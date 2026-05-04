@@ -1,0 +1,14 @@
+﻿__pycache__
+*.pyc
+*.pyo
+.env
+venv
+env
+.venv
+*.log
+data/academy.db
+fix_*.py
+check_*.py
+build_*.py
+debug_*.py
+.git

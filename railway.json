@@ -1,7 +1,6 @@
 ﻿{
   "build": {
-    "builder": "RAILPACK",
-    "buildCommand": "pip install -r requirements.txt"
+    "builder": "DOCKERFILE"
   },
   "deploy": {
     "startCommand": "python api_server.py & python main.py",
