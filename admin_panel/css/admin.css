@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم أكاديمية يامن</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">🎓</span>
+            <span class="brand-text">أكاديمية يامن</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+                <span class="nav-icon">📊</span> الرئيسية
+            </a>
+            <a href="#" class="nav-item" data-page="students" onclick="switchPage('students')">
+                <span class="nav-icon">👥</span> الطلاب
+            </a>
+            <a href="#" class="nav-item" data-page="courses" onclick="switchPage('courses')">
+                <span class="nav-icon">📚</span> الدورات والدروس
+            </a>
+            <a href="#" class="nav-item" data-page="payments" onclick="switchPage('payments')">
+                <span class="nav-icon">💳</span> المدفوعات
+            </a>
+            <a href="#" class="nav-item" data-page="vault" onclick="switchPage('vault')">
+                <span class="nav-icon">🔐</span> خزنة الأسرار
+            </a>
+            <a href="#" class="nav-item" data-page="gamification" onclick="switchPage('gamification')">
+                <span class="nav-icon">⚡</span> التحفيز و XP
+            </a>
+            <a href="#" class="nav-item" data-page="speaking" onclick="switchPage('speaking')">
+                <span class="nav-icon">🎤</span> محاكي المحادثة
+            </a>
+            <a href="#" class="nav-item" data-page="settings" onclick="switchPage('settings')">
+                <span class="nav-icon">⚙️</span> الإعدادات
+            </a>
+        </nav>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1 id="page-title">الرئيسية</h1>
+            <div class="topbar-actions">
+                <span class="badge" id="pending-count">0 معلقة</span>
+                <button class="btn-refresh" onclick="refreshAll()">🔄 تحديث</button>
+            </div>
+        </header>
+
+        <!-- صفحات المحتوى -->
+        <div class="page-container">
+            <!-- الرئيسية / Dashboard -->
+            <div id="page-dashboard" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-students">0</div>
+                            <div class="stat-label">إجمالي الطلاب</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-active">0</div>
+                            <div class="stat-label">نشط</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚫</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-blocked">0</div>
+                            <div class="stat-label">محظور</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💳</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-pending">0</div>
+                            <div class="stat-label">مدفوعات معلقة</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-subs">0</div>
+                            <div class="stat-label">اشتراكات نشطة</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-xp">0</div>
+                            <div class="stat-label">مجموع XP</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">⚡ إجراءات سريعة</div>
+                    <div class="card-body quick-actions">
+                        <button class="btn btn-primary" onclick="switchPage('students')">👥 إدارة الطلاب</button>
+                        <button class="btn btn-success" onclick="switchPage('payments')">💳 عرض المدفوعات</button>
+                        <button class="btn btn-warning" onclick="sendDailyChallenge()">📨 إرسال تحدي اليوم</button>
+                        <button class="btn btn-danger" onclick="switchPage('settings')">⚙️ إعدادات المنصة</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة الطلاب -->
+            <div id="page-students" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <span>👥 قائمة الطلاب</span>
+                        <div class="card-actions">
+                            <input type="text" class="input-search" placeholder="بحث عن طالب..." oninput="filterStudents(this.value)">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table" id="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>الاسم</th>
+                                        <th>المستوى</th>
+                                        <th>XP</th>
+                                        <th>الحالة</th>
+                                        <th>إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-tbody">
+                                    <tr><td colspan="6" class="text-center">جاري التحميل...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة الدورات والدروس -->
+            <div id="page-courses" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <span>📚 إدارة الدورات والدروس</span>
+                        <button class<span class="cursor">█</span>
+@"
+:root {
+    --primary: #4F46E5;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --bg: #F1F5F9;
+    --card: #FFFFFF;
+    --text: #1E293B;
+    --text-light: #64748B;
+    --border: #E2E8F0;
+    --sidebar-bg: #1E293B;
+    --sidebar-text: #CBD5E1;
+    --sidebar-active: #4F46E5;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    direction: rtl;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s;
+    overflow-y: auto;
+}
+.sidebar-brand {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; gap: 10px;
+}
+.brand-icon { font-size: 28px; }
+
+.sidebar-nav { padding: 12px 0; }
+
+.nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 20px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 15px;
+    border-right: 3px solid transparent;
+}
+.nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.nav-item.active {
+    background: rgba(79,70,229,0.2);
+    color: #fff;
+    border-right-color: var(--sidebar-active);
+}
+.nav-icon { font-size: 20px; width: 28px; text-align: center; }
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-right: 260px;
+    padding: 24px;
+    width: calc(100% - 260px);
+}
+
+/* Topbar */
+.topbar {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.topbar h1 { font-size: 24px; flex: 1; }
+.menu-toggle {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    font-size: 24px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn-refresh {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.badge {
+    background: var(--danger);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 16px;
+}
+.stat-icon { font-size: 36px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--primary); }
+.stat-label { font-size: 13px; color: var(--text-light); }
+
+/* Cards */
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+}
+.card-body { padding: 20px; }
+
+/* Quick Actions */
+.quick-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.15s;
+    font-family: inherit;
+}
+.btn:active { opacity: 0.85; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-warning { background: var(--warning); color: #000; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+
+/* Tables */
+.table-container { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td {
+    padding: 12px 16px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+.table th { background: var(--bg); font-weight: 600; color: var(--text-light); font-size: 13px; }
+.table tr:hover td { background: #F8FAFC; }
+
+/* Inputs */
+.input, .input-search, .input-sm, .input-md {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--card);
+    color: var(--text);
+}
+.input { width: 100%; }
+.input-search { width: 250px; }
+.input-sm { width: 80px; }
+.input-md { width: 200px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; }
+.tab {
+    padding: 8px 16px;
+    border: none;
+    background: var(--bg);
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+}
+.tab.active { background: var(--primary); color: #fff; }
+
+/* Toggle Groups */
+.toggle-group { display: flex; flex-direction: column; gap: 16px; }
+.toggle-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+/* Switch */
+.switch { position: relative; width: 52px; height: 28px; display: inline-block; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #CBD5E1;
+    border-radius: 28px;
+    transition: 0.3s;
+}
+.slider:before {
+    content: ""; position: absolute;
+    height: 22px; width: 22px;
+    left: 3px; bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+input:checked + .slider { background: var(--success); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+/* Pages */
+.page { display: none; }
+.page.active { display: block; }
+
+/* Status badges */
+.status-active { color: var(--success); font-weight: 600; }
+.status-blocked { color: var(--danger); font-weight: 600; }
+.status-pending { color: var(--warning); font-weight: 600; }
+.status-approved { color: var(--success); font-weight: 600; }
+
+/* Modal */
+.modal {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+}
+.modal.hidden { display: none; }
+.modal-content {
+    background: var(--card);
+    border-radius: var(--radius);
+    width: 90%; max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.modal-close {
+    background: none; border: none;
+    font-size: 22px; cursor: pointer;
+    color: var(--text-light);
+}
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.modal-body label { font-weight: 600; font-size: 14px; color: var(--text-light); }
+.modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end; gap: 10px;
+}
+
+/* Toast */
+.toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 300;
+    animation: slideUp 0.3s;
+}
+.toast.hidden { display: none; }
+@keyframes slideUp { from { bottom: -60px; opacity: 0; } to { bottom: 24px; opacity: 1; } }
+
+.text-center { text-align: center; color: var(--text-light); }
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(260px); }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-right: 0; width: 100%; }
+    .menu-toggle { display: block; }
+    .input-search { width: 100%; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+}

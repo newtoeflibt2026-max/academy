@@ -1,0 +1,24 @@
+{
+    "name": "Yamen Academy",
+    "short_name": "Yamen",
+    "description": "IELTS Preparation Academy — Learn Anytime, Anywhere",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#F8FAFC",
+    "theme_color": "#3B82F6",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "lang": "ar",
+    "dir": "rtl"
+}

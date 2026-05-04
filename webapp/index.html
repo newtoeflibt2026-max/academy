@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamen Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3B82F6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<script src="offline.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('SW registered:', reg.scope);
+    }).catch(err => {
+        console.log('SW failed:', err);
+    });
+}
+</script>
+<body>
+    <!-- Loading -->
+    <div id="loading" class="loading-screen">
+        <div class="loader"></div>
+        <p>جاري التحميل...</p>
+    </div>
+
+    <!-- Student App -->
+    <div id="studentApp" class="app-container" style="display:none">
+        <nav class="bottom-nav" id="studentNav">
+            <button class="nav-item active" data-page="home">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">الرئيسية</span>
+            </button>
+            <button class="nav-item" data-page="courses">
+                <span class="nav-icon">📚</span>
+                <span class="nav-label">دوراتي</span>
+            </button>
+            <button class="nav-item" data-page="spelling">
+                <span class="nav-icon">✍️</span>
+                <span class="nav-label">تهجئة</span>
+            </button>
+            <button class="nav-item" data-page="progress">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">تقدمي</span>
+            </button>
+        </nav>
+        
+        <!-- Student Pages -->
+        <main id="studentPages">
+            <div id="page-home" class="page active">
+                <div class="hero-card">
+                    <div class="hero-avatar">👤</div>
+                    <h1 class="hero-name" id="studentName">...</h1>
+                    <p class="hero-level" id="studentLevel">المستوى: --</p>
+                    <div class="xp-bar-container">
+                        <div class="xp-bar" id="xpBar"></div>
+                        <span class="xp-text" id="xpText">0 XP</span>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-card" onclick="navigate('courses')">
+                        <span class="action-icon">📖</span>
+                        <span class="action-label">متابعة التعلم</span>
+                    </button>
+                    <button class="action-card" onclick="navigate('challenge')">
+                        <span class="action-icon">⚡</span>
+                        <span class="action-label">تحدي 60 ثانية</span>
+                    </button>
+                    <button class="action-card" onclick="openGroup()">
+                        <span class="action-icon">💬</span>
+                        <span class="action-label">مجموعة النقاش</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="page-courses" class="page">
+                <h2 class="page-title">دوراتي</h2>
+                <div id="coursesList" class="courses-grid"></div>
+            </div>
+
+            <div id="page-lesson" class="page">
+                <div id="lessonContent"></div>
+            </div>
+
+            <div id="page-quiz" class="page">
+                <div id="quizContent"></div>
+            </div>
+
+            <div id="page-spelling" class="page">
+                <h2 class="page-title">تدريب التهجئة</h2>
+                <div id="spellingCard" class="spelling-card">
+                    <p class="spelling-hint" id="spellingHint">...</p>
+                    <input type="text" id="spellingInput" class="spelling-input" placeholder="اكتب الكلمة..." autocomplete="off">
+                    <button class="btn-primary" onclick="checkSpelling()">تحقق</button>
+                    <p class="spelling-result" id="spellingResult"></p>
+                </div>
+            </div>
+
+            <div id="page-progress" class="page">
+                <h2 class="page-title">تقدمي</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="statXp">0</span>
+                        <span class="stat-label">XP</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="statLessons">0</span>
+                        <span class="stat-label">درس</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="statWords">0</span>
+                        <span class="stat-label">كلمة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="statStreak">0</span>
+                        <span class="stat-label">يوم متتالي</span>
+                    </div>
+                </div>
+                <h3>سجل النشاط</h3>
+                <div id="xpLog" class="log-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin App -->
+    <div id="adminApp" class="app-container" style="display:none">
+        <nav class="bottom-nav" id="adminNav">
+            <button class="nav-item active" data-page="dashboard">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">لوحة التحكم</span>
+            </button>
+            <button class="nav-item" data-page="adminLessons">
+                <span class="nav-icon">📚</span>
+                <span class="nav-label">الدروس</span>
+            </button>
+            <button class="nav-item" data-page="adminWords">
+                <span class="nav-icon">✍️</span>
+                <span class="nav-label">الكلمات</span>
+            </button>
+            <button class="nav-item" data-page="adminStudents">
+                <span class="nav-icon">👥</span>
+                <span class="nav-label">الطلاب</span>
+            </button>
+            <button class="nav-item" data-page="adminSettings">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">الإعدادات</span>
+            </button>
+        </nav>
+        
+        <main id="adminPages">
+            <div id="page-dashboard" class="page active">
+                <h2 class="page-title">لوحة التحكم</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="dashStudents">0</span>
+                        <span class="stat-label">طالب</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="dashActive">0</span>
+                        <span class="stat-label">نشط</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="dashPending">0</span>
+                        <span class="stat-label">مدفوعات معلقة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="dashRevenue">0$</span>
+                        <span class="stat-label">الإيرادات</span>
+                    </div>
+                </div>
+                <div id="pendingPayments" class="pending-list"></div>
+            </div>
+
+            <div id="page-adminLessons" class="page">
+                <h2 class="page-title">إدارة الدروس</h2>
+                <button class="btn-primary" onclick="showAddLesson()">+ إضافة درس</button>
+                <div id="adminLessonsList" class="admin-list"></div>
+            </div>
+
+            <div id="page-adminWords" class="page">
+                <h2 class="page-title">إدارة الكلمات</h2>
+                <button class="btn-primary" onclick="showAddWord()">+ إضافة كلمة</button>
+                <div id="adminWordsList" class="admin-list"></div>
+            </div>
+
+            <div id="page-adminStudents" class="page">
+                <h2 class="page-title">الطلاب</h2>
+                <input type="text" id="studentSearch" class="search-input" placeholder="بحث عن طالب..." oninput="searchStudents()">
+                <div id="adminStudentsList" class="admin-list"></div>
+            </div>
+
+            <div id="page-adminSettings" class="page">
+                <h2 class="page-title">الإعدادات</h2>
+                <div class="settings-form">
+                    <label>رابط مجموعة النقاش</label>
+                    <input type="text" id="groupLinkInput" class="form-input">
+                    <button class="btn-primary" onclick="saveGroupLink()">حفظ</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

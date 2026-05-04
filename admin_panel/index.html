@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم أكاديمية يامن</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">🎓</span>
+            <span class="brand-text">أكاديمية يامن</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+                <span class="nav-icon">📊</span> الرئيسية
+            </a>
+            <a href="#" class="nav-item" data-page="students" onclick="switchPage('students')">
+                <span class="nav-icon">👥</span> الطلاب
+            </a>
+            <a href="#" class="nav-item" data-page="courses" onclick="switchPage('courses')">
+                <span class="nav-icon">📚</span> الدورات والدروس
+            </a>
+            <a href="#" class="nav-item" data-page="payments" onclick="switchPage('payments')">
+                <span class="nav-icon">💳</span> المدفوعات
+            </a>
+            <a href="#" class="nav-item" data-page="vault" onclick="switchPage('vault')">
+                <span class="nav-icon">🔐</span> خزنة الأسرار
+            </a>
+            <a href="#" class="nav-item" data-page="gamification" onclick="switchPage('gamification')">
+                <span class="nav-icon">⚡</span> التحفيز و XP
+            </a>
+            <a href="#" class="nav-item" data-page="speaking" onclick="switchPage('speaking')">
+                <span class="nav-icon">🎤</span> محاكي المحادثة
+            </a>
+            <a href="#" class="nav-item" data-page="settings" onclick="switchPage('settings')">
+                <span class="nav-icon">⚙️</span> الإعدادات
+            </a>
+        </nav>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <!-- رأس الصفحة -->
+        <header class="topbar">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1 id="page-title">الرئيسية</h1>
+            <div class="topbar-actions">
+                <span class="badge" id="pending-count">0 معلقة</span>
+                <button class="btn-refresh" onclick="refreshAll()">🔄 تحديث</button>
+            </div>
+        </header>
+
+        <!-- صفحات المحتوى -->
+        <div class="page-container">
+            <!-- الرئيسية / Dashboard -->
+            <div id="page-dashboard" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-students">0</div>
+                            <div class="stat-label">إجمالي الطلاب</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-active">0</div>
+                            <div class="stat-label">نشط</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚫</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-blocked">0</div>
+                            <div class="stat-label">محظور</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💳</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-pending">0</div>
+                            <div class="stat-label">مدفوعات معلقة</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-subs">0</div>
+                            <div class="stat-label">اشتراكات نشطة</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-xp">0</div>
+                            <div class="stat-label">مجموع XP</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">⚡ إجراءات سريعة</div>
+                    <div class="card-body quick-actions">
+                        <button class="btn btn-primary" onclick="switchPage('students')">👥 إدارة الطلاب</button>
+                        <button class="btn btn-success" onclick="switchPage('payments')">💳 عرض المدفوعات</button>
+                        <button class="btn btn-warning" onclick="sendDailyChallenge()">📨 إرسال تحدي اليوم</button>
+                        <button class="btn btn-danger" onclick="switchPage('settings')">⚙️ إعدادات المنصة</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة الطلاب -->
+            <div id="page-students" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <span>👥 قائمة الطلاب</span>
+                        <div class="card-actions">
+                            <input type="text" class="input-search" placeholder="بحث عن طالب..." oninput="filterStudents(this.value)">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table" id="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>الاسم</th>
+                                        <th>المستوى</th>
+                                        <th>XP</th>
+                                        <th>الحالة</th>
+                                        <th>إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-tbody">
+                                    <tr><td colspan="6" class="text-center">جاري التحميل...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة الدورات والدروس -->
+            <div id="page-courses" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <span>📚 إدارة الدورات والدروس</span>
+                        <button class="btn btn-primary" onclick="showAddCourseModal()">➕ إضافة دورة</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="courses-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صفحة المدفوعات -->
+            <div id="page-payments" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <span>💳 المدفوعات</span>
+                        <div class="tabs">
+                            <button class="tab active" onclick="filterPayments('pending')">معلقة</button>
+                            <button class="tab" onclick="filterPayments('approved')">مقبولة</button>
+                            <button class="tab" onclick="filterPayments('rejected')">مرفوضة</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="payments-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خزنة الأسرار -->
+            <div id="page-vault" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <span>🔐 خزنة الأسرار</span>
+                        <button class="btn btn-primary" onclick="showAddVaultModal()">➕ إضافة محتوى</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="vault-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- التحفيز و XP -->
+            <div id="page-gamification" class="page">
+                <div class="card">
+                    <div class="card-header">⚡ إعدادات التحفيز</div>
+                    <div class="card-body">
+                        <div class="toggle-group">
+                            <div class="toggle-row">
+                                <span>⏱️ وقت تحدي 60 ثانية (دقائق)</span>
+                                <input type="number" id="set-challenge-timer" value="5" min="1" max="30" class="input-sm">
+                                <button class="btn btn-sm btn-primary" onclick="saveSetting('challenge_timer')">حفظ</button>
+                            </div>
+                            <div class="toggle-row">
+                                <span>🔢 مضاعف XP</span>
+                                <input type="number" id="set-xp-multiplier" value="1" min="1" max="10" class="input-sm">
+                                <button class="btn btn-sm btn-primary" onclick="saveSetting('xp_multiplier')">حفظ</button>
+                            </div>
+                            <div class="toggle-row">
+                                <span>📨 إرسال تحدي اليوم لجميع الطلاب</span>
+                                <button class="btn btn-warning" onclick="sendDailyChallenge()">إرسال الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">🏆 لوحة الشرف</div>
+                    <div class="card-body">
+                        <div id="leaderboard-admin"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محاكي المحادثة -->
+            <div id="page-speaking" class="page">
+                <div class="card">
+                    <div class="card-header">🎤 إعدادات محاكي المحادثة</div>
+                    <div class="card-body">
+                        <div class="toggle-group">
+                            <div class="toggle-row">
+                                <span>🔐 Strict Mode (Mini App فقط)</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-strict" onchange="toggleSetting('speaking_strict', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-row">
+                                <span>🎛️ فحص جودة الصوت (Bitrate)</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-bitrate" onchange="toggleSetting('speaking_bitrate_check', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الإعدادات العامة -->
+            <div id="page-settings" class="page">
+                <div class="card">
+                    <div class="card-header">⚙️ إعدادات المنصة</div>
+                    <div class="card-body">
+                        <div class="toggle-group">
+                            <div class="toggle-row">
+                                <span>👁️ إظهار تصحيح الكتابة</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-writing" onchange="toggleSetting('show_writing', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-row">
+                                <span>👁️ إظهار محاكي المحادثة</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-speaking" onchange="toggleSetting('show_speaking', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-row">
+                                <span>🔒 قفل خزنة الأسرار</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="toggle-vault" onchange="toggleSetting('vault_locked', this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-row">
+                                <span>🚫 سقف الاستخدام اليومي</span>
+                                <input type="number" id="set-usage-cap" value="3" min="1" max="20" class="input-sm">
+                                <button class="btn btn-sm btn-primary" onclick="saveSetting('usage_cap')">حفظ</button>
+                            </div>
+                            <div class="toggle-row">
+                                <span>📱 رقم المحفظة</span>
+                                <input type="text" id="set-wallet" value="0798919150" class="input-md">
+                                <button class="btn btn-sm btn-primary" onclick="saveSetting('wallet_number')">حفظ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- مودال إضافة دورة -->
+    <div id="modal-course" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ إضافة دورة جديدة</h3>
+                <button class="modal-close" onclick="closeModal('modal-course')">✕</button>
+            </div>
+            <div class="modal-body">
+                <label>اسم الدورة</label>
+                <input type="text" id="course-name" class="input" placeholder="مثال: IELTS Foundation">
+                <label>المستوى</label>
+                <select id="course-level" class="input">
+                    <option value="Foundation">تأسيس</option>
+                    <option value="Intermediate">متوسط</option>
+                    <option value="Advanced">متقدم</option>
+                </select>
+                <label>السعر (دينار)</label>
+                <input type="number" id="course-price" class="input" value="25">
+                <label>المدة (أيام)</label>
+                <input type="number" id="course-duration" class="input" value="30">
+                <label>VIP</label>
+                <select id="course-vip" class="input">
+                    <option value="0">لا</option>
+                    <option value="1">نعم</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-course')">إلغاء</button>
+                <button class="btn btn-primary" onclick="addCourse()">إضافة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال إضافة محتوى للخزنة -->
+    <div id="modal-vault" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ إضافة للخزنة</h3>
+                <button class="modal-close" onclick="closeModal('modal-vault')">✕</button>
+            </div>
+            <div class="modal-body">
+                <label>العنوان</label>
+                <input type="text" id="vault-title" class="input">
+                <label>المحتوى</label>
+                <textarea id="vault-content" class="input" rows="4"></textarea>
+                <label>يفتح عند المستوى</label>
+                <select id="vault-level" class="input">
+                    <option value="Foundation">تأسيس</option>
+                    <option value="Intermediate">متوسط</option>
+                    <option value="Advanced">متقدم</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-vault')">إلغاء</button>
+                <button class="btn btn-primary" onclick="addVaultItem()">إضافة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- رسالة تأكيد -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/students.js"></script>
+    <script src="js/courses.js"></script>
+    <script src="js/payments.js"></script>
+    <script src="js/vault.js"></script>
+    <script src="js/gamification.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>
