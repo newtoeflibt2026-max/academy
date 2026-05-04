@@ -1,0 +1,30 @@
+﻿services:
+  - type: web
+    name: yamen-academy-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn api_server:app --bind 0.0.0.0:main.pyPORT
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.13.0
+
+  - type: worker
+    name: yamen-academy-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.13.0
