@@ -3,3 +3,4 @@ flask-cors==5.0.1
 aiogram==3.17.0
 aiohttp==3.11.0
 gunicorn==23.0.0
+google-generativeai
