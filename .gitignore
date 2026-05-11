@@ -1,4 +1,4 @@
-﻿.env
+.env
 config.py
 __pycache__/
 *.pyc
@@ -12,3 +12,5 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+Dockerfile
+.dockerignore
