@@ -1,4 +1,4 @@
-"""
+﻿"""
 Yamen Academy – Flask API Server
 """
 import os, json, sqlite3, asyncio, aiohttp, base64, random
@@ -8,11 +8,11 @@ from flask_cors import CORS
 app = Flask(__name__, static_folder="webapp", static_url_path="")
 CORS(app)
 
-DB = "data/academy.db"
+DB = os.getenv("DB_PATH", "data/academy.db")
 os.makedirs("data", exist_ok=True)
 
-WRITING_KEYS = ['AIzaSyDkAuMCa9rBQGiFkqxIauUCL7eXQyP2aHw', 'AIzaSyDGRbeskDR64jlDFkC5UzSdfleMp_sUwKc', 'AIzaSyDFU5MAO20Hssq6SWS-F0TGGint3IZHcTU']
-SPEAKING_KEYS = ['AIzaSyCBFNExYp5-9yFjHFrnaqUS-yZn_YqigSY', 'AIzaSyAXGja3hvzIo2SyTTQcuKBNa-yHZghHu8M', 'AIzaSyBWj39r49ORhKEpoDLhk6bpPiJLGrmohW0']
+WRITING_KEYS = os.getenv("WRITING_KEYS", "").split(",")
+SPEAKING_KEYS = os.getenv("SPEAKING_KEYS", "").split(",")
 MODEL = "gemini-2.5-flash"
 
 # ── DB Helpers ──
