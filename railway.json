@@ -1,10 +1,9 @@
-﻿{
+{
   "build": {
-    "builder": "DOCKERFILE"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python api_server.py & python main.py",
-    "healthcheckPath": "/api/health",
+    "startCommand": "python main.py",
     "restartPolicyType": "ALWAYS"
   }
 }
