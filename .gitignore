@@ -1,0 +1,14 @@
+﻿.env
+config.py
+__pycache__/
+*.pyc
+*.pyo
+*.bak
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
