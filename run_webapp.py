@@ -29,6 +29,7 @@ def dict_rows(rows):
 
 # ─── Flask App ───
 app = Flask(__name__)
+CORS(app)
 
 # WebApp static
 @app.route("/")
