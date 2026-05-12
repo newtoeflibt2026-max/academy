@@ -4,34 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yamen Academy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="manifest" href="/manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#3B82F6">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <!-- Instant fallback CSS -->
+    <style>
+        body {
+            background: #f0f2f5 !important;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+        #loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1E3A5F, #3B82F6);
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+        }
+        #loading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #app, #adminApp {
+            display: none;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 25px 25px;
+        }
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-    <div id="loading"><span>⏳ Yamen Academy Loading...</span></div>
+    <div id="loading">
+        <div>
+            <div class="spinner"></div>
+            <div>🕌 Yamen Academy</div>
+            <div style="font-size:14px;opacity:0.8;margin-top:8px;">Loading...</div>
+        </div>
+    </div>
     <div id="app">
         <div class="header">
-            <h1>🕌 Yamen Academy</h1>
-            <p>مرحباً بك في أكاديمية يامن</p>
+            <h1 style="margin:0">🕌 Yamen Academy</h1>
+            <p style="margin:5px 0 0;opacity:0.9">مرحباً بك في أكاديمية يامن للغات</p>
         </div>
-        <div class="container" id="mainContent">
+        <div class="container">
             <div class="card">
-                <h2>الدورات</h2>
+                <h2 style="margin-top:0">📚 الدورات</h2>
                 <div id="coursesList">جاري تحميل الدورات...</div>
             </div>
         </div>
     </div>
     <div id="adminApp">
         <div class="header" style="background: linear-gradient(135deg, #10B981, #059669);">
-            <h1>🔧 لوحة التحكم</h1>
+            <h1 style="margin:0">🔧 لوحة التحكم</h1>
         </div>
-        <div class="container" id="adminContent">
+        <div class="container">
             <div class="card">
-                <h2>الإحصائيات</h2>
+                <h2>📊 الإحصائيات</h2>
                 <div id="adminStats">جاري التحميل...</div>
             </div>
         </div>
