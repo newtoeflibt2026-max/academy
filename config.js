@@ -13,3 +13,4 @@ const CONFIG = {
         danger: "#EF4444"
     }
 };
+console.log("[config] API_BASE:", CONFIG.API_BASE || "same-origin");

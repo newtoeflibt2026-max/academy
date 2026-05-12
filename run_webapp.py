@@ -1,6 +1,7 @@
 ﻿"""
-Yamen Academy - WebApp + Admin API
-FINAL: serves from root (.) - no webapp/ folder
+Yamen Academy - WebApp + Admin API v6
+ZERO-LATENCY: MMAP + WAL + timeout=30
+Serves from ROOT (.) - no webapp/ folder
 """
 import os, json, sqlite3, random
 from flask import Flask, request, jsonify, send_from_directory
@@ -10,11 +11,14 @@ DB = os.getenv("DB_PATH", "data/academy.db")
 os.makedirs("data", exist_ok=True)
 
 def get_conn():
-    conn = sqlite3.connect(DB, check_same_thread=False, timeout=20)
+    conn = sqlite3.connect(DB, check_same_thread=False, timeout=30, uri=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA busy_timeout=10000")
+    conn.execute("PRAGMA busy_timeout=30000")
     conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA mmap_size=268435456")
+    conn.execute("PRAGMA cache_size=-64000")
+    conn.execute("PRAGMA temp_store=MEMORY")
     return conn
 
 def query(sql, params=()):
@@ -34,23 +38,23 @@ def dict_rows(rows): return [dict(r) for r in rows]
 app = Flask(__name__, static_folder=".", static_url_path="")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Serve all static files from current directory (.)
+# Serve ALL files from current directory (.)
 @app.route("/<path:filename>")
 def serve_static(filename):
     if filename.startswith("api/"):
         return jsonify({"error": "not found"}), 404
 
-    # Try exact file in current directory
+    # Try exact path in root
     if os.path.exists(filename) and os.path.isfile(filename):
         return send_from_directory(".", filename)
 
     # Try in subfolders: icons, css, js
-    for subfolder in ["icons", "css", "js"]:
-        sub_path = os.path.join(subfolder, os.path.basename(filename))
-        if os.path.exists(sub_path) and os.path.isfile(sub_path):
-            return send_from_directory(subfolder, os.path.basename(filename))
+    for sub in ["icons", "css", "js"]:
+        p = os.path.join(sub, os.path.basename(filename))
+        if os.path.exists(p) and os.path.isfile(p):
+            return send_from_directory(sub, os.path.basename(filename))
 
-    # SPA fallback: serve index.html
+    # SPA fallback
     return send_from_directory(".", "index.html")
 
 @app.route("/")
@@ -64,17 +68,20 @@ def admin():
     return send_from_directory(".", "index.html")
 
 @app.route("/admin/<path:filename>")
-def serve_admin_static(filename):
-    path = os.path.join("admin_panel", filename)
-    if os.path.exists(path) and os.path.isfile(path):
+def serve_admin(filename):
+    p = os.path.join("admin_panel", filename)
+    if os.path.exists(p) and os.path.isfile(p):
         return send_from_directory("admin_panel", filename)
     return send_from_directory(".", "index.html")
 
-# ============================================================
-# API ROUTES
-# ============================================================
+# API
 @app.route("/api/health")
-def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"cors":True,"version":"5.0"})
+def health():
+    try:
+        row = query("SELECT 1")[0]
+        return jsonify({"status":"ok","app":"yamen-academy","db":True,"wal":True,"mmap":True,"version":"6.0"})
+    except Exception as e:
+        return jsonify({"status":"ok","app":"yamen-academy","db":False,"error":str(e)})
 
 @app.route("/api/me")
 def me():
@@ -182,7 +189,7 @@ def eval_speaking():
             return jsonify(rj)
     except Exception as e: return jsonify({"error":str(e)}), 500
 
-# Admin APIs
+# Admin
 @app.route("/api/admin/stats")
 def admin_stats():
     return jsonify({"total_students":query("SELECT COUNT(*) as n FROM students")[0]["n"],"active_subs":query("SELECT COUNT(*) as n FROM subscriptions WHERE active=1")[0]["n"],"pending_payments":query("SELECT COUNT(*) as n FROM payments WHERE status='pending'")[0]["n"],"total_xp":query("SELECT COALESCE(SUM(xp),0) as n FROM students")[0]["n"]})
@@ -235,5 +242,5 @@ def admin_save_setting():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"Yamen Academy v5.0 on port {port} [ROOT+SINGLE+WAL]")
+    print(f"Yamen Academy v6.0 [MMAP+WAL+ROOT] on port {port}")
     app.run(host="0.0.0.0", port=port)
