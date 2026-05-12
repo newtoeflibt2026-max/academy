@@ -1,6 +1,6 @@
 ﻿"""
 Yamen Academy - WebApp + Admin API
-FINAL FIX: direct routes + WAL + icons + no duplicates
+FINAL: webapp as static folder + SPA fallback + WAL
 """
 import os, json, sqlite3, random
 from flask import Flask, request, jsonify, send_from_directory
@@ -31,69 +31,57 @@ def execute(sql, params=()):
 
 def dict_rows(rows): return [dict(r) for r in rows]
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="webapp", static_url_path="")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ============================================================
-# EXPLICIT ROUTES - serve from BOTH / and /webapp/
+# Serve index.html for SPA-like behavior
 # ============================================================
+@app.route("/")
+@app.route("/index.html")
+def serve_index():
+    return send_from_directory("webapp", "index.html")
 
-SERVE_FILES = [
-    "index.html", "app.js", "style.css", "config.js",
-    "offline.js", "sw.js", "manifest.json"
-]
+# ============================================================
+# Admin Panel
+# ============================================================
+@app.route("/admin")
+def admin_index():
+    return send_from_directory("admin_panel", "index.html")
 
-for filename in SERVE_FILES:
-    # Route: /filename
-    def make_handler(fn):
-        def handler():
-            return send_from_directory("webapp", fn)
-        handler.__name__ = f"serve_{fn.replace('.','_')}"
-        return handler
-    app.add_url_rule(f"/{filename}", f"root_{filename.replace('.','_')}", make_handler(filename))
-    # Route: /webapp/filename
-    app.add_url_rule(f"/webapp/{filename}", f"webapp_{filename.replace('.','_')}", make_handler(filename))
+@app.route("/admin/<path:filename>")
+def serve_admin_static(filename):
+    path = os.path.join("admin_panel", filename)
+    if os.path.exists(path) and os.path.isfile(path):
+        return send_from_directory("admin_panel", filename)
+    return send_from_directory("admin_panel", "index.html")
 
-# Icon routes
-@app.route("/icons/<path:filename>")
-def serve_icons(filename):
-    return send_from_directory("webapp/icons", filename)
-
-@app.route("/webapp/icons/<path:filename>")
-def serve_webapp_icons(filename):
-    return send_from_directory("webapp/icons", filename)
-
-# Catch-all for other files
+# ============================================================
+# Catch-all: serve from webapp, if not found -> index.html (SPA)
+# ============================================================
 @app.route("/<path:filename>")
-def catch_all(filename):
-    if filename.startswith("api/"): return jsonify({"error":"not found"}), 404
-    # Try webapp/
+def serve_static(filename):
+    if filename.startswith("api/"):
+        return jsonify({"error": "not found"}), 404
+
+    # Try serving exact file from webapp
     webapp_path = os.path.join("webapp", filename)
     if os.path.exists(webapp_path) and os.path.isfile(webapp_path):
         return send_from_directory("webapp", filename)
-    # Try admin_panel/
-    admin_path = os.path.join("admin_panel", filename)
-    if os.path.exists(admin_path) and os.path.isfile(admin_path):
-        return send_from_directory("admin_panel", filename)
-    # Try basename in webapp
-    basename = os.path.basename(filename)
-    for folder in ["webapp", "admin_panel"]:
-        for root, _, files in os.walk(folder):
-            if basename in files:
-                rel = os.path.relpath(os.path.join(root, basename), folder)
-                return send_from_directory(folder, rel)
-    return jsonify({"error":"file not found","path":filename}), 404
 
-# Admin
-@app.route("/admin")
-def admin(): return send_from_directory("admin_panel", "index.html")
+    # Try with icons subfolder
+    icons_path = os.path.join("webapp", "icons", os.path.basename(filename))
+    if os.path.exists(icons_path) and os.path.isfile(icons_path):
+        return send_from_directory("webapp", "icons/" + os.path.basename(filename))
+
+    # SPA fallback: serve index.html for any unknown route
+    return send_from_directory("webapp", "index.html")
 
 # ============================================================
 # API ROUTES
 # ============================================================
-
 @app.route("/api/health")
-def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"cors":True})
+def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"cors":True,"version":"4.0"})
 
 @app.route("/api/me")
 def me():
@@ -254,5 +242,5 @@ def admin_save_setting():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"Yamen Academy WebApp on port {port} [WAL+CORS+Icons+DirectRoutes]")
+    print(f"Yamen Academy WebApp v4.0 on port {port} [WAL+CORS+SPA]")
     app.run(host="0.0.0.0", port=port)

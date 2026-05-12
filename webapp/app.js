@@ -1,4 +1,4 @@
-﻿// Yamen Academy WebApp v3 - Browser + Telegram
+﻿// Yamen Academy WebApp v4 - Final
 (function() {
     const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
     const tg = isTelegram ? window.Telegram.WebApp : null;
@@ -9,73 +9,96 @@
     const API_BASE = (window.CONFIG && CONFIG.API_BASE) || "";
 
     async function api(path, opts = {}) {
-        const url = API_BASE ? (API_BASE + path) : path;
+        const base = API_BASE ? API_BASE : window.location.origin;
+        const url = base + (path.startsWith("/") ? path : "/" + path);
         try {
             const res = await fetch(url, {
                 headers: { "Content-Type": "application/json", ...opts.headers },
                 ...opts
             });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return await res.json();
         } catch (e) {
-            console.warn("API offline:", path, e.message);
-            return { error: "offline" };
+            console.warn("API unavailable:", path, e.message);
+            return { error: "offline", message: e.message };
         }
+    }
+
+    function hideLoading() {
+        const el = document.getElementById("loading");
+        if (el) el.style.display = "none";
+    }
+
+    function showApp() {
+        const el = document.getElementById("app");
+        if (el) el.style.display = "block";
+    }
+
+    function showAdmin() {
+        const el = document.getElementById("adminApp");
+        if (el) el.style.display = "block";
+        if (typeof initAdmin === "function") initAdmin();
     }
 
     async function loadUserData() {
         let uid = null;
 
+        // Telegram user
         if (isTelegram && tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
             currentUser = tg.initDataUnsafe.user;
             uid = currentUser.id;
             isAdmin = CONFIG.ADMIN_IDS.includes(currentUser.id);
-        } else {
+        }
+        // Browser with user_id parameter
+        else {
             const params = new URLSearchParams(window.location.search);
-            uid = params.get("user_id");
-            if (uid) {
-                uid = parseInt(uid);
+            const userIdParam = params.get("user_id");
+            if (userIdParam) {
+                uid = parseInt(userIdParam);
                 currentUser = { id: uid, first_name: "User" };
                 isAdmin = CONFIG.ADMIN_IDS.includes(uid);
             }
         }
 
-        // Hide loading
-        const loadingEl = document.getElementById("loading");
-        const appEl = document.getElementById("app");
-        const adminEl = document.getElementById("adminApp");
-
+        // No user - show public view immediately
         if (!uid) {
-            if (loadingEl) loadingEl.style.display = "none";
-            if (appEl) appEl.style.display = "block";
-            console.log("Yamen Academy - public visitor mode");
+            hideLoading();
+            showApp();
+            console.log("Yamen Academy - public mode");
             return;
         }
 
-        // Try to fetch user data
+        // Try loading user data from API
         try {
             const me = await api("/api/me?user_id=" + uid);
             if (!me.error && me.full_name) {
                 currentUser = { ...currentUser, full_name: me.full_name, level: me.level };
             }
-        } catch (e) {}
+        } catch (e) {
+            console.log("Could not fetch user data, continuing offline");
+        }
 
-        if (loadingEl) loadingEl.style.display = "none";
+        hideLoading();
 
-        if (isAdmin && adminEl) {
-            adminEl.style.display = "block";
-            if (typeof initAdmin === "function") initAdmin();
-        } else if (appEl) {
-            appEl.style.display = "block";
+        if (isAdmin) {
+            showAdmin();
+        } else {
+            showApp();
             if (typeof showMainMenu === "function") showMainMenu();
         }
 
         console.log("Yamen Academy ready | User:", uid, "| Admin:", isAdmin);
     }
 
-    document.addEventListener("DOMContentLoaded", loadUserData);
+    // Start immediately - don't wait for DOMContentLoaded if DOM is already ready
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", loadUserData);
+    } else {
+        loadUserData();
+    }
 
-    // Register service worker
+    // Service worker
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw.js").catch(() => {});
+        navigator.serviceWorker.register("/sw.js").catch(function() {});
     }
 })();
