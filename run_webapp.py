@@ -1,7 +1,5 @@
 ﻿"""
-Yamen Academy - WebApp + Admin API v6
-ZERO-LATENCY: MMAP + WAL + timeout=30
-Serves from ROOT (.) - no webapp/ folder
+Yamen Academy v7 - ROOT ONLY + MMAP + WAL + SPA
 """
 import os, json, sqlite3, random
 from flask import Flask, request, jsonify, send_from_directory
@@ -11,7 +9,7 @@ DB = os.getenv("DB_PATH", "data/academy.db")
 os.makedirs("data", exist_ok=True)
 
 def get_conn():
-    conn = sqlite3.connect(DB, check_same_thread=False, timeout=30, uri=False)
+    conn = sqlite3.connect(DB, check_same_thread=False, timeout=30)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=30000")
@@ -36,29 +34,21 @@ def execute(sql, params=()):
 def dict_rows(rows): return [dict(r) for r in rows]
 
 app = Flask(__name__, static_folder=".", static_url_path="")
-CORS(app, resources={r"/*": {"origins": "*"}})
-
-# Serve ALL files from current directory (.)
-@app.route("/<path:filename>")
-def serve_static(filename):
-    if filename.startswith("api/"):
-        return jsonify({"error": "not found"}), 404
-
-    # Try exact path in root
-    if os.path.exists(filename) and os.path.isfile(filename):
-        return send_from_directory(".", filename)
-
-    # Try in subfolders: icons, css, js
-    for sub in ["icons", "css", "js"]:
-        p = os.path.join(sub, os.path.basename(filename))
-        if os.path.exists(p) and os.path.isfile(p):
-            return send_from_directory(sub, os.path.basename(filename))
-
-    # SPA fallback
-    return send_from_directory(".", "index.html")
+CORS(app)
 
 @app.route("/")
 def index():
+    return send_from_directory(".", "index.html")
+
+@app.route("/<path:filename>")
+def serve(filename):
+    if filename.startswith("api/"): return jsonify({"error":"not found"}), 404
+    if os.path.exists(filename) and os.path.isfile(filename):
+        return send_from_directory(".", filename)
+    for sub in ["icons","css","js"]:
+        p = os.path.join(sub, os.path.basename(filename))
+        if os.path.exists(p) and os.path.isfile(p):
+            return send_from_directory(sub, os.path.basename(filename))
     return send_from_directory(".", "index.html")
 
 @app.route("/admin")
@@ -67,21 +57,12 @@ def admin():
         return send_from_directory("admin_panel", "index.html")
     return send_from_directory(".", "index.html")
 
-@app.route("/admin/<path:filename>")
-def serve_admin(filename):
-    p = os.path.join("admin_panel", filename)
-    if os.path.exists(p) and os.path.isfile(p):
-        return send_from_directory("admin_panel", filename)
-    return send_from_directory(".", "index.html")
-
-# API
 @app.route("/api/health")
 def health():
     try:
-        row = query("SELECT 1")[0]
-        return jsonify({"status":"ok","app":"yamen-academy","db":True,"wal":True,"mmap":True,"version":"6.0"})
-    except Exception as e:
-        return jsonify({"status":"ok","app":"yamen-academy","db":False,"error":str(e)})
+        query("SELECT 1")
+        return jsonify({"status":"ok","db":True,"version":"7.0"})
+    except: return jsonify({"status":"ok","db":False,"version":"7.0"})
 
 @app.route("/api/me")
 def me():
@@ -129,12 +110,7 @@ def progress():
     s = query("SELECT * FROM students WHERE user_id=?",(uid,))
     if not s: return jsonify({"error":"not found"}), 404
     s = dict(s[0])
-    return jsonify({"student":s,"stats":{
-        "quizzes": query("SELECT COUNT(*) as c FROM quiz_attempts WHERE user_id=?",(uid,))[0]["c"],
-        "writing": query("SELECT COUNT(*) as c FROM writing_submissions WHERE user_id=?",(uid,))[0]["c"],
-        "speaking": query("SELECT COUNT(*) as c FROM speaking_sessions WHERE user_id=?",(uid,))[0]["c"],
-        "words": query("SELECT COUNT(*) as c FROM word_reviews WHERE user_id=?",(uid,))[0]["c"]
-    }})
+    return jsonify({"student":s,"stats":{"quizzes":query("SELECT COUNT(*) as c FROM quiz_attempts WHERE user_id=?",(uid,))[0]["c"],"writing":query("SELECT COUNT(*) as c FROM writing_submissions WHERE user_id=?",(uid,))[0]["c"],"speaking":query("SELECT COUNT(*) as c FROM speaking_sessions WHERE user_id=?",(uid,))[0]["c"],"words":query("SELECT COUNT(*) as c FROM word_reviews WHERE user_id=?",(uid,))[0]["c"]}})
 
 WRITING_KEYS = os.getenv("WRITING_KEYS","").split(",")
 SPEAKING_KEYS = os.getenv("SPEAKING_KEYS","").split(",")
@@ -155,14 +131,11 @@ def eval_writing():
     req = ur.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
     try:
         with ur.urlopen(req, timeout=60) as r:
-            t = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"]
-            t = t.strip().lstrip("```json").rstrip("```").strip()
+            t = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"].strip().lstrip("```json").rstrip("```").strip()
             rj = json.loads(t)
             rj.setdefault("overall",6.0); rj.setdefault("feedback_ar","تم التقييم.")
             uid = d.get("user_id")
-            if uid:
-                execute("INSERT INTO writing_submissions (user_id,task_type,prompt,essay_text,word_count,band_score,task_response,coherence_cohesion,lexical_resource,grammatical_range,feedback_ar,corrections_json) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                    (int(uid),d.get("task_type","task2"),d.get("prompt",""),essay,len(essay.split()),rj["overall"],rj.get("task_response",6),rj.get("coherence_cohesion",6),rj.get("lexical_resource",6),rj.get("grammatical_range",6),rj["feedback_ar"],json.dumps(rj.get("corrections",[]))))
+            if uid: execute("INSERT INTO writing_submissions (user_id,task_type,prompt,essay_text,word_count,band_score,task_response,coherence_cohesion,lexical_resource,grammatical_range,feedback_ar,corrections_json) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(int(uid),d.get("task_type","task2"),d.get("prompt",""),essay,len(essay.split()),rj["overall"],rj.get("task_response",6),rj.get("coherence_cohesion",6),rj.get("lexical_resource",6),rj.get("grammatical_range",6),rj["feedback_ar"],json.dumps(rj.get("corrections",[]))))
             return jsonify(rj)
     except Exception as e: return jsonify({"error":str(e)}), 500
 
@@ -178,21 +151,16 @@ def eval_speaking():
     req = ur.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
     try:
         with ur.urlopen(req, timeout=90) as r:
-            t = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"]
-            t = t.strip().lstrip("```json").rstrip("```").strip()
+            t = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"].strip().lstrip("```json").rstrip("```").strip()
             rj = json.loads(t)
             rj.setdefault("overall",6.0); rj.setdefault("feedback_ar","تم التقييم.")
             uid = d.get("user_id")
-            if uid:
-                execute("INSERT INTO speaking_sessions (user_id,prompt,transcript_text,audio_duration_sec,band_score,fluency,pronunciation,lexical_resource,grammatical_range,feedback_ar) VALUES (?,?,?,?,?,?,?,?,?,?)",
-                    (int(uid),d.get("prompt",""),rj.get("transcript",""),d.get("duration",30),rj["overall"],rj.get("fluency",6),rj.get("pronunciation",6),rj.get("lexical_resource",6),rj.get("grammatical_range",6),rj["feedback_ar"]))
+            if uid: execute("INSERT INTO speaking_sessions (user_id,prompt,transcript_text,audio_duration_sec,band_score,fluency,pronunciation,lexical_resource,grammatical_range,feedback_ar) VALUES (?,?,?,?,?,?,?,?,?,?)",(int(uid),d.get("prompt",""),rj.get("transcript",""),d.get("duration",30),rj["overall"],rj.get("fluency",6),rj.get("pronunciation",6),rj.get("lexical_resource",6),rj.get("grammatical_range",6),rj["feedback_ar"]))
             return jsonify(rj)
     except Exception as e: return jsonify({"error":str(e)}), 500
 
-# Admin
 @app.route("/api/admin/stats")
-def admin_stats():
-    return jsonify({"total_students":query("SELECT COUNT(*) as n FROM students")[0]["n"],"active_subs":query("SELECT COUNT(*) as n FROM subscriptions WHERE active=1")[0]["n"],"pending_payments":query("SELECT COUNT(*) as n FROM payments WHERE status='pending'")[0]["n"],"total_xp":query("SELECT COALESCE(SUM(xp),0) as n FROM students")[0]["n"]})
+def admin_stats(): return jsonify({"total_students":query("SELECT COUNT(*) as n FROM students")[0]["n"],"active_subs":query("SELECT COUNT(*) as n FROM subscriptions WHERE active=1")[0]["n"],"pending_payments":query("SELECT COUNT(*) as n FROM payments WHERE status='pending'")[0]["n"],"total_xp":query("SELECT COALESCE(SUM(xp),0) as n FROM students")[0]["n"]})
 
 @app.route("/api/admin/students")
 def admin_students(): return jsonify({"students":dict_rows(query("SELECT * FROM students ORDER BY created_at DESC"))})
@@ -213,9 +181,7 @@ def admin_approve():
     return jsonify({"success":True})
 
 @app.route("/api/admin/reject_payment", methods=["POST"])
-def admin_reject(): 
-    execute("UPDATE payments SET status='rejected' WHERE id=?",(request.json["id"],))
-    return jsonify({"success":True})
+def admin_reject(): execute("UPDATE payments SET status='rejected' WHERE id=?",(request.json["id"],)); return jsonify({"success":True})
 
 @app.route("/api/admin/courses")
 def admin_courses(): return jsonify({"courses":dict_rows(query("SELECT * FROM courses ORDER BY id"))})
@@ -227,9 +193,7 @@ def admin_add_course():
     return jsonify({"success":True})
 
 @app.route("/api/admin/delete_course", methods=["POST"])
-def admin_delete_course():
-    execute("DELETE FROM courses WHERE id=?",(request.json["id"],))
-    return jsonify({"success":True})
+def admin_delete_course(): execute("DELETE FROM courses WHERE id=?",(request.json["id"],)); return jsonify({"success":True})
 
 @app.route("/api/admin/settings")
 def admin_settings(): return jsonify({r["key"]:r["value"] for r in query("SELECT * FROM admin_settings")})
@@ -242,5 +206,5 @@ def admin_save_setting():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"Yamen Academy v6.0 [MMAP+WAL+ROOT] on port {port}")
+    print(f"Yamen Academy v7.0 [UNSTUCK] on port {port}")
     app.run(host="0.0.0.0", port=port)

@@ -1,6 +1,6 @@
-﻿// Yamen Academy Config
+﻿// Yamen Academy Config v7
 const CONFIG = {
-    API_BASE: "",
+    API_BASE: window.location.origin,
     ADMIN_IDS: [469136626],
     COLORS: {
         primary: "#3B82F6",
@@ -13,4 +13,4 @@ const CONFIG = {
         danger: "#EF4444"
     }
 };
-console.log("[config] API_BASE:", CONFIG.API_BASE || "same-origin");
+console.log("[config] API_BASE:", CONFIG.API_BASE);
