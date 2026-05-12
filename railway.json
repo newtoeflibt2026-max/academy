@@ -3,7 +3,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python main.py",
+    "startCommand": "python run_webapp.py",
     "restartPolicyType": "ALWAYS"
   }
 }
