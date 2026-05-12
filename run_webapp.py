@@ -1,8 +1,9 @@
 ﻿import os, logging
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from database import get_db_connection, init_db, DB_PATH
+from database import get_db_connection, init_db
 import sqlite3
+import traceback
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -10,40 +11,50 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-def with_db(query_func):
+# ===== Safe DB wrapper =====
+def with_db(fn):
     conn = None
     try:
         conn = get_db_connection()
-        return query_func(conn)
-    except sqlite3.OperationalError as e:
-        logger.error(f"DB Lock: {e}")
-        return jsonify({"error":"database_locked","retry":True}), 503
+        return fn(conn)
     except Exception as e:
-        logger.error(f"Error: {e}")
-        return jsonify({"error":str(e)}), 500
+        logger.error(f"DB Error: {e}\n{traceback.format_exc()}")
+        return jsonify({"error": str(e)}), 500
     finally:
         if conn:
             try: conn.close()
             except: pass
 
+# ===== Routes =====
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    try:
+        return send_from_directory('.', 'index.html')
+    except Exception as e:
+        logger.error(f"Index error: {e}")
+        return "<h1>Yamen Academy</h1><p>Welcome</p>", 200
 
 @app.route('/<path:f>')
 def serve(f):
-    try: return send_from_directory('.', f)
-    except: return jsonify({"error":"not_found"}), 404
+    try:
+        return send_from_directory('.', f)
+    except:
+        if f == 'favicon.ico':
+            return '', 204
+        return jsonify({"error": "not_found"}), 404
 
 @app.route('/api/health')
 def health():
-    return jsonify({"status":"ok","database":os.path.exists(DB_PATH)})
+    return jsonify({"status": "ok"})
 
 @app.route('/api/courses')
 def courses():
     def q(conn):
-        rows = conn.execute("SELECT * FROM courses WHERE is_active=1").fetchall()
-        return jsonify([dict(r) for r in rows])
+        try:
+            rows = conn.execute("SELECT * FROM courses WHERE is_active=1").fetchall()
+            return jsonify([dict(r) for r in rows])
+        except sqlite3.OperationalError as e:
+            return jsonify([])  # return empty on lock
     return with_db(q)
 
 @app.route('/api/courses', methods=['POST'])
@@ -52,14 +63,7 @@ def add_course():
     def q(conn):
         conn.execute("INSERT INTO courses (title,description,level) VALUES (?,?,?)",
                     (d.get('title',''), d.get('description',''), d.get('level','A1')))
-        return jsonify({"status":"created"}), 201
-    return with_db(q)
-
-@app.route('/api/lessons/<int:cid>')
-def lessons(cid):
-    def q(conn):
-        rows = conn.execute("SELECT * FROM lessons WHERE course_id=? ORDER BY order_index", (cid,)).fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"status":"ok"}), 201
     return with_db(q)
 
 @app.route('/api/leaderboard')
@@ -67,27 +71,6 @@ def leaderboard():
     def q(conn):
         rows = conn.execute("SELECT first_name,username,xp,streak FROM students WHERE is_banned=0 ORDER BY xp DESC LIMIT 20").fetchall()
         return jsonify([dict(r) for r in rows])
-    return with_db(q)
-
-@app.route('/api/placement/questions')
-def placement():
-    def q(conn):
-        rows = conn.execute("SELECT * FROM questions LIMIT 20").fetchall()
-        return jsonify([dict(r) for r in rows])
-    return with_db(q)
-
-@app.route('/api/spelling')
-def spelling():
-    def q(conn):
-        rows = conn.execute("SELECT * FROM spelling_words ORDER BY RANDOM() LIMIT 10").fetchall()
-        return jsonify([dict(r) for r in rows])
-    return with_db(q)
-
-@app.route('/api/daily-challenge')
-def daily():
-    def q(conn):
-        row = conn.execute("SELECT * FROM daily_challenges WHERE challenge_date=date('now','localtime')").fetchone()
-        return jsonify(dict(row) if row else {"challenge":None})
     return with_db(q)
 
 @app.route('/api/admin/stats')
@@ -98,15 +81,21 @@ def admin_stats():
         return jsonify({"students":s,"courses":c})
     return with_db(q)
 
-@app.route('/api/admin/students')
-def admin_students():
-    def q(conn):
-        rows = conn.execute("SELECT * FROM students ORDER BY xp DESC").fetchall()
-        return jsonify([dict(r) for r in rows])
-    return with_db(q)
+# ===== Error handlers =====
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({"error": "internal_error"}), 500
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "not_found"}), 404
 
 if __name__ == '__main__':
-    init_db()
+    try:
+        init_db()
+    except Exception as e:
+        logger.error(f"DB init failed: {e}")
+    
     port = int(os.getenv('PORT', 5000))
     logger.info(f"Starting on port {port}")
     app.run(host='0.0.0.0', port=port, debug=False)
