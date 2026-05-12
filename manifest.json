@@ -1,9 +1,9 @@
 ﻿{
-  "name": "Yamen Academy",
-  "short_name": "Yamen",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#3B82F6",
-  "theme_color": "#3B82F6",
-  "description": "IELTS Preparation Academy"
+    "name": "Yamen Academy",
+    "short_name": "YamenAcademy",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#3B82F6",
+    "background_color": "#f0f2f5",
+    "description": "Yamen Academy - Online Learning Platform"
 }

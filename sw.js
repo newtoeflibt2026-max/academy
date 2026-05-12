@@ -1,44 +1,15 @@
-﻿// Yamen Academy Service Worker v7
-self.addEventListener("install", function(event) {
-    console.log("[SW] Install");
+﻿self.addEventListener('install', (event) => {
+    console.log('[sw] Installing...');
     self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    console.log('[sw] Activated');
     event.waitUntil(
-        caches.open("yamen-v7").then(function(cache) {
-            return cache.addAll([
-                "/",
-                "/index.html",
-                "/style.css",
-                "/app.js",
-                "/config.js",
-                "/manifest.json"
-            ]);
-        })
+        caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key))))
     );
 });
 
-self.addEventListener("activate", function(event) {
-    console.log("[SW] Activate");
-    event.waitUntil(
-        caches.keys().then(function(keys) {
-            return Promise.all(
-                keys.filter(function(k) { return k !== "yamen-v7"; })
-                    .map(function(k) { return caches.delete(k); })
-            );
-        }).then(function() {
-            return self.clients.claim();
-        })
-    );
-});
-
-self.addEventListener("fetch", function(event) {
-    if (event.request.url.includes("/api/")) {
-        return fetch(event.request);
-    }
-    event.respondWith(
-        caches.match(event.request).then(function(cached) {
-            return cached || fetch(event.request).catch(function() {
-                return caches.match("/index.html");
-            });
-        })
-    );
+self.addEventListener('fetch', (event) => {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 });

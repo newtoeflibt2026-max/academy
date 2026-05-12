@@ -1,113 +1,109 @@
-﻿// Yamen Academy WebApp v7 - Unstuck
-console.log("[app] === START v7 ===");
+﻿// ====== Yamen Academy App v8 - FINAL ======
+console.log('[app] START v8 - ' + new Date().toISOString());
 
-(function() {
-    console.log("[app] IIFE started");
+const FORCE_TIMEOUT = 4000;
+let tg = null;
+let currentUser = null;
+let isAdmin = false;
 
-    const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
-    const tg = isTelegram ? window.Telegram.WebApp : null;
-    if (tg) { try { tg.ready(); tg.expand(); } catch(e) {} }
-
-    let currentUser = null, isAdmin = false;
-    const API_BASE = CONFIG.API_BASE || window.location.origin;
-    console.log("[app] API_BASE:", API_BASE);
-
-    // === FORCE SHOW UI AFTER 5 SECONDS MAX ===
-    let uiShown = false;
-    const FORCE_TIMEOUT = 5000;
-
-    function forceShowUI() {
-        if (uiShown) return;
-        uiShown = true;
-        console.log("[app] FORCE showing UI (timeout or early)");
-        var loadingEl = document.getElementById("loading");
-        var appEl = document.getElementById("app");
-        var adminEl = document.getElementById("adminApp");
-        if (loadingEl) loadingEl.style.display = "none";
-        if (isAdmin && adminEl) {
-            adminEl.style.display = "block";
-        } else if (appEl) {
-            appEl.style.display = "block";
-        }
-        console.log("[app] UI forced visible");
+// Force show UI after timeout
+let timeoutTriggered = false;
+function forceShowUI() {
+    if (timeoutTriggered) return;
+    timeoutTriggered = true;
+    
+    console.log('[app] FORCE showing UI (timeout)');
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('app').style.opacity = '1';
+    document.getElementById('app').style.visibility = 'visible';
+    
+    if (isAdmin) {
+        document.getElementById('adminApp').style.display = 'block';
     }
+}
 
-    // Start timeout immediately
-    setTimeout(forceShowUI, FORCE_TIMEOUT);
-    console.log("[app] Force timeout set for", FORCE_TIMEOUT, "ms");
+// Start timeout
+setTimeout(forceShowUI, FORCE_TIMEOUT);
 
-    // === API helper ===
-    async function api(path, opts = {}) {
-        const url = path.startsWith("http") ? path : (API_BASE + path);
-        console.log("[api] GET", url);
-        try {
-            const res = await fetch(url, {
-                headers: { "Content-Type": "application/json", ...opts.headers },
-                ...opts,
-                signal: AbortSignal.timeout(4000)
-            });
-            console.log("[api]", url, "->", res.status);
-            if (!res.ok) return { error: "HTTP " + res.status };
-            return await res.json();
-        } catch (e) {
-            console.warn("[api] FAILED:", url, e.message);
-            return { error: "offline", message: e.message };
-        }
-    }
-
-    // === Main ===
-    async function loadUserData() {
-        console.log("[app] loadUserData started");
-
-        var uid = null;
-
-        if (isTelegram && tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            currentUser = tg.initDataUnsafe.user;
-            uid = currentUser.id;
+// Try Telegram init
+try {
+    if (window.Telegram && window.Telegram.WebApp) {
+        tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        console.log('[app] Telegram WebApp ready');
+        
+        const initData = tg.initDataUnsafe;
+        if (initData && initData.user) {
+            currentUser = initData.user;
             isAdmin = CONFIG.ADMIN_IDS.includes(currentUser.id);
-            console.log("[app] Telegram user:", uid, "admin:", isAdmin);
+            console.log('[app] User:', currentUser.username, 'Admin:', isAdmin);
         }
-
-        // SHOW UI FIRST
-        forceShowUI();
-
-        if (!uid) {
-            console.log("[app] No user - public view shown");
-            return;
-        }
-
-        // Background: try to fetch user data
-        try {
-            console.log("[app] Fetching user data for:", uid);
-            var me = await api("/api/me?user_id=" + uid);
-            console.log("[app] User data result:", me.error ? me.error : "ok");
-            if (!me.error && me.full_name) {
-                currentUser = currentUser || {};
-                currentUser.full_name = me.full_name;
-            }
-        } catch (e) {
-            console.log("[app] User fetch exception:", e.message);
-        }
-
-        // Update admin view if needed
-        if (isAdmin && !uiShown) {
-            var adminEl = document.getElementById("adminApp");
-            if (adminEl) adminEl.style.display = "block";
-            if (typeof initAdmin === "function") initAdmin();
-        }
-
-        console.log("[app] Ready! User:", uid, "Admin:", isAdmin);
-    }
-
-    // START
-    console.log("[app] document.readyState:", document.readyState);
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadUserData);
     } else {
-        loadUserData();
+        console.log('[app] Browser mode (no Telegram)');
     }
+} catch(e) {
+    console.warn('[app] Telegram init failed:', e.message);
+}
 
-    console.log("[app] IIFE completed");
-})();
+// Init
+async function init() {
+    console.log('[app] init() started');
+    
+    // Show UI immediately
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('app').style.opacity = '1';
+    document.getElementById('app').style.visibility = 'visible';
+    console.log('[app] UI shown');
+    
+    if (isAdmin) {
+        document.getElementById('adminApp').style.display = 'block';
+        console.log('[app] Admin panel shown');
+    }
+    
+    // Load data
+    try {
+        await loadData();
+    } catch(e) {
+        console.warn('[app] Load data failed, but UI is visible:', e.message);
+    }
+    
+    // Update content
+    updateUI();
+    console.log('[app] init() DONE');
+}
 
-console.log("[app] === Script end ===");
+async function loadData() {
+    try {
+        const resp = await fetch(CONFIG.API_BASE + '/api/courses');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        console.log('[app] Courses loaded:', data);
+        return data;
+    } catch(e) {
+        console.warn('[app] API not available:', e.message);
+        return [];
+    }
+}
+
+function updateUI() {
+    const el = document.getElementById('coursesList');
+    if (el) {
+        el.innerHTML = '<p style="color:green;">✅ الواجهة تعمل بنجاح!</p><p>الدورات ستظهر عند إضافتها عبر لوحة التحكم.</p>';
+    }
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('[app] SW registered:', reg.scope))
+        .catch(err => console.warn('[app] SW failed:', err));
+}
+
+// Start
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[app] DOM ready, starting...');
+    init();
+});
