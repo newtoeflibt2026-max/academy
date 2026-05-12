@@ -1,91 +1,54 @@
-﻿// ====== Yamen Academy v9 - DB Lock Proof ======
-console.log('[app] v9 START');
+﻿// v10 - No localStorage, no sessionStorage, instant UI
+console.log('[app] v10 - Direct injection mode');
 
-const FORCE_SHOW_TIMEOUT = 3000;
 const CONFIG = window.CONFIG || { API_BASE: window.location.origin, ADMIN_IDS: [469136626, 5572314718] };
-let currentUser = null;
 let isAdmin = false;
 
-// Force show UI after timeout - NEVER stay on loading
-setTimeout(() => {
-    console.log('[app] Force timeout - showing UI');
+// Show UI after max 1.5 seconds - NO exceptions
+setTimeout(function() {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    document.getElementById('app').style.opacity = '1';
-    document.getElementById('app').style.visibility = 'visible';
     if (isAdmin) document.getElementById('adminApp').style.display = 'block';
-}, FORCE_SHOW_TIMEOUT);
+    console.log('[app] UI forced visible');
+}, 1500);
 
-// Telegram init
-try {
-    if (window.Telegram?.WebApp) {
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
-        const user = window.Telegram.WebApp.initDataUnsafe?.user;
-        if (user) {
-            currentUser = user;
-            isAdmin = CONFIG.ADMIN_IDS.includes(user.id);
-        }
-    }
-} catch(e) { console.warn('[app] No Telegram'); }
-
-// Safe fetch - never throws
-async function safeFetch(url) {
+// Init
+(async function() {
+    // Telegram (optional)
     try {
-        const resp = await fetch(url, { signal: AbortSignal.timeout(4000) });
-        if (!resp.ok) throw new Error('HTTP ' + resp.status);
-        return await resp.json();
-    } catch(e) {
-        console.warn('[app] Fetch failed:', url, e.message);
-        return null;
-    }
-}
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            var u = window.Telegram.WebApp.initDataUnsafe;
+            if (u && u.user) isAdmin = CONFIG.ADMIN_IDS.indexOf(u.user.id) >= 0;
+        }
+    } catch(e) { console.warn('[app] No Telegram'); }
 
-// Load courses - fallback on fail
-async function loadCourses() {
-    const data = await safeFetch(CONFIG.API_BASE + '/api/courses');
-    const el = document.getElementById('coursesList');
-    if (!el) return;
-    
-    if (data && Array.isArray(data) && data.length > 0) {
-        el.innerHTML = data.map(c => 
-            '<div style="padding:15px;border-bottom:1px solid #eee;">' +
-            '<h3>' + (c.title || 'دورة') + '</h3>' +
-            '<p>' + (c.description || '') + '</p>' +
-            '<span style="color:#3B82F6">مستوى: ' + (c.level || 'A1') + '</span>' +
-            '</div>'
-        ).join('');
-    } else {
-        el.innerHTML = 
-            '<div style="text-align:center;padding:30px;">' +
-            '<h2 style="color:#10B981;">✅ الأكاديمية تعمل!</h2>' +
-            '<p style="color:#666;">لا توجد دورات حالياً. أضف دورات من لوحة التحكم.</p>' +
-            '<a href="/admin" style="color:#3B82F6;">🔧 لوحة التحكم</a>' +
-            '</div>';
-    }
-}
-
-// Main init
-async function init() {
-    console.log('[app] init');
-    
-    // Show UI immediately
+    // Show immediately
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    document.getElementById('app').style.opacity = '1';
-    document.getElementById('app').style.visibility = 'visible';
-    
     if (isAdmin) document.getElementById('adminApp').style.display = 'block';
-    
-    // Load data (won't block UI)
-    loadCourses();
-    
-    // SW
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(()=>{});
-    }
-    
-    console.log('[app] Ready');
-}
 
-document.addEventListener('DOMContentLoaded', init);
+    // Load courses (non-blocking)
+    try {
+        var r = await fetch(CONFIG.API_BASE + '/api/courses', { signal: AbortSignal.timeout(3000) });
+        var data = await r.json();
+        var el = document.getElementById('coursesList');
+        if (data && data.length) {
+            el.innerHTML = data.map(function(c) {
+                return '<div style="padding:15px;border-bottom:1px solid #eee">'
+                    + '<h3>' + (c.title || 'دورة') + '</h3>'
+                    + '<p>' + (c.description || '') + '</p>'
+                    + '<span style="color:#3B82F6">مستوى: ' + (c.level || 'A1') + '</span>'
+                    + '</div>';
+            }).join('');
+        } else {
+            el.innerHTML = '<p style="text-align:center;color:#666">لا توجد دورات حالياً. <a href="/admin" style="color:#3B82F6">أضف دورة</a></p>';
+        }
+    } catch(e) {
+        console.warn('[app] Courses load failed, but UI is visible');
+        document.getElementById('coursesList').innerHTML = '<p style="color:#3B82F6">الدورات غير متاحة مؤقتاً - لكن التطبيق يعمل!</p>';
+    }
+
+    console.log('[app] Ready');
+})();
