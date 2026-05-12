@@ -39,6 +39,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ─── Static File Map ───
+import glob as _glob
 STATIC_MAP = {}
 for folder in ["webapp", "admin_panel"]:
     if not os.path.exists(folder):
@@ -47,6 +48,7 @@ for folder in ["webapp", "admin_panel"]:
         for f in files:
             full = os.path.relpath(os.path.join(root, f), folder)
             STATIC_MAP[f] = (folder, full)
+            # Also add subfolder/filename mapping
             if "/" in full or "\\" in full:
                 STATIC_MAP[full.replace("\\", "/")] = (folder, full)
 
@@ -63,9 +65,11 @@ def catch_all(filename):
     if filename.startswith("api/"):
         return jsonify({"error": "not found"}), 404
     fname = os.path.basename(filename)
+    # Try basename first
     if fname in STATIC_MAP:
         folder, rel = STATIC_MAP[fname]
         return send_from_directory(folder, rel)
+    # Try full path
     for key in [filename, filename.replace("\\", "/")]:
         if key in STATIC_MAP:
             folder, rel = STATIC_MAP[key]
@@ -151,7 +155,7 @@ def evaluate_writing():
     if len(essay.split()) < 50: return jsonify({"error": "Essay too short"}), 400
     if not WRITING_KEYS or not WRITING_KEYS[0]: return jsonify({"error": "AI keys not configured"}), 500
     key = random.choice(WRITING_KEYS)
-    system = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"feedback","corrections":[]}'
+    system = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"feedbsck","corrections":[]}'
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={key}"
     body = {"contents":[{"parts":[{"text":system},{"text":f"Task: {data.get('task_type','task2')}\nPrompt: {data.get('prompt','')}\nESSAY:\n\n{essay}"}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
     import urllib.request
