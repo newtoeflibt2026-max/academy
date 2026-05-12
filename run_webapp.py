@@ -1,47 +1,54 @@
-"""
-Yamen Academy – WebApp + Admin Panel Server
+﻿"""
+Yamen Academy - WebApp + Admin Panel
+Fixed: SQLite WAL mode, static files, CORS
 """
 import os, sys, json, sqlite3, random
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
+# ─── DB Setup (WAL mode for concurrent access) ───
 DB = os.getenv("DB_PATH", "data/academy.db")
 os.makedirs("data", exist_ok=True)
 
 def get_conn():
-    conn = sqlite3.connect(DB)
+    conn = sqlite3.connect(DB, check_same_thread=False, timeout=10)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=5000")
     return conn
 
 def query(sql, params=()):
-    return get_conn().execute(sql, params).fetchall()
+    conn = get_conn()
+    try:
+        return conn.execute(sql, params).fetchall()
+    finally:
+        conn.close()
 
 def execute(sql, params=()):
     conn = get_conn()
-    conn.execute(sql, params)
-    conn.commit()
-    conn.close()
+    try:
+        conn.execute(sql, params)
+        conn.commit()
+    finally:
+        conn.close()
 
 def dict_rows(rows):
     return [dict(r) for r in rows]
 
-app = Flask(__name__, static_folder=None)
-CORS(app)
+app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-# ─── SERVE ALL STATIC FILES FROM ROOT ───
+# ─── Static File Map ───
 STATIC_MAP = {}
-
-def build_static_map():
-    """Build a map of filename -> folder for all files in webapp/ and admin_panel/"""
-    for folder in ["webapp", "admin_panel"]:
-        if not os.path.exists(folder):
-            continue
-        for root, dirs, files in os.walk(folder):
-            for f in files:
-                rel = os.path.relpath(os.path.join(root, f), folder)
-                STATIC_MAP[f] = (folder, rel)
-
-build_static_map()
+for folder in ["webapp", "admin_panel"]:
+    if not os.path.exists(folder):
+        continue
+    for root, dirs, files in os.walk(folder):
+        for f in files:
+            full = os.path.relpath(os.path.join(root, f), folder)
+            STATIC_MAP[f] = (folder, full)
+            if "/" in full or "\\" in full:
+                STATIC_MAP[full.replace("\\", "/")] = (folder, full)
 
 @app.route("/")
 def webapp_index():
@@ -53,21 +60,22 @@ def admin_index():
 
 @app.route("/<path:filename>")
 def catch_all(filename):
-    # Skip API routes
     if filename.startswith("api/"):
         return jsonify({"error": "not found"}), 404
-    
     fname = os.path.basename(filename)
     if fname in STATIC_MAP:
         folder, rel = STATIC_MAP[fname]
         return send_from_directory(folder, rel)
-    
-    return jsonify({"error": "file not found", "path": filename}), 404
+    for key in [filename, filename.replace("\\", "/")]:
+        if key in STATIC_MAP:
+            folder, rel = STATIC_MAP[key]
+            return send_from_directory(folder, rel)
+    return jsonify({"error": "file not found"}), 404
 
 # ─── API: Health ───
 @app.route("/api/health")
 def health():
-    return jsonify({"status": "ok", "app": "yamen-academy"})
+    return jsonify({"status": "ok", "app": "yamen-academy", "db": DB})
 
 # ─── API: Student ───
 @app.route("/api/me")
@@ -88,8 +96,8 @@ def courses():
 @app.route("/api/lessons")
 def lessons():
     cid = request.args.get("course_id")
-    rows = query("SELECT * FROM lessons WHERE course_id=? ORDER BY order_num", (cid,))
-    return jsonify(dict_rows(rows))
+    if not cid: return jsonify(dict_rows(query("SELECT * FROM lessons ORDER BY course_id, order_num")))
+    return jsonify(dict_rows(query("SELECT * FROM lessons WHERE course_id=? ORDER BY order_num", (cid,))))
 
 # ─── API: Placement Questions ───
 @app.route("/api/placement/questions")
@@ -114,7 +122,7 @@ def daily_challenge():
 # ─── API: Leaderboard ───
 @app.route("/api/leaderboard")
 def leaderboard():
-    return jsonify(dict_rows(query("SELECT user_id, full_name, level, xp FROM students ORDER BY xp DESC LIMIT 20")))
+    return jsonify(dict_rows(query("SELECT user_id, full_name, level, xp FROM students WHERE xp > 0 ORDER BY xp DESC LIMIT 20")))
 
 # ─── API: Student Progress ───
 @app.route("/api/progress")
@@ -143,7 +151,7 @@ def evaluate_writing():
     if len(essay.split()) < 50: return jsonify({"error": "Essay too short"}), 400
     if not WRITING_KEYS or not WRITING_KEYS[0]: return jsonify({"error": "AI keys not configured"}), 500
     key = random.choice(WRITING_KEYS)
-    system = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"Arabic feedback","corrections":[]}'
+    system = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"feedback","corrections":[]}'
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={key}"
     body = {"contents":[{"parts":[{"text":system},{"text":f"Task: {data.get('task_type','task2')}\nPrompt: {data.get('prompt','')}\nESSAY:\n\n{essay}"}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
     import urllib.request
