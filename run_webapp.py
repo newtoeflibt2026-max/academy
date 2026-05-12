@@ -1,6 +1,6 @@
 ﻿"""
 Yamen Academy - WebApp + Admin API
-FINAL: webapp as static folder + SPA fallback + WAL
+FINAL: serves from root (.) - no webapp/ folder
 """
 import os, json, sqlite3, random
 from flask import Flask, request, jsonify, send_from_directory
@@ -31,57 +31,50 @@ def execute(sql, params=()):
 
 def dict_rows(rows): return [dict(r) for r in rows]
 
-app = Flask(__name__, static_folder="webapp", static_url_path="")
+app = Flask(__name__, static_folder=".", static_url_path="")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# ============================================================
-# Serve index.html for SPA-like behavior
-# ============================================================
-@app.route("/")
-@app.route("/index.html")
-def serve_index():
-    return send_from_directory("webapp", "index.html")
+# Serve all static files from current directory (.)
+@app.route("/<path:filename>")
+def serve_static(filename):
+    if filename.startswith("api/"):
+        return jsonify({"error": "not found"}), 404
 
-# ============================================================
-# Admin Panel
-# ============================================================
+    # Try exact file in current directory
+    if os.path.exists(filename) and os.path.isfile(filename):
+        return send_from_directory(".", filename)
+
+    # Try in subfolders: icons, css, js
+    for subfolder in ["icons", "css", "js"]:
+        sub_path = os.path.join(subfolder, os.path.basename(filename))
+        if os.path.exists(sub_path) and os.path.isfile(sub_path):
+            return send_from_directory(subfolder, os.path.basename(filename))
+
+    # SPA fallback: serve index.html
+    return send_from_directory(".", "index.html")
+
+@app.route("/")
+def index():
+    return send_from_directory(".", "index.html")
+
 @app.route("/admin")
-def admin_index():
-    return send_from_directory("admin_panel", "index.html")
+def admin():
+    if os.path.exists("admin_panel/index.html"):
+        return send_from_directory("admin_panel", "index.html")
+    return send_from_directory(".", "index.html")
 
 @app.route("/admin/<path:filename>")
 def serve_admin_static(filename):
     path = os.path.join("admin_panel", filename)
     if os.path.exists(path) and os.path.isfile(path):
         return send_from_directory("admin_panel", filename)
-    return send_from_directory("admin_panel", "index.html")
-
-# ============================================================
-# Catch-all: serve from webapp, if not found -> index.html (SPA)
-# ============================================================
-@app.route("/<path:filename>")
-def serve_static(filename):
-    if filename.startswith("api/"):
-        return jsonify({"error": "not found"}), 404
-
-    # Try serving exact file from webapp
-    webapp_path = os.path.join("webapp", filename)
-    if os.path.exists(webapp_path) and os.path.isfile(webapp_path):
-        return send_from_directory("webapp", filename)
-
-    # Try with icons subfolder
-    icons_path = os.path.join("webapp", "icons", os.path.basename(filename))
-    if os.path.exists(icons_path) and os.path.isfile(icons_path):
-        return send_from_directory("webapp", "icons/" + os.path.basename(filename))
-
-    # SPA fallback: serve index.html for any unknown route
-    return send_from_directory("webapp", "index.html")
+    return send_from_directory(".", "index.html")
 
 # ============================================================
 # API ROUTES
 # ============================================================
 @app.route("/api/health")
-def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"cors":True,"version":"4.0"})
+def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"cors":True,"version":"5.0"})
 
 @app.route("/api/me")
 def me():
@@ -148,16 +141,16 @@ def eval_writing():
     keys = [k for k in WRITING_KEYS if k.strip()]
     if not keys: return jsonify({"error":"AI keys not configured"}), 500
     key = random.choice(keys)
-    sys_prompt = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"Arabic feedback","corrections":[]}'
+    sp = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"Arabic","corrections":[]}'
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={key}"
-    body = {"contents":[{"parts":[{"text":sys_prompt},{"text":f"Task: {d.get('task_type','task2')}\nPrompt: {d.get('prompt','')}\nESSAY:\n\n{essay}"}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
+    body = {"contents":[{"parts":[{"text":sp},{"text":f"Task: {d.get('task_type','task2')}\nPrompt: {d.get('prompt','')}\nESSAY:\n\n{essay}"}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
     import urllib.request as ur
     req = ur.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
     try:
         with ur.urlopen(req, timeout=60) as r:
-            txt = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"]
-            txt = txt.strip().lstrip("```json").rstrip("```").strip()
-            rj = json.loads(txt)
+            t = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"]
+            t = t.strip().lstrip("```json").rstrip("```").strip()
+            rj = json.loads(t)
             rj.setdefault("overall",6.0); rj.setdefault("feedback_ar","تم التقييم.")
             uid = d.get("user_id")
             if uid:
@@ -178,9 +171,9 @@ def eval_speaking():
     req = ur.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
     try:
         with ur.urlopen(req, timeout=90) as r:
-            txt = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"]
-            txt = txt.strip().lstrip("```json").rstrip("```").strip()
-            rj = json.loads(txt)
+            t = json.loads(r.read())["candidates"][0]["content"]["parts"][0]["text"]
+            t = t.strip().lstrip("```json").rstrip("```").strip()
+            rj = json.loads(t)
             rj.setdefault("overall",6.0); rj.setdefault("feedback_ar","تم التقييم.")
             uid = d.get("user_id")
             if uid:
@@ -242,5 +235,5 @@ def admin_save_setting():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"Yamen Academy WebApp v4.0 on port {port} [WAL+CORS+SPA]")
+    print(f"Yamen Academy v5.0 on port {port} [ROOT+SINGLE+WAL]")
     app.run(host="0.0.0.0", port=port)

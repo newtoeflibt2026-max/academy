@@ -1,4 +1,4 @@
-﻿// Yamen Academy WebApp v4 - Final
+﻿// Yamen Academy WebApp v5 - Root Only
 (function() {
     const isTelegram = !!(window.Telegram && window.Telegram.WebApp);
     const tg = isTelegram ? window.Telegram.WebApp : null;
@@ -6,77 +6,62 @@
 
     let currentUser = null;
     let isAdmin = false;
-    const API_BASE = (window.CONFIG && CONFIG.API_BASE) || "";
 
     async function api(path, opts = {}) {
-        const base = API_BASE ? API_BASE : window.location.origin;
-        const url = base + (path.startsWith("/") ? path : "/" + path);
+        const url = path.startsWith("http") ? path : path;
         try {
             const res = await fetch(url, {
                 headers: { "Content-Type": "application/json", ...opts.headers },
                 ...opts
             });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            if (!res.ok) throw new Error("HTTP " + res.status);
             return await res.json();
         } catch (e) {
-            console.warn("API unavailable:", path, e.message);
-            return { error: "offline", message: e.message };
+            console.warn("API offline:", path);
+            return { error: "offline" };
         }
     }
 
     function hideLoading() {
-        const el = document.getElementById("loading");
+        var el = document.getElementById("loading");
         if (el) el.style.display = "none";
     }
 
     function showApp() {
-        const el = document.getElementById("app");
+        var el = document.getElementById("app");
         if (el) el.style.display = "block";
     }
 
     function showAdmin() {
-        const el = document.getElementById("adminApp");
+        var el = document.getElementById("adminApp");
         if (el) el.style.display = "block";
         if (typeof initAdmin === "function") initAdmin();
     }
 
     async function loadUserData() {
-        let uid = null;
+        var uid = null;
 
-        // Telegram user
         if (isTelegram && tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
             currentUser = tg.initDataUnsafe.user;
             uid = currentUser.id;
             isAdmin = CONFIG.ADMIN_IDS.includes(currentUser.id);
         }
-        // Browser with user_id parameter
-        else {
-            const params = new URLSearchParams(window.location.search);
-            const userIdParam = params.get("user_id");
-            if (userIdParam) {
-                uid = parseInt(userIdParam);
-                currentUser = { id: uid, first_name: "User" };
-                isAdmin = CONFIG.ADMIN_IDS.includes(uid);
-            }
-        }
 
-        // No user - show public view immediately
         if (!uid) {
             hideLoading();
             showApp();
-            console.log("Yamen Academy - public mode");
+            console.log("Yamen Academy - public view");
             return;
         }
 
-        // Try loading user data from API
         try {
-            const me = await api("/api/me?user_id=" + uid);
+            var me = await api("/api/me?user_id=" + uid);
             if (!me.error && me.full_name) {
-                currentUser = { ...currentUser, full_name: me.full_name, level: me.level };
+                currentUser = currentUser || {};
+                currentUser.full_name = me.full_name;
+                currentUser.level = me.level;
             }
-        } catch (e) {
-            console.log("Could not fetch user data, continuing offline");
-        }
+        } catch (e) {}
 
         hideLoading();
 
@@ -86,18 +71,15 @@
             showApp();
             if (typeof showMainMenu === "function") showMainMenu();
         }
-
-        console.log("Yamen Academy ready | User:", uid, "| Admin:", isAdmin);
+        console.log("Yamen Academy ready | User:", uid);
     }
 
-    // Start immediately - don't wait for DOMContentLoaded if DOM is already ready
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", loadUserData);
     } else {
         loadUserData();
     }
 
-    // Service worker
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("/sw.js").catch(function() {});
     }
