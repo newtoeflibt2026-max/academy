@@ -13,53 +13,31 @@ BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 
 async def main():
     if not BOT_TOKEN or len(BOT_TOKEN) < 20:
-        logger.critical(f"❌ Invalid BOT_TOKEN (length: {len(BOT_TOKEN)})")
+        logger.critical(f"Invalid token (length: {len(BOT_TOKEN)})")
         return
 
-    logger.info(f"✅ Bot starting with token: {BOT_TOKEN[:10]}...")
-
+    logger.info(f"Bot starting: {BOT_TOKEN[:10]}...")
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
 
-    # Basic commands
     @dp.message(Command("start"))
     async def start(msg: Message):
-        await msg.answer(
-            "🕌 *مرحباً بك في Yamen Academy!*\n\n"
-            "📚 تعلم اللغة الإنجليزية بأحدث الأساليب\n"
-            "🎯 اختبر مستواك\n"
-            "📝 تابع تقدمك\n\n"
-            "استخدم /help لرؤية الأوامر",
-            parse_mode="Markdown"
-        )
+        await msg.answer("🕌 مرحباً بك في Yamen Academy!\n/help للأوامر")
 
     @dp.message(Command("help"))
     async def help_cmd(msg: Message):
-        await msg.answer(
-            "📚 *الأوامر:*\n"
-            "/start - البداية\n"
-            "/help - المساعدة\n"
-            "/courses - الدورات المتاحة\n"
-            "/level - اختبار المستوى\n"
-            "/progress - تقدمك\n"
-            "/leaderboard - المتصدرون\n"
-            "/daily - تحدي اليوم",
-            parse_mode="Markdown"
-        )
+        await msg.answer("📚 /start /help /courses /level /progress /leaderboard /daily")
 
     @dp.message(Command("courses"))
     async def courses_cmd(msg: Message):
-        await msg.answer("📚 الدورات ستظهر قريباً! تابع updates القناة.")
+        await msg.answer("📚 الدورات قيد الإعداد - تابع التحديثات!")
 
-    logger.info("🤖 Bot polling started...")
+    logger.info("Polling...")
     try:
         await dp.start_polling(bot, drop_pending_updates=True)
     except Exception as e:
-        logger.error(f"❌ Bot error: {e}")
+        logger.error(f"Error: {e}")
 
 if __name__ == "__main__":
     init_db()
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        logger.info("Bot stopped")
+    asyncio.run(main())
