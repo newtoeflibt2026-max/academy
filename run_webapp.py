@@ -1,8 +1,8 @@
 ﻿"""
-Yamen Academy – WebApp + Admin API
-FIXED: WAL mode, CORS, static paths, no bot, icons
+Yamen Academy - WebApp + Admin API
+FINAL FIX: direct routes + WAL + icons + no duplicates
 """
-import os, json, sqlite3, random, glob as _glob
+import os, json, sqlite3, random
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
@@ -14,6 +14,7 @@ def get_conn():
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=10000")
+    conn.execute("PRAGMA synchronous=NORMAL")
     return conn
 
 def query(sql, params=()):
@@ -33,31 +34,63 @@ def dict_rows(rows): return [dict(r) for r in rows]
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Build static map once at startup
-STATIC_MAP = {}
-for folder in ["webapp", "admin_panel"]:
-    if os.path.exists(folder):
+# ============================================================
+# EXPLICIT ROUTES - serve from BOTH / and /webapp/
+# ============================================================
+
+SERVE_FILES = [
+    "index.html", "app.js", "style.css", "config.js",
+    "offline.js", "sw.js", "manifest.json"
+]
+
+for filename in SERVE_FILES:
+    # Route: /filename
+    def make_handler(fn):
+        def handler():
+            return send_from_directory("webapp", fn)
+        handler.__name__ = f"serve_{fn.replace('.','_')}"
+        return handler
+    app.add_url_rule(f"/{filename}", f"root_{filename.replace('.','_')}", make_handler(filename))
+    # Route: /webapp/filename
+    app.add_url_rule(f"/webapp/{filename}", f"webapp_{filename.replace('.','_')}", make_handler(filename))
+
+# Icon routes
+@app.route("/icons/<path:filename>")
+def serve_icons(filename):
+    return send_from_directory("webapp/icons", filename)
+
+@app.route("/webapp/icons/<path:filename>")
+def serve_webapp_icons(filename):
+    return send_from_directory("webapp/icons", filename)
+
+# Catch-all for other files
+@app.route("/<path:filename>")
+def catch_all(filename):
+    if filename.startswith("api/"): return jsonify({"error":"not found"}), 404
+    # Try webapp/
+    webapp_path = os.path.join("webapp", filename)
+    if os.path.exists(webapp_path) and os.path.isfile(webapp_path):
+        return send_from_directory("webapp", filename)
+    # Try admin_panel/
+    admin_path = os.path.join("admin_panel", filename)
+    if os.path.exists(admin_path) and os.path.isfile(admin_path):
+        return send_from_directory("admin_panel", filename)
+    # Try basename in webapp
+    basename = os.path.basename(filename)
+    for folder in ["webapp", "admin_panel"]:
         for root, _, files in os.walk(folder):
-            for f in files:
-                rel = os.path.relpath(os.path.join(root, f), folder).replace("\\", "/")
-                STATIC_MAP[f] = (folder, rel)
-                STATIC_MAP[rel] = (folder, rel)
+            if basename in files:
+                rel = os.path.relpath(os.path.join(root, basename), folder)
+                return send_from_directory(folder, rel)
+    return jsonify({"error":"file not found","path":filename}), 404
 
-@app.route("/")
-def index(): return send_from_directory("webapp", "index.html")
-
+# Admin
 @app.route("/admin")
 def admin(): return send_from_directory("admin_panel", "index.html")
 
-@app.route("/<path:filename>")
-def static_files(filename):
-    if filename.startswith("api/"): return jsonify({"error": "not found"}), 404
-    key = filename.replace("\\", "/")
-    for k in [key, os.path.basename(key)]:
-        if k in STATIC_MAP:
-            folder, rel = STATIC_MAP[k]
-            return send_from_directory(folder, rel)
-    return jsonify({"error": "file not found"}), 404
+# ============================================================
+# API ROUTES
+# ============================================================
 
 @app.route("/api/health")
 def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"cors":True})
@@ -66,7 +99,7 @@ def health(): return jsonify({"status":"ok","app":"yamen-academy","wal":True,"co
 def me():
     uid = request.args.get("user_id")
     if not uid: return jsonify({"error":"user_id required"}), 400
-    row = query("SELECT * FROM students WHERE user_id=?", (uid,))
+    row = query("SELECT * FROM students WHERE user_id=?",(uid,))
     return jsonify(dict(row[0]) if row else {"error":"not found"})
 
 @app.route("/api/courses")
@@ -82,16 +115,16 @@ def lessons():
     return jsonify(dict_rows(rows))
 
 @app.route("/api/placement/questions")
-def placement_questions(): return jsonify(dict_rows(query("SELECT * FROM placement_questions ORDER BY id")))
+def placement_q(): return jsonify(dict_rows(query("SELECT * FROM placement_questions ORDER BY id")))
 
 @app.route("/api/spelling/words")
-def spelling_words():
+def spelling():
     lv = request.args.get("level","")
     rows = query("SELECT * FROM spelling_words WHERE level=? ORDER BY id",(lv,)) if lv else query("SELECT * FROM spelling_words ORDER BY id")
     return jsonify(dict_rows(rows))
 
 @app.route("/api/daily/challenge")
-def daily_challenge():
+def daily():
     today = __import__("datetime").date.today().isoformat()
     row = query("SELECT * FROM daily_challenges WHERE date=? ORDER BY id DESC LIMIT 1",(today,))
     if not row: row = query("SELECT * FROM daily_challenges ORDER BY id DESC LIMIT 1")
@@ -120,15 +153,16 @@ SPEAKING_KEYS = os.getenv("SPEAKING_KEYS","").split(",")
 MODEL = "gemini-2.5-flash"
 
 @app.route("/api/writing/evaluate", methods=["POST"])
-def evaluate_writing():
+def eval_writing():
     d = request.get_json(force=True)
     essay = d.get("essay","")
     if len(essay.split()) < 50: return jsonify({"error":"Essay too short"}), 400
-    if not WRITING_KEYS[0]: return jsonify({"error":"AI keys not configured"}), 500
-    key = random.choice([k for k in WRITING_KEYS if k.strip()])
-    sys = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"feedback","corrections":[]}'
+    keys = [k for k in WRITING_KEYS if k.strip()]
+    if not keys: return jsonify({"error":"AI keys not configured"}), 500
+    key = random.choice(keys)
+    sys_prompt = 'You are an IELTS examiner. Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"Arabic feedback","corrections":[]}'
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={key}"
-    body = {"contents":[{"parts":[{"text":sys},{"text":f"Task: {d.get('task_type','task2')}\nPrompt: {d.get('prompt','')}\nESSAY:\n\n{essay}"}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
+    body = {"contents":[{"parts":[{"text":sys_prompt},{"text":f"Task: {d.get('task_type','task2')}\nPrompt: {d.get('prompt','')}\nESSAY:\n\n{essay}"}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
     import urllib.request as ur
     req = ur.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
     try:
@@ -145,10 +179,11 @@ def evaluate_writing():
     except Exception as e: return jsonify({"error":str(e)}), 500
 
 @app.route("/api/speaking/evaluate", methods=["POST"])
-def evaluate_speaking():
+def eval_speaking():
     d = request.get_json(force=True)
-    if not SPEAKING_KEYS[0]: return jsonify({"error":"AI keys not configured"}), 500
-    key = random.choice([k for k in SPEAKING_KEYS if k.strip()])
+    keys = [k for k in SPEAKING_KEYS if k.strip()]
+    if not keys: return jsonify({"error":"AI keys not configured"}), 500
+    key = random.choice(keys)
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={key}"
     body = {"contents":[{"parts":[{"text":f"IELTS Speaking {d.get('part','part1')}. Prompt: {d.get('prompt','')}. Duration: {d.get('duration',30)}s. Score JSON: {{\"overall\":6.5,\"fluency\":6,\"pronunciation\":7,\"lexical_resource\":6.5,\"grammatical_range\":6,\"feedback_ar\":\"...\",\"transcript\":\"...\"}}"},{"inline_data":{"mime_type":"audio/ogg","data":d.get("audio_base64","")}}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
     import urllib.request as ur
@@ -166,6 +201,7 @@ def evaluate_speaking():
             return jsonify(rj)
     except Exception as e: return jsonify({"error":str(e)}), 500
 
+# Admin APIs
 @app.route("/api/admin/stats")
 def admin_stats():
     return jsonify({"total_students":query("SELECT COUNT(*) as n FROM students")[0]["n"],"active_subs":query("SELECT COUNT(*) as n FROM subscriptions WHERE active=1")[0]["n"],"pending_payments":query("SELECT COUNT(*) as n FROM payments WHERE status='pending'")[0]["n"],"total_xp":query("SELECT COALESCE(SUM(xp),0) as n FROM students")[0]["n"]})
@@ -189,7 +225,7 @@ def admin_approve():
     return jsonify({"success":True})
 
 @app.route("/api/admin/reject_payment", methods=["POST"])
-def admin_reject():
+def admin_reject(): 
     execute("UPDATE payments SET status='rejected' WHERE id=?",(request.json["id"],))
     return jsonify({"success":True})
 
@@ -218,5 +254,5 @@ def admin_save_setting():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    print(f"Yamen Academy WebApp on port {port} [WAL+CORS+StaticFixed]")
+    print(f"Yamen Academy WebApp on port {port} [WAL+CORS+Icons+DirectRoutes]")
     app.run(host="0.0.0.0", port=port)
