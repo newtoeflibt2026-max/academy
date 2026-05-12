@@ -31,16 +31,26 @@ def dict_rows(rows):
 app = Flask(__name__)
 CORS(app)
 
-# WebApp static
+# ─── WebApp: serve index.html at root ───
 @app.route("/")
 def webapp_index():
     return send_from_directory("webapp", "index.html")
 
-@app.route("/webapp/<path:filename>")
-def webapp_static(filename):
-    return send_from_directory("webapp", filename)
+# ─── Static files: try webapp/ first, then admin_panel/ ───
+@app.route("/<path:filename>")
+def serve_static(filename):
+    import os as _os
+    # WebApp files
+    webapp_path = _os.path.join("webapp", filename)
+    if _os.path.exists(webapp_path):
+        return send_from_directory("webapp", filename)
+    # Admin Panel files
+    admin_path = _os.path.join("admin_panel", filename)
+    if _os.path.exists(admin_path):
+        return send_from_directory("admin_panel", filename)
+    return jsonify({"error": "file not found"}), 404
 
-# Admin Panel static
+# ─── Admin Panel ───
 @app.route("/admin")
 def admin_index():
     return send_from_directory("admin_panel", "index.html")
