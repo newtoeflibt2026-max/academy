@@ -1,4 +1,4 @@
-import asyncio, logging, sys, os
+﻿import asyncio, logging, sys, os
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -17,10 +17,8 @@ async def main():
         return
 
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-
-    # 🔑 KEY FIX: delete webhook first to clear any stale updates
     await bot.delete_webhook(drop_pending_updates=True)
-    logger.info("Webhook deleted, pending updates dropped")
+    logger.info("Webhook deleted")
 
     dp = Dispatcher()
 
@@ -32,15 +30,8 @@ async def main():
     async def help_cmd(msg: Message):
         await msg.answer("📚 /start /help /courses /level /progress /leaderboard /daily")
 
-    @dp.message(Command("courses"))
-    async def courses_cmd(msg: Message):
-        await msg.answer("📚 الدورات متاحة على: yamen-academy.up.railway.app")
-
-    logger.info(f"Bot {bot.id} starting polling...")
-    try:
-        await dp.start_polling(bot, drop_pending_updates=True)
-    except Exception as e:
-        logger.error(f"Error: {e}")
+    logger.info("Polling...")
+    await dp.start_polling(bot, drop_pending_updates=True)
 
 if __name__ == "__main__":
     init_db()

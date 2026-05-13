@@ -1,4 +1,4 @@
-import sqlite3, os, logging
+﻿import sqlite3, os, logging
 logger = logging.getLogger(__name__)
 
 DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -22,7 +22,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
     """)
     conn.close()
-    logger.info("Database initialized")
+    logger.info("DB initialized")
 
 def get_db_connection():
     os.makedirs(DB_DIR, exist_ok=True)
