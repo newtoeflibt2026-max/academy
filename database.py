@@ -40,3 +40,35 @@ def get_db_connection():
     conn.execute("PRAGMA cache_size=-8000;")
     conn.execute("PRAGMA temp_store=MEMORY;")
     return conn
+
+# ====================== صلاحيات المستخدمين ======================
+
+def update_user_role(telegram_id, role):
+    """تحديث صلاحية المستخدم (admin/student)"""
+    conn = get_db_connection()
+    try:
+        c = conn.cursor()
+        c.execute("""
+            INSERT INTO settings (key, value) VALUES (?, ?)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value
+        """, (f"role_{telegram_id}", role))
+        conn.commit()
+        return True
+    except Exception as e:
+        logging.error(f"update_user_role error: {e}")
+        return False
+    finally:
+        conn.close()
+
+def get_user(telegram_id):
+    """استعلام عن معلومات المستخدم"""
+    conn = get_db_connection()
+    try:
+        c = conn.cursor()
+        c.execute("SELECT value FROM settings WHERE key = ?", (f"role_{telegram_id}",))
+        row = c.fetchone()
+        return {"role": row[0]} if row else {"role": "student"}
+    except:
+        return {"role": "student"}
+    finally:
+        conn.close()
