@@ -1,4 +1,4 @@
-﻿import sqlite3, os, logging
+import sqlite3, os, logging
 logger = logging.getLogger(__name__)
 
 DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -22,15 +22,15 @@ def init_db():
         CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
     """)
     conn.close()
-    logger.info("Database initialized successfully")
+    logger.info("Database initialized")
 
 def get_db_connection():
     os.makedirs(DB_DIR, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, timeout=60, isolation_level=None)
+    conn = sqlite3.connect(DB_PATH, timeout=30, isolation_level=None)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA synchronous=NORMAL;")
-    conn.execute("PRAGMA busy_timeout=60000;")
+    conn.execute("PRAGMA busy_timeout=30000;")
     conn.execute("PRAGMA cache_size=-8000;")
     conn.execute("PRAGMA temp_store=MEMORY;")
     return conn
