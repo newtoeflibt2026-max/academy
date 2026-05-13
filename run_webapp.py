@@ -1,4 +1,4 @@
-﻿import os, logging
+import os, logging
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from database import get_db_connection, init_db
