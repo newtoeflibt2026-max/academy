@@ -1,4 +1,4 @@
-import sqlite3, os, logging
+﻿import sqlite3, os, logging
 logger = logging.getLogger(__name__)
 
 DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")

@@ -1,4 +1,4 @@
-import os, logging
+﻿import os, logging
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from database import get_db_connection, init_db
@@ -15,9 +15,12 @@ def with_db(fn):
     try:
         conn = get_db_connection()
         return fn(conn)
+    except sqlite3.OperationalError as e:
+        logger.error(f"DB Lock: {e}")
+        return jsonify({"error":"db_busy","retry":True}), 503
     except Exception as e:
-        logger.error(f"DB error: {e}")
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Error: {e}")
+        return jsonify({"error":str(e)}), 500
     finally:
         if conn:
             try: conn.close()
