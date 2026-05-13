@@ -4,7 +4,12 @@ logger = logging.getLogger(__name__)
 DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 DB_PATH = os.path.join(DB_DIR, "academy.db")
 
+_initialized = False
+
 def init_db():
+    global _initialized
+    if _initialized:
+        return
     os.makedirs(DB_DIR, exist_ok=True)
     conn = get_db_connection()
     c = conn.cursor()
@@ -22,6 +27,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
     """)
     conn.close()
+    _initialized = True
     logger.info("Database initialized")
 
 def get_db_connection():

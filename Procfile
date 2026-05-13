@@ -1,2 +1,1 @@
-﻿web: gunicorn run_webapp:app --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 120
-worker: python main.py
+﻿web: gunicorn run_webapp:app --bind 0.0.0.0:$PORT --timeout 60
