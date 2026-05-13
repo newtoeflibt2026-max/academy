@@ -1,4 +1,4 @@
-﻿import os, logging
+import os, logging
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from database import get_db_connection, init_db
@@ -30,11 +30,11 @@ def index():
 @app.route('/<path:f>')
 def serve(f):
     try: return send_from_directory('.', f)
-    except: return jsonify({"error": "not_found"}), 404
+    except: return jsonify({"error":"not_found"}), 404
 
 @app.route('/api/health')
 def health():
-    return jsonify({"status": "ok"})
+    return jsonify({"status":"ok","app":"yamen-academy"})
 
 @app.route('/api/courses')
 def courses():
@@ -64,7 +64,14 @@ def admin_stats():
     def q(conn):
         s = conn.execute("SELECT COUNT(*) FROM students WHERE is_banned=0").fetchone()[0]
         c = conn.execute("SELECT COUNT(*) FROM courses WHERE is_active=1").fetchone()[0]
-        return jsonify({"students": s, "courses": c})
+        return jsonify({"students":s,"courses":c})
+    return with_db(q)
+
+@app.route('/api/lessons/<int:cid>')
+def lessons(cid):
+    def q(conn):
+        rows = conn.execute("SELECT * FROM lessons WHERE course_id=? ORDER BY order_index", (cid,)).fetchall()
+        return jsonify([dict(r) for r in rows])
     return with_db(q)
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-﻿import asyncio, logging, sys, os
+import asyncio, logging, sys, os
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -18,7 +18,6 @@ async def main():
 
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     await bot.delete_webhook(drop_pending_updates=True)
-    logger.info("Webhook deleted")
 
     dp = Dispatcher()
 
@@ -30,7 +29,7 @@ async def main():
     async def help_cmd(msg: Message):
         await msg.answer("📚 /start /help /courses /level /progress /leaderboard /daily")
 
-    logger.info("Polling...")
+    logger.info(f"Bot {bot.id} polling...")
     await dp.start_polling(bot, drop_pending_updates=True)
 
 if __name__ == "__main__":
