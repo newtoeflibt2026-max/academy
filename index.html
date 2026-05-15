@@ -1,63 +1,248 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamen Academy</title>
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#3B82F6">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أكاديمية يامن | لوحة الطالب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:   { DEFAULT: "#1a365d", light: "#1e4080", dark: "#112244" },
+            gold:   { DEFAULT: "#d4af37", light: "#e8c84a", dark: "#b8961e" },
+            marble: "#f8f6f2",
+          },
+          fontFamily: { cairo: ["Cairo", "sans-serif"] },
+          animation: {
+            "spin-slow": "spin 3s linear infinite",
+            "pulse-soft": "pulse 2.5s cubic-bezier(0.4,0,0.6,1) infinite",
+            "fade-in-up": "fadeInUp 0.6s ease both",
+            shimmer: "shimmer 2s linear infinite",
+          },
+          keyframes: {
+            fadeInUp: { "0%": { opacity: "0", transform: "translateY(20px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
+            shimmer: { "0%": { backgroundPosition: "-200% 0" }, "100%": { backgroundPosition: "200% 0" } },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="manifest" href="/manifest.json" />
 </head>
-<body>
-    <div id="loading">
-        <div style="text-align:center;width:100%">
-            <div style="width:50px;height:50px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 15px"></div>
-            <div style="font-size:28px;font-weight:700;color:#fff">🕌 Yamen Academy</div>
+<body class="stars-bg min-h-screen text-white" id="appBody">
+
+  <!-- ========== HEADER ========== -->
+  <header class="relative overflow-hidden px-4 pt-8 pb-6 fade-in-1">
+    <div class="absolute -top-16 -left-16 w-48 h-48 rounded-full" style="background:radial-gradient(circle,rgba(212,175,55,.18),transparent 70%)"></div>
+    <div class="absolute -top-10 -right-10 w-36 h-36 rounded-full" style="background:radial-gradient(circle,rgba(26,54,93,.6),transparent 70%)"></div>
+
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center gold-border" style="background:linear-gradient(135deg,#1a365d,#112244)">
+          <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#d4af37" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M2 17l10 5 10-5" stroke="#d4af37" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M2 12l10 5 10-5" stroke="#d4af37" stroke-width="1.8" stroke-linecap="round" opacity=".6"/>
+          </svg>
         </div>
+        <div>
+          <p class="text-xs text-yellow-300/70 leading-none">أكاديمية</p>
+          <p class="text-base font-black text-gold leading-tight tracking-wide">يامن</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="relative w-10 h-10 rounded-xl glass-card flex items-center justify-center" data-tip="الإشعارات">
+          <svg class="w-5 h-5 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-navy"></span>
+        </button>
+      </div>
     </div>
 
-    <div id="app">
-        <div style="background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff;padding:30px 20px;text-align:center;border-radius:0 0 25px 25px">
-            <h1 style="margin:0">🕌 Yamen Academy</h1>
-            <p style="margin:5px 0 0;opacity:0.9">مرحباً بك في أكاديمية يامن للغات</p>
+    <!-- Welcome banner -->
+    <div class="glass-card p-5 relative overflow-hidden gold-border">
+      <div class="absolute left-0 top-0 h-full w-1.5 rounded-r" style="background:linear-gradient(180deg,#d4af37,#b8961e)"></div>
+      <div class="flex items-start gap-4">
+        <div class="relative flex-shrink-0">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,#d4af37,#b8961e)">🎓</div>
+          <div class="absolute -bottom-1 -left-1 w-5 h-5 bg-green-400 rounded-full border-2 border-navy"></div>
         </div>
-        <div style="max-width:1000px;margin:20px auto;padding:0 15px">
-            <!-- هذه البطاقة تظهر فوراً بدون انتظار JavaScript -->
-            <div style="background:#fff;border-radius:15px;padding:20px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.08);text-align:center">
-                <h2 style="color:#10B981;margin-top:0">✅ الأكاديمية تعمل!</h2>
-                <p style="color:#666">الواجهة جاهزة. أضف دورات من لوحة التحكم لبدء التعليم.</p>
-                <a href="/admin" style="display:inline-block;margin-top:10px;padding:12px 24px;background:#3B82F6;color:#fff;border-radius:10px;text-decoration:none">🔧 لوحة التحكم</a>
-            </div>
-            <div style="background:#fff;border-radius:15px;padding:20px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
-                <h2>📚 الدورات</h2>
-                <div id="coursesList">
-                    <p style="color:#3B82F6">جاري تحميل الدورات...</p>
-                </div>
-            </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs text-gold/60 mb-0.5">🌟 مرحباً</p>
+          <h1 class="text-xl font-black leading-tight text-white mb-1" id="welcomeName">أهلاً بك يا بطل!</h1>
+          <p class="text-xs text-blue-200/70 leading-relaxed" id="welcomeMsg">طريق النجاح يبدأ من هنا 💪</p>
         </div>
+      </div>
+      <div class="flex items-center gap-3 mt-4 pt-3 border-t border-gold/10">
+        <div class="flex items-center gap-1.5 bg-gold/10 rounded-lg px-3 py-1.5">
+          <span class="text-base">⚡</span>
+          <div><p class="text-xs text-gold/60 leading-none">النقاط</p><p class="text-sm font-bold text-gold" id="xpValue">--- XP</p></div>
+        </div>
+        <div class="flex items-center gap-1.5 bg-orange-500/10 rounded-lg px-3 py-1.5">
+          <span class="text-base">🔥</span>
+          <div><p class="text-xs text-orange-300/60 leading-none">الاستمرارية</p><p class="text-sm font-bold text-orange-300" id="streakValue">---</p></div>
+        </div>
+        <div class="flex items-center gap-1.5 bg-purple-500/10 rounded-lg px-3 py-1.5">
+          <span class="text-base">🏆</span>
+          <div><p class="text-xs text-purple-300/60 leading-none">المستوى</p><p class="text-sm font-bold text-purple-300" id="levelValue">---</p></div>
+        </div>
+      </div>
     </div>
+  </header>
 
-    <div id="adminApp" style="display:none">
-        <div style="background:linear-gradient(135deg,#10B981,#059669);color:#fff;padding:30px 20px;text-align:center;border-radius:0 0 25px 25px">
-            <h1 style="margin:0">🔧 لوحة التحكم</h1>
+  <!-- ========== PROGRESS WHEEL ========== -->
+  <section class="px-4 mb-6 fade-in-2">
+    <div class="glass-card p-6">
+      <div class="flex items-center justify-between mb-5">
+        <div><h2 class="text-lg font-bold text-white">🎯 مسيرة النجاح</h2><p class="text-xs text-blue-200/60" id="progressSubtitle">نحو هدف الـ 90 درجة</p></div>
+        <span class="text-xs bg-gold/15 text-gold border border-gold/30 rounded-full px-3 py-1 font-semibold" id="chapterLabel">الفصل الأول</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="relative flex-shrink-0" style="width:140px;height:140px">
+          <svg width="140" height="140" viewBox="0 0 180 180">
+            <defs>
+              <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f5e27a"/><stop offset="50%" stop-color="#d4af37"/><stop offset="100%" stop-color="#b8961e"/>
+              </linearGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle cx="90" cy="90" r="80" fill="none" stroke="rgba(212,175,55,.12)" stroke-width="12"/>
+            <circle class="progress-ring__bar" id="progressArc" cx="90" cy="90" r="80" stroke-width="12" transform="rotate(-90 90 90)" filter="url(#glow)"/>
+            <text id="progressScore" x="90" y="78" text-anchor="middle" fill="#d4af37" font-size="32" font-weight="900" font-family="Cairo">---</text>
+            <text id="progressTarget" x="90" y="98" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="11" font-family="Cairo">من 90</text>
+            <text id="progressPct" x="90" y="116" text-anchor="middle" fill="#d4af37" font-size="13" font-family="Cairo" font-weight="700">---</text>
+          </svg>
         </div>
+        <div class="flex-1 space-y-3">
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-blue-200/70">🗣 التحدث</span><span class="text-gold font-bold" id="skill1">---</span></div>
+            <div class="w-full h-2 bg-navy/60 rounded-full overflow-hidden"><div class="h-full rounded-full transition-all duration-1000" id="bar1" style="width:0%;background:linear-gradient(90deg,#d4af37,#f5e27a)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-blue-200/70">✍️ الكتابة</span><span class="text-gold font-bold" id="skill2">---</span></div>
+            <div class="w-full h-2 bg-navy/60 rounded-full overflow-hidden"><div class="h-full rounded-full transition-all duration-1000" id="bar2" style="width:0%;background:linear-gradient(90deg,#d4af37,#f5e27a)"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs mb-1"><span class="text-blue-200/70">📚 المفردات</span><span class="text-gold font-bold" id="skill3">---</span></div>
+            <div class="w-full h-2 bg-navy/60 rounded-full overflow-hidden"><div class="h-full rounded-full transition-all duration-1000" id="bar3" style="width:0%;background:linear-gradient(90deg,#d4af37,#f5e27a)"></div></div>
+          </div>
+          <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gold/10">
+            <div class="w-7 h-7 rounded-lg bg-gold/15 flex items-center justify-center text-sm">🎯</div>
+            <div><p class="text-xs text-white/50 leading-none">تحتاج للوصول</p><p class="text-sm font-bold text-gold" id="neededScore">---</p></div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <style>
-        body {
-            background: #f0f2f5 !important;
-            min-height: 100vh;
-            margin: 0;
-            font-family: 'Cairo', sans-serif;
-            direction: rtl;
-        }
-        #app { display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+  <!-- ========== DAILY GOALS ========== -->
+  <section class="px-4 mb-6 fade-in-3">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-base font-bold text-white">📋 المهام اليومية</h2>
+      <span class="text-xs text-gold/70 font-semibold bg-gold/10 px-3 py-1 rounded-full border border-gold/20" id="goalsCount">---</span>
+    </div>
+    <div class="space-y-3" id="goalsContainer">
+      <p class="text-center text-white/40 text-sm py-8">🎯 جاري تحميل المهام...</p>
+    </div>
+  </section>
 
-    <script src="/config.js"></script>
-    <script src="/app.js"></script>
+  <!-- ========== LEADERBOARD ========== -->
+  <section class="px-4 mb-6 fade-in-4">
+    <div class="glass-card overflow-hidden">
+      <div class="p-4 border-b border-gold/10 flex items-center justify-between" style="background:linear-gradient(90deg,rgba(212,175,55,.1),transparent)">
+        <div class="flex items-center gap-2"><span class="text-xl">🏆</span><div><h2 class="text-sm font-bold text-white">لوحة المتصدرين</h2><p class="text-xs text-gold/50">أفضل ٥ طلاب</p></div></div>
+      </div>
+      <div class="divide-y divide-gold/5" id="leaderboardList">
+        <p class="text-center text-white/30 text-sm py-8">🏆 جاري تحميل المتصدرين...</p>
+      </div>
+      <div class="px-4 py-3 flex items-center justify-center gap-2 border-t border-gold/10" style="background:rgba(212,175,55,.04)">
+        <span class="text-xs text-gold/40">يُحدَّث كل يوم جمعة</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ERROR BANK ========== -->
+  <section class="px-4 mb-6 fade-in-5">
+    <div class="error-pulse rounded-2xl overflow-hidden" style="border: 2px solid rgba(239,68,68,.5);">
+      <div class="p-4 flex items-center justify-between" style="background:linear-gradient(135deg,rgba(127,29,29,.5),rgba(239,68,68,.1))">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center"><span class="text-2xl">🔬</span></div>
+          <div><h2 class="text-base font-black text-white">مستودع الأخطاء</h2><p class="text-xs text-red-300/70">مراجعة الأخطاء = تحسّن حقيقي 📈</p></div>
+        </div>
+        <div class="text-left"><p class="text-2xl font-black text-red-400" id="errorCount">---</p><p class="text-xs text-red-300/60">خطأ مسجّل</p></div>
+      </div>
+      <div class="p-4" style="background:rgba(17,34,68,.7)">
+        <div class="space-y-2" id="errorCategories"></div>
+        <button id="reviewBtn" class="w-full py-3.5 rounded-xl font-bold text-sm text-navy mt-3 transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
+                style="background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 4px 20px rgba(239,68,68,.35)" onclick="startReview()">
+          🔥 ابدأ مراجعة الأخطاء الآن
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== QUICK ACTIONS ========== -->
+  <section class="px-4 mb-24 fade-in-5">
+    <h2 class="text-sm font-bold text-white/60 mb-3">⚡ وصول سريع</h2>
+    <div class="grid grid-cols-3 gap-3" id="quickActions">
+      <button class="glass-card p-3 flex flex-col items-center gap-2 hover:border-gold/40 transition" onclick="startSkill('speaking')">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.05))">🗣️</div>
+        <span class="text-xs text-white/70 font-semibold text-center leading-tight">تحدّث</span>
+      </button>
+      <button class="glass-card p-3 flex flex-col items-center gap-2 hover:border-gold/40 transition" onclick="startSkill('spelling')">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(99,102,241,.05))">✍️</div>
+        <span class="text-xs text-white/70 font-semibold text-center leading-tight">إكمال</span>
+      </button>
+      <button class="glass-card p-3 flex flex-col items-center gap-2 hover:border-gold/40 transition" onclick="startSkill('writing')">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.05))">📝</div>
+        <span class="text-xs text-white/70 font-semibold text-center leading-tight">ترتيب</span>
+      </button>
+      <button class="glass-card p-3 flex flex-col items-center gap-2 hover:border-gold/40 transition" onclick="startSkill('email')">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.05))">📧</div>
+        <span class="text-xs text-white/70 font-semibold text-center leading-tight">إيميل</span>
+      </button>
+      <button class="glass-card p-3 flex flex-col items-center gap-2 hover:border-gold/40 transition" onclick="startSkill('listening')">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(245,158,11,.05))">🎧</div>
+        <span class="text-xs text-white/70 font-semibold text-center leading-tight">استماع</span>
+      </button>
+      <button class="glass-card p-3 flex flex-col items-center gap-2 hover:border-gold/40 transition" onclick="window.open('/admin','_blank')">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style="background:linear-gradient(135deg,rgba(20,184,166,.2),rgba(20,184,166,.05))">👑</div>
+        <span class="text-xs text-white/70 font-semibold text-center leading-tight">الأدمن</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== BOTTOM NAV ========== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 px-2 pb-2" style="background:linear-gradient(0deg,#0e1f3d 80%,transparent)">
+    <div class="glass-card px-2 py-2 flex items-center justify-around" style="border-color:rgba(212,175,55,.2)">
+      <button class="nav-item active flex flex-col items-center gap-1" onclick="setNav(this)">
+        <div class="w-10 h-9 rounded-xl flex items-center justify-center transition"><svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+        <span class="text-xs font-semibold text-gold">الرئيسية</span>
+      </button>
+      <button class="nav-item flex flex-col items-center gap-1" onclick="setNav(this)">
+        <div class="w-10 h-9 rounded-xl flex items-center justify-center transition"><svg class="w-5 h-5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
+        <span class="text-xs font-semibold text-white/40">تقدمي</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 -mt-5" onclick="startSkill('speaking')">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-navy text-2xl shadow-lg transition hover:scale-105" style="background:linear-gradient(135deg,#d4af37,#f5e27a);box-shadow:0 4px 20px rgba(212,175,55,.5)">🎙️</div>
+        <span class="text-xs font-bold text-gold">تحدّث</span>
+      </button>
+      <button class="nav-item flex flex-col items-center gap-1" onclick="setNav(this)">
+        <div class="w-10 h-9 rounded-xl flex items-center justify-center transition"><svg class="w-5 h-5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+        <span class="text-xs font-semibold text-white/40">الدروس</span>
+      </button>
+      <button class="nav-item flex flex-col items-center gap-1" onclick="setNav(this)">
+        <div class="w-10 h-9 rounded-xl flex items-center justify-center transition"><svg class="w-5 h-5 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+        <span class="text-xs font-semibold text-white/40">حسابي</span>
+      </button>
+    </div>
+  </nav>
+
+  <script src="/app.js"></script>
 </body>
 </html>
