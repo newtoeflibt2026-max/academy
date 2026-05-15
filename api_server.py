@@ -1,184 +1,178 @@
-﻿"""
-Yamen Academy – Flask API Server
-"""
-import os, json, sqlite3, asyncio, aiohttp, base64, random
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+import sys, os
 
-app = Flask(__name__, static_folder="webapp", static_url_path="")
+sys.path.insert(0, os.path.dirname(__file__))
+from database import (
+    get_conn, get_stats, get_all_students, toggle_student_active,
+    get_pending_payments, update_payment_status, add_subscription,
+    add_payment, get_admin_setting, set_admin_setting,
+    get_leaderboard, add_xp, upsert_student,
+    get_due_reviews, add_to_error_bank, record_correct_review,
+    log_activity, get_absent_students, init_db
+)
+
+app = Flask(__name__)
 CORS(app)
 
-DB = os.getenv("DB_PATH", "data/academy.db")
-os.makedirs("data", exist_ok=True)
-
-WRITING_KEYS = os.getenv("WRITING_KEYS", "").split(",")
-SPEAKING_KEYS = os.getenv("SPEAKING_KEYS", "").split(",")
-MODEL = "gemini-2.5-flash"
-
-# ── DB Helpers ──
-def get_conn():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def query(sql, params=()):
-    return get_conn().execute(sql, params).fetchall()
-
-def execute(sql, params=()):
-    conn = get_conn()
-    conn.execute(sql, params)
-    conn.commit()
-    conn.close()
-
-def dict_rows(rows):
-    return [dict(r) for r in rows]
-
-# ── Health ──
-@app.route("/api/health")
+# ───── Health ─────
+@app.route('/api/health')
 def health():
     return jsonify({"status": "ok"})
 
-# ── Student ──
-@app.route("/api/me")
-def me():
-    uid = request.args.get("user_id")
-    if not uid: return jsonify({"error": "user_id required"}), 400
-    row = query("SELECT * FROM students WHERE user_id=?", (uid,))
-    return jsonify(dict(row[0]) if row else {"error": "not found"})
+# ───── Dashboard ─────
+@app.route('/api/admin/stats', methods=['POST', 'GET'])
+def stats():
+    stats = get_stats()
+    conn = get_conn()
+    stats['total_xp'] = conn.execute("SELECT COALESCE(SUM(xp), 0) FROM students").fetchone()[0]
+    conn.close()
+    return jsonify(stats)
 
-# ── Courses ──
-@app.route("/api/courses")
+# ───── Students ─────
+@app.route('/api/admin/students', methods=['POST', 'GET'])
+def students():
+    students = get_all_students()
+    return jsonify({'students': [dict(s) for s in students]})
+
+@app.route('/api/admin/toggle_student', methods=['POST'])
+def toggle_student():
+    data = request.json
+    toggle_student_active(data['user_id'])
+    return jsonify({'success': True})
+
+# ───── Courses ─────
+@app.route('/api/admin/courses', methods=['POST', 'GET'])
 def courses():
-    uid = request.args.get("user_id")
-    level = request.args.get("level", "")
-    if level:
-        rows = query("SELECT * FROM courses WHERE level=? ORDER BY id", (level,))
-    else:
-        rows = query("SELECT * FROM courses ORDER BY id")
-    return jsonify(dict_rows(rows))
+    conn = get_conn()
+    courses = conn.execute("SELECT * FROM courses ORDER BY id").fetchall()
+    conn.close()
+    return jsonify({'courses': [dict(c) for c in courses]})
 
-# ── Lessons ──
-@app.route("/api/lessons")
-def lessons():
-    cid = request.args.get("course_id")
-    rows = query("SELECT * FROM lessons WHERE course_id=? ORDER BY id", (cid,))
-    return jsonify(dict_rows(rows))
+@app.route('/api/courses', methods=['GET'])
+def public_courses():
+    conn = get_conn()
+    courses = conn.execute("SELECT id, name, level, price, duration_days, skill_type, time_limit, target_score FROM courses ORDER BY id").fetchall()
+    conn.close()
+    return jsonify({'courses': [dict(c) for c in courses]})
 
-# ── AI Writing ──
-@app.route("/api/writing/evaluate", methods=["POST"])
-def evaluate_writing():
-    data = request.get_json(force=True)
-    essay = data.get("essay", "")
-    task_type = data.get("task_type", "task2")
-    prompt = data.get("prompt", "")
-    user_id = data.get("user_id")
+@app.route('/api/admin/add_course', methods=['POST'])
+def add_course():
+    d = request.json
+    conn = get_conn()
+    conn.execute("INSERT INTO courses (name,level,price,duration_days,is_vip,skill_type,time_limit,target_score) VALUES (?,?,?,?,?,?,?,?)",
+                 (d['name'], d['level'], d['price'], d['duration_days'], d.get('is_vip', 0), d.get('skill_type', 'speaking'), d.get('time_limit', 45), d.get('target_score', 59)))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
 
-    if len(essay.split()) < 150:
-        return jsonify({"error": "Essay too short"}), 400
+@app.route('/api/admin/delete_course', methods=['POST'])
+def delete_course():
+    conn = get_conn()
+    conn.execute("DELETE FROM courses WHERE id=?", (request.json['id'],))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
 
-    key = random.choice(WRITING_KEYS)
-    system = """You are an IELTS examiner. Score this essay on:
-Task Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy.
-Reply ONLY in JSON: {"overall":6.5,"task_response":6,"coherence_cohesion":7,"lexical_resource":6.5,"grammatical_range":6.5,"feedback_ar":"detailed Arabic feedback","corrections":[]}"""
+# ───── Payments ─────
+@app.route('/api/admin/payments', methods=['POST', 'GET'])
+def payments():
+    flt = (request.json or {}).get('filter', 'pending')
+    conn = get_conn()
+    payments = conn.execute("SELECT * FROM payments WHERE status=? ORDER BY created_at DESC", (flt,)).fetchall()
+    conn.close()
+    return jsonify({'payments': [dict(p) for p in payments]})
 
-    url = "https://generativelanguage.googleapis.com/v1beta/models/" + MODEL + ":generateContent?key=" + key
-    body = {"contents":[{"parts":[{"text":system},{"text":"Task: "+task_type+"\nPrompt: "+prompt+"\nESSAY:\n\n"+essay}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
-
-    import urllib.request
-    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            raw = json.loads(resp.read())["candidates"][0]["content"]["parts"][0]["text"]
-            raw = raw.strip().lstrip("```json").rstrip("```").strip()
-            result = json.loads(raw)
-            result.setdefault("overall", 6.0)
-            result.setdefault("feedback_ar", "تم التقييم.")
-            if user_id:
-                execute("""INSERT INTO writing_submissions
-                    (user_id,task_type,prompt,essay_text,word_count,band_score,task_response,coherence_cohesion,lexical_resource,grammatical_range,feedback_ar,corrections_json)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
-                    (int(user_id), task_type, prompt, essay, len(essay.split()),
-                     result["overall"], result.get("task_response",6), result.get("coherence_cohesion",6),
-                     result.get("lexical_resource",6), result.get("grammatical_range",6),
-                     result["feedback_ar"], json.dumps(result.get("corrections",[]))))
-            return jsonify(result)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# ── AI Speaking ──
-@app.route("/api/speaking/evaluate", methods=["POST"])
-def evaluate_speaking():
-    data = request.get_json(force=True)
-    audio_b64 = data.get("audio_base64", "")
-    prompt = data.get("prompt", "")
-    part = data.get("part", "part1")
-    duration = data.get("duration", 30)
-    user_id = data.get("user_id")
-
-    key = random.choice(SPEAKING_KEYS)
-    url = "https://generativelanguage.googleapis.com/v1beta/models/" + MODEL + ":generateContent?key=" + key
-    body = {"contents":[{"parts":[{"text":"IELTS Speaking "+part+". Prompt: "+prompt+". Duration: "+str(duration)+"s. Score on Fluency, Pronunciation, Lexical Resource, Grammar. Reply JSON: {\"overall\":6.5,\"fluency\":6,\"pronunciation\":7,\"lexical_resource\":6.5,\"grammatical_range\":6,\"feedback_ar\":\"...\",\"transcript\":\"...\"}"},{"inline_data":{"mime_type":"audio/ogg","data":audio_b64}}]}],"generationConfig":{"temperature":0.3,"maxOutputTokens":2048}}
-
-    import urllib.request
-    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
-            raw = json.loads(resp.read())["candidates"][0]["content"]["parts"][0]["text"]
-            raw = raw.strip().lstrip("```json").rstrip("```").strip()
-            result = json.loads(raw)
-            result.setdefault("overall", 6.0)
-            result.setdefault("feedback_ar", "تم التقييم.")
-            if user_id:
-                execute("""INSERT INTO speaking_sessions
-                    (user_id,prompt,transcript_text,audio_duration_sec,band_score,fluency,pronunciation,lexical_resource,grammatical_range,feedback_ar)
-                    VALUES (?,?,?,?,?,?,?,?,?,?)""",
-                    (int(user_id), prompt, result.get("transcript",""), duration,
-                     result["overall"], result.get("fluency",6), result.get("pronunciation",6),
-                     result.get("lexical_resource",6), result.get("grammatical_range",6),
-                     result["feedback_ar"]))
-            return jsonify(result)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# ── Admin ──
-@app.route("/api/admin/stats")
-def admin_stats():
-    students = query("SELECT COUNT(*) as n FROM students")[0]["n"]
-    active = query("SELECT COUNT(*) as n FROM subscriptions WHERE active=1")[0]["n"]
-    pending = query("SELECT COUNT(*) as n FROM payments WHERE status='pending'")[0]["n"]
-    return jsonify({"students": students, "active_subs": active, "pending_payments": pending})
-
-@app.route("/api/admin/payments")
-def admin_payments():
-    rows = query("SELECT * FROM payments ORDER BY created_at DESC LIMIT 50")
-    return jsonify(dict_rows(rows))
-
-@app.route("/api/admin/approve", methods=["POST"])
-def admin_approve():
-    data = request.get_json(force=True)
-    pid = data["payment_id"]
-    execute("UPDATE payments SET status='approved' WHERE id=?", (pid,))
-    p = query("SELECT * FROM payments WHERE id=?", (pid,))
+@app.route('/api/admin/approve_payment', methods=['POST'])
+def approve_payment():
+    pid = request.json['id']
+    conn = get_conn()
+    update_payment_status(pid, 'approved')
+    p = conn.execute("SELECT user_id, plan_name FROM payments WHERE id=?", (pid,)).fetchone()
     if p:
-        p = dict(p[0])
-        execute("INSERT INTO subscriptions (user_id,plan_name,course_id,start_date,end_date,active) VALUES (?,?,?,date('now'),date('now','+30 days'),1)",
-                (p["user_id"], p.get("plan_name","default"), p.get("course_id",1)))
-    return jsonify({"ok": True})
+        days = 90 if "Excellence" in p[1] else (60 if "VIP" in p[1] else 30)
+        add_subscription(p[0], p[1], days)
+    conn.close()
+    return jsonify({'success': True})
 
-@app.route("/api/admin/reject", methods=["POST"])
-def admin_reject():
-    data = request.get_json(force=True)
-    execute("UPDATE payments SET status='rejected' WHERE id=?", (data["payment_id"],))
-    return jsonify({"ok": True})
+@app.route('/api/admin/reject_payment', methods=['POST'])
+def reject_payment():
+    update_payment_status(request.json['id'], 'rejected')
+    return jsonify({'success': True})
 
-# ── Static ──
-@app.route("/")
-def index():
-    return send_from_directory("webapp", "index.html")
+# ───── Vault ─────
+@app.route('/api/admin/vault', methods=['POST', 'GET'])
+def vault():
+    conn = get_conn()
+    items = conn.execute("SELECT * FROM vault_items ORDER BY id").fetchall()
+    conn.close()
+    return jsonify({'items': [dict(i) for i in items]})
 
-@app.route("/<path:filename>")
-def static_files(filename):
-    return send_from_directory("webapp", filename)
+@app.route('/api/admin/add_vault', methods=['POST'])
+def add_vault():
+    d = request.json
+    conn = get_conn()
+    conn.execute("INSERT INTO vault_items (title,content,unlock_level,category) VALUES (?,?,?,?)",
+                 (d['title'], d['content'], d.get('unlock_level', 1), d.get('category', 'speaking')))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+@app.route('/api/admin/delete_vault', methods=['POST'])
+def delete_vault():
+    conn = get_conn()
+    conn.execute("DELETE FROM vault_items WHERE id=?", (request.json['id'],))
+    conn.commit(); conn.close()
+    return jsonify({'success': True})
+
+# ───── Error Bank ─────
+@app.route('/api/error_bank/<int:user_id>', methods=['GET'])
+def error_bank(user_id):
+    reviews = get_due_reviews(user_id)
+    return jsonify({'reviews': reviews})
+
+@app.route('/api/error_bank/correct', methods=['POST'])
+def correct_review():
+    d = request.json
+    record_correct_review(d['user_id'], d['error_bank_id'])
+    return jsonify({'success': True})
+
+# ───── Leaderboard ─────
+@app.route('/api/leaderboard', methods=['GET'])
+def leaderboard():
+    lb = get_leaderboard(10)
+    return jsonify({'leaderboard': lb})
+
+# ───── Gamification ─────
+@app.route('/api/admin/gamification', methods=['POST', 'GET'])
+def gamification():
+    timer = get_admin_setting('challenge_timer', '5')
+    multiplier = get_admin_setting('xp_multiplier', '1')
+    leaderboard = get_leaderboard(10)
+    return jsonify({
+        'challenge_timer': timer,
+        'xp_multiplier': multiplier,
+        'leaderboard': [dict(r) for r in leaderboard]
+    })
+
+# ───── Settings ─────
+@app.route('/api/admin/settings', methods=['POST', 'GET'])
+def settings():
+    return jsonify({
+        'show_writing': get_admin_setting('show_writing', '1'),
+        'show_speaking': get_admin_setting('show_speaking', '1'),
+        'vault_locked': get_admin_setting('vault_locked', '1'),
+        'usage_cap': get_admin_setting('usage_cap', '3'),
+        'wallet_number': get_admin_setting('wallet_number', '0798919150'),
+        'speaking_strict': get_admin_setting('speaking_strict', '0'),
+        'speaking_bitrate_check': get_admin_setting('speaking_bitrate_check', '0'),
+        'xp_multiplier': get_admin_setting('xp_multiplier', '1'),
+        'challenge_timer': get_admin_setting('challenge_timer', '5'),
+    })
+
+@app.route('/api/admin/save_setting', methods=['POST'])
+def save_setting():
+    d = request.json
+    set_admin_setting(d['key'], str(d['value']))
+    return jsonify({'success': True})
+
+if __name__ == '__main__':
+    init_db()
+    app.run(host='0.0.0.0', port=5050, debug=True)
