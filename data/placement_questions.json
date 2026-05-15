@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "question_text": "Sentence Structure: The researcher explains ___ the experiment was conducted.",
+    "option_a": "that how",
+    "option_b": "how",
+    "option_c": "which way",
+    "option_d": "the way that",
+    "correct_answer": "B",
+    "difficulty": "medium"
+  },
+  {
+    "id": 2,
+    "question_text": "Vocabulary: The word 'significant' in the passage is closest in meaning to:",
+    "option_a": "Small",
+    "option_b": "Important",
+    "option_c": "Interesting",
+    "option_d": "Difficult",
+    "correct_answer": "B",
+    "difficulty": "easy"
+  },
+  {
+    "id": 3,
+    "question_text": "Prepositions: The report must be submitted ___ the deadline.",
+    "option_a": "until",
+    "option_b": "by",
+    "option_c": "before",
+    "option_d": "within",
+    "correct_answer": "C",
+    "difficulty": "easy"
+  },
+  {
+    "id": 4,
+    "question_text": "Reading Comprehension: According to the passage, online learning provides flexibility because:",
+    "option_a": "It is cheaper than traditional education",
+    "option_b": "Students can learn at their own pace",
+    "option_c": "Teachers are more qualified online",
+    "option_d": "Technology makes learning easier",
+    "correct_answer": "B",
+    "difficulty": "medium"
+  },
+  {
+    "id": 5,
+    "question_text": "Connectors: The study was extensive; ___, the results were inconclusive.",
+    "option_a": "therefore",
+    "option_b": "however",
+    "option_c": "furthermore",
+    "option_d": "consequently",
+    "correct_answer": "B",
+    "difficulty": "medium"
+  },
+  {
+    "id": 6,
+    "question_text": "Main Idea: The passage about green spaces and mental health primarily argues that:",
+    "option_a": "Green spaces are expensive to maintain",
+    "option_b": "Cities should focus on building more housing",
+    "option_c": "Access to nature improves psychological well-being",
+    "option_d": "Mental health issues are decreasing globally",
+    "correct_answer": "C",
+    "difficulty": "hard"
+  },
+  {
+    "id": 7,
+    "question_text": "Sentence Completion: The company invested heavily in research; ___, it developed a breakthrough product.",
+    "option_a": "as a result",
+    "option_b": "on the contrary",
+    "option_c": "in spite of this",
+    "option_d": "nevertheless",
+    "correct_answer": "A",
+    "difficulty": "medium"
+  },
+  {
+    "id": 8,
+    "question_text": "Inference: The author mentions policy concerns in order to:",
+    "option_a": "Propose a new government regulation",
+    "option_b": "Highlight potential obstacles to implementation",
+    "option_c": "Criticize current political leaders",
+    "option_d": "Suggest that policies are unnecessary",
+    "correct_answer": "B",
+    "difficulty": "hard"
+  },
+  {
+    "id": 9,
+    "question_text": "Tone Analysis: The author's tone throughout the article can best be described as:",
+    "option_a": "Enthusiastic and optimistic",
+    "option_b": "Angry and confrontational",
+    "option_c": "Careful and reserved",
+    "option_d": "Humorous and light-hearted",
+    "correct_answer": "C",
+    "difficulty": "hard"
+  },
+  {
+    "id": 10,
+    "question_text": "Author Position: The author's stance on renewable energy is:",
+    "option_a": "Completely opposed",
+    "option_b": "Somewhat convinced",
+    "option_c": "Neutral with no opinion",
+    "option_d": "Strongly in favor without reservation",
+    "correct_answer": "B",
+    "difficulty": "medium"
+  }
+]

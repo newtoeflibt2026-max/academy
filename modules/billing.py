@@ -6,10 +6,7 @@ billing_bp = Blueprint("billing", __name__)
 @billing_bp.route("/api/plans")
 def get_plans():
     rows = query_db("SELECT * FROM billing_plans WHERE is_active=1")
-    plans = []
-    for r in rows:
-        plans.append({"id": r["id"], "name": r["name"], "price_monthly": r["price_monthly"], "features": r["features"]})
-    return jsonify(plans)
+    return jsonify([dict(r) for r in rows])
 
 @billing_bp.route("/api/subscribe", methods=["POST"])
 def subscribe():

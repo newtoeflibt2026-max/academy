@@ -10,17 +10,15 @@
 <style>
   * { font-family: "Cairo", sans-serif; }
   body { background: #fdfcfb; }
-  .glass { background: rgba(255,255,255,0.82); backdrop-filter: blur(14px); border: 1px solid rgba(197,160,40,0.18); border-radius: 24px; }
+  .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(14px); border: 1px solid rgba(197,160,40,0.18); border-radius: 24px; }
   .navy { color: #1a365d; } .gold { color: #c5a028; }
-  .bg-navy { background: #1a365d; } .bg-gold { background: #c5a028; }
-  .skill-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 18px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .skill-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 18px; padding: 16px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
   .skill-btn:hover, .skill-btn:active { border-color: #c5a028; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197,160,40,0.18); }
-  .skill-btn:active { transform: scale(0.97); }
+  .skill-btn:active { transform: scale(0.96); }
+  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; border-radius: 16px; padding: 14px 24px; font-weight: 700; cursor: pointer; transition: all 0.3s; border: none; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,54,93,0.3); }
   .nav-item { padding: 10px; border-radius: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
   .nav-item.active { background: #1a365d; color: #fff; }
-  .progress-ring circle { transition: stroke-dashoffset 0.8s ease; }
-  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; border-radius: 16px; padding: 14px 24px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,54,93,0.3); }
   .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 12px 24px; border-radius: 12px; color: #fff; font-weight: 600; animation: slideDown 0.3s ease; }
   @keyframes slideDown { from { transform: translateX(-50%) translateY(-100%); opacity: 0; } }
 </style>
@@ -33,79 +31,87 @@
   <div class="glass p-4 flex justify-between items-center">
     <div>
       <h1 class="text-lg font-extrabold navy">أهلاً بكِ يا <span id="studentName">{{ student.name if student else 'طالب' }}</span> 👋</h1>
-      <p class="text-xs text-gray-400">المستوى <span class="font-bold gold" id="studentLevel">{{ student.level if student else 1 }}</span></p>
+      <p class="text-xs text-gray-400">المستوى <span class="font-bold gold">{{ student.level if student else 1 }}</span></p>
     </div>
     <div class="text-right">
-      <div class="text-2xl font-extrabold gold" id="xpDisplay">{{ student.xp if student else 0 }} <span class="text-sm text-gray-400">XP</span></div>
-      <div class="text-xs text-gray-400">🔥 {{ student.streak if student else 0 }} يوم</div>
+      <div class="text-2xl font-extrabold gold">{{ student.xp if student else 0 }} <span class="text-sm text-gray-400">XP</span></div>
     </div>
   </div>
 
-  <!-- PLACEMENT BANNER (shown if test not done) -->
+  <!-- PLACEMENT STATUS -->
   {% if placement %}
-  <div class="glass p-4 text-center bg-green-50">
-    <p class="text-sm font-bold navy">✅ مستواك: <span class="gold text-lg">{{ placement.level }}</span></p>
+  <div class="glass p-4 text-center" style="background:#d1fae5;">
+    <p class="text-sm font-bold navy">✅ تم تحديد مستواك: <span class="gold text-lg">{{ placement.level }}</span></p>
     <p class="text-xs text-gray-500">{{ placement.score }}/{{ placement.total }}</p>
   </div>
   {% else %}
   <div class="glass p-4 text-center" style="background:#fef3c7;">
     <p class="text-sm font-bold navy">⚠️ لم تكمل اختبار تحديد المستوى بعد</p>
-    <a href="/placement?user_id={{ student_id }}" class="inline-block mt-2 px-4 py-2 bg-gold text-white rounded-xl text-sm font-bold">ابدأ الاختبار</a>
+    <a href="/placement?user_id={{ student_id }}" class="inline-block mt-2 px-4 py-2 bg-gold text-white rounded-xl text-sm font-bold" style="background:#c5a028;">ابدأ الاختبار الآن</a>
   </div>
   {% endif %}
 
-  <!-- SECTION 1: COURSE -->
-  <div class="glass p-5">
+  <!-- COURSE -->
+  <div class="glass p-4">
     <h2 class="text-lg font-extrabold navy mb-3">📚 الدورة</h2>
     {% for course in courses %}
     <div class="flex justify-between items-center p-3 bg-gray-50 rounded-2xl">
-      <span class="font-bold">{{ course.title }}</span>
+      <span class="font-bold navy">{{ course.title }}</span>
       <span class="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">نشط</span>
     </div>
     {% endfor %}
   </div>
 
-  <!-- SECTION 2: EXAM HALL -->
+  <!-- EXAM HALL -->
   <div class="glass p-5">
-    <div class="flex justify-between items-center mb-3">
-      <h2 class="text-lg font-extrabold navy">🏛️ قاعة الامتحان</h2>
-    </div>
-    <button class="btn-primary w-full text-lg" onclick="startExam()">دخول قاعة الامتحان</button>
-    <p class="text-xs text-gray-400 text-center mt-2">اختبار TOEFL شامل • قراءة • استماع • تحدث • كتابة</p>
+    <h2 class="text-lg font-extrabold navy mb-3">🏛️ قاعة الامتحان</h2>
+    <button class="btn-primary w-full text-lg" onclick="showToast('قاعة الامتحان ستتوفر قريباً!', 'info')">دخول قاعة الامتحان</button>
   </div>
 
-  <!-- SECTION 3: DAILY SKILLS -->
+  <!-- DAILY SKILLS -->
   <div class="glass p-5">
     <h2 class="text-lg font-extrabold navy mb-4">⚡ المهارات اليومية</h2>
-    <div class="grid grid-cols-3 gap-3" id="skillsGrid">
+    <div class="grid grid-cols-3 gap-3">
       {% for skill in skills %}
-      <button class="skill-btn" data-skill-id="{{ skill.id }}" data-skill-type="{{ skill.skill_type }}" data-time-limit="{{ skill.time_limit }}" onclick="launchSkill({{ skill.id }}, '{{ skill.skill_type }}', {{ skill.time_limit }})">
-        <div class="text-2xl mb-1"><i class="fas {{ skill.icon or 'fa-star' }} gold"></i></div>
+      <button class="skill-btn" onclick="launchSkill({{ skill.id }}, '{{ skill.skill_type }}', {{ skill.time_limit }})">
+        <div class="text-xl mb-1"><i class="fas {{ skill.icon or 'fa-star' }} gold"></i></div>
         <div class="text-xs font-bold navy">{{ skill.title }}</div>
       </button>
       {% endfor %}
     </div>
   </div>
 
-  <!-- SECTION 4: PROGRESS -->
+  <!-- LIBRARY -->
+  <div class="glass p-5">
+    <h2 class="text-lg font-extrabold navy mb-3">📖 المكتبة الرقمية</h2>
+    <div class="space-y-2">
+      {% for item in library_items %}
+      <a href="{{ item.file_path or item.external_url or '#' }}" target="_blank" class="block p-3 bg-gray-50 rounded-2xl hover:bg-gray-100 transition">
+        <span class="text-sm font-bold navy">{{ item.title }}</span>
+        <span class="text-xs text-gray-400 mr-2">{{ item.item_type }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- PROGRESS + ERROR BANK -->
   <div class="glass p-5">
     <h2 class="text-lg font-extrabold navy mb-3">📊 تقدمك</h2>
     <div class="flex justify-center mb-3">
-      <svg width="140" height="140" viewBox="0 0 140 140">
-        <circle cx="70" cy="70" r="60" fill="none" stroke="#e5e7eb" stroke-width="12"/>
-        <circle cx="70" cy="70" r="60" fill="none" stroke="#c5a028" stroke-width="12"
-          stroke-dasharray="377" stroke-dashoffset="{{ 377 * (1 - (student.xp|default(0)|int % 100) / 100) if student else 377 }}"
-          stroke-linecap="round" transform="rotate(-90 70 70)" class="progress-ring"/>
-        <text x="70" y="70" text-anchor="middle" dominant-baseline="middle" class="text-2xl font-extrabold navy" fill="#1a365d">{{ (student.xp|default(0)|int % 100) if student else 0 }}%</text>
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#c5a028" stroke-width="10"
+          stroke-dasharray="314" stroke-dashoffset="{{ 314 * (1 - (student.xp|default(0)|int % 100) / 100) if student else 314 }}"
+          stroke-linecap="round" transform="rotate(-90 60 60)"/>
+        <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" class="text-xl font-extrabold navy" fill="#1a365d">{{ (student.xp|default(0)|int % 100) if student else 0 }}%</text>
       </svg>
     </div>
-    <!-- Error Bank -->
     <div class="p-3 rounded-2xl {% if error_count > 0 %}bg-red-50{% else %}bg-green-50{% endif %} text-center">
       <p class="text-sm font-bold {% if error_count > 0 %}text-red-600{% else %}text-green-600{% endif %}">
         {% if error_count > 0 %}
-        🔴 لديك {{ error_count }} أخطاء معلقة — <a href="#" class="underline">راجع الآن</a>
+        🔴 لديك {{ error_count }} أخطاء معلقة — راجع الآن
         {% else %}
-        ✅ لا توجد أخطاء معلقة — أحسنت!
+        ✅ لا توجد أخطاء — أحسنت!
         {% endif %}
       </p>
     </div>
@@ -116,7 +122,7 @@
     <h2 class="text-lg font-extrabold navy mb-3">🏆 لوحة المتصدرين</h2>
     <div class="space-y-2">
       {% for p in leaderboard %}
-      <div class="flex justify-between items-center p-2 rounded-xl {% if p.telegram_id == student_id %}bg-gold bg-opacity-10{% endif %}">
+      <div class="flex justify-between items-center p-2 rounded-xl {% if p.telegram_id == student_id|int %}bg-gold bg-opacity-10{% endif %}">
         <span class="text-sm font-bold">{{ loop.index }}. {{ p.name or p.telegram_id }}</span>
         <span class="text-sm font-bold gold">{{ p.xp }} XP</span>
       </div>
@@ -126,23 +132,21 @@
 
 </div>
 
-<!-- BOTTOM NAVIGATION -->
+<!-- BOTTOM NAV -->
 <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
   <div class="max-w-lg mx-auto flex justify-around">
-    <div class="nav-item active" onclick="switchTab('home')"><i class="fas fa-home text-xl"></i><div class="text-xs mt-1">الرئيسية</div></div>
-    <div class="nav-item" onclick="switchTab('errors')"><i class="fas fa-exclamation-triangle text-xl"></i><div class="text-xs mt-1">الأخطاء</div></div>
-    <div class="nav-item" onclick="switchTab('library')"><i class="fas fa-book text-xl"></i><div class="text-xs mt-1">المكتبة</div></div>
-    <div class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user text-xl"></i><div class="text-xs mt-1">حسابي</div></div>
+    <div class="nav-item active"><i class="fas fa-home text-xl"></i><div class="text-xs mt-1">الرئيسية</div></div>
+    <div class="nav-item" onclick="showToast('بنك الأخطاء — قيد التطوير', 'info')"><i class="fas fa-exclamation-triangle text-xl"></i><div class="text-xs mt-1">الأخطاء</div></div>
+    <div class="nav-item" onclick="showToast('المكتبة', 'info')"><i class="fas fa-book text-xl"></i><div class="text-xs mt-1">المكتبة</div></div>
+    <div class="nav-item" onclick="showToast('حسابي', 'info')"><i class="fas fa-user text-xl"></i><div class="text-xs mt-1">حسابي</div></div>
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast" class="toast hidden"></div>
 
 <script>
 const STUDENT_ID = "{{ student_id }}";
 
-// --- TOAST ---
 function showToast(msg, type="success") {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -151,12 +155,10 @@ function showToast(msg, type="success") {
   setTimeout(() => t.classList.add("hidden"), 2500);
 }
 
-// --- SKILL LAUNCH ---
 async function launchSkill(skillId, skillType, timeLimit) {
   let seconds = timeLimit || 45;
-  showToast(`انطلق! لديك ${seconds} ثانية`, "info");
+  showToast(`⏱️ لديك ${seconds} ثانية!`, "info");
 
-  // Fetch question
   const res = await fetch("/api/question/next", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
@@ -168,87 +170,30 @@ async function launchSkill(skillId, skillType, timeLimit) {
     return;
   }
 
-  // Timer
   let timerInterval = setInterval(() => {
     seconds--;
     if (seconds <= 5 && seconds > 0) {
-      // Beep via AudioContext
-      try {
-        const ctx = new (window.AudioContext||window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.frequency.value = 880; osc.type = "sine";
-        gain.gain.value = 0.3;
-        osc.start(); osc.stop(ctx.currentTime + 0.15);
-      } catch(e) {}
+      try { const ctx = new (window.AudioContext||window.webkitAudioContext)(); const o = ctx.createOscillator(), g = ctx.createGain(); o.connect(g); g.connect(ctx.destination); o.frequency.value=880; o.type="sine"; g.gain.value=0.3; o.start(); o.stop(ctx.currentTime+0.15); } catch(e) {}
     }
-    if (seconds <= 0) {
-      clearInterval(timerInterval);
-      showToast("انتهى الوقت!", "error");
-    }
+    if (seconds <= 0) { clearInterval(timerInterval); showToast("⏰ انتهى الوقت!", "error"); }
   }, 1000);
 
-  // Try haptic feedback
-  if (window.Telegram?.WebApp?.HapticFeedback) {
-    window.Telegram.WebApp.HapticFeedback.impactOccurred("medium");
-  }
-
-  // Show question as alert (simplified; in production would be a modal)
-  const options = [data.option_a, data.option_b, data.option_c, data.option_d].filter(Boolean);
-  const answer = prompt(`${data.question_text}\n\n${options.map((o,i) => `${String.fromCharCode(65+i)}) ${o}`).join('\n')}`);
+  const opts = [data.option_a, data.option_b, data.option_c, data.option_d].filter(Boolean);
+  const answer = prompt(`${data.question_text}\n\n${opts.map((o,i) => `${String.fromCharCode(65+i)}) ${o}`).join('\n')}`);
   clearInterval(timerInterval);
 
-  if (answer && answer.toUpperCase() === data.correct_answer.toUpperCase()) {
-    // Award XP
+  if (answer && answer.toUpperCase() === data.correct_answer?.toUpperCase()) {
     await fetch("/api/student/xp", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
+      method: "POST", headers: {"Content-Type":"application/json"},
       body: JSON.stringify({ student_id: STUDENT_ID, xp: 10 })
     });
     showToast("✅ إجابة صحيحة! +10 XP");
   } else {
-    // Add to error bank
-    try {
-      await fetch("/api/error_bank/add", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ student_id: STUDENT_ID, question_id: data.id, skill_type: skillType })
-      });
-    } catch(e) {}
-    showToast(`❌ خطأ! الإجابة الصحيحة: ${data.correct_answer}`, "error");
+    try { await fetch("/api/error_bank/add", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({ student_id: STUDENT_ID, question_id: data.id, skill_type: skillType }) }); } catch(e) {}
+    showToast(`❌ خطأ! الصحيح: ${data.correct_answer}`, "error");
   }
-
-  // Refresh page to update XP
-  setTimeout(() => location.reload(), 1000);
+  setTimeout(() => location.reload(), 1200);
 }
-
-// --- EXAM HALL ---
-function startExam() {
-  showToast("جاري تجهيز قاعة الامتحان...", "info");
-  setTimeout(() => {
-    showToast("قاعة الامتحان ستتوفر قريباً!", "info");
-  }, 1000);
-}
-
-// --- NAVIGATION ---
-function switchTab(tab) {
-  document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
-  event.target.closest(".nav-item").classList.add("active");
-  if (tab === "errors") showToast("بنك الأخطاء — قيد التطوير", "info");
-  if (tab === "library") showToast("المكتبة الرقمية — قيد التطوير", "info");
-}
-
-// --- Check placement on load ---
-(async function() {
-  try {
-    const res = await fetch(`/api/placement/status/${STUDENT_ID}`);
-    const data = await res.json();
-    if (!data.completed) {
-      showToast("يجب إكمال اختبار تحديد المستوى أولاً", "info");
-    }
-  } catch(e) {}
-})();
 </script>
 </body>
 </html>

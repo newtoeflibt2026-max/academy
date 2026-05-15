@@ -1,4 +1,4 @@
-import sqlite3, os, time
+import sqlite3, os
 from config import DATABASE_PATH, ADMIN_IDS
 
 def get_db():
@@ -26,7 +26,6 @@ def execute_db(query, args=()):
 def init_db():
     conn = get_db()
     c = conn.cursor()
-    # ---------- 17 tables ----------
     c.executescript("""
         CREATE TABLE IF NOT EXISTS students (
             telegram_id   INTEGER PRIMARY KEY,
@@ -37,6 +36,8 @@ def init_db():
             streak        INTEGER DEFAULT 0,
             course_id     INTEGER,
             is_active     INTEGER DEFAULT 1,
+            placement_done INTEGER DEFAULT 0,
+            placement_level TEXT DEFAULT '',
             registered_at TEXT DEFAULT (datetime('now'))
         );
         CREATE TABLE IF NOT EXISTS courses (
@@ -46,23 +47,13 @@ def init_db():
             is_active     INTEGER DEFAULT 1,
             created_at    TEXT DEFAULT (datetime('now'))
         );
-        CREATE TABLE IF NOT EXISTS placement_questions (
-            id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            question_text TEXT NOT NULL,
-            option_a      TEXT,
-            option_b      TEXT,
-            option_c      TEXT,
-            option_d      TEXT,
-            correct_answer TEXT NOT NULL,
-            difficulty    TEXT DEFAULT 'medium',
-            is_active     INTEGER DEFAULT 1
-        );
         CREATE TABLE IF NOT EXISTS placement_results (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
             student_id    INTEGER NOT NULL,
             score         INTEGER,
             total         INTEGER,
             level         TEXT,
+            answers_json  TEXT,
             completed_at  TEXT DEFAULT (datetime('now')),
             FOREIGN KEY (student_id) REFERENCES students(telegram_id)
         );
@@ -91,6 +82,7 @@ def init_db():
             icon          TEXT DEFAULT 'fa-star',
             time_limit    INTEGER DEFAULT 45,
             telegram_link TEXT,
+            content_path  TEXT,
             is_active     INTEGER DEFAULT 1,
             sort_order    INTEGER DEFAULT 0,
             created_at    TEXT DEFAULT (datetime('now'))
@@ -187,21 +179,18 @@ def init_db():
             created_at    TEXT DEFAULT (datetime('now'))
         );
     """)
-    # --- Insert defaults if empty ---
-    existing = c.execute("SELECT COUNT(*) FROM courses").fetchone()[0]
-    if existing == 0:
+    # Defaults
+    if c.execute("SELECT COUNT(*) FROM courses").fetchone()[0] == 0:
         c.execute("INSERT INTO courses (title, description) VALUES (?,?)",
             ("International TOEFL Course", "Complete TOEFL preparation course"))
-    existing = c.execute("SELECT COUNT(*) FROM billing_plans").fetchone()[0]
-    if existing == 0:
+    if c.execute("SELECT COUNT(*) FROM billing_plans").fetchone()[0] == 0:
         c.executescript("""
             INSERT INTO billing_plans (name, price_monthly, features) VALUES ('Free', 0, 'Limited skills,Basic library');
             INSERT INTO billing_plans (name, price_monthly, features) VALUES ('Silver', 9.99, 'All skills,Weekly AI review');
             INSERT INTO billing_plans (name, price_monthly, features) VALUES ('Gold', 19.99, 'Daily AI review,Live sessions');
             INSERT INTO billing_plans (name, price_monthly, features) VALUES ('Diamond', 49.99, 'Personal trainer,Priority support');
         """)
-    existing = c.execute("SELECT COUNT(*) FROM ai_config").fetchone()[0]
-    if existing == 0:
+    if c.execute("SELECT COUNT(*) FROM ai_config").fetchone()[0] == 0:
         c.executescript("""
             INSERT INTO ai_config (config_key, config_value) VALUES ('min_speaking_score', '2.5');
             INSERT INTO ai_config (config_key, config_value) VALUES ('min_writing_score', '3.0');
@@ -210,31 +199,6 @@ def init_db():
             INSERT INTO ai_config (config_key, config_value) VALUES ('fluency_weight', '0.4');
             INSERT INTO ai_config (config_key, config_value) VALUES ('max_recording_seconds', '120');
         """)
-    existing = c.execute("SELECT COUNT(*) FROM placement_questions").fetchone()[0]
-    if existing == 0:
-        c.executescript("""
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('What is the synonym of "happy"?', 'Sad', 'Angry', 'Joyful', 'Tired', 'C', 'easy');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('Choose the correct sentence:', 'He go to school', 'He goes to school', 'He going to school', 'He gone to school', 'B', 'easy');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('"She ___ a book every night." Fill in the blank:', 'read', 'reads', 'reading', 'is read', 'B', 'medium');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('What does "ubiquitous" mean?', 'Rare', 'Everywhere', 'Underground', 'Unique', 'B', 'medium');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('Which word is a noun?', 'Quickly', 'Beautiful', 'Happiness', 'Running', 'C', 'easy');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('"If I ___ you, I would study more."', 'am', 'was', 'were', 'be', 'C', 'hard');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('The study of word origins is called:', 'Phonetics', 'Etymology', 'Syntax', 'Morphology', 'B', 'hard');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('"Neither the teacher nor the students ___ happy."', 'is', 'are', 'was', 'be', 'B', 'medium');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('What is the past participle of "swim"?', 'Swam', 'Swum', 'Swimmed', 'Swimming', 'B', 'easy');
-            INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty)
-            VALUES ('"I have been studying ___ three hours."', 'since', 'for', 'during', 'while', 'B', 'medium');
-        """)
-    # Ensure admin students exist
     for aid in ADMIN_IDS:
         c.execute("INSERT OR IGNORE INTO students (telegram_id, name, username, xp, level) VALUES (?,?,?,?,?)",
             (aid, f"Admin {aid}", f"admin_{aid}", 9999, 99))
@@ -242,5 +206,4 @@ def init_db():
     conn.close()
     print("[DB] init_db() — all 17 tables ready + defaults inserted.")
 
-# Run init
 init_db()

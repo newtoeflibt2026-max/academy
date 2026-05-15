@@ -4,6 +4,10 @@ def get_ai_config():
     rows = query_db("SELECT config_key, config_value FROM ai_config")
     return {r["config_key"]: r["config_value"] for r in rows}
 
+def update_ai_config(data):
+    for key, value in data.items():
+        execute_db("INSERT OR REPLACE INTO ai_config (config_key, config_value) VALUES (?,?)", (key, str(value)))
+
 def assess_speaking_submission(submission_id):
     row = query_db("SELECT * FROM audio_submissions WHERE id=?", (submission_id,), one=True)
     if not row: return None

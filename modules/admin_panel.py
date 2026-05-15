@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, send_from_directory
 from modules.models import query_db, execute_db
-from modules.ai_engine import assess_speaking_submission, assess_writing_submission
+from modules.ai_engine import assess_speaking_submission, assess_writing_submission, update_ai_config as set_ai_config, get_ai_config
 from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from werkzeug.utils import secure_filename
 import os, time
@@ -13,23 +13,23 @@ def allowed_file(filename):
 # ========== STATS ==========
 @admin_bp.route("/api/admin/stats")
 def admin_stats():
-    students  = query_db("SELECT COUNT(*) as c FROM students", one=True)["c"]
-    courses   = query_db("SELECT COUNT(*) as c FROM courses", one=True)["c"]
-    lessons   = query_db("SELECT COUNT(*) as c FROM library_items", one=True)["c"]
-    questions = query_db("SELECT COUNT(*) as c FROM questions", one=True)["c"]
-    skills    = query_db("SELECT COUNT(*) as c FROM daily_skills", one=True)["c"]
-    placements = query_db("SELECT COUNT(*) as c FROM placement_results", one=True)["c"]
-    errors    = query_db("SELECT COUNT(*) as c FROM error_bank WHERE is_corrected=0", one=True)["c"]
-    audio_subs = query_db("SELECT COUNT(*) as c FROM audio_submissions", one=True)["c"]
-    writing_subs = query_db("SELECT COUNT(*) as c FROM writing_submissions", one=True)["c"]
-
+    def cnt(table, where=""):
+        q = f"SELECT COUNT(*) as c FROM {table}"
+        if where: q += f" WHERE {where}"
+        return query_db(q, one=True)["c"]
     return jsonify({
-        "students": students, "courses": courses, "library_items": lessons,
-        "questions": questions, "skills": skills, "placement_tests": placements,
-        "pending_errors": errors, "audio_submissions": audio_subs, "writing_submissions": writing_subs
+        "students": cnt("students"),
+        "courses": cnt("courses"),
+        "library_items": cnt("library_items"),
+        "questions": cnt("questions"),
+        "skills": cnt("daily_skills"),
+        "placement_tests": cnt("placement_results"),
+        "pending_errors": cnt("error_bank", "is_corrected=0"),
+        "audio_submissions": cnt("audio_submissions"),
+        "writing_submissions": cnt("writing_submissions"),
     })
 
-# ========== STUDENTS LIST ==========
+# ========== STUDENTS ==========
 @admin_bp.route("/api/admin/students")
 def admin_students():
     rows = query_db("""
@@ -48,12 +48,29 @@ def admin_skills():
 
 @admin_bp.route("/api/admin/skills/add", methods=["POST"])
 def add_skill():
-    data = request.get_json()
+    data = request.form if request.form else request.get_json() or {}
+    title = data.get("title", "New Skill")
+    skill_type = data.get("skill_type", "text")
+    task_type = data.get("task_type", "mcq")
+    icon = data.get("icon", "fa-star")
+    time_limit = data.get("time_limit", "45")
+    telegram_link = data.get("telegram_link", "")
+    content_path = None
+
+    # Handle skill content file upload
+    if "content_file" in request.files:
+        file = request.files["content_file"]
+        if file and file.filename and allowed_file(file.filename):
+            filename = secure_filename(f"skill_{int(time.time())}_{file.filename}")
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+            full = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(full)
+            content_path = f"/static/uploads/{filename}"
+
     sid = execute_db(
-        """INSERT INTO daily_skills (title, skill_type, task_type, icon, time_limit, telegram_link, sort_order)
-           VALUES (?,?,?,?,?,?, (SELECT COALESCE(MAX(sort_order),0)+1 FROM daily_skills))""",
-        (data["title"], data.get("skill_type","text"), data.get("task_type","mcq"),
-         data.get("icon","fa-star"), data.get("time_limit",45), data.get("telegram_link"))
+        """INSERT INTO daily_skills (title, skill_type, task_type, icon, time_limit, telegram_link, content_path, sort_order)
+           VALUES (?,?,?,?,?,?,?, (SELECT COALESCE(MAX(sort_order),0)+1 FROM daily_skills))""",
+        (title, skill_type, task_type, icon, int(time_limit) if str(time_limit).isdigit() else 45, telegram_link, content_path)
     )
     return jsonify({"id": sid, "ok": True})
 
@@ -63,7 +80,7 @@ def update_skill(skill_id):
     execute_db(
         "UPDATE daily_skills SET title=?, skill_type=?, task_type=?, icon=?, time_limit=?, telegram_link=?, is_active=? WHERE id=?",
         (data["title"], data.get("skill_type"), data.get("task_type"), data.get("icon"),
-         data.get("time_limit"), data.get("telegram_link"), data.get("is_active",1), skill_id)
+         data.get("time_limit"), data.get("telegram_link"), data.get("is_active", 1), skill_id)
     )
     return jsonify({"ok": True})
 
@@ -84,7 +101,7 @@ def reorder_skills():
         execute_db("UPDATE daily_skills SET sort_order=? WHERE id=?", (item["order"], item["id"]))
     return jsonify({"ok": True})
 
-# ========== LIBRARY CRUD ==========
+# ========== LIBRARY CRUD (with file upload) ==========
 @admin_bp.route("/api/admin/library")
 def admin_library():
     rows = query_db("SELECT * FROM library_items ORDER BY created_at DESC")
@@ -101,7 +118,7 @@ def add_library():
     if "file" in request.files:
         file = request.files["file"]
         if file and file.filename and allowed_file(file.filename):
-            filename = secure_filename(f"{int(time.time())}_{file.filename}")
+            filename = secure_filename(f"lib_{int(time.time())}_{file.filename}")
             os.makedirs(UPLOAD_FOLDER, exist_ok=True)
             full_path = os.path.join(UPLOAD_FOLDER, filename)
             file.save(full_path)
@@ -113,16 +130,13 @@ def add_library():
     )
     return jsonify({"id": lid, "ok": True})
 
-@admin_bp.route("/api/admin/library/update/<int:item_id>", methods=["PUT"])
-def update_library(item_id):
-    data = request.get_json() if request.is_json else request.form
-    title = data.get("title")
-    is_active = data.get("is_active", 1)
-    execute_db("UPDATE library_items SET title=?, is_active=? WHERE id=?", (title, is_active, item_id))
-    return jsonify({"ok": True})
-
 @admin_bp.route("/api/admin/library/delete/<int:item_id>", methods=["DELETE"])
 def delete_library(item_id):
+    row = query_db("SELECT file_path FROM library_items WHERE id=?", (item_id,), one=True)
+    if row and row["file_path"]:
+        fp = os.path.join(UPLOAD_FOLDER, os.path.basename(row["file_path"]))
+        if os.path.exists(fp):
+            os.remove(fp)
     execute_db("DELETE FROM library_items WHERE id=?", (item_id,))
     return jsonify({"ok": True})
 
@@ -131,43 +145,7 @@ def toggle_library(item_id):
     execute_db("UPDATE library_items SET is_active = 1 - is_active WHERE id=?", (item_id,))
     return jsonify({"ok": True})
 
-# ========== PLACEMENT QUESTIONS CRUD ==========
-@admin_bp.route("/api/admin/placement_questions")
-def placement_questions():
-    rows = query_db("SELECT * FROM placement_questions")
-    return jsonify([dict(r) for r in rows])
-
-@admin_bp.route("/api/admin/placement_questions/add", methods=["POST"])
-def add_placement_question():
-    data = request.get_json()
-    qid = execute_db(
-        "INSERT INTO placement_questions (question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty) VALUES (?,?,?,?,?,?,?)",
-        (data["question_text"], data["option_a"], data["option_b"], data["option_c"], data["option_d"], data["correct_answer"], data.get("difficulty","medium"))
-    )
-    return jsonify({"id": qid, "ok": True})
-
-@admin_bp.route("/api/admin/placement_questions/delete/<int:qid>", methods=["DELETE"])
-def delete_placement_question(qid):
-    execute_db("DELETE FROM placement_questions WHERE id=?", (qid,))
-    return jsonify({"ok": True})
-
-@admin_bp.route("/api/admin/placement_questions/toggle/<int:qid>", methods=["POST"])
-def toggle_placement_question(qid):
-    execute_db("UPDATE placement_questions SET is_active = 1 - is_active WHERE id=?", (qid,))
-    return jsonify({"ok": True})
-
-# ========== PLACEMENT RESULTS ==========
-@admin_bp.route("/api/admin/placement_results")
-def placement_results():
-    rows = query_db("""
-        SELECT pr.*, s.name as student_name
-        FROM placement_results pr
-        JOIN students s ON pr.student_id = s.telegram_id
-        ORDER BY pr.completed_at DESC
-    """)
-    return jsonify([dict(r) for r in rows])
-
-# ========== SUBMISSIONS HUB ==========
+# ========== SUBMISSIONS ==========
 @admin_bp.route("/api/admin/submissions/audio")
 def audio_submissions():
     rows = query_db("""
@@ -190,14 +168,14 @@ def writing_submissions():
     """)
     return jsonify([dict(r) for r in rows])
 
-@admin_bp.route("/api/admin/submissions/evaluate_audio/<int:submission_id>", methods=["POST"])
-def evaluate_audio(submission_id):
-    result = assess_speaking_submission(submission_id)
+@admin_bp.route("/api/admin/submissions/evaluate_audio/<int:sid>", methods=["POST"])
+def evaluate_audio(sid):
+    result = assess_speaking_submission(sid)
     return jsonify({"ok": True, "result": result})
 
-@admin_bp.route("/api/admin/submissions/evaluate_writing/<int:submission_id>", methods=["POST"])
-def evaluate_writing_admin(submission_id):
-    result = assess_writing_submission(submission_id)
+@admin_bp.route("/api/admin/submissions/evaluate_writing/<int:sid>", methods=["POST"])
+def evaluate_writing_admin(sid):
+    result = assess_writing_submission(sid)
     return jsonify({"ok": True, "result": result})
 
 # ========== AI CONFIG ==========
@@ -207,18 +185,12 @@ def ai_config():
     return jsonify([dict(r) for r in rows])
 
 @admin_bp.route("/api/admin/ai_config/update", methods=["POST"])
-def update_ai_config():
+def update_ai_config_route():
     data = request.get_json()
-    for key, value in data.items():
-        execute_db("UPDATE ai_config SET config_value=? WHERE config_key=?", (str(value), key))
+    set_ai_config(data)
     return jsonify({"ok": True})
 
-# ========== SERVE UPLOADS (for audio playback) ==========
-@admin_bp.route("/uploads/<path:filename>")
-def serve_upload(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
-
-# ========== BILLING ADMIN ==========
+# ========== BILLING ==========
 @admin_bp.route("/api/admin/subscriptions")
 def admin_subscriptions():
     rows = query_db("""
@@ -240,3 +212,28 @@ def activity_log():
         ORDER BY al.created_at DESC LIMIT 100
     """)
     return jsonify([dict(r) for r in rows])
+
+# ========== SERVE UPLOADS ==========
+@admin_bp.route("/uploads/<path:filename>")
+def serve_upload(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
+# ========== QUESTIONS CRUD (for daily skills) ==========
+@admin_bp.route("/api/admin/questions")
+def admin_questions():
+    rows = query_db("SELECT q.*, ds.title as skill_title FROM questions q LEFT JOIN daily_skills ds ON q.skill_id=ds.id ORDER BY q.id DESC")
+    return jsonify([dict(r) for r in rows])
+
+@admin_bp.route("/api/admin/questions/add", methods=["POST"])
+def add_question():
+    data = request.get_json()
+    qid = execute_db(
+        "INSERT INTO questions (skill_id, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES (?,?,?,?,?,?,?)",
+        (data["skill_id"], data["question_text"], data["option_a"], data["option_b"], data["option_c"], data["option_d"], data["correct_answer"])
+    )
+    return jsonify({"id": qid, "ok": True})
+
+@admin_bp.route("/api/admin/questions/delete/<int:qid>", methods=["DELETE"])
+def delete_question(qid):
+    execute_db("DELETE FROM questions WHERE id=?", (qid,))
+    return jsonify({"ok": True})

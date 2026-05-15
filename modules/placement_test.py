@@ -1,129 +1,138 @@
-"""
-placement_test.py v17.0 — محرك امتحان تحديد المستوى
-- MCQ فقط لضمان دقة التصحيح
-- مؤقت تنازلي (Time-Limited)
-- تصحيح فوري وتصنيف (مبتدئ/متوسط/متقدم)
-- قفل Dashboard حتى إنهاء الامتحان
-"""
-from flask import Blueprint, jsonify, request, render_template
+import json, os
+from flask import Blueprint, request, jsonify
+from config import JSON_PLACEMENT
 from modules.models import query_db, execute_db
-import random
 
-placement_bp = Blueprint("placement", __name__, url_prefix="/placement")
+placement_bp = Blueprint("placement_bp", __name__)
 
-@placement_bp.route("/")
-def placement_page():
-    """صفحة امتحان المستوى"""
-    return render_template("placement.html")
+def load_questions():
+    with open(JSON_PLACEMENT, "r", encoding="utf-8") as f:
+        questions = json.load(f)
+    return questions
 
-@placement_bp.route("/api/questions")
-def api_placement_questions():
-    """جلب 10 أسئلة عشوائية لامتحان المستوى"""
-    rows = query_db("SELECT * FROM placement_questions WHERE is_active=1 ORDER BY RANDOM() LIMIT 10")
-    if not rows:
-        # أسئلة احتياطية
-        return jsonify({"questions": [
-            {"id":0,"question_text":"What is the synonym of 'rapid'?","option_a":"Slow","option_b":"Fast","option_c":"Heavy","option_d":"Bright","time_limit_seconds":45},
-            {"id":0,"question_text":"Choose correct: He ___ to school","option_a":"go","option_b":"goes","option_c":"going","option_d":"gone","time_limit_seconds":45},
-            {"id":0,"question_text":"The word 'ubiquitous' means:","option_a":"Rare","option_b":"Everywhere","option_c":"Underground","option_d":"Unique","time_limit_seconds":60},
-            {"id":0,"question_text":"What is TOEFL for?","option_a":"Math","option_b":"English proficiency","option_c":"Science","option_d":"History","time_limit_seconds":30},
-            {"id":0,"question_text":"'To kill two birds' means:","option_a":"Be cruel","option_b":"Achieve two things","option_c":"Fail","option_d":"Hunt","time_limit_seconds":45},
-        ], "total_time": 600})
+def save_questions(questions):
+    with open(JSON_PLACEMENT, "w", encoding="utf-8") as f:
+        json.dump(questions, f, indent=2, ensure_ascii=False)
 
-    questions = []
-    for r in rows:
-        questions.append({
-            "id": r["id"],
-            "question_text": r["question_text"],
-            "option_a": r["option_a"],
-            "option_b": r["option_b"],
-            "option_c": r["option_c"],
-            "option_d": r["option_d"],
-            "time_limit_seconds": r["time_limit_seconds"],
-        })
-
-    return jsonify({"questions": questions, "total_time": 600})
-
-@placement_bp.route("/api/submit", methods=["POST"])
-def api_placement_submit():
-    """
-    استقبال إجابات الطالب وتصحيحها فورياً
-    body: {user_id, answers: [{question_id, selected_option}]}
-    """
-    d = request.get_json()
-    user_id = d.get("user_id")
-    answers = d.get("answers", [])
-
-    if not user_id:
-        return jsonify({"error": "معرف الطالب مطلوب"}), 400
-
-    # تصحيح الإجابات
-    total = len(answers)
-    correct = 0
-    skill_scores = {}
-
-    for ans in answers:
-        qid = ans.get("question_id")
-        selected = ans.get("selected_option", "").strip().upper()
-
-        row = query_db("SELECT correct_option, skill_area, difficulty FROM placement_questions WHERE id=?", (qid,), one=True)
-        if row:
-            is_correct = (selected == row["correct_option"].strip().upper())
-            if is_correct:
-                correct += 1
-
-            area = row["skill_area"] or "general"
-            if area not in skill_scores:
-                skill_scores[area] = {"correct": 0, "total": 0}
-            skill_scores[area]["total"] += 1
-            if is_correct:
-                skill_scores[area]["correct"] += 1
-
-    score_percent = round((correct / total) * 100, 1) if total > 0 else 0
-
-    # تصنيف المستوى
-    if score_percent >= 80:
-        level = "متقدم Advanced"
-    elif score_percent >= 50:
-        level = "متوسط Intermediate"
+def classify_level(score, total):
+    if total == 0:
+        return "ضعيف (Beginner)"
+    if score <= 3:
+        return "ضعيف (Beginner)"
+    elif score <= 7:
+        return "متوسط (Intermediate)"
     else:
-        level = "مبتدئ Beginner"
+        return "متقدم (Advanced)"
 
-    # حفظ النتيجة
-    execute_db(
-        """INSERT INTO placement_results (user_id, total_questions, correct_count, score_percent, level, skill_breakdown)
-           VALUES (?, ?, ?, ?, ?, ?)""",
-        (user_id, total, correct, score_percent, level, str(skill_scores)))
+# ===== STUDENT API: get questions (without correct_answer) =====
+@placement_bp.route("/api/placement/questions")
+def get_questions():
+    questions = load_questions()
+    # Strip correct_answer for students
+    safe = []
+    for q in questions:
+        safe.append({
+            "id": q["id"],
+            "question_text": q["question_text"],
+            "option_a": q["option_a"],
+            "option_b": q["option_b"],
+            "option_c": q["option_c"],
+            "option_d": q["option_d"],
+            "difficulty": q.get("difficulty", "medium")
+        })
+    return jsonify(safe)
 
-    # تحديث الطالب
-    execute_db(
-        "UPDATE students SET placement_done=1, placement_level=?, level=?, xp=COALESCE(xp,0)+?, last_active=CURRENT_TIMESTAMP WHERE telegram_id=?",
-        (level, {"متقدم Advanced": 3, "متوسط Intermediate": 2, "مبتدئ Beginner": 1}.get(level, 1),
-         correct * 5, user_id))
+# ===== STUDENT API: submit =====
+@placement_bp.route("/api/placement/submit", methods=["POST"])
+def submit_placement():
+    data = request.get_json()
+    student_id = data.get("student_id")
+    answers = data.get("answers", {})  # { "1": "B", "2": "B", ... }
 
-    # تسجيل نشاط
+    if not student_id:
+        return jsonify({"error": "student_id required"}), 400
+
+    execute_db("INSERT OR IGNORE INTO students (telegram_id) VALUES (?)", (student_id,))
+
+    questions = load_questions()
+    total = len(questions)
+    correct = 0
+
+    for q in questions:
+        qid = str(q["id"])
+        chosen = answers.get(qid, "").upper()
+        if chosen == q["correct_answer"].upper():
+            correct += 1
+
+    level = classify_level(correct, total)
+
+    # Save to DB
     execute_db(
-        "INSERT INTO activity_log (user_id, action, details, xp_change) VALUES (?,?,?,?)",
-        (user_id, "placement_complete", f"Level: {level} | Score: {score_percent}%", correct * 5))
+        "INSERT INTO placement_results (student_id, score, total, level, answers_json) VALUES (?,?,?,?,?)",
+        (student_id, correct, total, level, json.dumps(answers))
+    )
+    execute_db(
+        "UPDATE students SET placement_done=1, placement_level=? WHERE telegram_id=?",
+        (level, student_id)
+    )
 
     return jsonify({
-        "success": True,
+        "score": correct,
         "total": total,
-        "correct": correct,
-        "score_percent": score_percent,
         "level": level,
-        "level_number": {"متقدم Advanced": 3, "متوسط Intermediate": 2, "مبتدئ Beginner": 1}.get(level, 1),
-        "xp_earned": correct * 5,
-        "skill_breakdown": skill_scores
+        "percentage": round(correct/total*100, 1) if total > 0 else 0
     })
 
-@placement_bp.route("/api/status/<int:user_id>")
-def api_placement_status(user_id):
-    """هل أنهى الطالب امتحان المستوى؟"""
-    row = query_db("SELECT placement_done, placement_level FROM students WHERE telegram_id=?", (user_id,), one=True)
-    if row:
-        return jsonify({
-            "placement_done": bool(row["placement_done"]),
-            "level": row["placement_level"]
-        })
-    return jsonify({"placement_done": False, "level": None})
+# ===== STUDENT API: placement status =====
+@placement_bp.route("/api/placement/status/<int:student_id>")
+def placement_status(student_id):
+    row = query_db(
+        "SELECT placement_done, placement_level FROM students WHERE telegram_id=?",
+        (student_id,), one=True
+    )
+    if not row:
+        return jsonify({"completed": False, "level": None})
+    result_row = query_db(
+        "SELECT score, total, level, completed_at FROM placement_results WHERE student_id=? ORDER BY id DESC LIMIT 1",
+        (student_id,), one=True
+    )
+    return jsonify({
+        "completed": bool(row["placement_done"]),
+        "level": row["placement_level"],
+        "result": {"score": result_row["score"], "total": result_row["total"], "level": result_row["level"], "completed_at": result_row["completed_at"]} if result_row else None
+    })
+
+# ===== ADMIN API: full questions with correct_answer =====
+@placement_bp.route("/api/admin/placement_questions_full")
+def admin_placement_questions():
+    questions = load_questions()
+    return jsonify(questions)
+
+# ===== ADMIN API: update a question =====
+@placement_bp.route("/api/admin/placement_questions/update/<int:qid>", methods=["PUT"])
+def update_placement_question(qid):
+    data = request.get_json()
+    questions = load_questions()
+    for q in questions:
+        if q["id"] == qid:
+            q["question_text"] = data.get("question_text", q["question_text"])
+            q["option_a"] = data.get("option_a", q["option_a"])
+            q["option_b"] = data.get("option_b", q["option_b"])
+            q["option_c"] = data.get("option_c", q["option_c"])
+            q["option_d"] = data.get("option_d", q["option_d"])
+            q["correct_answer"] = data.get("correct_answer", q["correct_answer"]).upper()
+            q["difficulty"] = data.get("difficulty", q.get("difficulty", "medium"))
+            break
+    save_questions(questions)
+    return jsonify({"ok": True})
+
+# ===== ADMIN API: placement results =====
+@placement_bp.route("/api/admin/placement_results")
+def admin_placement_results():
+    rows = query_db("""
+        SELECT pr.*, s.name as student_name
+        FROM placement_results pr
+        JOIN students s ON pr.student_id = s.telegram_id
+        ORDER BY pr.completed_at DESC
+    """)
+    return jsonify([dict(r) for r in rows])

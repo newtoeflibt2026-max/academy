@@ -5,23 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>اختبار تحديد المستوى | أكاديمية يامن</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { font-family: "Cairo", sans-serif; }
   body { background: #fdfcfb; }
-  .card { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(197,160,40,0.2); border-radius: 24px; }
-  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; border-radius: 16px; padding: 14px 28px; font-weight: 700; transition: all 0.3s; }
+  .card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(197,160,40,0.2); border-radius: 24px; }
+  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; border-radius: 16px; padding: 14px 28px; font-weight: 700; cursor: pointer; transition: all 0.3s; border: none; }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,54,93,0.3); }
-  .gold { color: #c5a028; }
-  .navy { color: #1a365d; }
-  .bg-gold { background: #c5a028; }
-  .option-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; padding: 14px 20px; text-align: right; cursor: pointer; transition: all 0.2s; }
+  .gold { color: #c5a028; } .navy { color: #1a365d; }
+  .option-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; padding: 14px; text-align: right; cursor: pointer; transition: all 0.2s; display: block; width: 100%; }
   .option-btn:hover { border-color: #c5a028; background: #fef9e7; }
   .option-btn.selected { border-color: #1a365d; background: #e8edf5; }
-  .option-btn.correct { border-color: #10b981; background: #d1fae5; }
-  .option-btn.wrong { border-color: #ef4444; background: #fee2e2; }
-  .progress-ring circle { transition: stroke-dashoffset 0.5s; }
 </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -30,11 +24,11 @@
 <div id="startScreen" class="card p-8 max-w-md w-full text-center">
   <div class="text-6xl mb-4">📝</div>
   <h1 class="text-2xl font-extrabold navy mb-2">اختبار تحديد المستوى</h1>
-  <p class="text-gray-600 mb-6">10 أسئلة اختيارية • 10 دقائق • مستوى TOEFL</p>
+  <p class="text-gray-600 mb-6">10 أسئلة اختيارية • 6 دقائق • مستوى TOEFL</p>
   <div class="space-y-3 text-right text-sm text-gray-500 mb-8">
-    <p>✅ بعد إكمال الاختبار سيتم تصنيفك: مبتدئ / متوسط / متقدم</p>
-    <p>✅ لا يمكنك تخطي الاختبار</p>
-    <p>✅ حاول الإجابة بتركيز</p>
+    <p>✅ التصنيف: ضعيف (0-3) / متوسط (4-7) / متقدم (8-10)</p>
+    <p>✅ لا يمكن تخطي الاختبار</p>
+    <p>✅ الإكمال إجباري للدخول إلى الداشبورد</p>
   </div>
   <button onclick="startTest()" class="btn-primary w-full text-lg">ابدأ الاختبار الآن</button>
 </div>
@@ -43,16 +37,15 @@
 <div id="testScreen" class="card p-6 max-w-lg w-full hidden">
   <div class="flex justify-between items-center mb-4">
     <span class="navy font-bold text-lg">السؤال <span id="currentQ">1</span>/<span id="totalQ">10</span></span>
-    <span class="gold font-bold text-lg" id="timer">10:00</span>
+    <span class="gold font-bold text-2xl" id="timer">6:00</span>
   </div>
-  <!-- Progress bar -->
   <div class="w-full bg-gray-200 rounded-full h-3 mb-6">
-    <div id="progressBar" class="bg-gradient-to-r from-navy to-gold h-3 rounded-full transition-all" style="width:0%"></div>
+    <div id="progressBar" class="h-3 rounded-full transition-all duration-500" style="width:0%; background: linear-gradient(90deg, #1a365d, #c5a028);"></div>
   </div>
-  <h2 id="questionText" class="text-xl font-bold navy mb-6"></h2>
+  <h2 id="questionText" class="text-xl font-bold navy mb-6 leading-relaxed"></h2>
   <div id="optionsContainer" class="space-y-3"></div>
   <div class="flex gap-3 mt-8">
-    <button id="prevBtn" onclick="prevQuestion()" class="hidden flex-1 py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-600">السابق</button>
+    <button id="prevBtn" onclick="prevQuestion()" class="hidden flex-1 py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-600 bg-white">السابق</button>
     <button onclick="nextQuestion()" class="btn-primary flex-1" id="nextBtn">التالي</button>
   </div>
 </div>
@@ -61,7 +54,7 @@
 <div id="resultScreen" class="card p-8 max-w-md w-full text-center hidden">
   <div class="text-6xl mb-4" id="resultEmoji">🎉</div>
   <h1 class="text-2xl font-extrabold navy mb-2">اكتمل الاختبار!</h1>
-  <div class="text-5xl font-extrabold gold my-4" id="resultLevel"></div>
+  <div class="text-4xl font-extrabold gold my-4" id="resultLevel"></div>
   <p class="text-gray-600 mb-2">النتيجة: <span id="resultScore" class="font-bold navy"></span></p>
   <p class="text-sm text-gray-400 mb-8">سيتم توجيهك إلى لوحة التحكم...</p>
   <button onclick="goToDashboard()" class="btn-primary w-full">انتقل إلى الداشبورد</button>
@@ -69,17 +62,21 @@
 
 <script>
 const USER_ID = new URLSearchParams(location.search).get("user_id") || "5602495831";
-let questions = [], currentIndex = 0, answers = {}, timer = null, timeLeft = 600;
+let questions = [], currentIndex = 0, answers = {}, timer = null, timeLeft = 360; // 6 minutes
 
 async function startTest() {
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("testScreen").classList.remove("hidden");
-  const res = await fetch("/api/placement/questions");
-  const all = await res.json();
-  questions = all.sort(() => Math.random() - 0.5).slice(0, 10);
-  document.getElementById("totalQ").textContent = questions.length;
-  startTimer();
-  renderQuestion();
+  try {
+    const res = await fetch("/api/placement/questions");
+    const all = await res.json();
+    questions = all.sort(() => Math.random() - 0.5);
+    document.getElementById("totalQ").textContent = questions.length;
+    startTimer();
+    renderQuestion();
+  } catch(e) {
+    alert("خطأ في تحميل الأسئلة: " + e.message);
+  }
 }
 
 function startTimer() {
@@ -102,14 +99,14 @@ function renderQuestion() {
   ["A","B","C","D"].forEach(letter => {
     const text = q["option_"+letter.toLowerCase()];
     if (!text) return;
-    const btn = document.createElement("div");
+    const btn = document.createElement("button");
     btn.className = "option-btn " + (answers[q.id] === letter ? "selected" : "");
-    btn.innerHTML = `<span class="inline-block w-8 h-8 rounded-full border-2 ${answers[q.id]===letter?'bg-navy text-white border-navy':'border-gray-300'} text-center leading-7 mr-3 font-bold text-sm">${letter}</span>${text}`;
+    btn.innerHTML = `<span class="inline-block w-8 h-8 rounded-full border-2 ${answers[q.id]===letter?'bg-navy text-white border-navy':'border-gray-300'} text-center leading-7 ml-3 font-bold text-sm" style="color:${answers[q.id]===letter?'#fff':'#6b7280'}">${letter}</span>${text}`;
     btn.onclick = () => { answers[q.id] = letter; renderQuestion(); };
     opts.appendChild(btn);
   });
   document.getElementById("prevBtn").classList.toggle("hidden", currentIndex === 0);
-  document.getElementById("nextBtn").textContent = currentIndex === questions.length - 1 ? "إنهاء" : "التالي";
+  document.getElementById("nextBtn").textContent = currentIndex === questions.length - 1 ? "إنهاء الاختبار" : "التالي";
 }
 
 function prevQuestion() { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
@@ -119,17 +116,22 @@ async function submitTest() {
   clearInterval(timer);
   document.getElementById("testScreen").classList.add("hidden");
   document.getElementById("resultScreen").classList.remove("hidden");
-  const res = await fetch("/api/placement/submit", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ student_id: USER_ID, answers: answers })
-  });
-  const data = await res.json();
-  const emojis = { "Advanced": "🏆", "Intermediate": "🌟", "Beginner": "📚" };
-  document.getElementById("resultEmoji").textContent = emojis[data.level] || "🎉";
-  document.getElementById("resultLevel").textContent = data.level;
-  document.getElementById("resultScore").textContent = `${data.score}/${data.total} (${data.percentage}%)`;
-  setTimeout(goToDashboard, 5000);
+  try {
+    const res = await fetch("/api/placement/submit", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ student_id: USER_ID, answers: answers })
+    });
+    const data = await res.json();
+    const emojis = { "متقدم (Advanced)": "🏆", "متوسط (Intermediate)": "🌟", "ضعيف (Beginner)": "📚" };
+    document.getElementById("resultEmoji").textContent =
+      Object.entries(emojis).find(([k])=>data.level.includes(k.split(" ")[0]))?.[1] || "🎉";
+    document.getElementById("resultLevel").textContent = data.level;
+    document.getElementById("resultScore").textContent = `${data.score}/${data.total} (${data.percentage}%)`;
+    setTimeout(goToDashboard, 5000);
+  } catch(e) {
+    alert("خطأ في حفظ النتيجة: " + e.message);
+  }
 }
 
 function goToDashboard() {
