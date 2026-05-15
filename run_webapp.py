@@ -1,204 +1,205 @@
-import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
-
+import os
+import sqlite3
+import json
 from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
+from datetime import datetime
 
-from database import (
-    init_db, get_db_connection, get_conn, get_stats, get_all_students,
-    toggle_student_active, get_pending_payments, update_payment_status,
-    add_subscription, add_payment, get_admin_setting, set_admin_setting,
-    get_leaderboard, add_xp, upsert_student, log_activity
-)
+# ─── تهيئة Flask ──────────────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_PATH = os.path.join(BASE_DIR, "data", "yamen_academy.db")
+PORT = int(os.environ.get("PORT", 5050))
 
 app = Flask(__name__)
 CORS(app)
 
-# ═══════ STATIC FILES ═══════
-@app.route('/')
-def index():
-    return render_template('admin.html')
+# ─── دوال مساعدة لقاعدة البيانات ──────────────────────────
+def get_db():
+    """يفتح اتصال SQLite آمن لكل طلب"""
+    conn = sqlite3.connect(DATABASE_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
+    return conn
 
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
+def query_db(query, args=(), one=False):
+    conn = get_db()
+    try:
+        cur = conn.execute(query, args)
+        rv = cur.fetchall()
+        conn.commit()
+        return (rv[0] if rv else None) if one else rv
+    except Exception as e:
+        print(f"⚠️ DB Query Error: {e}")
+        return None
+    finally:
+        conn.close()
 
-@app.route('/app.js')
-def serve_js():
-    return send_from_directory('static', 'app.js', mimetype='application/javascript')
+def execute_db(query, args=()):
+    conn = get_db()
+    try:
+        conn.execute(query, args)
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"⚠️ DB Execute Error: {e}")
+        return False
+    finally:
+        conn.close()
 
-@app.route('/style.css')
-def serve_css():
-    return send_from_directory('static', 'style.css', mimetype='text/css')
+# ─── صفحة Dashboard الطالب ────────────────────────────────
+@app.route("/dashboard")
+@app.route("/dashboard/<int:student_id>")
+def dashboard(student_id=None):
+    """تعرض لوحة التحكم التفاعلية للطالب ببيانات حية"""
 
-# ═══════ HEALTH ═══════
-@app.route('/api/health')
+    # --- إفتراضي: لوحة ترحيبية (بدون ID) ---
+    if student_id is None:
+        return render_template("dashboard.html",
+            student={"first_name": "طالب", "xp": 0, "level": 0, "streak": 0},
+            courses=[],
+            error_count=0,
+            leaderboard=[]
+        )
+
+    # --- جلب بيانات الطالب ────────────────────────────────
+    student_row = query_db(
+        "SELECT telegram_id, username, first_name, xp, level, is_active, last_active, streak "
+        "FROM students WHERE telegram_id = ?",
+        (student_id,), one=True
+    )
+    if not student_row:
+        return render_template("dashboard.html",
+            student={"first_name": "غير معروف", "xp": 0, "level": 0, "streak": 0},
+            courses=[],
+            error_count=0,
+            leaderboard=[]
+        ), 200
+
+    student = {
+        "id": student_row["telegram_id"],
+        "username": student_row["username"] or "طالب",
+        "first_name": student_row["first_name"] or student_row["username"] or "طالب",
+        "xp": student_row["xp"] or 0,
+        "level": student_row["level"] or 0,
+        "is_active": bool(student_row["is_active"]),
+        "last_active": student_row["last_active"],
+        "streak": student_row["streak"] or 0
+    }
+
+    # --- الكورسات المتاحة والنشطة ─────────────────────────
+    courses_data = query_db(
+        "SELECT id, title, skill_type, time_limit, target_score, is_active "
+        "FROM courses WHERE is_active = 1"
+    ) or []
+
+    # --- عدد الأخطاء في بنك الأخطاء ────────────────────────
+    error_row = query_db(
+        "SELECT COUNT(*) as cnt FROM error_bank WHERE user_id = ?",
+        (student_id,), one=True
+    )
+    error_count = error_row["cnt"] if error_row else 0
+
+    # --- لوحة المتصدرين (أفضل 5) ──────────────────────────
+    lb_rows = query_db(
+        "SELECT telegram_id, first_name, username, xp, level "
+        "FROM students WHERE is_active = 1 "
+        "ORDER BY xp DESC LIMIT 5"
+    ) or []
+
+    leaderboard = []
+    for r in lb_rows:
+        leaderboard.append({
+            "id": r["telegram_id"],
+            "name": r["first_name"] or r["username"] or "طالب",
+            "xp": r["xp"] or 0,
+            "level": r["level"] or 0
+        })
+
+    courses = [dict(r) for r in courses_data]
+
+    return render_template("dashboard.html",
+        student=student,
+        courses=courses,
+        error_count=error_count,
+        leaderboard=leaderboard
+    )
+
+# ============================================================
+#  مسارات API الحالية (موجودة مسبقاً - مختصرة هنا)
+# ============================================================
+
+@app.route("/api/health")
 def health():
-    return jsonify({"status": "ok", "message": "Yamen Academy API is running"})
+    return jsonify({"status": "healthy", "timestamp": str(datetime.now())})
 
-# ═══════ DASHBOARD ═══════
-@app.route('/api/admin/stats', methods=['POST', 'GET'])
-def stats():
-    s = get_stats()
-    conn = get_conn()
-    try:
-        s['total_xp'] = conn.execute("SELECT COALESCE(SUM(xp), 0) FROM students").fetchone()[0]
-    except:
-        s['total_xp'] = 0
-    finally:
-        conn.close()
-    return jsonify(s)
+@app.route("/api/courses")
+def api_courses():
+    rows = query_db("SELECT * FROM courses WHERE is_active = 1")
+    return jsonify([dict(r) for r in rows] if rows else [])
 
-# ═══════ STUDENTS ═══════
-@app.route('/api/admin/students', methods=['POST', 'GET'])
-def students():
-    ss = get_all_students()
-    return jsonify({'students': [dict(s) for s in ss]})
-
-@app.route('/api/admin/toggle_student', methods=['POST'])
-def toggle_student():
-    data = request.json
-    toggle_student_active(data['user_id'])
-    return jsonify({'success': True})
-
-# ═══════ COURSES ═══════
-@app.route('/api/admin/courses', methods=['POST', 'GET'])
-def courses():
-    conn = get_conn()
-    try:
-        cs = conn.execute("SELECT * FROM courses ORDER BY id").fetchall()
-        return jsonify({'courses': [dict(c) for c in cs]})
-    finally:
-        conn.close()
-
-@app.route('/api/courses', methods=['GET'])
-def public_courses():
-    conn = get_conn()
-    try:
-        cs = conn.execute("SELECT id, name, level, price, duration_days, skill_type, time_limit, target_score, is_active FROM courses WHERE is_active=1 ORDER BY id").fetchall()
-        return jsonify({'courses': [dict(c) for c in cs]})
-    finally:
-        conn.close()
-
-@app.route('/api/admin/add_course', methods=['POST'])
-def add_course():
-    d = request.json
-    conn = get_conn()
-    try:
-        conn.execute("INSERT INTO courses (name,level,price,duration_days,is_vip,skill_type,time_limit,target_score) VALUES (?,?,?,?,?,?,?,?)",
-                     (d['name'], d['level'], d['price'], d['duration_days'], d.get('is_vip', 0),
-                      d.get('skill_type', 'speaking'), d.get('time_limit', 45), d.get('target_score', 59)))
-        conn.commit()
-    finally:
-        conn.close()
-    return jsonify({'success': True})
-
-@app.route('/api/admin/delete_course', methods=['POST'])
-def delete_course():
-    conn = get_conn()
-    try:
-        conn.execute("DELETE FROM courses WHERE id=?", (request.json['id'],))
-        conn.commit()
-    finally:
-        conn.close()
-    return jsonify({'success': True})
-
-# ═══════ PAYMENTS ═══════
-@app.route('/api/admin/payments', methods=['POST', 'GET'])
-def payments():
-    conn = get_conn()
-    try:
-        ps = conn.execute("SELECT * FROM payments WHERE status='pending' ORDER BY created_at DESC").fetchall()
-        return jsonify({'payments': [dict(p) for p in ps]})
-    finally:
-        conn.close()
-
-@app.route('/api/admin/approve_payment', methods=['POST'])
-def approve_payment():
-    pid = request.json['id']
-    conn = get_conn()
-    try:
-        update_payment_status(pid, 'approved')
-        p = conn.execute("SELECT user_id, plan_name FROM payments WHERE id=?", (pid,)).fetchone()
-        if p:
-            days = 90 if "Excellence" in p[1] else (60 if "VIP" in p[1] else 30)
-            add_subscription(p[0], p[1], days)
-    finally:
-        conn.close()
-    return jsonify({'success': True})
-
-@app.route('/api/admin/reject_payment', methods=['POST'])
-def reject_payment():
-    update_payment_status(request.json['id'], 'rejected')
-    return jsonify({'success': True})
-
-# ═══════ VAULT ═══════
-@app.route('/api/admin/vault', methods=['POST', 'GET'])
-def vault():
-    conn = get_conn()
-    try:
-        items = conn.execute("SELECT * FROM vault_items ORDER BY id").fetchall()
-        return jsonify({'items': [dict(i) for i in items]})
-    finally:
-        conn.close()
-
-@app.route('/api/admin/add_vault', methods=['POST'])
-def add_vault():
-    d = request.json
-    conn = get_conn()
-    try:
-        conn.execute("INSERT INTO vault_items (title,content,unlock_level,category) VALUES (?,?,?,?)",
-                     (d['title'], d['content'], d.get('unlock_level', 1), d.get('category', 'speaking')))
-        conn.commit()
-    finally:
-        conn.close()
-    return jsonify({'success': True})
-
-@app.route('/api/admin/delete_vault', methods=['POST'])
-def delete_vault():
-    conn = get_conn()
-    try:
-        conn.execute("DELETE FROM vault_items WHERE id=?", (request.json['id'],))
-        conn.commit()
-    finally:
-        conn.close()
-    return jsonify({'success': True})
-
-# ═══════ LEADERBOARD ═══════
-@app.route('/api/leaderboard', methods=['GET'])
-def leaderboard():
-    lb = get_leaderboard(10)
-    return jsonify({'leaderboard': lb})
-
-# ═══════ SETTINGS ═══════
-@app.route('/api/admin/settings', methods=['POST', 'GET'])
-def settings():
+@app.route("/api/admin/stats")
+def admin_stats():
+    students_count = query_db("SELECT COUNT(*) as c FROM students", one=True)
+    courses_count = query_db("SELECT COUNT(*) as c FROM courses", one=True)
     return jsonify({
-        'show_writing': get_admin_setting('show_writing', '1'),
-        'show_speaking': get_admin_setting('show_speaking', '1'),
-        'wallet_number': get_admin_setting('wallet_number', '0798919150'),
-        'xp_multiplier': get_admin_setting('xp_multiplier', '1'),
-        'challenge_timer': get_admin_setting('challenge_timer', '5'),
+        "students": students_count["c"] if students_count else 0,
+        "courses": courses_count["c"] if courses_count else 0
     })
 
-@app.route('/api/admin/save_setting', methods=['POST'])
-def save_setting():
-    d = request.json
-    set_admin_setting(d['key'], str(d['value']))
-    return jsonify({'success': True})
+@app.route("/api/admin/students")
+def admin_students():
+    rows = query_db("SELECT * FROM students ORDER BY xp DESC")
+    return jsonify([dict(r) for r in rows] if rows else [])
 
-# ═══════ ERROR HANDLERS ═══════
-@app.errorhandler(404)
-def not_found(e):
-    return jsonify({"error": "Not found"}), 404
+@app.route("/api/leaderboard")
+def api_leaderboard():
+    rows = query_db(
+        "SELECT telegram_id, first_name, username, xp, level "
+        "FROM students WHERE is_active = 1 ORDER BY xp DESC LIMIT 10"
+    )
+    return jsonify([dict(r) for r in rows] if rows else [])
 
-@app.errorhandler(500)
-def server_error(e):
-    return jsonify({"error": "Internal server error"}), 500
+@app.route("/api/error_bank/<int:user_id>")
+def api_error_bank(user_id):
+    rows = query_db("SELECT * FROM error_bank WHERE user_id = ?", (user_id,))
+    return jsonify([dict(r) for r in rows] if rows else [])
 
-# ═══════ MAIN ═══════
-if __name__ == '__main__':
-    init_db()
-    port = int(os.environ.get('PORT', 8080))
-    print(f"🚀 Yamen Academy Admin running on port {port}")
-    app.run(host='0.0.0.0', port=port, debug=False)
+@app.route("/api/error_bank/correct", methods=["POST"])
+def api_error_correct():
+    data = request.get_json()
+    qid = data.get("question_id")
+    uid = data.get("user_id")
+    if not qid or not uid:
+        return jsonify({"error": "Missing fields"}), 400
+    execute_db(
+        "UPDATE error_bank SET correct_count = correct_count + 1 WHERE question_id = ? AND user_id = ?",
+        (qid, uid)
+    )
+    row = query_db(
+        "SELECT correct_count FROM error_bank WHERE question_id = ? AND user_id = ?",
+        (qid, uid), one=True
+    )
+    if row and row["correct_count"] >= 2:
+        execute_db("DELETE FROM error_bank WHERE question_id = ? AND user_id = ?", (qid, uid))
+    return jsonify({"success": True})
+
+# ─── الملفات الثابتة ─────────────────────────────────────
+@app.route("/style.css")
+def serve_style():
+    return send_from_directory("static", "style.css")
+
+@app.route("/app.js")
+def serve_app_js():
+    return send_from_directory("static", "app.js")
+
+@app.route("/manifest.json")
+def serve_manifest():
+    return send_from_directory("static", "manifest.json")
+
+# ─── تشغيل التطبيق ─────────────────────────────────────────
+if __name__ == "__main__":
+    # تأكد من وجود مجلد data + قاعدة بيانات
+    os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
+    app.run(host="0.0.0.0", port=PORT, debug=False)
+

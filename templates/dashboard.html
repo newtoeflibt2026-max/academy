@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يمن أكاديمي – لوحة التحكم</title>
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        'dark': '#0A0E27',
+                        'neon': '#00FFA3',
+                        'purp': '#7C3AED',
+                        'glass': 'rgba(255,255,255,0.05)',
+                        'card': '#111640',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { font-family: 'Cairo', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0A0E27 0%, #1A1050 50%, #0F0B30 100%);
+            min-height: 100vh;
+        }
+        /* تأثير الزجاج */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+        }
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            transition: all 0.3s ease;
+        }
+        .glass-btn:hover {
+            background: rgba(0, 255, 163, 0.1);
+            border-color: #00FFA3;
+            transform: translateY(-2px);
+        }
+        /* حلقة التقدم الدائرية */
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.8s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        /* شريط التقدم الخطي */
+        .xp-bar {
+            background: linear-gradient(90deg, #00FFA3 0%, #7C3AED 100%);
+            border-radius: 20px;
+            height: 10px;
+            transition: width 1s ease;
+        }
+        /* نجمة متحركة */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .pulse-star {
+            animation: pulse 2s infinite;
+        }
+        /* تأثير Hover للكروت */
+        .hover-glow:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 163, 0.15);
+        }
+        /* شريط التنقل السفلي */
+        .bottom-nav-item {
+            color: #6B7280;
+            transition: all 0.3s ease;
+        }
+        .bottom-nav-item.active {
+            color: #00FFA3;
+        }
+        /* التمرير السلس */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    </style>
+</head>
+<body class="text-white pb-24">
+
+    <div class="max-w-md mx-auto px-5 pt-8">
+
+        <!-- ========== 1. الشريط العلوي ========== -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-extrabold">
+                    أهلاً بكِ يا
+                    <span class="text-neon">{{ student.first_name or 'طالب' }}</span>
+                    👑
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">المستوى {{ student.level or 0 }} · يوم {{ student.streak or 0 }} على التوالي 🔥</p>
+            </div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-neon to-purp flex items-center justify-center text-lg font-bold shadow-lg pulse-star">
+                ⭐
+            </div>
+        </div>
+
+        <!-- ========== 2. بطاقة التقدم الدائري ========== -->
+        <div class="glass-card p-6 mb-5 hover-glow">
+            <h2 class="text-lg font-bold mb-4 text-gray-200">📊 تقدمك الأكاديمي</h2>
+            <div class="flex items-center justify-center gap-5">
+                <!-- الحلقة الدائرية -->
+                <div class="relative w-32 h-32">
+                    <svg class="w-full h-full" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="54"
+                            fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+                        <circle cx="60" cy="60" r="54"
+                            fill="none" stroke="url(#gradient)" stroke-width="8"
+                            stroke-linecap="round"
+                            stroke-dasharray="339.292"
+                            stroke-dashoffset="{{ 339.292 * (1 - (student.xp or 0) / 90) if (student.xp or 0) < 90 else 0 }}"
+                            class="progress-ring-circle"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#00FFA3"/>
+                                <stop offset="100%" stop-color="#7C3AED"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-extrabold text-neon">{{ student.xp or 0 }}</span>
+                        <span class="text-xs text-gray-400">XP</span>
+                    </div>
+                </div>
+                <!-- الأهداف -->
+                <div class="space-y-3 flex-1">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>🎯 59 XP</span><span class="text-neon">{{ ((student.xp or 0)/59*100)|int if (student.xp or 0) < 59 else 100 }}%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2.5">
+                            <div class="xp-bar" style="width: {{ ((student.xp or 0)/59*100)|int if (student.xp or 0) < 59 else 100 }}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>🏆 69 XP</span><span class="text-purp">{{ ((student.xp or 0)/69*100)|int if (student.xp or 0) < 69 else 100 }}%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2.5">
+                            <div class="xp-bar" style="width: {{ ((student.xp or 0)/69*100)|int if (student.xp or 0) < 69 else 100 }}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>👑 90 XP</span><span class="text-yellow-400">{{ ((student.xp or 0)/90*100)|int if (student.xp or 0) < 90 else 100 }}%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2.5">
+                            <div class="xp-bar bg-yellow-400" style="width: {{ ((student.xp or 0)/90*100)|int if (student.xp or 0) < 90 else 100 }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 3. قسم المهارات ========== -->
+        <div class="glass-card p-5 mb-5 hover-glow">
+            <h2 class="text-lg font-bold mb-4 text-gray-200">🎯 مهارات اليوم</h2>
+            <div class="grid grid-cols-2 gap-3">
+                {% for course in courses %}
+                <button onclick="startSkill('{{ course.skill_type or 'default' }}', {{ course.id or 0 }}, {{ course.time_limit or 45 }})"
+                        class="glass-btn p-4 text-center text-sm font-semibold hover:border-neon">
+                    <span class="text-2xl block mb-1">
+                        {% if 'محادثة' in (course.title or course.skill_type or '') %}💬
+                        {% elif 'كلمات' in (course.title or course.skill_type or '') %}📝
+                        {% elif 'جمل' in (course.title or course.skill_type or '') %}🧩
+                        {% elif 'إيميل' in (course.title or course.skill_type or '') or 'ايميل' in (course.title or course.skill_type or '') %}✉️
+                        {% elif 'استماع' in (course.title or course.skill_type or '') or 'تكرار' in (course.title or course.skill_type or '') %}🎧
+                        {% else %}📚{% endif %}
+                    </span>
+                    {{ course.title or course.skill_type or 'مهارة' }}
+                </button>
+                {% endfor %}
+                {% if not courses %}
+                <!-- أزرار افتراضية -->
+                <button class="glass-btn p-4 text-center text-sm font-semibold hover:border-neon">
+                    <span class="text-2xl block mb-1">💬</span> محادثة 45s
+                </button>
+                <button class="glass-btn p-4 text-center text-sm font-semibold hover:border-neon">
+                    <span class="text-2xl block mb-1">📝</span> إكمال كلمات
+                </button>
+                <button class="glass-btn p-4 text-center text-sm font-semibold hover:border-neon">
+                    <span class="text-2xl block mb-1">🧩</span> ترتيب جمل
+                </button>
+                <button class="glass-btn p-4 text-center text-sm font-semibold hover:border-neon">
+                    <span class="text-2xl block mb-1">✉️</span> كتابة إيميل
+                </button>
+                <button class="glass-btn p-4 text-center text-sm font-semibold hover:border-neon">
+                    <span class="text-2xl block mb-1">🎧</span> استماع وتكرار
+                </button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ========== 4. بنك الأخطاء ========== -->
+        <div class="glass-card p-5 mb-5 hover-glow cursor-pointer" onclick="openErrorBank()">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">⚠️</span>
+                    <div>
+                        <h3 class="font-bold text-lg">بنك الأخطاء</h3>
+                        <p class="text-gray-400 text-sm">
+                            {% if error_count > 0 %}
+                            لديك <span class="text-red-400 font-bold">{{ error_count }}</span> أخطاء معلقة
+                            {% else %}
+                            لا توجد أخطاء — أحسنت! 🎉
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% if error_count > 0 %}
+                <button class="bg-red-500/20 text-red-400 px-4 py-2 rounded-xl text-sm font-bold border border-red-500/30 hover:bg-red-500/30 transition">
+                    راجع الآن ←
+                </button>
+                {% else %}
+                <span class="text-2xl">✅</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ========== 5. لوحة المتصدرين ========== -->
+        <div class="glass-card p-5 mb-5 hover-glow">
+            <h2 class="text-lg font-bold mb-4 text-gray-200">🏅 لوحة المتصدرين</h2>
+
+            {% if leaderboard %}
+            <div class="space-y-3">
+                {% for player in leaderboard %}
+                <div class="flex items-center justify-between p-3 rounded-xl
+                    {% if player.id == student.id %}bg-neon/10 border border-neon/30{% else %}bg-white/[0.02]{% endif %}">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
+                            {% if loop.index == 1 %}bg-yellow-400 text-black{% elif loop.index == 2 %}bg-gray-300 text-black{% elif loop.index == 3 %}bg-amber-600 text-white{% else %}bg-white/10 text-gray-400{% endif %}">
+                            {{ loop.index }}
+                        </span>
+                        <div>
+                            <p class="font-semibold">{{ player.name }}</p>
+                            <p class="text-xs text-gray-400">مستوى {{ player.level or 0 }}</p>
+                        </div>
+                    </div>
+                    <span class="text-neon font-bold text-sm">{{ player.xp }} XP</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center text-gray-500 py-6">
+                <span class="text-3xl block mb-2">🏆</span>
+                <p>لا يوجد متصدرون بعد. كن الأول!</p>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- ========== 6. شريط التنقل السفلي ========== -->
+    <div class="fixed bottom-0 left-0 right-0 glass-card rounded-t-3xl px-6 py-3 z-50 max-w-md mx-auto">
+        <div class="flex items-center justify-between">
+            <button class="bottom-nav-item active flex flex-col items-center gap-1 text-xs font-semibold" onclick="navigate('home')">
+                <span class="text-xl">🏠</span> الرئيسية
+            </button>
+            <button class="bottom-nav-item flex flex-col items-center gap-1 text-xs" onclick="openErrorBank()">
+                <span class="text-xl">⚠️</span> بنك الأخطاء
+            </button>
+            <button class="bottom-nav-item flex flex-col items-center gap-1 text-xs" onclick="navigate('achievements')">
+                <span class="text-xl">🏆</span> الإنجازات
+            </button>
+            <button class="bottom-nav-item flex flex-col items-center gap-1 text-xs" onclick="navigate('settings')">
+                <span class="text-xl">⚙️</span> الإعدادات
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // بيانات من السيرفر
+        const STUDENT_ID = {{ student.id or 0 }};
+        const STUDENT_NAME = "{{ student.first_name or 'طالب' }}";
+        const STUDENT_XP   = {{ student.xp or 0 }};
+
+        // ======================
+        //  وظائف التنقل
+        // ======================
+        function navigate(page) {
+            switch(page) {
+                case 'home':
+                    window.location.href = '/dashboard/' + STUDENT_ID;
+                    break;
+                case 'achievements':
+                    showToast('🏆', 'قسم الإنجازات قيد التطوير');
+                    break;
+                case 'settings':
+                    showToast('⚙️', 'قسم الإعدادات قيد التطوير');
+                    break;
+                default:
+                    window.location.href = '/dashboard/' + STUDENT_ID;
+            }
+        }
+
+        function openErrorBank() {
+            window.location.href = '/error_bank/' + STUDENT_ID;
+        }
+
+        // ======================
+        //  بدء مهارة
+        // ======================
+        function startSkill(skillType, courseId, timeLimit) {
+            const tl = timeLimit || 45;
+            showToast('🚀', 'جاري تحميل التمرين — ' + skillType + ' ⏱️ ' + tl + 's');
+
+            // تشغيل صوت التنبيه قبل 5 ثوانٍ من النهاية
+            if (tl > 5) {
+                setTimeout(() => {
+                    playBeep();
+                }, (tl - 5) * 1000);
+            }
+
+            // إعادة توجيه حسب نوع المهارة
+            setTimeout(() => {
+                // يمكن ربطه بـ API أو صفحة الأسئلة
+                console.log('✅ بدء تمرين:', skillType, courseId);
+            }, 1000);
+        }
+
+        // ======================
+        //  صوت التنبيه (Beep)
+        // ======================
+        function playBeep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.value = 880;
+                gain.gain.value = 0.3;
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+                showToast('⏰', 'تنبيه! تبقى 5 ثوانٍ');
+            } catch(e) {
+                console.log('Beep blocked:', e);
+            }
+        }
+
+        // ======================
+        //  إشعارات Toast
+        // ======================
+        function showToast(icon, message) {
+            const el = document.getElementById('toast') || createToastContainer();
+            el.innerHTML = `<span class="text-xl">${icon}</span> ${message}`;
+            el.classList.remove('opacity-0', 'translate-y-10');
+            el.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                el.classList.add('opacity-0', 'translate-y-10');
+                el.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        function createToastContainer() {
+            const div = document.createElement('div');
+            div.id = 'toast';
+            div.className = 'fixed top-6 left-1/2 transform -translate-x-1/2 bg-card border border-white/10 text-white px-5 py-3 rounded-2xl shadow-2xl z-[100] text-sm font-semibold transition-all duration-300 opacity-0 translate-y-10 flex items-center gap-2';
+            document.body.appendChild(div);
+            return div;
+        }
+
+        // ======================
+        //  رسالة ترحيبية (أول يوم)
+        // ======================
+        document.addEventListener('DOMContentLoaded', () => {
+            if (STUDENT_XP === 0) {
+                showToast('🌟', 'أهلاً بك في أول يوم في طريق النجاح!');
+            }
+            console.log('🚀 Yamen Dashboard Loaded — XP:', STUDENT_XP, 'Name:', STUDENT_NAME);
+        });
+    </script>
+
+</body>
+</html>
