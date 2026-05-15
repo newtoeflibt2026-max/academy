@@ -1,9 +1,7 @@
-aiogram>=3.7,<4
+﻿aiogram>=3.7,<4
 aiohttp>=3.9,<4
 flask>=3.0
 flask-cors>=5.0
 gunicorn>=23.0
 python-dotenv>=1.0
 apscheduler>=3.10
-SpeechRecognition>=3.10
-pydub>=0.25
