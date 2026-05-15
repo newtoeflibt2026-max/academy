@@ -4,56 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#fdfcfb">
-    <title>يامن أكاديمي | لوحة التحكم</title>
+    <title>يامن أكاديمي | TOEFL</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028','gold-dim':'#b8941f','soft-bg':'#f7f4ef','card-bg':'#ffffff'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04)','soft-lg':'0 8px 40px rgba(26,54,93,0.08),0 2px 8px rgba(26,54,93,0.04)','glow':'0 0 20px rgba(197,160,40,0.15)','inner-soft':'inset 0 1px 3px rgba(26,54,93,0.04)'}}}}</script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','Tajawal','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028','gold-dim':'#b8941f','soft-bg':'#f7f4ef','card-bg':'#ffffff'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04)','soft-lg':'0 8px 40px rgba(26,54,93,0.08),0 2px 8px rgba(26,54,93,0.04)','glow':'0 0 20px rgba(197,160,40,0.15)','inner-soft':'inset 0 1px 3px rgba(26,54,93,0.04)'}}}}</script>
     <style>
-        *{font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+        *{font-family:'Cairo','Tajawal',sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
         body{background:radial-gradient(ellipse at 15% 10%,rgba(197,160,40,0.04) 0%,transparent 60%),radial-gradient(ellipse at 85% 90%,rgba(26,54,93,0.03) 0%,transparent 60%),linear-gradient(175deg,#fdfcfb 0%,#f7f4ef 40%,#f0ece3 100%);min-height:100vh}
         .glass-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.85);box-shadow:0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04);border-radius:24px}
-        .glass-card-hover{transition:all 0.35s cubic-bezier(0.25,0.8,0.25,1.2)}
-        .glass-card-hover:active{transform:scale(0.97);box-shadow:0 2px 8px rgba(26,54,93,0.08)}
-        .skill-btn{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(197,160,40,0.15);border-radius:18px;transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2);cursor:pointer;position:relative;overflow:hidden}
+        .glass-card:active{transform:scale(0.985)}
+        .section-header{display:flex;align-items:center;gap:8px;font-size:1.125rem;font-weight:800;color:#1a365d;margin-bottom:14px}
+        .section-header .dot{width:8px;height:8px;background:#c5a028;border-radius:50%;display:inline-block}
+        .skill-btn{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border:1px solid rgba(197,160,40,0.15);border-radius:18px;transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2);cursor:pointer;overflow:hidden}
         .skill-btn:active{transform:scale(0.94);background:rgba(197,160,40,0.08);border-color:rgba(197,160,40,0.4);box-shadow:0 0 18px rgba(197,160,40,0.12)}
         .skill-btn.loading{pointer-events:none;opacity:0.7}
-        .skill-btn .spinner{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;border:3px solid rgba(197,160,40,0.2);border-top-color:#c5a028;border-radius:50%;animation:spin 0.7s linear infinite}
-        .skill-btn.loading .spinner{display:block}
-        @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-        .ripple{position:absolute;border-radius:50%;background:rgba(197,160,40,0.2);transform:scale(0);animation:ripple-anim 0.6s ease-out;pointer-events:none}
-        @keyframes ripple-anim{to{transform:scale(4);opacity:0}}
-        .hall-btn{background:linear-gradient(135deg,#1a365d 0%,#254e7a 100%);border:none;border-radius:22px;box-shadow:0 6px 24px rgba(26,54,93,0.18);transition:all 0.35s ease}
+        .library-item{background:rgba(255,255,255,0.8);border:1px solid rgba(26,54,93,0.06);border-radius:16px;padding:14px;transition:all 0.3s ease;cursor:pointer}
+        .library-item:active{background:rgba(197,160,40,0.06);border-color:rgba(197,160,40,0.2)}
+        .hall-btn{background:linear-gradient(135deg,#1a365d 0%,#254e7a 100%);border:none;border-radius:22px;box-shadow:0 6px 24px rgba(26,54,93,0.18);transition:all 0.35s ease;cursor:pointer;color:white}
         .hall-btn:active{transform:scale(0.96);box-shadow:0 3px 12px rgba(26,54,93,0.25)}
-        .library-btn{background:linear-gradient(135deg,#c5a028 0%,#b8941f 100%);border:none;border-radius:22px;box-shadow:0 6px 24px rgba(197,160,40,0.2);transition:all 0.35s ease}
-        .library-btn:active{transform:scale(0.96);box-shadow:0 3px 12px rgba(197,160,40,0.3)}
         .progress-ring-circle{transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);transform:rotate(-90deg);transform-origin:50% 50%}
-        .timer-badge{background:rgba(26,54,93,0.07);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#1a365d;font-weight:700}
-        @keyframes counter-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.25)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
-        .error-pulse{animation:counter-pulse 2.2s infinite}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+        .toast-show{animation:slideDown 0.4s ease-out}
         .bottom-nav{background:rgba(255,255,255,0.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(26,54,93,0.05);border-radius:28px 28px 0 0;box-shadow:0 -4px 20px rgba(26,54,93,0.04)}
-        .nav-item{transition:all 0.3s ease;color:#8896a6}
+        .nav-item{transition:all 0.3s ease;color:#8896a6;cursor:pointer}
         .nav-item.active{color:#1a365d;transform:translateY(-3px)}
         .nav-item.active .nav-dot{opacity:1;transform:scale(1)}
         .nav-dot{width:6px;height:6px;background:#c5a028;border-radius:50%;opacity:0;transform:scale(0);transition:all 0.3s ease}
-        @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-        .toast-show{animation:slideDown 0.4s ease-out}
+        .recording-indicator{width:12px;height:12px;background:#ef4444;border-radius:50%;animation:pulse-rec 1s infinite;display:none}
+        @keyframes pulse-rec{0%,100%{opacity:1}50%{opacity:0.3}}
+        .recording .recording-indicator{display:block}
         ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(26,54,93,0.12);border-radius:10px}
-        .question-card{background:rgba(255,255,255,0.9);backdrop-filter:blur(24px);border:2px solid rgba(197,160,40,0.2);border-radius:20px;padding:20px;margin-top:12px;display:none}
-        .question-card.show{display:block;animation:slideDown 0.5s ease-out}
-        .option-btn{background:rgba(255,255,255,0.8);border:1px solid rgba(26,54,93,0.1);border-radius:14px;padding:14px 18px;text-align:right;transition:all 0.3s ease;cursor:pointer;font-weight:600;font-size:0.95rem}
-        .option-btn:active{background:rgba(197,160,40,0.1);border-color:#c5a028}
-        .option-btn.correct{background:rgba(34,197,94,0.15);border-color:#22c55e;color:#166534}
-        .option-btn.wrong{background:rgba(239,68,68,0.1);border-color:#ef4444;color:#991b1b}
+        audio{width:100%;border-radius:12px}
+        audio::-webkit-media-controls-panel{background:rgba(26,54,93,0.05)}
     </style>
 </head>
 <body class="pb-28">
 <div class="max-w-lg mx-auto px-4 pt-6">
 
-    <!-- الشريط العلوي -->
+    <!-- ════════════════ الشريط العلوي ════════════════ -->
     <div class="flex items-center justify-between mb-7">
         <div>
             <h1 class="text-3xl font-black text-royal leading-tight">
-                أهلاً بكِ <span class="text-gold" id="studentName">{{ student.first_name or student.username or 'طالب' }}</span> 👑
+                أهلاً <span class="text-gold" id="studentName">{{ student.first_name or 'طالب' }}</span> 👑
             </h1>
             <div class="flex items-center gap-3 mt-2">
                 <span class="text-sm text-gray-500 font-medium">المستوى <strong class="text-royal" id="studentLevel">{{ student.level or 0 }}</strong></span>
@@ -64,90 +56,158 @@
         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-royal/10 flex items-center justify-center text-2xl shadow-soft border border-gold/20">🦅</div>
     </div>
 
-    <!-- بطاقة التقدم -->
-    <div class="glass-card p-6 mb-5 glass-card-hover">
-        <h2 class="text-lg font-extrabold text-royal mb-5 flex items-center gap-2"><span class="text-gold">◆</span> رحلتك نحو الإتقان</h2>
-        <div class="flex items-center gap-5">
-            <div class="relative w-[130px] h-[130px] flex-shrink-0">
-                <svg class="w-full h-full" viewBox="0 0 140 140">
-                    <circle cx="70" cy="70" r="62" fill="none" stroke="rgba(26,54,93,0.06)" stroke-width="9"/>
-                    <circle cx="70" cy="70" r="62" fill="none" stroke="#c5a028" stroke-width="9" stroke-linecap="round" stroke-dasharray="389.557" stroke-dashoffset="{{ 389.557 * (1 - (student.xp or 0)/90) if (student.xp or 0)<90 else 0 }}" class="progress-ring-circle"/>
+    <!-- ════════════════ ① الدورة التدريبية ════════════════ -->
+    <div class="glass-card p-5 mb-5" id="section-course">
+        <div class="section-header"><span class="dot"></span>الدورة التدريبية</div>
+        <div class="space-y-2" id="libraryList">
+            {% if library %}
+                {% for item in library %}
+                <div class="library-item flex items-center gap-3" onclick="openLibraryItem('{{ item.url or item.telegram_link }}', '{{ item.type }}', '{{ item.title }}')">
+                    <span class="text-2xl">{{ item.icon or '📄' }}</span>
+                    <div class="flex-1">
+                        <p class="font-bold text-sm text-royal">{{ item.title }}</p>
+                        <p class="text-xs text-gray-400">{{ item.type | upper }}{% if item.telegram_link %} · تلغرام{% endif %}</p>
+                    </div>
+                    <span class="text-gold text-lg">→</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="library-item flex items-center gap-3" onclick="showToast('📚','المكتبة قيد التجهيز')">
+                    <span class="text-2xl">📖</span>
+                    <div><p class="font-bold text-sm text-royal">دليل التوفل الكامل</p><p class="text-xs text-gray-400">PDF</p></div>
+                    <span class="text-gold text-lg">→</span>
+                </div>
+                <div class="library-item flex items-center gap-3" onclick="showToast('📚','المكتبة قيد التجهيز')">
+                    <span class="text-2xl">🎬</span>
+                    <div><p class="font-bold text-sm text-royal">شرح استراتيجيات التوفل</p><p class="text-xs text-gray-400">فيديو</p></div>
+                    <span class="text-gold text-lg">→</span>
+                </div>
+                <div class="library-item flex items-center gap-3" onclick="showToast('📚','المكتبة قيد التجهيز')">
+                    <span class="text-2xl">💬</span>
+                    <div><p class="font-bold text-sm text-royal">مجتمع يامن التفاعلي</p><p class="text-xs text-gray-400">تلغرام</p></div>
+                    <span class="text-gold text-lg">→</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ════════════════ ② قاعة الامتحان الذكية ════════════════ -->
+    <div class="glass-card p-5 mb-5" id="section-exam">
+        <div class="section-header"><span class="dot"></span>قاعة الامتحان الذكية</div>
+        <p class="text-sm text-gray-500 mb-4">محاكاة كاملة لامتحان التوفل — تقييم فوري بالذكاء الاصطناعي</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <button class="hall-btn p-4 text-center" onclick="startExamSection('reading')">
+                <div class="text-2xl mb-1">📖</div><div class="font-extrabold text-sm">القراءة</div><div class="text-xs text-white/70">Reading</div>
+            </button>
+            <button class="hall-btn p-4 text-center" onclick="startExamSection('listening')">
+                <div class="text-2xl mb-1">🎧</div><div class="font-extrabold text-sm">الاستماع</div><div class="text-xs text-white/70">Listening</div>
+            </button>
+            <button class="hall-btn p-4 text-center" onclick="startSpeakingExam()">
+                <div class="text-2xl mb-1">🎙️</div><div class="font-extrabold text-sm">المحادثة</div><div class="text-xs text-white/70">Speaking + AI</div>
+            </button>
+            <button class="hall-btn p-4 text-center" onclick="startWritingExam()">
+                <div class="text-2xl mb-1">✍️</div><div class="font-extrabold text-sm">الكتابة</div><div class="text-xs text-white/70">Writing + AI</div>
+            </button>
+        </div>
+        <!-- منطقة الامتحان -->
+        <div id="examArea" style="display:none">
+            <div class="bg-royal/5 rounded-2xl p-4 mb-3">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-extrabold text-royal text-sm" id="examTitle">الامتحان</span>
+                    <span class="text-xs font-bold text-gold" id="examTimer">⏱ 0s</span>
+                </div>
+                <p class="text-royal/80 font-semibold text-sm mb-3" id="examQuestion">جاري التحميل...</p>
+                <div id="examOptions" class="space-y-2"></div>
+                <div id="examAudioArea" style="display:none" class="mb-3">
+                    <audio id="examAudioPlayer" controls></audio>
+                </div>
+                <div id="examSpeakingArea" style="display:none" class="mb-3">
+                    <button class="bg-red-500 text-white px-4 py-2 rounded-xl font-bold text-sm" id="recordBtn" onclick="toggleRecording()">
+                        <span class="recording-indicator inline-block mr-1"></span> 🎙️ بدء التسجيل
+                    </button>
+                    <p class="text-xs text-gray-400 mt-2" id="speakingTranscript"></p>
+                </div>
+                <div id="examWritingArea" style="display:none" class="mb-3">
+                    <textarea id="essayText" class="w-full border border-royal/10 rounded-xl p-3 text-sm font-semibold text-royal h-32" placeholder="اكتب مقالتك هنا..."></textarea>
+                    <span class="text-xs text-gray-400" id="wordCountDisplay">0 كلمة</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button class="bg-gold text-white px-4 py-2 rounded-xl font-bold text-sm flex-1" onclick="submitExamAnswer()">✅ تقديم الإجابة</button>
+                <button class="bg-gray-300 text-gray-600 px-4 py-2 rounded-xl font-bold text-sm" onclick="closeExam()">✕ إنهاء</button>
+            </div>
+            <div id="examFeedback" class="mt-3 text-sm font-bold"></div>
+        </div>
+    </div>
+
+    <!-- ════════════════ ③ بنك المهارات اليومية ════════════════ -->
+    <div class="glass-card p-5 mb-5" id="section-skills">
+        <div class="section-header"><span class="dot"></span>بنك المهارات اليومية</div>
+        <div class="grid grid-cols-2 gap-3" id="skillsGrid">
+            {% if skills %}
+                {% for skill in skills %}
+                <button class="skill-btn p-4 text-center" data-skill="{{ skill.skill_type }}" data-time="{{ skill.time_limit or 45 }}" data-title="{{ skill.title }}">
+                    <div class="text-3xl mb-2">{{ skill.icon or '📝' }}</div>
+                    <div class="font-extrabold text-sm text-royal mb-1">{{ skill.title }}</div>
+                    <span class="text-xs font-bold text-royal/40 bg-royal/5 px-3 py-1 rounded-full">⏱ {{ skill.time_limit or 45 }}s</span>
+                </button>
+                {% endfor %}
+            {% else %}
+                <button class="skill-btn p-4 text-center" data-skill="spelling" data-time="45" data-title="التدريب الصوتي"><div class="text-3xl mb-2">🔊</div><div class="font-extrabold text-sm text-royal mb-1">التدريب الصوتي</div><span class="text-xs font-bold text-royal/40 bg-royal/5 px-3 py-1 rounded-full">⏱ 45s</span></button>
+                <button class="skill-btn p-4 text-center" data-skill="spelling" data-time="60" data-title="السبيليتغ"><div class="text-3xl mb-2">🔤</div><div class="font-extrabold text-sm text-royal mb-1">السبيليتغ</div><span class="text-xs font-bold text-royal/40 bg-royal/5 px-3 py-1 rounded-full">⏱ 60s</span></button>
+                <button class="skill-btn p-4 text-center" data-skill="sentence_ordering" data-time="50" data-title="ترتيب الجمل"><div class="text-3xl mb-2">🧩</div><div class="font-extrabold text-sm text-royal mb-1">ترتيب الجمل</div><span class="text-xs font-bold text-royal/40 bg-royal/5 px-3 py-1 rounded-full">⏱ 50s</span></button>
+                <button class="skill-btn p-4 text-center" data-skill="word_completion" data-time="40" data-title="إكمال الكلمات"><div class="text-3xl mb-2">📝</div><div class="font-extrabold text-sm text-royal mb-1">إكمال الكلمات</div><span class="text-xs font-bold text-royal/40 bg-royal/5 px-3 py-1 rounded-full">⏱ 40s</span></button>
+            {% endif %}
+        </div>
+        <!-- منطقة الإجابة -->
+        <div id="skillAnswerArea" style="display:none" class="mt-4 bg-royal/5 rounded-2xl p-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-extrabold text-royal text-sm" id="skillTitle">سؤال</span>
+                <span class="text-xs font-bold text-gold" id="skillTimer">⏱ 0s</span>
+            </div>
+            <p class="text-royal/80 font-semibold text-sm mb-3" id="skillQuestion">اختر الإجابة الصحيحة</p>
+            <div id="skillOptions" class="space-y-2"></div>
+            <div class="mt-3 text-sm font-bold" id="skillFeedback"></div>
+        </div>
+    </div>
+
+    <!-- ════════════════ ④ مركز الإنجاز ════════════════ -->
+    <div class="glass-card p-5 mb-5" id="section-achievement">
+        <div class="section-header"><span class="dot"></span>مركز الإنجاز</div>
+        <!-- التقدم الدائري -->
+        <div class="flex items-center gap-5 mb-5">
+            <div class="relative w-28 h-28 flex-shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(26,54,93,0.06)" stroke-width="8"/>
+                    <circle cx="60" cy="60" r="52" fill="none" stroke="#c5a028" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.726" stroke-dashoffset="{{ 326.726 * (1 - (student.xp or 0)/90) if (student.xp or 0)<90 else 0 }}" class="progress-ring-circle"/>
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span class="text-3xl font-black text-royal" id="studentXP">{{ student.xp or 0 }}</span>
-                    <span class="text-xs font-bold text-gold tracking-wider">XP</span>
+                    <span class="text-2xl font-black text-royal" id="studentXP">{{ student.xp or 0 }}</span>
+                    <span class="text-xs font-bold text-gold">XP</span>
                 </div>
             </div>
-            <div class="flex-1 space-y-4">
-                <div><div class="flex justify-between text-xs font-bold mb-1.5"><span class="text-royal/70">🎯 مبتدئ</span><span class="text-gold">{{ ((student.xp or 0)/59*100)|int if (student.xp or 0)<59 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft"><div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:{{ ((student.xp or 0)/59*100)|int if (student.xp or 0)<59 else 100 }}%;background:linear-gradient(90deg,#c5a028,#d4af37)"></div></div><span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">59 XP</span></div>
-                <div><div class="flex justify-between text-xs font-bold mb-1.5"><span class="text-royal/70">🏆 محترف</span><span class="text-royal">{{ ((student.xp or 0)/69*100)|int if (student.xp or 0)<69 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft"><div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:{{ ((student.xp or 0)/69*100)|int if (student.xp or 0)<69 else 100 }}%;background:linear-gradient(90deg,#1a365d,#254e7a)"></div></div><span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">69 XP</span></div>
-                <div><div class="flex justify-between text-xs font-bold mb-1.5"><span class="text-royal/70">👑 خبير</span><span class="text-gold">{{ ((student.xp or 0)/90*100)|int if (student.xp or 0)<90 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft"><div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:{{ ((student.xp or 0)/90*100)|int if (student.xp or 0)<90 else 100 }}%;background:linear-gradient(90deg,#b8860b,#c5a028,#d4af37)"></div></div><span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">90 XP</span></div>
+            <div class="flex-1 space-y-3 text-sm">
+                <div><div class="flex justify-between text-xs font-bold mb-1"><span class="text-royal/70">🎯 مبتدئ</span><span class="text-gold">{{ ((student.xp or 0)/59*100)|int if (student.xp or 0)<59 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2"><div class="h-full rounded-full bg-gold transition-all duration-1000" style="width:{{ ((student.xp or 0)/59*100)|int if (student.xp or 0)<59 else 100 }}%"></div></div></div>
+                <div><div class="flex justify-between text-xs font-bold mb-1"><span class="text-royal/70">🏆 محترف</span><span class="text-royal">{{ ((student.xp or 0)/69*100)|int if (student.xp or 0)<69 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2"><div class="h-full rounded-full bg-royal transition-all duration-1000" style="width:{{ ((student.xp or 0)/69*100)|int if (student.xp or 0)<69 else 100 }}%"></div></div></div>
+                <div><div class="flex justify-between text-xs font-bold mb-1"><span class="text-royal/70">👑 خبير</span><span class="text-gold">{{ ((student.xp or 0)/90*100)|int if (student.xp or 0)<90 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2"><div class="h-full rounded-full bg-yellow-500 transition-all duration-1000" style="width:{{ ((student.xp or 0)/90*100)|int if (student.xp or 0)<90 else 100 }}%"></div></div></div>
             </div>
         </div>
-    </div>
-
-    <!-- المهارات + Fetch API -->
-    <div class="glass-card p-5 mb-5">
-        <h2 class="text-lg font-extrabold text-royal mb-4 flex items-center gap-2"><span class="text-gold">◆</span> مهارات اليوم</h2>
-        <div class="grid grid-cols-2 gap-3" id="skillsGrid">
-            {% set skills = [('💬','تحدث','conversation','محادثة 45s',45),('📝','إكمال','word_completion','إكمال كلمات',60),('🧩','ترتيب','sentence_ordering','ترتيب جمل',50),('✉️','إيميل','email_writing','كتابة إيميل',90),('🎧','استماع','listening','استماع وتكرار',40),('📖','قراءة','reading','قراءة متحررة',70)] %}
-            {% for (icon,label,stype,title,tl) in skills %}
-            <button class="skill-btn p-4 text-center" data-skill="{{ stype }}" data-time="{{ tl }}" data-title="{{ title }}">
-                <div class="spinner"></div>
-                <div class="text-3xl mb-2 drop-shadow-sm">{{ icon }}</div>
-                <div class="font-extrabold text-sm text-royal mb-1">{{ label }}</div>
-                <span class="timer-badge inline-block">⏱ {{ tl }}s</span>
-            </button>
-            {% endfor %}
-        </div>
-        <div class="question-card" id="questionArea">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="font-extrabold text-royal text-lg" id="qTitle">سؤال</h3>
-                <span class="timer-badge" id="qTimer">⏱ 0s</span>
-            </div>
-            <p class="text-royal/80 font-semibold mb-4" id="qText">جاري تحميل السؤال...</p>
-            <div class="space-y-2" id="qOptions"></div>
-            <div class="flex justify-between mt-4">
-                <button class="text-sm text-gray-400 font-bold" onclick="closeQuestion()">✕ إغلاق</button>
-                <span class="text-xs text-gold font-extrabold" id="qFeedback"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- القاعة والمكتبة -->
-    <div class="grid grid-cols-2 gap-4 mb-5">
-        <button class="hall-btn p-5 text-center text-white" onclick="openExamHall()"><div class="text-3xl mb-2">🏛️</div><div class="font-extrabold text-base">قاعة الامتحان</div><div class="text-xs text-white/70 mt-1">محاكاة اختبار كامل</div></button>
-        <button class="library-btn p-5 text-center text-white" onclick="openDigitalLibrary()"><div class="text-3xl mb-2">📚</div><div class="font-extrabold text-base">المكتبة الرقمية</div><div class="text-xs text-white/70 mt-1">PDF · فيديوهات · قوالب</div></button>
-    </div>
-
-    <!-- بنك الأخطاء -->
-    <div class="glass-card p-5 mb-5 cursor-pointer glass-card-hover {% if error_count > 0 %}error-pulse{% endif %}" onclick="openErrorBank()">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl {% if error_count > 0 %}bg-red-50{% else %}bg-green-50{% endif %}">{% if error_count > 0 %}⚠️{% else %}✅{% endif %}</div>
-                <div><h3 class="font-extrabold text-royal text-lg">بنك الأخطاء الذكي</h3><p class="text-sm text-gray-500 font-medium">{% if error_count > 0 %}<span class="text-red-500 font-extrabold text-lg" id="errorCount">{{ error_count }}</span> خطأ بانتظار المراجعة{% else %}رائع! لا توجد أخطاء 🎉{% endif %}</p></div>
-            </div>
-            {% if error_count > 0 %}<div class="bg-red-500 text-white px-4 py-2.5 rounded-2xl text-sm font-extrabold shadow-lg shadow-red-200">راجع الآن ←</div>{% endif %}
-        </div>
-    </div>
-
-    <!-- المتصدرين -->
-    <div class="glass-card p-5 mb-5">
-        <h2 class="text-lg font-extrabold text-royal mb-4 flex items-center gap-2"><span class="text-gold">◆</span> قائمة المتفوقين</h2>
+        <!-- المتصدرين -->
+        <h3 class="font-extrabold text-royal text-sm mb-3">🏅 قائمة المتفوقين</h3>
         {% if leaderboard %}
         <div class="space-y-2">
-            {% for player in leaderboard %}
-            <div class="flex items-center justify-between p-3 rounded-2xl {% if player.telegram_id==student.id %}bg-gold/5 border border-gold/20{% else %}bg-gray-50/60{% endif %}">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm {% if loop.index==1 %}bg-gold text-white shadow-md shadow-gold/30{% elif loop.index==2 %}bg-gray-300 text-white{% elif loop.index==3 %}bg-amber-700 text-white{% else %}bg-gray-100 text-gray-500{% endif %}">{{ loop.index }}</div>
-                    <div><p class="font-bold text-royal text-sm">{{ player.first_name or player.username or 'طالب' }}{% if player.telegram_id==student.id %}<span class="text-[10px] bg-gold/15 text-gold px-2 py-0.5 rounded-full font-extrabold ml-1">أنت</span>{% endif %}</p><p class="text-[11px] text-gray-400 font-medium">مستوى {{ player.level or 0 }}</p></div>
+            {% for p in leaderboard %}
+            <div class="flex items-center justify-between p-2 rounded-xl {% if p.telegram_id==student.id %}bg-gold/5{% else %}bg-gray-50/60{% endif %}">
+                <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs {% if loop.index==1 %}bg-gold text-white{% elif loop.index==2 %}bg-gray-300{% elif loop.index==3 %}bg-amber-700 text-white{% else %}bg-gray-100{% endif %}">{{ loop.index }}</span>
+                    <span class="font-bold text-sm text-royal">{{ p.first_name or p.username or 'طالب' }}</span>
                 </div>
-                <span class="text-gold font-extrabold text-sm">{{ player.xp or 0 }} XP</span>
+                <span class="text-gold font-extrabold text-xs">{{ p.xp or 0 }} XP</span>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="text-center py-8 text-gray-400"><span class="text-5xl block mb-3">🏆</span><p class="font-bold text-royal/40">لا يوجد متصدرون بعد</p><p class="text-sm mt-1">كن أول من يصعد إلى القمة!</p></div>
+        <p class="text-gray-400 text-sm text-center py-4">لا يوجد متصدرون بعد</p>
         {% endif %}
     </div>
     <div class="h-6"></div>
@@ -157,58 +217,156 @@
 <div class="fixed bottom-0 left-0 right-0 z-50 px-3 pb-2">
     <div class="bottom-nav max-w-lg mx-auto px-5 py-3">
         <div class="flex items-center justify-between">
-            <button class="nav-item active flex flex-col items-center gap-1" onclick="navigate('home')"><span class="text-xl">🏠</span><span class="text-[10px] font-extrabold">الرئيسية</span><span class="nav-dot" style="opacity:1;transform:scale(1)"></span></button>
-            <button class="nav-item flex flex-col items-center gap-1" onclick="openErrorBank()"><span class="text-xl">⚠️</span><span class="text-[10px] font-extrabold">الأخطاء</span><span class="nav-dot"></span></button>
-            <button class="nav-item flex flex-col items-center gap-1" onclick="openExamHall()"><span class="text-xl">🏛️</span><span class="text-[10px] font-extrabold">الامتحان</span><span class="nav-dot"></span></button>
-            <button class="nav-item flex flex-col items-center gap-1" onclick="openDigitalLibrary()"><span class="text-xl">📚</span><span class="text-[10px] font-extrabold">المكتبة</span><span class="nav-dot"></span></button>
+            <button class="nav-item active flex flex-col items-center gap-1" onclick="scrollToSection('section-course')"><span class="text-xl">📚</span><span class="text-[10px] font-extrabold">الدورة</span><span class="nav-dot" style="opacity:1;transform:scale(1)"></span></button>
+            <button class="nav-item flex flex-col items-center gap-1" onclick="scrollToSection('section-exam')"><span class="text-xl">🏛️</span><span class="text-[10px] font-extrabold">الامتحان</span><span class="nav-dot"></span></button>
+            <button class="nav-item flex flex-col items-center gap-1" onclick="scrollToSection('section-skills')"><span class="text-xl">🎯</span><span class="text-[10px] font-extrabold">المهارات</span><span class="nav-dot"></span></button>
+            <button class="nav-item flex flex-col items-center gap-1" onclick="scrollToSection('section-achievement')"><span class="text-xl">🏆</span><span class="text-[10px] font-extrabold">الإنجاز</span><span class="nav-dot"></span></button>
         </div>
     </div>
 </div>
 
-<!-- ⚡ النظام العصبي: Touch + Fetch -->
+<!-- ⚡ JavaScript: النظام العصبي المتكامل -->
 <script>
-const STUDENT={id:{{ student.id or 0 }},name:"{{ student.first_name or student.username or 'طالب' }}",xp:{{ student.xp or 0 }},level:{{ student.level or 0 }}};
-let currentTimer=null,currentSkill=null,lastQuestionId=0,timeLeft=0,timerInterval=null;
+const STUDENT={id:{{ student.id or 0 }},name:"{{ student.first_name or 'طالب' }}",xp:{{ student.xp or 0 }},level:{{ student.level or 0 }}};
+let examTimer=null,examTimeLeft=0,examAnswers=[],mediaRecorder=null,audioChunks=[],isRecording=false;
 
-// Ripple
-document.querySelectorAll('.skill-btn,.hall-btn,.library-btn').forEach(b=>{b.addEventListener('pointerdown',function(e){const r=this.getBoundingClientRect(),s=Math.max(r.width,r.height),x=e.clientX-r.left-s/2,y=e.clientY-r.top-s/2,d=document.createElement('span');d.className='ripple';d.style.width=d.style.height=s+'px';d.style.left=x+'px';d.style.top=y+'px';this.appendChild(d);d.addEventListener('animationend',()=>d.remove())})});
+// ═══ التنقل ═══
+function scrollToSection(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});updateNav(id)}}
+function updateNav(id){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');n.querySelector('.nav-dot').style.opacity='0';n.querySelector('.nav-dot').style.transform='scale(0)'});const active=document.querySelector('.nav-item[onclick*="'+id+'"]');if(active){active.classList.add('active');active.querySelector('.nav-dot').style.opacity='1';active.querySelector('.nav-dot').style.transform='scale(1)'}}
 
-// Zero-Click: Touch → Fetch → Question
-document.querySelectorAll('.skill-btn').forEach(b=>{b.addEventListener('pointerdown',async function(e){e.preventDefault();const st=this.dataset.skill,tl=parseInt(this.dataset.time||45),ti=this.dataset.title;if(this.classList.contains('loading'))return;this.classList.add('loading');showToast('🚀','جاري تحميل '+ti+'...');try{const res=await fetch('/api/question/next',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skill_type:st,student_id:STUDENT.id,last_question_id:lastQuestionId})});const d=await res.json();if(d.error){showToast('⚠️',d.error);this.classList.remove('loading');return}displayQuestion(d.question,st);currentSkill=st;lastQuestionId=d.question.id;startTimer(tl,ti);triggerHaptic()}catch(e){console.error(e);showToast('❌','فشل الاتصال')}finally{this.classList.remove('loading')}})});
-
-function displayQuestion(q,st){
-    const a=document.getElementById('questionArea'),qt=document.getElementById('qTitle'),qx=document.getElementById('qText'),op=document.getElementById('qOptions'),fb=document.getElementById('qFeedback');
-    qt.textContent=st==='conversation'?'🗣️ تحدث':st==='word_completion'?'📝 إكمال':st==='listening'?'🎧 استماع':'❓ سؤال';
-    qx.textContent=q.question_text||q.title||'اختر الإجابة الصحيحة';fb.textContent='';op.innerHTML='';
-    let ans=[];try{if(q.options){const p=typeof q.options==='string'?JSON.parse(q.options):q.options;if(Array.isArray(p))ans.push(...p)}}catch(e){}
-    if(ans.length===0){ans=[q.correct_answer||'الإجابة الصحيحة','إجابة خاطئة 1','إجابة خاطئة 2','إجابة خاطئة 3']}
-    const correctAnswer=q.correct_answer||ans[0];
-    ans.sort(()=>Math.random()-0.5).forEach(ans=>{const btn=document.createElement('div');btn.className='option-btn';btn.textContent=ans;btn.addEventListener('pointerdown',()=>handleAnswer(ans,correctAnswer,q,btn));op.appendChild(btn)});
-    a.classList.add('show');a.scrollIntoView({behavior:'smooth',block:'center'})
+// ═══ المكتبة ═══
+function openLibraryItem(url,type,title){
+    if(!url||url==='#'){showToast('📚','الرابط قيد التجهيز');return}
+    if(type==='telegram'||url.includes('t.me')){window.open(url,'_blank');return}
+    showToast('📖','جاري فتح: '+title);window.open(url,'_blank')
 }
 
-async function handleAnswer(chosen,correct,q,btn){
-    clearInterval(timerInterval);const all=document.querySelectorAll('#qOptions .option-btn');
-    if(chosen===correct){btn.classList.add('correct');document.getElementById('qFeedback').textContent='✅ إجابة صحيحة! +10 XP';triggerHaptic('success');
-        try{const r=await fetch('/api/student/xp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student_id:STUDENT.id,xp_gain:10})});const d=await r.json();if(d.xp!==undefined){STUDENT.xp=d.xp;document.getElementById('studentXP').textContent=d.xp;updateProgressRing(d.xp)}}catch(e){}
-    }else{btn.classList.add('wrong');document.getElementById('qFeedback').textContent='❌ إجابة خاطئة — ستُضاف لبنك الأخطاء';triggerHaptic('error');
-        try{await fetch('/api/error_bank/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,question_id:q.id,skill_type:currentSkill})})}catch(e){}
-        all.forEach(o=>{if(o.textContent===correct)o.classList.add('correct')})
+// ═══ الامتحان ═══
+function startExamSection(section){
+    const area=document.getElementById('examArea');area.style.display='block';
+    document.getElementById('examSpeakingArea').style.display='none';
+    document.getElementById('examWritingArea').style.display='none';
+    document.getElementById('examAudioArea').style.display=section==='listening'?'block':'none';
+    document.getElementById('examTitle').textContent=section==='reading'?'📖 Reading':section==='listening'?'🎧 Listening':'exam';
+    area.scrollIntoView({behavior:'smooth'});
+    fetch('/api/exam/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,section:section})})
+    .then(r=>r.json()).then(d=>{
+        if(d.questions&&d.questions.length>0){showExamQuestion(d.questions[0],0,d.questions)}
+        else{showToast('⚠️','لا توجد أسئلة متاحة')}
+    }).catch(e=>{showToast('❌','فشل التحميل')})
+}
+
+function showExamQuestion(q,idx,all){
+    document.getElementById('examQuestion').textContent=q.question_text||q.title||'اختر الإجابة الصحيحة';
+    const opts=document.getElementById('examOptions');
+    opts.innerHTML='';
+    let answers=[];try{if(q.options){const p=typeof q.options==='string'?JSON.parse(q.options):q.options;if(Array.isArray(p))answers=p}}catch(e){}
+    if(!answers.length)answers=[q.correct_answer||'A','B','C','D'];
+    answers.sort(()=>Math.random()-0.5).forEach(a=>{
+        const btn=document.createElement('button');
+        btn.className='w-full text-right bg-white/80 border border-royal/10 rounded-xl px-4 py-3 text-sm font-semibold text-royal cursor-pointer hover:bg-gold/5';
+        btn.textContent=a;btn.onclick=()=>{
+            document.querySelectorAll('#examOptions button').forEach(b=>b.style.borderColor='rgba(26,54,93,0.1)');
+            btn.style.borderColor='#c5a028';btn.style.background='rgba(197,160,40,0.06)';
+            examAnswers[idx]={question_id:q.id,answer:a,correct:a===q.correct_answer};
+            setTimeout(()=>{if(idx+1<all.length){showExamQuestion(all[idx+1],idx+1,all)}else{submitExamResults(all)}},600)
+        };
+        opts.appendChild(btn)
+    })
+}
+
+function submitExamResults(all){
+    const correct=examAnswers.filter(a=>a&&a.correct).length;
+    fetch('/api/exam/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,answers:examAnswers})})
+    .then(r=>r.json()).then(d=>{
+        showToast('✅',d.correct+'/'+d.total+' صحيح! +'+d.xp_earned+' XP');
+        document.getElementById('examFeedback').innerHTML='<span class="text-green-600">✅ '+d.correct+'/'+d.total+' إجابات صحيحة | +'+d.xp_earned+' XP</span>';
+        updateXP(d.xp_earned)
+    });
+    examAnswers=[]
+}
+
+function startSpeakingExam(){
+    const area=document.getElementById('examArea');area.style.display='block';
+    document.getElementById('examOptions').innerHTML='';document.getElementById('examAudioArea').style.display='none';
+    document.getElementById('examWritingArea').style.display='none';document.getElementById('examSpeakingArea').style.display='block';
+    document.getElementById('examTitle').textContent='🎙️ Speaking — سجّل إجابتك';
+    document.getElementById('examQuestion').textContent='اضغط على زر التسجيل وتحدث عن: "Describe your favorite place to study and explain why."';
+    area.scrollIntoView({behavior:'smooth'})
+}
+
+function startWritingExam(){
+    const area=document.getElementById('examArea');area.style.display='block';
+    document.getElementById('examOptions').innerHTML='';document.getElementById('examAudioArea').style.display='none';
+    document.getElementById('examSpeakingArea').style.display='none';document.getElementById('examWritingArea').style.display='block';
+    document.getElementById('examTitle').textContent='✍️ Writing — اكتب مقالتك';
+    document.getElementById('examQuestion').textContent='Do you agree or disagree: "Technology has made education more accessible." Write 150+ words.';
+    document.getElementById('essayText').addEventListener('input',()=>{
+        document.getElementById('wordCountDisplay').textContent=document.getElementById('essayText').value.split(/\s+/).filter(w=>w).length+' كلمة'
+    });
+    area.scrollIntoView({behavior:'smooth'})
+}
+
+async function toggleRecording(){
+    if(isRecording){stopRecording();return}
+    try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        mediaRecorder=new MediaRecorder(stream);audioChunks=[];
+        mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
+        mediaRecorder.onstop=()=>{const blob=new Blob(audioChunks,{type:'audio/webm'});document.getElementById('speakingTranscript').textContent='🎙️ تم التسجيل ('+(blob.size/1024).toFixed(0)+' KB) — جاري التقييم...'}
+        mediaRecorder.start();isRecording=true;
+        document.getElementById('recordBtn').innerHTML='<span class="recording-indicator inline-block mr-1"></span> ⏹️ إيقاف';
+        document.getElementById('recordBtn').classList.add('recording')
+    }catch(e){showToast('❌','تعذر الوصول للميكروفون')}
+}
+function stopRecording(){
+    if(mediaRecorder){mediaRecorder.stop();mediaRecorder.stream.getTracks().forEach(t=>t.stop())}
+    isRecording=false;document.getElementById('recordBtn').innerHTML='🎙️ بدء التسجيل';document.getElementById('recordBtn').classList.remove('recording')
+}
+
+async function submitExamAnswer(){
+    const speaking=document.getElementById('examSpeakingArea').style.display!=='none';
+    const writing=document.getElementById('examWritingArea').style.display!=='none';
+    if(speaking){
+        const transcript=document.getElementById('speakingTranscript').textContent||'تسجيل صوتي';
+        const r=await fetch('/api/ai/submit_speaking',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,question_id:1,transcript:transcript})});
+        const d=await r.json();showToast('🎙️','النتيجة: '+d.score+'/5 — '+d.feedback);updateXP(d.xp_earned)
+    }else if(writing){
+        const essay=document.getElementById('essayText').value;
+        const r=await fetch('/api/ai/submit_writing',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,question_id:1,essay:essay})});
+        const d=await r.json();showToast('✍️','النتيجة: '+d.score+'/5 — '+d.feedback+' | '+d.word_count+' كلمة');updateXP(d.xp_earned)
     }
-    all.forEach(o=>o.style.pointerEvents='none');setTimeout(closeQuestion,3000)
+    document.getElementById('examFeedback').innerHTML='<span class="text-gold font-extrabold">✅ تم التقييم!</span>'
+}
+function closeExam(){document.getElementById('examArea').style.display='none';examAnswers=[]}
+
+// ═══ المهارات ═══
+document.querySelectorAll('.skill-btn').forEach(btn=>{btn.addEventListener('pointerdown',async function(e){e.preventDefault();const st=this.dataset.skill,tl=parseInt(this.dataset.time||45),ti=this.dataset.title;if(this.classList.contains('loading'))return;this.classList.add('loading');showToast('🚀',ti+'...');try{const r=await fetch('/api/question/next',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skill_type:st,student_id:STUDENT.id})});const d=await r.json();if(d.error){showToast('⚠️',d.error);this.classList.remove('loading');return}showSkillQuestion(d.question,ti)}catch(e){showToast('❌','فشل')}finally{this.classList.remove('loading')}})});
+
+function showSkillQuestion(q,tl){
+    const area=document.getElementById('skillAnswerArea');area.style.display='block';
+    document.getElementById('skillTitle').textContent='❓ سؤال';document.getElementById('skillQuestion').textContent=q.question_text||q.title||'اختر الإجابة';
+    document.getElementById('skillFeedback').textContent='';document.getElementById('skillTimer').textContent='⏱ '+tl+'s';
+    const opts=document.getElementById('skillOptions');opts.innerHTML='';
+    let answers=[];try{if(q.options){const p=typeof q.options==='string'?JSON.parse(q.options):q.options;if(Array.isArray(p))answers=p}}catch(e){}
+    if(!answers.length)answers=[q.correct_answer||'A','B','C','D'];
+    answers.sort(()=>Math.random()-0.5).forEach(a=>{
+        const btn=document.createElement('button');
+        btn.className='w-full text-right bg-white/80 border border-royal/10 rounded-xl px-4 py-3 text-sm font-semibold text-royal cursor-pointer';
+        btn.textContent=a;btn.onclick=()=>{
+            document.querySelectorAll('#skillOptions button').forEach(b=>b.style.pointerEvents='none');
+            if(a===q.correct_answer){btn.style.background='rgba(34,197,94,0.1)';btn.style.borderColor='#22c55e';document.getElementById('skillFeedback').innerHTML='<span class="text-green-600">✅ صحيح!</span>';fetch('/api/student/xp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student_id:STUDENT.id,xp_gain:10})}).then(r=>r.json()).then(d=>updateXP(d.xp))}
+            else{btn.style.background='rgba(239,68,68,0.1)';btn.style.borderColor='#ef4444';document.getElementById('skillFeedback').innerHTML='<span class="text-red-500">❌ خطأ — أضيف لبنك الأخطاء</span>';fetch('/api/error_bank/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,question_id:q.id,skill_type:q.skill_type})})}
+            setTimeout(()=>{document.getElementById('skillAnswerArea').style.display='none'},2500)
+        };opts.appendChild(btn)
+    });
+    area.scrollIntoView({behavior:'smooth'})
 }
 
-function startTimer(s,t){clearInterval(timerInterval);timeLeft=s;document.getElementById('qTimer').textContent='⏱ '+timeLeft+'s';timerInterval=setInterval(()=>{timeLeft--;document.getElementById('qTimer').textContent='⏱ '+timeLeft+'s';if(timeLeft===5)playBeep();if(timeLeft<=0){clearInterval(timerInterval);showToast('⏰','انتهى الوقت! '+t);document.getElementById('qFeedback').textContent='⏰ انتهى الوقت'}},1000)}
-function playBeep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.setValueAtTime(1100,c.currentTime+0.1);g.gain.setValueAtTime(0.25,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.35);o.start(c.currentTime);o.stop(c.currentTime+0.35)}catch(e){}}
-function closeQuestion(){clearInterval(timerInterval);document.getElementById('questionArea').classList.remove('show')}
-function triggerHaptic(t='light'){if(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.HapticFeedback){const h=window.Telegram.WebApp.HapticFeedback;try{if(t==='success')h.notificationOccurred('success');else if(t==='error')h.notificationOccurred('error');else h.impactOccurred('light')}catch(e){}}}
-function updateProgressRing(xp){const c=document.querySelector('.progress-ring-circle');if(!c)return;const m=90,ci=389.557,off=xp>=m?0:ci*(1-xp/m);c.style.strokeDashoffset=off}
-function showToast(i,m){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.className='fixed top-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-royal/10 text-royal px-5 py-3 rounded-2xl shadow-soft-lg z-[200] text-sm font-extrabold flex items-center gap-2 toast-show';document.body.appendChild(e)}e.innerHTML='<span class="text-xl">'+i+'</span> '+m;e.classList.add('toast-show');e.style.opacity='1';e.style.transform='translate(-50%,0)';clearTimeout(e._t);e._t=setTimeout(()=>{e.style.opacity='0';e.style.transform='translate(-50%,-20px)';e.style.transition='all 0.3s ease'},2500)}
-function openErrorBank(){showToast('⚠️','جاري فتح بنك الأخطاء...')}
-function openExamHall(){showToast('🏛️','جاري الدخول إلى قاعة الامتحان...')}
-function openDigitalLibrary(){showToast('📚','جاري فتح المكتبة الرقمية...')}
-function navigate(p){if(p==='home')window.scrollTo({top:0,behavior:'smooth'})}
-document.addEventListener('DOMContentLoaded',()=>{if(STUDENT.xp===0)setTimeout(()=>showToast('🌟','أهلاً بكِ في أول يوم في طريق النجاح!'),800);console.log('⚡ يامن أكاديمي | Neural Active | Student:',STUDENT.name,'| XP:',STUDENT.xp)});
+// ═══ أدوات ═══
+function updateXP(gain){STUDENT.xp+=gain;document.getElementById('studentXP').textContent=STUDENT.xp;const c=document.querySelector('.progress-ring-circle');if(c){const m=90,ci=326.726;c.style.strokeDashoffset=STUDENT.xp>=m?0:ci*(1-STUDENT.xp/m)}}
+function showToast(icon,msg){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.className='fixed top-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-royal/10 text-royal px-5 py-3 rounded-2xl shadow-soft-lg z-[200] text-sm font-extrabold flex items-center gap-2 toast-show';document.body.appendChild(e)}e.innerHTML='<span class="text-xl">'+icon+'</span> '+msg;e.classList.add('toast-show');e.style.opacity='1';e.style.transform='translate(-50%,0)';clearTimeout(e._t);e._t=setTimeout(()=>{e.style.opacity='0';e.style.transform='translate(-50%,-20px)';e.style.transition='all 0.3s ease'},2500)}
+document.addEventListener('DOMContentLoaded',()=>{console.log('🦅 يامن أكاديمي — TOEFL Platform Ready | Student:',STUDENT.name,'| XP:',STUDENT.xp)});
 document.addEventListener('touchmove',function(e){},{passive:true});
 </script>
 </body>

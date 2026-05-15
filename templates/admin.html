@@ -1,223 +1,168 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>يامن أكاديمي | لوحة الإمبراطورة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028','card':'#ffffff'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04)'}}}}</script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06)'}}}}</script>
     <style>
-        *{font-family:'Cairo',sans-serif}
-        body{background:radial-gradient(ellipse at 20% 0%,rgba(197,160,40,0.03) 0%,transparent 60%),linear-gradient(180deg,#fdfcfb 0%,#f7f4ef 100%);min-height:100vh}
-        .glass-card{background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(26,54,93,0.06);border-radius:22px;padding:20px}
-        .btn-primary{background:linear-gradient(135deg,#1a365d,#254e7a);color:white;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(26,54,93,0.15)}
-        .btn-primary:active{transform:scale(0.96)}
-        .btn-gold{background:linear-gradient(135deg,#c5a028,#b8941f);color:white;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease}
-        .btn-gold:active{transform:scale(0.96)}
-        .btn-danger{background:#ef4444;color:white;border:none;border-radius:14px;padding:8px 16px;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.3s ease}
-        .btn-danger:active{transform:scale(0.95)}
-        .toggle-switch{width:52px;height:28px;background:#e5e7eb;border-radius:28px;cursor:pointer;transition:all 0.3s ease;position:relative;display:inline-block}
-        .toggle-switch.active{background:#22c55e}
-        .toggle-switch::after{content:'';position:absolute;width:22px;height:22px;background:white;border-radius:50%;top:3px;left:3px;transition:all 0.3s ease;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-        .toggle-switch.active::after{left:27px}
-        .tab-btn{padding:8px 16px;border-radius:12px;font-weight:700;font-size:0.85rem;transition:all 0.3s ease;cursor:pointer;color:#8896a6;background:transparent;border:none}
-        .tab-btn.active{background:rgba(26,54,93,0.08);color:#1a365d}
-        .tab-content{display:none}
-        .tab-content.active{display:block;animation:fadeIn 0.4s ease}
+        *{font-family:'Cairo',sans-serif}body{background:linear-gradient(180deg,#fdfcfb,#f7f4ef);min-height:100vh}
+        .glass-card{background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(26,54,93,0.06);border-radius:22px;padding:20px;margin-bottom:16px}
+        .btn-primary{background:linear-gradient(135deg,#1a365d,#254e7a);color:#fff;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:.9rem;cursor:pointer;transition:all 0.3s}
+        .btn-primary:active{transform:scale(.96)}
+        .btn-gold{background:linear-gradient(135deg,#c5a028,#b8941f);color:#fff;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:.9rem;cursor:pointer}
+        .btn-gold:active{transform:scale(.96)}
+        .btn-danger{background:#ef4444;color:#fff;border:none;border-radius:14px;padding:8px 14px;font-weight:700;font-size:.8rem;cursor:pointer}
+        .tab-btn{padding:8px 16px;border-radius:12px;font-weight:700;font-size:.85rem;cursor:pointer;color:#8896a6;background:transparent;border:none;transition:all 0.3s}
+        .tab-btn.active{background:rgba(26,54,93,.08);color:#1a365d}
+        .tab-content{display:none}.tab-content.active{display:block;animation:fadeIn .4s ease}
         @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        .skill-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(255,255,255,0.6);border-radius:16px;margin-bottom:8px}
-        .skill-row:hover{background:rgba(255,255,255,0.9)}
-        .stat-card{background:rgba(255,255,255,0.7);border-radius:18px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(26,54,93,0.04);transition:all 0.3s ease}
-        .stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(26,54,93,0.08)}
-        .lesson-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.6);border-radius:14px;margin-bottom:6px;font-size:0.9rem}
-        ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(26,54,93,0.1);border-radius:10px}
-        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,54,93,0.4);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
+        .toggle-switch{width:52px;height:28px;background:#e5e7eb;border-radius:28px;cursor:pointer;transition:all 0.3s;position:relative;display:inline-block}
+        .toggle-switch.active{background:#22c55e}
+        .toggle-switch::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:all 0.3s;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .toggle-switch.active::after{left:27px}
+        .stat-card{background:rgba(255,255,255,.7);border-radius:18px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(26,54,93,.04)}
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,54,93,.4);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
         .modal-overlay.show{display:flex}
-        .modal-box{background:white;border-radius:24px;padding:28px;max-width:440px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:fadeIn 0.3s ease}
-        .input-field{width:100%;border:1.5px solid rgba(26,54,93,0.1);border-radius:14px;padding:12px 16px;font-size:0.9rem;font-weight:600;color:#1a365d;background:#f8f9fa;transition:all 0.3s ease;outline:none}
-        .input-field:focus{border-color:#c5a028;box-shadow:0 0 0 3px rgba(197,160,40,0.1);background:white}
-        select.input-field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%231a365d' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 16px center}
+        .modal-box{background:#fff;border-radius:24px;padding:28px;max-width:440px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeIn .3s ease}
+        .input-field{width:100%;border:1.5px solid rgba(26,54,93,.1);border-radius:14px;padding:10px 14px;font-size:.9rem;font-weight:600;color:#1a365d;background:#f8f9fa;outline:none;margin-bottom:10px}
+        .input-field:focus{border-color:#c5a028;box-shadow:0 0 0 3px rgba(197,160,40,.1);background:#fff}
     </style>
 </head>
 <body>
-
 <div class="max-w-3xl mx-auto px-4 py-6">
 
-    <!-- الشريط العلوي -->
     <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="text-3xl font-black text-royal">👑 لوحة الإمبراطورة</h1>
-            <p class="text-gray-500 text-sm mt-1 font-semibold">إدارة أكاديمية يامن</p>
-        </div>
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold/30 to-royal/20 flex items-center justify-center text-3xl shadow-soft border border-gold/30">🦅</div>
+        <div><h1 class="text-3xl font-black text-royal">👑 لوحة الإمبراطورة</h1><p class="text-gray-500 text-sm font-semibold">إدارة أكاديمية يامن — TOEFL</p></div>
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold/30 to-royal/20 flex items-center justify-center text-3xl shadow-soft">🦅</div>
     </div>
 
-    <!-- بطاقات الإحصائيات -->
     <div class="grid grid-cols-4 gap-3 mb-6">
-        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statStudents">-</div><div class="text-xs text-gray-400 mt-1 font-bold">طلاب</div></div>
-        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statCourses">-</div><div class="text-xs text-gray-400 mt-1 font-bold">كورسات</div></div>
-        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statLessons">-</div><div class="text-xs text-gray-400 mt-1 font-bold">دروس</div></div>
-        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statQuestions">-</div><div class="text-xs text-gray-400 mt-1 font-bold">أسئلة</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statStudents">-</div><div class="text-xs text-gray-400 font-bold">طلاب</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statLibrary">-</div><div class="text-xs text-gray-400 font-bold">مكتبة</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statSkills">-</div><div class="text-xs text-gray-400 font-bold">مهارات</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statQuestions">-</div><div class="text-xs text-gray-400 font-bold">أسئلة</div></div>
     </div>
 
-    <!-- التبويبات -->
-    <div class="flex gap-2 mb-6 overflow-x-auto pb-1">
-        <button class="tab-btn active" data-tab="skills">🎯 المهارات</button>
-        <button class="tab-btn" data-tab="lessons">📚 الدروس</button>
-        <button class="tab-btn" data-tab="students">👥 الطلاب</button>
+    <div class="flex gap-2 mb-6 overflow-x-auto">
+        <button class="tab-btn active" data-tab="library">📚 المكتبة</button>
+        <button class="tab-btn" data-tab="skills">🎯 المهارات</button>
+        <button class="tab-btn" data-tab="ai">🤖 تقييم AI</button>
     </div>
 
-    <!-- ═══ تبويب المهارات ═══ -->
-    <div class="tab-content active" id="tab-skills">
+    <!-- ═══ المكتبة ═══ -->
+    <div class="tab-content active" id="tab-library">
         <div class="glass-card">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-lg font-extrabold text-royal">تفعيل / تعطيل المهارات الست</h2>
-                <span class="text-xs text-gray-400 font-semibold">⇄ لمسة واحدة للتبديل</span>
-            </div>
-            <div id="skillsList"><div class="text-center text-gray-400 py-6">⏳ جاري التحميل...</div></div>
+            <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-extrabold text-royal">محتوى المكتبة</h2><button class="btn-gold text-sm" onclick="openModal('libraryModal')">+ إضافة مادة</button></div>
+            <div id="libraryList"><div class="text-gray-400 text-center py-4">⏳ جاري التحميل...</div></div>
         </div>
     </div>
 
-    <!-- ═══ تبويب الدروس ═══ -->
-    <div class="tab-content" id="tab-lessons">
+    <!-- ═══ المهارات ═══ -->
+    <div class="tab-content" id="tab-skills">
         <div class="glass-card">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-lg font-extrabold text-royal">إدارة الدروس</h2>
-                <button class="btn-gold text-sm" onclick="openAddLessonModal()">+ إضافة درس</button>
-            </div>
-            <div id="lessonsList"><div class="text-center text-gray-400 py-6">⏳ جاري التحميل...</div></div>
+            <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-extrabold text-royal">Dynamic Button Creator</h2><button class="btn-gold text-sm" onclick="openModal('skillModal')">+ مهارة جديدة</button></div>
+            <div id="skillsList"><div class="text-gray-400 text-center py-4">⏳ جاري التحميل...</div></div>
         </div>
     </div>
 
-    <!-- ═══ تبويب الطلاب ═══ -->
-    <div class="tab-content" id="tab-students">
+    <!-- ═══ AI Config ═══ -->
+    <div class="tab-content" id="tab-ai">
         <div class="glass-card">
-            <h2 class="text-lg font-extrabold text-royal mb-5">قائمة الطلاب</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead><tr class="text-right text-gray-400 font-bold"><th class="pb-3">الطالب</th><th class="pb-3">XP</th><th class="pb-3">المستوى</th><th class="pb-3">الحالة</th></tr></thead>
-                    <tbody id="studentsListBody"><tr><td colspan="4" class="text-center text-gray-400 py-6">⏳ جاري التحميل...</td></tr></tbody>
-                </table>
-            </div>
+            <h2 class="text-lg font-extrabold text-royal mb-4">🤖 إعدادات تقييم الذكاء الاصطناعي</h2>
+            <div id="aiConfigList"><div class="text-gray-400 text-center py-4">⏳ جاري التحميل...</div></div>
         </div>
     </div>
 
 </div>
 
-<!-- ═══ Modal: إضافة درس جديد ═══ -->
-<div class="modal-overlay" id="addLessonModal">
+<!-- Modal: إضافة مادة للمكتبة -->
+<div class="modal-overlay" id="libraryModal">
     <div class="modal-box">
-        <h3 class="text-xl font-extrabold text-royal mb-5">+ إضافة درس جديد</h3>
-        <div class="space-y-4">
-            <div>
-                <label class="text-xs font-bold text-gray-500 block mb-1">اسم الدرس</label>
-                <input type="text" id="lessonTitle" class="input-field" placeholder="مثال: أساسيات المحادثة">
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 block mb-1">النوع</label>
-                <select id="lessonType" class="input-field">
-                    <option value="video">🎬 فيديو</option>
-                    <option value="pdf">📄 PDF</option>
-                </select>
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 block mb-1">الرابط</label>
-                <input type="url" id="lessonUrl" class="input-field" placeholder="https://...">
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 block mb-1">المهارة المرتبطة</label>
-                <select id="lessonSkill" class="input-field">
-                    <option value="reading">📖 قراءة</option>
-                    <option value="conversation">💬 محادثة</option>
-                    <option value="word_completion">📝 إكمال كلمات</option>
-                    <option value="sentence_ordering">🧩 ترتيب جمل</option>
-                    <option value="email_writing">✉️ كتابة إيميل</option>
-                    <option value="listening">🎧 استماع</option>
-                </select>
-            </div>
-        </div>
-        <div class="flex gap-3 mt-6">
-            <button class="btn-primary flex-1" onclick="addLesson()">✅ حفظ الدرس</button>
-            <button class="btn-danger flex-1" onclick="closeAddLessonModal()">✕ إلغاء</button>
+        <h3 class="text-xl font-extrabold text-royal mb-4">+ إضافة مادة جديدة</h3>
+        <input type="text" id="libTitle" class="input-field" placeholder="اسم المادة"><br>
+        <select id="libType" class="input-field"><option value="pdf">📄 PDF</option><option value="video">🎬 فيديو</option><option value="telegram">💬 تلغرام</option><option value="audio">🎧 أوديو</option></select><br>
+        <input type="url" id="libUrl" class="input-field" placeholder="الرابط"><br>
+        <input type="text" id="libTelegram" class="input-field" placeholder="رابط التلغرام (اختياري)"><br>
+        <input type="text" id="libIcon" class="input-field" placeholder="الأيقونة (📄/🎬/💬/🎧)" value="📄"><br>
+        <div class="flex gap-3 mt-4">
+            <button class="btn-primary flex-1" onclick="addLibraryItem()">✅ حفظ</button>
+            <button class="btn-danger flex-1" onclick="closeModal('libraryModal')">✕ إلغاء</button>
         </div>
     </div>
 </div>
 
-<!-- ⚡ JavaScript: Admin Logic -->
+<!-- Modal: إضافة مهارة -->
+<div class="modal-overlay" id="skillModal">
+    <div class="modal-box">
+        <h3 class="text-xl font-extrabold text-royal mb-4">+ مهارة يومية جديدة</h3>
+        <input type="text" id="skillTitle" class="input-field" placeholder="اسم المهارة"><br>
+        <select id="skillType" class="input-field"><option value="spelling">🔤 سبيلنغ</option><option value="sentence_ordering">🧩 ترتيب</option><option value="word_completion">📝 إكمال</option><option value="listening">🎧 استماع</option><option value="reading">📖 قراءة</option><option value="speaking">🎙️ محادثة</option></select><br>
+        <input type="text" id="skillIcon" class="input-field" placeholder="الأيقونة" value="📝"><br>
+        <input type="number" id="skillTime" class="input-field" placeholder="الوقت (ثانية)" value="45"><br>
+        <div class="flex gap-3 mt-4">
+            <button class="btn-primary flex-1" onclick="addSkill()">✅ حفظ</button>
+            <button class="btn-danger flex-1" onclick="closeModal('skillModal')">✕ إلغاء</button>
+        </div>
+    </div>
+</div>
+
 <script>
-// ========== التبويبات ==========
+// ═══ التبويبات ═══
 document.querySelectorAll('.tab-btn').forEach(b=>{b.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
-    if(b.dataset.tab==='skills')loadSkills();
-    if(b.dataset.tab==='lessons')loadLessons();
-    if(b.dataset.tab==='students')loadStudents();
+    if(b.dataset.tab==='library')loadLibrary();if(b.dataset.tab==='skills')loadSkills();if(b.dataset.tab==='ai')loadAIConfig()
 })});
 
-// ========== تحميل الإحصائيات ==========
 async function loadStats(){
-    try{const r=await fetch('/api/admin/stats');const d=await r.json();
-        document.getElementById('statStudents').textContent=d.students||0;
-        document.getElementById('statCourses').textContent=d.courses||0;
-        document.getElementById('statLessons').textContent=d.lessons||0;
-        document.getElementById('statQuestions').textContent=d.questions||0;
-    }catch(e){console.error(e)}
+    const r=await fetch('/api/admin/stats');const d=await r.json();
+    document.getElementById('statStudents').textContent=d.students||0;document.getElementById('statLibrary').textContent=d.library||0;
+    document.getElementById('statSkills').textContent=d.skills||0;document.getElementById('statQuestions').textContent=d.questions||0
 }
 
-// ========== المهارات ==========
+// ═══ المكتبة ═══
+async function loadLibrary(){
+    const r=await fetch('/api/library');const items=await r.json();
+    document.getElementById('libraryList').innerHTML=items.length?items.map(i=>'<div class="flex items-center justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="text-xl">'+i.icon+'</span><div><p class="font-bold text-royal text-sm">'+i.title+'</p><p class="text-xs text-gray-400">'+i.type.toUpperCase()+(i.telegram_link?' · تلغرام':'')+'</p></div></div><button class="btn-danger text-xs" onclick="deleteLibraryItem('+i.id+')">🗑</button></div>').join(''):'<div class="text-gray-400 text-center py-4">لا توجد مواد</div>'
+}
+async function addLibraryItem(){
+    const title=document.getElementById('libTitle').value.trim(),type=document.getElementById('libType').value,url=document.getElementById('libUrl').value.trim(),telegram=document.getElementById('libTelegram').value.trim(),icon=document.getElementById('libIcon').value.trim();
+    if(!title){alert('العنوان مطلوب');return}
+    await fetch('/api/library/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,type,url,telegram_link:telegram,icon})});
+    closeModal('libraryModal');loadLibrary();loadStats()
+}
+async function deleteLibraryItem(id){if(!confirm('متأكد؟'))return;await fetch('/api/library/delete/'+id,{method:'DELETE'});loadLibrary();loadStats()}
+
+// ═══ المهارات ═══
 async function loadSkills(){
-    const el=document.getElementById('skillsList');
-    try{const r=await fetch('/api/skills');const skills=await r.json();
-        el.innerHTML=skills.map(s=>'<div class="skill-row"><div class="flex items-center gap-3"><span class="text-2xl">'+s.icon+'</span><div><p class="font-extrabold text-royal">'+s.title+'</p><p class="text-xs text-gray-400">⏱ '+s.time_limit+' ثانية</p></div></div><span class="toggle-switch'+(s.is_active?' active':'')+'" onclick="toggleSkill(\''+s.id+'\',this)" data-skill="'+s.id+'"></span></div>').join('')
-    }catch(e){el.innerHTML='<div class="text-red-400 text-center py-4">❌ فشل التحميل</div>'}
+    const r=await fetch('/api/skills');const items=await r.json();
+    document.getElementById('skillsList').innerHTML=items.length?items.map(s=>'<div class="flex items-center justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="text-xl">'+s.icon+'</span><div><p class="font-bold text-royal text-sm">'+s.title+' ['+s.skill_type+']</p><p class="text-xs text-gray-400">⏱ '+s.time_limit+'s</p></div></div><div class="flex items-center gap-3"><span class="toggle-switch'+(s.is_active?' active':'')+'" onclick="toggleSkill('+s.id+',this)"></span><button class="btn-danger text-xs" onclick="deleteSkill('+s.id+')">🗑</button></div></div>').join(''):'<div class="text-gray-400 text-center py-4">لا توجد مهارات</div>'
 }
-
-async function toggleSkill(skillType,el){
-    el.classList.toggle('active');
-    try{await fetch('/api/skills/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skill_type:skillType})});loadStats()}catch(e){el.classList.toggle('active')}
+async function addSkill(){
+    const title=document.getElementById('skillTitle').value.trim(),st=document.getElementById('skillType').value,icon=document.getElementById('skillIcon').value.trim(),time=parseInt(document.getElementById('skillTime').value);
+    if(!title){alert('العنوان مطلوب');return}
+    await fetch('/api/skills/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,skill_type:st,icon,time_limit:time})});
+    closeModal('skillModal');loadSkills();loadStats()
 }
-
-// ========== الدروس ==========
-async function loadLessons(){
-    const el=document.getElementById('lessonsList');
-    try{const r=await fetch('/api/lessons');const lessons=await r.json();
-        if(lessons.length===0){el.innerHTML='<div class="text-center text-gray-400 py-6">لا توجد دروس بعد</div>';return}
-        el.innerHTML=lessons.map(l=>'<div class="lesson-row"><div class="flex items-center gap-3"><span class="text-xl">'+(l.type==='video'?'🎬':'📄')+'</span><div><p class="font-bold text-royal">'+l.title+'</p><p class="text-xs text-gray-400">'+(l.type==='video'?'فيديو':'PDF')+' · '+l.skill_type+'</p></div></div><button class="btn-danger text-xs" onclick="deleteLesson('+l.id+',this)">🗑 حذف</button></div>').join('')
-    }catch(e){el.innerHTML='<div class="text-red-400 text-center py-4">❌ فشل التحميل</div>'}
+async function toggleSkill(id,el){
+    const active=el.classList.contains('active')?0:1;el.classList.toggle('active');
+    await fetch('/api/skills/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,active})})
 }
+async function deleteSkill(id){if(!confirm('متأكد؟'))return;await fetch('/api/skills/delete/'+id,{method:'DELETE'});loadSkills();loadStats()}
 
-async function deleteLesson(id,el){
-    if(!confirm('متأكد من حذف هذا الدرس؟'))return;
-    try{await fetch('/api/lessons/delete/'+id,{method:'DELETE'});el.parentElement.remove();loadStats()}catch(e){alert('فشل الحذف')}
+// ═══ AI Config ═══
+async function loadAIConfig(){
+    const r=await fetch('/api/ai/config');const items=await r.json();
+    document.getElementById('aiConfigList').innerHTML=items.map(c=>'<div class="flex items-center justify-between py-3 border-b border-gray-100"><div><p class="font-bold text-royal text-sm">'+c.config_key+'</p><p class="text-xs text-gray-400">'+c.description+'</p></div><div class="flex items-center gap-2"><input type="text" class="input-field w-32 text-sm" value="'+c.config_value+'" id="ai_'+c.config_key+'"><button class="btn-gold text-xs px-3 py-1" onclick="updateAIConfig(\''+c.config_key+'\')">💾</button></div></div>').join('')
 }
+async function updateAIConfig(key){const val=document.getElementById('ai_'+key).value;await fetch('/api/ai/config/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({config_key:key,config_value:val})});alert('✅ تم التحديث')}
 
-function openAddLessonModal(){document.getElementById('addLessonModal').classList.add('show')}
-function closeAddLessonModal(){document.getElementById('addLessonModal').classList.remove('show');document.getElementById('lessonTitle').value='';document.getElementById('lessonUrl').value=''}
-
-async function addLesson(){
-    const title=document.getElementById('lessonTitle').value.trim();
-    const type=document.getElementById('lessonType').value;
-    const url=document.getElementById('lessonUrl').value.trim();
-    const skill=document.getElementById('lessonSkill').value;
-    if(!title||!url){alert('الرجاء ملء جميع الحقول');return}
-    try{const r=await fetch('/api/lessons/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:title,type:type,url:url,skill_type:skill})});const d=await r.json();
-        if(d.success){closeAddLessonModal();loadLessons();loadStats();alert(d.message)}else{alert(d.error)}
-    }catch(e){alert('فشل الإضافة')}
-}
-
-// ========== الطلاب ==========
-async function loadStudents(){
-    const el=document.getElementById('studentsListBody');
-    try{const r=await fetch('/api/admin/students');const students=await r.json();
-        if(students.length===0){el.innerHTML='<tr><td colspan="4" class="text-center text-gray-400 py-6">لا يوجد طلاب بعد</td></tr>';return}
-        el.innerHTML=students.map(s=>'<tr class="border-b border-gray-100"><td class="py-3 font-bold text-royal">'+(s.first_name||s.username||'طالب')+'<br><span class="text-xs text-gray-400">ID: '+s.telegram_id+'</span></td><td class="py-3"><span class="text-gold font-extrabold">'+(s.xp||0)+'</span></td><td class="py-3">'+(s.level||0)+'</td><td class="py-3"><span class="text-xs font-bold px-2 py-1 rounded-full '+(s.is_active?'bg-green-100 text-green-600':'bg-red-100 text-red-500')+'">'+(s.is_active?'نشط ✅':'غير نشط ❌')+'</span></td></tr>').join('')
-    }catch(e){el.innerHTML='<tr><td colspan="4" class="text-red-400 text-center py-4">❌ فشل التحميل</td></tr>'}
-}
-
-// ========== تهيئة ==========
-document.addEventListener('DOMContentLoaded',()=>{loadStats();loadSkills();console.log('👑 لوحة إمبراطورة يامن أكاديمي جاهزة')});
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.addEventListener('DOMContentLoaded',()=>{loadStats();loadLibrary();console.log('👑 يامن أكاديمي — Admin Board Ready')});
 </script>
 </body>
 </html>
