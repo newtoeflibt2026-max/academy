@@ -1,160 +1,139 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#fdfcfb">
-    <title>يامن أكاديمي | امتحان المستوى</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028'}}}}</script>
-    <style>
-        *{font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
-        body{background:radial-gradient(ellipse at 20% 0%,rgba(197,160,40,0.04),transparent 60%),linear-gradient(180deg,#fdfcfb,#f7f4ef);min-height:100vh}
-        .glass-card{background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(26,54,93,0.06);border-radius:24px}
-        .option-btn{width:100%;text-align:right;background:rgba(255,255,255,0.85);border:1.5px solid rgba(26,54,93,0.1);border-radius:16px;padding:14px 18px;font-weight:600;font-size:0.95rem;color:#1a365d;cursor:pointer;transition:all 0.3s;margin-bottom:8px}
-        .option-btn:active,.option-btn.selected{background:rgba(197,160,40,0.08);border-color:#c5a028}
-        .option-btn.correct{background:rgba(34,197,94,0.12);border-color:#22c55e;color:#166534}
-        .option-btn.wrong{background:rgba(239,68,68,0.1);border-color:#ef4444;color:#991b1b}
-        .timer-ring{transition:stroke-dashoffset 1s linear}
-        @keyframes pulse-danger{0%,100%{color:#ef4444}50%{color:#dc2626}}
-        .timer-danger{animation:pulse-danger 0.8s infinite}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>اختبار تحديد المستوى | أكاديمية يامن</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { font-family: "Cairo", sans-serif; }
+  body { background: #fdfcfb; }
+  .card { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(197,160,40,0.2); border-radius: 24px; }
+  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; border-radius: 16px; padding: 14px 28px; font-weight: 700; transition: all 0.3s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,54,93,0.3); }
+  .gold { color: #c5a028; }
+  .navy { color: #1a365d; }
+  .bg-gold { background: #c5a028; }
+  .option-btn { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; padding: 14px 20px; text-align: right; cursor: pointer; transition: all 0.2s; }
+  .option-btn:hover { border-color: #c5a028; background: #fef9e7; }
+  .option-btn.selected { border-color: #1a365d; background: #e8edf5; }
+  .option-btn.correct { border-color: #10b981; background: #d1fae5; }
+  .option-btn.wrong { border-color: #ef4444; background: #fee2e2; }
+  .progress-ring circle { transition: stroke-dashoffset 0.5s; }
+</style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-<div class="w-full max-w-lg">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- ═══ شاشة البداية ═══ -->
-    <div id="startScreen" class="glass-card p-8 text-center">
-        <div class="text-6xl mb-4">🌍</div>
-        <h1 class="text-2xl font-black text-royal mb-3">امتحان تحديد المستوى</h1>
-        <p class="text-gray-500 text-sm mb-2 font-semibold">دورة التوفل الدولي TOEFL iBT</p>
-        <div class="bg-royal/5 rounded-2xl p-4 my-5 text-sm text-royal/70 font-semibold text-right space-y-2">
-            <p>📋 10 أسئلة اختيار من متعدد</p>
-            <p>⏱️ الوقت الكلي: 10 دقائق</p>
-            <p>✅ تصحيح فوري بعد الانتهاء</p>
-            <p>🏆 تصنيف: مبتدئ / متوسط / متقدم</p>
-            <p class="text-red-400">⚠️ لا يمكن تخطي الامتحان</p>
-        </div>
-        <button class="w-full bg-gradient-to-r from-royal to-blue-800 text-white font-extrabold py-3.5 rounded-2xl text-lg shadow-lg" onclick="startExam()">
-            🚀 ابدأ الامتحان الآن
-        </button>
-    </div>
+<!-- Start Screen -->
+<div id="startScreen" class="card p-8 max-w-md w-full text-center">
+  <div class="text-6xl mb-4">📝</div>
+  <h1 class="text-2xl font-extrabold navy mb-2">اختبار تحديد المستوى</h1>
+  <p class="text-gray-600 mb-6">10 أسئلة اختيارية • 10 دقائق • مستوى TOEFL</p>
+  <div class="space-y-3 text-right text-sm text-gray-500 mb-8">
+    <p>✅ بعد إكمال الاختبار سيتم تصنيفك: مبتدئ / متوسط / متقدم</p>
+    <p>✅ لا يمكنك تخطي الاختبار</p>
+    <p>✅ حاول الإجابة بتركيز</p>
+  </div>
+  <button onclick="startTest()" class="btn-primary w-full text-lg">ابدأ الاختبار الآن</button>
+</div>
 
-    <!-- ═══ شاشة الامتحان ═══ -->
-    <div id="examScreen" style="display:none">
-        <div class="glass-card p-6">
-            <div class="flex justify-between items-center mb-4">
-                <div>
-                    <span class="text-sm font-bold text-gray-400">سؤال <span id="currentQ">1</span>/<span id="totalQ">10</span></span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <svg class="w-10 h-10" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20" fill="none" stroke="rgba(26,54,93,0.08)" stroke-width="3"/><circle cx="22" cy="22" r="20" fill="none" stroke="#c5a028" stroke-width="3" stroke-dasharray="125.66" stroke-dashoffset="0" stroke-linecap="round" class="timer-ring" id="timerRing"/></svg>
-                    <span class="text-xl font-black text-royal" id="timerDisplay">10:00</span>
-                </div>
-            </div>
-            <div class="w-full bg-gray-100 h-1.5 rounded-full mb-5 overflow-hidden"><div class="h-full bg-gradient-to-r from-gold to-royal rounded-full transition-all" id="progressBar" style="width:0%"></div></div>
-            <p class="text-royal font-extrabold text-base mb-5" id="questionText">جاري التحميل...</p>
-            <div id="optionsContainer"></div>
-            <div class="flex gap-3 mt-5">
-                <button class="flex-1 bg-royal text-white font-extrabold py-3 rounded-2xl text-sm" id="nextBtn" onclick="nextQuestion()" disabled>التالي ←</button>
-                <button class="bg-red-500 text-white font-extrabold py-3 px-5 rounded-2xl text-sm" onclick="finishEarly()">إنهاء ✕</button>
-            </div>
-        </div>
-    </div>
+<!-- Test Screen -->
+<div id="testScreen" class="card p-6 max-w-lg w-full hidden">
+  <div class="flex justify-between items-center mb-4">
+    <span class="navy font-bold text-lg">السؤال <span id="currentQ">1</span>/<span id="totalQ">10</span></span>
+    <span class="gold font-bold text-lg" id="timer">10:00</span>
+  </div>
+  <!-- Progress bar -->
+  <div class="w-full bg-gray-200 rounded-full h-3 mb-6">
+    <div id="progressBar" class="bg-gradient-to-r from-navy to-gold h-3 rounded-full transition-all" style="width:0%"></div>
+  </div>
+  <h2 id="questionText" class="text-xl font-bold navy mb-6"></h2>
+  <div id="optionsContainer" class="space-y-3"></div>
+  <div class="flex gap-3 mt-8">
+    <button id="prevBtn" onclick="prevQuestion()" class="hidden flex-1 py-3 border-2 border-gray-300 rounded-xl font-bold text-gray-600">السابق</button>
+    <button onclick="nextQuestion()" class="btn-primary flex-1" id="nextBtn">التالي</button>
+  </div>
+</div>
 
-    <!-- ═══ شاشة النتيجة ═══ -->
-    <div id="resultScreen" style="display:none" class="glass-card p-8 text-center">
-        <div id="resultIcon" class="text-7xl mb-4"></div>
-        <h1 class="text-2xl font-black text-royal mb-2" id="resultLevel"></h1>
-        <div class="text-6xl font-black text-gold my-3" id="resultScore"></div>
-        <p class="text-gray-500 mb-1 font-semibold" id="resultDetail"></p>
-        <p class="text-sm text-gold font-extrabold mb-5" id="resultXP"></p>
-        <div id="skillBreakdown" class="text-xs text-gray-400 mb-5"></div>
-        <button class="w-full bg-gradient-to-r from-gold to-yellow-600 text-white font-extrabold py-3.5 rounded-2xl text-lg shadow-lg" onclick="goToDashboard()">
-            🎯 انتقل إلى المنصة
-        </button>
-    </div>
-
+<!-- Result Screen -->
+<div id="resultScreen" class="card p-8 max-w-md w-full text-center hidden">
+  <div class="text-6xl mb-4" id="resultEmoji">🎉</div>
+  <h1 class="text-2xl font-extrabold navy mb-2">اكتمل الاختبار!</h1>
+  <div class="text-5xl font-extrabold gold my-4" id="resultLevel"></div>
+  <p class="text-gray-600 mb-2">النتيجة: <span id="resultScore" class="font-bold navy"></span></p>
+  <p class="text-sm text-gray-400 mb-8">سيتم توجيهك إلى لوحة التحكم...</p>
+  <button onclick="goToDashboard()" class="btn-primary w-full">انتقل إلى الداشبورد</button>
 </div>
 
 <script>
-let questions=[],currentIndex=0,answers=[],totalTime=600,timeLeft=600,timerInterval=null;
-const STUDENT_ID = {{ request.args.get('user_id', 0) or 0 }};
+const USER_ID = new URLSearchParams(location.search).get("user_id") || "5602495831";
+let questions = [], currentIndex = 0, answers = {}, timer = null, timeLeft = 600;
 
-async function startExam(){
-    document.getElementById('startScreen').style.display='none';
-    document.getElementById('examScreen').style.display='block';
-    try{
-        const r=await fetch('/placement/api/questions');const d=await r.json();
-        questions=d.questions;totalTime=d.total_time||600;timeLeft=totalTime;
-        document.getElementById('totalQ').textContent=questions.length;
-        showQuestion(0);startTimer();
-    }catch(e){alert('فشل تحميل الأسئلة')}
+async function startTest() {
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("testScreen").classList.remove("hidden");
+  const res = await fetch("/api/placement/questions");
+  const all = await res.json();
+  questions = all.sort(() => Math.random() - 0.5).slice(0, 10);
+  document.getElementById("totalQ").textContent = questions.length;
+  startTimer();
+  renderQuestion();
 }
 
-function showQuestion(idx){
-    if(idx>=questions.length){submitExam();return}
-    currentIndex=idx;
-    const q=questions[idx];
-    document.getElementById('currentQ').textContent=idx+1;
-    document.getElementById('questionText').textContent=q.question_text;
-    document.getElementById('progressBar').style.width=((idx)/questions.length*100)+'%';
-    document.getElementById('nextBtn').disabled=true;
-    const opts=document.getElementById('optionsContainer');
-    opts.innerHTML='';
-    ['a','b','c','d'].forEach(letter=>{
-        const btn=document.createElement('div');
-        btn.className='option-btn';btn.textContent=letter.toUpperCase()+'. '+q['option_'+letter];
-        btn.onclick=()=>{
-            document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
-            btn.classList.add('selected');answers[idx]={question_id:q.id,selected_option:letter.toUpperCase()};
-            document.getElementById('nextBtn').disabled=false;
-        };
-        opts.appendChild(btn)
-    })
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft/60), s = timeLeft%60;
+    document.getElementById("timer").textContent = `${m}:${s.toString().padStart(2,"0")}`;
+    if (timeLeft <= 0) { clearInterval(timer); submitTest(); }
+  }, 1000);
 }
 
-function nextQuestion(){showQuestion(currentIndex+1)}
-
-function startTimer(){
-    updateTimerDisplay();
-    timerInterval=setInterval(()=>{
-        timeLeft--;updateTimerDisplay();
-        if(timeLeft<=0)submitExam();
-        if(timeLeft<=60)document.getElementById('timerDisplay').classList.add('timer-danger');
-    },1000)
+function renderQuestion() {
+  if (currentIndex >= questions.length) { submitTest(); return; }
+  const q = questions[currentIndex];
+  document.getElementById("currentQ").textContent = currentIndex + 1;
+  document.getElementById("questionText").textContent = q.question_text;
+  document.getElementById("progressBar").style.width = ((currentIndex/questions.length)*100) + "%";
+  const opts = document.getElementById("optionsContainer");
+  opts.innerHTML = "";
+  ["A","B","C","D"].forEach(letter => {
+    const text = q["option_"+letter.toLowerCase()];
+    if (!text) return;
+    const btn = document.createElement("div");
+    btn.className = "option-btn " + (answers[q.id] === letter ? "selected" : "");
+    btn.innerHTML = `<span class="inline-block w-8 h-8 rounded-full border-2 ${answers[q.id]===letter?'bg-navy text-white border-navy':'border-gray-300'} text-center leading-7 mr-3 font-bold text-sm">${letter}</span>${text}`;
+    btn.onclick = () => { answers[q.id] = letter; renderQuestion(); };
+    opts.appendChild(btn);
+  });
+  document.getElementById("prevBtn").classList.toggle("hidden", currentIndex === 0);
+  document.getElementById("nextBtn").textContent = currentIndex === questions.length - 1 ? "إنهاء" : "التالي";
 }
 
-function updateTimerDisplay(){
-    const m=Math.floor(timeLeft/60),s=timeLeft%60;
-    document.getElementById('timerDisplay').textContent=m+':'+(s<10?'0':'')+s;
-    const ring=document.getElementById('timerRing');
-    if(ring)ring.style.strokeDashoffset=125.66*(1-timeLeft/totalTime);
+function prevQuestion() { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
+function nextQuestion() { currentIndex++; renderQuestion(); }
+
+async function submitTest() {
+  clearInterval(timer);
+  document.getElementById("testScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  const res = await fetch("/api/placement/submit", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ student_id: USER_ID, answers: answers })
+  });
+  const data = await res.json();
+  const emojis = { "Advanced": "🏆", "Intermediate": "🌟", "Beginner": "📚" };
+  document.getElementById("resultEmoji").textContent = emojis[data.level] || "🎉";
+  document.getElementById("resultLevel").textContent = data.level;
+  document.getElementById("resultScore").textContent = `${data.score}/${data.total} (${data.percentage}%)`;
+  setTimeout(goToDashboard, 5000);
 }
 
-async function submitExam(){
-    clearInterval(timerInterval);
-    document.getElementById('examScreen').style.display='none';
-    document.getElementById('resultScreen').style.display='block';
-    try{
-        const r=await fetch('/placement/api/submit',{method:'POST',headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({user_id:STUDENT_ID,answers:answers.filter(a=>a)})});
-        const d=await r.json();
-        document.getElementById('resultScore').textContent=d.score_percent+'%';
-        document.getElementById('resultDetail').textContent=d.correct+'/'+d.total+' إجابات صحيحة';
-        document.getElementById('resultXP').textContent='+'+d.xp_earned+' XP ✨';
-        if(d.level.includes('متقدم')){document.getElementById('resultIcon').textContent='🏆';document.getElementById('resultLevel').textContent='مستوى متقدم Advanced'}
-        else if(d.level.includes('متوسط')){document.getElementById('resultIcon').textContent='🥈';document.getElementById('resultLevel').textContent='مستوى متوسط Intermediate'}
-        else{document.getElementById('resultIcon').textContent='🌱';document.getElementById('resultLevel').textContent='مستوى مبتدئ Beginner'}
-        let bd='';for(let[k,v]of Object.entries(d.skill_breakdown))bd+=k+': '+v.correct+'/'+v.total+' | ';
-        document.getElementById('skillBreakdown').textContent=bd||''
-    }catch(e){alert('فشل إرسال النتيجة')}
-}
-
-function finishEarly(){if(confirm('هل أنت متأكد من إنهاء الامتحان؟'))submitExam()}
-function goToDashboard(){
-    const uid=STUDENT_ID||new URLSearchParams(window.location.search).get('user_id')||5602495831;
-    window.location.href='/dashboard/'+uid
+function goToDashboard() {
+  location.href = `/dashboard/${USER_ID}`;
 }
 </script>
 </body>

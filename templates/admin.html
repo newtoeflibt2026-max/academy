@@ -1,168 +1,608 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>يامن أكاديمي | لوحة الإمبراطورة</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06)'}}}}</script>
-    <style>
-        *{font-family:'Cairo',sans-serif}body{background:linear-gradient(180deg,#fdfcfb,#f7f4ef);min-height:100vh}
-        .glass-card{background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(26,54,93,0.06);border-radius:22px;padding:20px;margin-bottom:16px}
-        .btn-primary{background:linear-gradient(135deg,#1a365d,#254e7a);color:#fff;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:.9rem;cursor:pointer;transition:all 0.3s}
-        .btn-primary:active{transform:scale(.96)}
-        .btn-gold{background:linear-gradient(135deg,#c5a028,#b8941f);color:#fff;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:.9rem;cursor:pointer}
-        .btn-gold:active{transform:scale(.96)}
-        .btn-danger{background:#ef4444;color:#fff;border:none;border-radius:14px;padding:8px 14px;font-weight:700;font-size:.8rem;cursor:pointer}
-        .tab-btn{padding:8px 16px;border-radius:12px;font-weight:700;font-size:.85rem;cursor:pointer;color:#8896a6;background:transparent;border:none;transition:all 0.3s}
-        .tab-btn.active{background:rgba(26,54,93,.08);color:#1a365d}
-        .tab-content{display:none}.tab-content.active{display:block;animation:fadeIn .4s ease}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        .toggle-switch{width:52px;height:28px;background:#e5e7eb;border-radius:28px;cursor:pointer;transition:all 0.3s;position:relative;display:inline-block}
-        .toggle-switch.active{background:#22c55e}
-        .toggle-switch::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:3px;left:3px;transition:all 0.3s;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-        .toggle-switch.active::after{left:27px}
-        .stat-card{background:rgba(255,255,255,.7);border-radius:18px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(26,54,93,.04)}
-        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,54,93,.4);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
-        .modal-overlay.show{display:flex}
-        .modal-box{background:#fff;border-radius:24px;padding:28px;max-width:440px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeIn .3s ease}
-        .input-field{width:100%;border:1.5px solid rgba(26,54,93,.1);border-radius:14px;padding:10px 14px;font-size:.9rem;font-weight:600;color:#1a365d;background:#f8f9fa;outline:none;margin-bottom:10px}
-        .input-field:focus{border-color:#c5a028;box-shadow:0 0 0 3px rgba(197,160,40,.1);background:#fff}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>لوحة التحكم | أكاديمية يامن</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { font-family: "Cairo", sans-serif; }
+  body { background: #fdfcfb; }
+  .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(197,160,40,0.2); border-radius: 20px; }
+  .navy { color: #1a365d; } .gold { color: #c5a028; }
+  .bg-navy { background: #1a365d; } .bg-gold { background: #c5a028; }
+  .tab-btn { padding: 10px 20px; border-radius: 12px; font-weight: 700; transition: all 0.2s; cursor: pointer; }
+  .tab-btn.active { background: #1a365d; color: #fff; }
+  .tab-btn:not(.active) { background: #f3f4f6; color: #6b7280; }
+  .btn-sm { padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; }
+  .btn-danger { background: #ef4444; color: #fff; }
+  .btn-warning { background: #f59e0b; color: #fff; }
+  .btn-success { background: #10b981; color: #fff; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 12px 16px; text-align: right; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f8fafc; font-weight: 700; color: #1a365d; }
+  .stat-card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .stat-value { font-size: 2rem; font-weight: 800; }
+  .upload-zone { border: 3px dashed #c5a028; border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s; background: #fef9e7; }
+  .upload-zone:hover, .upload-zone.dragover { border-color: #1a365d; background: #e8edf5; }
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+  .modal { background: #fff; border-radius: 24px; padding: 32px; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; }
+  input, select, textarea { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 14px; transition: border 0.2s; }
+  input:focus, select:focus, textarea:focus { border-color: #c5a028; outline: none; }
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 12px 24px; border-radius: 12px; color: #fff; font-weight: 600; animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from { transform: translateX(-50%) translateY(-100%); opacity: 0; } }
+</style>
 </head>
-<body>
-<div class="max-w-3xl mx-auto px-4 py-6">
+<body class="min-h-screen">
 
-    <div class="flex items-center justify-between mb-8">
-        <div><h1 class="text-3xl font-black text-royal">👑 لوحة الإمبراطورة</h1><p class="text-gray-500 text-sm font-semibold">إدارة أكاديمية يامن — TOEFL</p></div>
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold/30 to-royal/20 flex items-center justify-center text-3xl shadow-soft">🦅</div>
+<div class="max-w-7xl mx-auto p-4">
+  <!-- Header -->
+  <div class="glass p-6 mb-6 flex flex-wrap justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-extrabold navy">👑 لوحة تحكم يامن</h1>
+      <p class="text-gray-500 text-sm mt-1">Dynamic CMS • الإدارة الشاملة</p>
     </div>
+    <div id="liveClock" class="text-lg font-bold gold"></div>
+  </div>
 
-    <div class="grid grid-cols-4 gap-3 mb-6">
-        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statStudents">-</div><div class="text-xs text-gray-400 font-bold">طلاب</div></div>
-        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statLibrary">-</div><div class="text-xs text-gray-400 font-bold">مكتبة</div></div>
-        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statSkills">-</div><div class="text-xs text-gray-400 font-bold">مهارات</div></div>
-        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statQuestions">-</div><div class="text-xs text-gray-400 font-bold">أسئلة</div></div>
-    </div>
+  <!-- Quick Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6" id="statsGrid">
+    <!-- filled by JS -->
+  </div>
 
-    <div class="flex gap-2 mb-6 overflow-x-auto">
-        <button class="tab-btn active" data-tab="library">📚 المكتبة</button>
-        <button class="tab-btn" data-tab="skills">🎯 المهارات</button>
-        <button class="tab-btn" data-tab="ai">🤖 تقييم AI</button>
-    </div>
+  <!-- Tabs -->
+  <div class="flex flex-wrap gap-2 mb-6" id="tabBar">
+    <button class="tab-btn active" data-tab="library">📚 المكتبة الرقمية</button>
+    <button class="tab-btn" data-tab="skills">⚡ المهارات اليومية</button>
+    <button class="tab-btn" data-tab="placement">📝 اختبار التحديد</button>
+    <button class="tab-btn" data-tab="submissions">🎙️ التسليمات</button>
+    <button class="tab-btn" data-tab="students">👥 الطلاب</button>
+    <button class="tab-btn" data-tab="billing">💳 الاشتراكات</button>
+    <button class="tab-btn" data-tab="ai">🤖 إعدادات AI</button>
+  </div>
 
-    <!-- ═══ المكتبة ═══ -->
-    <div class="tab-content active" id="tab-library">
-        <div class="glass-card">
-            <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-extrabold text-royal">محتوى المكتبة</h2><button class="btn-gold text-sm" onclick="openModal('libraryModal')">+ إضافة مادة</button></div>
-            <div id="libraryList"><div class="text-gray-400 text-center py-4">⏳ جاري التحميل...</div></div>
-        </div>
+  <!-- ========== TAB: LIBRARY ========== -->
+  <div class="tab-content glass p-6" id="tab-library">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-extrabold navy">📚 المكتبة الرقمية</h2>
+      <button class="btn-sm btn-primary" onclick="openLibraryModal()">+ إضافة مادة</button>
     </div>
+    <div class="overflow-x-auto">
+      <table>
+        <thead><tr><th>العنوان</th><th>النوع</th><th>الملف</th><th>الرابط</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+        <tbody id="libraryTable"></tbody>
+      </table>
+    </div>
+  </div>
 
-    <!-- ═══ المهارات ═══ -->
-    <div class="tab-content" id="tab-skills">
-        <div class="glass-card">
-            <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-extrabold text-royal">Dynamic Button Creator</h2><button class="btn-gold text-sm" onclick="openModal('skillModal')">+ مهارة جديدة</button></div>
-            <div id="skillsList"><div class="text-gray-400 text-center py-4">⏳ جاري التحميل...</div></div>
-        </div>
+  <!-- ========== TAB: SKILLS ========== -->
+  <div class="tab-content glass p-6 hidden" id="tab-skills">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-extrabold navy">⚡ المهارات اليومية</h2>
+      <button class="btn-sm btn-primary" onclick="openSkillModal()">+ إضافة مهارة</button>
     </div>
+    <div class="overflow-x-auto">
+      <table>
+        <thead><tr><th>#</th><th>الأيقونة</th><th>العنوان</th><th>النوع</th><th>المهمة</th><th>الوقت</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+        <tbody id="skillsTable"></tbody>
+      </table>
+    </div>
+  </div>
 
-    <!-- ═══ AI Config ═══ -->
-    <div class="tab-content" id="tab-ai">
-        <div class="glass-card">
-            <h2 class="text-lg font-extrabold text-royal mb-4">🤖 إعدادات تقييم الذكاء الاصطناعي</h2>
-            <div id="aiConfigList"><div class="text-gray-400 text-center py-4">⏳ جاري التحميل...</div></div>
-        </div>
+  <!-- ========== TAB: PLACEMENT ========== -->
+  <div class="tab-content glass p-6 hidden" id="tab-placement">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-extrabold navy">📝 أسئلة اختبار التحديد</h2>
+      <button class="btn-sm btn-primary" onclick="openPlacementModal()">+ إضافة سؤال</button>
     </div>
+    <div class="overflow-x-auto">
+      <table>
+        <thead><tr><th>#</th><th>السؤال</th><th>الإجابة</th><th>الصعوبة</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+        <tbody id="placementTable"></tbody>
+      </table>
+    </div>
+    <hr class="my-6">
+    <h3 class="text-lg font-bold navy mb-3">نتائج الطلاب</h3>
+    <div class="overflow-x-auto">
+      <table>
+        <thead><tr><th>الطالب</th><th>النتيجة</th><th>المستوى</th><th>التاريخ</th></tr></thead>
+        <tbody id="placementResultsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== TAB: SUBMISSIONS ========== -->
+  <div class="tab-content glass p-6 hidden" id="tab-submissions">
+    <div class="flex gap-2 mb-4">
+      <button class="tab-btn active" data-subtab="audio" onclick="switchSubTab('audio')">🎙️ التسجيلات الصوتية</button>
+      <button class="tab-btn" data-subtab="writing" onclick="switchSubTab('writing')">✍️ النصوص الكتابية</button>
+    </div>
+    <!-- Audio Submissions -->
+    <div id="sub-audio" class="overflow-x-auto">
+      <table>
+        <thead><tr><th>الطالب</th><th>المهارة</th><th>التسجيل</th><th>النتيجة</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
+        <tbody id="audioSubmissionsTable"></tbody>
+      </table>
+    </div>
+    <!-- Writing Submissions -->
+    <div id="sub-writing" class="overflow-x-auto hidden">
+      <table>
+        <thead><tr><th>الطالب</th><th>المهارة</th><th>النص</th><th>النتيجة</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
+        <tbody id="writingSubmissionsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== TAB: STUDENTS ========== -->
+  <div class="tab-content glass p-6 hidden" id="tab-students">
+    <h2 class="text-xl font-extrabold navy mb-4">👥 قائمة الطلاب</h2>
+    <div class="overflow-x-auto">
+      <table>
+        <thead><tr><th>المعرف</th><th>الاسم</th><th>XP</th><th>المستوى</th><th>اختبار التحديد</th><th>التسجيل</th></tr></thead>
+        <tbody id="studentsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== TAB: BILLING ========== -->
+  <div class="tab-content glass p-6 hidden" id="tab-billing">
+    <h2 class="text-xl font-extrabold navy mb-4">💳 الاشتراكات</h2>
+    <div class="overflow-x-auto">
+      <table>
+        <thead><tr><th>الطالب</th><th>الباقة</th><th>السعر</th><th>الحالة</th><th>تاريخ البدء</th><th>انتهاء الصلاحية</th></tr></thead>
+        <tbody id="billingTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== TAB: AI CONFIG ========== -->
+  <div class="tab-content glass p-6 hidden" id="tab-ai">
+    <h2 class="text-xl font-extrabold navy mb-4">🤖 إعدادات الذكاء الاصطناعي</h2>
+    <div id="aiConfigForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg"></div>
+  </div>
 
 </div>
 
-<!-- Modal: إضافة مادة للمكتبة -->
-<div class="modal-overlay" id="libraryModal">
-    <div class="modal-box">
-        <h3 class="text-xl font-extrabold text-royal mb-4">+ إضافة مادة جديدة</h3>
-        <input type="text" id="libTitle" class="input-field" placeholder="اسم المادة"><br>
-        <select id="libType" class="input-field"><option value="pdf">📄 PDF</option><option value="video">🎬 فيديو</option><option value="telegram">💬 تلغرام</option><option value="audio">🎧 أوديو</option></select><br>
-        <input type="url" id="libUrl" class="input-field" placeholder="الرابط"><br>
-        <input type="text" id="libTelegram" class="input-field" placeholder="رابط التلغرام (اختياري)"><br>
-        <input type="text" id="libIcon" class="input-field" placeholder="الأيقونة (📄/🎬/💬/🎧)" value="📄"><br>
-        <div class="flex gap-3 mt-4">
-            <button class="btn-primary flex-1" onclick="addLibraryItem()">✅ حفظ</button>
-            <button class="btn-danger flex-1" onclick="closeModal('libraryModal')">✕ إلغاء</button>
+<!-- ========== MODALS ========== -->
+
+<!-- Library Add Modal -->
+<div class="modal-overlay hidden" id="libraryModal">
+  <div class="modal">
+    <h3 class="text-xl font-extrabold navy mb-4">📚 إضافة مادة جديدة</h3>
+    <form id="libraryForm" enctype="multipart/form-data">
+      <div class="space-y-4">
+        <input name="title" placeholder="عنوان المادة" required>
+        <select name="item_type">
+          <option value="pdf">PDF</option><option value="video">MP4 فيديو</option><option value="audio">MP3 صوت</option><option value="telegram">رابط تليجرام</option><option value="youtube">رابط يوتيوب</option>
+        </select>
+        <!-- Drag & Drop Upload Zone -->
+        <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <div class="text-4xl mb-2">📂</div>
+          <p class="text-gray-500">اسحب وأفلت الملف هنا أو اضغط للاختيار</p>
+          <p class="text-xs text-gray-400 mt-1">PDF, MP3, MP4 حتى 100MB</p>
+          <p class="text-sm font-bold navy mt-2" id="fileNameDisplay"></p>
         </div>
-    </div>
+        <input type="file" name="file" id="fileInput" class="hidden" accept=".pdf,.mp3,.mp4" onchange="handleFileSelect(event)">
+        <p class="text-center text-gray-400 text-sm">— أو —</p>
+        <input name="external_url" placeholder="رابط خارجي (اختياري): YouTube, Telegram, إلخ">
+        <input name="course_id" type="hidden" value="1">
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="button" onclick="closeLibraryModal()" class="btn-sm flex-1" style="background:#e5e7eb;color:#374151;">إلغاء</button>
+        <button type="submit" class="btn-sm btn-primary flex-1">✅ إضافة</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- Modal: إضافة مهارة -->
-<div class="modal-overlay" id="skillModal">
-    <div class="modal-box">
-        <h3 class="text-xl font-extrabold text-royal mb-4">+ مهارة يومية جديدة</h3>
-        <input type="text" id="skillTitle" class="input-field" placeholder="اسم المهارة"><br>
-        <select id="skillType" class="input-field"><option value="spelling">🔤 سبيلنغ</option><option value="sentence_ordering">🧩 ترتيب</option><option value="word_completion">📝 إكمال</option><option value="listening">🎧 استماع</option><option value="reading">📖 قراءة</option><option value="speaking">🎙️ محادثة</option></select><br>
-        <input type="text" id="skillIcon" class="input-field" placeholder="الأيقونة" value="📝"><br>
-        <input type="number" id="skillTime" class="input-field" placeholder="الوقت (ثانية)" value="45"><br>
-        <div class="flex gap-3 mt-4">
-            <button class="btn-primary flex-1" onclick="addSkill()">✅ حفظ</button>
-            <button class="btn-danger flex-1" onclick="closeModal('skillModal')">✕ إلغاء</button>
-        </div>
+<!-- Skill Add / Edit Modal -->
+<div class="modal-overlay hidden" id="skillModal">
+  <div class="modal">
+    <h3 class="text-xl font-extrabold navy mb-4" id="skillModalTitle">⚡ إضافة مهارة جديدة</h3>
+    <div class="space-y-4">
+      <input id="skillTitle" placeholder="اسم المهارة">
+      <select id="skillType">
+        <option value="text">نص</option><option value="audio">صوت</option><option value="video">فيديو</option><option value="telegram">ربط بتليجرام</option>
+      </select>
+      <select id="skillTaskType">
+        <option value="mcq">اختيار من متعدد</option><option value="speaking">محادثة</option><option value="writing">كتابة</option><option value="listening">استماع</option>
+      </select>
+      <input id="skillIcon" placeholder="أيقونة FontAwesome (مثال: fa-microphone)">
+      <input id="skillTimeLimit" type="number" placeholder="الوقت (ثانية)" value="45">
+      <input id="skillTelegramLink" placeholder="رابط تليجرام (اختياري)">
+      <input type="hidden" id="skillEditId">
     </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeSkillModal()" class="btn-sm flex-1" style="background:#e5e7eb;color:#374151;">إلغاء</button>
+      <button onclick="saveSkill()" class="btn-sm btn-primary flex-1">✅ حفظ</button>
+    </div>
+  </div>
 </div>
+
+<!-- Placement Question Modal -->
+<div class="modal-overlay hidden" id="placementModal">
+  <div class="modal">
+    <h3 class="text-xl font-extrabold navy mb-4">📝 إضافة سؤال تحديد مستوى</h3>
+    <div class="space-y-4">
+      <textarea id="pqText" rows="3" placeholder="نص السؤال"></textarea>
+      <input id="pqA" placeholder="الخيار A">
+      <input id="pqB" placeholder="الخيار B">
+      <input id="pqC" placeholder="الخيار C">
+      <input id="pqD" placeholder="الخيار D">
+      <div class="flex gap-4">
+        <input id="pqCorrect" placeholder="الإجابة الصحيحة (A/B/C/D)" class="flex-1">
+        <select id="pqDifficulty" class="flex-1">
+          <option value="easy">سهل</option><option value="medium">متوسط</option><option value="hard">صعب</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closePlacementModal()" class="btn-sm flex-1" style="background:#e5e7eb;color:#374151;">إلغاء</button>
+      <button onclick="savePlacementQuestion()" class="btn-sm btn-primary flex-1">✅ حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
 
 <script>
-// ═══ التبويبات ═══
-document.querySelectorAll('.tab-btn').forEach(b=>{b.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
-    if(b.dataset.tab==='library')loadLibrary();if(b.dataset.tab==='skills')loadSkills();if(b.dataset.tab==='ai')loadAIConfig()
-})});
+// ===== CLOCK =====
+setInterval(() => {
+  document.getElementById("liveClock").textContent = new Date().toLocaleTimeString("ar-SA");
+}, 1000);
 
-async function loadStats(){
-    const r=await fetch('/api/admin/stats');const d=await r.json();
-    document.getElementById('statStudents').textContent=d.students||0;document.getElementById('statLibrary').textContent=d.library||0;
-    document.getElementById('statSkills').textContent=d.skills||0;document.getElementById('statQuestions').textContent=d.questions||0
+// ===== TAB SWITCHING =====
+document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn[data-tab]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".tab-content").forEach(tc => tc.classList.add("hidden"));
+    document.getElementById("tab-" + btn.dataset.tab).classList.remove("hidden");
+    if (btn.dataset.tab === "submissions") { loadSubmissions("audio"); }
+  });
+});
+
+// ===== TOAST =====
+function showToast(msg, type="success") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.background = type==="success"?"#10b981":type==="error"?"#ef4444":"#f59e0b";
+  t.classList.remove("hidden");
+  setTimeout(() => t.classList.add("hidden"), 3000);
 }
 
-// ═══ المكتبة ═══
-async function loadLibrary(){
-    const r=await fetch('/api/library');const items=await r.json();
-    document.getElementById('libraryList').innerHTML=items.length?items.map(i=>'<div class="flex items-center justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="text-xl">'+i.icon+'</span><div><p class="font-bold text-royal text-sm">'+i.title+'</p><p class="text-xs text-gray-400">'+i.type.toUpperCase()+(i.telegram_link?' · تلغرام':'')+'</p></div></div><button class="btn-danger text-xs" onclick="deleteLibraryItem('+i.id+')">🗑</button></div>').join(''):'<div class="text-gray-400 text-center py-4">لا توجد مواد</div>'
+// ===== FILE UPLOAD (Drag & Drop) =====
+const dropZone = document.getElementById("dropZone");
+if (dropZone) {
+  ["dragenter","dragover","dragleave","drop"].forEach(ev => {
+    dropZone.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); });
+  });
+  ["dragenter","dragover"].forEach(ev => {
+    dropZone.addEventListener(ev, () => dropZone.classList.add("dragover"));
+  });
+  ["dragleave","drop"].forEach(ev => {
+    dropZone.addEventListener(ev, () => dropZone.classList.remove("dragover"));
+  });
+  dropZone.addEventListener("drop", e => {
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      document.getElementById("fileInput").files = files;
+      document.getElementById("fileNameDisplay").textContent = files[0].name;
+    }
+  });
 }
-async function addLibraryItem(){
-    const title=document.getElementById('libTitle').value.trim(),type=document.getElementById('libType').value,url=document.getElementById('libUrl').value.trim(),telegram=document.getElementById('libTelegram').value.trim(),icon=document.getElementById('libIcon').value.trim();
-    if(!title){alert('العنوان مطلوب');return}
-    await fetch('/api/library/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,type,url,telegram_link:telegram,icon})});
-    closeModal('libraryModal');loadLibrary();loadStats()
+function handleFileSelect(e) {
+  const f = e.target.files[0];
+  document.getElementById("fileNameDisplay").textContent = f ? f.name : "";
 }
-async function deleteLibraryItem(id){if(!confirm('متأكد؟'))return;await fetch('/api/library/delete/'+id,{method:'DELETE'});loadLibrary();loadStats()}
 
-// ═══ المهارات ═══
-async function loadSkills(){
-    const r=await fetch('/api/skills');const items=await r.json();
-    document.getElementById('skillsList').innerHTML=items.length?items.map(s=>'<div class="flex items-center justify-between py-3 border-b border-gray-100"><div class="flex items-center gap-3"><span class="text-xl">'+s.icon+'</span><div><p class="font-bold text-royal text-sm">'+s.title+' ['+s.skill_type+']</p><p class="text-xs text-gray-400">⏱ '+s.time_limit+'s</p></div></div><div class="flex items-center gap-3"><span class="toggle-switch'+(s.is_active?' active':'')+'" onclick="toggleSkill('+s.id+',this)"></span><button class="btn-danger text-xs" onclick="deleteSkill('+s.id+')">🗑</button></div></div>').join(''):'<div class="text-gray-400 text-center py-4">لا توجد مهارات</div>'
-}
-async function addSkill(){
-    const title=document.getElementById('skillTitle').value.trim(),st=document.getElementById('skillType').value,icon=document.getElementById('skillIcon').value.trim(),time=parseInt(document.getElementById('skillTime').value);
-    if(!title){alert('العنوان مطلوب');return}
-    await fetch('/api/skills/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,skill_type:st,icon,time_limit:time})});
-    closeModal('skillModal');loadSkills();loadStats()
-}
-async function toggleSkill(id,el){
-    const active=el.classList.contains('active')?0:1;el.classList.toggle('active');
-    await fetch('/api/skills/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,active})})
-}
-async function deleteSkill(id){if(!confirm('متأكد؟'))return;await fetch('/api/skills/delete/'+id,{method:'DELETE'});loadSkills();loadStats()}
+// ===== LIBRARY MODAL =====
+function openLibraryModal() { document.getElementById("libraryModal").classList.remove("hidden"); }
+function closeLibraryModal() { document.getElementById("libraryModal").classList.add("hidden"); document.getElementById("fileNameDisplay").textContent=""; }
+document.getElementById("libraryForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = new FormData(e.target);
+  const res = await fetch("/api/admin/library/add", { method: "POST", body: form });
+  const data = await res.json();
+  showToast(data.ok ? "تمت الإضافة بنجاح!" : "حدث خطأ", data.ok ? "success" : "error");
+  if (data.ok) { closeLibraryModal(); loadLibrary(); }
+});
 
-// ═══ AI Config ═══
-async function loadAIConfig(){
-    const r=await fetch('/api/ai/config');const items=await r.json();
-    document.getElementById('aiConfigList').innerHTML=items.map(c=>'<div class="flex items-center justify-between py-3 border-b border-gray-100"><div><p class="font-bold text-royal text-sm">'+c.config_key+'</p><p class="text-xs text-gray-400">'+c.description+'</p></div><div class="flex items-center gap-2"><input type="text" class="input-field w-32 text-sm" value="'+c.config_value+'" id="ai_'+c.config_key+'"><button class="btn-gold text-xs px-3 py-1" onclick="updateAIConfig(\''+c.config_key+'\')">💾</button></div></div>').join('')
+// ===== SKILL MODAL =====
+function openSkillModal(id=null) {
+  document.getElementById("skillModal").classList.remove("hidden");
+  if (id) {
+    document.getElementById("skillModalTitle").textContent = "✏️ تعديل مهارة";
+    document.getElementById("skillEditId").value = id;
+  } else {
+    document.getElementById("skillModalTitle").textContent = "⚡ إضافة مهارة جديدة";
+    document.getElementById("skillEditId").value = "";
+    ["skillTitle","skillIcon","skillTelegramLink"].forEach(f=>document.getElementById(f).value="");
+    document.getElementById("skillTimeLimit").value=45;
+  }
 }
-async function updateAIConfig(key){const val=document.getElementById('ai_'+key).value;await fetch('/api/ai/config/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({config_key:key,config_value:val})});alert('✅ تم التحديث')}
+function closeSkillModal() { document.getElementById("skillModal").classList.add("hidden"); }
+async function saveSkill() {
+  const id = document.getElementById("skillEditId").value;
+  const body = {
+    title: document.getElementById("skillTitle").value,
+    skill_type: document.getElementById("skillType").value,
+    task_type: document.getElementById("skillTaskType").value,
+    icon: document.getElementById("skillIcon").value || "fa-star",
+    time_limit: parseInt(document.getElementById("skillTimeLimit").value) || 45,
+    telegram_link: document.getElementById("skillTelegramLink").value,
+    is_active: 1
+  };
+  const url = id ? `/api/admin/skills/update/${id}` : "/api/admin/skills/add";
+  const method = id ? "PUT" : "POST";
+  const res = await fetch(url, { method, headers: {"Content-Type":"application/json"}, body: JSON.stringify(body) });
+  const data = await res.json();
+  showToast(data.ok ? "تم الحفظ!" : "خطأ", data.ok ? "success" : "error");
+  if (data.ok) { closeSkillModal(); loadSkills(); }
+}
 
-function openModal(id){document.getElementById(id).classList.add('show')}
-function closeModal(id){document.getElementById(id).classList.remove('show')}
-document.addEventListener('DOMContentLoaded',()=>{loadStats();loadLibrary();console.log('👑 يامن أكاديمي — Admin Board Ready')});
+// ===== PLACEMENT MODAL =====
+function openPlacementModal() { document.getElementById("placementModal").classList.remove("hidden"); }
+function closePlacementModal() { document.getElementById("placementModal").classList.add("hidden"); }
+async function savePlacementQuestion() {
+  const body = {
+    question_text: document.getElementById("pqText").value,
+    option_a: document.getElementById("pqA").value,
+    option_b: document.getElementById("pqB").value,
+    option_c: document.getElementById("pqC").value,
+    option_d: document.getElementById("pqD").value,
+    correct_answer: document.getElementById("pqCorrect").value.toUpperCase(),
+    difficulty: document.getElementById("pqDifficulty").value
+  };
+  const res = await fetch("/api/admin/placement_questions/add", {
+    method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  showToast(data.ok ? "تمت الإضافة!" : "خطأ", data.ok ? "success" : "error");
+  if (data.ok) { closePlacementModal(); loadPlacementQuestions(); }
+}
+
+// ===== LOAD FUNCTIONS =====
+async function loadStats() {
+  const res = await fetch("/api/admin/stats");
+  const stats = await res.json();
+  const grid = document.getElementById("statsGrid");
+  grid.innerHTML = [
+    { label: "الطلاب", value: stats.students, icon: "👥", color: "#1a365d" },
+    { label: "الكورسات", value: stats.courses, icon: "📚", color: "#c5a028" },
+    { label: "المواد", value: stats.library_items, icon: "📄", color: "#10b981" },
+    { label: "الأسئلة", value: stats.questions, icon: "❓", color: "#6366f1" },
+    { label: "المهارات", value: stats.skills, icon: "⚡", color: "#f59e0b" },
+    { label: "الأخطاء", value: stats.pending_errors, icon: "🔴", color: "#ef4444" },
+    { label: "التسجيلات", value: stats.audio_submissions, icon: "🎙️", color: "#ec4899" },
+    { label: "النصوص", value: stats.writing_submissions, icon: "✍️", color: "#8b5cf6" },
+    { label: "اختبارات التحديد", value: stats.placement_tests, icon: "📝", color: "#14b8a6" },
+  ].slice(0,6).map(s => `
+    <div class="stat-card">
+      <div class="text-2xl mb-1">${s.icon}</div>
+      <div class="stat-value" style="color:${s.color}">${s.value}</div>
+      <div class="text-sm text-gray-500">${s.label}</div>
+    </div>
+  `).join("");
+}
+
+async function loadLibrary() {
+  const res = await fetch("/api/admin/library");
+  const items = await res.json();
+  document.getElementById("libraryTable").innerHTML = items.map(item => `
+    <tr>
+      <td class="font-bold">${item.title}</td>
+      <td><span class="bg-gray-100 px-3 py-1 rounded-full text-xs">${item.item_type}</span></td>
+      <td>${item.file_path ? `<a href="${item.file_path}" target="_blank" class="text-blue-500 text-sm">📎 عرض الملف</a>` : '—'}</td>
+      <td>${item.external_url ? `<a href="${item.external_url}" target="_blank" class="text-blue-500 text-sm">🔗 الرابط</a>` : '—'}</td>
+      <td><span class="px-3 py-1 rounded-full text-xs ${item.is_active?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${item.is_active?'نشط':'مخفي'}</span></td>
+      <td>
+        <button class="btn-sm btn-warning mr-1" onclick="toggleLibrary(${item.id})">👁️</button>
+        <button class="btn-sm btn-danger" onclick="deleteLibrary(${item.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+async function toggleLibrary(id) {
+  await fetch(`/api/admin/library/toggle/${id}`, { method:"POST" });
+  loadLibrary();
+}
+async function deleteLibrary(id) {
+  if (!confirm("متأكد من الحذف؟")) return;
+  await fetch(`/api/admin/library/delete/${id}`, { method:"DELETE" });
+  showToast("تم الحذف"); loadLibrary();
+}
+
+async function loadSkills() {
+  const res = await fetch("/api/admin/skills");
+  const skills = await res.json();
+  document.getElementById("skillsTable").innerHTML = skills.map((s,i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><i class="fas ${s.icon || 'fa-star'} gold text-xl"></i></td>
+      <td class="font-bold">${s.title}</td>
+      <td>${s.skill_type}</td>
+      <td>${s.task_type}</td>
+      <td>${s.time_limit} ث</td>
+      <td><span class="px-3 py-1 rounded-full text-xs ${s.is_active?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${s.is_active?'نشط':'مخفي'}</span></td>
+      <td>
+        <button class="btn-sm btn-warning mr-1" onclick="toggleSkill(${s.id})">👁️</button>
+        <button class="btn-sm" style="background:#6366f1;color:#fff" onclick="editSkillPrompt(${s.id})">✏️</button>
+        <button class="btn-sm btn-danger" onclick="deleteSkill(${s.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+async function toggleSkill(id) { await fetch(`/api/admin/skills/toggle/${id}`, {method:"POST"}); loadSkills(); }
+async function deleteSkill(id) {
+  if (!confirm("متأكد من الحذف؟")) return;
+  await fetch(`/api/admin/skills/delete/${id}`, { method:"DELETE" });
+  showToast("تم الحذف"); loadSkills();
+}
+async function editSkillPrompt(id) {
+  const res = await fetch("/api/admin/skills");
+  const skills = await res.json();
+  const skill = skills.find(s=>s.id===id);
+  if (!skill) return;
+  openSkillModal(id);
+  document.getElementById("skillTitle").value = skill.title;
+  document.getElementById("skillType").value = skill.skill_type;
+  document.getElementById("skillTaskType").value = skill.task_type;
+  document.getElementById("skillIcon").value = skill.icon || "";
+  document.getElementById("skillTimeLimit").value = skill.time_limit;
+  document.getElementById("skillTelegramLink").value = skill.telegram_link || "";
+}
+
+async function loadPlacementQuestions() {
+  const res = await fetch("/api/admin/placement_questions");
+  const qs = await res.json();
+  document.getElementById("placementTable").innerHTML = qs.map(q => `
+    <tr>
+      <td>${q.id}</td>
+      <td>${q.question_text.substring(0,60)}...</td>
+      <td class="font-bold">${q.correct_answer}</td>
+      <td>${q.difficulty}</td>
+      <td><span class="px-3 py-1 rounded-full text-xs ${q.is_active?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${q.is_active?'نشط':'مخفي'}</span></td>
+      <td>
+        <button class="btn-sm btn-warning mr-1" onclick="togglePQ(${q.id})">👁️</button>
+        <button class="btn-sm btn-danger" onclick="deletePQ(${q.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join("");
+  const r2 = await fetch("/api/admin/placement_results");
+  const prs = await r2.json();
+  document.getElementById("placementResultsTable").innerHTML = prs.map(pr => `
+    <tr>
+      <td>${pr.student_name || pr.student_id}</td>
+      <td>${pr.score}/${pr.total}</td>
+      <td class="font-bold gold">${pr.level}</td>
+      <td>${pr.completed_at?.substring(0,10) || ''}</td>
+    </tr>
+  `).join("");
+}
+
+async function togglePQ(id) { await fetch(`/api/admin/placement_questions/toggle/${id}`, {method:"POST"}); loadPlacementQuestions(); }
+async function deletePQ(id) { await fetch(`/api/admin/placement_questions/delete/${id}`, {method:"DELETE"}); loadPlacementQuestions(); }
+
+async function loadSubmissions(type="audio") {
+  if (type==="audio") {
+    const res = await fetch("/api/admin/submissions/audio");
+    const subs = await res.json();
+    document.getElementById("audioSubmissionsTable").innerHTML = subs.map(s => `
+      <tr>
+        <td>${s.student_name||s.student_id}</td>
+        <td>${s.skill_title||'—'}</td>
+        <td>
+          ${s.file_path ? `<audio controls src="/static/uploads/${s.file_path.split('/').pop()}" style="height:32px"></audio>` : '—'}
+        </td>
+        <td>${s.ai_score||'—'}/10</td>
+        <td>${s.submitted_at?.substring(0,10)||''}</td>
+        <td><button class="btn-sm btn-success" onclick="evaluateAudio(${s.id})">🤖 تقييم AI</button></td>
+      </tr>
+    `).join("");
+  } else {
+    const res = await fetch("/api/admin/submissions/writing");
+    const subs = await res.json();
+    document.getElementById("writingSubmissionsTable").innerHTML = subs.map(s => `
+      <tr>
+        <td>${s.student_name||s.student_id}</td>
+        <td>${s.skill_title||'—'}</td>
+        <td class="max-w-xs truncate">${(s.content||'').substring(0,80)}...</td>
+        <td>${s.ai_score||'—'}/10</td>
+        <td>${s.submitted_at?.substring(0,10)||''}</td>
+        <td><button class="btn-sm btn-success" onclick="evaluateWriting(${s.id})">🤖 تقييم AI</button></td>
+      </tr>
+    `).join("");
+  }
+}
+
+function switchSubTab(type) {
+  document.querySelectorAll("[data-subtab]").forEach(b=>b.classList.remove("active"));
+  document.querySelector(`[data-subtab=${type}]`).classList.add("active");
+  document.getElementById("sub-audio").classList.toggle("hidden", type!=="audio");
+  document.getElementById("sub-writing").classList.toggle("hidden", type!=="writing");
+  loadSubmissions(type);
+}
+
+async function evaluateAudio(id) {
+  const res = await fetch(`/api/admin/submissions/evaluate_audio/${id}`, {method:"POST"});
+  const data = await res.json();
+  showToast(`تم التقييم: ${data.result?.score||"?"}/10`);
+  loadSubmissions("audio");
+}
+async function evaluateWriting(id) {
+  const res = await fetch(`/api/admin/submissions/evaluate_writing/${id}`, {method:"POST"});
+  const data = await res.json();
+  showToast(`تم التقييم: ${data.result?.score||"?"}/10`);
+  loadSubmissions("writing");
+}
+
+async function loadStudents() {
+  const res = await fetch("/api/admin/students");
+  const students = await res.json();
+  document.getElementById("studentsTable").innerHTML = students.map(s => `
+    <tr>
+      <td>${s.telegram_id}</td>
+      <td>${s.name||s.username||'—'}</td>
+      <td class="font-bold">${s.xp}</td>
+      <td>${s.level}</td>
+      <td><span class="px-3 py-1 rounded-full text-xs ${s.placement_level?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">${s.placement_level||'لم يكتمل'}</span></td>
+      <td>${s.registered_at?.substring(0,10)||''}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadBilling() {
+  const res = await fetch("/api/admin/subscriptions");
+  const subs = await res.json();
+  document.getElementById("billingTable").innerHTML = subs.map(s => `
+    <tr>
+      <td>${s.student_name||s.student_id}</td>
+      <td class="font-bold">${s.plan_name}</td>
+      <td>$${s.price_monthly}</td>
+      <td><span class="px-3 py-1 rounded-full text-xs ${s.status==='active'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${s.status}</span></td>
+      <td>${s.started_at?.substring(0,10)||''}</td>
+      <td>${s.expires_at?.substring(0,10)||''}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadAIConfig() {
+  const res = await fetch("/api/admin/ai_config");
+  const config = await res.json();
+  document.getElementById("aiConfigForm").innerHTML = config.map(c => `
+    <div>
+      <label class="text-sm text-gray-600 font-bold">${c.config_key}</label>
+      <input value="${c.config_value}" data-key="${c.config_key}" onchange="updateAIConfig()">
+    </div>
+  `).join("<br>");
+}
+
+async function updateAIConfig() {
+  const inputs = document.querySelectorAll("#aiConfigForm input");
+  const data = {};
+  inputs.forEach(inp => data[inp.dataset.key] = inp.value);
+  await fetch("/api/admin/ai_config/update", {
+    method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(data)
+  });
+  showToast("تم تحديث إعدادات AI");
+}
+
+// ===== INIT =====
+loadStats();
+loadLibrary();
+loadSkills();
+loadPlacementQuestions();
+loadStudents();
+loadBilling();
+loadAIConfig();
+loadSubmissions("audio");
 </script>
 </body>
 </html>

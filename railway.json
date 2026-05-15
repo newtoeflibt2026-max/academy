@@ -1,6 +1,8 @@
 {
-  "build": { "builder": "NIXPACKS" },
+  "build": {
+    "builder": "NIXPACKS"
+  },
   "deploy": {
-    "startCommand": "gunicorn run_webapp:app --bind 0.0.0.0:${PORT:-8080} --workers 2 --timeout 120"
+    "startCommand": "gunicorn app:app --bind 0.0.0.0:${PORT:-8080} --workers 2 --timeout 120"
   }
 }
