@@ -1,209 +1,133 @@
 import asyncio, logging, sys, os
-sys.path.insert(0, os.path.dirname(__file__))
-
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.filters import Command, CommandStart
+from aiogram.types import Message
 
-from config import BOT_TOKEN, ADMIN_IDS
-from database import (init_db, get_db_connection, get_stats, get_all_students,
-    get_leaderboard, get_absent_students, upsert_student, log_activity,
-    add_to_error_bank, get_due_reviews, record_correct_review, update_user_role,
-    get_admin_setting, set_admin_setting)
+# ── استيراد الإعدادات ────────────────────────────────────────
+try:
+    from config import ADMIN_IDS, BOT_TOKEN, DATABASE_PATH, WEBHOOK_HOST, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT
+except ImportError:
+    ADMIN_IDS = [5602495831]
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+    DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "yamen_academy.db")
+    WEBHOOK_HOST = os.environ.get("WEBHOOK_HOST", "")
+    WEBHOOK_PATH = "/webhook"
+    WEBAPP_HOST = "0.0.0.0"
+    WEBAPP_PORT = int(os.environ.get("PORT", 8080))
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+import aiohttp
+import sqlite3
+
+logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-if not BOT_TOKEN:
-    logger.critical("❌ BOT_TOKEN missing!"); sys.exit(1)
-
-bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-def is_admin(uid): return uid in ADMIN_IDS
+# ── معالجات البوت ────────────────────────────────────────────
+@dp.message(CommandStart())
+async def cmd_start(message: Message):
+    user = message.from_user
+    is_admin = user.id in ADMIN_IDS
+    logger.info(f"/start from {user.full_name} (ID:{user.id}) | Admin:{is_admin}")
 
-def menu():
-    b = InlineKeyboardBuilder()
-    for txt, cb in [("📊 إحصائيات","stats"),("📚 الدورات","courses"),("👥 الطلاب","students"),
-        ("💰 المدفوعات","payments"),("🗄️ الخزنة","vault"),("⚙️ الإعدادات","settings"),
-        ("➕ إضافة دورة","add_course"),("➕ إضافة قالب","add_vault")]:
-        b.button(text=txt, callback_data=cb)
-    b.adjust(2,2,2,2)
-    return b.as_markup()
+    # حفظ الطالب في القاعدة
+    db = sqlite3.connect(DATABASE_PATH)
+    db.execute("INSERT OR IGNORE INTO students (telegram_id, username, first_name, is_active) VALUES (?,?,?,1)",
+               (user.id, user.username, user.first_name))
+    db.execute("UPDATE students SET username=?, first_name=?, last_active=datetime('now') WHERE telegram_id=?",
+               (user.username, user.first_name, user.id))
+    db.commit(); db.close()
 
-# ═══════ HANDLERS ═══════
+    await message.answer(
+        f"🦅 أهلاً بك في **يامن أكاديمي**، {user.full_name}!\n\n"
+        f"⚡ مستواك: 0\n"
+        f"📊 XP: 0\n\n"
+        f"{'👑 أنتِ الإمبراطورة! استخدمي /admin للوحة التحكم' if is_admin else '🎯 استخدم /help لمعرفة الأوامر المتاحة'}"
+    )
 
-@dp.message(Command("start"))
-async def start(msg: Message):
-    uid = msg.from_user.id
-    upsert_student(uid, msg.from_user.username or "", msg.from_user.first_name or "")
-    log_activity(uid, "start")
-    await msg.answer(f"👋 أهلاً {msg.from_user.first_name or 'مستخدم'}!\n🆔 `{uid}`",
-                     parse_mode="Markdown")
-
-@dp.message(Command("leaderboard"))
-async def leaderboard(msg: Message):
-    lb = get_leaderboard(5)
-    if not lb: return await msg.answer("لا يوجد طلاب.")
-    t = "🏆 **Top 5**:\n\n"
-    for i,s in enumerate(lb,1):
-        t += f"{['🥇','🥈','🥉','4️⃣','5️⃣'][i-1]} {s['first_name'] or '---'} — {s['xp']} XP\n"
-    await msg.answer(t, parse_mode="Markdown")
+@dp.message(Command("help"))
+async def cmd_help(message: Message):
+    await message.answer(
+        "📋 **الأوامر المتاحة:**\n"
+        "/start — بدء التشغيل\n"
+        "/help — هذه القائمة\n"
+        "/profile — ملفك الشخصي\n"
+        "/leaderboard — قائمة المتفوقين\n"
+        "/review — مراجعة الأخطاء\n"
+        + ("/admin — 👑 لوحة الإمبراطورة\n" if message.from_user.id in ADMIN_IDS else "")
+    )
 
 @dp.message(Command("profile"))
-async def profile(msg: Message):
-    uid = msg.from_user.id
-    conn = get_db_connection()
-    try:
-        s = conn.execute("SELECT * FROM students WHERE user_id=?",(uid,)).fetchone()
-        if s:
-            total = conn.execute("SELECT COUNT(*) FROM courses").fetchone()[0] or 1
-            done = conn.execute("SELECT COUNT(DISTINCT course_id) FROM progress WHERE user_id=? AND completed=1",(uid,)).fetchone()[0]
-            pct = round(done/total*100)
-            bar = "█"*(pct//10) + "░"*(10-pct//10)
-            await msg.answer(f"👤 {s['first_name']}\n⭐ {s['xp']} XP | 🎚️ Lv.{s['level']}\n📊 [{bar}] {pct}%")
-    finally: conn.close()
-
-@dp.message(Command("review"))
-async def review(msg: Message):
-    reviews = get_due_reviews(msg.from_user.id)
-    if not reviews: return await msg.answer("✅ لا توجد مراجعة.")
-    for r in reviews[:5]:
-        kb = InlineKeyboardBuilder()
-        kb.button(text="✅ صحيح", callback_data=f"ok_{r['id']}")
-        await msg.answer(f"🔄 {r['question_text']}\nإجابتك: _{r['wrong_answer']}_",
-                         reply_markup=kb.as_markup(), parse_mode="Markdown")
-
-@dp.callback_query(F.data.startswith("ok_"))
-async def ok_review(cb: CallbackQuery):
-    record_correct_review(cb.from_user.id, int(cb.data.split("_")[1]))
-    await cb.message.edit_text(cb.message.text + "\n\n✅ **إجابة صحيحة!**", parse_mode="Markdown")
-    await cb.answer()
-
-# ═══════ ADMIN ═══════
+async def cmd_profile(message: Message):
+    db = sqlite3.connect(DATABASE_PATH); db.row_factory = sqlite3.Row
+    row = db.execute("SELECT * FROM students WHERE telegram_id=?",(message.from_user.id,)).fetchone()
+    db.close()
+    if row:
+        await message.answer(f"👤 {row['first_name'] or row['username']}\n⭐ XP: {row['xp'] or 0}\n📊 المستوى: {row['level'] or 0}\n🔥 Streak: {row.get('streak',0) or 0}")
+    else:
+        await message.answer("❌ لم يتم العثور على ملفك. اكتب /start أولاً.")
 
 @dp.message(Command("admin"))
-async def admin(msg: Message):
-    uid = msg.from_user.id
-    if uid not in ADMIN_IDS: return await msg.answer(f"⛔ {uid}")
-    update_user_role(uid, "admin")
-    await msg.answer("👑 **لوحة التحكم**", reply_markup=menu(), parse_mode="Markdown")
+async def cmd_admin(message: Message):
+    if message.from_user.id not in ADMIN_IDS:
+        await message.answer("⛔ غير مصرح لك بالدخول.")
+        return
+    await message.answer(
+        f"👑 **لوحة الإمبراطورة** — يامن أكاديمي\n\n"
+        f"🔗 افتحي الرابط:\n`{WEBHOOK_HOST}/admin`\n\n"
+        f"📊 الميزات:\n"
+        f"• تفعيل/تعطيل المهارات الست\n"
+        f"• إضافة/حذف دروس (فيديو/PDF)\n"
+        f"• عرض قائمة الطلاب والإحصائيات"
+    )
 
-@dp.callback_query(F.data == "stats")
-async def cb_stats(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    s = get_stats()
-    conn = get_db_connection()
-    xp = conn.execute("SELECT COALESCE(SUM(xp),0) FROM students").fetchone()[0]
-    conn.close()
-    await cb.message.edit_text(f"📊 👥{s['students']} 📚{s['courses']} 🟢{s['active_today']} ⭐{xp}XP", reply_markup=menu())
-    await cb.answer()
+@dp.message(Command("leaderboard"))
+async def cmd_leaderboard(message: Message):
+    db = sqlite3.connect(DATABASE_PATH); db.row_factory = sqlite3.Row
+    rows = db.execute("SELECT first_name,username,xp,level FROM students WHERE is_active=1 ORDER BY xp DESC LIMIT 5").fetchall()
+    db.close()
+    if rows:
+        text = "🏅 **قائمة المتفوقين:**\n\n" + "\n".join(f"{i+1}. {r['first_name'] or r['username']} — {r['xp'] or 0} XP" for i,r in enumerate(rows))
+    else:
+        text = "لا يوجد طلاب بعد!"
+    await message.answer(text)
 
-@dp.callback_query(F.data == "courses")
-async def cb_courses(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    conn = get_db_connection()
-    cs = conn.execute("SELECT * FROM courses ORDER BY id").fetchall(); conn.close()
-    t = "📚 الدورات:\n\n" + "\n".join([f"🔹 {c['name']} ({c['level']})" for c in cs]) if cs else "لا دورات."
-    await cb.message.edit_text(t, reply_markup=menu()); await cb.answer()
+@dp.message()
+async def echo(message: Message):
+    await message.answer("اكتب /help لمعرفة الأوامر المتاحة.")
 
-@dp.callback_query(F.data == "students")
-async def cb_students(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    ss = get_all_students()
-    t = "👥:\n\n" + "\n".join([f"{'🟢' if s['is_active'] else '🔴'} {s['first_name']} — {s['xp']}XP" for s in ss[:15]])
-    await cb.message.edit_text(t, reply_markup=menu()); await cb.answer()
-
-@dp.callback_query(F.data == "payments")
-async def cb_payments(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    conn = get_db_connection()
-    ps = conn.execute("SELECT * FROM payments WHERE status='pending'").fetchall(); conn.close()
-    t = "💰:\n\n" + "\n".join([f"#{p['id']} {p['plan_name']} {p['amount']}ر.س" for p in ps]) if ps else "لا مدفوعات."
-    await cb.message.edit_text(t, reply_markup=menu()); await cb.answer()
-
-@dp.callback_query(F.data == "vault")
-async def cb_vault(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    conn = get_db_connection()
-    vs = conn.execute("SELECT * FROM vault_items ORDER BY id").fetchall(); conn.close()
-    t = "🗄️ القوالب:\n\n" + "\n".join([f"📁 {v['title']}" for v in vs]) if vs else "لا قوالب."
-    await cb.message.edit_text(t, reply_markup=menu()); await cb.answer()
-
-@dp.callback_query(F.data == "settings")
-async def cb_settings(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    t = "\n".join([f"• {k}: {get_admin_setting(k,'---')}" for k in ['wallet_number','xp_multiplier','challenge_timer']])
-    await cb.message.edit_text(f"⚙️:\n\n{t}", reply_markup=menu()); await cb.answer()
-
-@dp.callback_query(F.data == "add_course")
-async def cb_add_course(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    kb = InlineKeyboardBuilder()
-    for skill, label in [("speaking","🗣️ تحدث"),("spelling","✍️ إكمال"),("writing","📝 ترتيب"),("email","📧 إيميل"),("listening","🎧 استماع")]:
-        kb.button(text=label, callback_data=f"skill_{skill}")
-    kb.adjust(2,2,1)
-    await cb.message.edit_text("اختر نوع المهارة:", reply_markup=kb.as_markup())
-    await cb.answer()
-
-@dp.callback_query(F.data == "add_vault")
-async def cb_add_vault(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    await cb.message.edit_text("📁 أرسل: العنوان | المحتوى | التصنيف | المستوى\nمثال: قالب تقديم | مرحبا اسمي... | speaking | 1")
-    await cb.answer()
-
-@dp.message(F.text.regexp(r"^.+ \| .+ \| .+ \| .+$"))
-async def vault_input(msg: Message):
-    if not is_admin(msg.from_user.id): return
-    parts = [p.strip() for p in msg.text.split("|")]
-    if len(parts) == 4:
-        conn = get_db_connection()
-        conn.execute("INSERT INTO vault_items (title,content,category,unlock_level) VALUES (?,?,?,?)", tuple(parts))
-        conn.commit(); conn.close()
-        await msg.answer("✅ تم!", reply_markup=menu())
-
-@dp.message(F.text.regexp(r"^(.+)\|(.+)\|(.+)\|(.+)\|(.+)\|(.+)\|(.+)$"))
-async def course_input(msg: Message):
-    if not is_admin(msg.from_user.id): return
-    p = [x.strip() for x in msg.text.split("|")]
-    if len(p) == 7:
-        conn = get_db_connection()
-        conn.execute("INSERT INTO courses (name,level,skill_type,price,duration_days,time_limit,target_score) VALUES (?,?,?,?,?,?,?)", tuple(p))
-        conn.commit(); conn.close()
-        await msg.answer("✅ تمت!", reply_markup=menu())
-
-@dp.callback_query(F.data.startswith("skill_"))
-async def skill_pick(cb: CallbackQuery):
-    if not is_admin(cb.from_user.id): return await cb.answer("⛔",show_alert=True)
-    skill = cb.data.split("_")[1]
-    await cb.message.edit_text(
-        f"✅ المهارة: {skill}\n\n📝 أرسل بيانات الدورة:\n`الاسم|المستوى|{skill}|السعر|المدة|الوقت|الهدف`\nمثال:\n`محادثة|beginner|{skill}|100|30|45|69`",
-        parse_mode="Markdown")
-    await cb.answer()
-
-@dp.callback_query(F.data == "back")
-async def back(cb: CallbackQuery):
-    await cb.message.edit_text("👑 لوحة التحكم", reply_markup=menu()); await cb.answer()
-
-# ═══════ MAIN ═══════
-
+# ── الدالة الرئيسية ──────────────────────────────────────────
 async def main():
-    logger.info("🛑 Step 1: Hard stop – deleting webhook + dropping pending updates...")
-    try:
-        await bot.delete_webhook(drop_pending_updates=True)
-    except Exception as e:
-        logger.warning(f"delete_webhook skipped: {e}")
+    bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN))
 
-    logger.info("💤 Step 2: Sleeping 5 seconds for Telegram servers to stabilize...")
-    await asyncio.sleep(5)
+    # ⚡ حذف الـ Webhook القديم + مسح التحديثات المعلقة
+    await bot.delete_webhook(drop_pending_updates=True)
+    logger.info("✅ Old webhook deleted, pending updates dropped")
 
-    logger.info("🗄️ Step 3: Initializing database...")
-    init_db()
-    logger.info("✅ DB ready.")
-
-    logger.info(f"🚀 Step 4: Starting polling on port={os.environ.get('PORT','8080')} | ADMIN_IDS={ADMIN_IDS}")
-    await dp.start_polling(bot)
+    # ⚡ محاولة تعيين Webhook جديد إذا كان WEBHOOK_HOST موجوداً
+    if WEBHOOK_HOST and WEBHOOK_HOST.startswith("https://"):
+        webhook_url = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+        try:
+            await bot.set_webhook(webhook_url)
+            logger.info(f"🔗 Webhook set to: {webhook_url}")
+            # بدء webhook server
+            from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+            from aiohttp import web
+            app_web = web.Application()
+            handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
+            handler.register(app_web, path=WEBHOOK_PATH)
+            setup_application(app_web, dp, bot=bot)
+            logger.info(f"🌐 Webhook server starting on {WEBAPP_HOST}:{WEBAPP_PORT}")
+            await web._run_app(app_web, host=WEBAPP_HOST, port=WEBAPP_PORT)
+        except Exception as e:
+            logger.error(f"❌ Webhook setup failed: {e}. Falling back to polling...")
+            await dp.start_polling(bot)
+    else:
+        logger.info("🔄 No WEBHOOK_HOST set. Starting polling mode...")
+        await dp.start_polling(bot)
 
 if __name__ == "__main__":
+    logger.info(f"🚀 Starting Yamen Academy Bot | ADMIN_IDS: {ADMIN_IDS}")
     asyncio.run(main())
