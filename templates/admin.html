@@ -3,244 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | أكاديمية يامن</title>
-    <link rel="manifest" href="/manifest.json">
+    <title>يامن أكاديمي | لوحة الإمبراطورة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028','card':'#ffffff'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04)'}}}}</script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
-        
-        /* ─── Header ─── */
-        .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100; }
-        .header h1 { font-size: 1.5rem; }
-        .header .logo { font-weight: bold; color: #e94560; }
-        .header .status { background: #00c853; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
-
-        /* ─── Layout ─── */
-        .container { display: flex; min-height: calc(100vh - 60px); }
-        .sidebar { width: 220px; background: white; padding: 16px 0; box-shadow: 2px 0 8px rgba(0,0,0,0.05); }
-        .sidebar a { display: block; padding: 12px 24px; text-decoration: none; color: #444; border-right: 3px solid transparent; transition: all 0.2s; cursor: pointer; }
-        .sidebar a:hover, .sidebar a.active { background: #f0f2f5; color: #e94560; border-right-color: #e94560; font-weight: bold; }
-        .main { flex: 1; padding: 24px; }
-
-        /* ─── Cards ─── */
-        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
-        .card .number { font-size: 2rem; font-weight: bold; color: #e94560; }
-        .card .label { color: #888; margin-top: 4px; }
-
-        /* ─── Table ─── */
-        .section-title { font-size: 1.2rem; margin-bottom: 12px; color: #1a1a2e; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        th { background: #1a1a2e; color: white; padding: 12px; text-align: right; }
-        td { padding: 12px; border-bottom: 1px solid #eee; }
-        tr:hover { background: #f8f9fa; }
-
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; }
-        .badge-success { background: #e8f5e9; color: #2e7d32; }
-        .badge-warning { background: #fff3e0; color: #e65100; }
-        .badge-danger { background: #ffebee; color: #c62828; }
-
-        /* ─── Loading ─── */
-        .spinner { border: 3px solid #f0f0f0; border-top: 3px solid #e94560; border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 40px auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .hidden { display: none !important; }
-        .section { margin-bottom: 32px; }
+        *{font-family:'Cairo',sans-serif}
+        body{background:radial-gradient(ellipse at 20% 0%,rgba(197,160,40,0.03) 0%,transparent 60%),linear-gradient(180deg,#fdfcfb 0%,#f7f4ef 100%);min-height:100vh}
+        .glass-card{background:rgba(255,255,255,0.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.9);box-shadow:0 4px 20px rgba(26,54,93,0.06);border-radius:22px;padding:20px}
+        .btn-primary{background:linear-gradient(135deg,#1a365d,#254e7a);color:white;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 12px rgba(26,54,93,0.15)}
+        .btn-primary:active{transform:scale(0.96)}
+        .btn-gold{background:linear-gradient(135deg,#c5a028,#b8941f);color:white;border:none;border-radius:14px;padding:10px 20px;font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.3s ease}
+        .btn-gold:active{transform:scale(0.96)}
+        .btn-danger{background:#ef4444;color:white;border:none;border-radius:14px;padding:8px 16px;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.3s ease}
+        .btn-danger:active{transform:scale(0.95)}
+        .toggle-switch{width:52px;height:28px;background:#e5e7eb;border-radius:28px;cursor:pointer;transition:all 0.3s ease;position:relative;display:inline-block}
+        .toggle-switch.active{background:#22c55e}
+        .toggle-switch::after{content:'';position:absolute;width:22px;height:22px;background:white;border-radius:50%;top:3px;left:3px;transition:all 0.3s ease;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+        .toggle-switch.active::after{left:27px}
+        .tab-btn{padding:8px 16px;border-radius:12px;font-weight:700;font-size:0.85rem;transition:all 0.3s ease;cursor:pointer;color:#8896a6;background:transparent;border:none}
+        .tab-btn.active{background:rgba(26,54,93,0.08);color:#1a365d}
+        .tab-content{display:none}
+        .tab-content.active{display:block;animation:fadeIn 0.4s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .skill-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:rgba(255,255,255,0.6);border-radius:16px;margin-bottom:8px}
+        .skill-row:hover{background:rgba(255,255,255,0.9)}
+        .stat-card{background:rgba(255,255,255,0.7);border-radius:18px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(26,54,93,0.04);transition:all 0.3s ease}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(26,54,93,0.08)}
+        .lesson-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.6);border-radius:14px;margin-bottom:6px;font-size:0.9rem}
+        ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(26,54,93,0.1);border-radius:10px}
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,54,93,0.4);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:white;border-radius:24px;padding:28px;max-width:440px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:fadeIn 0.3s ease}
+        .input-field{width:100%;border:1.5px solid rgba(26,54,93,0.1);border-radius:14px;padding:12px 16px;font-size:0.9rem;font-weight:600;color:#1a365d;background:#f8f9fa;transition:all 0.3s ease;outline:none}
+        .input-field:focus{border-color:#c5a028;box-shadow:0 0 0 3px rgba(197,160,40,0.1);background:white}
+        select.input-field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%231a365d' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 16px center}
     </style>
 </head>
 <body>
-    <div class="header">
-        <div><span class="logo">Yamen</span> Academy | لوحة التحكم</div>
-        <div class="status" id="statusBadge">🟢 متصل</div>
+
+<div class="max-w-3xl mx-auto px-4 py-6">
+
+    <!-- الشريط العلوي -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-black text-royal">👑 لوحة الإمبراطورة</h1>
+            <p class="text-gray-500 text-sm mt-1 font-semibold">إدارة أكاديمية يامن</p>
+        </div>
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold/30 to-royal/20 flex items-center justify-center text-3xl shadow-soft border border-gold/30">🦅</div>
     </div>
 
-    <div class="container">
-        <!-- ─── Sidebar ─── -->
-        <div class="sidebar">
-            <a class="active" onclick="showSection('dashboard')">📊 لوحة المعلومات</a>
-            <a onclick="showSection('courses')">📚 الدورات</a>
-            <a onclick="showSection('students')">👥 الطلاب</a>
-            <a onclick="showSection('payments')">💰 المدفوعات</a>
-            <a onclick="showSection('vault')">🗄️ الخزنة</a>
-            <a onclick="showSection('settings')">⚙️ الإعدادات</a>
-        </div>
+    <!-- بطاقات الإحصائيات -->
+    <div class="grid grid-cols-4 gap-3 mb-6">
+        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statStudents">-</div><div class="text-xs text-gray-400 mt-1 font-bold">طلاب</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statCourses">-</div><div class="text-xs text-gray-400 mt-1 font-bold">كورسات</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-royal" id="statLessons">-</div><div class="text-xs text-gray-400 mt-1 font-bold">دروس</div></div>
+        <div class="stat-card"><div class="text-2xl font-black text-gold" id="statQuestions">-</div><div class="text-xs text-gray-400 mt-1 font-bold">أسئلة</div></div>
+    </div>
 
-        <!-- ─── Main Content ─── -->
-        <div class="main">
-            <div id="spinner" class="spinner"></div>
+    <!-- التبويبات -->
+    <div class="flex gap-2 mb-6 overflow-x-auto pb-1">
+        <button class="tab-btn active" data-tab="skills">🎯 المهارات</button>
+        <button class="tab-btn" data-tab="lessons">📚 الدروس</button>
+        <button class="tab-btn" data-tab="students">👥 الطلاب</button>
+    </div>
 
-            <!-- Dashboard -->
-            <div id="dashboard" class="section hidden">
-                <div class="cards" id="statsCards"></div>
+    <!-- ═══ تبويب المهارات ═══ -->
+    <div class="tab-content active" id="tab-skills">
+        <div class="glass-card">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-lg font-extrabold text-royal">تفعيل / تعطيل المهارات الست</h2>
+                <span class="text-xs text-gray-400 font-semibold">⇄ لمسة واحدة للتبديل</span>
             </div>
-
-            <!-- Courses -->
-            <div id="courses" class="section hidden">
-                <div class="section-title">📚 الدورات</div>
-                <table id="coursesTable"><thead><tr><th>#</th><th>الاسم</th><th>المستوى</th><th>السعر</th><th>المهارة</th><th>الحالة</th></tr></thead><tbody></tbody></table>
-            </div>
-
-            <!-- Students -->
-            <div id="students" class="section hidden">
-                <div class="section-title">👥 الطلاب</div>
-                <table id="studentsTable"><thead><tr><th>المعرف</th><th>الاسم</th><th>XP</th><th>المستوى</th><th>آخر نشاط</th><th>الحالة</th></tr></thead><tbody></tbody></table>
-            </div>
-
-            <!-- Payments -->
-            <div id="payments" class="section hidden">
-                <div class="section-title">💰 المدفوعات المعلقة</div>
-                <table id="paymentsTable"><thead><tr><th>#</th><th>المستخدم</th><th>الخطة</th><th>المبلغ</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody></tbody></table>
-            </div>
-
-            <!-- Vault -->
-            <div id="vault" class="section hidden">
-                <div class="section-title">🗄️ مكتبة القوالب</div>
-                <table id="vaultTable"><thead><tr><th>#</th><th>العنوان</th><th>التصنيف</th><th>المستوى</th></tr></thead><tbody></tbody></table>
-            </div>
-
-            <!-- Settings -->
-            <div id="settings" class="section hidden">
-                <div class="section-title">⚙️ الإعدادات</div>
-                <div id="settingsContent"></div>
-            </div>
+            <div id="skillsList"><div class="text-center text-gray-400 py-6">⏳ جاري التحميل...</div></div>
         </div>
     </div>
 
-    <script>
-        const API = window.location.origin + '/api/admin';
-        let currentSection = 'dashboard';
+    <!-- ═══ تبويب الدروس ═══ -->
+    <div class="tab-content" id="tab-lessons">
+        <div class="glass-card">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-lg font-extrabold text-royal">إدارة الدروس</h2>
+                <button class="btn-gold text-sm" onclick="openAddLessonModal()">+ إضافة درس</button>
+            </div>
+            <div id="lessonsList"><div class="text-center text-gray-400 py-6">⏳ جاري التحميل...</div></div>
+        </div>
+    </div>
 
-        // ═══════ NAVIGATION ═══════
-        function showSection(name) {
-            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(name).classList.remove('hidden');
-            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-            event.target.classList.add('active');
-            currentSection = name;
-            loadSection(name);
-        }
+    <!-- ═══ تبويب الطلاب ═══ -->
+    <div class="tab-content" id="tab-students">
+        <div class="glass-card">
+            <h2 class="text-lg font-extrabold text-royal mb-5">قائمة الطلاب</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="text-right text-gray-400 font-bold"><th class="pb-3">الطالب</th><th class="pb-3">XP</th><th class="pb-3">المستوى</th><th class="pb-3">الحالة</th></tr></thead>
+                    <tbody id="studentsListBody"><tr><td colspan="4" class="text-center text-gray-400 py-6">⏳ جاري التحميل...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        async function api(url) {
-            try {
-                const res = await fetch(url);
-                return await res.json();
-            } catch(e) {
-                console.error('API Error:', e);
-                return null;
-            }
-        }
+</div>
 
-        // ═══════ LOAD SECTIONS ═══════
-        function loadSection(name) {
-            switch(name) {
-                case 'dashboard': loadDashboard(); break;
-                case 'courses':   loadCourses(); break;
-                case 'students':  loadStudents(); break;
-                case 'payments':  loadPayments(); break;
-                case 'vault':     loadVault(); break;
-                case 'settings':  loadSettings(); break;
-            }
-        }
+<!-- ═══ Modal: إضافة درس جديد ═══ -->
+<div class="modal-overlay" id="addLessonModal">
+    <div class="modal-box">
+        <h3 class="text-xl font-extrabold text-royal mb-5">+ إضافة درس جديد</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="text-xs font-bold text-gray-500 block mb-1">اسم الدرس</label>
+                <input type="text" id="lessonTitle" class="input-field" placeholder="مثال: أساسيات المحادثة">
+            </div>
+            <div>
+                <label class="text-xs font-bold text-gray-500 block mb-1">النوع</label>
+                <select id="lessonType" class="input-field">
+                    <option value="video">🎬 فيديو</option>
+                    <option value="pdf">📄 PDF</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-xs font-bold text-gray-500 block mb-1">الرابط</label>
+                <input type="url" id="lessonUrl" class="input-field" placeholder="https://...">
+            </div>
+            <div>
+                <label class="text-xs font-bold text-gray-500 block mb-1">المهارة المرتبطة</label>
+                <select id="lessonSkill" class="input-field">
+                    <option value="reading">📖 قراءة</option>
+                    <option value="conversation">💬 محادثة</option>
+                    <option value="word_completion">📝 إكمال كلمات</option>
+                    <option value="sentence_ordering">🧩 ترتيب جمل</option>
+                    <option value="email_writing">✉️ كتابة إيميل</option>
+                    <option value="listening">🎧 استماع</option>
+                </select>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button class="btn-primary flex-1" onclick="addLesson()">✅ حفظ الدرس</button>
+            <button class="btn-danger flex-1" onclick="closeAddLessonModal()">✕ إلغاء</button>
+        </div>
+    </div>
+</div>
 
-        async function loadDashboard() {
-            const data = await api(API + '/stats');
-            if (!data) return;
-            document.getElementById('statsCards').innerHTML = `
-                <div class="card"><div class="number">${data.students}</div><div class="label">👥 الطلاب</div></div>
-                <div class="card"><div class="number">${data.courses}</div><div class="label">📚 الدورات</div></div>
-                <div class="card"><div class="number">${data.active_today}</div><div class="label">🟢 نشط اليوم</div></div>
-                <div class="card"><div class="number">${data.total_xp || 0}</div><div class="label">⭐ مجموع XP</div></div>
-            `;
-        }
+<!-- ⚡ JavaScript: Admin Logic -->
+<script>
+// ========== التبويبات ==========
+document.querySelectorAll('.tab-btn').forEach(b=>{b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+    if(b.dataset.tab==='skills')loadSkills();
+    if(b.dataset.tab==='lessons')loadLessons();
+    if(b.dataset.tab==='students')loadStudents();
+})});
 
-        async function loadCourses() {
-            const data = await api(API + '/courses');
-            if (!data || !data.courses) return;
-            const tbody = document.querySelector('#coursesTable tbody');
-            tbody.innerHTML = data.courses.map((c,i) => `
-                <tr>
-                    <td>${c.id}</td>
-                    <td>${c.name}</td>
-                    <td>${c.level}</td>
-                    <td>${c.price} ر.س</td>
-                    <td>${c.skill_type || '—'}</td>
-                    <td><span class="badge ${c.is_active ? 'badge-success' : 'badge-danger'}">${c.is_active ? 'نشط' : 'متوقف'}</span></td>
-                </tr>
-            `).join('');
-        }
+// ========== تحميل الإحصائيات ==========
+async function loadStats(){
+    try{const r=await fetch('/api/admin/stats');const d=await r.json();
+        document.getElementById('statStudents').textContent=d.students||0;
+        document.getElementById('statCourses').textContent=d.courses||0;
+        document.getElementById('statLessons').textContent=d.lessons||0;
+        document.getElementById('statQuestions').textContent=d.questions||0;
+    }catch(e){console.error(e)}
+}
 
-        async function loadStudents() {
-            const data = await api(API + '/students');
-            if (!data || !data.students) return;
-            const tbody = document.querySelector('#studentsTable tbody');
-            tbody.innerHTML = data.students.map(s => `
-                <tr>
-                    <td>${s.user_id}</td>
-                    <td>${s.first_name || '—'}</td>
-                    <td>${s.xp || 0}</td>
-                    <td>${s.level || 1}</td>
-                    <td>${s.last_active || '—'}</td>
-                    <td><span class="badge ${s.is_active ? 'badge-success' : 'badge-danger'}">${s.is_active ? 'نشط' : 'متوقف'}</span></td>
-                </tr>
-            `).join('');
-        }
+// ========== المهارات ==========
+async function loadSkills(){
+    const el=document.getElementById('skillsList');
+    try{const r=await fetch('/api/skills');const skills=await r.json();
+        el.innerHTML=skills.map(s=>'<div class="skill-row"><div class="flex items-center gap-3"><span class="text-2xl">'+s.icon+'</span><div><p class="font-extrabold text-royal">'+s.title+'</p><p class="text-xs text-gray-400">⏱ '+s.time_limit+' ثانية</p></div></div><span class="toggle-switch'+(s.is_active?' active':'')+'" onclick="toggleSkill(\''+s.id+'\',this)" data-skill="'+s.id+'"></span></div>').join('')
+    }catch(e){el.innerHTML='<div class="text-red-400 text-center py-4">❌ فشل التحميل</div>'}
+}
 
-        async function loadPayments() {
-            const data = await api(API + '/payments');
-            if (!data || !data.payments) return;
-            const tbody = document.querySelector('#paymentsTable tbody');
-            tbody.innerHTML = data.payments.map(p => `
-                <tr>
-                    <td>#${p.id}</td>
-                    <td>${p.user_id}</td>
-                    <td>${p.plan_name}</td>
-                    <td>${p.amount} ر.س</td>
-                    <td>${p.created_at}</td>
-                    <td>
-                        <button onclick="approvePayment(${p.id})" style="background:#00c853;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;margin-left:4px">✅</button>
-                        <button onclick="rejectPayment(${p.id})" style="background:#c62828;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer">❌</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+async function toggleSkill(skillType,el){
+    el.classList.toggle('active');
+    try{await fetch('/api/skills/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skill_type:skillType})});loadStats()}catch(e){el.classList.toggle('active')}
+}
 
-        async function approvePayment(id) {
-            await fetch(API + '/approve_payment', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id}) });
-            loadPayments();
-        }
-        async function rejectPayment(id) {
-            await fetch(API + '/reject_payment', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id}) });
-            loadPayments();
-        }
+// ========== الدروس ==========
+async function loadLessons(){
+    const el=document.getElementById('lessonsList');
+    try{const r=await fetch('/api/lessons');const lessons=await r.json();
+        if(lessons.length===0){el.innerHTML='<div class="text-center text-gray-400 py-6">لا توجد دروس بعد</div>';return}
+        el.innerHTML=lessons.map(l=>'<div class="lesson-row"><div class="flex items-center gap-3"><span class="text-xl">'+(l.type==='video'?'🎬':'📄')+'</span><div><p class="font-bold text-royal">'+l.title+'</p><p class="text-xs text-gray-400">'+(l.type==='video'?'فيديو':'PDF')+' · '+l.skill_type+'</p></div></div><button class="btn-danger text-xs" onclick="deleteLesson('+l.id+',this)">🗑 حذف</button></div>').join('')
+    }catch(e){el.innerHTML='<div class="text-red-400 text-center py-4">❌ فشل التحميل</div>'}
+}
 
-        async function loadVault() {
-            const data = await api(API + '/vault');
-            if (!data || !data.items) return;
-            document.querySelector('#vaultTable tbody').innerHTML = data.items.map(v => `
-                <tr>
-                    <td>${v.id}</td>
-                    <td>${v.title}</td>
-                    <td>${v.category || '—'}</td>
-                    <td>${v.unlock_level}</td>
-                </tr>
-            `).join('');
-        }
+async function deleteLesson(id,el){
+    if(!confirm('متأكد من حذف هذا الدرس؟'))return;
+    try{await fetch('/api/lessons/delete/'+id,{method:'DELETE'});el.parentElement.remove();loadStats()}catch(e){alert('فشل الحذف')}
+}
 
-        function loadSettings() {
-            document.getElementById('settingsContent').innerHTML = `
-                <p>⚙️ استخدم البوت لإدارة الإعدادات (أمر /admin → ⚙️ الإعدادات)</p>
-            `;
-        }
+function openAddLessonModal(){document.getElementById('addLessonModal').classList.add('show')}
+function closeAddLessonModal(){document.getElementById('addLessonModal').classList.remove('show');document.getElementById('lessonTitle').value='';document.getElementById('lessonUrl').value=''}
 
-        // ═══════ INIT ═══════
-        document.getElementById('spinner').classList.add('hidden');
-        showSectionDirect('dashboard');
+async function addLesson(){
+    const title=document.getElementById('lessonTitle').value.trim();
+    const type=document.getElementById('lessonType').value;
+    const url=document.getElementById('lessonUrl').value.trim();
+    const skill=document.getElementById('lessonSkill').value;
+    if(!title||!url){alert('الرجاء ملء جميع الحقول');return}
+    try{const r=await fetch('/api/lessons/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:title,type:type,url:url,skill_type:skill})});const d=await r.json();
+        if(d.success){closeAddLessonModal();loadLessons();loadStats();alert(d.message)}else{alert(d.error)}
+    }catch(e){alert('فشل الإضافة')}
+}
 
-        function showSectionDirect(name) {
-            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(name).classList.remove('hidden');
-            loadSection(name);
-        }
-    </script>
+// ========== الطلاب ==========
+async function loadStudents(){
+    const el=document.getElementById('studentsListBody');
+    try{const r=await fetch('/api/admin/students');const students=await r.json();
+        if(students.length===0){el.innerHTML='<tr><td colspan="4" class="text-center text-gray-400 py-6">لا يوجد طلاب بعد</td></tr>';return}
+        el.innerHTML=students.map(s=>'<tr class="border-b border-gray-100"><td class="py-3 font-bold text-royal">'+(s.first_name||s.username||'طالب')+'<br><span class="text-xs text-gray-400">ID: '+s.telegram_id+'</span></td><td class="py-3"><span class="text-gold font-extrabold">'+(s.xp||0)+'</span></td><td class="py-3">'+(s.level||0)+'</td><td class="py-3"><span class="text-xs font-bold px-2 py-1 rounded-full '+(s.is_active?'bg-green-100 text-green-600':'bg-red-100 text-red-500')+'">'+(s.is_active?'نشط ✅':'غير نشط ❌')+'</span></td></tr>').join('')
+    }catch(e){el.innerHTML='<tr><td colspan="4" class="text-red-400 text-center py-4">❌ فشل التحميل</td></tr>'}
+}
+
+// ========== تهيئة ==========
+document.addEventListener('DOMContentLoaded',()=>{loadStats();loadSkills();console.log('👑 لوحة إمبراطورة يامن أكاديمي جاهزة')});
+</script>
 </body>
 </html>

@@ -4,615 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#fdfcfb">
-    <title>يمن أكاديمي | لوحة التحكم</title>
-
-    <!-- Tailwind CSS CDN -->
+    <title>يامن أكاديمي | لوحة التحكم</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts: Cairo + Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'cairo': ['Cairo', 'Tajawal', 'sans-serif'],
-                    },
-                    colors: {
-                        'pearl':    '#fdfcfb',
-                        'royal':    '#1a365d',
-                        'gold':     '#c5a028',
-                        'gold-dim': '#b8941f',
-                        'soft-bg':  '#f7f4ef',
-                        'card-bg':  '#ffffff',
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px rgba(26,54,93,0.06), 0 1px 3px rgba(26,54,93,0.04)',
-                        'soft-lg': '0 8px 40px rgba(26,54,93,0.08), 0 2px 8px rgba(26,54,93,0.04)',
-                        'glow': '0 0 20px rgba(197,160,40,0.15)',
-                        'inner-soft': 'inset 0 1px 3px rgba(26,54,93,0.04)',
-                    },
-                }
-            }
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{'cairo':['Cairo','sans-serif']},colors:{'pearl':'#fdfcfb','royal':'#1a365d','gold':'#c5a028','gold-dim':'#b8941f','soft-bg':'#f7f4ef','card-bg':'#ffffff'},boxShadow:{'soft':'0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04)','soft-lg':'0 8px 40px rgba(26,54,93,0.08),0 2px 8px rgba(26,54,93,0.04)','glow':'0 0 20px rgba(197,160,40,0.15)','inner-soft':'inset 0 1px 3px rgba(26,54,93,0.04)'}}}}</script>
     <style>
-        /* ══════════ الأساسيات ══════════ */
-        * {
-            font-family: 'Cairo', 'Tajawal', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        html, body {
-            background: #fdfcfb;
-            min-height: 100vh;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-            margin: 0; padding: 0;
-        }
-
-        /* ══════════ خلفية لؤلؤية دافئة ══════════ */
-        body {
-            background:
-                radial-gradient(ellipse at 15% 10%, rgba(197,160,40,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 85% 90%, rgba(26,54,93,0.03) 0%, transparent 60%),
-                linear-gradient(175deg, #fdfcfb 0%, #f7f4ef 40%, #f0ece3 100%);
-            background-attachment: fixed;
-        }
-
-        /* ══════════ Soft Glassmorphism ══════════ */
-        .glass-card {
-            background: rgba(255,255,255,0.72);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255,255,255,0.85);
-            box-shadow: 0 4px 20px rgba(26,54,93,0.06), 0 1px 3px rgba(26,54,93,0.04);
-            border-radius: 24px;
-        }
-        .glass-card-hover {
-            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
-        }
-        .glass-card-hover:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 8px rgba(26,54,93,0.08);
-        }
-
-        /* ══════════ Skill Buttons ══════════ */
-        .skill-btn {
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(197,160,40,0.15);
-            border-radius: 18px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .skill-btn:active {
-            transform: scale(0.94);
-            background: rgba(197,160,40,0.08);
-            border-color: rgba(197,160,40,0.4);
-            box-shadow: 0 0 18px rgba(197,160,40,0.12);
-        }
-        /* Ripple effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(197,160,40,0.2);
-            transform: scale(0);
-            animation: ripple-anim 0.6s ease-out;
-            pointer-events: none;
-        }
-        @keyframes ripple-anim {
-            to { transform: scale(4); opacity: 0; }
-        }
-
-        /* ══════════ أزرار القاعة والمكتبة ══════════ */
-        .hall-btn {
-            background: linear-gradient(135deg, #1a365d 0%, #254e7a 100%);
-            border: none;
-            border-radius: 22px;
-            box-shadow: 0 6px 24px rgba(26,54,93,0.18);
-            transition: all 0.35s ease;
-        }
-        .hall-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 3px 12px rgba(26,54,93,0.25);
-            background: linear-gradient(135deg, #254e7a 0%, #1a365d 100%);
-        }
-        .library-btn {
-            background: linear-gradient(135deg, #c5a028 0%, #b8941f 100%);
-            border: none;
-            border-radius: 22px;
-            box-shadow: 0 6px 24px rgba(197,160,40,0.2);
-            transition: all 0.35s ease;
-        }
-        .library-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 3px 12px rgba(197,160,40,0.3);
-        }
-
-        /* ══════════ حلقة التقدم الدائرية ══════════ */
-        .progress-ring-circle {
-            transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        /* ══════════ Leaderboard Table ══════════ */
-        .lb-row {
-            transition: all 0.3s ease;
-        }
-        .lb-row:active {
-            background: rgba(197,160,40,0.06);
-        }
-
-        /* ══════════ Error Bank Counter ══════════ */
-        @keyframes counter-pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.25); }
-            50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-        }
-        .error-pulse {
-            animation: counter-pulse 2.2s infinite;
-        }
-
-        /* ══════════ Timer Badge ══════════ */
-        .timer-badge {
-            background: rgba(26,54,93,0.07);
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.75rem;
-            color: #1a365d;
-            font-weight: 700;
-        }
-
-        /* ══════════ Bottom Navigation ══════════ */
-        .bottom-nav {
-            background: rgba(255,255,255,0.88);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-top: 1px solid rgba(26,54,93,0.05);
-            border-radius: 28px 28px 0 0;
-            box-shadow: 0 -4px 20px rgba(26,54,93,0.04);
-        }
-        .nav-item {
-            transition: all 0.3s ease;
-            color: #8896a6;
-        }
-        .nav-item.active {
-            color: #1a365d;
-            transform: translateY(-3px);
-        }
-        .nav-item.active .nav-dot {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .nav-dot {
-            width: 6px; height: 6px;
-            background: #c5a028;
-            border-radius: 50%;
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s ease;
-        }
-
-        /* ══════════ Scrollbar ══════════ */
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(26,54,93,0.12); border-radius: 10px; }
-
-        /* ══════════ Toast ══════════ */
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .toast-show { animation: slideDown 0.4s ease-out; }
+        *{font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+        body{background:radial-gradient(ellipse at 15% 10%,rgba(197,160,40,0.04) 0%,transparent 60%),radial-gradient(ellipse at 85% 90%,rgba(26,54,93,0.03) 0%,transparent 60%),linear-gradient(175deg,#fdfcfb 0%,#f7f4ef 40%,#f0ece3 100%);min-height:100vh}
+        .glass-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.85);box-shadow:0 4px 20px rgba(26,54,93,0.06),0 1px 3px rgba(26,54,93,0.04);border-radius:24px}
+        .glass-card-hover{transition:all 0.35s cubic-bezier(0.25,0.8,0.25,1.2)}
+        .glass-card-hover:active{transform:scale(0.97);box-shadow:0 2px 8px rgba(26,54,93,0.08)}
+        .skill-btn{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(197,160,40,0.15);border-radius:18px;transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1.2);cursor:pointer;position:relative;overflow:hidden}
+        .skill-btn:active{transform:scale(0.94);background:rgba(197,160,40,0.08);border-color:rgba(197,160,40,0.4);box-shadow:0 0 18px rgba(197,160,40,0.12)}
+        .skill-btn.loading{pointer-events:none;opacity:0.7}
+        .skill-btn .spinner{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;border:3px solid rgba(197,160,40,0.2);border-top-color:#c5a028;border-radius:50%;animation:spin 0.7s linear infinite}
+        .skill-btn.loading .spinner{display:block}
+        @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+        .ripple{position:absolute;border-radius:50%;background:rgba(197,160,40,0.2);transform:scale(0);animation:ripple-anim 0.6s ease-out;pointer-events:none}
+        @keyframes ripple-anim{to{transform:scale(4);opacity:0}}
+        .hall-btn{background:linear-gradient(135deg,#1a365d 0%,#254e7a 100%);border:none;border-radius:22px;box-shadow:0 6px 24px rgba(26,54,93,0.18);transition:all 0.35s ease}
+        .hall-btn:active{transform:scale(0.96);box-shadow:0 3px 12px rgba(26,54,93,0.25)}
+        .library-btn{background:linear-gradient(135deg,#c5a028 0%,#b8941f 100%);border:none;border-radius:22px;box-shadow:0 6px 24px rgba(197,160,40,0.2);transition:all 0.35s ease}
+        .library-btn:active{transform:scale(0.96);box-shadow:0 3px 12px rgba(197,160,40,0.3)}
+        .progress-ring-circle{transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);transform:rotate(-90deg);transform-origin:50% 50%}
+        .timer-badge{background:rgba(26,54,93,0.07);border-radius:20px;padding:4px 12px;font-size:0.75rem;color:#1a365d;font-weight:700}
+        @keyframes counter-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.25)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
+        .error-pulse{animation:counter-pulse 2.2s infinite}
+        .bottom-nav{background:rgba(255,255,255,0.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(26,54,93,0.05);border-radius:28px 28px 0 0;box-shadow:0 -4px 20px rgba(26,54,93,0.04)}
+        .nav-item{transition:all 0.3s ease;color:#8896a6}
+        .nav-item.active{color:#1a365d;transform:translateY(-3px)}
+        .nav-item.active .nav-dot{opacity:1;transform:scale(1)}
+        .nav-dot{width:6px;height:6px;background:#c5a028;border-radius:50%;opacity:0;transform:scale(0);transition:all 0.3s ease}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+        .toast-show{animation:slideDown 0.4s ease-out}
+        ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(26,54,93,0.12);border-radius:10px}
+        .question-card{background:rgba(255,255,255,0.9);backdrop-filter:blur(24px);border:2px solid rgba(197,160,40,0.2);border-radius:20px;padding:20px;margin-top:12px;display:none}
+        .question-card.show{display:block;animation:slideDown 0.5s ease-out}
+        .option-btn{background:rgba(255,255,255,0.8);border:1px solid rgba(26,54,93,0.1);border-radius:14px;padding:14px 18px;text-align:right;transition:all 0.3s ease;cursor:pointer;font-weight:600;font-size:0.95rem}
+        .option-btn:active{background:rgba(197,160,40,0.1);border-color:#c5a028}
+        .option-btn.correct{background:rgba(34,197,94,0.15);border-color:#22c55e;color:#166534}
+        .option-btn.wrong{background:rgba(239,68,68,0.1);border-color:#ef4444;color:#991b1b}
     </style>
 </head>
 <body class="pb-28">
+<div class="max-w-lg mx-auto px-4 pt-6">
 
-    <!-- ══════════════════════════════════ -->
-    <!--  الحاوية الرئيسية                    -->
-    <!-- ══════════════════════════════════ -->
-    <div class="max-w-lg mx-auto px-4 pt-6">
-
-        <!-- ─── 1. الشريط العلوي ─────────────────────────── -->
-        <div class="flex items-center justify-between mb-7">
-            <div>
-                <h1 class="text-3xl font-black text-royal leading-tight">
-                    أهلاً بكِ
-                    <span class="text-gold" id="studentName">{{ student.first_name or student.username or 'طالب' }}</span>
-                    <span class="inline-block ml-1">👑</span>
-                </h1>
-                <div class="flex items-center gap-3 mt-2">
-                    <span class="text-sm text-gray-500 font-medium">
-                        المستوى <strong class="text-royal" id="studentLevel">{{ student.level or 0 }}</strong>
-                    </span>
-                    <span class="w-1.5 h-1.5 bg-gold rounded-full"></span>
-                    <span class="text-sm text-gray-500 font-medium">
-                        🔥 <strong class="text-royal" id="studentStreak">{{ student.streak or 0 }}</strong> يوم متواصل
-                    </span>
-                </div>
-            </div>
-            <!-- شعار الأكاديمية -->
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-royal/10 flex items-center justify-center text-2xl shadow-soft border border-gold/20">
-                🦅
+    <!-- الشريط العلوي -->
+    <div class="flex items-center justify-between mb-7">
+        <div>
+            <h1 class="text-3xl font-black text-royal leading-tight">
+                أهلاً بكِ <span class="text-gold" id="studentName">{{ student.first_name or student.username or 'طالب' }}</span> 👑
+            </h1>
+            <div class="flex items-center gap-3 mt-2">
+                <span class="text-sm text-gray-500 font-medium">المستوى <strong class="text-royal" id="studentLevel">{{ student.level or 0 }}</strong></span>
+                <span class="w-1.5 h-1.5 bg-gold rounded-full"></span>
+                <span class="text-sm text-gray-500 font-medium">🔥 <strong class="text-royal" id="studentStreak">{{ student.streak or 0 }}</strong> يوم</span>
             </div>
         </div>
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/20 to-royal/10 flex items-center justify-center text-2xl shadow-soft border border-gold/20">🦅</div>
+    </div>
 
-        <!-- ─── 2. بطاقة التقدم الدائرية ════════════════════ -->
-        <div class="glass-card p-6 mb-5 glass-card-hover">
-            <h2 class="text-lg font-extrabold text-royal mb-5 flex items-center gap-2">
-                <span class="text-gold">◆</span> رحلتك نحو الإتقان
-            </h2>
-            <div class="flex items-center gap-5">
-                <!-- الحلقة الدائرية -->
-                <div class="relative w-[130px] h-[130px] flex-shrink-0">
-                    <svg class="w-full h-full" viewBox="0 0 140 140">
-                        <!-- الحلقة الخلفية -->
-                        <circle cx="70" cy="70" r="62"
-                            fill="none" stroke="rgba(26,54,93,0.06)" stroke-width="9"/>
-                        <!-- حلقة التقدم -->
-                        <circle cx="70" cy="70" r="62"
-                            fill="none" stroke="#c5a028" stroke-width="9"
-                            stroke-linecap="round"
-                            stroke-dasharray="389.557"
-                            stroke-dashoffset="{{ 389.557 * (1 - (student.xp or 0) / 90) if (student.xp or 0) < 90 else 0 }}"
-                            class="progress-ring-circle"/>
-                    </svg>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                        <span class="text-3xl font-black text-royal" id="studentXP">{{ student.xp or 0 }}</span>
-                        <span class="text-xs font-bold text-gold tracking-wider">XP</span>
-                    </div>
-                </div>
-                <!-- أشرطة الأهداف -->
-                <div class="flex-1 space-y-4">
-                    <!-- هدف 59 -->
-                    <div>
-                        <div class="flex justify-between text-xs font-bold mb-1.5">
-                            <span class="text-royal/70">🎯 مبتدئ</span>
-                            <span class="text-gold">{{ ((student.xp or 0)/59*100)|int if (student.xp or 0) < 59 else 100 }}%</span>
-                        </div>
-                        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft">
-                            <div class="h-full rounded-full transition-all duration-1000 ease-out"
-                                style="width:{{ ((student.xp or 0)/59*100)|int if (student.xp or 0) < 59 else 100 }}%;
-                                background: linear-gradient(90deg, #c5a028 0%, #d4af37 100%);"></div>
-                        </div>
-                        <span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">59 XP</span>
-                    </div>
-                    <!-- هدف 69 -->
-                    <div>
-                        <div class="flex justify-between text-xs font-bold mb-1.5">
-                            <span class="text-royal/70">🏆 محترف</span>
-                            <span class="text-royal">{{ ((student.xp or 0)/69*100)|int if (student.xp or 0) < 69 else 100 }}%</span>
-                        </div>
-                        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft">
-                            <div class="h-full rounded-full transition-all duration-1000 ease-out"
-                                style="width:{{ ((student.xp or 0)/69*100)|int if (student.xp or 0) < 69 else 100 }}%;
-                                background: linear-gradient(90deg, #1a365d 0%, #254e7a 100%);"></div>
-                        </div>
-                        <span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">69 XP</span>
-                    </div>
-                    <!-- هدف 90 -->
-                    <div>
-                        <div class="flex justify-between text-xs font-bold mb-1.5">
-                            <span class="text-royal/70">👑 خبير</span>
-                            <span class="text-gold">{{ ((student.xp or 0)/90*100)|int if (student.xp or 0) < 90 else 100 }}%</span>
-                        </div>
-                        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft">
-                            <div class="h-full rounded-full transition-all duration-1000 ease-out"
-                                style="width:{{ ((student.xp or 0)/90*100)|int if (student.xp or 0) < 90 else 100 }}%;
-                                background: linear-gradient(90deg, #b8860b 0%, #c5a028 50%, #d4af37 100%);"></div>
-                        </div>
-                        <span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">90 XP</span>
-                    </div>
+    <!-- بطاقة التقدم -->
+    <div class="glass-card p-6 mb-5 glass-card-hover">
+        <h2 class="text-lg font-extrabold text-royal mb-5 flex items-center gap-2"><span class="text-gold">◆</span> رحلتك نحو الإتقان</h2>
+        <div class="flex items-center gap-5">
+            <div class="relative w-[130px] h-[130px] flex-shrink-0">
+                <svg class="w-full h-full" viewBox="0 0 140 140">
+                    <circle cx="70" cy="70" r="62" fill="none" stroke="rgba(26,54,93,0.06)" stroke-width="9"/>
+                    <circle cx="70" cy="70" r="62" fill="none" stroke="#c5a028" stroke-width="9" stroke-linecap="round" stroke-dasharray="389.557" stroke-dashoffset="{{ 389.557 * (1 - (student.xp or 0)/90) if (student.xp or 0)<90 else 0 }}" class="progress-ring-circle"/>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span class="text-3xl font-black text-royal" id="studentXP">{{ student.xp or 0 }}</span>
+                    <span class="text-xs font-bold text-gold tracking-wider">XP</span>
                 </div>
             </div>
-        </div>
-
-        <!-- ─── 3. شبكة المهارات الستة ══════════════════════ -->
-        <div class="glass-card p-5 mb-5">
-            <h2 class="text-lg font-extrabold text-royal mb-4 flex items-center gap-2">
-                <span class="text-gold">◆</span> مهارات اليوم
-            </h2>
-            <div class="grid grid-cols-2 gap-3" id="skillsGrid">
-                {% set skills_list = [
-                    ('💬', 'تحدث', 'conversation', 'محادثة 45s', 45),
-                    ('📝', 'إكمال', 'word_completion', 'إكمال كلمات', 60),
-                    ('🧩', 'ترتيب', 'sentence_ordering', 'ترتيب جمل', 50),
-                    ('✉️', 'إيميل', 'email_writing', 'كتابة إيميل', 90),
-                    ('🎧', 'استماع', 'listening', 'استماع وتكرار', 40),
-                    ('📖', 'قراءة', 'reading', 'قراءة متحررة', 70)
-                ] %}
-                {% for (icon, label, skill_type, title, time_limit) in skills_list %}
-                <button
-                    class="skill-btn p-4 text-center relative"
-                    onclick="handleSkillClick(event, '{{ icon }}', '{{ label }}', '{{ skill_type }}', '{{ title }}', {{ time_limit }})"
-                    data-skill="{{ skill_type }}"
-                    data-time="{{ time_limit }}">
-                    <!-- أيقونة ذهبية -->
-                    <div class="text-3xl mb-2 drop-shadow-sm">{{ icon }}</div>
-                    <!-- اسم المهارة -->
-                    <div class="font-extrabold text-sm text-royal mb-1">{{ label }}</div>
-                    <!-- المؤقت -->
-                    <span class="timer-badge inline-block">⏱ {{ time_limit }}s</span>
-                </button>
-                {% endfor %}
+            <div class="flex-1 space-y-4">
+                <div><div class="flex justify-between text-xs font-bold mb-1.5"><span class="text-royal/70">🎯 مبتدئ</span><span class="text-gold">{{ ((student.xp or 0)/59*100)|int if (student.xp or 0)<59 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft"><div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:{{ ((student.xp or 0)/59*100)|int if (student.xp or 0)<59 else 100 }}%;background:linear-gradient(90deg,#c5a028,#d4af37)"></div></div><span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">59 XP</span></div>
+                <div><div class="flex justify-between text-xs font-bold mb-1.5"><span class="text-royal/70">🏆 محترف</span><span class="text-royal">{{ ((student.xp or 0)/69*100)|int if (student.xp or 0)<69 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft"><div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:{{ ((student.xp or 0)/69*100)|int if (student.xp or 0)<69 else 100 }}%;background:linear-gradient(90deg,#1a365d,#254e7a)"></div></div><span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">69 XP</span></div>
+                <div><div class="flex justify-between text-xs font-bold mb-1.5"><span class="text-royal/70">👑 خبير</span><span class="text-gold">{{ ((student.xp or 0)/90*100)|int if (student.xp or 0)<90 else 100 }}%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner-soft"><div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:{{ ((student.xp or 0)/90*100)|int if (student.xp or 0)<90 else 100 }}%;background:linear-gradient(90deg,#b8860b,#c5a028,#d4af37)"></div></div><span class="text-[10px] text-gray-400 font-semibold mt-0.5 block">90 XP</span></div>
             </div>
         </div>
+    </div>
 
-        <!-- ─── 4. القاعة والمكتبة ═════════════════════════ -->
-        <div class="grid grid-cols-2 gap-4 mb-5">
-            <!-- قاعة الامتحان -->
-            <button class="hall-btn p-5 text-center text-white" onclick="openExamHall()">
-                <div class="text-3xl mb-2">🏛️</div>
-                <div class="font-extrabold text-base">قاعة الامتحان</div>
-                <div class="text-xs text-white/70 mt-1">محاكاة اختبار كامل</div>
+    <!-- المهارات + Fetch API -->
+    <div class="glass-card p-5 mb-5">
+        <h2 class="text-lg font-extrabold text-royal mb-4 flex items-center gap-2"><span class="text-gold">◆</span> مهارات اليوم</h2>
+        <div class="grid grid-cols-2 gap-3" id="skillsGrid">
+            {% set skills = [('💬','تحدث','conversation','محادثة 45s',45),('📝','إكمال','word_completion','إكمال كلمات',60),('🧩','ترتيب','sentence_ordering','ترتيب جمل',50),('✉️','إيميل','email_writing','كتابة إيميل',90),('🎧','استماع','listening','استماع وتكرار',40),('📖','قراءة','reading','قراءة متحررة',70)] %}
+            {% for (icon,label,stype,title,tl) in skills %}
+            <button class="skill-btn p-4 text-center" data-skill="{{ stype }}" data-time="{{ tl }}" data-title="{{ title }}">
+                <div class="spinner"></div>
+                <div class="text-3xl mb-2 drop-shadow-sm">{{ icon }}</div>
+                <div class="font-extrabold text-sm text-royal mb-1">{{ label }}</div>
+                <span class="timer-badge inline-block">⏱ {{ tl }}s</span>
             </button>
-            <!-- المكتبة الرقمية -->
-            <button class="library-btn p-5 text-center text-white" onclick="openDigitalLibrary()">
-                <div class="text-3xl mb-2">📚</div>
-                <div class="font-extrabold text-base">المكتبة الرقمية</div>
-                <div class="text-xs text-white/70 mt-1">PDF · فيديوهات · قوالب</div>
-            </button>
+            {% endfor %}
         </div>
+        <div class="question-card" id="questionArea">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-extrabold text-royal text-lg" id="qTitle">سؤال</h3>
+                <span class="timer-badge" id="qTimer">⏱ 0s</span>
+            </div>
+            <p class="text-royal/80 font-semibold mb-4" id="qText">جاري تحميل السؤال...</p>
+            <div class="space-y-2" id="qOptions"></div>
+            <div class="flex justify-between mt-4">
+                <button class="text-sm text-gray-400 font-bold" onclick="closeQuestion()">✕ إغلاق</button>
+                <span class="text-xs text-gold font-extrabold" id="qFeedback"></span>
+            </div>
+        </div>
+    </div>
 
-        <!-- ─── 5. بنك الأخطاء الذكي ═══════════════════════ -->
-        <div class="glass-card p-5 mb-5 cursor-pointer glass-card-hover {% if error_count > 0 %}error-pulse{% endif %}"
-             onclick="openErrorBank()" id="errorBankCard">
-            <div class="flex items-center justify-between">
+    <!-- القاعة والمكتبة -->
+    <div class="grid grid-cols-2 gap-4 mb-5">
+        <button class="hall-btn p-5 text-center text-white" onclick="openExamHall()"><div class="text-3xl mb-2">🏛️</div><div class="font-extrabold text-base">قاعة الامتحان</div><div class="text-xs text-white/70 mt-1">محاكاة اختبار كامل</div></button>
+        <button class="library-btn p-5 text-center text-white" onclick="openDigitalLibrary()"><div class="text-3xl mb-2">📚</div><div class="font-extrabold text-base">المكتبة الرقمية</div><div class="text-xs text-white/70 mt-1">PDF · فيديوهات · قوالب</div></button>
+    </div>
+
+    <!-- بنك الأخطاء -->
+    <div class="glass-card p-5 mb-5 cursor-pointer glass-card-hover {% if error_count > 0 %}error-pulse{% endif %}" onclick="openErrorBank()">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl {% if error_count > 0 %}bg-red-50{% else %}bg-green-50{% endif %}">{% if error_count > 0 %}⚠️{% else %}✅{% endif %}</div>
+                <div><h3 class="font-extrabold text-royal text-lg">بنك الأخطاء الذكي</h3><p class="text-sm text-gray-500 font-medium">{% if error_count > 0 %}<span class="text-red-500 font-extrabold text-lg" id="errorCount">{{ error_count }}</span> خطأ بانتظار المراجعة{% else %}رائع! لا توجد أخطاء 🎉{% endif %}</p></div>
+            </div>
+            {% if error_count > 0 %}<div class="bg-red-500 text-white px-4 py-2.5 rounded-2xl text-sm font-extrabold shadow-lg shadow-red-200">راجع الآن ←</div>{% endif %}
+        </div>
+    </div>
+
+    <!-- المتصدرين -->
+    <div class="glass-card p-5 mb-5">
+        <h2 class="text-lg font-extrabold text-royal mb-4 flex items-center gap-2"><span class="text-gold">◆</span> قائمة المتفوقين</h2>
+        {% if leaderboard %}
+        <div class="space-y-2">
+            {% for player in leaderboard %}
+            <div class="flex items-center justify-between p-3 rounded-2xl {% if player.telegram_id==student.id %}bg-gold/5 border border-gold/20{% else %}bg-gray-50/60{% endif %}">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl
-                        {% if error_count > 0 %}bg-red-50{% else %}bg-green-50{% endif %}">
-                        {% if error_count > 0 %}⚠️{% else %}✅{% endif %}
-                    </div>
-                    <div>
-                        <h3 class="font-extrabold text-royal text-lg">بنك الأخطاء الذكي</h3>
-                        <p class="text-sm text-gray-500 font-medium">
-                            {% if error_count > 0 %}
-                            <span class="text-red-500 font-extrabold text-lg" id="errorCount">{{ error_count }}</span> خطأ بانتظار المراجعة
-                            {% else %}
-                            رائع! لا توجد أخطاء معلقة 🎉
-                            {% endif %}
-                        </p>
-                    </div>
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm {% if loop.index==1 %}bg-gold text-white shadow-md shadow-gold/30{% elif loop.index==2 %}bg-gray-300 text-white{% elif loop.index==3 %}bg-amber-700 text-white{% else %}bg-gray-100 text-gray-500{% endif %}">{{ loop.index }}</div>
+                    <div><p class="font-bold text-royal text-sm">{{ player.first_name or player.username or 'طالب' }}{% if player.telegram_id==student.id %}<span class="text-[10px] bg-gold/15 text-gold px-2 py-0.5 rounded-full font-extrabold ml-1">أنت</span>{% endif %}</p><p class="text-[11px] text-gray-400 font-medium">مستوى {{ player.level or 0 }}</p></div>
                 </div>
-                {% if error_count > 0 %}
-                <div class="bg-red-500 text-white px-4 py-2.5 rounded-2xl text-sm font-extrabold shadow-lg shadow-red-200">
-                    راجع الآن ←
-                </div>
-                {% endif %}
+                <span class="text-gold font-extrabold text-sm">{{ player.xp or 0 }} XP</span>
             </div>
+            {% endfor %}
         </div>
-
-        <!-- ─── 6. لوحة المتصدرين ══════════════════════════ -->
-        <div class="glass-card p-5 mb-5">
-            <h2 class="text-lg font-extrabold text-royal mb-4 flex items-center gap-2">
-                <span class="text-gold">◆</span> قائمة المتفوقين
-            </h2>
-            {% if leaderboard %}
-            <div class="space-y-2">
-                {% for player in leaderboard %}
-                <div class="lb-row flex items-center justify-between p-3 rounded-2xl transition-all
-                    {% if player.telegram_id == student.id %}bg-gold/5 border border-gold/20{% else %}bg-gray-50/60{% endif %}">
-                    <div class="flex items-center gap-3">
-                        <!-- الترتيب -->
-                        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm
-                            {% if loop.index == 1 %}bg-gold text-white shadow-md shadow-gold/30
-                            {% elif loop.index == 2 %}bg-gray-300 text-white
-                            {% elif loop.index == 3 %}bg-amber-700 text-white
-                            {% else %}bg-gray-100 text-gray-500{% endif %}">
-                            {{ loop.index }}
-                        </div>
-                        <div>
-                            <p class="font-bold text-royal text-sm">
-                                {{ player.first_name or player.username or 'طالب' }}
-                                {% if player.telegram_id == student.id %}
-                                <span class="text-[10px] bg-gold/15 text-gold px-2 py-0.5 rounded-full font-extrabold ml-1">أنت</span>
-                                {% endif %}
-                            </p>
-                            <p class="text-[11px] text-gray-400 font-medium">مستوى {{ player.level or 0 }}</p>
-                        </div>
-                    </div>
-                    <span class="text-gold font-extrabold text-sm">{{ player.xp or 0 }} XP</span>
-                </div>
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="text-center py-8 text-gray-400">
-                <span class="text-5xl block mb-3">🏆</span>
-                <p class="font-bold text-royal/40">لا يوجد متصدرون بعد</p>
-                <p class="text-sm mt-1">كن أول من يصعد إلى القمة!</p>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- مسافة إضافية للتنفس -->
-        <div class="h-6"></div>
-
+        {% else %}
+        <div class="text-center py-8 text-gray-400"><span class="text-5xl block mb-3">🏆</span><p class="font-bold text-royal/40">لا يوجد متصدرون بعد</p><p class="text-sm mt-1">كن أول من يصعد إلى القمة!</p></div>
+        {% endif %}
     </div>
+    <div class="h-6"></div>
+</div>
 
-    <!-- ══════════════════════════════════ -->
-    <!--  شريط التنقل السفلي                 -->
-    <!-- ══════════════════════════════════ -->
-    <div class="fixed bottom-0 left-0 right-0 z-50 px-3 pb-2">
-        <div class="bottom-nav max-w-lg mx-auto px-5 py-3">
-            <div class="flex items-center justify-between">
-                <button class="nav-item active flex flex-col items-center gap-1" onclick="navigate('home')">
-                    <span class="text-xl">🏠</span>
-                    <span class="text-[10px] font-extrabold">الرئيسية</span>
-                    <span class="nav-dot" style="opacity:1;transform:scale(1)"></span>
-                </button>
-                <button class="nav-item flex flex-col items-center gap-1" onclick="openErrorBank()">
-                    <span class="text-xl">⚠️</span>
-                    <span class="text-[10px] font-extrabold">الأخطاء</span>
-                    <span class="nav-dot"></span>
-                </button>
-                <button class="nav-item flex flex-col items-center gap-1" onclick="openExamHall()">
-                    <span class="text-xl">🏛️</span>
-                    <span class="text-[10px] font-extrabold">الامتحان</span>
-                    <span class="nav-dot"></span>
-                </button>
-                <button class="nav-item flex flex-col items-center gap-1" onclick="openDigitalLibrary()">
-                    <span class="text-xl">📚</span>
-                    <span class="text-[10px] font-extrabold">المكتبة</span>
-                    <span class="nav-dot"></span>
-                </button>
-            </div>
+<!-- شريط التنقل السفلي -->
+<div class="fixed bottom-0 left-0 right-0 z-50 px-3 pb-2">
+    <div class="bottom-nav max-w-lg mx-auto px-5 py-3">
+        <div class="flex items-center justify-between">
+            <button class="nav-item active flex flex-col items-center gap-1" onclick="navigate('home')"><span class="text-xl">🏠</span><span class="text-[10px] font-extrabold">الرئيسية</span><span class="nav-dot" style="opacity:1;transform:scale(1)"></span></button>
+            <button class="nav-item flex flex-col items-center gap-1" onclick="openErrorBank()"><span class="text-xl">⚠️</span><span class="text-[10px] font-extrabold">الأخطاء</span><span class="nav-dot"></span></button>
+            <button class="nav-item flex flex-col items-center gap-1" onclick="openExamHall()"><span class="text-xl">🏛️</span><span class="text-[10px] font-extrabold">الامتحان</span><span class="nav-dot"></span></button>
+            <button class="nav-item flex flex-col items-center gap-1" onclick="openDigitalLibrary()"><span class="text-xl">📚</span><span class="text-[10px] font-extrabold">المكتبة</span><span class="nav-dot"></span></button>
         </div>
     </div>
+</div>
 
-    <!-- ══════════════════════════════════ -->
-    <!--  JavaScript Core                    -->
-    <!-- ══════════════════════════════════ -->
-    <script>
-    // ============ بيانات الطالب من السيرفر ============
-    const STUDENT = {
-        id:    {{ student.id or 0 }},
-        name:  "{{ student.first_name or student.username or 'طالب' }}",
-        xp:    {{ student.xp or 0 }},
-        level: {{ student.level or 0 }}
-    };
+<!-- ⚡ النظام العصبي: Touch + Fetch -->
+<script>
+const STUDENT={id:{{ student.id or 0 }},name:"{{ student.first_name or student.username or 'طالب' }}",xp:{{ student.xp or 0 }},level:{{ student.level or 0 }}};
+let currentTimer=null,currentSkill=null,lastQuestionId=0,timeLeft=0,timerInterval=null;
 
-    // ============ تأثير Ripple ============
-    document.querySelectorAll('.skill-btn, .hall-btn, .library-btn').forEach(btn => {
-        btn.addEventListener('pointerdown', function(e) {
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size/2;
-            const y = e.clientY - rect.top - size/2;
+// Ripple
+document.querySelectorAll('.skill-btn,.hall-btn,.library-btn').forEach(b=>{b.addEventListener('pointerdown',function(e){const r=this.getBoundingClientRect(),s=Math.max(r.width,r.height),x=e.clientX-r.left-s/2,y=e.clientY-r.top-s/2,d=document.createElement('span');d.className='ripple';d.style.width=d.style.height=s+'px';d.style.left=x+'px';d.style.top=y+'px';this.appendChild(d);d.addEventListener('animationend',()=>d.remove())})});
 
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
+// Zero-Click: Touch → Fetch → Question
+document.querySelectorAll('.skill-btn').forEach(b=>{b.addEventListener('pointerdown',async function(e){e.preventDefault();const st=this.dataset.skill,tl=parseInt(this.dataset.time||45),ti=this.dataset.title;if(this.classList.contains('loading'))return;this.classList.add('loading');showToast('🚀','جاري تحميل '+ti+'...');try{const res=await fetch('/api/question/next',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({skill_type:st,student_id:STUDENT.id,last_question_id:lastQuestionId})});const d=await res.json();if(d.error){showToast('⚠️',d.error);this.classList.remove('loading');return}displayQuestion(d.question,st);currentSkill=st;lastQuestionId=d.question.id;startTimer(tl,ti);triggerHaptic()}catch(e){console.error(e);showToast('❌','فشل الاتصال')}finally{this.classList.remove('loading')}})});
 
-            this.appendChild(ripple);
-            ripple.addEventListener('animationend', () => ripple.remove());
-        });
-    });
+function displayQuestion(q,st){
+    const a=document.getElementById('questionArea'),qt=document.getElementById('qTitle'),qx=document.getElementById('qText'),op=document.getElementById('qOptions'),fb=document.getElementById('qFeedback');
+    qt.textContent=st==='conversation'?'🗣️ تحدث':st==='word_completion'?'📝 إكمال':st==='listening'?'🎧 استماع':'❓ سؤال';
+    qx.textContent=q.question_text||q.title||'اختر الإجابة الصحيحة';fb.textContent='';op.innerHTML='';
+    let ans=[];try{if(q.options){const p=typeof q.options==='string'?JSON.parse(q.options):q.options;if(Array.isArray(p))ans.push(...p)}}catch(e){}
+    if(ans.length===0){ans=[q.correct_answer||'الإجابة الصحيحة','إجابة خاطئة 1','إجابة خاطئة 2','إجابة خاطئة 3']}
+    const correctAnswer=q.correct_answer||ans[0];
+    ans.sort(()=>Math.random()-0.5).forEach(ans=>{const btn=document.createElement('div');btn.className='option-btn';btn.textContent=ans;btn.addEventListener('pointerdown',()=>handleAnswer(ans,correctAnswer,q,btn));op.appendChild(btn)});
+    a.classList.add('show');a.scrollIntoView({behavior:'smooth',block:'center'})
+}
 
-    // ============ معالج الأزرار (Zero-Click) ============
-    function handleSkillClick(event, icon, label, skillType, title, timeLimit) {
-        event.preventDefault();
-
-        // رد فعل بصري فوري
-        const btn = event.currentTarget;
-        btn.style.transform = 'scale(0.94)';
-        setTimeout(() => btn.style.transform = '', 150);
-
-        // بدء المؤقت والتسجيل
-        startSkillTimer(skillType, timeLimit, title);
-        showToast(icon, `بدأ ${title} ⏱️ ${timeLimit} ثانية`);
-
-        // TODO: ربط API لتحميل سؤال المهارة
-        console.log(`🎯 بدء مهارة: ${skillType} | الوقت: ${timeLimit}s`);
+async function handleAnswer(chosen,correct,q,btn){
+    clearInterval(timerInterval);const all=document.querySelectorAll('#qOptions .option-btn');
+    if(chosen===correct){btn.classList.add('correct');document.getElementById('qFeedback').textContent='✅ إجابة صحيحة! +10 XP';triggerHaptic('success');
+        try{const r=await fetch('/api/student/xp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({student_id:STUDENT.id,xp_gain:10})});const d=await r.json();if(d.xp!==undefined){STUDENT.xp=d.xp;document.getElementById('studentXP').textContent=d.xp;updateProgressRing(d.xp)}}catch(e){}
+    }else{btn.classList.add('wrong');document.getElementById('qFeedback').textContent='❌ إجابة خاطئة — ستُضاف لبنك الأخطاء';triggerHaptic('error');
+        try{await fetch('/api/error_bank/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:STUDENT.id,question_id:q.id,skill_type:currentSkill})})}catch(e){}
+        all.forEach(o=>{if(o.textContent===correct)o.classList.add('correct')})
     }
+    all.forEach(o=>o.style.pointerEvents='none');setTimeout(closeQuestion,3000)
+}
 
-    // ============ مؤقت التمرين + Beep ═══════
-    function startSkillTimer(skillType, timeLimit, title) {
-        // تنبيه صوتي قبل 5 ثوانٍ
-        if (timeLimit > 5) {
-            setTimeout(() => {
-                playBeep();
-                showToast('⏰', 'تبقى 5 ثوانٍ! ركّز');
-            }, (timeLimit - 5) * 1000);
-        }
-
-        // انتهاء المؤقت
-        setTimeout(() => {
-            showToast('✅', `انتهى ${title}! أحسنت`);
-            // TODO: تسجيل النتيجة
-        }, timeLimit * 1000);
-    }
-
-    // ============ صوت التنبيه Beep ============
-    function playBeep() {
-        try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const ctx = new AudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, ctx.currentTime);
-            osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.25, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 0.35);
-        } catch(e) {
-            console.log('🔇 Beep blocked:', e.message);
-        }
-    }
-
-    // ============ Toast إشعار ============
-    function showToast(icon, msg) {
-        let el = document.getElementById('toast');
-        if (!el) {
-            el = document.createElement('div');
-            el.id = 'toast';
-            el.className = 'fixed top-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-royal/10 text-royal px-5 py-3 rounded-2xl shadow-soft-lg z-[200] text-sm font-extrabold flex items-center gap-2 toast-show';
-            document.body.appendChild(el);
-        }
-        el.innerHTML = `<span class="text-xl">${icon}</span> ${msg}`;
-        el.classList.add('toast-show');
-        el.style.opacity = '1';
-        el.style.transform = 'translate(-50%, 0)';
-
-        clearTimeout(el._timeout);
-        el._timeout = setTimeout(() => {
-            el.style.opacity = '0';
-            el.style.transform = 'translate(-50%, -20px)';
-            el.style.transition = 'all 0.3s ease';
-        }, 2500);
-    }
-
-    // ============ فتح الأقسام ============
-    function openErrorBank() {
-        const count = document.getElementById('errorCount')?.textContent || 0;
-        if (parseInt(count) > 0) {
-            showToast('⚠️', 'جاري فتح بنك الأخطاء للمراجعة السريعة...');
-            // TODO: فتح صفحة المراجعة
-        } else {
-            showToast('✅', 'لا توجد أخطاء — أنت رائع!');
-        }
-    }
-
-    function openExamHall() {
-        showToast('🏛️', 'جاري الدخول إلى قاعة الامتحان...');
-        // TODO: فتح محاكاة الامتحان
-    }
-
-    function openDigitalLibrary() {
-        showToast('📚', 'جاري فتح المكتبة الرقمية...');
-        // TODO: فتح مكتبة PDF والفيديوهات
-    }
-
-    function navigate(page) {
-        if (page === 'home') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showToast('🏠', 'أهلاً بك في الرئيسية');
-        }
-    }
-
-    // ============ رسالة اليوم الأول ============
-    document.addEventListener('DOMContentLoaded', () => {
-        if (STUDENT.xp === 0 && STUDENT.level === 0) {
-            setTimeout(() => showToast('🌟', 'أهلاً بكِ في أول يوم في طريق النجاح!'), 800);
-        }
-        console.log('✨ Pro Light Dashboard | Yamen Academy | Student:', STUDENT.name, '| XP:', STUDENT.xp);
-    });
-
-    // ============ تحسين اللمس للجوال ============
-    document.addEventListener('touchmove', function(e) {}, { passive: true });
-    </script>
-
+function startTimer(s,t){clearInterval(timerInterval);timeLeft=s;document.getElementById('qTimer').textContent='⏱ '+timeLeft+'s';timerInterval=setInterval(()=>{timeLeft--;document.getElementById('qTimer').textContent='⏱ '+timeLeft+'s';if(timeLeft===5)playBeep();if(timeLeft<=0){clearInterval(timerInterval);showToast('⏰','انتهى الوقت! '+t);document.getElementById('qFeedback').textContent='⏰ انتهى الوقت'}},1000)}
+function playBeep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.setValueAtTime(1100,c.currentTime+0.1);g.gain.setValueAtTime(0.25,c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,c.currentTime+0.35);o.start(c.currentTime);o.stop(c.currentTime+0.35)}catch(e){}}
+function closeQuestion(){clearInterval(timerInterval);document.getElementById('questionArea').classList.remove('show')}
+function triggerHaptic(t='light'){if(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.HapticFeedback){const h=window.Telegram.WebApp.HapticFeedback;try{if(t==='success')h.notificationOccurred('success');else if(t==='error')h.notificationOccurred('error');else h.impactOccurred('light')}catch(e){}}}
+function updateProgressRing(xp){const c=document.querySelector('.progress-ring-circle');if(!c)return;const m=90,ci=389.557,off=xp>=m?0:ci*(1-xp/m);c.style.strokeDashoffset=off}
+function showToast(i,m){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.className='fixed top-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-royal/10 text-royal px-5 py-3 rounded-2xl shadow-soft-lg z-[200] text-sm font-extrabold flex items-center gap-2 toast-show';document.body.appendChild(e)}e.innerHTML='<span class="text-xl">'+i+'</span> '+m;e.classList.add('toast-show');e.style.opacity='1';e.style.transform='translate(-50%,0)';clearTimeout(e._t);e._t=setTimeout(()=>{e.style.opacity='0';e.style.transform='translate(-50%,-20px)';e.style.transition='all 0.3s ease'},2500)}
+function openErrorBank(){showToast('⚠️','جاري فتح بنك الأخطاء...')}
+function openExamHall(){showToast('🏛️','جاري الدخول إلى قاعة الامتحان...')}
+function openDigitalLibrary(){showToast('📚','جاري فتح المكتبة الرقمية...')}
+function navigate(p){if(p==='home')window.scrollTo({top:0,behavior:'smooth'})}
+document.addEventListener('DOMContentLoaded',()=>{if(STUDENT.xp===0)setTimeout(()=>showToast('🌟','أهلاً بكِ في أول يوم في طريق النجاح!'),800);console.log('⚡ يامن أكاديمي | Neural Active | Student:',STUDENT.name,'| XP:',STUDENT.xp)});
+document.addEventListener('touchmove',function(e){},{passive:true});
+</script>
 </body>
 </html>
