@@ -1,0 +1,99 @@
+{
+  "lesson_id": "L001",
+  "title": "أساسيات القراءة — الفكرة الرئيسية",
+  "title_en": "Reading Basics — Main Idea",
+  "category": "reading",
+  "skill_type": "reading",
+  "difficulty": "easy",
+  "duration_minutes": 20,
+  "description": "تعلم كيفية استخراج الفكرة الرئيسية من أي نص إنجليزي بسرعة ودقة",
+  "prerequisites": [],
+  "objectives": [
+    "تحديد الفكرة الرئيسية (Main Idea) في النصوص القصيرة",
+    "التمييز بين الفكرة الرئيسية والتفاصيل المساندة",
+    "تطبيق تقنية Skimming للقراءة السريعة"
+  ],
+  "sections": [
+    {
+      "section_id": "intro",
+      "title": "مقدمة",
+      "content_type": "text",
+      "content": "أهلاً بك في درس 'أساسيات القراءة'. هل تعلم أن 70% من أسئلة القراءة في التوفل تدور حول الفكرة الرئيسية؟ هذا الدرس سيعطيك المهارة الأساسية التي تحتاجها.",
+      "media": null
+    },
+    {
+      "section_id": "technique",
+      "title": "تقنية Skimming",
+      "content_type": "text",
+      "content": "تقنية Skimming هي القراءة السريعة للنص بهدف فهم الفكرة العامة دون التوقف عند التفاصيل. اقرأ الجملة الأولى والأخيرة من كل فقرة — فهي غالباً ما تحتوي على الفكرة الرئيسية.",
+      "media": null
+    },
+    {
+      "section_id": "example",
+      "title": "مثال تطبيقي",
+      "content_type": "text",
+      "content": "اقرأ النص التالي:\n\n'Online learning has transformed education in the 21st century. Students can now access courses from anywhere in the world. This flexibility allows them to balance studies with work and family commitments. As a result, more people than ever are pursuing higher education.'\n\n**الفكرة الرئيسية**: Online learning has made education more accessible and flexible.",
+      "media": null
+    },
+    {
+      "section_id": "tips",
+      "title": "نصائح ذهبية",
+      "content_type": "list",
+      "content": "اسأل نفسك: 'ما الذي يتحدث عنه النص بشكل عام؟'\nلا تنخدع بالتفاصيل — التفاصيل تشرح الفكرة، لكنها ليست الفكرة نفسها\nالفكرة الرئيسية غالباً ما تكون في الجملة الأولى أو الأخيرة\nإذا احترت، اقرأ العنوان — فهو يلخص الفكرة الرئيسية",
+      "media": null
+    }
+  ],
+  "exercises": [
+    {
+      "exercise_id": "EX001",
+      "type": "multiple_choice",
+      "question": "ما هي الفكرة الرئيسية للنص أعلاه؟",
+      "options": {
+        "A": "Online learning is expensive",
+        "B": "Online learning has made education more accessible and flexible",
+        "C": "Students prefer traditional classrooms",
+        "D": "Technology is difficult to use"
+      },
+      "correct_answer": "B",
+      "explanation": "النص بأكمله يتحدث عن كيف أن التعلم عبر الإنترنت جعل التعليم أكثر مرونة وسهولة في الوصول."
+    }
+  ],
+  "quiz": {
+    "passing_score": 70,
+    "questions": [
+      {
+        "qid": "Q001",
+        "type": "multiple_choice",
+        "question": "The main idea of a passage is usually found in:",
+        "options": {
+          "A": "The middle of the paragraph",
+          "B": "The first or last sentence",
+          "C": "The longest sentence",
+          "D": "Random sentences"
+        },
+        "correct_answer": "B",
+        "explanation": "The first and last sentences of a paragraph typically contain the main idea."
+      },
+      {
+        "qid": "Q002",
+        "type": "multiple_choice",
+        "question": "What is the purpose of the Skimming technique?",
+        "options": {
+          "A": "To read every word carefully",
+          "B": "To get the general idea quickly",
+          "C": "To memorize all details",
+          "D": "To translate the text"
+        },
+        "correct_answer": "B",
+        "explanation": "Skimming is a speed-reading technique used to get the general idea without focusing on details."
+      }
+    ]
+  },
+  "metadata": {
+    "author": "Yamen Academy",
+    "created_at": "2026-05-15",
+    "updated_at": "2026-05-15",
+    "version": 1,
+    "tags": ["reading", "main idea", "skimming", "beginner"]
+  }
+}

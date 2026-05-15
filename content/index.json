@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "generated_at": "",
+  "total_lessons": 0,
+  "total_questions": 0,
+  "lessons": [],
+  "questions": [],
+  "categories": {
+    "reading": { "count": 0, "lesson_ids": [] },
+    "writing": { "count": 0, "lesson_ids": [] },
+    "listening": { "count": 0, "lesson_ids": [] },
+    "speaking": { "count": 0, "lesson_ids": [] },
+    "grammar": { "count": 0, "lesson_ids": [] },
+    "vocabulary": { "count": 0, "lesson_ids": [] }
+  }
+}

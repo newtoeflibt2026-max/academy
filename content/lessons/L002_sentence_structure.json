@@ -1,0 +1,58 @@
+{
+  "lesson_id": "L002",
+  "title": "بنية الجملة الإنجليزية",
+  "title_en": "English Sentence Structure",
+  "category": "grammar",
+  "skill_type": "grammar",
+  "difficulty": "medium",
+  "duration_minutes": 25,
+  "description": "تعلم بناء الجمل الإنجليزية الصحيحة من الأساسيات إلى المستوى المتقدم",
+  "prerequisites": ["L001"],
+  "objectives": [
+    "فهم مكونات الجملة الإنجليزية (Subject + Verb + Object)",
+    "التمييز بين الجمل البسيطة والمركبة",
+    "تصحيح أخطاء تركيب الجملة الشائعة"
+  ],
+  "sections": [
+    {
+      "section_id": "intro",
+      "title": "مقدمة",
+      "content_type": "text",
+      "content": "كل جملة إنجليزية صحيحة تتبع نمطاً أساسياً: Subject (الفاعل) + Verb (الفعل) + Object (المفعول به). هذا هو 'العمود الفقري' لأي جملة.",
+      "media": null
+    },
+    {
+      "section_id": "pattern",
+      "title": "النمط الأساسي",
+      "content_type": "text",
+      "content": "النمط: Subject + Verb + Object\n\nمثال:\n✅ 'The researcher explains the experiment.'\n- Subject: The researcher\n- Verb: explains\n- Object: the experiment\n\n❌ 'Explains the researcher the experiment.' (ترتيب خاطئ)",
+      "media": null
+    }
+  ],
+  "exercises": [],
+  "quiz": {
+    "passing_score": 70,
+    "questions": [
+      {
+        "qid": "Q003",
+        "type": "multiple_choice",
+        "question": "The researcher explains ___ the experiment was conducted.",
+        "options": {
+          "A": "that how",
+          "B": "how",
+          "C": "which way",
+          "D": "the way that"
+        },
+        "correct_answer": "B",
+        "explanation": "'Explains how' is the correct and most natural structure in English."
+      }
+    ]
+  },
+  "metadata": {
+    "author": "Yamen Academy",
+    "created_at": "2026-05-15",
+    "updated_at": "2026-05-15",
+    "version": 1,
+    "tags": ["grammar", "sentence structure", "intermediate"]
+  }
+}
