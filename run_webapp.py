@@ -1,21 +1,20 @@
 import os
 import sqlite3
 import json
-from flask import Flask, render_template, jsonify, request, send_from_directory
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for
 from flask_cors import CORS
 from datetime import datetime
 
-# ─── تهيئة Flask ──────────────────────────────────────────
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# ── التهيئة ──────────────────────────────────────────────────
+BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
 DATABASE_PATH = os.path.join(BASE_DIR, "data", "yamen_academy.db")
 PORT = int(os.environ.get("PORT", 5050))
 
 app = Flask(__name__)
 CORS(app)
 
-# ─── دوال مساعدة لقاعدة البيانات ──────────────────────────
+# ── دوال قاعدة البيانات ──────────────────────────────────────
 def get_db():
-    """يفتح اتصال SQLite آمن لكل طلب"""
     conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
@@ -30,7 +29,7 @@ def query_db(query, args=(), one=False):
         conn.commit()
         return (rv[0] if rv else None) if one else rv
     except Exception as e:
-        print(f"⚠️ DB Query Error: {e}")
+        print(f"⚠️ DB Error: {e}")
         return None
     finally:
         conn.close()
@@ -42,93 +41,80 @@ def execute_db(query, args=()):
         conn.commit()
         return True
     except Exception as e:
-        print(f"⚠️ DB Execute Error: {e}")
+        print(f"⚠️ DB Exec Error: {e}")
         return False
     finally:
         conn.close()
 
-# ─── صفحة Dashboard الطالب ────────────────────────────────
+# ==============================================================
+#  ✅ ROUTE 1: لوحة التحكم الرئيسية (ترحيبية)
+# ==============================================================
+@app.route("/")
+def home():
+    return redirect("/dashboard")
+
+# ==============================================================
+#  ✅ ROUTE 2: Dashboard الطالب
+# ==============================================================
 @app.route("/dashboard")
 @app.route("/dashboard/<int:student_id>")
 def dashboard(student_id=None):
-    """تعرض لوحة التحكم التفاعلية للطالب ببيانات حية"""
-
-    # --- إفتراضي: لوحة ترحيبية (بدون ID) ---
     if student_id is None:
         return render_template("dashboard.html",
-            student={"first_name": "طالب", "xp": 0, "level": 0, "streak": 0},
-            courses=[],
-            error_count=0,
-            leaderboard=[]
-        )
+            student={"first_name": "طالب", "xp": 0, "level": 0, "streak": 0, "id": 0},
+            courses=[], error_count=0, leaderboard=[])
 
-    # --- جلب بيانات الطالب ────────────────────────────────
-    student_row = query_db(
+    # جلب بيانات الطالب
+    s = query_db(
         "SELECT telegram_id, username, first_name, xp, level, is_active, last_active, streak "
-        "FROM students WHERE telegram_id = ?",
-        (student_id,), one=True
-    )
-    if not student_row:
+        "FROM students WHERE telegram_id = ?", (student_id,), one=True)
+
+    if not s:
         return render_template("dashboard.html",
-            student={"first_name": "غير معروف", "xp": 0, "level": 0, "streak": 0},
-            courses=[],
-            error_count=0,
-            leaderboard=[]
-        ), 200
+            student={"first_name": "غير معروف", "xp": 0, "level": 0, "streak": 0, "id": 0},
+            courses=[], error_count=0, leaderboard=[]), 200
 
     student = {
-        "id": student_row["telegram_id"],
-        "username": student_row["username"] or "طالب",
-        "first_name": student_row["first_name"] or student_row["username"] or "طالب",
-        "xp": student_row["xp"] or 0,
-        "level": student_row["level"] or 0,
-        "is_active": bool(student_row["is_active"]),
-        "last_active": student_row["last_active"],
-        "streak": student_row["streak"] or 0
+        "id": s["telegram_id"],
+        "username": s["username"] or "طالب",
+        "first_name": s["first_name"] or s["username"] or "طالب",
+        "xp": s["xp"] or 0,
+        "level": s["level"] or 0,
+        "is_active": bool(s["is_active"]),
+        "last_active": s["last_active"],
+        "streak": s["streak"] or 0
     }
 
-    # --- الكورسات المتاحة والنشطة ─────────────────────────
+    # الكورسات النشطة
     courses_data = query_db(
         "SELECT id, title, skill_type, time_limit, target_score, is_active "
-        "FROM courses WHERE is_active = 1"
-    ) or []
+        "FROM courses WHERE is_active = 1")
+    courses = [dict(r) for r in courses_data] if courses_data else []
 
-    # --- عدد الأخطاء في بنك الأخطاء ────────────────────────
-    error_row = query_db(
-        "SELECT COUNT(*) as cnt FROM error_bank WHERE user_id = ?",
-        (student_id,), one=True
-    )
-    error_count = error_row["cnt"] if error_row else 0
+    # بنك الأخطاء
+    err = query_db("SELECT COUNT(*) as cnt FROM error_bank WHERE user_id = ?", (student_id,), one=True)
+    error_count = err["cnt"] if err else 0
 
-    # --- لوحة المتصدرين (أفضل 5) ──────────────────────────
-    lb_rows = query_db(
+    # المتصدرين
+    lb = query_db(
         "SELECT telegram_id, first_name, username, xp, level "
-        "FROM students WHERE is_active = 1 "
-        "ORDER BY xp DESC LIMIT 5"
-    ) or []
-
-    leaderboard = []
-    for r in lb_rows:
-        leaderboard.append({
-            "id": r["telegram_id"],
-            "name": r["first_name"] or r["username"] or "طالب",
-            "xp": r["xp"] or 0,
-            "level": r["level"] or 0
-        })
-
-    courses = [dict(r) for r in courses_data]
+        "FROM students WHERE is_active = 1 ORDER BY xp DESC LIMIT 5")
+    leaderboard = [dict(r) for r in lb] if lb else []
 
     return render_template("dashboard.html",
-        student=student,
-        courses=courses,
-        error_count=error_count,
-        leaderboard=leaderboard
-    )
+        student=student, courses=courses,
+        error_count=error_count, leaderboard=leaderboard)
 
-# ============================================================
-#  مسارات API الحالية (موجودة مسبقاً - مختصرة هنا)
-# ============================================================
+# ==============================================================
+#  ✅ ROUTE 3: Admin Dashboard
+# ==============================================================
+@app.route("/admin")
+def admin_panel():
+    return render_template("admin.html")
 
+# ==============================================================
+#  📡 API Routes
+# ==============================================================
 @app.route("/api/health")
 def health():
     return jsonify({"status": "healthy", "timestamp": str(datetime.now())})
@@ -140,11 +126,11 @@ def api_courses():
 
 @app.route("/api/admin/stats")
 def admin_stats():
-    students_count = query_db("SELECT COUNT(*) as c FROM students", one=True)
-    courses_count = query_db("SELECT COUNT(*) as c FROM courses", one=True)
+    sc = query_db("SELECT COUNT(*) as c FROM students", one=True)
+    cc = query_db("SELECT COUNT(*) as c FROM courses", one=True)
     return jsonify({
-        "students": students_count["c"] if students_count else 0,
-        "courses": courses_count["c"] if courses_count else 0
+        "students": sc["c"] if sc else 0,
+        "courses": cc["c"] if cc else 0
     })
 
 @app.route("/api/admin/students")
@@ -156,8 +142,7 @@ def admin_students():
 def api_leaderboard():
     rows = query_db(
         "SELECT telegram_id, first_name, username, xp, level "
-        "FROM students WHERE is_active = 1 ORDER BY xp DESC LIMIT 10"
-    )
+        "FROM students WHERE is_active = 1 ORDER BY xp DESC LIMIT 10")
     return jsonify([dict(r) for r in rows] if rows else [])
 
 @app.route("/api/error_bank/<int:user_id>")
@@ -171,35 +156,31 @@ def api_error_correct():
     qid = data.get("question_id")
     uid = data.get("user_id")
     if not qid or not uid:
-        return jsonify({"error": "Missing fields"}), 400
+        return jsonify({"error": "Missing"}), 400
     execute_db(
         "UPDATE error_bank SET correct_count = correct_count + 1 WHERE question_id = ? AND user_id = ?",
-        (qid, uid)
-    )
+        (qid, uid))
     row = query_db(
         "SELECT correct_count FROM error_bank WHERE question_id = ? AND user_id = ?",
-        (qid, uid), one=True
-    )
+        (qid, uid), one=True)
     if row and row["correct_count"] >= 2:
         execute_db("DELETE FROM error_bank WHERE question_id = ? AND user_id = ?", (qid, uid))
     return jsonify({"success": True})
 
-# ─── الملفات الثابتة ─────────────────────────────────────
+# ── Static files ─────────────────────────────────────────────
 @app.route("/style.css")
-def serve_style():
+def serve_css():
     return send_from_directory("static", "style.css")
 
 @app.route("/app.js")
-def serve_app_js():
+def serve_js():
     return send_from_directory("static", "app.js")
 
 @app.route("/manifest.json")
 def serve_manifest():
     return send_from_directory("static", "manifest.json")
 
-# ─── تشغيل التطبيق ─────────────────────────────────────────
+# ── تشغيل ────────────────────────────────────────────────────
 if __name__ == "__main__":
-    # تأكد من وجود مجلد data + قاعدة بيانات
     os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
     app.run(host="0.0.0.0", port=PORT, debug=False)
-
