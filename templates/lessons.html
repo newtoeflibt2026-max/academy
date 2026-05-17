@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamen Academy - جميع الدروس</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; color: #333; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #1a237e, #283593); color: white; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .header a { color: #bbdefb; text-decoration: none; font-size: 0.9rem; }
+        .header a:hover { text-decoration: underline; }
+        .header h1 { font-size: 1.5rem; }
+
+        /* Filter bar */
+        .filter-bar { background: white; padding: 0.8rem 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .filter-bar button { padding: 0.5rem 1.2rem; border-radius: 20px; border: 2px solid #e0e0e0; background: white; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
+        .filter-bar button:hover { border-color: #1a237e; color: #1a237e; }
+        .filter-bar button.active { background: #1a237e; color: white; border-color: #1a237e; }
+        .filter-bar .count { background: #e8eaf6; color: #1a237e; padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 0.85rem; font-weight: bold; margin-right: auto; }
+
+        /* Lesson cards grid */
+        .container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; }
+        
+        .lesson-card { background: white; border-radius: 14px; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.07); transition: transform 0.2s, box-shadow 0.2s; border-right: 5px solid #1a237e; cursor: pointer; display: block; text-decoration: none; color: inherit; }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+        .lesson-card .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .lesson-card h3 { color: #1a237e; font-size: 1.05rem; margin-bottom: 0.4rem; line-height: 1.5; }
+        .lesson-card .desc { color: #666; font-size: 0.85rem; margin-bottom: 0.8rem; line-height: 1.5; }
+        .lesson-card .meta { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .lesson-card .badge { padding: 0.2rem 0.7rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .badge-skill { color: white; }
+        .badge-diff { background: #e0e0e0; color: #555; }
+        .badge-sections { background: #e8eaf6; color: #1a237e; }
+
+        /* Category section headers */
+        .category-header { max-width: 1100px; margin: 1.5rem auto 0.5rem; padding: 0 1rem; }
+        .category-header h2 { font-size: 1.3rem; color: #1a237e; border-bottom: 2px solid #e0e0e0; padding-bottom: 0.4rem; margin-bottom: 0; }
+
+        /* No lessons message */
+        .no-lessons { text-align: center; padding: 4rem 1rem; color: #999; }
+        .no-lessons .big-icon { font-size: 4rem; margin-bottom: 1rem; }
+
+        /* Skill colors */
+        .reading { border-right-color: #e53935; }
+        .reading .badge-skill { background: #e53935; }
+        .listening { border-right-color: #1e88e5; }
+        .listening .badge-skill { background: #1e88e5; }
+        .writing { border-right-color: #43a047; }
+        .writing .badge-skill { background: #43a047; }
+        .speaking { border-right-color: #fb8c00; }
+        .speaking .badge-skill { background: #fb8c00; }
+        .grammar { border-right-color: #8e24aa; }
+        .grammar .badge-skill { background: #8e24aa; }
+        .vocabulary { border-right-color: #00acc1; }
+        .vocabulary .badge-skill { background: #00acc1; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>📚 جميع الدروس</h1>
+        </div>
+        <a href="/dashboard">← العودة للوحة التحكم</a>
+    </div>
+
+    <div class="filter-bar">
+        <span class="count" id="lesson-count">📊 <span id="count-number">جاري التحميل...</span></span>
+        <button class="active" data-skill="all">🏷️ الكل</button>
+        <button data-skill="reading">📖 Reading</button>
+        <button data-skill="listening">🎧 Listening</button>
+        <button data-skill="writing">✍️ Writing</button>
+        <button data-skill="speaking">🗣️ Speaking</button>
+        <button data-skill="grammar">📝 Grammar</button>
+        <button data-skill="vocabulary">📋 Vocabulary</button>
+    </div>
+
+    {% if lessons %}
+        {% set categories = {} %}
+        {% for lesson in lessons %}
+            {% set cat = lesson.get('category', lesson.get('skill', 'uncategorized')) | string | lower | trim %}
+            {% set _ = categories.setdefault(cat, []) %}
+            {% set _ = categories[cat].append(lesson) %}
+        {% endfor %}
+
+        {% set emojis = {'reading': '📖', 'listening': '🎧', 'writing': '✍️', 'speaking': '🗣️', 'grammar': '📝', 'vocabulary': '📋'} %}
+        {% set skill_names = {'reading': 'Reading', 'listening': 'Listening', 'writing': 'Writing', 'speaking': 'Speaking', 'grammar': 'Grammar', 'vocabulary': 'Vocabulary'} %}
+        {% set order = ['reading', 'listening', 'writing', 'speaking', 'grammar', 'vocabulary'] %}
+
+        {% for skill_name in order %}
+            {% if skill_name in categories %}
+            <div class="category-header" data-category="{{ skill_name }}">
+                <h2>{{ emojis.get(skill_name, '📚') }} {{ skill_names.get(skill_name, skill_name | capitalize) }} <span style="font-size:0.85rem;color:#888;">({{ categories[skill_name] | length }} درس)</span></h2>
+            </div>
+            {% endif %}
+            <div class="container" data-category="{{ skill_name }}">
+                {% for lesson in categories.get(skill_name, []) %}
+                <a href="/lesson/{{ lesson.lesson_id }}" class="lesson-card {{ skill_name }}">
+                    <div class="icon">{{ emojis.get(skill_name, '📚') }}</div>
+                    <h3>{{ lesson.title[:70] }}{% if lesson.title | length > 70 %}...{% endif %}</h3>
+                    {% if lesson.description %}<div class="desc">{{ lesson.description[:100] }}{% if lesson.description | length > 100 %}...{% endif %}</div>{% endif %}
+                    <div class="meta">
+                        <span class="badge badge-skill">{{ skill_names.get(skill_name, skill_name) }}</span>
+                        <span class="badge badge-diff">{{ lesson.difficulty }}</span>
+                        {% if lesson.section_count or lesson.sections %}
+                        <span class="badge badge-sections">
+                            {{ lesson.section_count if lesson.section_count else lesson.sections | length if lesson.sections else 0 }} أقسام
+                        </span>
+                        {% endif %}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        {% if categories.get('uncategorized') %}
+        <div class="category-header" data-category="uncategorized">
+            <h2>📚 أخرى <span style="font-size:0.85rem;color:#888;">({{ categories['uncategorized'] | length }} درس)</span></h2>
+        </div>
+        <div class="container" data-category="uncategorized">
+            {% for lesson in categories['uncategorized'] %}
+            <a href="/lesson/{{ lesson.lesson_id }}" class="lesson-card">
+                <div class="icon">📚</div>
+                <h3>{{ lesson.title[:70] }}{% if lesson.title | length > 70 %}...{% endif %}</h3>
+                <div class="meta">
+                    <span class="badge badge-diff">{{ lesson.difficulty }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="no-lessons">
+            <div class="big-icon">📭</div>
+            <h2>لا توجد دروس متاحة حالياً</h2>
+            <p>يرجى التواصل مع الإدارة لإضافة المحتوى</p>
+        </div>
+    {% endif %}
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const buttons = document.querySelectorAll(".filter-bar button");
+        const categoryHeaders = document.querySelectorAll(".category-header");
+        const containers = document.querySelectorAll(".container[data-category]");
+        const countSpan = document.getElementById("count-number");
+
+        function updateCount(visibleCount) {
+            countSpan.textContent = visibleCount + " درس";
+        }
+
+        function filterLessons(skill) {
+            let totalVisible = 0;
+            const normalizedSkill = skill.toLowerCase().replace(/[^a-z]/g, "");
+
+            categoryHeaders.forEach(header => {
+                const headerCat = header.getAttribute("data-category");
+                const container = document.querySelector('.container[data-category="' + headerCat + '"]');
+                const cards = container ? container.querySelectorAll(".lesson-card") : [];
+
+                if (normalizedSkill === "all" || normalizedSkill === "الكل" || headerCat === normalizedSkill) {
+                    header.classList.remove("hidden");
+                    if (container) container.classList.remove("hidden");
+                    cards.forEach(card => { card.style.display = ""; });
+                    totalVisible += cards.length;
+                } else {
+                    header.classList.add("hidden");
+                    if (container) container.classList.add("hidden");
+                    cards.forEach(card => { card.style.display = "none"; });
+                }
+            });
+
+            updateCount(totalVisible);
+        }
+
+        function countAll() {
+            let total = 0;
+            containers.forEach(c => {
+                total += c.querySelectorAll(".lesson-card").length;
+            });
+            updateCount(total);
+        }
+
+        // Initialize count
+        countAll();
+
+        // Button click handlers
+        buttons.forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+                buttons.forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+                const skill = this.getAttribute("data-skill");
+                filterLessons(skill);
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

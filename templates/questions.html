@@ -1,0 +1,820 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>أكاديمية يامن – الأسئلة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--navy:#1a365d;--gold:#d4af37;--bg:#f0f4f8;--card:#fff;--green:#38a169;--red:#e53e3e;--purple:#7c3aed;--blue:#2b6cb0}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Cairo",sans-serif}
+body{background:var(--bg);min-height:100vh;color:#1a202c}
+
+/* NAV */
+.topnav{background:var(--navy);color:#fff;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.topnav .logo{font-size:1.1rem;font-weight:900;color:var(--gold)}
+.back-btn{background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:"Cairo",sans-serif;font-weight:600}
+
+/* TABS */
+.tabs-wrap{background:#fff;border-bottom:2px solid #e2e8f0;padding:0 20px;display:flex;gap:4px;overflow-x:auto;position:sticky;top:58px;z-index:90}
+.tab-btn{background:none;border:none;padding:14px 16px;font-size:.82rem;font-weight:700;color:#718096;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;font-family:"Cairo",sans-serif;transition:.2s}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--gold)}
+.tab-btn .cnt{background:#e2e8f0;color:#718096;font-size:.65rem;padding:1px 6px;border-radius:99px;margin-right:4px}
+.tab-btn.active .cnt{background:var(--gold);color:var(--navy)}
+
+/* MAIN */
+.main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+
+/* SECTION */
+.section{display:none}.section.active{display:block}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 2px 12px rgba(26,54,93,.08);border:2px solid transparent;transition:.3s}
+.q-card.correct{border-color:#38a169;background:#f0fff4}
+.q-card.wrong  {border-color:#e53e3e;background:#fff5f5}
+.q-num{font-size:.72rem;color:#718096;font-weight:700;margin-bottom:8px}
+.q-text{font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:14px;line-height:1.7}
+
+/* PASSAGE */
+.passage-box{background:#f7fafc;border-right:4px solid var(--gold);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:.85rem;line-height:1.9;color:#2d3748}
+
+/* MCQ OPTIONS */
+.options{display:flex;flex-direction:column;gap:8px}
+.opt-btn{background:#f7fafc;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;text-align:right;cursor:pointer;font-size:.85rem;font-weight:600;color:#2d3748;transition:.2s;display:flex;align-items:center;gap:10px}
+.opt-btn:hover{border-color:var(--gold);background:#fffbea}
+.opt-btn.selected{border-color:var(--navy);background:#ebf4ff}
+.opt-btn.correct-ans{border-color:#38a169;background:#f0fff4;color:#276749}
+.opt-btn.wrong-ans  {border-color:#e53e3e;background:#fff5f5;color:#c53030}
+.opt-letter{width:28px;height:28px;border-radius:8px;background:#e2e8f0;color:#4a5568;font-weight:900;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt-btn.correct-ans .opt-letter{background:#38a169;color:#fff}
+.opt-btn.wrong-ans   .opt-letter{background:#e53e3e;color:#fff}
+
+/* COMPLETE THE WORDS */
+.ctw-passage{font-size:.9rem;line-height:2.2;color:#2d3748;background:#f7fafc;border-radius:12px;padding:16px;margin-bottom:12px}
+.ctw-blank{display:inline-flex;align-items:center;gap:2px;margin:0 4px;vertical-align:middle}
+.ctw-input{border:none;border-bottom:2px solid var(--navy);background:transparent;font-size:.88rem;font-weight:700;color:var(--navy);text-align:center;outline:none;font-family:"Cairo",sans-serif;padding:2px 4px;min-width:20px;transition:.2s}
+.ctw-input:focus{border-bottom-color:var(--gold)}
+.ctw-input.correct{border-bottom-color:#38a169;color:#276749}
+.ctw-input.wrong  {border-bottom-color:#e53e3e;color:#c53030}
+.ctw-hint{font-size:.7rem;color:#718096;display:block;text-align:center}
+.ctw-passage{direction:ltr;text-align:left;unicode-bidi:embed}
+.ctw-blank{direction:ltr !important}
+.ctw-input{direction:ltr;text-align:center;font-family:monospace,Cairo,sans-serif;letter-spacing:1px}
+
+/* BUILD SENTENCE */
+.words-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:44px;padding:10px;border-radius:10px;background:#f7fafc;border:2px dashed #e2e8f0}
+.word-chip{background:var(--navy);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:700;user-select:none;transition:.2s}
+.word-chip:hover{background:#2a4a7f;transform:translateY(-1px)}
+.word-chip.used{opacity:.35;cursor:default;transform:none}
+.sentence-area{min-height:50px;border:2px dashed #cbd5e0;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff}
+.sentence-word{background:#e9f0fb;color:var(--navy);padding:5px 12px;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;border:1.5px solid #bee3f8}
+.sentence-word:hover{background:#fef3c7;border-color:var(--gold)}
+
+/* AUDIO */
+.audio-wrap{background:linear-gradient(135deg,var(--navy),#2a4a7f);border-radius:14px;padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.play-btn{width:46px;height:46px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.play-btn:hover{transform:scale(1.1)}
+.audio-info{color:#fff;flex:1}
+.audio-info .title{font-size:.85rem;font-weight:700}
+.audio-info .sub{font-size:.72rem;opacity:.7;margin-top:2px}
+audio{display:none}
+.audio-prog{height:4px;background:rgba(255,255,255,.2);border-radius:99px;margin-top:8px;overflow:hidden}
+.audio-prog-fill{height:100%;background:var(--gold);border-radius:99px;width:0%;transition:width .3s}
+
+/* WRITING */
+.writing-wrap{display:flex;flex-direction:column;gap:12px}
+.writing-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.w-badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:99px}
+.w-badge.premium{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.w-badge.free   {background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe}
+.writing-area{width:100%;min-height:140px;border:2px solid #e2e8f0;border-radius:12px;padding:12px 14px;font-size:.88rem;font-family:"Cairo",sans-serif;resize:vertical;outline:none;transition:.2s;color:#2d3748;line-height:1.8}
+.writing-area:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.word-counter{font-size:.75rem;color:#718096;text-align:left}
+.word-counter span{font-weight:700;color:var(--navy)}
+.ai-limit{font-size:.75rem;color:#c53030;font-weight:600;background:#fff5f5;padding:6px 12px;border-radius:8px;border:1px solid #fed7d7}
+
+/* FEEDBACK BOX */
+.feedback-box{border-radius:12px;padding:14px 16px;margin-top:12px;font-size:.84rem;line-height:1.9;white-space:pre-line}
+.feedback-box.basic{background:#f0fff4;border:1.5px solid #9ae6b4;color:#276749}
+.feedback-box.ai   {background:#ebf4ff;border:1.5px solid #90cdf4;color:#2b6cb0}
+.feedback-box.error{background:#fff5f5;border:1.5px solid #fed7d7;color:#c53030}
+
+/* SPEAKING */
+.speaking-wrap{display:flex;flex-direction:column;gap:14px}
+.recorder-area{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:16px;padding:24px;text-align:center;color:#fff}
+.rec-btn{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;font-size:1.8rem;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;transition:.3s}
+.rec-btn.idle   {background:#fff;color:#764ba2}
+.rec-btn.recording{background:#e53e3e;color:#fff;animation:pulse 1s infinite}
+.rec-btn.done   {background:#38a169;color:#fff}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.rec-status{font-size:.85rem;opacity:.9;margin-bottom:4px;font-weight:600}
+.rec-timer {font-size:1.5rem;font-weight:900;letter-spacing:4px}
+.rec-hint  {font-size:.75rem;opacity:.65;margin-top:8px}
+.audio-preview{background:#f7fafc;border-radius:12px;padding:12px;border:1.5px solid #e2e8f0}
+
+/* SUBMIT BTN */
+.submit-btn{background:linear-gradient(135deg,var(--navy),#2a4a7f);color:#fff;border:none;border-radius:12px;padding:12px 28px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:"Cairo",sans-serif;transition:.2s;width:100%}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,54,93,.3)}
+.submit-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.submit-btn.gold{background:linear-gradient(135deg,var(--gold),#f0d060);color:var(--navy)}
+
+/* RESULT */
+.result-banner{border-radius:12px;padding:14px 18px;text-align:center;font-weight:700;font-size:.95rem;margin-top:10px}
+.result-banner.correct-r{background:#f0fff4;color:#276749;border:2px solid #9ae6b4}
+.result-banner.wrong-r  {background:#fff5f5;color:#c53030;border:2px solid #fed7d7}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:#a0aec0}
+.empty .icon{font-size:3rem;margin-bottom:12px}
+
+/* RESPONSIVE */
+@media(max-width:600px){.main{padding:14px 10px 60px}.tab-btn{padding:10px 10px}}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">🎓 أكاديمية يامن</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-size:.8rem;opacity:.75" id="student-name-nav">—</span>
+    <span style="background:var(--gold);color:var(--navy);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:99px" id="xp-nav">0 XP</span>
+    <button class="back-btn" onclick="window.location='/dashboard?student_id='+USER_ID">← الرئيسية</button>
+  </div>
+</nav>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('reading',this)">📖 Reading <span class="cnt" id="cnt-reading">0</span></button>
+  <button class="tab-btn" onclick="switchTab('listening',this)">🎧 Listening <span class="cnt" id="cnt-listening">0</span></button>
+  <button class="tab-btn" onclick="switchTab('writing',this)">✍️ Writing <span class="cnt" id="cnt-writing">0</span></button>
+  <button class="tab-btn" onclick="switchTab('speaking',this)">🎤 Speaking <span class="cnt" id="cnt-speaking">0</span></button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- READING -->
+  <div id="sec-reading" class="section active">
+    <div id="list-reading"><div class="empty"><div class="icon">📖</div><p>جاري التحميل...</p></div></div>
+  </div>
+
+  <!-- LISTENING -->
+  <div id="sec-listening" class="section">
+    <div id="list-listening"><div class="empty"><div class="icon">🎧</div><p>جاري التحميل...</p></div></div>
+  </div>
+
+  <!-- WRITING -->
+  <div id="sec-writing" class="section">
+    <div id="list-writing"><div class="empty"><div class="icon">✍️</div><p>جاري التحميل...</p></div></div>
+  </div>
+
+  <!-- SPEAKING -->
+  <div id="sec-speaking" class="section">
+    <div id="list-speaking"><div class="empty"><div class="icon">🎤</div><p>جاري التحميل...</p></div></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────
+const _p = new URLSearchParams(location.search);
+const USER_ID = _p.get("student_id") || localStorage.getItem("yamen_uid") || "1";
+if(USER_ID) localStorage.setItem("yamen_uid", USER_ID);
+
+let STUDENT = {};
+let ALL_QUESTIONS = [];
+let mediaRecorder = null;
+let audioChunks   = [];
+let recTimerInt   = null;
+let recSeconds    = 0;
+
+// ── INIT ───────────────────────────────────────────────────────
+async function init(){
+  const [profile, qs] = await Promise.all([
+    fetch(`/api/student/profile?student_id=${USER_ID}`).then(r=>r.json()),
+    fetch("/api/questions").then(r=>r.json())
+  ]);
+  STUDENT       = profile || {};
+  ALL_QUESTIONS = Array.isArray(qs) ? qs : [];
+
+  // nav
+  document.getElementById("student-name-nav").textContent = STUDENT.name||"طالب";
+  document.getElementById("xp-nav").textContent = (STUDENT.xp||0).toLocaleString()+" XP";
+
+  // counts
+  const readingQs  = ALL_QUESTIONS.filter(q=>["mcq","complete_words","reading_passage"].includes(q.question_type));
+  const listeningQs= ALL_QUESTIONS.filter(q=>["listening","listen_respond"].includes(q.question_type));
+  const writingQs  = ALL_QUESTIONS.filter(q=>["writing_email","writing_discussion","build_sentence"].includes(q.question_type));
+  const speakingQs = ALL_QUESTIONS.filter(q=>["speaking_interview","speaking_repeat"].includes(q.question_type));
+
+  document.getElementById("cnt-reading").textContent  = readingQs.length;
+  document.getElementById("cnt-listening").textContent= listeningQs.length;
+  document.getElementById("cnt-writing").textContent  = writingQs.length;
+  document.getElementById("cnt-speaking").textContent = speakingQs.length;
+
+  renderReading(readingQs);
+  renderListening(listeningQs);
+  renderWriting(writingQs);
+  renderSpeaking(speakingQs);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function switchTab(id, btn){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("sec-"+id).classList.add("active");
+  btn.classList.add("active");
+}
+
+// ── READING ────────────────────────────────────────────────────
+function renderReading(qs){
+  const cont = document.getElementById("list-reading");
+  if(!qs.length){ cont.innerHTML=`<div class="empty"><div class="icon">📖</div><p>لا توجد أسئلة قراءة بعد</p></div>`; return; }
+  cont.innerHTML = qs.map((q,i)=>{
+    if(q.question_type==="complete_words") return renderCompleteWords(q, i+1);
+    return renderMCQ(q, i+1, "reading");
+  }).join("");
+}
+
+// ── MCQ ────────────────────────────────────────────────────────
+function renderMCQ(q, num, section){
+  const opts = [
+    {k:"a",v:q.option_a},{k:"b",v:q.option_b},
+    {k:"c",v:q.option_c},{k:"d",v:q.option_d}
+  ].filter(o=>o.v);
+  const passage = q.passage_text ? `<div class="passage-box">${q.passage_text}</div>` : "";
+  return `<div class="q-card" id="qcard-${q.id}">
+    <div class="q-num">سؤال ${num} • ${q.topic} • ${q.difficulty}</div>
+    ${passage}
+    <div class="q-text">${q.question_text||""}</div>
+    <div class="options" id="opts-${q.id}">
+      ${opts.map(o=>`
+        <button class="opt-btn" onclick="selectMCQ(${q.id},'${o.k}',this)" id="opt-${q.id}-${o.k}">
+          <div class="opt-letter">${o.k.toUpperCase()}</div>
+          <span>${o.v}</span>
+        </button>`).join("")}
+    </div>
+    <div id="result-${q.id}" style="margin-top:10px"></div>
+  </div>`;
+}
+
+async function selectMCQ(qid, opt, btn){
+  const card = document.getElementById("qcard-"+qid);
+  if(card.classList.contains("correct")||card.classList.contains("wrong")) return;
+  document.querySelectorAll(`#opts-${qid} .opt-btn`).forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+
+  const res = await fetch("/api/questions/check",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({question_id:qid, answer:opt, student_id:USER_ID})
+  }).then(r=>r.json());
+
+  // تلوين الخيارات
+  document.querySelectorAll(`#opts-${qid} .opt-btn`).forEach(b=>{
+    const bOpt = b.id.split("-")[2];
+    if(res.correct && bOpt===opt) b.classList.add("correct-ans");
+    if(!res.correct){
+      if(bOpt===opt) b.classList.add("wrong-ans");
+      if(res.correct_answer&&res.correct_answer.toLowerCase().startsWith(bOpt)) b.classList.add("correct-ans");
+    }
+    b.onclick=null;
+  });
+
+  card.classList.add(res.correct?"correct":"wrong");
+  document.getElementById("result-"+qid).innerHTML =
+    `<div class="result-banner ${res.correct?'correct-r':'wrong-r'}">
+      ${res.correct?"✅ إجابة صحيحة! +10 XP":"❌ "+res.feedback}
+    </div>`;
+
+  if(res.correct){
+    const xpEl = document.getElementById("xp-nav");
+    const cur  = parseInt(xpEl.textContent)||0;
+    xpEl.textContent = (cur+10).toLocaleString()+" XP";
+  }
+}
+
+// ── COMPLETE THE WORDS ─────────────────────────────────────────
+function renderCompleteWords(q, num){
+  const passage  = q.complete_words_passage || "";
+  let   answers  = {};
+  try{ answers = JSON.parse(q.complete_words_answers||"{}"); }catch(e){}
+
+  let html = passage;
+  Object.keys(answers).forEach(blank=>{
+    const word        = answers[blank];
+    const underscores = blank.match(/_+/)?.[0] || "____";
+    const visiblePart = blank.replace(/_+/g,"");
+    const len         = underscores.length;
+    const inputSize   = Math.max(len * 14, 50);
+
+    // تحديد موضع الفراغ: قبل أم بعد الحروف المرئية
+    // مثال: "mig____" → الفراغ بعد الحروف | "____tion" → الفراغ قبل الحروف
+    const blanksAtStart = blank.startsWith("_");
+    const blanksAtEnd   = blank.endsWith("_");
+
+    let innerHtml = "";
+    if(blanksAtEnd && !blanksAtStart){
+      // mig____ → اكتب: mig + فراغ
+      innerHtml = `<span dir="ltr" style="display:inline-flex;align-items:center;gap:1px;direction:ltr">
+        <span style="font-weight:900;color:var(--navy);font-size:.92rem">${visiblePart}</span><input
+          class="ctw-input"
+          data-blank="${blank}"
+          data-answer="${word}"
+          data-qid="${q.id}"
+          maxlength="${len+2}"
+          style="width:${inputSize}px"
+          oninput="ctw_check(this)"
+          placeholder="${"_".repeat(len)}"
+        /></span>`;
+    } else if(blanksAtStart && !blanksAtEnd){
+      // ____tion → فراغ + الحروف
+      innerHtml = `<span dir="ltr" style="display:inline-flex;align-items:center;gap:1px;direction:ltr"><input
+          class="ctw-input"
+          data-blank="${blank}"
+          data-answer="${word}"
+          data-qid="${q.id}"
+          maxlength="${len+2}"
+          style="width:${inputSize}px"
+          oninput="ctw_check(this)"
+          placeholder="${"_".repeat(len)}"
+        /><span style="font-weight:900;color:var(--navy);font-size:.92rem">${visiblePart}</span></span>`;
+    } else {
+      // فراغ بالكامل بدون حروف مرئية
+      innerHtml = `<input
+          class="ctw-input"
+          data-blank="${blank}"
+          data-answer="${word}"
+          data-qid="${q.id}"
+          maxlength="${len+2}"
+          style="width:${inputSize}px"
+          oninput="ctw_check(this)"
+          placeholder="${"_".repeat(len)}"
+        />`;
+    }
+
+    html = html.replace(blank,
+      `<span class="ctw-blank" style="display:inline-flex;flex-direction:column;align-items:center;margin:0 6px;vertical-align:middle">
+        ${innerHtml}
+        <span class="ctw-hint">${len} حرف</span>
+      </span>`
+    );
+  });
+
+  return `<div class="q-card" id="qcard-${q.id}">
+    <div class="q-num">سؤال ${num} • Complete the Words • TOEFL 2026 • ${q.difficulty}</div>
+    <div class="q-text">📝 ${q.question_text||"أكمل الكلمات الناقصة الحروف في النص:"}</div>
+    <div class="ctw-passage">${html}</div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="submit-btn" style="width:auto;padding:10px 22px" onclick="submitCTW(${q.id})">✅ تحقق من الإجابات</button>
+      <button class="submit-btn" style="width:auto;padding:10px 22px;background:#718096" onclick="resetCTW(${q.id})">🔄 إعادة</button>
+    </div>
+    <div id="result-${q.id}" style="margin-top:10px"></div>
+  </div>`;
+}
+
+function ctw_check(input){
+  const answer = input.dataset.answer.toLowerCase();
+  const val    = input.value.toLowerCase();
+  if(val.length >= answer.length){
+    input.classList.toggle("correct", val===answer);
+    input.classList.toggle("wrong",   val!==answer);
+  } else {
+    input.classList.remove("correct","wrong");
+  }
+}
+
+async function submitCTW(qid){
+  const card    = document.getElementById("qcard-"+qid);
+  const inputs  = card.querySelectorAll(".ctw-input");
+  const answers = {};
+  inputs.forEach(inp=>{ answers[inp.dataset.blank] = inp.value.trim(); });
+
+  const res = await fetch("/api/questions/check",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({question_id:qid, answer:"", answers, student_id:USER_ID})
+  }).then(r=>r.json());
+
+  inputs.forEach(inp=>{
+    const correct = inp.value.trim().toLowerCase() === inp.dataset.answer.toLowerCase();
+    inp.classList.toggle("correct", correct);
+    inp.classList.toggle("wrong",   !correct);
+    if(!correct) inp.value = inp.dataset.answer;
+  });
+
+  document.getElementById("result-"+qid).innerHTML =
+    `<div class="feedback-box basic">${res.feedback}</div>`;
+}
+
+function resetCTW(qid){
+  const card = document.getElementById("qcard-"+qid);
+  card.querySelectorAll(".ctw-input").forEach(inp=>{
+    inp.value=""; inp.classList.remove("correct","wrong");
+  });
+  document.getElementById("result-"+qid).innerHTML="";
+}
+
+// ── LISTENING ──────────────────────────────────────────────────
+function renderListening(qs){
+  const cont = document.getElementById("list-listening");
+  if(!qs.length){ cont.innerHTML=`<div class="empty"><div class="icon">🎧</div><p>لا توجد أسئلة استماع بعد</p></div>`; return; }
+  cont.innerHTML = qs.map((q,i)=>renderListeningQ(q,i+1)).join("");
+}
+
+function renderListeningQ(q, num){
+  const audioHtml = q.audio_url ? `
+    <div class="audio-wrap">
+      <button class="play-btn" onclick="toggleAudio('audio-${q.id}',this)" id="playbtn-${q.id}">▶️</button>
+      <div class="audio-info">
+        <div class="title">🎧 ${q.question_type==="listen_respond"?"استمع واختر الرد المناسب":"استمع ثم أجب"}</div>
+        <div class="sub">اضغط ▶ للتشغيل</div>
+        <div class="audio-prog"><div class="audio-prog-fill" id="prog-${q.id}"></div></div>
+      </div>
+      <audio id="audio-${q.id}" src="${q.audio_url}"
+        ontimeupdate="updateProg('${q.id}',this)"
+        onended="document.getElementById('playbtn-${q.id}').textContent='▶️'">
+      </audio>
+    </div>` : `<div style="background:#fffbea;border:1.5px dashed var(--gold);border-radius:10px;padding:12px;margin-bottom:12px;font-size:.82rem;color:#92400e;text-align:center">⚠️ لم يُرفع ملف صوتي لهذا السؤال بعد</div>`;
+
+  const opts = [
+    {k:"a",v:q.option_a},{k:"b",v:q.option_b},
+    {k:"c",v:q.option_c},{k:"d",v:q.option_d}
+  ].filter(o=>o.v);
+
+  return `<div class="q-card" id="qcard-${q.id}">
+    <div class="q-num">سؤال ${num} • ${q.question_type==="listen_respond"?"Listen & Choose Response":"Listening"} • ${q.difficulty}</div>
+    ${audioHtml}
+    <div class="q-text">${q.question_text||""}</div>
+    <div class="options" id="opts-${q.id}">
+      ${opts.map(o=>`
+        <button class="opt-btn" onclick="selectMCQ(${q.id},'${o.k}',this)" id="opt-${q.id}-${o.k}">
+          <div class="opt-letter">${o.k.toUpperCase()}</div>
+          <span>${o.v}</span>
+        </button>`).join("")}
+    </div>
+    <div id="result-${q.id}" style="margin-top:10px"></div>
+  </div>`;
+}
+
+function toggleAudio(audioId, btn){
+  const audio = document.getElementById(audioId);
+  if(audio.paused){ audio.play(); btn.textContent="⏸️"; }
+  else             { audio.pause(); btn.textContent="▶️"; }
+}
+function updateProg(qid, audio){
+  const pct = (audio.currentTime/audio.duration)*100||0;
+  const el  = document.getElementById("prog-"+qid);
+  if(el) el.style.width=pct+"%";
+}
+
+// ── WRITING ────────────────────────────────────────────────────
+function renderWriting(qs){
+  const cont = document.getElementById("list-writing");
+  if(!qs.length){ cont.innerHTML=`<div class="empty"><div class="icon">✍️</div><p>لا توجد أسئلة كتابة بعد</p></div>`; return; }
+  cont.innerHTML = qs.map((q,i)=>{
+    if(q.question_type==="build_sentence") return renderBuildSentence(q,i+1);
+    return renderWritingQ(q,i+1);
+  }).join("");
+}
+
+function renderBuildSentence(q, num){
+  const words = (q.word_order_words||"").split("/").map(w=>w.trim()).filter(Boolean);
+  const shuffled = [...words].sort(()=>Math.random()-.5);
+  return `<div class="q-card" id="qcard-${q.id}">
+    <div class="q-num">سؤال ${num} • Build a Sentence • TOEFL 2026 • ${q.difficulty}</div>
+    <div class="q-text">🔀 ${q.question_text||"رتب الكلمات لتكوين جملة صحيحة:"}</div>
+    <div class="sentence-area" id="sentence-${q.id}" onclick="removeWord(event,${q.id})">
+      <span style="color:#a0aec0;font-size:.82rem" id="placeholder-${q.id}">اضغط على الكلمات أدناه لترتيبها هنا...</span>
+    </div>
+    <div class="words-pool" id="pool-${q.id}">
+      ${shuffled.map((w,i)=>`
+        <div class="word-chip" id="chip-${q.id}-${i}" data-word="${w}" data-idx="${i}"
+             onclick="addWord(${q.id},this)">${w}</div>`).join("")}
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="submit-btn" style="width:auto;padding:10px 22px" onclick="submitBuildSentence(${q.id},'${(q.word_order_answer||"").replace(/'/g,"\\'")}')">✅ تحقق</button>
+      <button class="submit-btn" style="width:auto;padding:10px 22px;background:#718096" onclick="resetBuildSentence(${q.id})">🔄 إعادة</button>
+    </div>
+    <div id="result-${q.id}" style="margin-top:10px"></div>
+  </div>`;
+}
+
+function addWord(qid, chip){
+  if(chip.classList.contains("used")) return;
+  chip.classList.add("used");
+  const area  = document.getElementById("sentence-"+qid);
+  const ph    = document.getElementById("placeholder-"+qid);
+  if(ph) ph.style.display="none";
+  const span  = document.createElement("div");
+  span.className = "sentence-word";
+  span.textContent = chip.dataset.word;
+  span.dataset.idx  = chip.dataset.idx;
+  span.dataset.word = chip.dataset.word;
+  area.appendChild(span);
+}
+
+function removeWord(e, qid){
+  const el = e.target.closest(".sentence-word");
+  if(!el) return;
+  const chip = document.querySelector(`#chip-${qid}-${el.dataset.idx}`);
+  if(chip) chip.classList.remove("used");
+  el.remove();
+  const area = document.getElementById("sentence-"+qid);
+  if(!area.querySelector(".sentence-word")){
+    const ph = document.getElementById("placeholder-"+qid);
+    if(ph) ph.style.display="";
+  }
+}
+
+async function submitBuildSentence(qid, correctAnswer){
+  const area  = document.getElementById("sentence-"+qid);
+  const words = [...area.querySelectorAll(".sentence-word")].map(s=>s.dataset.word);
+  const built = words.join(" ");
+  const correct = built.toLowerCase().trim() === correctAnswer.toLowerCase().trim();
+
+  document.getElementById("result-"+qid).innerHTML =
+    `<div class="result-banner ${correct?"correct-r":"wrong-r"}">
+      ${correct
+        ? "✅ ممتاز! الجملة صحيحة! +10 XP"
+        : `❌ الإجابة الصحيحة:<br><strong>${correctAnswer}</strong>`}
+    </div>`;
+
+  const card = document.getElementById("qcard-"+qid);
+  card.classList.add(correct?"correct":"wrong");
+
+  if(correct){
+    try{
+      await fetch("/api/questions/check",{method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({question_id:qid,answer:built.toLowerCase(),student_id:USER_ID})
+      });
+      const xpEl=document.getElementById("xp-nav");
+      xpEl.textContent=(parseInt(xpEl.textContent)||0)+10+" XP";
+    }catch(e){}
+  }
+}
+
+function resetBuildSentence(qid){
+  const area = document.getElementById("sentence-"+qid);
+  area.querySelectorAll(".sentence-word").forEach(s=>{
+    const chip=document.querySelector(`#chip-${qid}-${s.dataset.idx}`);
+    if(chip) chip.classList.remove("used");
+    s.remove();
+  });
+  const ph=document.getElementById("placeholder-"+qid);
+  if(ph) ph.style.display="";
+  document.getElementById("result-"+qid).innerHTML="";
+  const card=document.getElementById("qcard-"+qid);
+  card.classList.remove("correct","wrong");
+}
+
+function renderWritingQ(q, num){
+  const isPremium  = STUDENT.subscription_type==="premium";
+  const corrections= STUDENT.writing_corrections_today||0;
+  const maxCorr    = 3;
+  const canAI      = isPremium && corrections < maxCorr;
+
+  const typeLabel  = q.question_type==="writing_email"?"📧 Write an Email":"💬 Academic Discussion";
+  const passage    = q.passage_text?`<div class="passage-box">${q.passage_text}</div>`:"";
+
+  return `<div class="q-card" id="qcard-${q.id}">
+    <div class="q-num">سؤال ${num} • ${typeLabel} • ${q.difficulty}</div>
+    <div class="writing-meta">
+      <span class="w-badge ${isPremium?"premium":"free"}">${isPremium?"⭐ مميز":"🆓 مجاني"}</span>
+      <span style="font-size:.72rem;color:#718096;background:#f7fafc;padding:3px 10px;border-radius:99px;border:1px solid #e2e8f0">
+        📝 الحد الأدنى: ${q.writing_min_words||50} كلمة
+      </span>
+      ${isPremium?`<span style="font-size:.72rem;color:#c53030;background:#fff5f5;padding:3px 10px;border-radius:99px;border:1px solid #fed7d7">
+        🤖 AI: ${corrections}/${maxCorr} استخدم اليوم
+      </span>`:""}
+    </div>
+    ${passage}
+    <div class="q-text">${q.writing_prompt||q.question_text||""}</div>
+    <div class="writing-wrap">
+      <textarea class="writing-area" id="wtxt-${q.id}"
+        placeholder="اكتب إجابتك هنا..."
+        oninput="updateWordCount(${q.id},this,${q.writing_min_words||50})"></textarea>
+      <div class="word-counter">عدد الكلمات: <span id="wc-${q.id}">0</span> / ${q.writing_min_words||50} مطلوب</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="submit-btn" style="flex:1;min-width:140px" onclick="submitWriting(${q.id},false)">
+          ✅ تصحيح أساسي (مجاني)
+        </button>
+        ${isPremium && canAI?`
+        <button class="submit-btn gold" style="flex:1;min-width:140px" onclick="submitWriting(${q.id},true)">
+          🤖 تصحيح AI (${maxCorr-corrections} متبقي)
+        </button>`:`
+        <button class="submit-btn" style="flex:1;min-width:140px;background:#a0aec0;cursor:not-allowed" disabled>
+          🔒 ${isPremium?`AI (وصلت الحد اليومي ${maxCorr})`: "🤖 AI للمميزين فقط"}
+        </button>`}
+      </div>
+      <div id="wfeedback-${q.id}"></div>
+    </div>
+    ${q.writing_sample?`
+    <details style="margin-top:10px">
+      <summary style="cursor:pointer;font-size:.82rem;color:#718096;font-weight:600">📖 عرض نموذج الإجابة</summary>
+      <div class="passage-box" style="margin-top:8px;font-size:.82rem">${q.writing_sample}</div>
+    </details>`:""}
+  </div>`;
+}
+
+function updateWordCount(qid, ta, min){
+  const wc = ta.value.trim().split(/\s+/).filter(w=>w).length;
+  const el = document.getElementById("wc-"+qid);
+  if(el){ el.textContent=wc; el.style.color=wc>=min?"#38a169":"#e53e3e"; }
+}
+
+async function submitWriting(qid, useAI){
+  const text = document.getElementById("wtxt-"+qid).value.trim();
+  if(!text){ alert("الرجاء كتابة إجابتك أولاً"); return; }
+
+  const btn = event.target;
+  btn.disabled=true; btn.textContent="⏳ جاري التصحيح...";
+
+  const res = await fetch("/api/writing/submit",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({student_id:USER_ID, question_id:qid, text, use_ai:useAI})
+  }).then(r=>r.json());
+
+  btn.disabled=false; btn.textContent= useAI?"🤖 تصحيح AI":"✅ تصحيح أساسي";
+
+  if(res.error){
+    document.getElementById("wfeedback-"+qid).innerHTML=
+      `<div class="feedback-box error">❌ ${res.error}</div>`;
+    return;
+  }
+
+  let html = `<div class="feedback-box basic">
+📊 <strong>الدرجة: ${res.score}/100</strong> | 📝 الكلمات: ${res.word_count}
+
+${res.feedback}
+  </div>`;
+
+  if(useAI && res.ai_feedback){
+    html += `<div class="feedback-box ai" style="margin-top:8px">${res.ai_feedback}</div>`;
+  }
+
+  document.getElementById("wfeedback-"+qid).innerHTML = html;
+}
+
+// ── SPEAKING ───────────────────────────────────────────────────
+function renderSpeaking(qs){
+  const cont = document.getElementById("list-speaking");
+  if(!qs.length){ cont.innerHTML=`<div class="empty"><div class="icon">🎤</div><p>لا توجد أسئلة محادثة بعد</p></div>`; return; }
+  cont.innerHTML = qs.map((q,i)=>renderSpeakingQ(q,i+1)).join("");
+}
+
+function renderSpeakingQ(q, num){
+  const isPremium = STUDENT.subscription_type==="premium";
+  const audioHtml = q.audio_url?`
+    <div class="audio-wrap" style="margin-bottom:12px">
+      <button class="play-btn" onclick="toggleAudio('speak-audio-${q.id}',this)">▶️</button>
+      <div class="audio-info">
+        <div class="title">🔊 ${q.question_type==="speaking_repeat"?"استمع ثم كرر":"استمع للسؤال"}</div>
+        <div class="sub">اضغط ▶ للتشغيل</div>
+        <div class="audio-prog"><div class="audio-prog-fill" id="prog-s-${q.id}"></div></div>
+      </div>
+      <audio id="speak-audio-${q.id}" src="${q.audio_url}"
+        ontimeupdate="updateProg('s-${q.id}',this)"
+        onended="document.querySelector('#speak-audio-${q.id}').parentElement.querySelector('.play-btn').textContent='▶️'">
+      </audio>
+    </div>`:"";
+
+  return `<div class="q-card" id="qcard-s-${q.id}">
+    <div class="q-num">سؤال ${num} • ${q.question_type==="speaking_repeat"?"Listen & Repeat":"Speaking Interview"} • ${q.difficulty}</div>
+    ${audioHtml}
+    <div class="q-text">🎤 ${q.speaking_prompt||q.question_text||""}</div>
+    <div class="speaking-wrap">
+      <div class="recorder-area">
+        <button class="rec-btn idle" id="recbtn-${q.id}" onclick="toggleRecording(${q.id})">🎤</button>
+        <div class="rec-status" id="recstatus-${q.id}">اضغط للتسجيل</div>
+        <div class="rec-timer" id="rectimer-${q.id}">00:45</div>
+        <div class="rec-hint">⏱️ مدة التسجيل: 45 ثانية | الملف ينزل تلقائياً</div>
+      </div>
+      <div id="rec-preview-${q.id}" style="display:none" class="audio-preview">
+        <p style="font-size:.8rem;color:#718096;margin-bottom:8px;font-weight:600">🎵 معاينة التسجيل:</p>
+        <audio id="rec-playback-${q.id}" controls style="width:100%;height:36px"></audio>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="submit-btn" id="submit-speak-${q.id}" onclick="submitSpeaking(${q.id})" disabled style="flex:1">
+          📤 إرسال للتقييم
+        </button>
+        <button class="submit-btn" style="flex:0 0 auto;width:auto;padding:10px 16px;background:#718096"
+          onclick="downloadRecording(${q.id})" id="dl-btn-${q.id}" disabled>
+          ⬇️ تحميل
+        </button>
+      </div>
+      <div id="speak-feedback-${q.id}"></div>
+      ${!isPremium?`<div style="background:#fffbea;border-radius:10px;padding:10px 14px;font-size:.8rem;color:#92400e;border:1px solid #fde68a">
+        🤖 التقييم بالذكاء الاصطناعي متاح للمشتركين المميزين فقط
+      </div>`:""}
+    </div>
+  </div>`;
+}
+
+let recBlobs = {};
+
+async function toggleRecording(qid){
+  const btn    = document.getElementById("recbtn-"+qid);
+  const status = document.getElementById("recstatus-"+qid);
+  const timer  = document.getElementById("rectimer-"+qid);
+
+  if(mediaRecorder && mediaRecorder.state==="recording"){
+    // إيقاف
+    mediaRecorder.stop();
+    clearInterval(recTimerInt);
+    btn.className="rec-btn done"; btn.textContent="✅";
+    status.textContent="تم التسجيل!";
+    return;
+  }
+
+  // بدء التسجيل
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    audioChunks  = [];
+    mediaRecorder= new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = e=>audioChunks.push(e.data);
+    mediaRecorder.onstop = ()=>{
+      const blob = new Blob(audioChunks,{type:"audio/webm"});
+      recBlobs[qid] = blob;
+      const url  = URL.createObjectURL(blob);
+      const prev = document.getElementById("rec-preview-"+qid);
+      const pb   = document.getElementById("rec-playback-"+qid);
+      if(pb){ pb.src=url; prev.style.display="block"; }
+      document.getElementById("submit-speak-"+qid).disabled=false;
+      document.getElementById("dl-btn-"+qid).disabled=false;
+      stream.getTracks().forEach(t=>t.stop());
+    };
+
+    mediaRecorder.start();
+    recSeconds = 45;
+    btn.className="rec-btn recording"; btn.textContent="⏹️";
+    status.textContent="🔴 جاري التسجيل...";
+
+    recTimerInt = setInterval(()=>{
+      recSeconds--;
+      const m=String(Math.floor(recSeconds/60)).padStart(2,"0");
+      const s=String(recSeconds%60).padStart(2,"0");
+      timer.textContent=`${m}:${s}`;
+      if(recSeconds<=0){
+        mediaRecorder.stop();
+        clearInterval(recTimerInt);
+        btn.className="rec-btn done"; btn.textContent="✅";
+        status.textContent="انتهى وقت التسجيل";
+      }
+    },1000);
+  }catch(e){
+    alert("الرجاء السماح بالوصول إلى الميكروفون");
+  }
+}
+
+function downloadRecording(qid){
+  const blob = recBlobs[qid];
+  if(!blob) return;
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = `speaking_${qid}_${Date.now()}.webm`;
+  a.click();
+}
+
+async function submitSpeaking(qid){
+  const blob = recBlobs[qid];
+  if(!blob){ alert("الرجاء تسجيل إجابتك أولاً"); return; }
+
+  const btn = document.getElementById("submit-speak-"+qid);
+  btn.disabled=true; btn.textContent="⏳ جاري الإرسال...";
+
+  const fd = new FormData();
+  fd.append("audio",  blob, `speaking_${qid}.webm`);
+  fd.append("student_id", USER_ID);
+  fd.append("question_id", qid);
+
+  const res = await fetch("/api/speaking/submit",{method:"POST",body:fd}).then(r=>r.json());
+  btn.disabled=false; btn.textContent="📤 إرسال للتقييم";
+
+  const fb = document.getElementById("speak-feedback-"+qid);
+  fb.innerHTML = `<div class="feedback-box basic">
+📊 <strong>الدرجة: ${res.score||75}/100</strong>
+
+${res.feedback||""}
+  </div>`;
+
+  if(res.ai_feedback){
+    fb.innerHTML += `<div class="feedback-box ai" style="margin-top:8px">${res.ai_feedback}</div>`;
+  }
+
+  // تحميل تلقائي
+  downloadRecording(qid);
+}
+
+// ── START ──────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
+
+

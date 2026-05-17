@@ -1,0 +1,851 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>أكاديمية يامن – لوحة الطالب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy:   #1a365d;
+    --navy2:  #162d4f;
+    --gold:   #d4af37;
+    --gold2:  #f0d060;
+    --bg:     #f0f4f8;
+    --card:   #ffffff;
+    --text:   #1a202c;
+    --muted:  #718096;
+    --green:  #38a169;
+    --red:    #e53e3e;
+    --shadow: 0 4px 20px rgba(26,54,93,.10);
+    --radius: 16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+  body{background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── TOP NAV ── */
+  .topnav{
+    background:var(--navy);color:#fff;
+    padding:0 20px;height:60px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:100;
+    box-shadow:0 2px 12px rgba(0,0,0,.25)
+  }
+  .topnav .logo{font-size:1.2rem;font-weight:900;color:var(--gold)}
+  .topnav .nav-right{display:flex;align-items:center;gap:12px}
+  .avatar{width:36px;height:36px;border-radius:50%;
+    background:var(--gold);color:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:.9rem;cursor:pointer}
+  .notif-btn{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;position:relative}
+  .notif-badge{position:absolute;top:-4px;right:-4px;background:var(--red);
+    color:#fff;font-size:.55rem;width:16px;height:16px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center}
+
+  /* ── MAIN LAYOUT ── */
+  .main{max-width:1100px;margin:0 auto;padding:20px 16px;
+    display:grid;gap:16px}
+
+  /* ── HERO CARD ── */
+  .hero{
+    background:linear-gradient(135deg,var(--navy) 0%,#2a4a7f 100%);
+    border-radius:var(--radius);padding:20px 24px;
+    color:#fff;display:flex;align-items:center;gap:16px;
+    box-shadow:var(--shadow)
+  }
+  .hero-avatar{width:64px;height:64px;border-radius:50%;
+    background:var(--gold);color:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.8rem;font-weight:900;flex-shrink:0}
+  .hero-info h2{font-size:1.2rem;font-weight:700}
+  .hero-info p{font-size:.82rem;opacity:.8;margin-top:2px}
+  .hero-stats{margin-right:auto;display:flex;gap:20px;text-align:center}
+  .hero-stat span{display:block}
+  .hero-stat .val{font-size:1.3rem;font-weight:900;color:var(--gold)}
+  .hero-stat .lbl{font-size:.7rem;opacity:.75}
+
+  /* ── GRID 2 COLS ── */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+  /* ── STAT MINI CARDS ── */
+  .stat-card{
+    background:var(--card);border-radius:var(--radius);
+    padding:16px;box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:12px
+  }
+  .stat-icon{width:46px;height:46px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;flex-shrink:0}
+  .stat-card .val{font-size:1.4rem;font-weight:900}
+  .stat-card .lbl{font-size:.75rem;color:var(--muted)}
+
+  /* ── SECTION CARD ── */
+  .card{background:var(--card);border-radius:var(--radius);
+    padding:18px;box-shadow:var(--shadow)}
+  .card-header{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px}
+  .card-title{font-size:.95rem;font-weight:700;color:var(--navy)}
+  .card-action{font-size:.8rem;color:var(--gold);cursor:pointer;
+    background:none;border:none;font-family:'Cairo',sans-serif;font-weight:600}
+
+  /* ── PROGRESS BAR ── */
+  .prog-wrap{margin-bottom:10px}
+  .prog-label{display:flex;justify-content:space-between;
+    font-size:.78rem;color:var(--muted);margin-bottom:5px}
+  .prog-bar{height:8px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+  .prog-fill{height:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--gold),var(--gold2));
+    transition:width .6s ease}
+
+  /* ── TASK ITEMS ── */
+  .task-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:10px;
+    background:#f7fafc;margin-bottom:8px;
+    cursor:pointer;transition:all .2s;border:1.5px solid transparent
+  }
+  .task-item:hover{border-color:var(--gold);background:#fffdf0}
+  .task-item.done{opacity:.55;background:#f0fff4}
+  .task-check{width:22px;height:22px;border-radius:6px;
+    border:2px solid #cbd5e0;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0;font-size:.8rem;transition:.2s}
+  .task-item.done .task-check{background:var(--green);border-color:var(--green);color:#fff}
+  .task-text{flex:1;font-size:.83rem}
+  .task-pts{font-size:.75rem;color:var(--gold);font-weight:700;
+    background:#fffbea;padding:2px 8px;border-radius:99px}
+
+  /* ── LEADERBOARD ── */
+  .lb-item{display:flex;align-items:center;gap:10px;padding:8px 0;
+    border-bottom:1px solid #f0f0f0}
+  .lb-item:last-child{border:none}
+  .lb-rank{width:28px;height:28px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:.82rem;flex-shrink:0}
+  .rank1{background:#FFD700;color:#7a5c00}
+  .rank2{background:#C0C0C0;color:#444}
+  .rank3{background:#cd7f32;color:#fff}
+  .rankN{background:#e2e8f0;color:var(--muted)}
+  .lb-name{flex:1;font-size:.83rem;font-weight:600}
+  .lb-xp{font-size:.8rem;color:var(--gold);font-weight:700}
+
+  /* ── ERROR BANK ── */
+  .err-item{padding:10px 12px;border-radius:10px;background:#fff5f5;
+    border-right:3px solid var(--red);margin-bottom:8px;font-size:.82rem}
+  .err-item .err-q{font-weight:600;color:var(--text);margin-bottom:4px}
+  .err-item .err-meta{color:var(--muted);font-size:.75rem}
+
+  /* ── BADGE ── */
+  .badges-wrap{display:flex;flex-wrap:wrap;gap:10px}
+  .badge-item{background:#fffbea;border:1.5px solid var(--gold);
+    border-radius:12px;padding:8px 14px;text-align:center;
+    min-width:80px}
+  .badge-item .b-icon{font-size:1.6rem}
+  .badge-item .b-name{font-size:.7rem;color:var(--navy);font-weight:700;margin-top:3px}
+  .badge-item.locked{opacity:.35;filter:grayscale(1)}
+
+  /* ── MODAL ── */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.5);
+    z-index:200;display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:.25s
+  }
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal{background:#fff;border-radius:20px;padding:24px;
+    width:90%;max-width:460px;max-height:85vh;overflow-y:auto;
+    transform:translateY(30px);transition:.25s;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+  .modal-overlay.open .modal{transform:translateY(0)}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:18px}
+  .modal-title{font-size:1.05rem;font-weight:700;color:var(--navy)}
+  .modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;
+    color:var(--muted);line-height:1}
+
+  /* ── BOTTOM NAV (mobile) ── */
+  .bottom-nav{
+    display:none;position:fixed;bottom:0;left:0;right:0;
+    background:var(--navy);padding:8px 0 12px;
+    z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.2)
+  }
+  .bottom-nav ul{display:flex;justify-content:space-around;list-style:none}
+  .bottom-nav li{text-align:center}
+  .bnav-btn{background:none;border:none;color:rgba(255,255,255,.6);
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    cursor:pointer;font-family:'Cairo',sans-serif;padding:0}
+  .bnav-btn .icon{font-size:1.3rem}
+  .bnav-btn .lbl{font-size:.62rem}
+  .bnav-btn.active{color:var(--gold)}
+
+  /* ── TOAST ── */
+  .toast{
+    position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(40px);
+    background:var(--navy);color:#fff;padding:10px 24px;
+    border-radius:99px;font-size:.85rem;z-index:300;
+    opacity:0;transition:.3s;pointer-events:none;white-space:nowrap
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ── TABS ── */
+  .tabs{display:flex;gap:8px;margin-bottom:14px;
+    border-bottom:2px solid #e2e8f0;padding-bottom:0}
+  .tab-btn{background:none;border:none;padding:8px 16px;
+    font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:600;
+    color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;
+    margin-bottom:-2px;transition:.2s}
+  .tab-btn.active{color:var(--navy);border-bottom-color:var(--gold)}
+
+  /* ── SECTION VISIBILITY ── */
+  .section{display:none}
+  .section.active{display:contents}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:640px){
+    .grid3{grid-template-columns:1fr 1fr}
+    .hero-stats{display:none}
+    .bottom-nav{display:block}
+    .main{padding:14px 12px 80px}
+    .hero{padding:16px}
+    .hero-avatar{width:52px;height:52px;font-size:1.4rem}
+  }
+  @media(max-width:400px){
+    .grid2,.grid3{grid-template-columns:1fr}
+  }
+
+  /* ── COLORS ── */
+  .bg-gold{background:#fff8e1}
+  .bg-blue{background:#ebf4ff}
+  .bg-green{background:#f0fff4}
+  .bg-red{background:#fff5f5}
+  .c-gold{color:#b7860a}
+  .c-blue{color:#2b6cb0}
+  .c-green{color:#276749}
+  .c-red{color:#c53030}
+  /* بوابة التخرج */
+  .grad-req-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;border:1px solid rgba(255,255,255,.1);transition:.3s}
+  .grad-req-item.done{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4)}
+  .grad-req-item.done .req-status{color:#4ade80}
+  .req-icon{font-size:1rem;flex-shrink:0}
+  .req-text{font-size:.75rem;color:rgba(255,255,255,.7);flex:1;font-weight:600}
+  .req-status{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.4)}
+  #grad-gate-btn.unlocked{background:linear-gradient(135deg,#d4af37,#f5e27a)!important;border-color:#d4af37!important;color:#1a365d!important;cursor:pointer!important}
+  #grad-gate-btn.unlocked:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,.4)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<nav class="topnav">
+  <div class="logo">🎓 أكاديمية يامن</div>
+  <div class="nav-right">
+    <button class="notif-btn" onclick="openModal('notifModal')" title="الإشعارات">
+      🔔<span class="notif-badge" id="notifCount">3</span>
+    </button>
+    <div class="avatar" id="avatarInitial" onclick="openModal('profileModal')">ط</div>
+  </div>
+</nav>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-avatar" id="heroAvatar">ط</div>
+    <div class="hero-info">
+      <h2 id="heroName">جاري التحميل…</h2>
+      <p id="heroLevel">المستوى: —</p>
+      <p id="heroPackage" style="font-size:.75rem;margin-top:4px;color:var(--gold)">—</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="val" id="heroXP">0</span>
+        <span class="lbl">XP</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val" id="heroStreak">0</span>
+        <span class="lbl">🔥 يوم</span>
+      </div>
+      <div class="hero-stat">
+        <span class="val" id="heroDays">0</span>
+        <span class="lbl">يوم متبقي</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT MINI CARDS -->
+  <div class="grid3">
+    <div class="stat-card">
+      <div class="stat-icon bg-gold"><span>⚡</span></div>
+      <div>
+        <div class="val c-gold" id="statXP">0</div>
+        <div class="lbl">نقاط XP</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon bg-blue"><span>🔥</span></div>
+      <div>
+        <div class="val c-blue" id="statStreak">0</div>
+        <div class="lbl">أيام متتالية</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon bg-green"><span>✅</span></div>
+      <div>
+        <div class="val c-green" id="statDone">0</div>
+        <div class="lbl">مهام منجزة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📈 التقدم الأسبوعي</span>
+      <button class="card-action" onclick="openModal('progressModal')">تفاصيل ←</button>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span>المهام اليومية</span><span id="pctTasks">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="fillTasks" style="width:0%"></div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span>الدروس المكتملة</span><span id="pctLessons">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="fillLessons" style="width:0%" style="background:linear-gradient(90deg,#667eea,#764ba2)"></div></div>
+    </div>
+    <div class="prog-wrap" style="margin-bottom:0">
+      <div class="prog-label"><span>دقة الاختبارات</span><span id="pctAcc">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="fillAcc" style="width:0%;background:linear-gradient(90deg,#38a169,#68d391)"></div></div>
+    </div>
+  </div>
+
+  <!-- TASKS + LEADERBOARD -->
+  <div class="grid2">
+
+    <!-- TASKS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📋 مهام اليوم</span>
+        <button class="card-action" onclick="openModal('tasksModal')">الكل ←</button>
+      </div>
+      <div id="tasksPreview">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">جاري التحميل…</div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🏆 لوحة الصدارة</span>
+        <button class="card-action" onclick="openModal('lbModal')">الكل ←</button>
+      </div>
+      <div id="lbPreview">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">جاري التحميل…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ERROR BANK + BADGES -->
+  <div class="grid2">
+
+    <!-- ERROR BANK -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">❌ مستودع الأخطاء</span>
+        <button class="card-action" onclick="openModal('errModal')">الكل ←</button>
+      </div>
+      <div id="errPreview">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">جاري التحميل…</div>
+      </div>
+    </div>
+
+    <!-- BADGES -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🎖️ الإنجازات</span>
+        <button class="card-action" onclick="openModal('badgesModal')">الكل ←</button>
+      </div>
+      <div class="badges-wrap" id="badgesPreview">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem;width:100%">جاري التحميل…</div>
+      </div>
+    </div>
+
+  </div>
+
+    <!-- ══ بوابة التخرج المقفلة ══ -->
+  <div id="grad-gate-card" style="background:linear-gradient(135deg,#1a365d 0%,#2a4a7f 100%);border-radius:20px;padding:24px;margin-top:4px;box-shadow:0 8px 32px rgba(26,54,93,.25);position:relative;overflow:hidden">
+    <div style="position:absolute;top:-20px;left:-20px;width:120px;height:120px;background:rgba(212,175,55,.08);border-radius:50%"></div>
+    <div style="position:absolute;bottom:-30px;right:-10px;width:160px;height:160px;background:rgba(212,175,55,.05);border-radius:50%"></div>
+    <div style="position:relative;z-index:1">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+        <div id="grad-lock-icon" style="width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">🔒</div>
+        <div>
+          <h3 style="color:white;font-size:1rem;font-weight:900;margin-bottom:2px">بوابة التخرج</h3>
+          <p style="color:rgba(255,255,255,.65);font-size:.78rem" id="grad-gate-subtitle">أكمل المتطلبات لإتمام التخرج</p>
+        </div>
+        <div style="margin-right:auto">
+          <span id="grad-status-badge" style="background:rgba(255,255,255,.15);color:white;font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.2)">🔒 مقفلة</span>
+        </div>
+      </div>
+
+      <!-- شريط التقدم نحو التخرج -->
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="color:rgba(255,255,255,.7);font-size:.75rem;font-weight:600">التقدم نحو التخرج</span>
+          <span style="color:#d4af37;font-size:.75rem;font-weight:900" id="grad-pct">0%</span>
+        </div>
+        <div style="height:10px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden">
+          <div id="grad-prog-fill" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#d4af37,#f5e27a);width:0%;transition:width 1s ease"></div>
+        </div>
+      </div>
+
+      <!-- المتطلبات -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="grad-reqs-grid">
+        <div class="grad-req-item" id="req-xp">
+          <span class="req-icon">⭐</span><span class="req-text">500 XP</span><span class="req-status">—</span>
+        </div>
+        <div class="grad-req-item" id="req-tasks">
+          <span class="req-icon">📋</span><span class="req-text">10 مهمة</span><span class="req-status">—</span>
+        </div>
+        <div class="grad-req-item" id="req-errors">
+          <span class="req-icon">🎯</span><span class="req-text">دقة 60%+</span><span class="req-status">—</span>
+        </div>
+        <div class="grad-req-item" id="req-streak">
+          <span class="req-icon">🔥</span><span class="req-text">3 أيام Streak</span><span class="req-status">—</span>
+        </div>
+      </div>
+
+      <!-- زر الوصول -->
+      <a id="grad-gate-btn" href="#" onclick="return handleGradClick()"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);text-decoration:none;font-size:.9rem;font-weight:700;transition:all .3s;cursor:not-allowed">
+        🔒 <span id="grad-btn-text">أكمل المتطلبات أولاً</span>
+      </a>
+    </div>
+  </div>
+  <!-- START QUESTIONS BUTTON -->
+  <div style="text-align:center;padding:8px 0 4px">
+    <a href="/questions?student_id=1" style="
+      display:inline-flex;align-items:center;gap:10px;
+      background:linear-gradient(135deg,#1a365d,#2a4a7f);
+      color:#fff;text-decoration:none;
+      padding:14px 32px;border-radius:99px;
+      font-size:1rem;font-weight:700;font-family:Cairo,sans-serif;
+      box-shadow:0 4px 20px rgba(26,54,93,.3);
+      transition:transform .2s,box-shadow .2s"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(26,54,93,.4)'"
+      onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px rgba(26,54,93,.3)'">
+      🎯 <span>ابدأ التدريب الآن</span>
+      <span style="background:#d4af37;color:#1a365d;border-radius:99px;padding:2px 12px;font-size:.8rem">NEW</span>
+    </a>
+  </div>
+</div><!-- /main -->
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<nav class="bottom-nav">
+  <ul>
+    <li><button class="bnav-btn active" onclick="scrollTop()"><span class="icon">🏠</span><span class="lbl">الرئيسية</span></button></li>
+    <li><button class="bnav-btn" onclick="openModal('tasksModal')"><span class="icon">📋</span><span class="lbl">المهام</span></button></li>
+    <li><button class="bnav-btn" onclick="openModal('progressModal')"><span class="icon">📈</span><span class="lbl">التقدم</span></button></li>
+    <li><button class="bnav-btn" onclick="openModal('errModal')"><span class="icon">❌</span><span class="lbl">الأخطاء</span></button></li>
+    <li><button class="bnav-btn" onclick="openModal('profileModal')"><span class="icon">👤</span><span class="lbl">حسابي</span></button></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">👤 ملف الطالب</span>
+      <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+    </div>
+    <div id="profileContent" style="font-size:.88rem;line-height:2">
+      <div style="text-align:center;margin-bottom:16px">
+        <div id="profileAvatar" style="width:70px;height:70px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;margin:0 auto 8px">ط</div>
+        <div id="profileName" style="font-size:1.1rem;font-weight:700">—</div>
+        <div id="profileEmail" style="color:var(--muted);font-size:.8rem">—</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--gold)" id="pm_xp">0</div>
+          <div style="font-size:.72rem;color:var(--muted)">نقاط XP</div>
+        </div>
+        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:1.4rem;font-weight:900;color:#e53e3e" id="pm_streak">0</div>
+          <div style="font-size:.72rem;color:var(--muted)">🔥 أيام متتالية</div>
+        </div>
+        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:1rem;font-weight:700;color:var(--navy)" id="pm_level">—</div>
+          <div style="font-size:.72rem;color:var(--muted)">المستوى</div>
+        </div>
+        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
+          <div style="font-size:1rem;font-weight:700;color:#38a169" id="pm_days">0</div>
+          <div style="font-size:.72rem;color:var(--muted)">يوم متبقي</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS MODAL -->
+<div class="modal-overlay" id="notifModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">🔔 الإشعارات</span>
+      <button class="modal-close" onclick="closeModal('notifModal')">✕</button>
+    </div>
+    <div id="notifList">
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f0f0f0">
+        <span style="font-size:1.4rem">🎯</span>
+        <div><div style="font-size:.85rem;font-weight:600">لديك مهام لم تُكمل اليوم</div><div style="font-size:.75rem;color:var(--muted)">منذ ساعتين</div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f0f0f0">
+        <span style="font-size:1.4rem">🔥</span>
+        <div><div style="font-size:.85rem;font-weight:600">3 أيام متتالية – استمر!</div><div style="font-size:.75rem;color:var(--muted)">منذ يوم</div></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 0">
+        <span style="font-size:1.4rem">🏆</span>
+        <div><div style="font-size:.85rem;font-weight:600">تهانينا! حصلت على شارة "المثابر"</div><div style="font-size:.75rem;color:var(--muted)">منذ يومين</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TASKS MODAL -->
+<div class="modal-overlay" id="tasksModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">📋 جميع المهام</span>
+      <button class="modal-close" onclick="closeModal('tasksModal')">✕</button>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="filterTasks('all',this)">الكل</button>
+      <button class="tab-btn" onclick="filterTasks('pending',this)">قيد الانتظار</button>
+      <button class="tab-btn" onclick="filterTasks('done',this)">مكتملة</button>
+    </div>
+    <div id="tasksModalList"></div>
+  </div>
+</div>
+
+<!-- LEADERBOARD MODAL -->
+<div class="modal-overlay" id="lbModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">🏆 لوحة الصدارة الكاملة</span>
+      <button class="modal-close" onclick="closeModal('lbModal')">✕</button>
+    </div>
+    <div id="lbModalList"></div>
+  </div>
+</div>
+
+<!-- PROGRESS MODAL -->
+<div class="modal-overlay" id="progressModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">📈 تقرير التقدم</span>
+      <button class="modal-close" onclick="closeModal('progressModal')">✕</button>
+    </div>
+    <canvas id="progressChart" height="200"></canvas>
+    <div style="margin-top:16px" id="progressDetails"></div>
+  </div>
+</div>
+
+<!-- ERROR BANK MODAL -->
+<div class="modal-overlay" id="errModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">❌ مستودع الأخطاء</span>
+      <button class="modal-close" onclick="closeModal('errModal')">✕</button>
+    </div>
+    <div id="errModalList"></div>
+  </div>
+</div>
+
+<!-- BADGES MODAL -->
+<div class="modal-overlay" id="badgesModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">🎖️ جميع الإنجازات</span>
+      <button class="modal-close" onclick="closeModal('badgesModal')">✕</button>
+    </div>
+    <div id="badgesModalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+// ─── CONFIG ────────────────────────────────
+const tg = window.Telegram?.WebApp;
+const _p = new URLSearchParams(location.search);
+const USER_ID = tg?.initDataUnsafe?.user?.id || _p.get("student_id") || localStorage.getItem("yamen_uid") || "1";
+if (USER_ID) localStorage.setItem("yamen_uid", USER_ID);
+
+let ALL_TASKS = [];
+let PROFILE   = {};
+
+// ─── TOAST ─────────────────────────────────
+function showToast(msg, dur=2200){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), dur);
+}
+
+// ─── MODAL ─────────────────────────────────
+function openModal(id){
+  document.getElementById(id).classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove("open");
+  document.body.style.overflow="";
+}
+document.querySelectorAll(".modal-overlay").forEach(o=>{
+  o.addEventListener("click", e=>{ if(e.target===o) closeModal(o.id); });
+});
+
+// ─── FETCH HELPERS ─────────────────────────
+async function apiFetch(url){
+  try{ const r=await fetch(url); if(!r.ok) throw new Error(r.status); return await r.json(); }
+  catch(e){ console.error(url, e); return null; }
+}
+
+// ─── INIT ───────────────────────────────────
+async function init(){
+  const [profile, tasks, lb, errors] = await Promise.all([
+    apiFetch(`/api/student/profile?student_id=${USER_ID}`),
+    apiFetch(`/api/student/tasks?student_id=${USER_ID}`),
+    apiFetch("/api/leaderboard/top5"),
+    apiFetch(`/api/errors/summary?student_id=${USER_ID}`)
+  ]);
+  if(profile) renderProfile(profile);
+  if(tasks)   renderTasks(tasks);
+  if(lb)      renderLeaderboard(lb);
+  if(errors)  renderErrors(errors);
+  if(profile && tasks) checkGraduation(profile, tasks);
+  renderBadges();
+}
+
+// ─── PROFILE ────────────────────────────────
+function renderProfile(p){
+  PROFILE = p;
+  const name    = p.name || "طالب";
+  const initial = name.charAt(0);
+  const xp      = p.xp || 0;
+  const streak  = p.streak_days || 0;
+  const days    = p.days_remaining || 0;
+  const level   = p.level || "—";
+  const pkg     = p.package || "—";
+
+  // Hero
+  document.getElementById("heroName").textContent   = name;
+  document.getElementById("heroLevel").textContent  = `المستوى: ${level}`;
+  document.getElementById("heroPackage").textContent= `📦 ${pkg}`;
+  document.getElementById("heroXP").textContent     = xp.toLocaleString();
+  document.getElementById("heroStreak").textContent = streak;
+  document.getElementById("heroDays").textContent   = days;
+  document.getElementById("heroAvatar").textContent = initial;
+
+  // Stats
+  document.getElementById("statXP").textContent     = xp.toLocaleString();
+  document.getElementById("statStreak").textContent = streak;
+  document.getElementById("avatarInitial").textContent = initial;
+
+  // Progress
+  const tp = Math.min(Math.round((xp/3000)*100),100);
+  const lp = Math.min(Math.round((p.completed_lessons||0)/20*100),100);
+  const ap = p.accuracy || 0;
+  setProgress("fillTasks","pctTasks", tp);
+  setProgress("fillLessons","pctLessons", lp);
+  setProgress("fillAcc","pctAcc", ap);
+
+  // Profile modal
+  document.getElementById("profileAvatar").textContent = initial;
+  document.getElementById("profileName").textContent   = name;
+  document.getElementById("profileEmail").textContent  = p.email || p.phone || "";
+  document.getElementById("pm_xp").textContent    = xp.toLocaleString();
+  document.getElementById("pm_streak").textContent= streak;
+  document.getElementById("pm_level").textContent = level;
+  document.getElementById("pm_days").textContent  = days;
+
+  // Progress chart modal
+  renderProgressChart(tp, lp, ap);
+  document.getElementById("progressDetails").innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+      <div style="background:#fffbea;border-radius:10px;padding:10px">
+        <div style="font-weight:900;font-size:1.2rem;color:var(--gold)">${tp}%</div>
+        <div style="font-size:.72rem;color:var(--muted)">المهام</div>
+      </div>
+      <div style="background:#ebf8ff;border-radius:10px;padding:10px">
+        <div style="font-weight:900;font-size:1.2rem;color:#2b6cb0">${lp}%</div>
+        <div style="font-size:.72rem;color:var(--muted)">الدروس</div>
+      </div>
+      <div style="background:#f0fff4;border-radius:10px;padding:10px">
+        <div style="font-weight:900;font-size:1.2rem;color:#276749">${ap}%</div>
+        <div style="font-size:.72rem;color:var(--muted)">الدقة</div>
+      </div>
+    </div>`;
+}
+
+function setProgress(fillId, pctId, val){
+  document.getElementById(fillId).style.width = val+"%";
+  document.getElementById(pctId).textContent  = val+"%";
+}
+
+// ─── TASKS ──────────────────────────────────
+function renderTasks(data){
+  ALL_TASKS = Array.isArray(data) ? data : (data.tasks || []);
+  const done = ALL_TASKS.filter(t=>t.completed).length;
+  document.getElementById("statDone").textContent = done;
+
+  const preview = ALL_TASKS.slice(0,3);
+  document.getElementById("tasksPreview").innerHTML = preview.length
+    ? preview.map(taskHTML).join("")
+    : `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:16px">🎉 لا توجد مهام اليوم</div>`;
+
+  renderTasksModal(ALL_TASKS);
+}
+
+function taskHTML(t){
+  return `<div class="task-item ${t.completed?'done':''}" onclick="toggleTask(${t.id},this)">
+    <div class="task-check">${t.completed?'✓':''}</div>
+    <div class="task-text">${t.task_text||t.description||'مهمة'}</div>
+    <div class="task-pts">+${t.xp_reward||10} XP</div>
+  </div>`;
+}
+
+function renderTasksModal(tasks){
+  document.getElementById("tasksModalList").innerHTML =
+    tasks.length ? tasks.map(taskHTML).join("") :
+    `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:20px">لا توجد مهام</div>`;
+}
+
+function filterTasks(filter, btn){
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const filtered = filter==="all" ? ALL_TASKS
+    : filter==="done" ? ALL_TASKS.filter(t=>t.completed)
+    : ALL_TASKS.filter(t=>!t.completed);
+  renderTasksModal(filtered);
+}
+
+async function toggleTask(id, el){
+  const item = ALL_TASKS.find(t=>t.id===id);
+  if(!item) return;
+  let r = null;
+  try {
+    const resp = await fetch("/api/tasks/toggle", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({task_id: id, student_id: parseInt(USER_ID)})
+    });
+    r = await resp.json();
+  } catch(e) { console.error(e); return; }
+  if(r && !r.error){
+  if(r && !r.error){
+    item.completed = !item.completed;
+    el.classList.toggle("done");
+    el.querySelector(".task-check").textContent = item.completed ? "✓" : "";
+    showToast(item.completed ? "✅ تم إنجاز المهمة!" : "↩ تم إلغاء الإنجاز");
+    // update counter
+    const done = ALL_TASKS.filter(t=>t.completed).length;
+    document.getElementById("statDone").textContent = done;
+  }
+}
+
+// ─── LEADERBOARD ────────────────────────────
+function renderLeaderboard(data){
+  const list = Array.isArray(data) ? data : (data.leaderboard || []);
+  const rankClasses = ["rank1","rank2","rank3","rankN","rankN"];
+  const html = list.map((s,i)=>`
+    <div class="lb-item">
+      <div class="lb-rank ${rankClasses[i]||'rankN'}">${i+1}</div>
+      <div class="lb-name">${s.name||s.student_name||'—'}</div>
+      <div class="lb-xp">${(s.xp||0).toLocaleString()} XP</div>
+    </div>`).join("");
+  document.getElementById("lbPreview").innerHTML = html || `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:16px">لا توجد بيانات</div>`;
+  document.getElementById("lbModalList").innerHTML = html;
+}
+
+// ─── ERRORS ─────────────────────────────────
+function renderErrors(data){
+  const list = Array.isArray(data) ? data : (data.errors || []);
+  const preview = list.slice(0,2);
+  const errHTML = arr => arr.map(e=>`
+    <div class="err-item">
+      <div class="err-q">${e.question_text||e.question||'سؤال'}</div>
+      <div class="err-meta">❌ ${e.wrong_answer||'—'} &nbsp;→&nbsp; ✅ ${e.correct_answer||'—'} &nbsp;|&nbsp; ${e.topic||''}</div>
+    </div>`).join("");
+  document.getElementById("errPreview").innerHTML = preview.length
+    ? errHTML(preview)
+    : `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:16px">🎉 لا أخطاء مسجلة</div>`;
+  document.getElementById("errModalList").innerHTML = list.length
+    ? errHTML(list)
+    : `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:20px">لا أخطاء مسجلة – أداء ممتاز!</div>`;
+}
+
+// ─── BADGES ─────────────────────────────────
+const BADGE_DEFS = [
+  {icon:"🌟",name:"النجم الصاعد",key:"xp_500"},
+  {icon:"🔥",name:"المثابر",key:"streak_3"},
+  {icon:"🏆",name:"المتصدر",key:"top3"},
+  {icon:"📚",name:"القارئ",key:"lessons_5"},
+  {icon:"⚡",name:"السريع",key:"speed"},
+  {icon:"💎",name:"الماسي",key:"xp_2000"},
+];
+function renderBadges(){
+  const earned = PROFILE?.badges || [];
+  const preview = BADGE_DEFS.slice(0,4);
+  document.getElementById("badgesPreview").innerHTML = preview.map(b=>`
+    <div class="badge-item ${earned.includes(b.key)?'':'locked'}">
+      <div class="b-icon">${b.icon}</div>
+      <div class="b-name">${b.name}</div>
+    </div>`).join("");
+  document.getElementById("badgesModalContent").innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      ${BADGE_DEFS.map(b=>`
+        <div class="badge-item ${earned.includes(b.key)?'':'locked'}" style="min-width:unset">
+          <div class="b-icon">${b.icon}</div>
+          <div class="b-name">${b.name}</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:2px">${earned.includes(b.key)?'✅ محققة':'🔒 مقفلة'}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+// ─── PROGRESS CHART ─────────────────────────
+let chartInst = null;
+function renderProgressChart(tasks, lessons, acc){
+  if(chartInst) chartInst.destroy();
+  const ctx = document.getElementById("progressChart").getContext("2d");
+  chartInst = new Chart(ctx, {
+    type:"doughnut",
+    data:{
+      labels:["المهام","الدروس","الدقة"],
+      datasets:[{
+        data:[tasks, lessons, acc],
+        backgroundColor:["#d4af37","#667eea","#38a169"],
+        borderWidth:0,
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{position:"bottom",labels:{font:{family:"Cairo"},padding:16}}}
+    }
+  });
+}
+
+// ─── UTILS ──────────────────────────────────
+function scrollTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+
+// ─── START ──────────────────────────────────
+init();
+</script>
+</body>
+</html>
+
+
+

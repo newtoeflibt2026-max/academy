@@ -1,14 +1,21 @@
+﻿# -*- coding: utf-8 -*-
 import os
+from dotenv import load_dotenv
 
-ADMIN_IDS = [5602495831, 469136626, 5572314718]
-BOT_TOKEN      = os.getenv("BOT_TOKEN", "")
-DATABASE_PATH  = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "yamen_academy.db")
-WEBAPP_PORT    = int(os.getenv("PORT", "8080"))
-UPLOAD_FOLDER  = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "uploads")
-JSON_PLACEMENT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "placement_questions.json")
-ALLOWED_EXTENSIONS = {"pdf", "mp3", "mp4", "jpg", "jpeg", "png", "gif", "webp", "ogg", "wav", "webm"}
-MAX_CONTENT_LENGTH = 150 * 1024 * 1024  # 150 MB
+# تحميل المتغيرات من ملف .env فوراً عند تشغيل السيرفر
+load_dotenv()
 
-print(f"[CONFIG] ADMIN_IDS={ADMIN_IDS}")
-print(f"[CONFIG] DB={DATABASE_PATH}, PORT={WEBAPP_PORT}")
-print(f"[CONFIG] PLACEMENT_JSON={JSON_PLACEMENT}")
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'yamen_academy_secure_key_2026')
+    TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', '123456789:ABCdefGhIJK...')
+    DATABASE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'academy.db')
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DATABASE_PATH}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # تحويل نص المعرفات إلى قائمة أرقام صالحة برمجياً
+    raw_admins = os.environ.get('ADMIN_IDS', '123456789')
+    ADMIN_IDS = [int(uid.strip()) for uid in raw_admins.split(',') if uid.strip().isdigit()]
+
+# المتغيرات الأساسية المطلوبة في ملف main.py لمنع الـ ImportError
+WEBHOOK_HOST = os.environ.get('WEBHOOK_HOST', 'https://yamen-academy-webapp.com')
+settings = Config()

@@ -1,507 +1,717 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>لوحة التحكم | أكاديمية يامن</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-  * { font-family: "Cairo", sans-serif; }
-  body { background: #fdfcfb; }
-  .glass { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(197,160,40,0.2); border-radius: 20px; }
-  .navy { color: #1a365d; } .gold { color: #c5a028; }
-  .tab-btn { padding: 10px 18px; border-radius: 12px; font-weight: 700; transition: all 0.2s; cursor: pointer; border: none; font-size: 14px; }
-  .tab-btn.active { background: #1a365d; color: #fff; }
-  .tab-btn:not(.active) { background: #f3f4f6; color: #6b7280; }
-  .btn-sm { padding: 8px 16px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; border: none; }
-  .btn-primary { background: linear-gradient(135deg, #1a365d, #2a4a7f); color: #fff; }
-  .btn-danger { background: #ef4444; color: #fff; }
-  .btn-success { background: #10b981; color: #fff; }
-  .btn-warning { background: #f59e0b; color: #fff; }
-  .btn-purple { background: #8b5cf6; color: #fff; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid #e5e7eb; }
-  th { background: #f8fafc; font-weight: 700; color: #1a365d; }
-  .stat-card { background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
-  .stat-value { font-size: 1.8rem; font-weight: 800; }
-  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-  .modal { background: #fff; border-radius: 24px; padding: 28px; max-width: 560px; width: 92%; max-height: 85vh; overflow-y: auto; }
-  .upload-zone { border: 3px dashed #c5a028; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; background: #fef9e7; }
-  .upload-zone:hover, .upload-zone.dragover { border-color: #1a365d; background: #e8edf5; }
-  input, select, textarea { width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 14px; transition: border 0.2s; font-family: "Cairo", sans-serif; }
-  input:focus, select:focus, textarea:focus { border-color: #c5a028; outline: none; }
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; padding: 12px 24px; border-radius: 12px; color: #fff; font-weight: 600; animation: slideDown 0.3s ease; }
-  @keyframes slideDown { from { transform: translateX(-50%) translateY(-100%); opacity: 0; } }
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>لوحة الإدارة</title>
+    <style>
+        :root{
+            --bg:#f5f7fb;
+            --panel:#ffffff;
+            --panel-soft:#fafbfd;
+            --text:#1b2430;
+            --muted:#6b7280;
+            --line:#d9e1ec;
+            --primary:#2463eb;
+            --primary-dark:#1d4fd7;
+            --danger:#d14141;
+            --danger-soft:#fff1f1;
+            --success:#14855b;
+            --success-soft:#edf9f3;
+            --warning:#9a6a00;
+            --warning-soft:#fff8e8;
+            --radius-lg:20px;
+            --radius-md:14px;
+            --radius-sm:10px;
+            --shadow:0 14px 32px rgba(15, 23, 42, 0.07);
+            --container:1240px;
+        }
+
+        *{
+            box-sizing:border-box;
+        }
+
+        html,body{
+            margin:0;
+            padding:0;
+            background:var(--bg);
+            color:var(--text);
+            font-family:"Tahoma","Segoe UI","Arial",sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+        }
+
+        .page{
+            width:min(100%, var(--container));
+            margin:0 auto;
+            padding:24px;
+        }
+
+        .topbar{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+            padding:20px 22px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            margin-bottom:22px;
+        }
+
+        .topbar-title{
+            margin:0;
+            font-size:1.35rem;
+            font-weight:800;
+        }
+
+        .topbar-subtitle{
+            margin:6px 0 0;
+            color:var(--muted);
+            font-size:0.95rem;
+        }
+
+        .topbar-links{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .nav-link{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:42px;
+            padding:0 16px;
+            border-radius:12px;
+            border:1px solid var(--line);
+            background:#fff;
+            color:var(--text);
+            text-decoration:none;
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap:16px;
+            margin-bottom:22px;
+        }
+
+        .stat-card{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+            padding:20px;
+        }
+
+        .stat-label{
+            color:var(--muted);
+            font-size:0.93rem;
+            margin-bottom:10px;
+        }
+
+        .stat-value{
+            font-size:1.9rem;
+            font-weight:800;
+        }
+
+        .content-grid{
+            display:grid;
+            grid-template-columns:1.45fr 0.95fr;
+            gap:22px;
+        }
+
+        .panel{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+            overflow:hidden;
+        }
+
+        .panel-header{
+            padding:20px 22px 14px;
+            border-bottom:1px solid #edf1f7;
+        }
+
+        .panel-title{
+            margin:0;
+            font-size:1.08rem;
+            font-weight:800;
+        }
+
+        .panel-subtitle{
+            margin:7px 0 0;
+            color:var(--muted);
+            font-size:0.93rem;
+        }
+
+        .panel-body{
+            padding:20px 22px 22px;
+        }
+
+        .table-wrap{
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:860px;
+        }
+
+        th, td{
+            text-align:right;
+            vertical-align:top;
+            padding:14px 12px;
+            border-bottom:1px solid #eef2f7;
+        }
+
+        th{
+            background:#f9fbff;
+            font-weight:800;
+            font-size:0.95rem;
+        }
+
+        td{
+            font-size:0.95rem;
+            line-height:1.7;
+        }
+
+        tr:last-child td{
+            border-bottom:none;
+        }
+
+        .question-text{
+            font-weight:700;
+            margin-bottom:6px;
+        }
+
+        .options-list{
+            margin:0;
+            padding-right:18px;
+            color:var(--muted);
+        }
+
+        .correct-answer{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            padding:8px 12px;
+            border-radius:999px;
+            background:var(--success-soft);
+            color:var(--success);
+            font-weight:700;
+            white-space:nowrap;
+        }
+
+        .btn{
+            border:none;
+            cursor:pointer;
+            min-height:42px;
+            padding:0 16px;
+            border-radius:12px;
+            font-weight:700;
+            transition:0.18s ease;
+        }
+
+        .btn-primary{
+            background:var(--primary);
+            color:#fff;
+        }
+
+        .btn-primary:hover{
+            background:var(--primary-dark);
+        }
+
+        .btn-danger{
+            background:var(--danger-soft);
+            color:var(--danger);
+        }
+
+        .btn-secondary{
+            background:#f7f9fc;
+            color:var(--text);
+            border:1px solid var(--line);
+        }
+
+        .form-grid{
+            display:grid;
+            gap:14px;
+        }
+
+        .field{
+            display:grid;
+            gap:8px;
+        }
+
+        .field label{
+            font-size:0.94rem;
+            font-weight:700;
+        }
+
+        .field input,
+        .field textarea,
+        .field select{
+            width:100%;
+            border:1px solid var(--line);
+            border-radius:12px;
+            padding:12px 14px;
+            background:#fff;
+            color:var(--text);
+            outline:none;
+            font:inherit;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus{
+            border-color:#8eb0ff;
+            box-shadow:0 0 0 4px rgba(36,99,235,0.08);
+        }
+
+        .field textarea{
+            min-height:96px;
+            resize:vertical;
+        }
+
+        .hint{
+            color:var(--muted);
+            font-size:0.87rem;
+            line-height:1.8;
+        }
+
+        .status{
+            display:none;
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:12px;
+            font-weight:700;
+            line-height:1.8;
+        }
+
+        .status.show{
+            display:block;
+        }
+
+        .status.success{
+            background:var(--success-soft);
+            color:var(--success);
+            border:1px solid #ccebdc;
+        }
+
+        .status.error{
+            background:var(--danger-soft);
+            color:var(--danger);
+            border:1px solid #f0cccc;
+        }
+
+        .status.warning{
+            background:var(--warning-soft);
+            color:var(--warning);
+            border:1px solid #ead8a8;
+        }
+
+        .actions-row{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .meta-box{
+            background:var(--panel-soft);
+            border:1px solid #e8edf5;
+            border-radius:14px;
+            padding:14px 16px;
+            color:var(--muted);
+            line-height:1.9;
+            font-size:0.93rem;
+        }
+
+        @media (max-width: 1050px){
+            .content-grid{
+                grid-template-columns:1fr;
+            }
+
+            .stats-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media (max-width: 720px){
+            .page{
+                padding:14px;
+            }
+
+            .topbar{
+                flex-direction:column;
+                align-items:stretch;
+            }
+
+            .topbar-links{
+                width:100%;
+            }
+
+            .nav-link,
+            .btn{
+                width:100%;
+            }
+
+            .actions-row{
+                flex-direction:column;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen">
+<body>
+    {% set questions = current_questions if current_questions is not none else [] %}
+    <div class="page">
+        <header class="topbar">
+            <div>
+                <h1 class="topbar-title">لوحة الإدارة</h1>
+                <p class="topbar-subtitle">إدارة بنك الأسئلة التشخيصية والإحصائيات الأساسية</p>
+            </div>
+            <div class="topbar-links">
+                <a class="nav-link" href="/dashboard">لوحة الطالب</a>
+                <a class="nav-link" href="/placement">الاختبار التشخيصي</a>
+            </div>
+        </header>
 
-<div class="max-w-7xl mx-auto p-4">
+        <section class="stats-grid">
+            <article class="stat-card">
+                <div class="stat-label">إجمالي الطلاب</div>
+                <div class="stat-value">{{ total_students if total_students is not none else 0 }}</div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">متوسط XP</div>
+                <div class="stat-value">{{ average_xp if average_xp is not none else 0 }}</div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">عدد الأسئلة الحالية</div>
+                <div class="stat-value" id="questionsCount">{{ questions|length }}</div>
+            </article>
+        </section>
 
-  <!-- HEADER -->
-  <div class="glass p-5 mb-6 flex flex-wrap justify-between items-center">
-    <div>
-      <h1 class="text-3xl font-extrabold navy">👑 لوحة تحكم يامن</h1>
-      <p class="text-gray-500 text-sm mt-1">Dynamic CMS — كل ضغطة تحفظ فوراً</p>
+        <section class="content-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">الأسئلة الحالية</h2>
+                    <p class="panel-subtitle">يعرض الجدول النسخة الحالية من بنك الأسئلة مع إمكانية الحذف ثم الحفظ المباشر.</p>
+                </div>
+                <div class="panel-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:70px;">#</th>
+                                    <th>السؤال</th>
+                                    <th style="width:280px;">الخيارات</th>
+                                    <th style="width:180px;">الإجابة الصحيحة</th>
+                                    <th style="width:120px;">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="questionsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="tableStatus" class="status"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">إضافة سؤال جديد</h2>
+                    <p class="panel-subtitle">يتم تحديث ملف الأسئلة مباشرة بعد الإضافة.</p>
+                </div>
+                <div class="panel-body">
+                    <form id="questionForm" class="form-grid">
+                        <div class="field">
+                            <label for="questionText">نص السؤال</label>
+                            <textarea id="questionText" required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="option1">الخيار الأول</label>
+                            <input id="option1" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="option2">الخيار الثاني</label>
+                            <input id="option2" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="option3">الخيار الثالث</label>
+                            <input id="option3" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="option4">الخيار الرابع</label>
+                            <input id="option4" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="correctAnswer">الإجابة الصحيحة</label>
+                            <select id="correctAnswer" required>
+                                <option value="">اختر الإجابة الصحيحة</option>
+                                <option value="A">الخيار الأول</option>
+                                <option value="B">الخيار الثاني</option>
+                                <option value="C">الخيار الثالث</option>
+                                <option value="D">الخيار الرابع</option>
+                            </select>
+                        </div>
+
+                        <div class="actions-row">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">إضافة وتحديث</button>
+                            <button type="button" class="btn btn-secondary" id="resetBtn">تفريغ الحقول</button>
+                        </div>
+                    </form>
+
+                    <div id="formStatus" class="status"></div>
+
+                    <div class="meta-box" style="margin-top:16px;">
+                        يتم حفظ جميع الأسئلة داخل الملف:
+                        <strong>data/diagnostic_questions.py</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-    <div id="liveClock" class="text-lg font-bold gold"></div>
-  </div>
 
-  <!-- STATS -->
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-6" id="statsGrid"></div>
+    <script>
+        const initialQuestions = {{ questions|tojson|safe }};
+        let questionsState = Array.isArray(initialQuestions) ? [...initialQuestions] : [];
 
-  <!-- TABS -->
-  <div class="flex flex-wrap gap-2 mb-6">
-    <button class="tab-btn active" data-tab="library">📚 المكتبة</button>
-    <button class="tab-btn" data-tab="skills">⚡ المهارات</button>
-    <button class="tab-btn" data-tab="placement">📝 اختبار المستوى</button>
-    <button class="tab-btn" data-tab="submissions">🎙️ التسليمات</button>
-    <button class="tab-btn" data-tab="students">👥 الطلاب</button>
-    <button class="tab-btn" data-tab="ai">🤖 AI</button>
-  </div>
+        const tableBody = document.getElementById("questionsTableBody");
+        const tableStatus = document.getElementById("tableStatus");
+        const formStatus = document.getElementById("formStatus");
+        const questionsCount = document.getElementById("questionsCount");
 
-  <!-- ===== TAB: LIBRARY ===== -->
-  <div class="tab-content glass p-5" id="tab-library">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-extrabold navy">📚 المكتبة الرقمية</h2>
-      <button class="btn-sm btn-primary" onclick="openLibraryModal()">+ إضافة مادة</button>
-    </div>
-    <div class="overflow-x-auto">
-      <table>
-        <thead><tr><th>العنوان</th><th>النوع</th><th>الملف/الرابط</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-        <tbody id="libraryTable"></tbody>
-      </table>
-    </div>
-  </div>
+        const form = document.getElementById("questionForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const resetBtn = document.getElementById("resetBtn");
 
-  <!-- ===== TAB: SKILLS ===== -->
-  <div class="tab-content glass p-5 hidden" id="tab-skills">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-extrabold navy">⚡ المهارات اليومية</h2>
-      <button class="btn-sm btn-primary" onclick="openSkillModal()">+ إضافة مهارة</button>
-    </div>
-    <div class="overflow-x-auto">
-      <table>
-        <thead><tr><th>#</th><th>الأيقونة</th><th>العنوان</th><th>النوع</th><th>المهمة</th><th>الوقت</th><th>ملف</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-        <tbody id="skillsTable"></tbody>
-      </table>
-    </div>
-  </div>
+        const questionText = document.getElementById("questionText");
+        const option1 = document.getElementById("option1");
+        const option2 = document.getElementById("option2");
+        const option3 = document.getElementById("option3");
+        const option4 = document.getElementById("option4");
+        const correctAnswer = document.getElementById("correctAnswer");
 
-  <!-- ===== TAB: PLACEMENT (JSON Editor) ===== -->
-  <div class="tab-content glass p-5 hidden" id="tab-placement">
-    <h2 class="text-xl font-extrabold navy mb-4">📝 إدارة اختبار تحديد المستوى (JSON)</h2>
-    <p class="text-sm text-gray-500 mb-4">تعديل الأسئلة يحفظ مباشرة في <code class="bg-gray-100 px-2 py-1 rounded">data/placement_questions.json</code></p>
-    <div class="space-y-4" id="placementEditor"></div>
-    <hr class="my-6">
-    <h3 class="text-lg font-bold navy mb-3">نتائج الطلاب</h3>
-    <div class="overflow-x-auto">
-      <table>
-        <thead><tr><th>الطالب</th><th>النتيجة</th><th>المستوى</th><th>التاريخ</th></tr></thead>
-        <tbody id="placementResultsTable"></tbody>
-      </table>
-    </div>
-  </div>
+        function setStatus(element, message, type) {
+            element.className = "status show " + type;
+            element.textContent = message;
+        }
 
-  <!-- ===== TAB: SUBMISSIONS ===== -->
-  <div class="tab-content glass p-5 hidden" id="tab-submissions">
-    <div class="flex gap-2 mb-4">
-      <button class="tab-btn active" data-subtab="audio" onclick="switchSubTab('audio')">🎙️ التسجيلات الصوتية</button>
-      <button class="tab-btn" data-subtab="writing" onclick="switchSubTab('writing')">✍️ النصوص الكتابية</button>
-    </div>
-    <div id="sub-audio" class="overflow-x-auto">
-      <table>
-        <thead><tr><th>الطالب</th><th>المهارة</th><th>التسجيل</th><th>النتيجة</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
-        <tbody id="audioSubmissionsTable"></tbody>
-      </table>
-    </div>
-    <div id="sub-writing" class="overflow-x-auto hidden">
-      <table>
-        <thead><tr><th>الطالب</th><th>المهارة</th><th>النص</th><th>النتيجة</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
-        <tbody id="writingSubmissionsTable"></tbody>
-      </table>
-    </div>
-  </div>
+        function clearStatus(element) {
+            element.className = "status";
+            element.textContent = "";
+        }
 
-  <!-- ===== TAB: STUDENTS ===== -->
-  <div class="tab-content glass p-5 hidden" id="tab-students">
-    <h2 class="text-xl font-extrabold navy mb-4">👥 قائمة الطلاب</h2>
-    <div class="overflow-x-auto">
-      <table>
-        <thead><tr><th>المعرف</th><th>الاسم</th><th>XP</th><th>المستوى</th><th>اختبار التحديد</th><th>التسجيل</th></tr></thead>
-        <tbody id="studentsTable"></tbody>
-      </table>
-    </div>
-  </div>
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
-  <!-- ===== TAB: AI CONFIG ===== -->
-  <div class="tab-content glass p-5 hidden" id="tab-ai">
-    <h2 class="text-xl font-extrabold navy mb-4">🤖 إعدادات الذكاء الاصطناعي</h2>
-    <div id="aiConfigForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg"></div>
-    <button class="btn-sm btn-primary mt-4" onclick="saveAIConfig()">💾 حفظ الإعدادات</button>
-  </div>
+        function updateQuestionsCount() {
+            questionsCount.textContent = questionsState.length;
+        }
 
-</div>
+        function normalizeQuestion(question, index) {
+            const options = Array.isArray(question.options) ? question.options : [];
+            return {
+                id: String(question.id || `dq_${index + 1}`),
+                section: String(question.section || "general"),
+                skill: String(question.skill || "general"),
+                difficulty: String(question.difficulty || "medium"),
+                question: String(question.question || "").trim(),
+                options: options.map(item => String(item || "").trim()).filter(Boolean),
+                correct_answer: String(question.correct_answer || "").trim(),
+                explanation: String(question.explanation || "").trim()
+            };
+        }
 
-<!-- ===== MODALS ===== -->
+        function renderTable() {
+            tableBody.innerHTML = "";
 
-<!-- Library Modal -->
-<div class="modal-overlay hidden" id="libraryModal">
-  <div class="modal">
-    <h3 class="text-xl font-extrabold navy mb-4">📚 إضافة مادة جديدة</h3>
-    <form id="libraryForm" enctype="multipart/form-data">
-      <div class="space-y-3">
-        <input name="title" placeholder="عنوان المادة" required>
-        <select name="item_type">
-          <option value="pdf">📄 PDF</option>
-          <option value="video">🎬 فيديو (MP4)</option>
-          <option value="audio">🎵 صوت (MP3)</option>
-          <option value="telegram">💬 رابط تلغرام</option>
-          <option value="youtube">▶️ رابط يوتيوب</option>
-        </select>
-        <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-          <div class="text-3xl mb-2">📂</div>
-          <p class="text-gray-500 text-sm">اسحب وأفلت الملف هنا أو اضغط للاختيار</p>
-          <p class="text-xs text-gray-400">PDF, MP3, MP4 حتى 150MB</p>
-          <p class="text-sm font-bold navy mt-2" id="fileNameDisplay"></p>
-        </div>
-        <input type="file" name="file" id="fileInput" class="hidden" accept=".pdf,.mp3,.mp4" onchange="handleFileSelect(event)">
-        <p class="text-center text-gray-400 text-sm">— أو —</p>
-        <input name="external_url" placeholder="رابط خارجي (اختياري)">
-        <input name="course_id" type="hidden" value="1">
-      </div>
-      <div class="flex gap-3 mt-5">
-        <button type="button" onclick="closeLibraryModal()" class="btn-sm flex-1" style="background:#e5e7eb;color:#374151;">إلغاء</button>
-        <button type="submit" class="btn-sm btn-primary flex-1">✅ إضافة</button>
-      </div>
-    </form>
-  </div>
-</div>
+            questionsState = questionsState.map((item, index) => normalizeQuestion(item, index));
 
-<!-- Skill Modal -->
-<div class="modal-overlay hidden" id="skillModal">
-  <div class="modal">
-    <h3 class="text-xl font-extrabold navy mb-4" id="skillModalTitle">⚡ إضافة مهارة جديدة</h3>
-    <form id="skillForm" enctype="multipart/form-data">
-      <div class="space-y-3">
-        <input name="title" placeholder="اسم المهارة" required>
-        <select name="skill_type"><option value="text">نص</option><option value="audio">صوت</option><option value="video">فيديو</option><option value="telegram">ربط بتليجرام</option></select>
-        <select name="task_type"><option value="mcq">اختيار متعدد</option><option value="speaking">محادثة</option><option value="writing">كتابة</option><option value="listening">استماع</option></select>
-        <input name="icon" placeholder="أيقونة FontAwesome (مثال: fa-microphone)" value="fa-star">
-        <input name="time_limit" type="number" placeholder="الوقت (ثانية)" value="45">
-        <input name="telegram_link" placeholder="رابط تليجرام (اختياري)">
-        <div class="upload-zone" onclick="document.getElementById('skillFileInput').click()">
-          <div class="text-2xl mb-1">📎</div>
-          <p class="text-gray-500 text-sm">ارفع محتوى المهارة (نص/صوت/فيديو) - اختياري</p>
-          <p id="skillFileNameDisplay" class="text-sm font-bold navy mt-1"></p>
-        </div>
-        <input type="file" name="content_file" id="skillFileInput" class="hidden" accept=".pdf,.mp3,.mp4,.txt" onchange="handleSkillFileSelect(event)">
-        <input type="hidden" name="skillEditId" id="skillEditId">
-      </div>
-      <div class="flex gap-3 mt-5">
-        <button type="button" onclick="closeSkillModal()" class="btn-sm flex-1" style="background:#e5e7eb;color:#374151;">إلغاء</button>
-        <button type="submit" class="btn-sm btn-primary flex-1">✅ حفظ</button>
-      </div>
-    </form>
-  </div>
-</div>
+            if (!questionsState.length) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td colspan="5" style="text-align:center; color:#6b7280; padding:22px;">
+                        لا توجد أسئلة حالياً.
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                updateQuestionsCount();
+                return;
+            }
 
-<!-- Toast -->
-<div id="toast" class="toast hidden"></div>
+            questionsState.forEach((question, index) => {
+                const row = document.createElement("tr");
+                const optionsHtml = (question.options || [])
+                    .map(option => `<li>${escapeHtml(option)}</li>`)
+                    .join("");
 
-<script>
-// CLOCK
-setInterval(() => { document.getElementById("liveClock").textContent = new Date().toLocaleTimeString("ar-SA"); }, 1000);
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="question-text">${escapeHtml(question.question)}</div>
+                        <div style="color:#6b7280; font-size:0.88rem;">
+                            القسم: ${escapeHtml(question.section)} |
+                            المهارة: ${escapeHtml(question.skill)} |
+                            الصعوبة: ${escapeHtml(question.difficulty)}
+                        </div>
+                    </td>
+                    <td>
+                        <ol class="options-list">${optionsHtml}</ol>
+                    </td>
+                    <td>
+                        <span class="correct-answer">${escapeHtml(question.correct_answer)}</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-index="${index}">حذف</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
 
-// ===== TOAST =====
-function showToast(msg, type="success") {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.style.background = type==="success"?"#10b981":type==="error"?"#ef4444":"#f59e0b";
-  t.classList.remove("hidden");
-  setTimeout(() => t.classList.add("hidden"), 2500);
-}
+            Array.from(tableBody.querySelectorAll(".btn-danger")).forEach(button => {
+                button.addEventListener("click", async () => {
+                    const index = Number(button.getAttribute("data-index"));
+                    if (Number.isNaN(index)) return;
 
-// ===== TAB SWITCHING =====
-document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn[data-tab]").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    document.querySelectorAll(".tab-content").forEach(tc => tc.classList.add("hidden"));
-    const target = document.getElementById("tab-" + btn.dataset.tab);
-    if (target) target.classList.remove("hidden");
-    if (btn.dataset.tab === "submissions") { switchSubTab("audio"); }
-    if (btn.dataset.tab === "placement") { loadPlacementEditor(); loadPlacementResults(); }
-    if (btn.dataset.tab === "ai") { loadAIConfig(); }
-    if (btn.dataset.tab === "skills") { loadSkills(); }
-    if (btn.dataset.tab === "library") { loadLibrary(); }
-    if (btn.dataset.tab === "students") { loadStudents(); }
-  });
-});
+                    const updatedQuestions = questionsState.filter((_, i) => i !== index);
+                    await saveQuestions(updatedQuestions, "تم حذف السؤال وتحديث بنك الأسئلة.");
+                });
+            });
 
-// ===== STATS =====
-async function loadStats() {
-  const res = await fetch("/api/admin/stats");
-  const stats = await res.json();
-  const items = [
-    { label: "الطلاب", value: stats.students, icon: "👥", color: "#1a365d" },
-    { label: "المواد", value: stats.library_items, icon: "📄", color: "#10b981" },
-    { label: "الأسئلة", value: stats.questions, icon: "❓", color: "#6366f1" },
-    { label: "المهارات", value: stats.skills, icon: "⚡", color: "#f59e0b" },
-    { label: "الأخطاء", value: stats.pending_errors, icon: "🔴", color: "#ef4444" },
-    { label: "التسجيلات", value: stats.audio_submissions, icon: "🎙️", color: "#ec4899" },
-    { label: "النصوص", value: stats.writing_submissions, icon: "✍️", color: "#8b5cf6" },
-    { label: "الاختبارات", value: stats.placement_tests, icon: "📝", color: "#14b8a6" },
-  ];
-  document.getElementById("statsGrid").innerHTML = items.slice(0,8).map(s => `
-    <div class="stat-card">
-      <div class="text-2xl mb-1">${s.icon}</div>
-      <div class="stat-value" style="color:${s.color}">${s.value}</div>
-      <div class="text-xs text-gray-500">${s.label}</div>
-    </div>
-  `).join("");
-}
+            updateQuestionsCount();
+        }
 
-// ===== LIBRARY =====
-async function loadLibrary() {
-  const res = await fetch("/api/admin/library");
-  const items = await res.json();
-  document.getElementById("libraryTable").innerHTML = items.map(item => `
-    <tr>
-      <td class="font-bold">${item.title}</td>
-      <td><span class="bg-gray-100 px-2 py-1 rounded-full text-xs">${item.item_type}</span></td>
-      <td>
-        ${item.file_path ? `<a href="${item.file_path}" target="_blank" class="text-blue-500 text-xs">📎 ملف</a>` : ''}
-        ${item.external_url ? `<a href="${item.external_url}" target="_blank" class="text-blue-500 text-xs ml-2">🔗 رابط</a>` : ''}
-        ${!item.file_path && !item.external_url ? '—' : ''}
-      </td>
-      <td><span class="px-2 py-1 rounded-full text-xs ${item.is_active?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${item.is_active?'نشط':'مخفي'}</span></td>
-      <td>
-        <button class="btn-sm btn-warning" onclick="toggleLibrary(${item.id})">👁️</button>
-        <button class="btn-sm btn-danger" onclick="deleteLibrary(${item.id})">🗑️</button>
-      </td>
-    </tr>
-  `).join("");
-}
+        async function saveQuestions(updatedQuestions, successMessage) {
+            clearStatus(tableStatus);
+            clearStatus(formStatus);
 
-async function toggleLibrary(id) { await fetch(`/api/admin/library/toggle/${id}`, {method:"POST"}); loadLibrary(); showToast("تم التحديث"); }
-async function deleteLibrary(id) { if (!confirm("متأكد من الحذف؟")) return; await fetch(`/api/admin/library/delete/${id}`, {method:"DELETE"}); loadLibrary(); showToast("تم الحذف"); }
+            try {
+                const response = await fetch("/api/admin/questions/update", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        questions: updatedQuestions
+                    })
+                });
 
-function openLibraryModal() { document.getElementById("libraryModal").classList.remove("hidden"); }
-function closeLibraryModal() { document.getElementById("libraryModal").classList.add("hidden"); document.getElementById("fileNameDisplay").textContent=""; document.getElementById("libraryForm").reset(); }
+                const data = await response.json();
 
-// Drag & Drop
-const dropZone = document.getElementById("dropZone");
-if (dropZone) {
-  ["dragenter","dragover"].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add("dragover"); }));
-  ["dragleave","drop"].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove("dragover"); }));
-  dropZone.addEventListener("drop", e => {
-    const files = e.dataTransfer.files;
-    if (files.length) { document.getElementById("fileInput").files = files; document.getElementById("fileNameDisplay").textContent = files[0].name; }
-  });
-}
-function handleFileSelect(e) { const f = e.target.files[0]; document.getElementById("fileNameDisplay").textContent = f ? f.name : ""; }
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "تعذر تحديث بنك الأسئلة.");
+                }
 
-document.getElementById("libraryForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const form = new FormData(e.target);
-  const res = await fetch("/api/admin/library/add", { method: "POST", body: form });
-  const data = await res.json();
-  showToast(data.ok ? "✅ تمت الإضافة!" : "❌ خطأ", data.ok?"success":"error");
-  if (data.ok) { closeLibraryModal(); loadLibrary(); loadStats(); }
-});
+                questionsState = updatedQuestions;
+                renderTable();
+                setStatus(tableStatus, successMessage || "تم تحديث بنك الأسئلة.", "success");
+            } catch (error) {
+                setStatus(tableStatus, error.message || "حدث خطأ أثناء تحديث بنك الأسئلة.", "error");
+            }
+        }
 
-// ===== SKILLS =====
-function handleSkillFileSelect(e) { const f = e.target.files[0]; document.getElementById("skillFileNameDisplay").textContent = f ? f.name : ""; }
+        function resetForm() {
+            questionText.value = "";
+            option1.value = "";
+            option2.value = "";
+            option3.value = "";
+            option4.value = "";
+            correctAnswer.value = "";
+        }
 
-async function loadSkills() {
-  const res = await fetch("/api/admin/skills");
-  const skills = await res.json();
-  document.getElementById("skillsTable").innerHTML = skills.map((s,i) => `
-    <tr>
-      <td>${i+1}</td>
-      <td><i class="fas ${s.icon||'fa-star'} gold text-lg"></i></td>
-      <td class="font-bold">${s.title}</td>
-      <td>${s.skill_type}</td>
-      <td>${s.task_type}</td>
-      <td>${s.time_limit} ث</td>
-      <td>${s.content_path ? `<a href="${s.content_path}" target="_blank" class="text-blue-500 text-xs">📎</a>` : '—'}</td>
-      <td><span class="px-2 py-1 rounded-full text-xs ${s.is_active?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${s.is_active?'نشط':'مخفي'}</span></td>
-      <td>
-        <button class="btn-sm btn-warning" onclick="toggleSkill(${s.id})">👁️</button>
-        <button class="btn-sm btn-danger" onclick="deleteSkill(${s.id})">🗑️</button>
-      </td>
-    </tr>
-  `).join("");
-}
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearStatus(formStatus);
+            clearStatus(tableStatus);
 
-async function toggleSkill(id) { await fetch(`/api/admin/skills/toggle/${id}`, {method:"POST"}); loadSkills(); showToast("تم التحديث"); }
-async function deleteSkill(id) { if (!confirm("متأكد؟")) return; await fetch(`/api/admin/skills/delete/${id}`, {method:"DELETE"}); loadSkills(); showToast("تم الحذف"); loadStats(); }
+            const qText = questionText.value.trim();
+            const opt1 = option1.value.trim();
+            const opt2 = option2.value.trim();
+            const opt3 = option3.value.trim();
+            const opt4 = option4.value.trim();
+            const correctKey = correctAnswer.value.trim();
 
-function openSkillModal() { document.getElementById("skillModal").classList.remove("hidden"); document.getElementById("skillEditId").value = ""; document.getElementById("skillForm").reset(); document.getElementById("skillFileNameDisplay").textContent = ""; }
-function closeSkillModal() { document.getElementById("skillModal").classList.add("hidden"); }
+            if (!qText || !opt1 || !opt2 || !opt3 || !opt4 || !correctKey) {
+                setStatus(formStatus, "جميع الحقول مطلوبة.", "error");
+                return;
+            }
 
-document.getElementById("skillForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const form = new FormData(e.target);
-  const res = await fetch("/api/admin/skills/add", { method: "POST", body: form });
-  const data = await res.json();
-  showToast(data.ok ? "✅ تمت الإضافة!" : "❌ خطأ", data.ok?"success":"error");
-  if (data.ok) { closeSkillModal(); loadSkills(); loadStats(); }
-});
+            const options = [opt1, opt2, opt3, opt4];
+            const map = { A: opt1, B: opt2, C: opt3, D: opt4 };
+            const resolvedCorrectAnswer = map[correctKey] || "";
 
-// ===== PLACEMENT EDITOR (JSON save) =====
-async function loadPlacementEditor() {
-  const res = await fetch("/api/admin/placement_questions_full");
-  const questions = await res.json();
-  document.getElementById("placementEditor").innerHTML = questions.map(q => `
-    <div class="border border-gray-200 rounded-2xl p-4 bg-gray-50">
-      <div class="flex justify-between items-center mb-2">
-        <span class="font-bold navy">سؤال #${q.id} — ${q.difficulty}</span>
-        <span class="text-sm gold">الإجابة الصحيحة: <span class="font-extrabold">${q.correct_answer}</span></span>
-      </div>
-      <textarea class="mb-2 question-text" data-id="${q.id}" data-field="question_text" rows="2">${q.question_text}</textarea>
-      <div class="grid grid-cols-2 gap-2">
-        <input class="option-input" data-id="${q.id}" data-field="option_a" placeholder="A" value="${q.option_a}">
-        <input class="option-input" data-id="${q.id}" data-field="option_b" placeholder="B" value="${q.option_b}">
-        <input class="option-input" data-id="${q.id}" data-field="option_c" placeholder="C" value="${q.option_c}">
-        <input class="option-input" data-id="${q.id}" data-field="option_d" placeholder="D" value="${q.option_d}">
-      </div>
-      <input class="mt-2 correct-input" data-id="${q.id}" data-field="correct_answer" placeholder="الإجابة الصحيحة (A/B/C/D)" value="${q.correct_answer}" style="max-width:120px">
-      <select class="mt-2 difficulty-select" data-id="${q.id}" data-field="difficulty" style="max-width:140px">
-        <option value="easy" ${q.difficulty==='easy'?'selected':''}>سهل</option>
-        <option value="medium" ${q.difficulty==='medium'?'selected':''}>متوسط</option>
-        <option value="hard" ${q.difficulty==='hard'?'selected':''}>صعب</option>
-      </select>
-      <button class="btn-sm btn-primary mt-2" onclick="saveQuestion(${q.id})">💾 حفظ التعديلات</button>
-    </div>
-  `).join("");
-}
+            if (!resolvedCorrectAnswer) {
+                setStatus(formStatus, "تعذر تحديد الإجابة الصحيحة.", "error");
+                return;
+            }
 
-async function saveQuestion(qid) {
-  const data = {};
-  document.querySelectorAll(`[data-id="${qid}"]`).forEach(el => {
-    data[el.dataset.field] = el.value;
-  });
-  const res = await fetch(`/api/admin/placement_questions/update/${qid}`, {
-    method: "PUT",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(data)
-  });
-  const result = await res.json();
-  showToast(result.ok ? "✅ تم حفظ السؤال في JSON!" : "❌ خطأ", result.ok?"success":"error");
-}
+            submitBtn.disabled = true;
+            submitBtn.textContent = "جارٍ التحديث...";
 
-async function loadPlacementResults() {
-  const res = await fetch("/api/admin/placement_results");
-  const results = await res.json();
-  document.getElementById("placementResultsTable").innerHTML = results.map(r => `
-    <tr>
-      <td>${r.student_name || r.student_id}</td>
-      <td class="font-bold">${r.score}/${r.total}</td>
-      <td class="gold font-bold">${r.level}</td>
-      <td>${(r.completed_at||'').substring(0,10)}</td>
-    </tr>
-  `).join("");
-}
+            try {
+                const newQuestion = {
+                    id: `dq_${Date.now()}`,
+                    section: "general",
+                    skill: "general",
+                    difficulty: "medium",
+                    question: qText,
+                    options: options,
+                    correct_answer: resolvedCorrectAnswer,
+                    explanation: ""
+                };
 
-// ===== SUBMISSIONS =====
-async function loadSubmissions(type="audio") {
-  if (type==="audio") {
-    const res = await fetch("/api/admin/submissions/audio");
-    const subs = await res.json();
-    document.getElementById("audioSubmissionsTable").innerHTML = subs.map(s => `
-      <tr>
-        <td>${s.student_name||s.student_id}</td>
-        <td>${s.skill_title||'—'}</td>
-        <td>${s.file_path ? `<audio controls src="/static/uploads/${s.file_path.split('/').pop()}" style="height:28px"></audio>` : '—'}</td>
-        <td>${s.ai_score||'—'}/10</td>
-        <td>${(s.submitted_at||'').substring(0,10)}</td>
-        <td><button class="btn-sm btn-success" onclick="evaluateAudio(${s.id})">🤖 تقييم</button></td>
-      </tr>
-    `).join("");
-  } else {
-    const res = await fetch("/api/admin/submissions/writing");
-    const subs = await res.json();
-    document.getElementById("writingSubmissionsTable").innerHTML = subs.map(s => `
-      <tr>
-        <td>${s.student_name||s.student_id}</td>
-        <td>${s.skill_title||'—'}</td>
-        <td class="max-w-xs text-xs">${(s.content||'').substring(0,70)}...</td>
-        <td>${s.ai_score||'—'}/10</td>
-        <td>${(s.submitted_at||'').substring(0,10)}</td>
-        <td><button class="btn-sm btn-success" onclick="evaluateWriting(${s.id})">🤖 تقييم</button></td>
-      </tr>
-    `).join("");
-  }
-}
+                const updatedQuestions = [...questionsState, newQuestion];
 
-function switchSubTab(type) {
-  document.querySelectorAll("[data-subtab]").forEach(b=>b.classList.remove("active"));
-  document.querySelector(`[data-subtab=${type}]`).classList.add("active");
-  document.getElementById("sub-audio").classList.toggle("hidden", type!=="audio");
-  document.getElementById("sub-writing").classList.toggle("hidden", type!=="writing");
-  loadSubmissions(type);
-}
+                const response = await fetch("/api/admin/questions/update", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        questions: updatedQuestions
+                    })
+                });
 
-async function evaluateAudio(id) {
-  const res = await fetch(`/api/admin/submissions/evaluate_audio/${id}`, {method:"POST"});
-  const data = await res.json();
-  showToast(`✅ التقييم: ${data.result?.score||"?"}/10`);
-  loadSubmissions("audio");
-}
+                const data = await response.json();
 
-async function evaluateWriting(id) {
-  const res = await fetch(`/api/admin/submissions/evaluate_writing/${id}`, {method:"POST"});
-  const data = await res.json();
-  showToast(`✅ التقييم: ${data.result?.score||"?"}/10`);
-  loadSubmissions("writing");
-}
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "تعذر إضافة السؤال.");
+                }
 
-// ===== STUDENTS =====
-async function loadStudents() {
-  const res = await fetch("/api/admin/students");
-  const students = await res.json();
-  document.getElementById("studentsTable").innerHTML = students.map(s => `
-    <tr>
-      <td>${s.telegram_id}</td>
-      <td>${s.name||s.username||'—'}</td>
-      <td class="font-bold">${s.xp}</td>
-      <td>${s.level}</td>
-      <td><span class="px-2 py-1 rounded-full text-xs ${s.placement_level?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">${s.placement_level||'لم يكتمل'}</span></td>
-      <td>${(s.registered_at||'').substring(0,10)}</td>
-    </tr>
-  `).join("");
-}
+                questionsState = updatedQuestions;
+                renderTable();
+                resetForm();
+                setStatus(formStatus, "تمت إضافة السؤال وتحديث بنك الأسئلة بنجاح.", "success");
+            } catch (error) {
+                setStatus(formStatus, error.message || "حدث خطأ أثناء إضافة السؤال.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "إضافة وتحديث";
+            }
+        });
 
-// ===== AI CONFIG =====
-async function loadAIConfig() {
-  const res = await fetch("/api/admin/ai_config");
-  const config = await res.json();
-  document.getElementById("aiConfigForm").innerHTML = config.map(c => `
-    <div>
-      <label class="text-sm text-gray-600 font-bold block mb-1">${c.config_key}</label>
-      <input value="${c.config_value}" data-key="${c.config_key}">
-    </div>
-  `).join("");
-}
+        resetBtn.addEventListener("click", () => {
+            resetForm();
+            clearStatus(formStatus);
+        });
 
-async function saveAIConfig() {
-  const inputs = document.querySelectorAll("#aiConfigForm input");
-  const data = {};
-  inputs.forEach(inp => data[inp.dataset.key] = inp.value);
-  const res = await fetch("/api/admin/ai_config/update", {
-    method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(data)
-  });
-  showToast("✅ تم حفظ إعدادات AI!");
-}
-
-// ===== INIT =====
-loadStats();
-loadLibrary();
-setTimeout(() => { loadSkills(); loadStudents(); }, 500);
-</script>
+        renderTable();
+    </script>
 </body>
 </html>

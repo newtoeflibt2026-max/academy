@@ -1,0 +1,60 @@
+﻿{
+    "course":  "TOEFL 2026 - Reading Section",
+    "total_lessons":  5,
+    "last_updated":  "2026-05-15T23:55:57",
+    "lessons":  [
+                    {
+                        "lesson_id":  [
+                                          null,
+                                          "R-05",
+                                          "R-06",
+                                          "R-07",
+                                          "R-08"
+                                      ],
+                        "title":  [
+                                      null,
+                                      "Task 3 — Factual \u0026 Negative Factual",
+                                      "Task 3 — Vocabulary in Context",
+                                      "Task 3 — Inference \u0026 Rhetorical Purpose",
+                                      "Task 3 — Insert a Sentence \u0026 Paragraph Relationships"
+                                  ],
+                        "focus_point":  [
+                                            null,
+                                            "التمييز بين الحقائق المذكورة وغير المذكورة في النص",
+                                            "معنى الكلمة حسب السياق وليس القاموس",
+                                            "القراءة بين السطور وفهم نية الكاتب",
+                                            "التدفق المنطقي للأفكار وإدراج الجمل في موضعها الصحيح"
+                                        ],
+                        "file":  "lesson_ R-05 R-06 R-07 R-08.json",
+                        "filepath":  "data_storage/reading/lesson_ R-05 R-06 R-07 R-08.json"
+                    },
+                    {
+                        "lesson_id":  "R-09",
+                        "title":  "بناء المفردات الأكاديمية — تقنية CRIS",
+                        "focus_point":  "حفظ المفردات بطريقة علمية في الذاكرة طويلة المدى",
+                        "file":  "lesson_R-09.json",
+                        "filepath":  "data_storage/reading/lesson_R-09.json"
+                    },
+                    {
+                        "lesson_id":  "R-10",
+                        "title":  "تطبيق شامل — النصوص الأكاديمية (المستوى المتوسط)",
+                        "focus_point":  "تطبيق جميع أنواع الأسئلة على نصوص متوسطة المستوى",
+                        "file":  "lesson_R-10.json",
+                        "filepath":  "data_storage/reading/lesson_R-10.json"
+                    },
+                    {
+                        "lesson_id":  "R-11",
+                        "title":  "تطبيق شامل — النصوص الأكاديمية الصعبة",
+                        "focus_point":  "التعامل مع المصطلحات المعقدة والأفكار المجردة",
+                        "file":  "lesson_R-11.json",
+                        "filepath":  "data_storage/reading/lesson_R-11.json"
+                    },
+                    {
+                        "lesson_id":  "R-12",
+                        "title":  "أسرار العلامة الكاملة — 10 قواعد ذهبية",
+                        "focus_point":  "الاستراتيجيات النهائية لتحقيق أعلى الدرجات",
+                        "file":  "lesson_R-12.json",
+                        "filepath":  "data_storage/reading/lesson_R-12.json"
+                    }
+                ]
+}
