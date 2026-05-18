@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, render_template, send_file
 import json, os, re
 from datetime import datetime
@@ -1433,6 +1433,350 @@ def api_activate_student():
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+# ══════════════════════════════════════════════════════
+# ADMIN API - إدارة كاملة من لوحة التحكم
+# ══════════════════════════════════════════════════════
+
+@app.route("/api/admin/placement-questions", methods=["GET"])
+def get_placement_questions_api():
+    try:
+        conn = get_db()
+        rows = conn.execute(
+            "SELECT * FROM placement_questions ORDER BY id"
+        ).fetchall()
+        conn.close()
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions", methods=["POST"])
+def add_placement_question():
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """INSERT INTO placement_questions
+               (question_text, option_a, option_b, option_c, option_d,
+                correct_option, skill_type)
+               VALUES (?,?,?,?,?,?,?)""",
+            (d["question_text"], d["option_a"], d["option_b"],
+             d["option_c"], d["option_d"], d["correct_option"],
+             d.get("skill_type", "general"))
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions/<int:qid>", methods=["DELETE"])
+def delete_placement_question(qid):
+    try:
+        conn = get_db()
+        conn.execute("DELETE FROM placement_questions WHERE id=?", (qid,))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions/<int:qid>", methods=["PUT"])
+def update_placement_question(qid):
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """UPDATE placement_questions SET
+               question_text=?, option_a=?, option_b=?,
+               option_c=?, option_d=?, correct_option=?,
+               skill_type=?, is_active=?
+               WHERE id=?""",
+            (d["question_text"], d["option_a"], d["option_b"],
+             d["option_c"], d["option_d"], d["correct_option"],
+             d.get("skill_type","general"), d.get("is_active",1), qid)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans", methods=["GET"])
+def get_plans():
+    try:
+        conn = get_db()
+        rows = conn.execute(
+            "SELECT * FROM subscription_plans ORDER BY price"
+        ).fetchall()
+        conn.close()
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans", methods=["POST"])
+def add_plan():
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """INSERT OR REPLACE INTO subscription_plans
+               (plan_key, plan_name, price, days, speed, description, emoji, is_active)
+               VALUES (?,?,?,?,?,?,?,1)""",
+            (d["plan_key"], d["plan_name"], d["price"],
+             d["days"], d.get("speed",1), d.get("description",""),
+             d.get("emoji","📦"))
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/<int:pid>", methods=["DELETE"])
+def delete_plan(pid):
+    try:
+        conn = get_db()
+        conn.execute("DELETE FROM subscription_plans WHERE id=?", (pid,))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/<int:pid>", methods=["PUT"])
+def update_plan(pid):
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """UPDATE subscription_plans SET
+               plan_name=?, price=?, days=?, speed=?,
+               description=?, emoji=?, is_active=?
+               WHERE id=?""",
+            (d["plan_name"], d["price"], d["days"],
+             d.get("speed",1), d.get("description",""),
+             d.get("emoji","📦"), d.get("is_active",1), pid)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/activate-paid", methods=["POST"])
+def activate_paid_api():
+    try:
+        d = request.json
+        telegram_id = d.get("telegram_id")
+        conn = get_db()
+        conn.execute(
+            "UPDATE students SET is_paid=1, is_active=1 WHERE telegram_id=?",
+            (str(telegram_id),)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "message": "تم تفعيل الحساب المدفوع"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/students/search", methods=["GET"])
+def search_student():
+    try:
+        q = request.args.get("q", "")
+        conn = get_db()
+        rows = conn.execute(
+            """SELECT * FROM students
+               WHERE telegram_id LIKE ? OR name LIKE ? OR phone LIKE ?
+               LIMIT 20""",
+            (f"%{q}%", f"%{q}%", f"%{q}%")
+        ).fetchall()
+        conn.close()
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/settings", methods=["GET"])
+def get_settings_api():
+    try:
+        conn = get_db()
+        rows = conn.execute("SELECT * FROM system_settings").fetchall()
+        conn.close()
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/settings", methods=["POST"])
+def update_setting_api():
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """INSERT INTO system_settings (key, value, updated_at)
+               VALUES (?,?,CURRENT_TIMESTAMP)
+               ON CONFLICT(key) DO UPDATE SET
+               value=excluded.value, updated_at=CURRENT_TIMESTAMP""",
+            (d["key"], d["value"])
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/daily-missions", methods=["GET"])
+def get_missions():
+    try:
+        conn = get_db()
+        rows = conn.execute(
+            "SELECT * FROM daily_missions ORDER BY id DESC LIMIT 30"
+        ).fetchall()
+        conn.close()
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/daily-missions", methods=["POST"])
+def add_mission():
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """INSERT INTO daily_missions
+               (title, description, skill_type, xp_reward, mission_date)
+               VALUES (?,?,?,?,?)""",
+            (d["title"], d.get("description",""),
+             d.get("skill_type","reading"),
+             d.get("xp_reward",20), d.get("mission_date"))
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/daily-missions/<int:mid>", methods=["DELETE"])
+def delete_mission(mid):
+    try:
+        conn = get_db()
+        conn.execute("DELETE FROM daily_missions WHERE id=?", (mid,))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/grading-rules", methods=["GET"])
+def get_grading_rules():
+    try:
+        conn = get_db()
+        rows = conn.execute(
+            "SELECT * FROM essay_grading_rules ORDER BY id DESC"
+        ).fetchall()
+        conn.close()
+        return jsonify([dict(r) for r in rows])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/grading-rules", methods=["POST"])
+def add_grading_rule():
+    try:
+        d = request.json
+        conn = get_db()
+        conn.execute(
+            """INSERT INTO essay_grading_rules
+               (topic_name, skill_type, target_vocab, academic_connectors,
+                forbidden_words, vocab_points, connector_points, penalty_points)
+               VALUES (?,?,?,?,?,?,?,?)""",
+            (d["topic_name"], d.get("skill_type","writing"),
+             d.get("target_vocab",""), d.get("academic_connectors",""),
+             d.get("forbidden_words",""), d.get("vocab_points",2),
+             d.get("connector_points",3), d.get("penalty_points",1))
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/grading-rules/<int:rid>", methods=["DELETE"])
+def delete_grading_rule(rid):
+    try:
+        conn = get_db()
+        conn.execute("DELETE FROM essay_grading_rules WHERE id=?", (rid,))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/user/graduation-status", methods=["GET"])
+def graduation_status():
+    try:
+        student_id = request.args.get("student_id")
+        conn = get_db()
+        student = conn.execute(
+            "SELECT * FROM students WHERE telegram_id=? OR id=?",
+            (str(student_id), student_id)
+        ).fetchone()
+        conn.close()
+        if not student:
+            return jsonify({"can_graduate": False,
+                           "message": "الطالب غير موجود"})
+        student = dict(student)
+        required_score = student.get("required_score", 69)
+        mock_pass = required_score + 10
+        conn2 = get_db()
+        needed_xp = int(conn2.execute(
+            "SELECT value FROM system_settings WHERE key='graduation_xp'"
+        ).fetchone()["value"] if conn2.execute(
+            "SELECT value FROM system_settings WHERE key='graduation_xp'"
+        ).fetchone() else "500")
+        needed_tasks = int(conn2.execute(
+            "SELECT value FROM system_settings WHERE key='graduation_tasks'"
+        ).fetchone()["value"] if conn2.execute(
+            "SELECT value FROM system_settings WHERE key='graduation_tasks'"
+        ).fetchone() else "10")
+        needed_streak = int(conn2.execute(
+            "SELECT value FROM system_settings WHERE key='graduation_streak'"
+        ).fetchone()["value"] if conn2.execute(
+            "SELECT value FROM system_settings WHERE key='graduation_streak'"
+        ).fetchone() else "3")
+        conn2.close()
+
+        checks = {
+            "is_paid": student.get("is_paid", 0) == 1,
+            "xp": student.get("xp", 0) >= needed_xp,
+            "tasks": student.get("tasks_completed", 0) >= needed_tasks,
+            "streak": student.get("streak_days", 0) >= needed_streak,
+            "mock_exam": student.get("mock_exam_score", 0) >= mock_pass,
+        }
+        can_graduate = all(checks.values())
+        failed = []
+        if not checks["is_paid"]:
+            failed.append("يجب تفعيل الاشتراك المدفوع")
+        if not checks["xp"]:
+            failed.append(f"يجب تحقيق {needed_xp} XP")
+        if not checks["tasks"]:
+            failed.append(f"يجب إنهاء {needed_tasks} مهام")
+        if not checks["streak"]:
+            failed.append(f"يجب الالتزام {needed_streak} أيام")
+        if not checks["mock_exam"]:
+            failed.append(
+                f"يجب تجاوز {mock_pass}% في الامتحان التجريبي "
+                f"(هذا يعني {required_score + 10}%)"
+            )
+        return jsonify({
+            "can_graduate": can_graduate,
+            "checks": checks,
+            "required_score": required_score,
+            "mock_pass_score": mock_pass,
+            "message": "✅ مبروك! أنت مؤهل للتخرج" if can_graduate
+                      else f"يجب إكمال:\n" + "\n".join(
+                          [f"❌ {m}" for m in failed]
+                      )
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # ══════════════════════════════════════════════════════════════
 if __name__ == "__main__":
