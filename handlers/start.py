@@ -205,11 +205,11 @@ async def cb_feature(cb: CallbackQuery):
         return
     if cb.data == "start_placement":
         from handlers.placement_test import start_placement
-        start_placement(cb)
+        start_placement(cb, state)
     elif cb.data == "menu:lessons":
         from handlers.lessons import show_lessons
-        await show_lessons(cb)
+        await show_lessons(cb, state)
     elif cb.data == "menu:correction":
         from handlers.correction import correction_menu
-        await correction_menu(cb, None)
+        await correction_menu(cb, state)
     await cb.answer()
