@@ -1,21 +1,35 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
-from dotenv import load_dotenv
 
-# تحميل المتغيرات من ملف .env فوراً عند تشغيل السيرفر
-load_dotenv()
+def _load_env():
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if not os.path.exists(env_path):
+        return
+    with open(env_path, "r", encoding="utf-8-sig") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, val = line.split("=", 1)
+                os.environ.setdefault(key.strip(), val.strip())
 
-class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'yamen_academy_secure_key_2026')
-    TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN', '123456789:ABCdefGhIJK...')
-    DATABASE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data', 'academy.db')
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DATABASE_PATH}"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    
-    # تحويل نص المعرفات إلى قائمة أرقام صالحة برمجياً
-    raw_admins = os.environ.get('ADMIN_IDS', '123456789')
-    ADMIN_IDS = [int(uid.strip()) for uid in raw_admins.split(',') if uid.strip().isdigit()]
+_load_env()
 
-# المتغيرات الأساسية المطلوبة في ملف main.py لمنع الـ ImportError
-WEBHOOK_HOST = os.environ.get('WEBHOOK_HOST', 'https://yamen-academy-webapp.com')
-settings = Config()
+class Settings:
+    BOT_TOKEN    = os.environ.get("BOT_TOKEN", "")
+    GEMINI_KEY   = os.environ.get("GEMINI_API_KEY", "")
+    # مسار قاعدة البيانات: يمكن تجاوزه بـ DB_PATH في .env
+    _db_override = os.environ.get("DB_PATH", "")
+    DB_PATH      = _db_override if _db_override else os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "academy.db"
+    )
+    WEBHOOK_HOST = os.environ.get("WEBHOOK_HOST", "http://localhost:8080")
+    GROUP_LINK   = os.environ.get("GROUP_LINK", "https://t.me/yamen_academy")
+    ADMIN_IDS    = [
+        int(x.strip()) for x in os.environ.get("ADMIN_IDS", "5572314718").split(",")
+        if x.strip().isdigit()
+    ]
+    PORT              = int(os.environ.get("PORT", 8080))
+    NGROK_AUTHTOKEN   = os.environ.get("NGROK_AUTHTOKEN", "")
+    FORCE_SUB_CHANNELS = os.environ.get("FORCE_SUB_CHANNELS", "")
+
+settings = Settings()

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, render_template, send_file
 import json, os, re
 from datetime import datetime
@@ -924,7 +924,7 @@ def api_get_payments():
     return jsonify([dict(r) for r in rows])
 
 @app.route("/api/admin/payments/<int:pid>/approve", methods=["POST"])
-def api_approve_payment(pid):
+def api_approve_admin_payment(pid):
     conn = get_db()
     p    = conn.execute("SELECT * FROM payments WHERE id=?", (pid,)).fetchone()
     if p:
@@ -974,7 +974,6 @@ def api_save_setting():
 @app.route("/api/admin/send-challenge", methods=["POST"])
 def api_send_challenge():
     return jsonify({"success":True,"message":"تم إرسال تحدي اليوم"})
-
 
 # ══════════════════════════════════════════════════════════════
 #  GRADUATION PORTAL — بوابة التخرج
@@ -1051,7 +1050,6 @@ def api_graduation_submit():
         data.get("answers_json","{}"),
         data.get("feedback","")
     ))
-    # XP مكافأة
     xp_reward = 50 if data.get("is_passed") else 20
     conn.execute("UPDATE students SET xp=xp+? WHERE id=?",
                  (xp_reward, int(data["student_id"])))
@@ -1091,7 +1089,6 @@ def api_admin_add_mock_exam():
         int(data.get("order_num", 1))
     ))
     exam_id = cur.lastrowid
-    # إضافة أسئلة تلقائية من بنك الأسئلة
     conn.execute("""
         INSERT INTO mock_exam_questions (mock_exam_id, question_id, section, order_num)
         SELECT ?, id,
@@ -1153,7 +1150,6 @@ def api_admin_add_question_to_exam(eid):
     sec  = data.get("section","reading")
     if not qid: return jsonify({"error":"question_id مطلوب"}),400
     conn = get_db()
-    # تحقق من عدم التكرار
     exists = conn.execute(
         "SELECT id FROM mock_exam_questions WHERE mock_exam_id=? AND question_id=?",
         (eid, qid)
@@ -1182,14 +1178,96 @@ def api_admin_remove_question_from_exam(eid, qid):
     return jsonify({"success": True})
 
 # ══════════════════════════════════════════════════════════════
+#  TELEGRAM WEBHOOK — استقبال تحديثات البوت عبر Flask
+# ══════════════════════════════════════════════════════════════
+_bot_dp  = None
+_bot_obj = None
+
+def set_bot_for_webhook(bot, dp):
+    global _bot_obj, _bot_dp
+    _bot_obj = bot
+    _bot_dp  = dp
+
+@app.route("/webhook", methods=["POST"])
+def telegram_webhook():
+    global _bot_obj, _bot_dp
+    if not _bot_obj or not _bot_dp:
+        return jsonify({"error": "البوت غير مهيأ"}), 503
+    try:
+        import asyncio as _aio
+        from aiogram.types import Update as _Update
+        data   = request.get_json(force=True, silent=True) or {}
+        update = _Update.model_validate(data)
+        loop   = _aio.new_event_loop()
+        loop.run_until_complete(_bot_dp.feed_update(_bot_obj, update))
+        loop.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# ══════════════════════════════════════════════════════════════
+#  HEALTH CHECK
+# ══════════════════════════════════════════════════════════════
+@app.route("/api/health")
+@app.route("/health")
+def api_health():
+    conn = get_db()
+    try:
+        students  = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
+        questions = conn.execute("SELECT COUNT(*) FROM questions").fetchone()[0]
+    finally:
+        conn.close()
+    return jsonify({
+        "status": "ok", "version": "2.0.0",
+        "students": students, "questions": questions,
+        "timestamp": datetime.now().isoformat(),
+    })
+
+# ══════════════════════════════════════════════════════════════
+#  SUBSCRIPTION ACTIVATION API
+# ══════════════════════════════════════════════════════════════
+@app.route("/api/admin/activate", methods=["POST"])
+def api_activate_student():
+    data = request.get_json(silent=True) or {}
+    sid  = data.get("student_id")
+    tid  = data.get("telegram_id")
+    pkg  = data.get("package", "premium")
+    days = int(data.get("days", 30))
+    conn = get_db()
+    try:
+        if tid:
+            conn.execute(
+                "UPDATE students SET is_active=1, subscription_type='premium', "
+                "package=?, package_start=date('now'), package_end=date('now',?) "
+                "WHERE telegram_id=?",
+                (pkg, f"+{days} days", str(tid))
+            )
+        elif sid:
+            conn.execute(
+                "UPDATE students SET is_active=1, subscription_type='premium', "
+                "package=?, package_start=date('now'), package_end=date('now',?) "
+                "WHERE id=?",
+                (pkg, f"+{days} days", int(sid))
+            )
+        else:
+            return jsonify({"error": "student_id أو telegram_id مطلوب"}), 400
+        conn.commit()
+        return jsonify({"success": True, "days": days, "package": pkg})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# ══════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     init_db()
     seed_demo_data()
     print("="*50)
-    print("الخادم يعمل على http://localhost:8080")
-    print("داشبورد الطالب : http://localhost:8080/dashboard?student_id=1")
-    print("لوحة الادمن    : http://localhost:8080/admin")
-    print("صفحة الاسئلة   : http://localhost:8080/questions?student_id=1")
+    print("الخادم يعمل على http://localhost:5000")
+    print("داشبورد الطالب : http://localhost:5000/?student_id=1")
+    print("لوحة الادمن    : http://localhost:5000/admin")
+    print("Health Check   : http://localhost:5000/api/health")
     print("="*50)
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
+
 

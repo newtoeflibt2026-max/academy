@@ -1,411 +1,190 @@
-import os
-
-code_content = '''# -*- coding: utf-8 -*-
-# handlers/subscriptions.py — إدارة الباقات المدفوعة، مسار الكتاب المطبوع، والتحكم بالتدفق الزمني 2026
-from __future__ import annotations
-import os
-import sys
-from datetime import datetime, timedelta
+# -*- coding: utf-8 -*-
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
-from aiogram.filters import Command
+from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from utils.states import PaymentStates
+from bot_database import create_payment, get_student
+from config import settings
 from loguru import logger
 
-PROJECT_ROOT = r\\\"C:\\\\Users\\\\nelt2\\\\yamen_academy\\\"
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-import database
-from utils.states import PaymentStates
-from config import Config
-
-router = Router(name=\\\"subscriptions\\\")
-
-# ─── تعريف الباقات والاشتراكات التفصيلية ومحددات التدفق ──────────────────────
+router = Router(name="subscriptions")
 
 PLANS = {
-    \\\"flexible\\\": {
-        \\\"name\\\":        \\\"المسار المرن (الأساسي)\\\",
-        \\\"emoji\\\":       \\\"📘\\\",
-        \\\"price\\\":       30,
-        \\\"days\\\":        30,
-        \\\"daily_limit\\\": 1,  # درس واحد كل 24 ساعة للضبط التربوي
-        \\\"description\\\":\\\"شهر كامل من التدريب المنظم — نظام درس واحد يومياً لمنع التشتت.\\\",
-        \\\"features\\\":    [\\\"🔒 امتحانات المراحل المتتالية\\\", \\\"🔒 مصحح الذكاء الاصطناعي الأساسي\\\", \\\"❌ بوابة التخرج الشاملة\\\"],
+    "flex_30": {
+        "name": "المسار المرن 30 يوم",
+        "price": 25,
+        "days": 30,
+        "speed": 1,
+        "desc": "درس واحد يومياً - مناسب للمبتدئين",
+        "emoji": "🌱"
     },
-    \\\"excellence\\\": {
-        \\\"name\\\":        \\\"مسار التفوق الأكاديمي\\\",
-        \\\"emoji\\\":       \\\"🏆\\\",
-        \\\"price\\\":       65,
-        \\\"days\\\":        90,
-        \\\"daily_limit\\\": 1,  # الطالب البطيء تتراكم دروسه المفتوحة تلقائياً دون إغلاق
-        \\\"description\\\":\\\"3 أشهر كاملة لبناء مهارات التوفل والآيلتس والعبور الآمن من التأسيس.\\\",
-        \\\"features\\\":    [\\\"✅ جميع امتحانات المراحل\\\", \\\"✅ الحفاظ على التقدم عند البطء\\\", \\\"🔒 بوابة التخرج والشهادة الدولية\\\"],
+    "excellence_90": {
+        "name": "مسار التفوق 90 يوم",
+        "price": 60,
+        "days": 90,
+        "speed": 1,
+        "desc": "درس يومي + تتبع كامل للتقدم",
+        "emoji": "🎯"
     },
-    \\\"emergency\\\": {
-        \\\"name\\\":        \\\"مسار الطوارئ المكثف\\\",
-        \\\"emoji\\\":       \\\"⚡\\\",
-        \\\"price\\\":       45,
-        \\\"days\\\":        30,
-        \\\"daily_limit\\\": 4,  # فتح حتى 4 دروس يومياً لتسريع الدراسة قبل الامتحان الفعلي
-        \\\"description\\\":\\\"امتحانك قريب؟ افتح القيود الزمنية وادرس بكثافة لإنهاء المنهاج سريعاً.\\\",
-        \\\"features\\\":    [\\\"✅ فتح القيود الزمنية (4 دروس/يوم)\\\", \\\"✅ تفعيل بنك الأخطاء الفوري\\\", \\\"✅ فتح بوابة التخرج وامتحان المحاكاة\\\"],
+    "emergency_30": {
+        "name": "مسار الطوارئ المكثف",
+        "price": 80,
+        "days": 30,
+        "speed": 4,
+        "desc": "حتى 4 دروس يومياً - للمتقدمين قبل الامتحان",
+        "emoji": "🚀"
     },
-    \\\"book_activation\\\": {
-        \\\"name\\\":        \\\"مسار تفعيل الكتاب المطبوع\\\",
-        \\\"emoji\\\":       \\\"📕\\\",
-        \\\"price\\\":       0,   # مجاني لمن يملك كود الكشط من المكتبة
-        \\\"days\\\":        14,  # ميزات مدفوعة كاملة لأسبوعين ثم يحول للمجاني المشروط
-        \\\"daily_limit\\\": 1,
-        \\\"description\\\":\\\"تفعيل البوت عن طريق كود الكتاب المطبوع الصادر من المكتبات الرسمية.\\\",
-        \\\"features\\\":    [\\\"✅ ميزات مدفوعة كاملة لمدة 14 يوماً\\\", \\\"✅ الربط المباشر مع فصول الكتاب المادية\\\", \\\"⚠️ يتحول تلقائياً لباقة مجانية مشروطة بعد أسبوعين\\\"],
-    }
-}
-
-PAYMENT_METHODS = {
-    \\\"zain\\\": {
-        \\\"name\\\":         \\\"زين كاش\\\",
-        \\\"emoji\\\":        \\\"💚\\\",
-        \\\"number\\\":       \\\"0798919150\\\",
-        \\\"instructions\\\": \\\"افتح تطبيق زين كاش ← إرسال ← أدخل الرقم ← أدخل المبلغ ← أرسل\\\",
-    },
-    \\\"click\\\": {
-        \\\"name\\\":         \\\"كليك — البنك الإسلامي\\\",
-        \\\"emoji\\\":        \\\"🔵\\\",
-        \\\"number\\\":       \\\"0798919150\\\",
-        \\\"instructions\\\": \\\"افتح تطبيق كليك → تحويل → أدخل الرقم → أدخل المبلغ → حوّل\\\",
-    },
-    \\\"western_union\\\": {
-        \\\"name\\\":         \\\"Western Union — دولي\\\",
-        \\\"emoji\\\":        \\\"🌍\\\",
-        \\\"number\\\":       \\\"00962798919150\\\",
-        \\\"instructions\\\": \\\"رقم الواتساب للتواصل واعتماد الحوالات الخارجية: 00962798919150\\\",
+    "vip_20h": {
+        "name": "باقة VIP 20 ساعة برايفت",
+        "price": 400,
+        "days": 90,
+        "speed": 4,
+        "desc": "20 ساعة تدريب خاص + مسار الطوارئ مجاناً",
+        "emoji": "👑"
     },
 }
 
-# ─── بناء لوحات التحكم والأزرار التفاعلية ──────────────────────────────────────
-
-def build_plans_keyboard() -> object:
+def plans_keyboard():
     kb = InlineKeyboardBuilder()
     for key, plan in PLANS.items():
-        if key == \\\"book_activation\\\":
-            kb.button(text=f\\\"{plan['emoji']} تفعيل كود الكتاب المطبوع 🔑\\\", callback_data=f\\\"sub:plan:{key}\\\")
-        else:
-            kb.button(text=f\\\"{plan['emoji']} {plan['name']} — {plan['price']} دينار\\\", callback_data=f\\\"sub:plan:{key}\\\")
-    kb.button(text=\\\"🏠 القائمة الرئيسية\\\", callback_data=\\\"menu:main\\\")
-    kb.adjust(1)
-    return kb.as_markup()
-
-def build_methods_keyboard(plan_key: str) -> object:
-    kb = InlineKeyboardBuilder()
-    if plan_key == \\\"book_activation\\\":
-        kb.button(text=\\\"🔑 أدخل كود تفعيل الكتاب\\\", callback_data=\\\"sub:enter_code\\\")
-    else:
-        for method_key, method in PAYMENT_METHODS.items():
-            kb.button(text=f\\\"{method['emoji']} {method['name']}\\\", callback_data=f\\\"sub:method:{plan_key}:{method_key}\\\")
-    kb.button(text=\\\"🔙 رجوع للباقات\\\", callback_data=\\\"menu:subscribe\\\")
-    kb.adjust(1)
-    return kb.as_markup()
-
-def build_cancel_keyboard() -> object:
-    kb = InlineKeyboardBuilder()
-    kb.button(text=\\\"❌ إلغاء العملية الجارية\\\", callback_data=\\\"sub:cancel\\\")
-    kb.adjust(1)
-    return kb.as_markup()
-
-def build_back_keyboard() -> object:
-    kb = InlineKeyboardBuilder()
-    kb.button(text=\\\"🚀 فتح لوحة التحكم\\\", callback_data=\\\"menu:main\\\")
-    kb.button(text=\\\"💎 ترقية / تجديد الاشتراك\\\", callback_data=\\\"menu:subscribe\\\")
-    kb.adjust(1)
-    return kb.as_markup()
-
-# ─── واجهات العرض الرئيسية والتدقيق الأكاديمي ───────────────────────────────────
-
-async def show_plans(update: Message | CallbackQuery) -> None:
-    is_cb   = isinstance(update, CallbackQuery)
-    user_id = update.from_user.id
-
-    try:
-        student = database.get_student(user_id)
-        if student and student.get(\\\"is_premium\\\"):
-            ends_at_str = student.get(\\\"sub_ends_at\\\", \\\"\\\")
-            if ends_at_str:
-                ends_at = datetime.strptime(ends_at_str[:10], \\\"%Y-%m-%d\\\")
-                if ends_at > datetime.now():
-                    text = (
-                        f\\\"🦅 <b>أكاديمية يامن — إشعار الصلاحية النشطة</b>\\\\n\\\"
-                        f\\\"━━━━━━━━━━━━━━━━━━━━━━\\\\n\\\"
-                        f\\\"نوع النظام الحالي: <b>{student.get('plan_name', 'المدفوع')}</b>\\\\n\\\"
-                        f\\\"تاريخ الانتهاء التلقائي: <b>{ends_at_str[:10]}</b>\\\\n\\\"
-                        f\\\"معدل التدفق التراكمي: <b>{student.get('daily_limit', 1)} درس/يوم</b>\\\\n\\\\n\\\"
-                        f\\\"💡 الحساب مستقر وتعمل ميزاتك بكفاءة، يمكنك الترقية لباقات الطوارئ إذا اقترب امتحانك الفعلي!\\\"
-                    )
-                    if is_cb:
-                        await update.message.edit_text(text, reply_markup=build_back_keyboard())
-                        await update.answer()
-                    else:
-                        await update.answer(text, reply_markup=build_back_keyboard())
-                    return
-    except Exception as e:
-        logger.error(f\\\"Error checking database subscription state: {e}\\\")
-
-    plans_text = \\\"\\\"
-    for key, plan in PLANS.items():
-        if key == \\\"book_activation\\\": continue
-        features    = \\\"\\\\n\\\".join(f\\\"  {f}\\\" for f in plan[\\\"features\\\"])
-        plans_text += (
-            f\\\"\\\\n{plan['emoji']} <b>{plan['name']}</b> — <b>{plan['price']} دينار أردني</b>\\\\n\\\"
-            f\\\"  ⏳ الصلاحية الزمنية: {plan['days']} يوم متواصلة\\\\n\\\"
-            f\\\"  📊 سياسة التدفق: {plan['daily_limit']} درس يومياً (تراكمي عند البطء)\\\\n\\\"
-            f\\\"{features}\\\\n\\\"
+        kb.button(
+            text=f"{plan['emoji']} {plan['name']} - {plan['price']} دينار",
+            callback_data=f"buy:{key}"
         )
+    kb.button(text="📖 أدخل كود الكتاب", callback_data="book:code")
+    kb.button(text="🏠 رجوع", callback_data="menu:main")
+    kb.adjust(1)
+    return kb.as_markup()
 
-    text = (
-        \\\"💎 <b>أنظمة الباقات والاشتراكات المعتمدة — أكاديمية يامن 2026</b>\\\\n\\\"
-        \\\"اختري مسارك الأكاديمي المناسب لبدء الفلترة والدراسة المنظمة:\\\\n\\\"
-        \\\"━━━━━━━━━━━━━━━━━━━━━━\\\\n\\\"
-        f\\\"{plans_text}\\\"\n"
-        f"<b>📕 {PLANS['book_activation']['name']}</b>\\\\n\\\"
-        f\\\"  ⏳ يمنحك صلاحية الحساب المدفوع بالكامل لـ (14 يوماً) ثم يحولك تلقائياً للنظام المجاني المشروط.\\\\n\\\\n\\\"
-        \\\"👇 <b>اضغط على الخيار المطلوب للتفعيل الفوري أو الدفع:</b>\\\"
+async def show_plans(cb: CallbackQuery):
+    await cb.message.edit_text(
+        "💎 <b>باقات أكاديمية يامن</b>\n\n"
+        "🌱 <b>المسار المرن 30 يوم</b> — 25 دينار\n"
+        "    درس واحد يومياً، مثالي للانطلاق\n\n"
+        "🎯 <b>مسار التفوق 90 يوم</b> — 60 دينار\n"
+        "    المسار الأكاديمي الكامل من الصفر للاحتراف\n\n"
+        "🚀 <b>مسار الطوارئ المكثف</b> — 80 دينار\n"
+        "    4 دروس يومياً للمتقدمين قبل الامتحان\n\n"
+        "👑 <b>VIP 20 ساعة برايفت</b> — 400 دينار\n"
+        "    20 ساعة تدريب خاص + مسار الطوارئ مجاناً\n\n"
+        "📖 <b>كتاب يامن؟</b> أدخل الكود للتفعيل الفوري!",
+        reply_markup=plans_keyboard()
     )
+    await cb.answer()
 
-    if is_cb:
-        try:
-            await update.message.edit_text(text, reply_markup=build_plans_keyboard())
-        except Exception:
-            await update.message.answer(text, reply_markup=build_plans_keyboard())
-        await update.answer()
-    else:
-        await update.answer(text, reply_markup=build_plans_keyboard())
-
-# ─── معالجة الأحداث والمستقبلات ─────────────────────────────────────────────
-
-@router.message(Command(\\\"subscribe\\\"))
-async def cmd_subscribe(message: Message) -> None:
-    await show_plans(message)
-
-@router.callback_query(F.data == \\\"menu:subscribe\\\")
-async def cb_show_plans(callback: CallbackQuery) -> None:
-    await show_plans(callback)
-
-@router.callback_query(F.data.startswith(\\\"sub:plan:\\\"))
-async def select_plan(callback: CallbackQuery, state: FSMContext) -> None:
-    plan_key = callback.data.split(\\\":\\\")[2]
-    plan     = PLANS.get(plan_key)
-
+@router.callback_query(F.data.startswith("buy:"))
+async def buy_plan(cb: CallbackQuery, state: FSMContext):
+    plan_key = cb.data.split(":")[1]
+    plan = PLANS.get(plan_key)
     if not plan:
-        await callback.answer(\\\"❌ خطأ في تحديد الباقة\\\", show_alert=True)
+        await cb.answer("باقة غير موجودة!", show_alert=True)
         return
 
-    features = \\\"\\\\n\\\".join(f\\\"  {f}\\\" for f in plan[\\\"features\\\"])
-    
-    if plan_key == \\\"book_activation\\\":
-        text = (
-            f\\\"📕 <b>{plan['name']} — تفعيل كود الكشط</b>\\\\n\\\"
-            f\\\"━━━━━━━━━━━━━━━━━━━━━━\\\\n\\\"
-            f\\\"⚙️ <b>آلية عمل النظام الحركية:</b>\\\\n\\\"
-            f\\\"1. عند إدخال كود التفعيل المطبوع في الكتاب، تفتح لك المنظومة بصلاحيات الحساب المدفوع (البريميوم) بالكامل لمدة 14 يوماً.\\\\n\\\"
-            f\\\"2. تفتح لك بوابة التخرج، مصحح النطق بالذكاء الاصطناعي، والدروس دون أي شروط لمواكبة استراتيجيات الكتاب الرقمية.\\\\n\\\"
-            f\\\"3. بعد انتهاء الـ 14 يوماً، يحولك النظام برمجياً وبشكل تلقائي إلى <b>الباقة المجانية المشروطة</b> (درس يومياً، مقيد بتقديم ريفيو أسبوعي ومنشورات الدعاية للتليجرام بوت).\\\\n\\\\n\\\"
-            f\\\"👇 اضغط على الزر أدناه لإدخال كود التحقق من نسختك المطبوعة:\\\"
-        )
-    else:
-        text = (
-            f\\\"{plan['emoji']} <b>{plan['name']}</b>\\\\n\\\"
-            f\\\"━━━━━━━━━━━━━━━━━━━━━━\\\\n\\\"
-            f\\\"💰 القيمة المستحقة: <b>{plan['price']} دينار أردني</b>\\\\n\\\"
-            f\\\"⏳ مدة الصلاحية: <b>{plan['days']} يوم متواصلة</b>\\\\n\\\"
-            f\\\"📊 محدد الاستيعاب: <b>تحديث تلقائي بمعدل {plan['daily_limit']} درس كل 24 ساعة</b>\\\\n\\\\n\\\"
-            f\\\"<b>الميزات الهندسية للمسار:</b>\\\\n{features}\\\\n\\\\n\\\"
-            f\\\"💳 <b>اختر قناة التحويل المفضلة لديك لإرسال الوصل وإلغاء القفل:</b>\\\"
-        )
-    await callback.message.edit_text(text, reply_markup=build_methods_keyboard(plan_key))
-    await callback.answer()
+    await state.update_data(plan_key=plan_key, plan=plan)
 
-# ─── نظام الكود الخاص بالكتاب المطبوع (14 يوماً ثم مجاني) ─────────────────────────
+    kb = InlineKeyboardBuilder()
+    kb.button(text="✅ تأكيد الدفع وإرسال الإيصال", callback_data=f"confirm_pay:{plan_key}")
+    kb.button(text="🔙 رجوع للباقات", callback_data="menu:subscribe")
+    kb.adjust(1)
 
-@router.callback_query(F.data == \\\"sub:enter_code\\\")
-async def request_book_code(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.set_state(PaymentStates.waiting_for_receipt) # إعادة استخدام الولاية للتبسيط الأمن
-    await state.update_data(plan_key=\\\"book_activation\\\")
-    await callback.message.edit_text(
-        \\\"📝 <b>يرجى كتابة كود التفعيل الموجود داخل كتابك المطبوع الآن:</b>\\\\n\\\\n\\\"
-        \\\"مثال على صيغة الأكواد المعتمدة بمكتبات الأكاديمية: <code>YAMEN-2026-XXXX</code>\\\\n\\\"
-        \\\"⚠️ تأكد من كتابة الحروف الكبيرة بشكل صحيح لتفادي رفض السيرفر المركب.\\\",
-        reply_markup=build_cancel_keyboard(),
-        parse_mode=\\\"HTML\\\"
+    await cb.message.edit_text(
+        f"{plan['emoji']} <b>{plan['name']}</b>\n\n"
+        f"💰 السعر: <b>{plan['price']} دينار أردني</b>\n"
+        f"📅 المدة: <b>{plan['days']} يوم</b>\n"
+        f"📖 {plan['desc']}\n\n"
+        "━━━━━━━━━━━━━━━━━━━━\n"
+        "💳 <b>طريقة الدفع:</b>\n"
+        "ارسل المبلغ عبر:\n"
+        "• <b>CliQ</b>: yamen_academy\n"
+        "• <b>زين كاش</b>: 0791234567\n\n"
+        "بعد الدفع اضغط <b>تأكيد</b> وأرسل صورة الإيصال 👇",
+        reply_markup=kb.as_markup()
     )
-    await callback.answer()
+    await cb.answer()
 
-@router.message(PaymentStates.waiting_for_receipt, F.text)
-async def process_book_code(message: Message, state: FSMContext) -> None:
-    user_code = message.text.strip().upper()
-    data      = await state.get_data()
-    plan_key  = data.get(\\\"plan_key\\\")
+@router.callback_query(F.data.startswith("confirm_pay:"))
+async def confirm_pay(cb: CallbackQuery, state: FSMContext):
+    plan_key = cb.data.split(":")[1]
+    plan = PLANS.get(plan_key)
+    await state.update_data(plan_key=plan_key, plan=plan)
 
-    if plan_key != \\\"book_activation\\\":
-        await message.answer(\\\"❌ عذراً، يرجى إرسال صورة الوصل المالي للمعاملة وليس نصاً.\\\")
-        return
+    kb = InlineKeyboardBuilder()
+    kb.button(text="❌ إلغاء", callback_data="menu:subscribe")
 
-    # التحقق البرمي من الكود (يمكن ربطه بمصفوفة أكواد في قاعدة البيانات)
-    if user_code.startswith(\\\"YAMEN-2026-\\\") and len(user_code) > 13:
-        await state.clear()
-        
-        # تفعيل فوري ومباشر في قاعدة البيانات لمدة 14 يوماً مع تفعيل حقل التحويل التلقائي لاحقاً
-        try:
-            database.activate_premium_status(
-                telegram_id=message.from_user.id,
-                plan_name=\\\"كتاب يامن المطبوع (بريميوم مؤقت)\\\",
-                days=14,
-                daily_limit=1,
-                convert_to_free_after_expiry=True # حقل ذكي لمعالجة حالة التحويل للمجاني
-            )
-        except Exception as e:
-            logger.error(f\\\"Failed to write code trigger to system db: {e}\\\")
-
-        await message.answer(
-            f\\\"🎉 <b>تم التحقق وتفعيل كود الكتاب المطبوع بنجاح!</b>\\\\n\\\\n\\\"
-            f\\\"كود التتبع المعتمد: <code>{user_code}</code>\\\\n\\\"
-            f\\\"📊 الحالة الحالية: <b>بريميوم كامل الميزات (مدفوع) لمدة 14 يوماً مجاناً.</b>\\\\n\\\"
-            f\\\"📚 معدل التدفق: درس واحد يومياً متزامن مع فصول كتابك المطبوع.\\\\n\\\\n\\\"
-            f\\\"💡 بعد أسبوعين سيقوم السيرفر بتحويل حسابك تلقائياً للمسار المجاني المشروط لضمان متابعتك الدعاية معنا. انطلق الآن!\\\",
-            reply_markup=build_back_keyboard(),
-        )
-    else:
-        await message.answer(
-            \\\"❌ <b>كود التفعيل غير صحيح أو مستخدم مسبقاً.</b>\\\\n\\\\n\\\"
-            \\\"يرجى التأكد من الكود المكتوب خلف بطاقة الكشط في كتابك، أو التواصل مع الدعم الفني للأكاديمية.\\\",
-            reply_markup=build_cancel_keyboard()
-        )
-
-# ─── معالجة الدفع اليدوي الرقمي الباقي (المرن، التفوق، الطوارئ) ─────────────────
-
-@router.callback_query(F.data.startswith(\\\"sub:method:\\\"))
-async def select_payment_method(callback: CallbackQuery, state: FSMContext) -> None:
-    parts      = callback.data.split(\\\":\\\")
-    plan_key   = parts[2]
-    method_key = parts[3]
-
-    plan   = PLANS.get(plan_key)
-    method = PAYMENT_METHODS.get(method_key)
-
-    if not plan or not method:
-        await callback.answer(\\\"❌ الطريقة غير متوفرة حالياً\\\", show_alert=True)
-        return
-
-    user_id = callback.from_user.id
-
-    try:
-        existing = database.get_student(user_id)
-        if existing and existing.get(\\\"payment_pending\\\"):
-            await callback.message.edit_text(
-                \\\"⚠️ <b>تنبيه نظام الأمان: لديك معاملة معلقة حالياً قيد التدقيق الفعلي من الإدارة.</b>\\\\n\\\\n\\\"
-                \\\"يرجى الانتظار حتى يتم فحص الوصل السابق، أو تواصل مباشرة على الواتساب للمساعدة: <code>00962798919150</code>\\\",
-                reply_markup=build_back_keyboard(),
-            )
-            await callback.answer()
-            return
-    except Exception as e:
-        logger.error(f\\\"Database error: {e}\\\")
-
-    payment_id = database.create_payment(
-        telegram_id=user_id,
-        plan_key=plan_key,
-        plan_name=plan[\\\"name\\\"],
-        amount=float(plan[\\\"price\\\"]),
+    await cb.message.edit_text(
+        "📸 <b>أرسل صورة إيصال الدفع الآن</b>\n\n"
+        "سيتم مراجعتها وتفعيل حسابك خلال دقائق ✅",
+        reply_markup=kb.as_markup()
     )
-
-    await state.update_data(payment_id=payment_id, plan_key=plan_key)
     await state.set_state(PaymentStates.waiting_for_receipt)
-
-    text = (
-        f\\\"💳 <b>نافذة التحويل المالي — أكاديمية يامن</b>\\\\n\\\"
-        f\\\"━━━━━━━━━━━━━━━━━━━━━━\\\\n\\\"
-        f\\\"الباقة المطلوبة: <b>{plan['emoji']} {plan['name']}</b>\\\\n\\\"
-        f\\\"المبلغ المطلوب: <b>{plan['price']} دينار أردني</b>\\\\n\\\"
-        f\\\"الجهة المستلمة: <b>{method['emoji']} {method['name']}</b>\\\\n\\\\n\\\"
-        f\\\"📱 <b>الرقم الرقمي للمحفظة / الحساب:</b> <code>{method['number']}</code>\\\\n\\\\n\\\"
-        f\\\"📋 <b>خطوات الإتمام:</b>\\\\n\\\"
-        f\\\"  {method['instructions']}\\\\"
-        f\\\"\\\\n\\\\n📸 <b>خطوات التفعيل البرمي:</b>\\\\n\\\"
-        f\\\"  1. التقط صورة واضحة للوصل الإلكتروني الصادر للعملية.\\\\n\\\"
-        f\\\"  2. أرسل الصورة هنا مباشرة داخل المحادثة كملف مصور.\\\\n\\\"
-        f\\\"  3. سيقوم النظام بمزامنة صلاحياتك فور مراجعة الإدارة للطلب.\\\\n\\\\n\\\"
-        f\\\"🆔 رمز الفاتورة للسيستم: <code>#{payment_id}</code>\\\"
-    )
-    await callback.message.edit_text(text, reply_markup=build_cancel_keyboard())
-    await callback.answer()
+    await cb.answer()
 
 @router.message(PaymentStates.waiting_for_receipt, F.photo)
-async def receive_receipt(message: Message, state: FSMContext) -> None:
-    user_id    = message.from_user.id
-    data       = await state.get_data()
-    payment_id = data.get(\\\"payment_id\\\")
-    plan_key   = data.get(\\\"plan_key\\\")
-
-    if not payment_id or plan_key == \\\"book_activation\\\":
-        await message.answer(\\\"❌ حدث خطأ في تتبع الجلسة الأمنية، يرجى إعادة كتابة /subscribe\\\")
-        await state.clear()
-        return
+async def receive_receipt(message: Message, state: FSMContext):
+    data = await state.get_data()
+    plan_key = data.get("plan_key", "unknown")
+    plan = data.get("plan", PLANS.get(plan_key, {}))
+    plan_name = plan.get("name", plan_key)
+    amount = plan.get("price", 0)
+    days = plan.get("days", 30)
 
     photo_id = message.photo[-1].file_id
-    database.update_payment_receipt(payment_id, photo_id)
+    user_id = message.from_user.id
+
+    pid = create_payment(
+        telegram_id=user_id,
+        plan_key=plan_key,
+        plan_name=plan_name,
+        amount=amount,
+        receipt_photo_id=photo_id
+    )
+
+    kb = InlineKeyboardBuilder()
+    kb.button(text=f"✅ تفعيل {days}يوم", callback_data=f"adm_approve:{pid}:{plan_key}:{plan_name}:{user_id}:{days}")
+    kb.button(text="❌ رفض", callback_data=f"adm_reject:{pid}:{user_id}")
+    kb.adjust(2)
+
+    for admin_id in settings.ADMIN_IDS:
+        try:
+            student = get_student(user_id)
+            name = student.get("name", "غير معروف") if student else "غير معروف"
+            await message.bot.send_photo(
+                chat_id=admin_id,
+                photo=photo_id,
+                caption=(
+                    f"💰 <b>طلب اشتراك جديد</b>\n\n"
+                    f"👤 الاسم: <b>{name}</b>\n"
+                    f"🆔 ID: <code>{user_id}</code>\n"
+                    f"📦 الباقة: <b>{plan_name}</b>\n"
+                    f"💵 المبلغ: <b>{amount} دينار</b>\n"
+                    f"📅 المدة: <b>{days} يوم</b>\n"
+                    f"🔢 رقم الطلب: <b>#{pid}</b>"
+                ),
+                reply_markup=kb.as_markup()
+            )
+        except Exception as e:
+            logger.error(f"Failed to notify admin {admin_id}: {e}")
+
     await state.clear()
 
+    kb2 = InlineKeyboardBuilder()
+    kb2.button(text="🏠 الرئيسية", callback_data="menu:main")
     await message.answer(
-        \\\"✅ <b>تم رفع إيصال الدفع بنجاح إلى سيرفرات الأكاديمية!</b>\\\\n\\\\n\\\"
-        f\\\"رقم الإيصال المحفوظ تتبعياً: <code>#{payment_id}</code>\\\\n\\\"
-        f\\\"بناءً على باقتك المحددة <b>({PLANS[plan_key]['name']})</b> سيتم فتح نظام التأسيس والمراحل وضبط معدل فتح الدروس فور موافقة الإدارة المعنية.\\\",
-        reply_markup=build_back_keyboard(),
+        "✅ <b>تم استلام إيصالك!</b>\n\n"
+        "سيتم مراجعة الدفع وتفعيل حسابك خلال دقائق 🎉\n"
+        "ستصلك رسالة تأكيد فور التفعيل.",
+        reply_markup=kb2.as_markup()
     )
 
-    # هيكلة إشعار الإدارة الموحد للإمبراطورة دانيا للتفعيل بنقرة واحدة
-    plan = PLANS[plan_key]
-    admin_text = (
-        f\\\"🔔 <b>طلب تفعيل مالي جديد ومطابقة تربوية!</b>\\\\n\\\\n\\\"
-        f\\\"🆔 معرف الطالب التليجرام: <code>{user_id}</code>\\\\n\\\"
-        f\\\"💎 الباقة المستهدفة: <b>{plan['name']}</b>\\\\n\\\"
-        f\\\"⏳ صلاحية الأيام الممنوحة: <b>{plan['days']} يوم</b>\\\\n\\\"
-        f\\\"📊 قيود التدفق والسرعة: <b>{plan['daily_limit']} درس/يوم (تراكمي)</b>\\\\n\\\"
-        f\\\"🔢 رقم المعاملة للسيستم: <code>#{payment_id}</code>\\\\n\\\\n\\\"
-        f\\\"⚙️ عند الضغط على موافقة سيقوم السيستم فوراً بتهيئة جداول الطالب للمزامنة المشتركة مع الـ WebApps.\\\"
+@router.callback_query(F.data == "book:code")
+async def book_code_prompt(cb: CallbackQuery, state: FSMContext):
+    kb = InlineKeyboardBuilder()
+    kb.button(text="❌ إلغاء", callback_data="menu:subscribe")
+    await cb.message.edit_text(
+        "📖 <b>تفعيل كتاب يامن</b>\n\n"
+        "أرسل كود التفعيل الموجود في الكتاب المطبوع:",
+        reply_markup=kb.as_markup()
     )
-
-    kb_admin = InlineKeyboardBuilder()
-    kb_admin.button(
-        text=\\\"✅ اعتماد الحساب ورفع القيود\\\",
-        callback_data=f\\\"adm_approve:{payment_id}:{plan_key}:{user_id}:{plan['days']}:{plan['daily_limit']}\\\",
-    )
-    kb_admin.button(text=\\\"❌ رفض الوصل\\\", callback_data=f\\\"adm_reject:{payment_id}:{user_id}\\\")
-    kb_admin.adjust(1)
-
-    try:
-        await message.bot.send_photo(
-            chat_id=Config.ADMIN_IDS[0] if hasattr(Config, 'ADMIN_IDS') else user_id,
-            photo=photo_id,
-            caption=admin_text,
-            reply_markup=kb_admin.as_markup(),
-        )
-    except Exception as e:
-        logger.error(f\\\"Failed to notify root admin: {e}\\\")
-
-@router.callback_query(F.data == \\\"sub:cancel\\\")
-async def cancel_payment(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.clear()
-    await callback.message.edit_text(
-        \\\"❌ <b>تم إلغاء طلب الاشتراك وإغلاق الفاتورة المفتوحة بنجاح.</b>\\\\n\\\\n\\\"
-        \\\"يمكنكِ دائماً اختيار المسار الذي يناسب وقتكِ الدراسي وموعد اختباركِ الفعلي لاحقاً.\\\",
-        reply_markup=build_back_keyboard(),
-    )
-    await callback.answer(\\\"تم إلغاء الطلب المالي\\\")
-'''
-
-with open(os.path.join('handlers', 'subscriptions.py'), 'w', encoding='utf-8') as f:
-    f.write(code_content)
-
-print('✅ File handlers/subscriptions.py rewritten successfully with Book Activation Path.')
-"
+    await state.set_state(PaymentStates.waiting_for_receipt)
+    await cb.answer()

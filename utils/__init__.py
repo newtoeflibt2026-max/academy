@@ -1,1 +1,0 @@
-# Yamen Academy - utilities package

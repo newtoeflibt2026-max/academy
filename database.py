@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sqlite3, os, json
 from datetime import datetime, timedelta
 
@@ -490,5 +490,450 @@ def init_mock_tables():
 if __name__=="__main__":
     init_db(); seed_demo_data()
     print("قاعدة البيانات والبيانات التجريبية جاهزة!")
+
+
+# ══════════════════════════════════════════════════════════════
+#  دوال مساعدة للـ handlers (Bot compatibility layer)
+# ══════════════════════════════════════════════════════════════
+
+def _safe_exec(sql: str, params: tuple = ()):
+    """تنفيذ SQL بأمان مع إرجاع cursor — مطلوب من handlers متعددة"""
+    conn = get_db()
+    try:
+        cur = conn.execute(sql, params)
+        conn.commit()
+        return cur
+    except Exception as e:
+        print(f"[DB] _safe_exec error: {e} | SQL: {sql[:80]}")
+        # إرجاع cursor وهمي لا يكسر الكود
+        class _EmptyCursor:
+            def fetchone(self): return None
+            def fetchall(self): return []
+            lastrowid = None
+        return _EmptyCursor()
+    finally:
+        conn.close()
+
+
+def dict_rows(rows) -> list:
+    """تحويل قائمة sqlite3.Row إلى قائمة dict"""
+    return [dict(r) for r in rows] if rows else []
+
+
+def dict_row(row) -> dict | None:
+    """تحويل sqlite3.Row واحد إلى dict"""
+    return dict(row) if row else None
+
+
+# ── get_student بـ telegram_id (مطلوبة من handlers.courses و placement_test) ─
+def get_student(telegram_id) -> dict | None:
+    """جلب بيانات الطالب بـ telegram_id أو الـ id الداخلي"""
+    conn = get_db()
+    row = conn.execute(
+        "SELECT * FROM students WHERE telegram_id=?", (str(telegram_id),)
+    ).fetchone()
+    # إذا لم يوجد بـ telegram_id، جرّب كـ id داخلي
+    if not row:
+        try:
+            row = conn.execute(
+                "SELECT * FROM students WHERE id=?", (int(telegram_id),)
+            ).fetchone()
+        except Exception:
+            pass
+    conn.close()
+    return dict(row) if row else None
+
+
+# ── get_student_level ─────────────────────────────────────────
+def get_student_level(telegram_id) -> str:
+    """جلب مستوى الطالب"""
+    s = get_student(telegram_id)
+    return s.get("level", "A1") if s else "A1"
+
+
+# ── add_xp ───────────────────────────────────────────────────
+def add_xp(telegram_id, amount: int, reason: str = ""):
+    """إضافة XP للطالب"""
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE students SET xp=xp+? WHERE telegram_id=?",
+            (amount, str(telegram_id))
+        )
+        conn.commit()
+    except Exception as e:
+        print(f"[DB] add_xp error: {e}")
+    finally:
+        conn.close()
+
+
+# ── Subscription check ────────────────────────────────────────
+def has_active_subscription(telegram_id) -> bool:
+    """هل الطالب لديه اشتراك فعّال؟"""
+    s = get_student(telegram_id)
+    if not s:
+        return False
+    if s.get("subscription_type") == "premium":
+        return True
+    if s.get("package_end"):
+        try:
+            from datetime import date
+            end_date = datetime.strptime(str(s["package_end"]), "%Y-%m-%d").date()
+            return end_date >= date.today()
+        except Exception:
+            pass
+    return False
+
+
+# ── Courses & Lessons ─────────────────────────────────────────
+def get_courses_by_level(level: str) -> list:
+    """جلب الكورسات حسب المستوى"""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM lessons WHERE level=? AND is_active=1 ORDER BY order_num",
+        (level,)
+    ).fetchall()
+    # إذا لم توجد بمستوى محدد، أرجع كل الدروس النشطة
+    if not rows:
+        rows = conn.execute(
+            "SELECT * FROM lessons WHERE is_active=1 ORDER BY order_num LIMIT 20"
+        ).fetchall()
+    conn.close()
+    result = []
+    for r in rows:
+        d = dict(r)
+        d.setdefault("name", d.get("title", ""))
+        result.append(d)
+    return result
+
+
+def get_lessons_by_course(course_id: int) -> list:
+    """جلب دروس كورس معين"""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM lessons WHERE id=? OR order_num=? ORDER BY order_num",
+        (course_id, course_id)
+    ).fetchall()
+    conn.close()
+    return dict_rows(rows)
+
+
+def get_lesson(lesson_id: int) -> dict | None:
+    """جلب درس واحد"""
+    conn = get_db()
+    row = conn.execute("SELECT * FROM lessons WHERE id=?", (lesson_id,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+# ── Quiz ──────────────────────────────────────────────────────
+def get_quiz_by_lesson_id(lesson_id: int) -> dict | None:
+    """جلب كويز مرتبط بدرس (نستخدم questions كبديل)"""
+    conn = get_db()
+    # أول سؤال MCQ مرتبط بهذا الدرس (تقريبي)
+    row = conn.execute(
+        "SELECT * FROM questions WHERE question_type='mcq' ORDER BY RANDOM() LIMIT 1"
+    ).fetchone()
+    conn.close()
+    if row:
+        d = dict(row)
+        d["id"] = d.get("id", lesson_id)
+        return d
+    return None
+
+
+def get_quiz_questions(quiz_id: int) -> list:
+    """جلب أسئلة كويز"""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM questions WHERE question_type IN ('mcq','listening','reading_passage') ORDER BY RANDOM() LIMIT 10"
+    ).fetchall()
+    conn.close()
+    result = []
+    for r in rows:
+        d = dict(r)
+        # توحيد الأعمدة مع ما تتوقعه handlers
+        d.setdefault("question_text", d.get("question_text", ""))
+        import json as _json
+        options = [d.get("option_a",""), d.get("option_b",""),
+                   d.get("option_c",""), d.get("option_d","")]
+        d["options"] = _json.dumps([o for o in options if o], ensure_ascii=False)
+        d["correct_answer"] = d.get("correct_option", "a")
+        d["question_type"] = "mcq"
+        result.append(d)
+    return result
+
+
+def add_quiz_attempt(user_id, quiz_id, answers: list, score: int):
+    """حفظ محاولة كويز"""
+    import json as _json
+    _safe_exec(
+        """INSERT OR IGNORE INTO error_bank
+           (student_id, question_text, wrong_answer, correct_answer, topic, next_review)
+           VALUES (?, ?, ?, ?, ?, date('now','+1 day'))""",
+        (str(user_id), f"Quiz #{quiz_id}", str(score), str(len(answers)), "Mock Exam")
+    )
+
+
+# ── Placement Test ────────────────────────────────────────────
+def get_placement_questions(limit: int = 10) -> list:
+    """جلب أسئلة اختبار تحديد المستوى"""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT * FROM questions WHERE question_type='mcq' ORDER BY RANDOM() LIMIT ?",
+        (limit,)
+    ).fetchall()
+    conn.close()
+    result = []
+    for r in rows:
+        d = dict(r)
+        d["question"]     = d.get("question_text", "")
+        d["option_a"]     = d.get("option_a", "A")
+        d["option_b"]     = d.get("option_b", "B")
+        d["option_c"]     = d.get("option_c", "C")
+        d["option_d"]     = d.get("option_d", "D")
+        # correct_option → int index (a=0, b=1, c=2, d=3)
+        opt_map = {"a": 0, "b": 1, "c": 2, "d": 3}
+        d["correct_option"] = opt_map.get(
+            str(d.get("correct_option", "a")).lower(), 0
+        )
+        d.setdefault("placement_done", False)
+        result.append(d)
+    return result
+
+
+def set_student_level(telegram_id, level: str):
+    """تحديث مستوى الطالب"""
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE students SET level=? WHERE telegram_id=?",
+            (level, str(telegram_id))
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def set_placement_done(telegram_id):
+    """تسجيل أن الطالب أتم اختبار تحديد المستوى"""
+    # نستخدم حقل موجود لتخزين هذا (metadata في الـ settings مثلاً)
+    _safe_exec(
+        "INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)",
+        (f"placement_done_{telegram_id}", "1")
+    )
+
+
+# ── Spelling / SRS (Spaced Repetition System) ─────────────────
+def get_spelling_words(level: str = "A1", limit: int = 5) -> list:
+    """جلب كلمات للتهجئة حسب المستوى"""
+    conn = get_db()
+    # محاولة جلب من جدول spelling_words إن وجد، وإلا من questions
+    try:
+        rows = conn.execute(
+            "SELECT * FROM spelling_words WHERE level=? ORDER BY RANDOM() LIMIT ?",
+            (level, limit)
+        ).fetchall()
+    except Exception:
+        rows = []
+    if not rows:
+        # جلب كلمات من جدول questions كبديل
+        rows = conn.execute(
+            "SELECT id, word_order_answer as word, 'Vocabulary' as level, "
+            "'Practice word' as definition, 'Practice this word.' as example_sentence "
+            "FROM questions WHERE word_order_answer IS NOT NULL "
+            "ORDER BY RANDOM() LIMIT ?",
+            (limit,)
+        ).fetchall()
+    conn.close()
+    result = []
+    for r in rows:
+        d = dict(r)
+        d.setdefault("word", d.get("word", "example"))
+        d.setdefault("definition", d.get("definition", "A word to spell"))
+        d.setdefault("example_sentence", d.get("example_sentence", "Use the word correctly."))
+        d.setdefault("id", d.get("id", 0))
+        result.append(d)
+    return result
+
+
+def get_all_spelling_words() -> list:
+    """جلب كل كلمات التهجئة"""
+    return get_spelling_words(limit=100)
+
+
+def get_or_create_review(telegram_id, word_id: int) -> dict:
+    """إنشاء أو جلب سجل مراجعة SRS"""
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT * FROM spelling_reviews WHERE user_id=? AND word_id=?",
+            (str(telegram_id), word_id)
+        ).fetchone()
+        if not row:
+            conn.execute(
+                "INSERT INTO spelling_reviews (user_id, word_id, next_review, interval_days, ease_factor, repetitions) "
+                "VALUES (?, ?, date('now'), 1, 2.5, 0)",
+                (str(telegram_id), word_id)
+            )
+            conn.commit()
+            row = conn.execute(
+                "SELECT * FROM spelling_reviews WHERE user_id=? AND word_id=?",
+                (str(telegram_id), word_id)
+            ).fetchone()
+        return dict(row) if row else {}
+    except Exception:
+        # الجدول غير موجود — أنشئه ثم أعد المحاولة
+        conn.execute("""CREATE TABLE IF NOT EXISTS spelling_reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
+            word_id INTEGER NOT NULL,
+            next_review DATE DEFAULT (date('now')),
+            interval_days INTEGER DEFAULT 1,
+            ease_factor REAL DEFAULT 2.5,
+            repetitions INTEGER DEFAULT 0,
+            UNIQUE(user_id, word_id)
+        )""")
+        conn.commit()
+        return {}
+    finally:
+        conn.close()
+
+
+def get_due_reviews(telegram_id, limit: int = 10) -> list:
+    """جلب الكلمات المستحقة للمراجعة اليوم"""
+    conn = get_db()
+    try:
+        # محاولة جدول spelling_reviews + spelling_words
+        rows = conn.execute(
+            """SELECT sr.*, sw.word, sw.definition, sw.example_sentence, sr.id as review_id, sw.id as word_id
+               FROM spelling_reviews sr
+               JOIN spelling_words sw ON sr.word_id = sw.id
+               WHERE sr.user_id=? AND sr.next_review <= date('now')
+               ORDER BY sr.next_review ASC LIMIT ?""",
+            (str(telegram_id), limit)
+        ).fetchall()
+    except Exception:
+        rows = []
+    conn.close()
+    return dict_rows(rows)
+
+
+def update_review(telegram_id, word_id: int, quality: int, elapsed_sec: float):
+    """تحديث سجل مراجعة SRS بعد الإجابة (خوارزمية SM-2 مبسطة)"""
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT * FROM spelling_reviews WHERE user_id=? AND word_id=?",
+            (str(telegram_id), word_id)
+        ).fetchone()
+        if not row:
+            conn.close()
+            return
+        r = dict(row)
+        ef   = max(1.3, r["ease_factor"] + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+        reps = r["repetitions"] + 1
+        if quality < 3:
+            interval = 1
+        elif reps == 1:
+            interval = 1
+        elif reps == 2:
+            interval = 6
+        else:
+            interval = round(r["interval_days"] * ef)
+        conn.execute(
+            "UPDATE spelling_reviews SET ease_factor=?, repetitions=?, interval_days=?, "
+            "next_review=date('now', ?) WHERE user_id=? AND word_id=?",
+            (ef, reps, interval, f"+{interval} days", str(telegram_id), word_id)
+        )
+        conn.commit()
+    except Exception as e:
+        print(f"[DB] update_review error: {e}")
+    finally:
+        conn.close()
+
+
+def add_to_error_bank(telegram_id, word_id: int, misspelled_as: str):
+    """إضافة كلمة خاطئة لبنك الأخطاء"""
+    _safe_exec(
+        """INSERT OR IGNORE INTO error_bank
+           (student_id, question_text, wrong_answer, correct_answer, topic, next_review)
+           VALUES (?, ?, ?, ?, 'Spelling', date('now'))""",
+        (str(telegram_id), f"word_id:{word_id}", misspelled_as, str(word_id))
+    )
+
+
+def get_error_bank(telegram_id, limit: int = 8) -> list:
+    """جلب أخطاء التهجئة للطالب"""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT *, wrong_answer as misspelled_as, correct_answer as word, "
+        "'Spelling error' as definition "
+        "FROM error_bank WHERE student_id=? AND topic='Spelling' ORDER BY created_at DESC LIMIT ?",
+        (str(telegram_id), limit)
+    ).fetchall()
+    conn.close()
+    return dict_rows(rows)
+
+
+def mark_error_mastered(telegram_id, error_id: int):
+    """حذف خطأ من بنك الأخطاء بعد إتقانه"""
+    conn = get_db()
+    conn.execute(
+        "DELETE FROM error_bank WHERE id=? AND student_id=?",
+        (error_id, str(telegram_id))
+    )
+    conn.commit()
+    conn.close()
+
+
+def quality_from_answer(is_correct: bool, elapsed_sec: float) -> int:
+    """حساب جودة الإجابة (0-5) للـ SM-2"""
+    if not is_correct:
+        return 2
+    if elapsed_sec < 5:
+        return 5   # سريع وصحيح
+    if elapsed_sec < 15:
+        return 4
+    return 3
+
+
+# ── Daily Challenge ───────────────────────────────────────────
+def get_today_challenge() -> dict | None:
+    """جلب تحدي اليوم من قاعدة البيانات أو إنشاء واحد"""
+    conn = get_db()
+    try:
+        # محاولة جدول daily_challenges المخصص
+        row = conn.execute(
+            "SELECT * FROM daily_challenges WHERE challenge_date=date('now') LIMIT 1"
+        ).fetchone()
+        if row:
+            conn.close()
+            return dict(row)
+    except Exception:
+        pass
+    # توليد تحدي يومي من جدول questions
+    try:
+        row = conn.execute(
+            "SELECT id, question_text as question, correct_option as answer, 15 as xp_reward "
+            "FROM questions WHERE question_type='mcq' ORDER BY RANDOM() LIMIT 1"
+        ).fetchone()
+        if row:
+            d = dict(row)
+            d["question"] = d.get("question", "ما معنى كلمة 'Eloquent'؟")
+            d["answer"]   = str(d.get("answer", "articulate"))
+            d["xp_reward"] = 15
+            conn.close()
+            return d
+    except Exception:
+        pass
+    conn.close()
+    # تحدي افتراضي إذا لم توجد أسئلة
+    return {
+        "id": 1,
+        "question": "ما معنى كلمة 'Perseverance' بالعربية؟",
+        "answer": "المثابرة",
+        "xp_reward": 15,
+    }
 
 

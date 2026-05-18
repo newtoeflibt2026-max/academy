@@ -1,5 +1,10 @@
 ﻿__pycache__/
 *.pyc
+*.pyo
 .env
-data/academy.db
-data/*.db
+academy.db
+*.db
+.venv/
+venv/
+ngrok.exe
+*.log
