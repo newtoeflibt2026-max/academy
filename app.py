@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, render_template, send_file
 import json, os, re
 from datetime import datetime
@@ -1268,6 +1268,7 @@ if __name__ == "__main__":
     print("لوحة الادمن    : http://localhost:5000/admin")
     print("Health Check   : http://localhost:5000/api/health")
     print("="*50)
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, debug=False)
 
 
