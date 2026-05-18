@@ -55,8 +55,11 @@ async def run_bot():
     from aiogram.fsm.storage.memory import MemoryStorage
     import importlib
 
-    from bot_database import init_bot_db
-    init_bot_db()
+    from database_v2 import init_db_v2
+from bot_database import init_bot_db
+init_db_v2()
+init_bot_db()
+
 
     bot = Bot(
         token=BOT_TOKEN,
