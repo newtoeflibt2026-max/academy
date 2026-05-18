@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from utils.states import PlacementStates
-from database_v2 import get_student, add_xp
+from database_v2 import add_xp
 import sqlite3, os
 
 router = Router(name="placement_test")
@@ -15,7 +15,8 @@ def get_questions():
         conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT * FROM placement_questions WHERE is_active=1 ORDER BY RANDOM() LIMIT 20"
+            """SELECT * FROM placement_questions 
+               WHERE is_active=1 ORDER BY RANDOM() LIMIT 20"""
         ).fetchall()
         conn.close()
         return [dict(r) for r in rows]
@@ -41,70 +42,88 @@ def save_result(telegram_id, score, correct, total):
         print(f"save_result error: {e}")
         return "beginner"
 
-def options_kb(qid, q_index, total):
+def build_question_kb(q_index, total):
     kb = InlineKeyboardBuilder()
-    kb.button(text="A", callback_data=f"pl:{qid}:{q_index}:A")
-    kb.button(text="B", callback_data=f"pl:{qid}:{q_index}:B")
-    kb.button(text="C", callback_data=f"pl:{qid}:{q_index}:C")
-    kb.button(text="D", callback_data=f"pl:{qid}:{q_index}:D")
+    kb.button(text="🅐", callback_data=f"pla:{q_index}:A")
+    kb.button(text="🅑", callback_data=f"pla:{q_index}:B")
+    kb.button(text="🅒", callback_data=f"pla:{q_index}:C")
+    kb.button(text="🅓", callback_data=f"pla:{q_index}:D")
     kb.adjust(4)
     return kb.as_markup()
 
-async def start_placement(cb: CallbackQuery, state: FSMContext = None):
-    questions = get_questions()
-    if not questions:
-        kb = InlineKeyboardBuilder()
-        kb.button(text="🏠 رجوع", callback_data="menu:main")
-        await cb.message.edit_text(
-            "⚠️ لا توجد أسئلة بعد. يرجى التواصل مع الإدارة.",
-            reply_markup=kb.as_markup()
-        )
-        await cb.answer()
-        return
-
-    if state:
-        await state.set_state(PlacementStates.answering)
-        await state.update_data(
-            questions=questions,
-            current=0,
-            correct=0,
-            answers=[]
-        )
-
-    q = questions[0]
-    text = (
+def build_question_text(q, index, total, feedback=""):
+    progress = "▓" * (index) + "░" * (total - index)
+    return (
         f"🔬 <b>اختبار تحديد المستوى</b>\n"
-        f"━━━━━━━━━━━━━━━\n"
-        f"📝 السؤال 1 من {len(questions)}\n\n"
+        f"[{progress}]\n"
+        f"📝 <b>السؤال {index + 1} من {total}</b>"
+        f"{' ' + feedback if feedback else ''}\n"
+        f"━━━━━━━━━━━━━━━━━━\n\n"
         f"{q['question_text']}\n\n"
         f"🅐 {q['option_a']}\n"
         f"🅑 {q['option_b']}\n"
         f"🅒 {q['option_c']}\n"
         f"🅓 {q['option_d']}"
     )
-    await cb.message.edit_text(
-        text,
-        reply_markup=options_kb(q['id'], 0, len(questions))
-    )
+
+async def start_placement(cb: CallbackQuery, state: FSMContext = None):
+    questions = get_questions()
+    if not questions:
+        kb = InlineKeyboardBuilder()
+        kb.button(text="🏠 رجوع", callback_data="menu:main")
+        try:
+            await cb.message.edit_text(
+                "⚠️ لا توجد أسئلة بعد. تواصل مع الإدارة.",
+                reply_markup=kb.as_markup()
+            )
+        except:
+            await cb.message.answer(
+                "⚠️ لا توجد أسئلة بعد.",
+                reply_markup=kb.as_markup()
+            )
+        await cb.answer()
+        return
+
+    if state:
+        await state.clear()
+        await state.set_state(PlacementStates.answering)
+        await state.update_data(
+            questions=questions,
+            current=0,
+            correct=0
+        )
+
+    q = questions[0]
+    text = build_question_text(q, 0, len(questions))
+    try:
+        await cb.message.edit_text(
+            text, reply_markup=build_question_kb(0, len(questions))
+        )
+    except:
+        await cb.message.answer(
+            text, reply_markup=build_question_kb(0, len(questions))
+        )
     await cb.answer()
 
 @router.callback_query(F.data == "start_placement")
 async def placement_start_cb(cb: CallbackQuery, state: FSMContext):
     await start_placement(cb, state)
 
-@router.callback_query(F.data.startswith("pl:"))
+@router.callback_query(F.data.startswith("pla:"))
 async def placement_answer(cb: CallbackQuery, state: FSMContext):
     parts = cb.data.split(":")
-    qid = int(parts[1])
-    q_index = int(parts[2])
-    answer = parts[3]
+    q_index = int(parts[1])
+    answer = parts[2]
 
     data = await state.get_data()
     questions = data.get("questions", [])
     correct_count = data.get("correct", 0)
-    answers = data.get("answers", [])
 
-    if not questions or q_index >= len(questions):
+    if not questions:
+        await cb.answer("❌ انتهت الجلسة، أرسل /start", show_alert=True)
+        return
+
+    if q_index >= len(questions):
         await cb.answer("انتهى الاختبار!")
         return
 
@@ -113,27 +132,22 @@ async def placement_answer(cb: CallbackQuery, state: FSMContext):
     if is_correct:
         correct_count += 1
 
-    answers.append({
-        "qid": qid,
-        "answer": answer,
-        "correct": is_correct
-    })
-
+    feedback = "✅" if is_correct else f"❌ الإجابة الصحيحة: {current_q.get('correct_option','')}"
     next_index = q_index + 1
 
+    # ══ انتهى الاختبار ══
     if next_index >= len(questions):
         score = round((correct_count / len(questions)) * 100, 1)
         user_id = str(cb.from_user.id)
         level = save_result(user_id, score, correct_count, len(questions))
+        add_xp(user_id, 50, "general", "placement test")
 
         level_map = {
-            "beginner": ("مبتدئ", "🔵", "ستبدأ من دورة التأسيس الشامل"),
-            "intermediate": ("متوسط", "🟡", "ستنطلق مباشرة في TOEFL"),
-            "advanced": ("متقدم", "🟢", "مستواك ممتاز! ستبدأ من المراحل المتقدمة")
+            "beginner": ("مبتدئ 🔵", "ستبدأ من دورة التأسيس الشامل"),
+            "intermediate": ("متوسط 🟡", "ستنطلق مباشرة في TOEFL"),
+            "advanced": ("متقدم 🟢", "مستواك ممتاز! ستبدأ من المراحل المتقدمة")
         }
-        lvl_name, emoji, msg = level_map.get(level, ("مبتدئ", "🔵", ""))
-
-        add_xp(user_id, 50, "general", "placement test completed")
+        lvl_name, msg = level_map.get(level, ("مبتدئ 🔵", ""))
 
         kb = InlineKeyboardBuilder()
         kb.button(text="📚 ابدأ دروسك", callback_data="menu:lessons")
@@ -143,36 +157,28 @@ async def placement_answer(cb: CallbackQuery, state: FSMContext):
         await state.clear()
         await cb.message.edit_text(
             f"🎉 <b>انتهى اختبار تحديد المستوى!</b>\n\n"
+            f"━━━━━━━━━━━━━━━━━━\n"
             f"✅ إجابات صحيحة: <b>{correct_count}/{len(questions)}</b>\n"
             f"📊 النتيجة: <b>{score}%</b>\n"
-            f"{emoji} مستواك: <b>{lvl_name}</b>\n\n"
+            f"🎓 مستواك: <b>{lvl_name}</b>\n\n"
             f"💡 {msg}\n\n"
-            f"🎁 حصلت على <b>50 XP</b> كمكافأة!",
+            f"🎁 حصلت على <b>50 XP</b> مكافأة!",
             reply_markup=kb.as_markup()
         )
-        await cb.answer("✅ انتهى الاختبار!")
+        await cb.answer("🎉 انتهى الاختبار!")
         return
 
-    next_q = questions[next_index]
+    # ══ السؤال التالي ══
     await state.update_data(
         current=next_index,
-        correct=correct_count,
-        answers=answers
+        correct=correct_count
     )
 
-    feedback = "✅" if is_correct else "❌"
-    text = (
-        f"🔬 <b>اختبار تحديد المستوى</b>\n"
-        f"━━━━━━━━━━━━━━━\n"
-        f"{feedback} | السؤال {next_index + 1} من {len(questions)}\n\n"
-        f"{next_q['question_text']}\n\n"
-        f"🅐 {next_q['option_a']}\n"
-        f"🅑 {next_q['option_b']}\n"
-        f"🅒 {next_q['option_c']}\n"
-        f"🅓 {next_q['option_d']}"
-    )
+    next_q = questions[next_index]
+    text = build_question_text(next_q, next_index, len(questions), feedback)
+
     await cb.message.edit_text(
         text,
-        reply_markup=options_kb(next_q['id'], next_index, len(questions))
+        reply_markup=build_question_kb(next_index, len(questions))
     )
-    await cb.answer(feedback)
+    await cb.answer(feedback[:30])
