@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify, render_template, send_file
 import json, os, re
 from datetime import datetime
@@ -75,133 +75,6 @@ def api_student_profile():
 def api_student_tasks():
     sid = request.args.get("student_id", 1)
     return jsonify(get_daily_tasks(int(sid)))
-
-# ── MINI APP STUDENT APIs ─────────────────────────────────
-@app.route("/api/user/progress")
-def api_user_progress():
-    sid = request.args.get("student_id")
-    tid = request.args.get("telegram_id")
-    conn = get_db()
-    if tid:
-        row = conn.execute("SELECT xp, streak_days, completed_lessons FROM students WHERE telegram_id=?", (str(tid),)).fetchone()
-    elif sid:
-        row = conn.execute("SELECT xp, streak_days, completed_lessons FROM students WHERE id=?", (int(sid),)).fetchone()
-    else:
-        row = conn.execute("SELECT xp, streak_days, completed_lessons FROM students LIMIT 1").fetchone()
-    conn.close()
-    if not row:
-        return jsonify({"error": "الطالب غير موجود"}), 404
-    return jsonify(dict(row))
-
-@app.route("/api/user/tasks")
-def api_user_tasks():
-    sid = request.args.get("student_id")
-    tid = request.args.get("telegram_id")
-    conn = get_db()
-    if tid:
-        student = conn.execute("SELECT * FROM students WHERE telegram_id=?", (str(tid),)).fetchone()
-    elif sid:
-        student = conn.execute("SELECT * FROM students WHERE id=?", (int(sid),)).fetchone()
-    else:
-        student = conn.execute("SELECT * FROM students LIMIT 1").fetchone()
-    
-    if not student:
-        conn.close()
-        return jsonify({"error": "الطالب غير موجود"}), 404
-    
-    student = dict(student)
-    day_num = request.args.get("day", student.get("completed_lessons", 0) + 1)
-    
-    lesson = conn.execute(
-        "SELECT * FROM lessons WHERE day_number=? AND (course_type=? OR level=?) LIMIT 1",
-        (int(day_num), student.get("level", "toefl"), student.get("level", "foundation"))
-    ).fetchone()
-    
-    if not lesson:
-        lesson = conn.execute("SELECT * FROM lessons LIMIT 1").fetchone()
-        
-    quiz = []
-    if lesson:
-        lesson = dict(lesson)
-        questions_rows = conn.execute("SELECT * FROM questions WHERE lesson_id=? AND is_mock=0", (lesson["id"],)).fetchall()
-        quiz = [dict(q) for q in questions_rows]
-        
-    conn.close()
-    return jsonify({
-        "lesson": lesson,
-        "quiz": quiz
-    })
-
-@app.route("/api/user/graduation-status", methods=["GET", "POST"])
-def api_graduation_status():
-    sid = request.args.get("student_id") or (request.json.get("student_id") if request.is_json else None)
-    tid = request.args.get("telegram_id") or (request.json.get("telegram_id") if request.is_json else None)
-    
-    conn = get_db()
-    if tid:
-        student = conn.execute("SELECT * FROM students WHERE telegram_id=?", (str(tid),)).fetchone()
-    elif sid:
-        student = conn.execute("SELECT * FROM students WHERE id=?", (int(sid),)).fetchone()
-    else:
-        student = conn.execute("SELECT * FROM students LIMIT 1").fetchone()
-        
-    if not student:
-        conn.close()
-        return jsonify({"error": "الطالب غير موجود"}), 404
-        
-    student = dict(student)
-    
-    required_score = student.get("required_score", 59)
-    if required_score is None:
-        required_score = 59
-    passing_threshold = required_score + 10
-    
-    xp = student.get("xp", 0) or 0
-    completed_lessons = student.get("completed_lessons", 0) or 0
-    streak_days = student.get("streak_days", 0) or 0
-    mock_exam_score = student.get("mock_exam_score", 0) or 0
-    is_graduated = student.get("is_graduated", 0) or 0
-    
-    cond_xp = xp >= 500
-    cond_lessons = completed_lessons >= 10
-    cond_streak = streak_days >= 3
-    cond_mock = mock_exam_score >= passing_threshold
-    
-    eligible = cond_xp and cond_lessons and cond_streak and cond_mock
-    
-    if request.method == "POST":
-        if eligible:
-            conn.execute("UPDATE students SET is_graduated=1 WHERE id=?", (student["id"],))
-            conn.commit()
-            is_graduated = 1
-            message = "🎉 تهانينا! لقد تخرجت بنجاح من الأكاديمية!"
-        else:
-            message = f"يجب أن تحصل على درجة {passing_threshold}% في الامتحان التجريبي لتضمن نجاحك وتفتح بوابة التخرج"
-    else:
-        if eligible:
-            message = "بوابة التخرج مفتوحة الآن! اضغط للتخرج."
-        else:
-            message = f"يجب أن تحصل على درجة {passing_threshold}% في الامتحان التجريبي لتضمن نجاحك وتفتح بوابة التخرج"
-            
-    conn.close()
-    
-    return jsonify({
-        "required_score": required_score,
-        "passing_threshold": passing_threshold,
-        "current_xp": xp,
-        "completed_lessons": completed_lessons,
-        "streak_days": streak_days,
-        "mock_exam_score": mock_exam_score,
-        "is_graduated": bool(is_graduated),
-        "eligible": eligible,
-        "conditions": {
-            "xp_reached": cond_xp,
-            "tasks_reached": cond_lessons,
-            "streak_reached": cond_streak,
-            "mock_score_reached": cond_mock
-        },
-        "message": message
-    })
 
 @app.route("/api/tasks/toggle", methods=["GET","POST"])
 def api_toggle_task():
@@ -985,20 +858,14 @@ def api_get_all_questions():
 @app.route("/api/admin/questions", methods=["POST"])
 def api_add_question():
     data = request.get_json(silent=True) or {}
-    is_mock = int(data.get("is_mock", 0))
-    lesson_id = data.get("lesson_id")
-    if not is_mock and not lesson_id:
-        return jsonify({"error": "يجب تحديد الدرس المستهدف للسؤال أو تمييزه كسؤال امتحان تجريبي"}), 400
-
     conn = get_db()
     conn.execute("""INSERT INTO questions
         (question_type,topic,difficulty,question_text,passage_text,
          audio_url,audio_file_id,option_a,option_b,option_c,option_d,correct_option,
          complete_words_passage,complete_words_answers,
          word_order_words,word_order_answer,
-         writing_prompt,writing_min_words,writing_sample,speaking_prompt,
-         lesson_id,is_mock)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""", (
+         writing_prompt,writing_min_words,writing_sample,speaking_prompt)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""", (
         data.get("question_type","mcq"), data.get("topic","General"),
         data.get("difficulty","medium"), data.get("question_text",""),
         data.get("passage_text",""),     data.get("audio_url",""),
@@ -1009,7 +876,6 @@ def api_add_question():
         data.get("word_order_words",""),  data.get("word_order_answer",""),
         data.get("writing_prompt",""),    data.get("writing_min_words",50),
         data.get("writing_sample",""),    data.get("speaking_prompt",""),
-        lesson_id, is_mock
     ))
     conn.commit(); conn.close()
     return jsonify({"success":True,"message":"تم إضافة السؤال"})
@@ -1025,19 +891,13 @@ def api_delete_question(qid):
 @app.route("/api/admin/questions/<int:qid>", methods=["PUT","POST"])
 def api_edit_question(qid):
     data = request.get_json(silent=True) or {}
-    is_mock = int(data.get("is_mock", 0))
-    lesson_id = data.get("lesson_id")
-    if not is_mock and not lesson_id:
-        return jsonify({"error": "يجب تحديد الدرس المستهدف للسؤال أو تمييزه كسؤال امتحان تجريبي"}), 400
-
     conn = get_db()
     conn.execute("""UPDATE questions SET
         question_type=?,topic=?,difficulty=?,question_text=?,passage_text=?,
         audio_url=?,audio_file_id=?,option_a=?,option_b=?,option_c=?,option_d=?,correct_option=?,
         complete_words_passage=?,complete_words_answers=?,
         word_order_words=?,word_order_answer=?,
-        writing_prompt=?,writing_min_words=?,writing_sample=?,speaking_prompt=?,
-        lesson_id=?,is_mock=?
+        writing_prompt=?,writing_min_words=?,writing_sample=?,speaking_prompt=?
         WHERE id=?""", (
         data.get("question_type","mcq"),  data.get("topic","General"),
         data.get("difficulty","medium"),  data.get("question_text",""),
@@ -1049,7 +909,7 @@ def api_edit_question(qid):
         data.get("word_order_words",""),  data.get("word_order_answer",""),
         data.get("writing_prompt",""),    data.get("writing_min_words",50),
         data.get("writing_sample",""),    data.get("speaking_prompt",""),
-        lesson_id, is_mock, qid))
+        qid))
     conn.commit(); conn.close()
     return jsonify({"success":True})
 
@@ -1099,40 +959,9 @@ def api_get_courses():
 def api_add_course():
     data = request.get_json(silent=True) or {}
     conn = get_db()
-    conn.execute("""INSERT INTO lessons 
-        (title,level,order_num,min_score,course_type,week_number,day_number,vocab_content,grammar_content,skill_content) 
-        VALUES (?,?,?,?,?,?,?,?,?,?)""", (
+    conn.execute("INSERT INTO lessons (title,level,order_num,min_score) VALUES (?,?,?,?)", (
         data.get("name","درس جديد"), data.get("level","foundation"),
-        data.get("order_num",1),     data.get("min_score",70),
-        data.get("course_type","toefl"), data.get("week_number",1),
-        data.get("day_number",1),    data.get("vocab_content",""),
-        data.get("grammar_content",""), data.get("skill_content","")
-    ))
-    conn.commit(); conn.close()
-    return jsonify({"success":True})
-
-@app.route("/api/admin/courses/<int:lid>", methods=["PUT","POST"])
-def api_update_course(lid):
-    data = request.get_json(silent=True) or {}
-    conn = get_db()
-    conn.execute("""UPDATE lessons SET
-        title=?,level=?,order_num=?,min_score=?,course_type=?,week_number=?,day_number=?,
-        vocab_content=?,grammar_content=?,skill_content=?
-        WHERE id=?""", (
-        data.get("name","درس جديد"), data.get("level","foundation"),
-        data.get("order_num",1),     data.get("min_score",70),
-        data.get("course_type","toefl"), data.get("week_number",1),
-        data.get("day_number",1),    data.get("vocab_content",""),
-        data.get("grammar_content",""), data.get("skill_content",""),
-        lid
-    ))
-    conn.commit(); conn.close()
-    return jsonify({"success":True})
-
-@app.route("/api/admin/courses/delete/<int:lid>", methods=["POST","DELETE"])
-def api_delete_course(lid):
-    conn = get_db()
-    conn.execute("DELETE FROM lessons WHERE id=?", (lid,))
+        data.get("order_num",1),     data.get("min_score",70)))
     conn.commit(); conn.close()
     return jsonify({"success":True})
 

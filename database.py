@@ -32,6 +32,9 @@ def init_db():
         subscription_type TEXT DEFAULT 'free',
         writing_corrections_today INTEGER DEFAULT 0,
         writing_corrections_date DATE,
+        required_score INTEGER DEFAULT 59,
+        mock_exam_score INTEGER DEFAULT 0,
+        is_graduated INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -54,6 +57,8 @@ def init_db():
         writing_min_words INTEGER DEFAULT 50,
         writing_sample    TEXT,
         speaking_prompt   TEXT,
+        lesson_id INTEGER,
+        is_mock INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -116,7 +121,13 @@ def init_db():
         order_num INTEGER DEFAULT 1,
         content TEXT,
         min_score INTEGER DEFAULT 70,
-        is_active INTEGER DEFAULT 1
+        is_active INTEGER DEFAULT 1,
+        course_type TEXT DEFAULT 'toefl',
+        week_number INTEGER DEFAULT 1,
+        day_number INTEGER DEFAULT 1,
+        vocab_content TEXT,
+        grammar_content TEXT,
+        skill_content TEXT
     );
 
     CREATE TABLE IF NOT EXISTS payments (

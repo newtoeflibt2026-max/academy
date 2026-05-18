@@ -38,6 +38,9 @@ def init_bot_db():
         free_week       INTEGER DEFAULT 1,
         review_submitted INTEGER DEFAULT 0,
         post_submitted  INTEGER DEFAULT 0,
+        required_score  INTEGER DEFAULT 59,
+        mock_exam_score INTEGER DEFAULT 0,
+        is_graduated    INTEGER DEFAULT 0,
         created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
