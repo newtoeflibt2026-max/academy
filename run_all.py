@@ -7,6 +7,7 @@ import logging
 from loguru import logger
 
 # ── تحميل متغيرات البيئة ──────────────────────────────────────────────────
+# ── تحميل متغيرات البيئة ──────────────────────────────────────────────────
 def _load_env():
     env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
     if os.path.exists(env_path):
@@ -19,10 +20,20 @@ def _load_env():
 
 _load_env()
 
-PORT = int(os.environ.get("PORT", 5000))
+PORT = int(os.environ.get("PORT", 8080))
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-RAILWAY_URL = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
+
+# تحقق من التوكن قبل البدء
+if not BOT_TOKEN or len(BOT_TOKEN) < 20:
+    import sys
+    print("ERROR: BOT_TOKEN missing or invalid!")
+    print(f"PORT={PORT}")
+    print(f"All env vars: {[k for k in os.environ.keys() if not k.startswith('_')]}")
+    # شغّل Flask فقط بدون البوت
+    BOT_TOKEN = None
+
 WEBHOOK_HOST = os.environ.get("WEBHOOK_HOST", "")
+
 
 # ── تشغيل Flask ──────────────────────────────────────────────────────────
 def run_flask():
@@ -32,6 +43,12 @@ def run_flask():
 
 # ── تشغيل البوت ──────────────────────────────────────────────────────────
 async def run_bot():
+    if not BOT_TOKEN:
+        logger.warning("BOT_TOKEN not set - bot disabled, running Flask only")
+        # اجعل البوت ينام بدل ما يكسر البرنامج
+        while True:
+            await asyncio.sleep(3600)
+
     from aiogram import Bot, Dispatcher
     from aiogram.enums import ParseMode
     from aiogram.client.default import DefaultBotProperties
