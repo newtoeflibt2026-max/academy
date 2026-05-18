@@ -56,9 +56,9 @@ async def run_bot():
     import importlib
 
     from database_v2 import init_db_v2
-from bot_database import init_bot_db
-init_db_v2()
-init_bot_db()
+    from bot_database import init_bot_db
+    init_db_v2()
+    init_bot_db()
 
 
     bot = Bot(
