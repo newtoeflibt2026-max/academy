@@ -59,7 +59,13 @@ async def run_bot():
     from bot_database import init_bot_db
     init_db_v2()
     init_bot_db()
-
+    
+    # seed البيانات الأساسية تلقائياً
+    try:
+        import seed_data
+        seed_data.seed()
+    except Exception as e:
+        logger.warning(f"Seed skipped: {e}")
 
     bot = Bot(
         token=BOT_TOKEN,
