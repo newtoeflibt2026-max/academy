@@ -1,89 +1,178 @@
-from aiogram import Router, F, types
-from aiogram.fsm.state import State, StatesGroup
+# -*- coding: utf-8 -*-
+from aiogram import Router, F
+from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from database import get_student, set_student_level, set_placement_done, get_placement_questions
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from utils.states import PlacementStates
+from database_v2 import get_student, add_xp
+import sqlite3, os
 
-router = Router()
-TOTAL_PER_LEVEL = {0: (0,3,"A1"), 1:(4,6,"A2"), 2:(7,8,"B1"), 3:(9,9,"B2"), 4:(10,10,"C1")}
+router = Router(name="placement_test")
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "academy.db")
 
-def get_pathway(score):
-    if score <= 3:   return "A1", "مبتدئ 🔸"
-    elif score <= 6:  return "A2", "تحت المتوسط 🟠"
-    elif score <= 8:  return "B1", "متوسط 🟡"
-    elif score <= 9:  return "B2", "فوق المتوسط 🟢"
-    return "C1", "متقدم 🔴"
+def get_questions():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            "SELECT * FROM placement_questions WHERE is_active=1 ORDER BY RANDOM() LIMIT 20"
+        ).fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+    except Exception as e:
+        print(f"get_questions error: {e}")
+        return []
 
-class PlaceState(StatesGroup):
-    q = State()
-
-@router.callback_query(F.data == "placement_test")
-async def start_test(callback: types.CallbackQuery, state: FSMContext):
-    student = get_student(callback.from_user.id)
-    if student and student["placement_done"]:
-        await callback.message.edit_text(
-            "✅ *لقد أتممت اختبار تحديد المستوى مسبقاً* ✅\n\n"
-            "تم تحديد مستواك بالفعل، يمكنك الآن:\n"
-            "📚 تصفح *دوراتي* للبدء بالتعلم\n"
-            "🎯 المشاركة في *تحدي الـ60 ثانية*\n\n"
-            "بالتوفيق في رحلتك التعليمية! 🌟",
-            parse_mode="Markdown"
+def save_result(telegram_id, score, correct, total):
+    try:
+        level = "advanced" if score >= 70 else \
+                "intermediate" if score >= 50 else "beginner"
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute(
+            """UPDATE students SET placement_done=1,
+               placement_score=?, level=?
+               WHERE telegram_id=?""",
+            (score, level, str(telegram_id))
         )
-        await callback.answer()
-        return
-    questions = get_placement_questions(10)
-    if len(questions) < 10:
-        await callback.message.edit_text("⚠️ لم يتم إعداد أسئلة كافية بعد. يرجى التواصل مع الأدمن.")
-        await callback.answer()
-        return
-    await state.update_data(score=0, idx=0, questions=questions)
-    await state.set_state(PlaceState.q)
-    await send_q(callback.message, state, 0)
+        conn.commit()
+        conn.close()
+        return level
+    except Exception as e:
+        print(f"save_result error: {e}")
+        return "beginner"
 
-async def send_q(msg, state, idx):
+def options_kb(qid, q_index, total):
+    kb = InlineKeyboardBuilder()
+    kb.button(text="A", callback_data=f"pl:{qid}:{q_index}:A")
+    kb.button(text="B", callback_data=f"pl:{qid}:{q_index}:B")
+    kb.button(text="C", callback_data=f"pl:{qid}:{q_index}:C")
+    kb.button(text="D", callback_data=f"pl:{qid}:{q_index}:D")
+    kb.adjust(4)
+    return kb.as_markup()
+
+async def start_placement(cb: CallbackQuery, state: FSMContext = None):
+    questions = get_questions()
+    if not questions:
+        kb = InlineKeyboardBuilder()
+        kb.button(text="🏠 رجوع", callback_data="menu:main")
+        await cb.message.edit_text(
+            "⚠️ لا توجد أسئلة بعد. يرجى التواصل مع الإدارة.",
+            reply_markup=kb.as_markup()
+        )
+        await cb.answer()
+        return
+
+    if state:
+        await state.set_state(PlacementStates.answering)
+        await state.update_data(
+            questions=questions,
+            current=0,
+            correct=0,
+            answers=[]
+        )
+
+    q = questions[0]
+    text = (
+        f"🔬 <b>اختبار تحديد المستوى</b>\n"
+        f"━━━━━━━━━━━━━━━\n"
+        f"📝 السؤال 1 من {len(questions)}\n\n"
+        f"{q['question_text']}\n\n"
+        f"🅐 {q['option_a']}\n"
+        f"🅑 {q['option_b']}\n"
+        f"🅒 {q['option_c']}\n"
+        f"🅓 {q['option_d']}"
+    )
+    await cb.message.edit_text(
+        text,
+        reply_markup=options_kb(q['id'], 0, len(questions))
+    )
+    await cb.answer()
+
+@router.callback_query(F.data == "start_placement")
+async def placement_start_cb(cb: CallbackQuery, state: FSMContext):
+    await start_placement(cb, state)
+
+@router.callback_query(F.data.startswith("pl:"))
+async def placement_answer(cb: CallbackQuery, state: FSMContext):
+    parts = cb.data.split(":")
+    qid = int(parts[1])
+    q_index = int(parts[2])
+    answer = parts[3]
+
     data = await state.get_data()
     questions = data.get("questions", [])
-    if idx >= len(questions):
-        await finish_test(msg, state)
+    correct_count = data.get("correct", 0)
+    answers = data.get("answers", [])
+
+    if not questions or q_index >= len(questions):
+        await cb.answer("انتهى الاختبار!")
         return
-    q = questions[idx]
-    opts = [q['option_a'], q['option_b'], q['option_c'], q['option_d']]
-    btns = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=f"{chr(0x2460+i)} {o}", callback_data=f"pq_{idx}_{i}")]
-        for i, o in enumerate(opts)
-    ])
-    await msg.edit_text(
-        f"📝 *سؤال {idx+1} من {len(questions)}*\n\n_{q['question']}_",
-        reply_markup=btns, parse_mode="Markdown"
+
+    current_q = questions[q_index]
+    is_correct = answer == current_q.get("correct_option", "")
+    if is_correct:
+        correct_count += 1
+
+    answers.append({
+        "qid": qid,
+        "answer": answer,
+        "correct": is_correct
+    })
+
+    next_index = q_index + 1
+
+    if next_index >= len(questions):
+        score = round((correct_count / len(questions)) * 100, 1)
+        user_id = str(cb.from_user.id)
+        level = save_result(user_id, score, correct_count, len(questions))
+
+        level_map = {
+            "beginner": ("مبتدئ", "🔵", "ستبدأ من دورة التأسيس الشامل"),
+            "intermediate": ("متوسط", "🟡", "ستنطلق مباشرة في TOEFL"),
+            "advanced": ("متقدم", "🟢", "مستواك ممتاز! ستبدأ من المراحل المتقدمة")
+        }
+        lvl_name, emoji, msg = level_map.get(level, ("مبتدئ", "🔵", ""))
+
+        add_xp(user_id, 50, "general", "placement test completed")
+
+        kb = InlineKeyboardBuilder()
+        kb.button(text="📚 ابدأ دروسك", callback_data="menu:lessons")
+        kb.button(text="🏠 الرئيسية", callback_data="menu:main")
+        kb.adjust(1)
+
+        await state.clear()
+        await cb.message.edit_text(
+            f"🎉 <b>انتهى اختبار تحديد المستوى!</b>\n\n"
+            f"✅ إجابات صحيحة: <b>{correct_count}/{len(questions)}</b>\n"
+            f"📊 النتيجة: <b>{score}%</b>\n"
+            f"{emoji} مستواك: <b>{lvl_name}</b>\n\n"
+            f"💡 {msg}\n\n"
+            f"🎁 حصلت على <b>50 XP</b> كمكافأة!",
+            reply_markup=kb.as_markup()
+        )
+        await cb.answer("✅ انتهى الاختبار!")
+        return
+
+    next_q = questions[next_index]
+    await state.update_data(
+        current=next_index,
+        correct=correct_count,
+        answers=answers
     )
 
-@router.callback_query(PlaceState.q, F.data.startswith("pq_"))
-async def handle_place(callback: types.CallbackQuery, state: FSMContext):
-    _, idx_s, choice_s = callback.data.split("_")
-    idx, choice = int(idx_s), int(choice_s)
-    data = await state.get_data()
-    questions = data["questions"]
-    correct = questions[idx]["correct_option"]
-    score = data.get("score", 0)
-    if choice == correct:
-        score += 1
-    await state.update_data(score=score)
-    await send_q(callback.message, state, idx + 1)
-    await callback.answer()
-
-async def finish_test(msg, state):
-    data = await state.get_data()
-    score = data.get("score", 0)
-    total = len(data.get("questions", []))
-    level, label = get_pathway(score)
-    uid = msg.chat.id
-    set_student_level(uid, level)
-    set_placement_done(uid)
-    await msg.edit_text(
-        f"🎉 *اكتمل اختبار تحديد المستوى!*\n\n"
-        f"📊 نتيجتك: *{score}/{total}*\n"
-        f"🎯 مستواك: *{label} ({level})*\n\n"
-        f"📚 تفضل بزيارة *دوراتي* للبدء بالدروس!\n"
-        f"⚡ جرّب *تحدي الـ60 ثانية* لاختبار سرعتك!",
-        parse_mode="Markdown"
+    feedback = "✅" if is_correct else "❌"
+    text = (
+        f"🔬 <b>اختبار تحديد المستوى</b>\n"
+        f"━━━━━━━━━━━━━━━\n"
+        f"{feedback} | السؤال {next_index + 1} من {len(questions)}\n\n"
+        f"{next_q['question_text']}\n\n"
+        f"🅐 {next_q['option_a']}\n"
+        f"🅑 {next_q['option_b']}\n"
+        f"🅒 {next_q['option_c']}\n"
+        f"🅓 {next_q['option_d']}"
     )
+    await cb.message.edit_text(
+        text,
+        reply_markup=options_kb(next_q['id'], next_index, len(questions))
+    )
+    await cb.answer(feedback)
