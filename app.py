@@ -2,8 +2,7 @@
 from flask import Flask, request, jsonify, render_template, send_file
 import json, os, re
 from datetime import datetime
-if __name__ == "__main__":
-    init_db()
+from database import (
     init_db, seed_demo_data, get_db,
     get_student_by_id, get_student_by_telegram,
     get_all_students, get_daily_tasks, toggle_task,
