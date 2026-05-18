@@ -119,9 +119,33 @@ async def placement_answer(cb: CallbackQuery, state: FSMContext):
     questions = data.get("questions", [])
     correct_count = data.get("correct", 0)
 
-    if not questions:
-        await cb.answer("❌ انتهت الجلسة، أرسل /start", show_alert=True)
-        return
+        if not questions:
+        # أعد تحميل الأسئلة تلقائياً
+        questions = get_questions()
+        if not questions:
+            await cb.answer("❌ لا توجد أسئلة، تواصل مع الإدارة", show_alert=True)
+            return
+        await state.clear()
+        await state.set_state(PlacementStates.answering)
+        await state.update_data(questions=questions, current=0, correct=0)
+        q_index = 0
+        correct_count = 0
+        current_q = questions[0]
+        is_correct = answer == current_q.get("correct_option", "")
+        if is_correct:
+            correct_count += 1
+        feedback = "✅" if is_correct else f"❌ الصحيح: {current_q.get('correct_option','')}"
+        next_index = 1
+        if next_index >= len(questions):
+            pass
+        else:
+            await state.update_data(current=next_index, correct=correct_count)
+            next_q = questions[next_index]
+            text = build_question_text(next_q, next_index, len(questions), feedback)
+            await cb.message.edit_text(text, reply_markup=build_question_kb(next_index, len(questions)))
+            await cb.answer(feedback[:30])
+            return
+
 
     if q_index >= len(questions):
         await cb.answer("انتهى الاختبار!")
