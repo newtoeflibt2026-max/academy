@@ -7,6 +7,10 @@ import os
 
 
 def register_admin_routes(app):
+    @app.route("/student")
+    @app.route("/portal")
+    def student_portal():
+        return render_template("student_portal.html")
 
     # ─── Admin Dashboard Page ────────────────────────────────────
     @app.route("/")
@@ -397,4 +401,5 @@ def register_admin_routes(app):
             return jsonify({"plans": [dict(r) for r in rows]})
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+
 

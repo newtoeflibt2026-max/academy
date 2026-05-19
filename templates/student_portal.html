@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>أكاديمية يامن - بوابة الطالب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{font-family:'Cairo',sans-serif;box-sizing:border-box;margin:0;padding:0}
+body{background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text{font-size:16px;font-weight:700;color:#f1f5f9}
+.container{max-width:800px;margin:0 auto;padding:20px}
+.card{background:#1e293b;border-radius:16px;border:1px solid #334155;padding:20px;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:700;color:#f1f5f9;margin-bottom:14px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#0f172a;border-radius:12px;padding:14px;text-align:center}
+.stat-val{font-size:22px;font-weight:800;color:#6366f1}
+.stat-lbl{font-size:11px;color:#64748b;margin-top:2px}
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.skill-name{width:80px;font-size:12px;color:#94a3b8}
+.skill-bar{flex:1;height:8px;background:#334155;border-radius:99px;overflow:hidden}
+.skill-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:.6s}
+.skill-xp{width:60px;text-align:left;font-size:12px;color:#64748b}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:.2s;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;width:100%;justify-content:center;margin-bottom:10px}
+.btn-ghost{background:#334155;color:#94a3b8;width:100%;justify-content:center;margin-bottom:10px}
+.badge{display:inline-flex;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-green{background:#052e16;color:#4ade80}
+.badge-red{background:#1c0005;color:#f87171}
+.badge-blue{background:#1e3a5f;color:#60a5fa}
+.form-control{width:100%;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 14px;color:#f1f5f9;font-size:14px;font-family:'Cairo',sans-serif;resize:vertical}
+.form-control:focus{outline:none;border-color:#6366f1}
+.login-box{max-width:400px;margin:60px auto;padding:0 20px}
+.login-title{font-size:24px;font-weight:800;text-align:center;margin-bottom:8px}
+.login-sub{font-size:13px;color:#64748b;text-align:center;margin-bottom:24px}
+.toast{position:fixed;bottom:20px;left:20px;background:#334155;color:#f1f5f9;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;display:none}
+.toast.show{display:block}
+.mission-item{display:flex;align-items:center;gap:12px;padding:12px;background:#0f172a;border-radius:10px;margin-bottom:8px}
+.mission-icon{width:36px;height:36px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.message-box{margin-top:8px}
+#login-screen,#main-screen{display:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🎓</div>
+    <div class="logo-text">أكاديمية يامن للتوفل</div>
+  </div>
+  <div id="header-user" style="font-size:13px;color:#64748b"></div>
+</div>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-title">🎓 مرحباً بك</div>
+    <div class="login-sub">أدخل Telegram ID الخاص بك للدخول</div>
+    <div style="margin-bottom:12px">
+      <input class="form-control" id="login-uid" placeholder="Telegram User ID" type="number" style="margin-bottom:10px"/>
+      <button class="btn btn-primary" onclick="doLogin()">🚀 دخول</button>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#64748b">
+      للحصول على ID الخاص بك، أرسل /start للبوت
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div id="main-screen">
+  <div class="container">
+
+    <!-- Profile -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:54px;height:54px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px">👤</div>
+        <div>
+          <div style="font-size:17px;font-weight:700;color:#f1f5f9" id="p-name">—</div>
+          <div style="font-size:12px;color:#64748b" id="p-level">—</div>
+        </div>
+        <div style="margin-right:auto" id="p-badge"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-val" id="p-xp">0</div><div class="stat-lbl">⭐ XP</div></div>
+        <div class="stat"><div class="stat-val" id="p-streak">0</div><div class="stat-lbl">🔥 Streak</div></div>
+        <div class="stat"><div class="stat-val" id="p-tasks">0</div><div class="stat-lbl">✅ مهام</div></div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="card">
+      <div class="card-title">📊 تقدم المهارات</div>
+      <div id="skills-container"></div>
+    </div>
+
+    <!-- Missions -->
+    <div class="card">
+      <div class="card-title">🎯 المهام اليومية</div>
+      <div id="missions-container"><div style="color:#64748b;font-size:13px">لا توجد مهام اليوم</div></div>
+    </div>
+
+    <!-- Send Message -->
+    <div class="card">
+      <div class="card-title">💬 تواصل مع الأكاديمية</div>
+      <textarea class="form-control" id="msg-text" rows="3" placeholder="اكتب رسالتك أو سؤالك هنا..."></textarea>
+      <button class="btn btn-primary" style="margin-top:10px" onclick="sendMessage()">📨 إرسال</button>
+    </div>
+
+    <!-- Graduation -->
+    <div class="card" id="grad-card" style="display:none">
+      <div class="card-title">🎓 شروط التخرج</div>
+      <div id="grad-container"></div>
+    </div>
+
+    <button class="btn btn-ghost" onclick="logout()" style="margin-top:8px">🚪 خروج</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = '';
+let currentUID = null;
+
+function showToast(msg, dur=3000){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+async function apiGet(url){
+  const r = await fetch(API_BASE+url);
+  return r.json();
+}
+async function apiPost(url, data){
+  const r = await fetch(API_BASE+url, {method:'POST',<span class="cursor">█</span>
+
+@'
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>أكاديمية يامن - بوابة الطالب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{font-family:'Cairo',sans-serif;box-sizing:border-box;margin:0;padding:0}
+body{background:#0f172a;color:#e2e8f0;min-height:100vh}
+.header{background:#1e293b;border-bottom:1px solid #334155;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.logo-text{font-size:16px;font-weight:700;color:#f1f5f9}
+.container{max-width:800px;margin:0 auto;padding:20px}
+.card{background:#1e293b;border-radius:16px;border:1px solid #334155;padding:20px;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:700;color:#f1f5f9;margin-bottom:14px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#0f172a;border-radius:12px;padding:14px;text-align:center}
+.stat-val{font-size:22px;font-weight:800;color:#6366f1}
+.stat-lbl{font-size:11px;color:#64748b;margin-top:2px}
+.skill-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.skill-name{width:80px;font-size:12px;color:#94a3b8}
+.skill-bar{flex:1;height:8px;background:#334155;border-radius:99px;overflow:hidden}
+.skill-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:.6s}
+.skill-xp{width:60px;text-align:left;font-size:12px;color:#64748b}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:.2s;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;width:100%;justify-content:center;margin-bottom:10px}
+.btn-ghost{background:#334155;color:#94a3b8;width:100%;justify-content:center;margin-bottom:10px}
+.badge{display:inline-flex;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-green{background:#052e16;color:#4ade80}
+.badge-red{background:#1c0005;color:#f87171}
+.badge-blue{background:#1e3a5f;color:#60a5fa}
+.form-control{width:100%;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:10px 14px;color:#f1f5f9;font-size:14px;font-family:'Cairo',sans-serif;resize:vertical}
+.form-control:focus{outline:none;border-color:#6366f1}
+.login-box{max-width:400px;margin:60px auto;padding:0 20px}
+.login-title{font-size:24px;font-weight:800;text-align:center;margin-bottom:8px}
+.login-sub{font-size:13px;color:#64748b;text-align:center;margin-bottom:24px}
+.toast{position:fixed;bottom:20px;left:20px;background:#334155;color:#f1f5f9;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;display:none}
+.toast.show{display:block}
+.mission-item{display:flex;align-items:center;gap:12px;padding:12px;background:#0f172a;border-radius:10px;margin-bottom:8px}
+.mission-icon{width:36px;height:36px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.message-box{margin-top:8px}
+#login-screen,#main-screen{display:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🎓</div>
+    <div class="logo-text">أكاديمية يامن للتوفل</div>
+  </div>
+  <div id="header-user" style="font-size:13px;color:#64748b"></div>
+</div>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-title">🎓 مرحباً بك</div>
+    <div class="login-sub">أدخل Telegram ID الخاص بك للدخول</div>
+    <div style="margin-bottom:12px">
+      <input class="form-control" id="login-uid" placeholder="Telegram User ID" type="number" style="margin-bottom:10px"/>
+      <button class="btn btn-primary" onclick="doLogin()">🚀 دخول</button>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#64748b">
+      للحصول على ID الخاص بك، أرسل /start للبوت
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div id="main-screen">
+  <div class="container">
+
+    <!-- Profile -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+        <div style="width:54px;height:54px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px">👤</div>
+        <div>
+          <div style="font-size:17px;font-weight:700;color:#f1f5f9" id="p-name">—</div>
+          <div style="font-size:12px;color:#64748b" id="p-level">—</div>
+        </div>
+        <div style="margin-right:auto" id="p-badge"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-val" id="p-xp">0</div><div class="stat-lbl">⭐ XP</div></div>
+        <div class="stat"><div class="stat-val" id="p-streak">0</div><div class="stat-lbl">🔥 Streak</div></div>
+        <div class="stat"><div class="stat-val" id="p-tasks">0</div><div class="stat-lbl">✅ مهام</div></div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="card">
+      <div class="card-title">📊 تقدم المهارات</div>
+      <div id="skills-container"></div>
+    </div>
+
+    <!-- Missions -->
+    <div class="card">
+      <div class="card-title">🎯 المهام اليومية</div>
+      <div id="missions-container"><div style="color:#64748b;font-size:13px">لا توجد مهام اليوم</div></div>
+    </div>
+
+    <!-- Send Message -->
+    <div class="card">
+      <div class="card-title">💬 تواصل مع الأكاديمية</div>
+      <textarea class="form-control" id="msg-text" rows="3" placeholder="اكتب رسالتك أو سؤالك هنا..."></textarea>
+      <button class="btn btn-primary" style="margin-top:10px" onclick="sendMessage()">📨 إرسال</button>
+    </div>
+
+    <!-- Graduation -->
+    <div class="card" id="grad-card" style="display:none">
+      <div class="card-title">🎓 شروط التخرج</div>
+      <div id="grad-container"></div>
+    </div>
+
+    <button class="btn btn-ghost" onclick="logout()" style="margin-top:8px">🚪 خروج</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = '';
+let currentUID = null;
+
+function showToast(msg, dur=3000){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+async function apiGet(url){
+  const r = await fetch(API_BASE+url);
+  return r.json();
+}
+async function apiPost(url, data){
+  const r = await fetch(API_BASE+url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  return r.json();
+}
+
+function logout(){
+  localStorage.removeItem('yamen_uid');
+  currentUID = null;
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'block';
+}
+
+async function doLogin(){
+  const uid = document.getElementById('login-uid').value.trim();
+  if(!uid){ showToast('أدخل Telegram ID'); return; }
+  const data = await apiGet('/api/admin/students/'+uid);
+  if(data.error){ showToast('❌ المستخدم غير موجود — تأكد من ID أو أرسل /start للبوت'); return; }
+  localStorage.setItem('yamen_uid', uid);
+  currentUID = parseInt(uid);
+  loadProfile(data);
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'block';
+}
+
+function loadProfile(data){
+  document.getElementById('p-name').textContent = data.full_name || data.username || 'طالب';
+  document.getElementById('header-user').textContent = data.full_name || '';
+  const levelMap = {beginner:'مبتدئ 🔵', intermediate:'متوسط 🟡', advanced:'متقدم 🟢'};
+  document.getElementById('p-level').textContent = levelMap[data.level]||data.level||'مبتدئ';
+  document.getElementById('p-xp').textContent = data.xp||0;
+  document.getElementById('p-streak').textContent = data.streak||0;
+  document.getElementById('p-tasks').textContent = data.tasks_completed||0;
+  const badge = document.getElementById('p-badge');
+  badge.innerHTML = data.is_paid
+    ? '<span class="badge badge-green">✅ مشترك</span>'
+    : '<span class="badge badge-red">⚠️ غير مفعّل</span>';
+
+  // Skills
+  const skills = data.skills||{};
+  const skillNames = {reading_xp:'📖 قراءة',listening_xp:'🎧 استماع',speaking_xp:'🗣️ محادثة',writing_xp:'✍️ كتابة',grammar_xp:'📝 قواعد',vocabulary_xp:'📚 مفردات'};
+  const maxXP = Math.max(...Object.values(skills).map(v=>parseInt(v)||0), 100);
+  const sc = document.getElementById('skills-container');
+  sc.innerHTML = Object.entries(skillNames).map(([key,label])=>{
+    const val = parseInt(skills[key])||0;
+    const pct = Math.min(100, Math.round(val/maxXP*100));
+    return '<div class="skill-row"><div class="skill-name">'+label+'</div><div class="skill-bar"><div class="skill-fill" style="width:'+pct+'%"></div></div><div class="skill-xp">'+val+' XP</div></div>';
+  }).join('');
+
+  // Graduation
+  const grad = data.graduation;
+  if(grad && grad.checks){
+    document.getElementById('grad-card').style.display = 'block';
+    const gc = document.getElementById('grad-container');
+    const checksHtml = grad.checks.map(c=>'<div style="padding:6px 0;border-bottom:1px solid #334155;font-size:13px;color:'+(c.passed?'#4ade80':'#f87171')+'">'+c.message+'</div>').join('');
+    gc.innerHTML = checksHtml + '<div style="margin-top:12px;font-weight:700;color:'+(grad.eligible?'#4ade80':'#f87171')+'">'+(grad.eligible?'✅ أنت مؤهل للتخرج!':'❌ أكمل الشروط للتخرج')+'</div>';
+  }
+}
+
+async function loadMissions(){
+  const data = await apiGet('/api/admin/missions');
+  const mc = document.getElementById('missions-container');
+  const missions = (data.missions||[]).filter(m=>m.is_active).slice(0,5);
+  if(!missions.length){ mc.innerHTML = '<div style="color:#64748b;font-size:13px">لا توجد مهام اليوم</div>'; return; }
+  const icons = {reading:'📖',listening:'🎧',speaking:'🗣️',writing:'✍️',vocabulary:'📚',grammar:'📝'};
+  mc.innerHTML = missions.map(m=>'<div class="mission-item"><div class="mission-icon">'+(icons[m.mission_type]||'🎯')+'</div><div style="flex:1"><div style="font-size:14px;font-weight:600;color:#f1f5f9">'+m.title+'</div><div style="font-size:12px;color:#64748b">'+(m.description||'')+'</div></div><span class="badge badge-blue">+'+m.xp_reward+' XP</span></div>').join('');
+}
+
+async function sendMessage(){
+  const text = document.getElementById('msg-text').value.trim();
+  if(!text){ showToast('اكتب رسالة أولاً'); return; }
+  const r = await apiPost('/api/student/message', {user_id: currentUID, message: text});
+  if(r.ok){ showToast('✅ تم إرسال رسالتك'); document.getElementById('msg-text').value = ''; }
+  else showToast('❌ خطأ في الإرسال');
+}
+
+async function init(){
+  const uid = localStorage.getItem('yamen_uid');
+  if(uid){
+    currentUID = parseInt(uid);
+    const data = await apiGet('/api/admin/students/'+uid);
+    if(!data.error){
+      loadProfile(data);
+      document.getElementById('main-screen').style.display = 'block';
+    } else {
+      document.getElementById('login-screen').style.display = 'block';
+    }
+  } else {
+    document.getElementById('login-screen').style.display = 'block';
+  }
+  loadMissions();
+}
+
+init();
+</script>
+</body>
+</html>
