@@ -1,851 +1,1018 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>أكاديمية يامن – لوحة الطالب</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>أكاديمية يامن للتوفل</title>
 <style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   :root {
-    --navy:   #1a365d;
-    --navy2:  #162d4f;
-    --gold:   #d4af37;
-    --gold2:  #f0d060;
-    --bg:     #f0f4f8;
-    --card:   #ffffff;
-    --text:   #1a202c;
-    --muted:  #718096;
-    --green:  #38a169;
-    --red:    #e53e3e;
-    --shadow: 0 4px 20px rgba(26,54,93,.10);
-    --radius: 16px;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
-  body{background:var(--bg);color:var(--text);min-height:100vh}
-
-  /* ── TOP NAV ── */
-  .topnav{
-    background:var(--navy);color:#fff;
-    padding:0 20px;height:60px;
-    display:flex;align-items:center;justify-content:space-between;
-    position:sticky;top:0;z-index:100;
-    box-shadow:0 2px 12px rgba(0,0,0,.25)
-  }
-  .topnav .logo{font-size:1.2rem;font-weight:900;color:var(--gold)}
-  .topnav .nav-right{display:flex;align-items:center;gap:12px}
-  .avatar{width:36px;height:36px;border-radius:50%;
-    background:var(--gold);color:var(--navy);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:700;font-size:.9rem;cursor:pointer}
-  .notif-btn{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;position:relative}
-  .notif-badge{position:absolute;top:-4px;right:-4px;background:var(--red);
-    color:#fff;font-size:.55rem;width:16px;height:16px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center}
-
-  /* ── MAIN LAYOUT ── */
-  .main{max-width:1100px;margin:0 auto;padding:20px 16px;
-    display:grid;gap:16px}
-
-  /* ── HERO CARD ── */
-  .hero{
-    background:linear-gradient(135deg,var(--navy) 0%,#2a4a7f 100%);
-    border-radius:var(--radius);padding:20px 24px;
-    color:#fff;display:flex;align-items:center;gap:16px;
-    box-shadow:var(--shadow)
-  }
-  .hero-avatar{width:64px;height:64px;border-radius:50%;
-    background:var(--gold);color:var(--navy);
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.8rem;font-weight:900;flex-shrink:0}
-  .hero-info h2{font-size:1.2rem;font-weight:700}
-  .hero-info p{font-size:.82rem;opacity:.8;margin-top:2px}
-  .hero-stats{margin-right:auto;display:flex;gap:20px;text-align:center}
-  .hero-stat span{display:block}
-  .hero-stat .val{font-size:1.3rem;font-weight:900;color:var(--gold)}
-  .hero-stat .lbl{font-size:.7rem;opacity:.75}
-
-  /* ── GRID 2 COLS ── */
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-
-  /* ── STAT MINI CARDS ── */
-  .stat-card{
-    background:var(--card);border-radius:var(--radius);
-    padding:16px;box-shadow:var(--shadow);
-    display:flex;align-items:center;gap:12px
-  }
-  .stat-icon{width:46px;height:46px;border-radius:12px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.4rem;flex-shrink:0}
-  .stat-card .val{font-size:1.4rem;font-weight:900}
-  .stat-card .lbl{font-size:.75rem;color:var(--muted)}
-
-  /* ── SECTION CARD ── */
-  .card{background:var(--card);border-radius:var(--radius);
-    padding:18px;box-shadow:var(--shadow)}
-  .card-header{display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:14px}
-  .card-title{font-size:.95rem;font-weight:700;color:var(--navy)}
-  .card-action{font-size:.8rem;color:var(--gold);cursor:pointer;
-    background:none;border:none;font-family:'Cairo',sans-serif;font-weight:600}
-
-  /* ── PROGRESS BAR ── */
-  .prog-wrap{margin-bottom:10px}
-  .prog-label{display:flex;justify-content:space-between;
-    font-size:.78rem;color:var(--muted);margin-bottom:5px}
-  .prog-bar{height:8px;background:#e2e8f0;border-radius:99px;overflow:hidden}
-  .prog-fill{height:100%;border-radius:99px;
-    background:linear-gradient(90deg,var(--gold),var(--gold2));
-    transition:width .6s ease}
-
-  /* ── TASK ITEMS ── */
-  .task-item{
-    display:flex;align-items:center;gap:10px;
-    padding:10px 12px;border-radius:10px;
-    background:#f7fafc;margin-bottom:8px;
-    cursor:pointer;transition:all .2s;border:1.5px solid transparent
-  }
-  .task-item:hover{border-color:var(--gold);background:#fffdf0}
-  .task-item.done{opacity:.55;background:#f0fff4}
-  .task-check{width:22px;height:22px;border-radius:6px;
-    border:2px solid #cbd5e0;display:flex;align-items:center;
-    justify-content:center;flex-shrink:0;font-size:.8rem;transition:.2s}
-  .task-item.done .task-check{background:var(--green);border-color:var(--green);color:#fff}
-  .task-text{flex:1;font-size:.83rem}
-  .task-pts{font-size:.75rem;color:var(--gold);font-weight:700;
-    background:#fffbea;padding:2px 8px;border-radius:99px}
-
-  /* ── LEADERBOARD ── */
-  .lb-item{display:flex;align-items:center;gap:10px;padding:8px 0;
-    border-bottom:1px solid #f0f0f0}
-  .lb-item:last-child{border:none}
-  .lb-rank{width:28px;height:28px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-weight:700;font-size:.82rem;flex-shrink:0}
-  .rank1{background:#FFD700;color:#7a5c00}
-  .rank2{background:#C0C0C0;color:#444}
-  .rank3{background:#cd7f32;color:#fff}
-  .rankN{background:#e2e8f0;color:var(--muted)}
-  .lb-name{flex:1;font-size:.83rem;font-weight:600}
-  .lb-xp{font-size:.8rem;color:var(--gold);font-weight:700}
-
-  /* ── ERROR BANK ── */
-  .err-item{padding:10px 12px;border-radius:10px;background:#fff5f5;
-    border-right:3px solid var(--red);margin-bottom:8px;font-size:.82rem}
-  .err-item .err-q{font-weight:600;color:var(--text);margin-bottom:4px}
-  .err-item .err-meta{color:var(--muted);font-size:.75rem}
-
-  /* ── BADGE ── */
-  .badges-wrap{display:flex;flex-wrap:wrap;gap:10px}
-  .badge-item{background:#fffbea;border:1.5px solid var(--gold);
-    border-radius:12px;padding:8px 14px;text-align:center;
-    min-width:80px}
-  .badge-item .b-icon{font-size:1.6rem}
-  .badge-item .b-name{font-size:.7rem;color:var(--navy);font-weight:700;margin-top:3px}
-  .badge-item.locked{opacity:.35;filter:grayscale(1)}
-
-  /* ── MODAL ── */
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(0,0,0,.5);
-    z-index:200;display:flex;align-items:center;justify-content:center;
-    opacity:0;pointer-events:none;transition:.25s
-  }
-  .modal-overlay.open{opacity:1;pointer-events:all}
-  .modal{background:#fff;border-radius:20px;padding:24px;
-    width:90%;max-width:460px;max-height:85vh;overflow-y:auto;
-    transform:translateY(30px);transition:.25s;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-  .modal-overlay.open .modal{transform:translateY(0)}
-  .modal-header{display:flex;justify-content:space-between;align-items:center;
-    margin-bottom:18px}
-  .modal-title{font-size:1.05rem;font-weight:700;color:var(--navy)}
-  .modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;
-    color:var(--muted);line-height:1}
-
-  /* ── BOTTOM NAV (mobile) ── */
-  .bottom-nav{
-    display:none;position:fixed;bottom:0;left:0;right:0;
-    background:var(--navy);padding:8px 0 12px;
-    z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.2)
-  }
-  .bottom-nav ul{display:flex;justify-content:space-around;list-style:none}
-  .bottom-nav li{text-align:center}
-  .bnav-btn{background:none;border:none;color:rgba(255,255,255,.6);
-    display:flex;flex-direction:column;align-items:center;gap:2px;
-    cursor:pointer;font-family:'Cairo',sans-serif;padding:0}
-  .bnav-btn .icon{font-size:1.3rem}
-  .bnav-btn .lbl{font-size:.62rem}
-  .bnav-btn.active{color:var(--gold)}
-
-  /* ── TOAST ── */
-  .toast{
-    position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(40px);
-    background:var(--navy);color:#fff;padding:10px 24px;
-    border-radius:99px;font-size:.85rem;z-index:300;
-    opacity:0;transition:.3s;pointer-events:none;white-space:nowrap
-  }
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-  /* ── TABS ── */
-  .tabs{display:flex;gap:8px;margin-bottom:14px;
-    border-bottom:2px solid #e2e8f0;padding-bottom:0}
-  .tab-btn{background:none;border:none;padding:8px 16px;
-    font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:600;
-    color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;
-    margin-bottom:-2px;transition:.2s}
-  .tab-btn.active{color:var(--navy);border-bottom-color:var(--gold)}
-
-  /* ── SECTION VISIBILITY ── */
-  .section{display:none}
-  .section.active{display:contents}
-
-  /* ── RESPONSIVE ── */
-  @media(max-width:640px){
-    .grid3{grid-template-columns:1fr 1fr}
-    .hero-stats{display:none}
-    .bottom-nav{display:block}
-    .main{padding:14px 12px 80px}
-    .hero{padding:16px}
-    .hero-avatar{width:52px;height:52px;font-size:1.4rem}
-  }
-  @media(max-width:400px){
-    .grid2,.grid3{grid-template-columns:1fr}
+    --bg:        #0f0f1a;
+    --bg2:       #1a1a2e;
+    --bg3:       #16213e;
+    --card:      #1e1e35;
+    --card2:     #252545;
+    --accent:    #6c63ff;
+    --accent2:   #a78bfa;
+    --gold:      #f59e0b;
+    --green:     #10b981;
+    --red:       #ef4444;
+    --blue:      #3b82f6;
+    --text:      #e2e8f0;
+    --text2:     #94a3b8;
+    --text3:     #64748b;
+    --radius:    16px;
+    --radius-sm: 10px;
+    --shadow:    0 4px 24px rgba(108,99,255,0.15);
   }
 
-  /* ── COLORS ── */
-  .bg-gold{background:#fff8e1}
-  .bg-blue{background:#ebf4ff}
-  .bg-green{background:#f0fff4}
-  .bg-red{background:#fff5f5}
-  .c-gold{color:#b7860a}
-  .c-blue{color:#2b6cb0}
-  .c-green{color:#276749}
-  .c-red{color:#c53030}
-  /* بوابة التخرج */
-  .grad-req-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;border:1px solid rgba(255,255,255,.1);transition:.3s}
-  .grad-req-item.done{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4)}
-  .grad-req-item.done .req-status{color:#4ade80}
-  .req-icon{font-size:1rem;flex-shrink:0}
-  .req-text{font-size:.75rem;color:rgba(255,255,255,.7);flex:1;font-weight:600}
-  .req-status{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.4)}
-  #grad-gate-btn.unlocked{background:linear-gradient(135deg,#d4af37,#f5e27a)!important;border-color:#d4af37!important;color:#1a365d!important;cursor:pointer!important}
-  #grad-gate-btn.unlocked:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,175,55,.4)}
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── Layout ── */
+  .app { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%);
+    padding: 20px 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(108,99,255,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.4);
+  }
+  .logo-text { font-size: 14px; font-weight: 700; color: var(--text); }
+  .logo-sub  { font-size: 11px; color: var(--text2); }
+
+  .streak-badge {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
+    50%       { box-shadow: 0 4px 20px rgba(245,158,11,0.7); }
+  }
+
+  .student-info { position: relative; z-index: 1; }
+  .student-name {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  .student-level {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(108,99,255,0.2);
+    border: 1px solid rgba(108,99,255,0.4);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px; color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  /* ── XP Bar ── */
+  .xp-section { margin-top: 4px; }
+  .xp-header {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .xp-value { color: var(--accent2); font-weight: 700; }
+  .xp-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .xp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), #ec4899);
+    border-radius: 999px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+  }
+  .xp-bar::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* ── Stats Grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 16px;
+    margin-top: -8px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px 8px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+  .stat-icon  { font-size: 20px; margin-bottom: 6px; display: block; }
+  .stat-value { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
+  .stat-label { font-size: 10px; color: var(--text3); margin-top: 2px; display: block; }
+
+  /* ── Section Title ── */
+  .section-title {
+    padding: 4px 16px 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(108,99,255,0.4), transparent);
+  }
+
+  /* ── Progress Cards (Skills) ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 16px 8px;
+  }
+  .skill-card {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s;
+  }
+  .skill-card:hover { transform: translateY(-2px); }
+  .skill-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .skill-name {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600;
+  }
+  .skill-xp { font-size: 11px; color: var(--accent2); font-weight: 700; }
+  .skill-bar-wrap {
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .skill-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bar-reading    { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .bar-listening  { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+  .bar-speaking   { background: linear-gradient(90deg, #ec4899, #f472b6); }
+  .bar-writing    { background: linear-gradient(90deg, #10b981, #34d399); }
+  .bar-grammar    { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  .bar-vocabulary { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+  /* ── Daily Mission Card ── */
+  .mission-card {
+    margin: 0 16px 10px;
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border-radius: var(--radius);
+    padding: 18px;
+    border: 1px solid rgba(108,99,255,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .mission-card::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+  }
+  .mission-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .mission-tag {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+  }
+  .mission-xp {
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.4);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .mission-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .mission-desc  { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .mission-progress {
+    margin-top: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mission-bar-wrap {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .mission-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 999px;
+    transition: width 1s ease;
+  }
+  .mission-pct { font-size: 12px; color: var(--accent2); font-weight: 700; min-width: 35px; }
+
+  /* ── Lessons List ── */
+  .lesson-item {
+    display: flex; align-items: center; gap: 14px;
+    margin: 0 16px 8px;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .lesson-item:hover {
+    background: var(--card2);
+    border-color: rgba(108,99,255,0.4);
+    transform: translateX(-3px);
+  }
+  .lesson-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .icon-reading    { background: rgba(59,130,246,0.2); }
+  .icon-listening  { background: rgba(139,92,246,0.2); }
+  .icon-speaking   { background: rgba(236,72,153,0.2); }
+  .icon-writing    { background: rgba(16,185,129,0.2); }
+  .icon-grammar    { background: rgba(245,158,11,0.2); }
+  .icon-vocabulary { background: rgba(239,68,68,0.2); }
+
+  .lesson-info { flex: 1; min-width: 0; }
+  .lesson-title {
+    font-size: 14px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+  .lesson-meta { font-size: 11px; color: var(--text3); display: flex; gap: 8px; }
+  .lesson-xp   { color: var(--gold); font-weight: 600; }
+  .lesson-arrow { color: var(--text3); font-size: 16px; }
+
+  /* ── Leaderboard ── */
+  .leader-item {
+    display: flex; align-items: center; gap: 12px;
+    margin: 0 16px 8px;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .leader-item.me {
+    border-color: rgba(108,99,255,0.5);
+    background: rgba(108,99,255,0.1);
+  }
+  .leader-rank {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .rank-1 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+  .rank-2 { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: #000; }
+  .rank-3 { background: linear-gradient(135deg, #b45309, #d97706); color: #fff; }
+  .rank-n { background: var(--card2); color: var(--text2); font-size: 12px; }
+  .leader-name  { flex: 1; font-size: 14px; font-weight: 600; }
+  .leader-xp    { font-size: 13px; color: var(--gold); font-weight: 700; }
+
+  /* ── Bottom Nav ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: rgba(26,26,46,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    padding: 8px 0 12px;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    padding: 6px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none; background: none; color: var(--text3);
+  }
+  .nav-item.active { color: var(--accent2); }
+  .nav-item:hover  { color: var(--text); }
+  .nav-icon { font-size: 22px; }
+  .nav-label { font-size: 10px; font-weight: 600; }
+  .nav-dot {
+    width: 4px; height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+  }
+
+  /* ── Tab Sections ── */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Badge / Status ── */
+  .status-banner {
+    margin: 8px 16px;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px;
+  }
+  .status-paid {
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.4);
+    color: var(--green);
+  }
+  .status-free {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: var(--gold);
+  }
+
+  /* ── Motivational Quote ── */
+  .quote-card {
+    margin: 0 16px 10px;
+    background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(167,139,250,0.1));
+    border: 1px solid rgba(108,99,255,0.2);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .quote-text { font-size: 14px; color: var(--text2); line-height: 1.7; font-style: italic; }
+  .quote-author { font-size: 12px; color: var(--accent2); margin-top: 8px; font-weight: 700; }
+
+  /* ── Graduation Card ── */
+  .grad-card {
+    margin: 0 16px 10px;
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .grad-locked {
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .grad-unlocked {
+    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(59,130,246,0.2));
+    border: 1px solid rgba(16,185,129,0.4);
+  }
+  .grad-icon  { font-size: 48px; margin-bottom: 12px; display: block; }
+  .grad-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .grad-desc  { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  .grad-requirements {
+    margin-top: 16px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .req-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.04);
+  }
+  .req-ok   { color: var(--green); }
+  .req-fail { color: var(--text3); }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: none; cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 700;
+    padding: 12px 24px;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 12px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(108,99,255,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.6);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(245,158,11,0.4);
+  }
+  .btn-disabled {
+    background: var(--card2);
+    color: var(--text3);
+    cursor: not-allowed;
+  }
+
+  /* ── Loading ── */
+  .loading {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; gap: 16px;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid rgba(108,99,255,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Animations ── */
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Empty State ── */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text3);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.7; }
 </style>
 </head>
 <body>
 
-<!-- ══════════════ TOP NAV ══════════════ -->
-<nav class="topnav">
-  <div class="logo">🎓 أكاديمية يامن</div>
-  <div class="nav-right">
-    <button class="notif-btn" onclick="openModal('notifModal')" title="الإشعارات">
-      🔔<span class="notif-badge" id="notifCount">3</span>
-    </button>
-    <div class="avatar" id="avatarInitial" onclick="openModal('profileModal')">ط</div>
-  </div>
-</nav>
+<!-- Loading Screen -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p style="color:var(--text2);font-size:14px">جاري التحميل...</p>
+</div>
 
-<!-- ══════════════ MAIN ══════════════ -->
-<div class="main">
+<!-- Main App -->
+<div class="app" id="app" style="display:none">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-avatar" id="heroAvatar">ط</div>
-    <div class="hero-info">
-      <h2 id="heroName">جاري التحميل…</h2>
-      <p id="heroLevel">المستوى: —</p>
-      <p id="heroPackage" style="font-size:.75rem;margin-top:4px;color:var(--gold)">—</p>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <span class="val" id="heroXP">0</span>
-        <span class="lbl">XP</span>
-      </div>
-      <div class="hero-stat">
-        <span class="val" id="heroStreak">0</span>
-        <span class="lbl">🔥 يوم</span>
-      </div>
-      <div class="hero-stat">
-        <span class="val" id="heroDays">0</span>
-        <span class="lbl">يوم متبقي</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- STAT MINI CARDS -->
-  <div class="grid3">
-    <div class="stat-card">
-      <div class="stat-icon bg-gold"><span>⚡</span></div>
-      <div>
-        <div class="val c-gold" id="statXP">0</div>
-        <div class="lbl">نقاط XP</div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon bg-blue"><span>🔥</span></div>
-      <div>
-        <div class="val c-blue" id="statStreak">0</div>
-        <div class="lbl">أيام متتالية</div>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon bg-green"><span>✅</span></div>
-      <div>
-        <div class="val c-green" id="statDone">0</div>
-        <div class="lbl">مهام منجزة</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PROGRESS -->
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">📈 التقدم الأسبوعي</span>
-      <button class="card-action" onclick="openModal('progressModal')">تفاصيل ←</button>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-label"><span>المهام اليومية</span><span id="pctTasks">0%</span></div>
-      <div class="prog-bar"><div class="prog-fill" id="fillTasks" style="width:0%"></div></div>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-label"><span>الدروس المكتملة</span><span id="pctLessons">0%</span></div>
-      <div class="prog-bar"><div class="prog-fill" id="fillLessons" style="width:0%" style="background:linear-gradient(90deg,#667eea,#764ba2)"></div></div>
-    </div>
-    <div class="prog-wrap" style="margin-bottom:0">
-      <div class="prog-label"><span>دقة الاختبارات</span><span id="pctAcc">0%</span></div>
-      <div class="prog-bar"><div class="prog-fill" id="fillAcc" style="width:0%;background:linear-gradient(90deg,#38a169,#68d391)"></div></div>
-    </div>
-  </div>
-
-  <!-- TASKS + LEADERBOARD -->
-  <div class="grid2">
-
-    <!-- TASKS -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">📋 مهام اليوم</span>
-        <button class="card-action" onclick="openModal('tasksModal')">الكل ←</button>
-      </div>
-      <div id="tasksPreview">
-        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">جاري التحميل…</div>
-      </div>
-    </div>
-
-    <!-- LEADERBOARD -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">🏆 لوحة الصدارة</span>
-        <button class="card-action" onclick="openModal('lbModal')">الكل ←</button>
-      </div>
-      <div id="lbPreview">
-        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">جاري التحميل…</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ERROR BANK + BADGES -->
-  <div class="grid2">
-
-    <!-- ERROR BANK -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">❌ مستودع الأخطاء</span>
-        <button class="card-action" onclick="openModal('errModal')">الكل ←</button>
-      </div>
-      <div id="errPreview">
-        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">جاري التحميل…</div>
-      </div>
-    </div>
-
-    <!-- BADGES -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">🎖️ الإنجازات</span>
-        <button class="card-action" onclick="openModal('badgesModal')">الكل ←</button>
-      </div>
-      <div class="badges-wrap" id="badgesPreview">
-        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem;width:100%">جاري التحميل…</div>
-      </div>
-    </div>
-
-  </div>
-
-    <!-- ══ بوابة التخرج المقفلة ══ -->
-  <div id="grad-gate-card" style="background:linear-gradient(135deg,#1a365d 0%,#2a4a7f 100%);border-radius:20px;padding:24px;margin-top:4px;box-shadow:0 8px 32px rgba(26,54,93,.25);position:relative;overflow:hidden">
-    <div style="position:absolute;top:-20px;left:-20px;width:120px;height:120px;background:rgba(212,175,55,.08);border-radius:50%"></div>
-    <div style="position:absolute;bottom:-30px;right:-10px;width:160px;height:160px;background:rgba(212,175,55,.05);border-radius:50%"></div>
-    <div style="position:relative;z-index:1">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-        <div id="grad-lock-icon" style="width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0">🔒</div>
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
         <div>
-          <h3 style="color:white;font-size:1rem;font-weight:900;margin-bottom:2px">بوابة التخرج</h3>
-          <p style="color:rgba(255,255,255,.65);font-size:.78rem" id="grad-gate-subtitle">أكمل المتطلبات لإتمام التخرج</p>
-        </div>
-        <div style="margin-right:auto">
-          <span id="grad-status-badge" style="background:rgba(255,255,255,.15);color:white;font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.2)">🔒 مقفلة</span>
+          <div class="logo-text">أكاديمية يامن</div>
+          <div class="logo-sub">TOEFL Academy</div>
         </div>
       </div>
-
-      <!-- شريط التقدم نحو التخرج -->
-      <div style="margin-bottom:16px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-          <span style="color:rgba(255,255,255,.7);font-size:.75rem;font-weight:600">التقدم نحو التخرج</span>
-          <span style="color:#d4af37;font-size:.75rem;font-weight:900" id="grad-pct">0%</span>
+      <div class="streak-badge" id="streakBadge">
+        🔥 <span id="streakVal">0</span>
+      </div>
+    </div>
+    <div class="student-info">
+      <div class="student-name" id="studentName">...</div>
+      <div class="student-level" id="studentLevel">
+        <span>🔵</span> <span id="levelText">مبتدئ</span>
+      </div>
+      <div class="xp-section">
+        <div class="xp-header">
+          <span>⭐ نقاط الخبرة</span>
+          <span class="xp-value"><span id="xpVal">0</span> XP</span>
         </div>
-        <div style="height:10px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden">
-          <div id="grad-prog-fill" style="height:100%;border-radius:99px;background:linear-gradient(90deg,#d4af37,#f5e27a);width:0%;transition:width 1s ease"></div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar" id="xpBar" style="width:0%"></div>
         </div>
       </div>
-
-      <!-- المتطلبات -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="grad-reqs-grid">
-        <div class="grad-req-item" id="req-xp">
-          <span class="req-icon">⭐</span><span class="req-text">500 XP</span><span class="req-status">—</span>
-        </div>
-        <div class="grad-req-item" id="req-tasks">
-          <span class="req-icon">📋</span><span class="req-text">10 مهمة</span><span class="req-status">—</span>
-        </div>
-        <div class="grad-req-item" id="req-errors">
-          <span class="req-icon">🎯</span><span class="req-text">دقة 60%+</span><span class="req-status">—</span>
-        </div>
-        <div class="grad-req-item" id="req-streak">
-          <span class="req-icon">🔥</span><span class="req-text">3 أيام Streak</span><span class="req-status">—</span>
-        </div>
-      </div>
-
-      <!-- زر الوصول -->
-      <a id="grad-gate-btn" href="#" onclick="return handleGradClick()"
-        style="display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);text-decoration:none;font-size:.9rem;font-weight:700;transition:all .3s;cursor:not-allowed">
-        🔒 <span id="grad-btn-text">أكمل المتطلبات أولاً</span>
-      </a>
     </div>
   </div>
-  <!-- START QUESTIONS BUTTON -->
-  <div style="text-align:center;padding:8px 0 4px">
-    <a href="/questions?student_id=1" style="
-      display:inline-flex;align-items:center;gap:10px;
-      background:linear-gradient(135deg,#1a365d,#2a4a7f);
-      color:#fff;text-decoration:none;
-      padding:14px 32px;border-radius:99px;
-      font-size:1rem;font-weight:700;font-family:Cairo,sans-serif;
-      box-shadow:0 4px 20px rgba(26,54,93,.3);
-      transition:transform .2s,box-shadow .2s"
-      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(26,54,93,.4)'"
-      onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px rgba(26,54,93,.3)'">
-      🎯 <span>ابدأ التدريب الآن</span>
-      <span style="background:#d4af37;color:#1a365d;border-radius:99px;padding:2px 12px;font-size:.8rem">NEW</span>
-    </a>
-  </div>
-</div><!-- /main -->
 
-<!-- ══════════════ BOTTOM NAV ══════════════ -->
-<nav class="bottom-nav">
-  <ul>
-    <li><button class="bnav-btn active" onclick="scrollTop()"><span class="icon">🏠</span><span class="lbl">الرئيسية</span></button></li>
-    <li><button class="bnav-btn" onclick="openModal('tasksModal')"><span class="icon">📋</span><span class="lbl">المهام</span></button></li>
-    <li><button class="bnav-btn" onclick="openModal('progressModal')"><span class="icon">📈</span><span class="lbl">التقدم</span></button></li>
-    <li><button class="bnav-btn" onclick="openModal('errModal')"><span class="icon">❌</span><span class="lbl">الأخطاء</span></button></li>
-    <li><button class="bnav-btn" onclick="openModal('profileModal')"><span class="icon">👤</span><span class="lbl">حسابي</span></button></li>
-  </ul>
+  <!-- ══ TAB: الرئيسية ══ -->
+  <div class="tab-content active fade-in" id="tab-home">
+
+    <!-- Status Banner -->
+    <div class="status-banner status-free" id="statusBanner">
+      ⚠️ حساب مجاني — فعّل اشتراكك لفتح جميع الميزات
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">⭐</span>
+        <span class="stat-value" id="xpStat">0</span>
+        <span class="stat-label">XP</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <span class="stat-value" id="streakStat">0</span>
+        <span class="stat-label">Streak</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">✅</span>
+        <span class="stat-value" id="missionsStat">0</span>
+        <span class="stat-label">مهام</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📊</span>
+        <span class="stat-value" id="scoreStat">0%</span>
+        <span class="stat-label">Placement</span>
+      </div>
+    </div>
+
+    <!-- Daily Mission -->
+    <div class="section-title">🎯 مهمة اليوم</div>
+    <div class="mission-card" id="missionCard">
+      <div class="mission-header">
+        <div class="mission-tag">📚 درس يومي</div>
+        <div class="mission-xp">+20 XP</div>
+      </div>
+      <div class="mission-title">ابدأ درس اليوم</div>
+      <div class="mission-desc">أكمل درس اليوم للحصول على نقاط وتقدم في مستواك</div>
+      <div class="mission-progress">
+        <div class="mission-bar-wrap">
+          <div class="mission-bar" id="missionBar" style="width:0%"></div>
+        </div>
+        <div class="mission-pct" id="missionPct">0%</div>
+      </div>
+    </div>
+
+    <!-- Motivational Quote -->
+    <div class="quote-card fade-in">
+      <div class="quote-text" id="quoteText">
+        "النجاح ليس نهائياً، والفشل ليس قاتلاً — الشجاعة على الاستمرار هي ما يهم"
+      </div>
+      <div class="quote-author">— Winston Churchill</div>
+    </div>
+
+    <!-- Skills Progress -->
+    <div class="section-title">💪 تقدم المهارات</div>
+    <div class="skills-grid" id="skillsGrid">
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">📖 القراءة</div>
+          <div class="skill-xp" id="readingXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-reading" id="readingBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">🎧 الاستماع</div>
+          <div class="skill-xp" id="listeningXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-listening" id="listeningBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">🗣️ التحدث</div>
+          <div class="skill-xp" id="speakingXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-speaking" id="speakingBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">✍️ الكتابة</div>
+          <div class="skill-xp" id="writingXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-writing" id="writingBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-home -->
+
+  <!-- ══ TAB: الدروس ══ -->
+  <div class="tab-content fade-in" id="tab-lessons">
+    <div class="section-title" style="padding-top:16px">📚 الدروس المتاحة</div>
+    <div id="lessonsList">
+      <div class="empty-state">
+        <div class="icon">📚</div>
+        <p>جاري تحميل الدروس...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: المتصدرون ══ -->
+  <div class="tab-content fade-in" id="tab-leaders">
+    <div class="section-title" style="padding-top:16px">🏆 المتصدرون</div>
+    <div id="leadersList">
+      <div class="empty-state">
+        <div class="icon">🏆</div>
+        <p>جاري تحميل البيانات...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: التخرج ══ -->
+  <div class="tab-content fade-in" id="tab-grad">
+    <div class="section-title" style="padding-top:16px">🎓 التخرج</div>
+    <div id="gradCard" class="grad-card grad-locked">
+      <span class="grad-icon">🔒</span>
+      <div class="grad-title">بوابة التخرج</div>
+      <div class="grad-desc">أكمل جميع المتطلبات لفتح شهادة التخرج</div>
+      <div class="grad-requirements" id="gradReqs"></div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav" id="bottomNav" style="display:none">
+  <button class="nav-item active" onclick="switchTab('home',this)">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">الرئيسية</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('lessons',this)">
+    <span class="nav-icon">📚</span>
+    <span class="nav-label">الدروس</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('leaders',this)">
+    <span class="nav-icon">🏆</span>
+    <span class="nav-label">المتصدرون</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('grad',this)">
+    <span class="nav-icon">🎓</span>
+    <span class="nav-label">التخرج</span>
+  </button>
 </nav>
 
-<!-- ══════════════════════════════════════
-     MODALS
-══════════════════════════════════════ -->
-
-<!-- PROFILE MODAL -->
-<div class="modal-overlay" id="profileModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">👤 ملف الطالب</span>
-      <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
-    </div>
-    <div id="profileContent" style="font-size:.88rem;line-height:2">
-      <div style="text-align:center;margin-bottom:16px">
-        <div id="profileAvatar" style="width:70px;height:70px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;margin:0 auto 8px">ط</div>
-        <div id="profileName" style="font-size:1.1rem;font-weight:700">—</div>
-        <div id="profileEmail" style="color:var(--muted);font-size:.8rem">—</div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
-          <div style="font-size:1.4rem;font-weight:900;color:var(--gold)" id="pm_xp">0</div>
-          <div style="font-size:.72rem;color:var(--muted)">نقاط XP</div>
-        </div>
-        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
-          <div style="font-size:1.4rem;font-weight:900;color:#e53e3e" id="pm_streak">0</div>
-          <div style="font-size:.72rem;color:var(--muted)">🔥 أيام متتالية</div>
-        </div>
-        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
-          <div style="font-size:1rem;font-weight:700;color:var(--navy)" id="pm_level">—</div>
-          <div style="font-size:.72rem;color:var(--muted)">المستوى</div>
-        </div>
-        <div style="background:#f7fafc;border-radius:10px;padding:10px;text-align:center">
-          <div style="font-size:1rem;font-weight:700;color:#38a169" id="pm_days">0</div>
-          <div style="font-size:.72rem;color:var(--muted)">يوم متبقي</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- NOTIFICATIONS MODAL -->
-<div class="modal-overlay" id="notifModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">🔔 الإشعارات</span>
-      <button class="modal-close" onclick="closeModal('notifModal')">✕</button>
-    </div>
-    <div id="notifList">
-      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f0f0f0">
-        <span style="font-size:1.4rem">🎯</span>
-        <div><div style="font-size:.85rem;font-weight:600">لديك مهام لم تُكمل اليوم</div><div style="font-size:.75rem;color:var(--muted)">منذ ساعتين</div></div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f0f0f0">
-        <span style="font-size:1.4rem">🔥</span>
-        <div><div style="font-size:.85rem;font-weight:600">3 أيام متتالية – استمر!</div><div style="font-size:.75rem;color:var(--muted)">منذ يوم</div></div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 0">
-        <span style="font-size:1.4rem">🏆</span>
-        <div><div style="font-size:.85rem;font-weight:600">تهانينا! حصلت على شارة "المثابر"</div><div style="font-size:.75rem;color:var(--muted)">منذ يومين</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TASKS MODAL -->
-<div class="modal-overlay" id="tasksModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">📋 جميع المهام</span>
-      <button class="modal-close" onclick="closeModal('tasksModal')">✕</button>
-    </div>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="filterTasks('all',this)">الكل</button>
-      <button class="tab-btn" onclick="filterTasks('pending',this)">قيد الانتظار</button>
-      <button class="tab-btn" onclick="filterTasks('done',this)">مكتملة</button>
-    </div>
-    <div id="tasksModalList"></div>
-  </div>
-</div>
-
-<!-- LEADERBOARD MODAL -->
-<div class="modal-overlay" id="lbModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">🏆 لوحة الصدارة الكاملة</span>
-      <button class="modal-close" onclick="closeModal('lbModal')">✕</button>
-    </div>
-    <div id="lbModalList"></div>
-  </div>
-</div>
-
-<!-- PROGRESS MODAL -->
-<div class="modal-overlay" id="progressModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">📈 تقرير التقدم</span>
-      <button class="modal-close" onclick="closeModal('progressModal')">✕</button>
-    </div>
-    <canvas id="progressChart" height="200"></canvas>
-    <div style="margin-top:16px" id="progressDetails"></div>
-  </div>
-</div>
-
-<!-- ERROR BANK MODAL -->
-<div class="modal-overlay" id="errModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">❌ مستودع الأخطاء</span>
-      <button class="modal-close" onclick="closeModal('errModal')">✕</button>
-    </div>
-    <div id="errModalList"></div>
-  </div>
-</div>
-
-<!-- BADGES MODAL -->
-<div class="modal-overlay" id="badgesModal">
-  <div class="modal">
-    <div class="modal-header">
-      <span class="modal-title">🎖️ جميع الإنجازات</span>
-      <button class="modal-close" onclick="closeModal('badgesModal')">✕</button>
-    </div>
-    <div id="badgesModalContent"></div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- ══════════════ JAVASCRIPT ══════════════ -->
 <script>
-// ─── CONFIG ────────────────────────────────
+// ══════════════════════════════════════
+// Telegram WebApp Init
+// ══════════════════════════════════════
 const tg = window.Telegram?.WebApp;
-const _p = new URLSearchParams(location.search);
-const USER_ID = tg?.initDataUnsafe?.user?.id || _p.get("student_id") || localStorage.getItem("yamen_uid") || "1";
-if (USER_ID) localStorage.setItem("yamen_uid", USER_ID);
-
-let ALL_TASKS = [];
-let PROFILE   = {};
-
-// ─── TOAST ─────────────────────────────────
-function showToast(msg, dur=2200){
-  const t=document.getElementById("toast");
-  t.textContent=msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), dur);
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#0f0f1a');
+  tg.setBackgroundColor('#0f0f1a');
 }
 
-// ─── MODAL ─────────────────────────────────
-function openModal(id){
-  document.getElementById(id).classList.add("open");
-  document.body.style.overflow="hidden";
-}
-function closeModal(id){
-  document.getElementById(id).classList.remove("open");
-  document.body.style.overflow="";
-}
-document.querySelectorAll(".modal-overlay").forEach(o=>{
-  o.addEventListener("click", e=>{ if(e.target===o) closeModal(o.id); });
-});
+const studentId = new URLSearchParams(window.location.search).get('student_id')
+  || tg?.initDataUnsafe?.user?.id
+  || null;
 
-// ─── FETCH HELPERS ─────────────────────────
-async function apiFetch(url){
-  try{ const r=await fetch(url); if(!r.ok) throw new Error(r.status); return await r.json(); }
-  catch(e){ console.error(url, e); return null; }
-}
-
-// ─── INIT ───────────────────────────────────
-async function init(){
-  const [profile, tasks, lb, errors] = await Promise.all([
-    apiFetch(`/api/student/profile?student_id=${USER_ID}`),
-    apiFetch(`/api/student/tasks?student_id=${USER_ID}`),
-    apiFetch("/api/leaderboard/top5"),
-    apiFetch(`/api/errors/summary?student_id=${USER_ID}`)
-  ]);
-  if(profile) renderProfile(profile);
-  if(tasks)   renderTasks(tasks);
-  if(lb)      renderLeaderboard(lb);
-  if(errors)  renderErrors(errors);
-  if(profile && tasks) checkGraduation(profile, tasks);
-  renderBadges();
+// ══════════════════════════════════════
+// Tab Switching
+// ══════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const tab = document.getElementById('tab-' + name);
+  if (tab) { tab.classList.add('active'); tab.classList.add('fade-in'); }
+  if (btn)  btn.classList.add('active');
+  if (name === 'lessons' && !lessonsLoaded) loadLessons();
+  if (name === 'leaders' && !leadersLoaded) loadLeaders();
+  if (name === 'grad')    loadGrad();
 }
 
-// ─── PROFILE ────────────────────────────────
-function renderProfile(p){
-  PROFILE = p;
-  const name    = p.name || "طالب";
-  const initial = name.charAt(0);
-  const xp      = p.xp || 0;
-  const streak  = p.streak_days || 0;
-  const days    = p.days_remaining || 0;
-  const level   = p.level || "—";
-  const pkg     = p.package || "—";
+let lessonsLoaded = false;
+let leadersLoaded = false;
 
-  // Hero
-  document.getElementById("heroName").textContent   = name;
-  document.getElementById("heroLevel").textContent  = `المستوى: ${level}`;
-  document.getElementById("heroPackage").textContent= `📦 ${pkg}`;
-  document.getElementById("heroXP").textContent     = xp.toLocaleString();
-  document.getElementById("heroStreak").textContent = streak;
-  document.getElementById("heroDays").textContent   = days;
-  document.getElementById("heroAvatar").textContent = initial;
+// ══════════════════════════════════════
+// Load Student Data
+// ══════════════════════════════════════
+const QUOTES = [
+  { text: "كل يوم تتعلم فيه هو انتصار على نفسك", author: "— يامن أكاديمي" },
+  { text: "النجاح ليس نهائياً والفشل ليس قاتلاً — الشجاعة على الاستمرار هي ما يهم", author: "— Winston Churchill" },
+  { text: "لا تنتظر الظروف المثالية — ابدأ الآن بما لديك", author: "— Arthur Ashe" },
+  { text: "التكرار هو أم التعلم", author: "— مثل تعليمي" },
+  { text: "كل خبير كان في يوم ما مبتدئاً", author: "— Helen Hayes" },
+];
 
-  // Stats
-  document.getElementById("statXP").textContent     = xp.toLocaleString();
-  document.getElementById("statStreak").textContent = streak;
-  document.getElementById("avatarInitial").textContent = initial;
-
-  // Progress
-  const tp = Math.min(Math.round((xp/3000)*100),100);
-  const lp = Math.min(Math.round((p.completed_lessons||0)/20*100),100);
-  const ap = p.accuracy || 0;
-  setProgress("fillTasks","pctTasks", tp);
-  setProgress("fillLessons","pctLessons", lp);
-  setProgress("fillAcc","pctAcc", ap);
-
-  // Profile modal
-  document.getElementById("profileAvatar").textContent = initial;
-  document.getElementById("profileName").textContent   = name;
-  document.getElementById("profileEmail").textContent  = p.email || p.phone || "";
-  document.getElementById("pm_xp").textContent    = xp.toLocaleString();
-  document.getElementById("pm_streak").textContent= streak;
-  document.getElementById("pm_level").textContent = level;
-  document.getElementById("pm_days").textContent  = days;
-
-  // Progress chart modal
-  renderProgressChart(tp, lp, ap);
-  document.getElementById("progressDetails").innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
-      <div style="background:#fffbea;border-radius:10px;padding:10px">
-        <div style="font-weight:900;font-size:1.2rem;color:var(--gold)">${tp}%</div>
-        <div style="font-size:.72rem;color:var(--muted)">المهام</div>
-      </div>
-      <div style="background:#ebf8ff;border-radius:10px;padding:10px">
-        <div style="font-weight:900;font-size:1.2rem;color:#2b6cb0">${lp}%</div>
-        <div style="font-size:.72rem;color:var(--muted)">الدروس</div>
-      </div>
-      <div style="background:#f0fff4;border-radius:10px;padding:10px">
-        <div style="font-weight:900;font-size:1.2rem;color:#276749">${ap}%</div>
-        <div style="font-size:.72rem;color:var(--muted)">الدقة</div>
-      </div>
-    </div>`;
-}
-
-function setProgress(fillId, pctId, val){
-  document.getElementById(fillId).style.width = val+"%";
-  document.getElementById(pctId).textContent  = val+"%";
-}
-
-// ─── TASKS ──────────────────────────────────
-function renderTasks(data){
-  ALL_TASKS = Array.isArray(data) ? data : (data.tasks || []);
-  const done = ALL_TASKS.filter(t=>t.completed).length;
-  document.getElementById("statDone").textContent = done;
-
-  const preview = ALL_TASKS.slice(0,3);
-  document.getElementById("tasksPreview").innerHTML = preview.length
-    ? preview.map(taskHTML).join("")
-    : `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:16px">🎉 لا توجد مهام اليوم</div>`;
-
-  renderTasksModal(ALL_TASKS);
-}
-
-function taskHTML(t){
-  return `<div class="task-item ${t.completed?'done':''}" onclick="toggleTask(${t.id},this)">
-    <div class="task-check">${t.completed?'✓':''}</div>
-    <div class="task-text">${t.task_text||t.description||'مهمة'}</div>
-    <div class="task-pts">+${t.xp_reward||10} XP</div>
-  </div>`;
-}
-
-function renderTasksModal(tasks){
-  document.getElementById("tasksModalList").innerHTML =
-    tasks.length ? tasks.map(taskHTML).join("") :
-    `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:20px">لا توجد مهام</div>`;
-}
-
-function filterTasks(filter, btn){
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  const filtered = filter==="all" ? ALL_TASKS
-    : filter==="done" ? ALL_TASKS.filter(t=>t.completed)
-    : ALL_TASKS.filter(t=>!t.completed);
-  renderTasksModal(filtered);
-}
-
-async function toggleTask(id, el){
-  const item = ALL_TASKS.find(t=>t.id===id);
-  if(!item) return;
-  let r = null;
+async function loadStudent() {
+  if (!studentId) {
+    showError();
+    return;
+  }
   try {
-    const resp = await fetch("/api/tasks/toggle", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({task_id: id, student_id: parseInt(USER_ID)})
-    });
-    r = await resp.json();
-  } catch(e) { console.error(e); return; }
-  if(r && !r.error){
-  if(r && !r.error){
-    item.completed = !item.completed;
-    el.classList.toggle("done");
-    el.querySelector(".task-check").textContent = item.completed ? "✓" : "";
-    showToast(item.completed ? "✅ تم إنجاز المهمة!" : "↩ تم إلغاء الإنجاز");
-    // update counter
-    const done = ALL_TASKS.filter(t=>t.completed).length;
-    document.getElementById("statDone").textContent = done;
+    const res  = await fetch(`/api/student/${studentId}`);
+    const data = await res.json();
+    if (data.error) { showError(data.error); return; }
+    renderStudent(data);
+  } catch(e) {
+    showError('تعذر الاتصال بالخادم');
   }
 }
 
-// ─── LEADERBOARD ────────────────────────────
-function renderLeaderboard(data){
-  const list = Array.isArray(data) ? data : (data.leaderboard || []);
-  const rankClasses = ["rank1","rank2","rank3","rankN","rankN"];
-  const html = list.map((s,i)=>`
-    <div class="lb-item">
-      <div class="lb-rank ${rankClasses[i]||'rankN'}">${i+1}</div>
-      <div class="lb-name">${s.name||s.student_name||'—'}</div>
-      <div class="lb-xp">${(s.xp||0).toLocaleString()} XP</div>
-    </div>`).join("");
-  document.getElementById("lbPreview").innerHTML = html || `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:16px">لا توجد بيانات</div>`;
-  document.getElementById("lbModalList").innerHTML = html;
+function renderStudent(d) {
+  // Header
+  document.getElementById('studentName').textContent  = d.full_name || d.username || 'طالب';
+  document.getElementById('xpVal').textContent        = (d.xp || 0).toLocaleString();
+  document.getElementById('streakVal').textContent    = d.streak || 0;
+
+  // Level
+  const levelMap = {
+    beginner:     { ar: 'مبتدئ',  icon: '🔵' },
+    intermediate: { ar: 'متوسط',  icon: '🟡' },
+    advanced:     { ar: 'متقدم',  icon: '🟢' },
+  };
+  const lv = levelMap[d.level] || levelMap.beginner;
+  document.getElementById('levelText').textContent   = lv.ar;
+  document.getElementById('studentLevel').querySelector('span').textContent = lv.icon;
+
+  // XP Bar (max 1000 per level)
+  const xpPct = Math.min((d.xp || 0) % 500 / 500 * 100, 100);
+  setTimeout(() => {
+    document.getElementById('xpBar').style.width = xpPct + '%';
+  }, 300);
+
+  // Stats
+  document.getElementById('xpStat').textContent      = (d.xp || 0).toLocaleString();
+  document.getElementById('streakStat').textContent  = d.streak || 0;
+  document.getElementById('missionsStat').textContent= d.missions_completed || 0;
+  document.getElementById('scoreStat').textContent   = (d.placement_score || 0) + '%';
+
+  // Status Banner
+  const banner = document.getElementById('statusBanner');
+  if (d.is_paid) {
+    banner.className = 'status-banner status-paid';
+    banner.textContent = '✅ حساب مفعّل — جميع الميزات متاحة لك';
+  }
+
+  // Skills
+  const skills = d.skills || {};
+  const maxXp  = 200;
+  renderSkillBar('reading',   skills.reading_xp   || 0, maxXp);
+  renderSkillBar('listening', skills.listening_xp || 0, maxXp);
+  renderSkillBar('speaking',  skills.speaking_xp  || 0, maxXp);
+  renderSkillBar('writing',   skills.writing_xp   || 0, maxXp);
+
+  // Mission Progress
+  const missions = d.missions_completed || 0;
+  const mPct = Math.min(missions / 10 * 100, 100);
+  setTimeout(() => {
+    document.getElementById('missionBar').style.width = mPct + '%';
+    document.getElementById('missionPct').textContent = Math.round(mPct) + '%';
+  }, 500);
+
+  // Random Quote
+  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  document.getElementById('quoteText').textContent   = '"' + q.text + '"';
+  document.querySelector('.quote-author').textContent = q.author;
+
+  // Show App
+  document.getElementById('loading').style.display   = 'none';
+  document.getElementById('app').style.display       = 'block';
+  document.getElementById('bottomNav').style.display = 'flex';
 }
 
-// ─── ERRORS ─────────────────────────────────
-function renderErrors(data){
-  const list = Array.isArray(data) ? data : (data.errors || []);
-  const preview = list.slice(0,2);
-  const errHTML = arr => arr.map(e=>`
-    <div class="err-item">
-      <div class="err-q">${e.question_text||e.question||'سؤال'}</div>
-      <div class="err-meta">❌ ${e.wrong_answer||'—'} &nbsp;→&nbsp; ✅ ${e.correct_answer||'—'} &nbsp;|&nbsp; ${e.topic||''}</div>
-    </div>`).join("");
-  document.getElementById("errPreview").innerHTML = preview.length
-    ? errHTML(preview)
-    : `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:16px">🎉 لا أخطاء مسجلة</div>`;
-  document.getElementById("errModalList").innerHTML = list.length
-    ? errHTML(list)
-    : `<div style="text-align:center;color:var(--muted);font-size:.85rem;padding:20px">لا أخطاء مسجلة – أداء ممتاز!</div>`;
+function renderSkillBar(skill, xp, max) {
+  const pct = Math.min(xp / max * 100, 100);
+  document.getElementById(skill + 'Xp').textContent  = xp + ' XP';
+  setTimeout(() => {
+    document.getElementById(skill + 'Bar').style.width = pct + '%';
+  }, 600);
 }
 
-// ─── BADGES ─────────────────────────────────
-const BADGE_DEFS = [
-  {icon:"🌟",name:"النجم الصاعد",key:"xp_500"},
-  {icon:"🔥",name:"المثابر",key:"streak_3"},
-  {icon:"🏆",name:"المتصدر",key:"top3"},
-  {icon:"📚",name:"القارئ",key:"lessons_5"},
-  {icon:"⚡",name:"السريع",key:"speed"},
-  {icon:"💎",name:"الماسي",key:"xp_2000"},
-];
-function renderBadges(){
-  const earned = PROFILE?.badges || [];
-  const preview = BADGE_DEFS.slice(0,4);
-  document.getElementById("badgesPreview").innerHTML = preview.map(b=>`
-    <div class="badge-item ${earned.includes(b.key)?'':'locked'}">
-      <div class="b-icon">${b.icon}</div>
-      <div class="b-name">${b.name}</div>
-    </div>`).join("");
-  document.getElementById("badgesModalContent").innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-      ${BADGE_DEFS.map(b=>`
-        <div class="badge-item ${earned.includes(b.key)?'':'locked'}" style="min-width:unset">
-          <div class="b-icon">${b.icon}</div>
-          <div class="b-name">${b.name}</div>
-          <div style="font-size:.65rem;color:var(--muted);margin-top:2px">${earned.includes(b.key)?'✅ محققة':'🔒 مقفلة'}</div>
-        </div>`).join("")}
+function showError(msg) {
+  document.getElementById('loading').innerHTML =
+    `<div style="text-align:center;padding:40px 20px">
+      <div style="font-size:48px;margin-bottom:16px">😕</div>
+      <div style="color:var(--text2);font-size:14px">${msg || 'تعذر تحميل البيانات'}</div>
+      <button onclick="loadStudent()" class="btn btn-primary" style="margin-top:20px;width:auto;padding:10px 24px">
+        🔄 إعادة المحاولة
+      </button>
     </div>`;
 }
 
-// ─── PROGRESS CHART ─────────────────────────
-let chartInst = null;
-function renderProgressChart(tasks, lessons, acc){
-  if(chartInst) chartInst.destroy();
-  const ctx = document.getElementById("progressChart").getContext("2d");
-  chartInst = new Chart(ctx, {
-    type:"doughnut",
-    data:{
-      labels:["المهام","الدروس","الدقة"],
-      datasets:[{
-        data:[tasks, lessons, acc],
-        backgroundColor:["#d4af37","#667eea","#38a169"],
-        borderWidth:0,
-      }]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{position:"bottom",labels:{font:{family:"Cairo"},padding:16}}}
+// ══════════════════════════════════════
+// Load Lessons
+// ══════════════════════════════════════
+async function loadLessons() {
+  lessonsLoaded = true;
+  try {
+    const res  = await fetch('/api/lessons');
+    const data = await res.json();
+    const lessons = data.lessons || [];
+    const el = document.getElementById('lessonsList');
+
+    if (!lessons.length) {
+      el.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>لا توجد دروس بعد</p></div>`;
+      return;
     }
-  });
+
+    const skillIcon = {
+      reading:'📖', listening:'🎧', speaking:'🗣️',
+      writing:'✍️', grammar:'📝', vocabulary:'📚'
+    };
+    const skillClass = {
+      reading:'icon-reading', listening:'icon-listening', speaking:'icon-speaking',
+      writing:'icon-writing', grammar:'icon-grammar', vocabulary:'icon-vocabulary'
+    };
+
+    // Group by stage
+    const stages = {};
+    lessons.forEach(l => {
+      const s = l.stage || 1;
+      (stages[s] = stages[s] || []).push(l);
+    });
+
+    let html = '';
+    Object.keys(stages).sort().forEach(s => {
+      html += `<div class="section-title">المرحلة ${s}</div>`;
+      stages[s].forEach(l => {
+        const sk = l.skill_type || 'reading';
+        html += `
+          <div class="lesson-item" onclick="openLesson(${l.id})">
+            <div class="lesson-icon ${skillClass[sk]||'icon-reading'}">
+              ${skillIcon[sk]||'📌'}
+            </div>
+            <div class="lesson-info">
+              <div class="lesson-title">${l.title}</div>
+              <div class="lesson-meta">
+                <span>${sk}</span>
+                <span class="lesson-xp">+${l.xp_reward||20} XP</span>
+              </div>
+            </div>
+            <span class="lesson-arrow">‹</span>
+          </div>`;
+      });
+    });
+    el.innerHTML = html;
+  } catch(e) {
+    document.getElementById('lessonsList').innerHTML =
+      `<div class="empty-state"><div class="icon">❌</div><p>خطأ في التحميل</p></div>`;
+  }
 }
 
-// ─── UTILS ──────────────────────────────────
-function scrollTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+function openLesson(id) {
+  if (tg) tg.close();
+  window.open(`/lesson/${id}`, '_blank');
+}
 
-// ─── START ──────────────────────────────────
-init();
+// ══════════════════════════════════════
+// Load Leaderboard
+// ══════════════════════════════════════
+async function loadLeaders() {
+  leadersLoaded = true;
+  try {
+    const res  = await fetch('/api/leaderboard');
+    const data = await res.json();
+    const leaders = data.leaderboard || data.leaders || [];
+    const el = document.getElementById('leadersList');
+
+    if (!leaders.length) {
+      el.innerHTML = `<div class="empty-state"><div class="icon">🏆</div><p>لا توجد بيانات بعد</p></div>`;
+      return;
+    }
+
+    const medals = ['rank-1','rank-2','rank-3'];
+    const mText  = ['🥇','🥈','🥉'];
+    let html = '';
+    leaders.forEach((l, i) => {
+      const isMe = String(l.telegram_id) === String(studentId);
+      const rc   = medals[i] || 'rank-n';
+      const rm   = mText[i]  || (i+1);
+      html += `
+        <div class="leader-item ${isMe ? 'me' : ''}">
+          <div class="leader-rank ${rc}">${rm}</div>
+          <div class="leader-name">
+            ${l.full_name || l.username || 'طالب'}
+            ${isMe ? ' <span style="color:var(--accent2);font-size:11px">(أنت)</span>' : ''}
+          </div>
+          <div class="leader-xp">${(l.xp||0).toLocaleString()} XP</div>
+        </div>`;
+    });
+    el.innerHTML = html;
+  } catch(e) {
+    document.getElementById('leadersList').innerHTML =
+      `<div class="empty-state"><div class="icon">❌</div><p>خطأ في التحميل</p></div>`;
+  }
+}
+
+// ══════════════════════════════════════
+// Graduation Check
+// ══════════════════════════════════════
+async function loadGrad() {
+  if (!studentId) return;
+  try {
+    const res  = await fetch(`/api/user/graduation-status?student_id=${studentId}`);
+    const data = await res.json();
+    const card = document.getElementById('gradCard');
+    const reqs = document.getElementById('gradReqs');
+
+    const checks = data.checks || [];
+    let reqHtml = '';
+    checks.forEach(c => {
+      reqHtml += `
+        <div class="req-item ${c.passed ? 'req-ok' : 'req-fail'}">
+          <span>${c.passed ? '✅' : '❌'}</span>
+          <span>${c.message}</span>
+        </div>`;
+    });
+    reqs.innerHTML = reqHtml;
+
+    if (data.eligible) {
+      card.className = 'grad-card grad-unlocked';
+      card.querySelector('.grad-icon').textContent  = '🎓';
+      card.querySelector('.grad-title').textContent = 'مبروك! أنت مؤهل للتخرج';
+      card.querySelector('.grad-desc').textContent  = 'تواصل مع الأدمن للحصول على شهادتك';
+      reqs.insertAdjacentHTML('afterend',
+        `<button class="btn btn-gold" onclick="contactAdmin()">
+          🎓 احصل على شهادتك الآن
+        </button>`
+      );
+    }
+  } catch(e) { /* silent */ }
+}
+
+function contactAdmin() {
+  if (tg) tg.openTelegramLink('https://t.me/YamenAdmin');
+  else window.open('https://t.me/YamenAdmin', '_blank');
+}
+
+// ══════════════════════════════════════
+// Boot
+// ══════════════════════════════════════
+loadStudent();
 </script>
 </body>
 </html>
-
-
-
