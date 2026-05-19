@@ -6,7 +6,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import settings
-from bot_database import init_bot_db
+from db import init_bot_db
 from handlers.start import router as start_router
 from handlers.subscriptions import router as sub_router
 from handlers.admin import router as admin_router
