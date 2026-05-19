@@ -6,7 +6,25 @@ DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
 
 def seed():
     conn = sqlite3.connect(DB_PATH)
-    
+       # إصلاح جدول lessons
+    lesson_cols = [r[1] for r in conn.execute('PRAGMA table_info(lessons)').fetchall()]
+    lesson_fixes = [
+        ('description', 'TEXT'),
+        ('skill_type', 'TEXT'),
+        ('vocabulary', 'TEXT'),
+        ('grammar_rule', 'TEXT'),
+        ('audio_url', 'TEXT'),
+        ('stage', 'INTEGER DEFAULT 1'),
+        ('xp_reward', 'INTEGER DEFAULT 10'),
+    ]
+    for col, definition in lesson_fixes:
+        if col not in lesson_cols:
+            try:
+                conn.execute(f'ALTER TABLE lessons ADD COLUMN {col} {definition}')
+            except:
+                pass
+    conn.commit()
+ 
     # ══ إنشاء جدول placement_questions إن لم يكن موجوداً ══
     conn.executescript("""
     CREATE TABLE IF NOT EXISTS placement_questions (
