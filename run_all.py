@@ -72,7 +72,21 @@ async def run_bot():
     from bot_database import init_bot_db
     init_db()
     init_bot_db()
-    
+    # seed essential data on every startup
+    try:
+        from startup_seed import seed as run_seed
+        run_seed()
+        logger.info("startup seed OK")
+    except Exception as _seed_err:
+        logger.warning(f"seed error: {_seed_err}")
+
+        # auto seed on every startup
+    try:
+        import launch_fix
+        launch_fix.fix_all()
+    except Exception as _e:
+        logger.warning(f"seed skipped: {_e}")
+
     # seed البيانات الأساسية تلقائياً
     try:
         import seed_data
