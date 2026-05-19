@@ -2,914 +2,1069 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>أكاديمية يامن | لوحة الإدارة</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>لوحة تحكم أكاديمية يامن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-*{font-family:"Cairo",sans-serif;box-sizing:border-box}
-body{background:linear-gradient(160deg,#f0f4ff 0%,#faf8f0 50%,#f5f0ff 100%);min-height:100vh;color:#1e293b}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#d4af37;border-radius:4px}
-.sidebar{position:fixed;top:0;right:0;height:100vh;width:240px;background:linear-gradient(180deg,#1a365d,#0f2347);box-shadow:4px 0 24px rgba(26,54,93,.25);display:flex;flex-direction:column;transition:transform .3s;z-index:50}
-.sidebar.collapsed{transform:translateX(240px)}
-.sidebar-brand{padding:1.25rem;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:.75rem}
-.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#d4af37,#f5e27a);display:flex;align-items:center;justify-content:center;font-size:1.25rem}
-.brand-name{font-size:.95rem;font-weight:900;color:white}
-.brand-sub{font-size:.65rem;color:rgba(255,255,255,.45)}
-.nav-section{padding:.75rem .75rem .25rem;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em}
-.nav-item{display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;margin:.1rem .5rem;border-radius:.75rem;cursor:pointer;color:rgba(255,255,255,.6);font-size:.85rem;font-weight:600;transition:all .2s;text-decoration:none;border:none;background:none;width:calc(100% - 1rem)}
-.nav-item:hover{background:rgba(255,255,255,.08);color:white}
-.nav-item.active{background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(212,175,55,.1));color:#f5e27a;border:1px solid rgba(212,175,55,.3)}
-.nav-icon{font-size:1rem;width:20px;text-align:center}
-.nav-badge{margin-right:auto;background:#ef4444;color:white;font-size:.6rem;font-weight:800;padding:1px 6px;border-radius:9999px}
-.main{margin-right:240px;min-height:100vh;transition:margin .3s}
-.main.expanded{margin-right:0}
-.topbar{background:white;border-bottom:1px solid #e2e8f0;padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:40;box-shadow:0 2px 8px rgba(26,54,93,.06)}
-.card{background:white;border:1px solid #e8edf5;border-radius:1.25rem;box-shadow:0 2px 12px rgba(26,54,93,.06);overflow:hidden;margin-bottom:1.25rem}
-.card-header{padding:.9rem 1.25rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#fffbf0,white);font-weight:800;color:#1a365d;font-size:.9rem}
-.card-body{padding:1.25rem}
-.stat-card{background:white;border:1px solid #e8edf5;border-radius:1rem;padding:1.1rem 1.25rem;display:flex;align-items:center;gap:1rem;box-shadow:0 2px 10px rgba(26,54,93,.05);transition:transform .2s}
-.stat-card:hover{transform:translateY(-2px)}
-.stat-icon{width:44px;height:44px;border-radius:.875rem;display:flex;align-items:center;justify-content:center;font-size:1.35rem}
-.stat-value{font-size:1.6rem;font-weight:900;color:#1a365d;line-height:1}
-.stat-label{font-size:.7rem;color:#94a3b8;font-weight:600;margin-top:.2rem}
-.tbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.tbl thead tr{background:#f8fafc}
-.tbl th{padding:.6rem 1rem;text-align:right;font-weight:800;color:#64748b;font-size:.72rem;border-bottom:2px solid #e2e8f0;white-space:nowrap}
-.tbl td{padding:.65rem 1rem;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:middle}
-.tbl tbody tr:hover{background:#fffbf0}
-.tbl tbody tr:last-child td{border-bottom:none}
-.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 10px;border-radius:9999px;font-size:.68rem;font-weight:700;white-space:nowrap}
-.b-gold{background:#fffbeb;color:#92700a;border:1px solid #fde68a}
-.b-blue{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
-.b-green{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
-.b-red{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}
-.b-purple{background:#faf5ff;color:#7c3aed;border:1px solid #ddd6fe}
-.b-gray{background:#f8fafc;color:#64748b;border:1px solid #e2e8f0}
-.b-orange{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
-.b-teal{background:#f0fdfa;color:#0f766e;border:1px solid #99f6e4}
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:.625rem;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;outline:none;font-family:"Cairo",sans-serif}
-.btn-navy{background:#1a365d;color:white}.btn-navy:hover{background:#1e4080}
-.btn-gold{background:linear-gradient(135deg,#d4af37,#f5e27a);color:#1a365d}
-.btn-green{background:#16a34a;color:white}.btn-green:hover{background:#15803d}
-.btn-red{background:#dc2626;color:white}.btn-red:hover{background:#b91c1c}
-.btn-ghost{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.btn-ghost:hover{background:#e2e8f0}
-.btn-sm{padding:.3rem .75rem;font-size:.75rem}
-.btn-xs{padding:.2rem .5rem;font-size:.7rem;border-radius:.4rem}
-.inp{width:100%;padding:.55rem .875rem;border:1.5px solid #e2e8f0;border-radius:.625rem;font-size:.85rem;color:#1e293b;background:white;transition:border-color .2s;outline:none;font-family:"Cairo",sans-serif}
-.inp:focus{border-color:#d4af37;box-shadow:0 0 0 3px rgba(212,175,55,.12)}
-.inp-label{display:block;font-size:.78rem;font-weight:700;color:#475569;margin-bottom:.3rem}
+*{font-family:'Cairo',sans-serif;box-sizing:border-box}
+body{background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex}
+/* Sidebar */
+.sidebar{width:260px;min-width:260px;background:#1e293b;height:100vh;overflow-y:auto;position:fixed;right:0;top:0;z-index:100;transition:.3s;border-left:1px solid #334155}
+.sidebar-brand{padding:20px 16px;border-bottom:1px solid #334155;display:flex;align-items:center;gap:12px}
+.brand-icon{width:42px;height:42px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.brand-text{font-size:15px;font-weight:700;color:#f1f5f9}
+.brand-sub{font-size:11px;color:#64748b}
+.nav-section{padding:12px 16px 4px;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;margin:2px 8px;border-radius:10px;cursor:pointer;transition:.2s;color:#94a3b8;font-size:13.5px;font-weight:500;text-decoration:none}
+.nav-item:hover{background:#334155;color:#f1f5f9}
+.nav-item.active{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:600}
+.nav-item .icon{width:20px;text-align:center;font-size:16px}
+.nav-badge{margin-right:auto;background:#ef4444;color:#fff;border-radius:99px;padding:1px 7px;font-size:10px}
+/* Main */
+.main{margin-right:260px;flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:#1e293b;border-bottom:1px solid #334155;padding:14px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50}
+.topbar h1{font-size:18px;font-weight:700;color:#f1f5f9;margin-right:auto}
+.btn-icon{width:38px;height:38px;background:#334155;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:16px;transition:.2s}
+.btn-icon:hover{background:#475569;color:#f1f5f9}
+.avatar{width:38px;height:38px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.content{padding:24px;flex:1}
+/* Cards */
+.card{background:#1e293b;border-radius:16px;border:1px solid #334155;padding:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:700;color:#f1f5f9}
+.stat-card{background:#1e293b;border-radius:16px;border:1px solid #334155;padding:20px;display:flex;align-items:center;gap:16px}
+.stat-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.stat-label{font-size:12px;color:#64748b;margin-bottom:2px}
+.stat-value{font-size:24px;font-weight:800;color:#f1f5f9}
+/* Table */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:10px 14px;text-align:right;font-size:11px;font-weight:700;color:#64748b;background:#0f172a;border-bottom:1px solid #334155;text-transform:uppercase}
+.tbl td{padding:12px 14px;border-bottom:1px solid #1e293b;font-size:13px;color:#cbd5e1;vertical-align:middle}
+.tbl tr:hover td{background:#1e293b}
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.badge-green{background:#052e16;color:#4ade80}
+.badge-red{background:#1c0005;color:#f87171}
+.badge-blue{background:#1e3a5f;color:#60a5fa}
+.badge-yellow{background:#2d1b00;color:#fbbf24}
+.badge-purple{background:#2e1065;color:#a78bfa}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-success{background:#166534;color:#4ade80}
+.btn-success:hover{background:#15803d}
+.btn-danger{background:#7f1d1d;color:#f87171}
+.btn-danger:hover{background:#991b1b}
+.btn-ghost{background:#334155;color:#94a3b8}
+.btn-ghost:hover{background:#475569;color:#f1f5f9}
+.btn-sm{padding:5px 10px;font-size:12px}
+/* Form */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:#94a3b8;margin-bottom:6px}
+.form-control{width:100%;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:9px 14px;color:#f1f5f9;font-size:13px;font-family:'Cairo',sans-serif;transition:.2s}
+.form-control:focus{outline:none;border-color:#6366f1;background:#1e293b}
+.form-control option{background:#1e293b}
+/* Switch */
 .switch{position:relative;display:inline-block;width:44px;height:24px}
 .switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;cursor:pointer;inset:0;background:#e2e8f0;border-radius:24px;transition:.3s}
-.slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
-input:checked+.slider{background:#1a365d}
-input:checked+.slider:before{transform:translateX(20px)}
-.modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(15,35,71,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.show{opacity:1;pointer-events:auto}
-.modal-box{background:white;border-radius:1.25rem;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(15,35,71,.3);transform:translateY(16px);transition:transform .25s}
-.modal-overlay.show .modal-box{transform:translateY(0)}
-.modal-head{padding:1.1rem 1.25rem;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#fffbf0,white);position:sticky;top:0;z-index:10}
-.modal-head h3{font-weight:900;color:#1a365d;font-size:.95rem}
-.modal-close{width:28px;height:28px;border-radius:.5rem;background:#f1f5f9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:1rem}
-.modal-close:hover{background:#e2e8f0}
-.modal-body{padding:1.25rem}
-.modal-foot{padding:.875rem 1.25rem;border-top:1px solid #f1f5f9;display:flex;gap:.5rem;justify-content:flex-end;position:sticky;bottom:0;background:white;z-index:10}
-.q-item{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:.875rem;padding:.875rem 1rem;margin-bottom:.625rem;transition:all .2s}
-.q-item:hover{border-color:#d4af37;background:#fffdf5}
-#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);padding:.6rem 1.5rem;border-radius:.875rem;font-weight:700;font-size:.85rem;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 8px 24px rgba(0,0,0,.15)}
-#toast.show{opacity:1}
-#toast.t-ok{background:#1a365d;color:white}
-#toast.t-err{background:#dc2626;color:white}
-#toast.t-warn{background:#d4af37;color:#1a365d}
-.page{display:none}.page.active{display:block}
-.qtype-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
-.qtype-tab{padding:.35rem .85rem;border-radius:.5rem;font-size:.75rem;font-weight:700;cursor:pointer;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;transition:all .2s}
-.qtype-tab.active{background:#1a365d;color:white;border-color:#1a365d}
-.upload-zone{border:2px dashed #e2e8f0;border-radius:.875rem;padding:1.25rem;text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc}
-.upload-zone:hover{border-color:#d4af37;background:#fffdf5}
-.upload-zone.has-file{border-color:#16a34a;background:#f0fdf4}
-.rec-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;font-size:1.5rem;display:flex;align-items:center;justify-content:center;transition:all .2s;margin:0 auto}
-.rec-btn.idle{background:#f1f5f9;color:#475569}
-.rec-btn.recording{background:#dc2626;color:white;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.form-section{display:none}.form-section.active{display:block}
-.section-tabs{display:flex;gap:4px;border-bottom:2px solid #f1f5f9;margin-bottom:1rem;flex-wrap:wrap}
-.section-tab{padding:.4rem .9rem;font-size:.78rem;font-weight:700;cursor:pointer;color:#94a3b8;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
-.section-tab.active{color:#1a365d;border-bottom-color:#d4af37}
-.qtype-badge{padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700}
-.qt-mcq{background:#dbeafe;color:#1e40af}
-.qt-listening{background:#dcfce7;color:#15803d}
-.qt-writing{background:#fef9c3;color:#92400e}
-.qt-speaking{background:#fee2e2;color:#991b1b}
-.qt-complete{background:#f3e8ff;color:#6b21a8}
-.qt-build{background:#e0f2fe;color:#0369a1}
-@media(max-width:768px){.sidebar{transform:translateX(240px)}.sidebar.open{transform:translateX(0)}.main{margin-right:0}}
+.slider{position:absolute;cursor:pointer;inset:0;background:#334155;border-radius:99px;transition:.3s}
+.slider:before{content:"";position:absolute;width:18px;height:18px;right:3px;top:3px;background:#94a3b8;border-radius:50%;transition:.3s}
+input:checked+.slider{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+input:checked+.slider:before{transform:translateX(-20px);background:#fff}
+/* Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:#1e293b;border-radius:20px;border:1px solid #334155;width:90%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal-header{padding:20px 24px;border-bottom:1px solid #334155;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700;color:#f1f5f9}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid #334155;display:flex;justify-content:flex-end;gap:10px}
+/* Search */
+.search-box{position:relative}
+.search-box input{padding-right:38px}
+.search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#64748b}
+/* Toast */
+#toast{position:fixed;bottom:24px;left:24px;background:#334155;color:#f1f5f9;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:999;display:none;gap:8px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+#toast.show{display:flex}
+#toast.success{border-left:4px solid #4ade80}
+#toast.error{border-left:4px solid #f87171}
+/* Pages */
+.page{display:none}
+.page.active{display:block}
+/* Skill bars */
+.skill-bar-track{height:6px;background:#334155;border-radius:99px;overflow:hidden}
+.skill-bar-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:.6s}
+/* Responsive */
+@media(max-width:768px){.sidebar{transform:translateX(100%);width:280px}.sidebar.open{transform:translateX(0)}.main{margin-right:0}}
 </style>
 </head>
 <body>
-<aside class="sidebar" id="sidebar">
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <div class="logo">🎓</div>
-    <div><div class="brand-name">يامن</div><div class="brand-sub">لوحة الإدارة</div></div>
+    <div class="brand-icon">🎓</div>
+    <div>
+      <div class="brand-text">أكاديمية يامن</div>
+      <div class="brand-sub">لوحة التحكم</div>
+    </div>
   </div>
-  <div style="flex:1;overflow-y:auto;padding-bottom:1rem">
-    <div class="nav-section">عام</div>
-    <button class="nav-item active" onclick="switchPage('dashboard',this)"><span class="nav-icon">📊</span>الرئيسية</button>
-    <button class="nav-item" onclick="switchPage('students',this)"><span class="nav-icon">👥</span>الطلاب<span class="nav-badge" id="nb-students">0</span></button>
-    <div class="nav-section">المحتوى</div>
-    <button class="nav-item" onclick="switchPage('questions',this)"><span class="nav-icon">❓</span>بنك الأسئلة<span class="nav-badge" id="nb-questions">0</span></button>
-    <button class="nav-item" onclick="switchPage('courses',this)"><span class="nav-icon">📚</span>الدورات</button>
-    <div class="nav-section">المالية</div>
-    <button class="nav-item" onclick="switchPage('payments',this)"><span class="nav-icon">💳</span>المدفوعات<span class="nav-badge" id="nb-payments">0</span></button>
-    <div class="nav-section">التشغيل</div>
-    <button class="nav-item" onclick="switchPage('gamification',this)"><span class="nav-icon">⚡</span>التحفيز و XP</button>
-    <button class="nav-item" onclick="switchPage('settings',this)"><span class="nav-icon">⚙️</span>الإعدادات</button>
-  </div>
-  <div style="padding:.875rem 1rem;border-top:1px solid rgba(255,255,255,.08)">
-    <a href="/dashboard?student_id=1" class="nav-item" style="margin:0"><span class="nav-icon">🚀</span>لوحة الطالب</a>
-  </div>
-</aside>
 
-<main class="main" id="main">
+  <div class="nav-section">عام</div>
+  <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">📊</span> الرئيسية</div>
+  <div class="nav-item" onclick="showPage('students',this)"><span class="icon">👥</span> الطلاب <span class="nav-badge" id="badge-students">0</span></div>
+
+  <div class="nav-section">المحتوى</div>
+  <div class="nav-item" onclick="showPage('questions',this)"><span class="icon">❓</span> الأسئلة</div>
+  <div class="nav-item" onclick="showPage('missions',this)"><span class="icon">🎯</span> المهام اليومية</div>
+
+  <div class="nav-section">التصحيح والتخرج</div>
+  <div class="nav-item" onclick="showPage('grading',this)"><span class="icon">✍️</span> معايير التصحيح</div>
+  <div class="nav-item" onclick="showPage('phases',this)"><span class="icon">🔄</span> شروط الانتقال</div>
+  <div class="nav-item" onclick="showPage('graduation',this)"><span class="icon">🎓</span> شروط التخرج</div>
+
+  <div class="nav-section">المالية</div>
+  <div class="nav-item" onclick="showPage('plans',this)"><span class="icon">📦</span> الباقات</div>
+  <div class="nav-item" onclick="showPage('plans',this)"><span class="icon">📦</span> الباقات</div>
+  <div class="nav-item" onclick="showPage('payments',this)"><span class="icon">💳</span> المدفوعات</div>
+
+  <div class="nav-section">التشغيل</div>
+  <div class="nav-item" onclick="showPage('settings',this)"><span class="icon">⚙️</span> الإعدادات</div>
+  <div class="nav-item" onclick="window.open('/','_blank')"><span class="icon">🌐</span> بوابة الطلاب</div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+  <!-- Topbar -->
   <div class="topbar">
-    <button onclick="toggleSidebar()" style="width:36px;height:36px;border-radius:10px;border:1.5px solid #e2e8f0;background:white;color:#475569;font-size:1.1rem;cursor:pointer">☰</button>
-    <div style="flex:1"><h1 id="page-title" style="font-weight:900;font-size:1rem;color:#1a365d">الرئيسية</h1></div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <button onclick="refreshAll()" class="btn btn-ghost btn-sm">🔄 تحديث</button>
-      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#1a365d,#1e4080);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem">A</div>
-    </div>
+    <button class="btn-icon" onclick="toggleSidebar()">☰</button>
+    <h1 id="page-title">الرئيسية</h1>
+    <button class="btn-icon" onclick="refreshPage()" title="تحديث">🔄</button>
+    <div class="avatar">👤</div>
   </div>
-  <div style="padding:1.25rem;max-width:1280px;margin:0 auto">
 
-    <!-- DASHBOARD -->
-    <div id="page-dashboard" class="page active">
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-5">
-        <div class="stat-card"><div class="stat-icon" style="background:#eff6ff">👥</div><div><div class="stat-value" id="stat-students">0</div><div class="stat-label">الطلاب</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:#f0fdf4">✅</div><div><div class="stat-value" id="stat-active">0</div><div class="stat-label">نشط</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:#fff7ed">💳</div><div><div class="stat-value" id="stat-pending">0</div><div class="stat-label">معلقة</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:#faf5ff">📦</div><div><div class="stat-value" id="stat-lessons">0</div><div class="stat-label">الدروس</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:#fffbeb">⭐</div><div><div class="stat-value" id="stat-xp">0</div><div class="stat-label">XP</div></div></div>
-        <div class="stat-card"><div class="stat-icon" style="background:#fff1f2">❓</div><div><div class="stat-value" id="stat-qcount">0</div><div class="stat-label">أسئلة</div></div></div>
-      </div>
-      <div class="card mb-5">
-        <div class="card-header">⚡ إجراءات سريعة</div>
-        <div class="card-body" style="display:flex;flex-wrap:wrap;gap:10px">
-          <button class="btn btn-navy" onclick="switchPage('students',null)">👥 الطلاب</button>
-          <button class="btn btn-gold" onclick="switchPage('payments',null)">💳 المدفوعات</button>
-          <button class="btn btn-green" onclick="sendDailyChallenge()">📨 تحدي اليوم</button>
-          <button class="btn btn-ghost" onclick="switchPage('questions',null)">❓ بنك الأسئلة</button>
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ─── DASHBOARD ─── -->
+    <div class="page active" id="page-dashboard">
+      <div class="grid grid-cols-2 gap-4 mb-6" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#1e3a5f">👥</div>
+          <div><div class="stat-label">إجمالي الطلاب</div><div class="stat-value" id="stat-total">—</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#052e16">💳</div>
+          <div><div class="stat-label">مشتركون مدفوعون</div><div class="stat-value" id="stat-paid">—</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#2e1065">⚡</div>
+          <div><div class="stat-label">نشطون اليوم</div><div class="stat-value" id="stat-active">—</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#2d1b00">🏆</div>
+          <div><div class="stat-label">إجمالي الأسئلة</div><div class="stat-value" id="stat-questions">—</div></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-header">🏆 المتصدرون</div>
-        <div class="card-body" style="padding:0">
-          <table class="tbl"><thead><tr><th>#</th><th>الطالب</th><th>المستوى</th><th>XP</th><th>🔥</th></tr></thead>
-          <tbody id="lb-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">جاري...</td></tr></tbody></table>
-        </div>
+        <div class="card-header"><span class="card-title">🏆 المتصدرون</span></div>
+        <table class="tbl" id="tbl-leaderboard">
+          <thead><tr><th>#</th><th>الطالب</th><th>XP</th><th>Streak</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- STUDENTS -->
-    <div id="page-students" class="page">
-      <div class="card">
-        <div class="card-header"><span>👥 الطلاب</span>
-          <div style="display:flex;gap:8px"><input class="inp" style="width:180px" placeholder="بحث..." oninput="filterStudents(this.value)"/><button class="btn btn-navy btn-sm" onclick="loadStudents()">🔄</button></div>
-        </div>
-        <div class="card-body" style="padding:0"><div style="overflow-x:auto">
-          <table class="tbl"><thead><tr><th>#</th><th>الاسم</th><th>المستوى</th><th>XP</th><th>Streak</th><th>الحالة</th><th>الباقة</th><th>إجراءات</th></tr></thead>
-          <tbody id="students-tbody"><tr><td colspan="8" style="text-align:center;padding:2rem;color:#94a3b8">جاري...</td></tr></tbody></table>
-        </div></div>
-      </div>
-    </div>
-
-    <!-- QUESTIONS -->
-    <div id="page-questions" class="page">
+    <!-- ─── STUDENTS ─── -->
+    <div class="page" id="page-students">
       <div class="card">
         <div class="card-header">
-          <span>❓ بنك الأسئلة <span id="q-total-badge" class="badge b-blue">0</span></span>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-            <select id="q-filter-type" class="inp" style="width:130px;padding:.35rem .7rem;font-size:.78rem" onchange="filterQuestions()">
-              <option value="">كل الأنواع</option>
-              <option value="mcq">MCQ</option>
-              <option value="listening">Listening</option>
-              <option value="reading_passage">Reading</option>
-              <option value="complete_words">Complete Words</option>
-              <option value="build_sentence">Build Sentence</option>
-              <option value="writing_email">Writing</option>
-              <option value="speaking_interview">Speaking</option>
-            </select>
-            <select id="q-filter-topic" class="inp" style="width:120px;padding:.35rem .7rem;font-size:.78rem" onchange="filterQuestions()">
-              <option value="">كل الموضوعات</option>
-              <option value="Grammar">Grammar</option>
-              <option value="Vocabulary">Vocabulary</option>
-              <option value="Reading">Reading</option>
-              <option value="Listening">Listening</option>
-              <option value="Writing">Writing</option>
-              <option value="Speaking">Speaking</option>
-              <option value="Tenses">Tenses</option>
-            </select>
-            <button class="btn btn-gold btn-sm" onclick="openQuestionModal()">➕ سؤال جديد</button>
+          <span class="card-title">👥 إدارة الطلاب</span>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input class="form-control" id="student-search" placeholder="ابحث بالاسم أو ID أو رقم الهاتف..." oninput="debounceSearch()" style="width:280px;padding-right:38px"/>
+            </div>
           </div>
         </div>
-        <div class="card-body" id="q-list-body"><div style="color:#94a3b8;text-align:center;padding:2rem">جاري التحميل...</div></div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="tbl-students">
+            <thead><tr><th>ID</th><th>الاسم</th><th>المستخدم</th><th>الهاتف</th><th>XP</th><th>Streak</th><th>المرحلة</th><th>النوع</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- COURSES -->
-    <div id="page-courses" class="page">
+    <!-- ─── QUESTIONS ─── -->
+    <div class="page" id="page-questions">
       <div class="card">
-        <div class="card-header"><span>📚 الدورات</span><button class="btn btn-navy btn-sm" onclick="openModal('modal-course')">➕ جديدة</button></div>
-        <div class="card-body" id="courses-body"><div style="color:#94a3b8;text-align:center;padding:2rem">جاري...</div></div>
+        <div class="card-header">
+          <span class="card-title">❓ بنك الأسئلة</span>
+          <div style="display:flex;gap:10px">
+            <select class="form-control" id="q-filter-skill" onchange="loadQuestions()" style="width:160px">
+              <option value="">جميع المهارات</option>
+              <option value="reading">قراءة</option>
+              <option value="listening">استماع</option>
+              <option value="speaking">محادثة</option>
+              <option value="writing">كتابة</option>
+              <option value="grammar">قواعد</option>
+              <option value="vocabulary">مفردات</option>
+            </select>
+            <button class="btn btn-primary" onclick="openModal('modal-add-question')">➕ إضافة سؤال</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="tbl-questions">
+            <thead><tr><th>#</th><th>السؤال</th><th>النوع</th><th>المهارة</th><th>الصعوبة</th><th>إجراءات</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- PAYMENTS -->
-    <div id="page-payments" class="page">
+    <!-- ─── MISSIONS ─── -->
+    <div class="page" id="page-missions">
       <div class="card">
-        <div class="card-header"><span>💳 المدفوعات</span>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-navy btn-sm" id="tab-pending" onclick="loadPayments('pending')">⏳ معلقة</button>
-            <button class="btn btn-ghost btn-sm" id="tab-approved" onclick="loadPayments('approved')">✅ مقبولة</button>
-            <button class="btn btn-ghost btn-sm" id="tab-rejected" onclick="loadPayments('rejected')">❌ مرفوضة</button>
-          </div>
+        <div class="card-header">
+          <span class="card-title">🎯 المهام اليومية</span>
+          <button class="btn btn-primary" onclick="openModal('modal-add-mission')">➕ إضافة مهمة</button>
         </div>
-        <div class="card-body" style="padding:0"><div style="overflow-x:auto">
-          <table class="tbl"><thead><tr><th>#</th><th>الطالب</th><th>الباقة</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-          <tbody id="payments-tbody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:#94a3b8">جاري...</td></tr></tbody></table>
-        </div></div>
+        <table class="tbl" id="tbl-missions">
+          <thead><tr><th>#</th><th>العنوان</th><th>النوع</th><th>XP</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- GAMIFICATION -->
-    <div id="page-gamification" class="page">
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="card">
-          <div class="card-header">⚡ إعدادات التحفيز</div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
-              <div><p style="font-weight:700;font-size:.85rem;color:#1a365d">⏱️ وقت التحدي (دقائق)</p></div>
-              <div style="display:flex;gap:8px;align-items:center">
-                <input type="number" id="set-challenge-timer" value="5" min="1" max="30" class="inp" style="width:70px;text-align:center"/>
-                <button class="btn btn-navy btn-sm" onclick="saveSetting('challenge_timer','set-challenge-timer')">حفظ</button>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a">
-              <div><p style="font-weight:700;font-size:.85rem;color:#92700a">📨 تحدي اليوم</p></div>
-              <button class="btn btn-gold btn-sm" onclick="sendDailyChallenge()">إرسال</button>
-            </div>
-          </div>
+    <!-- ─── GRADING ─── -->
+    <div class="page" id="page-grading">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">✍️ معايير التصحيح</span>
+          <button class="btn btn-primary" onclick="openModal('modal-add-grading')">➕ إضافة معيار</button>
         </div>
-        <div class="card">
-          <div class="card-header">🏆 لوحة الشرف</div>
-          <div class="card-body" style="padding:0">
-            <table class="tbl"><thead><tr><th>#</th><th>الطالب</th><th>XP</th><th>Streak</th></tr></thead>
-            <tbody id="lb-admin-tbody"><tr><td colspan="4" style="text-align:center;padding:2rem;color:#94a3b8">جاري...</td></tr></tbody></table>
-          </div>
+        <table class="tbl" id="tbl-grading">
+          <thead><tr><th>#</th><th>الموضوع</th><th>المهارة</th><th>Vocab نقاط</th><th>Connectors نقاط</th><th>الحظر -نقطة</th><th>Max</th><th>إجراءات</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─── PHASES ─── -->
+    <div class="page" id="page-phases">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🔄 شروط الانتقال بين المراحل</span></div>
+        <div id="phases-container" style="display:grid;gap:16px"></div>
+      </div>
+    </div>
+
+    <!-- ─── GRADUATION ─── -->
+    <div class="page" id="page-graduation">
+      <div class="card">
+        <div class="card-header"><span class="card-title">🎓 شروط التخرج</span><button class="btn btn-primary" onclick="saveGraduationSettings()">💾 حفظ</button></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="graduation-form"></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <span class="card-title">🔍 تحقق من أهلية طالب</span>
+        </div>
+        <div style="display:flex;gap:10px">
+          <input class="form-control" id="grad-check-uid" placeholder="Telegram User ID" style="max-width:240px"/>
+          <button class="btn btn-primary" onclick="checkStudentGraduation()">تحقق</button>
+        </div>
+        <div id="grad-check-result" style="margin-top:16px"></div>
+      </div>
+    </div>
+
+    
+    <!-- PLANS PAGE -->
+    <div class="page" id="page-plans">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📦 إدارة الباقات</span>
+          <button class="btn btn-primary" onclick="openPlanModal()">➕ إضافة باقة</button>
+        </div>
+        <div id="plans-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:8px"></div>
+      </div>
+    </div>
+
+    <!-- ─── PAYMENTS ─── -->
+    <div class="page" id="page-payments">
+      <div class="card">
+        <div class="card-header"><span class="card-title">💳 سجل المدفوعات</span></div>
+        <div style="overflow-x:auto">
+          <table class="tbl" id="tbl-payments">
+            <thead><tr><th>#</th><th>الطالب</th><th>المبلغ</th><th>الخطة</th><th>الحالة</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- SETTINGS -->
-    <div id="page-settings" class="page">
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="card">
-          <div class="card-header">⚙️ إعدادات المنصة</div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
-              <p style="font-weight:700;font-size:.85rem;color:#1a365d">👁️ إظهار تصحيح الكتابة</p>
-              <label class="switch"><input type="checkbox" id="toggle-writing" onchange="saveSetting('show_writing','toggle-writing',true)"><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">💰 المالية</div>
-          <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
-            <div style="padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0">
-              <p style="font-weight:700;font-size:.85rem;margin-bottom:8px;color:#1a365d">📱 رقم المحفظة</p>
-              <div style="display:flex;gap:8px">
-                <input type="text" id="set-wallet" class="inp" style="flex:1" placeholder="رقم المحفظة"/>
-                <button class="btn btn-navy btn-sm" onclick="saveSetting('wallet_number','set-wallet')">حفظ</button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- ─── SETTINGS ─── -->
+    <div class="page" id="page-settings">
+      <div class="card">
+        <div class="card-header"><span class="card-title">⚙️ إعدادات النظام</span><button class="btn btn-primary" onclick="saveAllSettings()">💾 حفظ الكل</button></div>
+        <div id="settings-form" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
       </div>
     </div>
 
-  </div>
-</main>
+  </div><!-- /content -->
+</div><!-- /main -->
 
-<!-- ═══════════════════════════════════════════════
-     MODAL: إضافة/تعديل سؤال - النظام الكامل
-═══════════════════════════════════════════════ -->
-<div id="modal-question" class="modal-overlay">
-  <div class="modal-box" style="max-width:740px">
-    <div class="modal-head">
-      <h3 id="qmodal-title">➕ إضافة سؤال جديد</h3>
-      <button class="modal-close" onclick="closeModal('modal-question')">✕</button>
+<!-- ═══ MODALS ═══ -->
+
+
+<!-- Modal: Plan -->
+<div class="modal-backdrop" id="modal-plan">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="plan-modal-title">➕ إضافة باقة</span>
+      <button class="btn-icon" onclick="closeModal('modal-plan')">✕</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="qm-edit-id"/>
-
-      <!-- نوع السؤال -->
-      <div style="margin-bottom:1rem">
-        <label class="inp-label">📌 نوع السؤال — اختر أولاً</label>
-        <div class="qtype-tabs" id="qtype-tabs">
-          <button class="qtype-tab active" data-type="mcq" onclick="selectQType('mcq',this)">📝 MCQ</button>
-          <button class="qtype-tab" data-type="listening" onclick="selectQType('listening',this)">🎧 Listening</button>
-          <button class="qtype-tab" data-type="reading_passage" onclick="selectQType('reading_passage',this)">📖 Reading</button>
-          <button class="qtype-tab" data-type="complete_words" onclick="selectQType('complete_words',this)">🔤 Complete Words</button>
-          <button class="qtype-tab" data-type="build_sentence" onclick="selectQType('build_sentence',this)">🔀 Build Sentence</button>
-          <button class="qtype-tab" data-type="writing_email" onclick="selectQType('writing_email',this)">✍️ Writing</button>
-          <button class="qtype-tab" data-type="speaking_interview" onclick="selectQType('speaking_interview',this)">🎤 Speaking</button>
+      <input type="hidden" id="plan-edit-id" value=""/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label class="form-label">الاسم (English)</label>
+          <input class="form-control" id="plan-name" placeholder="basic"/>
         </div>
-        <input type="hidden" id="qm-type" value="mcq"/>
-      </div>
-
-      <!-- تبويبات الأقسام -->
-      <div class="section-tabs">
-        <span class="section-tab active" onclick="switchFormSection('basic',this)">📋 الأساسي</span>
-        <span class="section-tab" onclick="switchFormSection('media',this)">🖼️ الوسائط</span>
-        <span class="section-tab" onclick="switchFormSection('options',this)">✅ الخيارات</span>
-        <span class="section-tab" onclick="switchFormSection('correction',this)">✔️ التصحيح</span>
-      </div>
-
-      <!-- SECTION: الأساسي -->
-      <div class="form-section active" id="fs-basic">
-        <div class="grid grid-cols-2 gap-3 mb-3">
-          <div><label class="inp-label">الموضوع</label><input id="qm-topic" class="inp" placeholder="Grammar, Vocabulary..."/></div>
-          <div><label class="inp-label">الصعوبة</label>
-            <select id="qm-diff" class="inp"><option value="easy">سهل</option><option value="medium" selected>متوسط</option><option value="hard">صعب</option></select></div>
+        <div class="form-group">
+          <label class="form-label">الاسم بالعربي</label>
+          <input class="form-control" id="plan-name-ar" placeholder="الباقة الأساسية"/>
         </div>
-        <div class="mb-3"><label class="inp-label">نص السؤال</label>
-          <textarea id="qm-text" class="inp" rows="3" placeholder="اكتب السؤال هنا..."></textarea></div>
-
-        <div id="field-passage" style="display:none" class="mb-3">
-          <label class="inp-label">📖 النص / Passage</label>
-          <textarea id="qm-passage" class="inp" rows="5" placeholder="أدخل النص هنا..."></textarea></div>
-
-        <div id="field-cw-passage" style="display:none" class="mb-3">
-          <label class="inp-label">🔤 النص مع الفراغات (ضع ___ للفراغ)</label>
-          <textarea id="qm-cw-passage" class="inp" rows="4" placeholder="مثال: The student ___ to school every day."></textarea>
-          <p style="font-size:.72rem;color:#64748b;margin-top:4px">💡 ضع ___ ثلاث شرطات مكان كل فراغ</p></div>
-
-        <div id="field-build" style="display:none" class="mb-3">
-          <label class="inp-label">🔀 الكلمات المبعثرة (افصل بـ /)</label>
-          <input id="qm-words" class="inp" placeholder="مثال: goes/school/to/he/every/day"/>
-          <label class="inp-label" style="margin-top:8px">✅ الجملة الصحيحة</label>
-          <input id="qm-word-answer" class="inp" placeholder="he goes to school every day"/></div>
-
-        <div id="field-writing" style="display:none" class="mb-3">
-          <label class="inp-label">✍️ تعليمات الكتابة</label>
-          <textarea id="qm-writing-prompt" class="inp" rows="3" placeholder="Write an email to..."></textarea>
-          <div class="grid grid-cols-2 gap-3 mt-2">
-            <div><label class="inp-label">الحد الأدنى للكلمات</label><input type="number" id="qm-min-words" class="inp" value="50"/></div>
-            <div><label class="inp-label">نموذج الإجابة</label><input id="qm-writing-sample" class="inp" placeholder="اختياري..."/></div>
-          </div></div>
-
-        <div id="field-speaking" style="display:none" class="mb-3">
-          <label class="inp-label">🎤 سؤال المحادثة</label>
-          <textarea id="qm-speaking-prompt" class="inp" rows="3" placeholder="Talk about your daily routine..."></textarea>
-          <div style="margin-top:8px;padding:10px;background:#fff7ed;border-radius:8px;border:1px solid #fed7aa">
-            <p style="font-size:.78rem;color:#c2410c;font-weight:700">📌 التقييم التلقائي: أقل من 5KB = Band 0 | أقل من 30KB = Band 1 | طبيعي = Band 3-4</p>
-          </div></div>
-      </div>
-
-      <!-- SECTION: الوسائط -->
-      <div class="form-section" id="fs-media">
-        <div class="mb-4">
-          <label class="inp-label">🖼️ صورة السؤال</label>
-          <div class="upload-zone" id="img-zone" onclick="document.getElementById('qm-img-file').click()">
-            <div id="img-zone-text"><div style="font-size:2rem">🖼️</div><p style="font-weight:700;color:#475569;font-size:.85rem">اضغط لرفع صورة</p><p style="font-size:.72rem;color:#94a3b8">PNG, JPG – أقصى 5MB</p></div>
-            <img id="img-preview" src="" style="display:none;max-height:150px;border-radius:8px;margin:0 auto"/>
-          </div>
-          <input type="file" id="qm-img-file" accept="image/*" style="display:none" onchange="previewImage(this)"/>
-          <input type="hidden" id="qm-img-url"/>
-          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-            <span style="font-size:.75rem;color:#64748b;white-space:nowrap">أو رابط:</span>
-            <input id="qm-img-link" class="inp" placeholder="https://..." oninput="document.getElementById('qm-img-url').value=this.value;previewImageUrl(this.value)"/>
-          </div>
+        <div class="form-group">
+          <label class="form-label">السعر (دينار عراقي)</label>
+          <input class="form-control" id="plan-price" type="number" placeholder="25000"/>
         </div>
-
-        <div class="mb-4" id="field-audio-upload">
-          <label class="inp-label">🎵 ملف صوتي</label>
-          <div class="upload-zone" id="audio-zone" onclick="document.getElementById('qm-audio-file').click()">
-            <div id="audio-zone-text"><div style="font-size:2rem">🎵</div><p style="font-weight:700;color:#475569;font-size:.85rem">اضغط لرفع ملف صوتي</p><p style="font-size:.72rem;color:#94a3b8">MP3, WAV – أقصى 20MB</p></div>
-            <audio id="audio-preview" controls style="display:none;width:100%;margin-top:8px"></audio>
-          </div>
-          <input type="file" id="qm-audio-file" accept="audio/*" style="display:none" onchange="previewAudio(this)"/>
-          <input type="hidden" id="qm-audio-url"/>
-          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-            <span style="font-size:.75rem;color:#64748b;white-space:nowrap">أو رابط:</span>
-            <input id="qm-audio-link" class="inp" placeholder="https://..." oninput="document.getElementById('qm-audio-url').value=this.value"/>
-          </div>
-        </div>
-
-        <div class="mb-3" id="field-mic-record">
-          <label class="inp-label">🎙️ تسجيل بالميكروفون مباشرة</label>
-          <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:.875rem;padding:1rem;text-align:center">
-            <button class="rec-btn idle" id="rec-btn" onclick="toggleRecording()">🎙️</button>
-            <div style="font-size:1.1rem;font-weight:900;color:#1a365d;margin-top:6px" id="rec-timer">00:00</div>
-            <p style="font-size:.72rem;color:#94a3b8;margin-top:4px" id="rec-status">اضغط للبدء</p>
-            <audio id="rec-preview" controls style="display:none;margin-top:8px;width:100%"></audio>
-            <div id="rec-actions" style="display:none;margin-top:8px;gap:8px;justify-content:center" class="flex">
-              <button class="btn btn-green btn-sm" onclick="useRecording()">✅ استخدام</button>
-              <button class="btn btn-ghost btn-sm" onclick="discardRecording()">🗑️ حذف</button>
-            </div>
-          </div>
+        <div class="form-group">
+          <label class="form-label">المدة (أيام)</label>
+          <input class="form-control" id="plan-days" type="number" placeholder="30"/>
         </div>
       </div>
-
-      <!-- SECTION: الخيارات -->
-      <div class="form-section" id="fs-options">
-        <div id="field-mcq-opts">
-          <div class="grid grid-cols-2 gap-3 mb-3">
-            <div><label class="inp-label">الخيار A</label><input id="qm-a" class="inp" placeholder="الخيار الأول"/></div>
-            <div><label class="inp-label">الخيار B</label><input id="qm-b" class="inp" placeholder="الخيار الثاني"/></div>
-            <div><label class="inp-label">الخيار C</label><input id="qm-c" class="inp" placeholder="الخيار الثالث"/></div>
-            <div><label class="inp-label">الخيار D</label><input id="qm-d" class="inp" placeholder="الخيار الرابع"/></div>
-          </div>
-          <div style="max-width:220px">
-            <label class="inp-label">✅ الإجابة الصحيحة</label>
-            <select id="qm-answer" class="inp">
-              <option value="a">A</option><option value="b">B</option><option value="c">C</option><option value="d">D</option>
-            </select>
-          </div>
-        </div>
-        <div id="field-cw-answers" style="display:none">
-          <label class="inp-label">✅ إجابات الفراغات (بالترتيب، افصل بفاصلة)</label>
-          <input id="qm-cw-answers" class="inp" placeholder="مثال: goes, studies, reads"/>
-          <p style="font-size:.72rem;color:#64748b;margin-top:4px">⚠️ الترتيب مهم: الفراغ الأول = الكلمة الأولى</p>
-          <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="previewCWAnswers()">👁️ معاينة الفراغات</button>
-          <div id="cw-answers-preview" style="margin-top:8px"></div>
-        </div>
+      <div class="form-group">
+        <label class="form-label">الوصف</label>
+        <input class="form-control" id="plan-desc" placeholder="وصف مختصر للباقة"/>
       </div>
-
-      <!-- SECTION: التصحيح -->
-      <div class="form-section" id="fs-correction">
-        <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:.875rem;padding:1rem;margin-bottom:1rem">
-          <p style="font-weight:700;color:#15803d;font-size:.85rem;margin-bottom:6px">✔️ نظام التصحيح التلقائي</p>
-          <div id="correction-info"><p style="font-size:.8rem;color:#166534">اختر نوع السؤال لرؤية معايير التصحيح</p></div>
-        </div>
-        <div class="mb-3"><label class="inp-label">💡 شرح الإجابة (اختياري)</label>
-          <textarea id="qm-explanation" class="inp" rows="3" placeholder="لماذا هذه الإجابة صحيحة..."></textarea></div>
-        <div class="mb-3"><label class="inp-label">⭐ نقاط XP</label>
-          <input type="number" id="qm-xp" class="inp" value="10" style="max-width:120px"/></div>
+      <div class="form-group">
+        <label class="form-label">المميزات (كل ميزة في سطر)</label>
+        <textarea class="form-control" id="plan-features" rows="4" placeholder="الوصول للدروس&#10;المهام اليومية&#10;Mock Exam"></textarea>
+      </div>
+      <div style="display:flex;gap:24px;margin-top:8px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#94a3b8">
+          <input type="checkbox" id="plan-active" checked style="width:16px;height:16px;accent-color:#6366f1"/>
+          باقة نشطة
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#94a3b8">
+          <input type="checkbox" id="plan-featured" style="width:16px;height:16px;accent-color:#f59e0b"/>
+          موصى بها ⭐
+        </label>
       </div>
     </div>
-
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-question')">إلغاء</button>
-      <button class="btn btn-navy" onclick="saveQuestionModal()" id="qm-save-btn">
-        <span id="qm-save-text">💾 حفظ السؤال</span>
-      </button>
-    </div>
-    <div id="qm-result" style="padding:.5rem 1.25rem 1rem;font-size:.82rem"></div>
-  </div>
-</div>
-
-<!-- Modal تأكيد الحذف -->
-<div id="modal-confirm" class="modal-overlay">
-  <div class="modal-box" style="max-width:380px">
-    <div class="modal-head"><h3>⚠️ تأكيد</h3><button class="modal-close" onclick="closeModal('modal-confirm')">✕</button></div>
-    <div class="modal-body" style="text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:12px">🗑️</div>
-      <p style="font-weight:700;margin-bottom:4px" id="confirm-msg">هل أنت متأكد؟</p>
-      <p style="font-size:.85rem;color:#64748b">لا يمكن التراجع</p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">إلغاء</button>
-      <button class="btn btn-red" id="confirm-action-btn">🗑️ حذف</button>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-plan')">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitPlan()">💾 حفظ</button>
     </div>
   </div>
 </div>
 
-<!-- Modal دورة جديدة -->
-<div id="modal-course" class="modal-overlay">
-  <div class="modal-box" style="max-width:440px">
-    <div class="modal-head"><h3>➕ دورة جديدة</h3><button class="modal-close" onclick="closeModal('modal-course')">✕</button></div>
-    <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
-      <div><label class="inp-label">اسم الدورة</label><input id="course-name" class="inp" placeholder="TOEFL Foundation"/></div>
-      <div class="grid grid-cols-2 gap-3">
-        <div><label class="inp-label">المستوى</label>
-          <select id="course-level" class="inp"><option value="foundation">تأسيس</option><option value="toefl">TOEFL</option><option value="advanced">متقدم</option></select></div>
-        <div><label class="inp-label">الحد الأدنى %</label><input type="number" id="course-minscore" class="inp" value="70"/></div>
+<!-- Modal: Add Question -->
+<div class="modal-backdrop" id="modal-add-question">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">➕ إضافة سؤال جديد</span>
+      <button class="btn-icon" onclick="closeModal('modal-add-question')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">المهارة</label>
+        <select class="form-control" id="q-skill">
+          <option value="reading">قراءة</option><option value="listening">استماع</option>
+          <option value="speaking">محادثة</option><option value="writing">كتابة</option>
+          <option value="grammar">قواعد</option><option value="vocabulary">مفردات</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">نوع السؤال</label>
+        <select class="form-control" id="q-type" onchange="toggleQFields()">
+          <option value="mcq">اختيار متعدد</option>
+          <option value="true_false">صح/خطأ</option>
+          <option value="fill">تعبئة الفراغ</option>
+          <option value="essay">مقالي</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">نص السؤال</label>
+        <textarea class="form-control" id="q-text" rows="3" placeholder="اكتب السؤال هنا..."></textarea>
+      </div>
+      <div id="q-options-group">
+        <div class="form-group">
+          <label class="form-label">الخيارات (كل خيار في سطر)</label>
+          <textarea class="form-control" id="q-options" rows="4" placeholder="الخيار أ&#10;الخيار ب&#10;الخيار ج&#10;الخيار د"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الإجابة الصحيحة</label>
+          <input class="form-control" id="q-answer" placeholder="الإجابة الصحيحة"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الشرح (اختياري)</label>
+        <textarea class="form-control" id="q-explanation" rows="2" placeholder="شرح الإجابة..."></textarea>
       </div>
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-course')">إلغاء</button>
-      <button class="btn btn-navy" onclick="addCourse()">➕ إضافة</button>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-question')">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitQuestion()">💾 حفظ السؤال</button>
     </div>
   </div>
 </div>
 
-<div id="toast"></div>
+<!-- Modal: Add Mission -->
+<div class="modal-backdrop" id="modal-add-mission">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">➕ إضافة مهمة يومية</span>
+      <button class="btn-icon" onclick="closeModal('modal-add-mission')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">عنوان المهمة</label><input class="form-control" id="m-title" placeholder="اقرأ 10 جمل..."/></div>
+      <div class="form-group"><label class="form-label">الوصف</label><textarea class="form-control" id="m-desc" rows="2"></textarea></div>
+      <div class="form-group">
+        <label class="form-label">النوع</label>
+        <select class="form-control" id="m-type">
+          <option value="reading">قراءة</option><option value="listening">استماع</option>
+          <option value="speaking">محادثة</option><option value="writing">كتابة</option>
+          <option value="vocabulary">مفردات</option><option value="grammar">قواعد</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">XP المكافأة</label><input class="form-control" id="m-xp" type="number" value="20"/></div>
+      <div class="form-group"><label class="form-label">تاريخ التفعيل (اختياري)</label><input class="form-control" id="m-date" type="date"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-mission')">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitMission()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Grading Rule -->
+<div class="modal-backdrop" id="modal-add-grading">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">➕ معيار تصحيح جديد</span>
+      <button class="btn-icon" onclick="closeModal('modal-add-grading')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">الموضوع</label><input class="form-control" id="gr-topic" placeholder="Environment, Technology..."/></div>
+      <div class="form-group">
+        <label class="form-label">المهارة</label>
+        <select class="form-control" id="gr-skill"><option value="writing">كتابة</option><option value="speaking">محادثة</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">كلمات Vocab (مفصولة بفاصلة)</label><textarea class="form-control" id="gr-vocab" rows="2" placeholder="pollution,environment,climate"></textarea></div>
+      <div class="form-group"><label class="form-label">روابط Connectors (مفصولة بفاصلة)</label><textarea class="form-control" id="gr-connectors" rows="2" placeholder="however,therefore,furthermore"></textarea></div>
+      <div class="form-group"><label class="form-label">كلمات محظورة (مفصولة بفاصلة)</label><textarea class="form-control" id="gr-forbidden" rows="2" placeholder="stuff,things,good"></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">نقاط Vocab</label><input class="form-control" id="gr-vpts" type="number" value="2" step="0.5"/></div>
+        <div class="form-group"><label class="form-label">نقاط Connectors</label><input class="form-control" id="gr-cpts" type="number" value="3" step="0.5"/></div>
+        <div class="form-group"><label class="form-label">خصم المحظور</label><input class="form-control" id="gr-penalty" type="number" value="1" step="0.5"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">الدرجة القصوى</label><input class="form-control" id="gr-max" type="number" value="100"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-grading')">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitGrading()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Activate Paid -->
+<div class="modal-backdrop" id="modal-activate">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">💳 تفعيل الحساب المدفوع</span>
+      <button class="btn-icon" onclick="closeModal('modal-activate')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-activate-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-activate')">إلغاء</button>
+      <button class="btn btn-success" id="btn-confirm-activate" onclick="confirmActivation()">✅ تفعيل</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">
+  <span id="toast-icon">✅</span>
+  <span id="toast-msg"></span>
+</div>
 
 <script>
-const API=async(url,method='GET',body=null)=>{
-  const opts={method,headers:{}};
-  if(body){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body);}
-  const r=await fetch(url,opts);
-  if(!r.ok)throw new Error('HTTP '+r.status);
+// ═══ Utilities ═══
+const API = async (url, method='GET', body=null) => {
+  const opts = {method, headers:{'Content-Type':'application/json'}};
+  if(body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
   return r.json();
 };
-function toast(msg,type='ok'){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className=`show t-${type}`;
-  setTimeout(()=>{el.className='';},3500);
+
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  document.getElementById('toast-icon').textContent = type==='success' ? '✅' : '❌';
+  t.className = `show ${type}`;
+  setTimeout(()=>t.className='', 3000);
 }
-let sidebarOpen=window.innerWidth>=768;
+
+function openModal(id){ document.getElementById(id).classList.add('open') }
+function closeModal(id){ document.getElementById(id).classList.remove('open') }
+
 function toggleSidebar(){
-  const sb=document.getElementById('sidebar'),mn=document.getElementById('main');
-  if(window.innerWidth>=768){sidebarOpen=!sidebarOpen;sb.classList.toggle('collapsed',!sidebarOpen);mn.classList.toggle('expanded',!sidebarOpen);}
-  else sb.classList.toggle('open');
+  document.getElementById('sidebar').classList.toggle('open');
 }
-const PAGE_TITLES={dashboard:'الرئيسية',students:'الطلاب',questions:'بنك الأسئلة',courses:'الدورات',payments:'المدفوعات',gamification:'التحفيز',settings:'الإعدادات'};
-function switchPage(id,el){
+
+// ═══ Navigation ═══
+const pageTitles = {
+  dashboard:'الرئيسية', students:'الطلاب', questions:'بنك الأسئلة',
+  missions:'المهام اليومية', grading:'معايير التصحيح', phases:'شروط الانتقال',
+  graduation:'شروط التخرج', payments:'المدفوعات', settings:'الإعدادات'
+};
+const pageLoaders = {
+  dashboard: loadDashboard, students: loadStudents, questions: loadQuestions,
+  missions: loadMissions, grading: loadGrading, phases: loadPhases,
+  graduation: loadGraduation, payments: loadPayments, settings: loadSettings
+};
+
+function showPage(name, el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
-  if(el)el.classList.add('active');
-  document.getElementById('page-title').textContent=PAGE_TITLES[id]||id;
-  if(id==='dashboard')loadDashboard();
-  if(id==='students')loadStudents();
-  if(id==='questions')loadQuestions();
-  if(id==='payments')loadPayments('pending');
-  if(id==='gamification')loadLeaderboardAdmin();
-  if(id==='courses')loadCourses();
-  if(window.innerWidth<768)document.getElementById('sidebar').classList.remove('open');
-}
-function openModal(id){document.getElementById(id).classList.add('show');}
-function closeModal(id){document.getElementById(id).classList.remove('show');}
-document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});});
-function confirmAction(msg,cb){
-  document.getElementById('confirm-msg').textContent=msg;
-  const btn=document.getElementById('confirm-action-btn');
-  btn.onclick=()=>{cb();closeModal('modal-confirm');};
-  openModal('modal-confirm');
-}
-function switchFormSection(sec,el){
-  document.querySelectorAll('.form-section').forEach(f=>f.classList.remove('active'));
-  document.querySelectorAll('.section-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('fs-'+sec).classList.add('active');
-  if(el)el.classList.add('active');
+  document.getElementById(`page-${name}`).classList.add('active');
+  if(el) el.classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[name] || name;
+  if(pageLoaders[name]) pageLoaders[name]();
 }
 
-// ── نوع السؤال ──
-const QTYPE_CONFIG={
-  mcq:{pass:false,cw:false,build:false,write:false,speak:false,opts:true,cwans:false,audio:true},
-  listening:{pass:false,cw:false,build:false,write:false,speak:false,opts:true,cwans:false,audio:true},
-  reading_passage:{pass:true,cw:false,build:false,write:false,speak:false,opts:true,cwans:false,audio:false},
-  complete_words:{pass:false,cw:true,build:false,write:false,speak:false,opts:false,cwans:true,audio:false},
-  build_sentence:{pass:false,cw:false,build:true,write:false,speak:false,opts:false,cwans:false,audio:false},
-  writing_email:{pass:false,cw:false,build:false,write:true,speak:false,opts:false,cwans:false,audio:false},
-  writing_discussion:{pass:false,cw:false,build:false,write:true,speak:false,opts:false,cwans:false,audio:false},
-  speaking_interview:{pass:false,cw:false,build:false,write:false,speak:true,opts:false,cwans:false,audio:false},
-  speaking_repeat:{pass:false,cw:false,build:false,write:false,speak:true,opts:false,cwans:false,audio:true},
-};
-const CORRECTION_INFO={
-  mcq:'✅ تصحيح فوري: مطابقة الخيار مع الإجابة الصحيحة. الخطأ يُحفظ في بنك الأخطاء.',
-  listening:'🎧 الطالب يسمع أولاً ثم يختار. مطابقة الخيار مع الإجابة الصحيحة.',
-  reading_passage:'📖 بعد قراءة النص، مطابقة الخيار. الخطأ يُحلل ويُحفظ.',
-  complete_words:'🔤 مطابقة حرفية دقيقة لكل كلمة. النتيجة كنسبة (صح/الكلي). Band TOEFL تلقائياً.',
-  build_sentence:'🔀 مقارنة الجملة المبنية بالجملة الصحيحة. نسبة التطابق تحدد البand.',
-  writing_email:'✍️ 4 معايير TOEFL: Task(35) + Coherence(20) + Lexical(15) + Grammar(15) = 85→100%.',
-  writing_discussion:'✍️ نفس معايير Writing Email. AI للمشتركين المميزين.',
-  speaking_interview:'🎤 فارغ<5KB=Band 0. قصير<30KB=Band 1. تسجيل كامل=Band 3-4.',
-  speaking_repeat:'🎤 نفس Speaking. يتضمن ملف صوتي نموذج.',
-};
-function selectQType(type,btn){
-  document.querySelectorAll('.qtype-tab').forEach(t=>t.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  document.getElementById('qm-type').value=type;
-  const c=QTYPE_CONFIG[type]||QTYPE_CONFIG.mcq;
-  document.getElementById('field-passage').style.display=c.pass?'':'none';
-  document.getElementById('field-cw-passage').style.display=c.cw?'':'none';
-  document.getElementById('field-build').style.display=c.build?'':'none';
-  document.getElementById('field-writing').style.display=c.write?'':'none';
-  document.getElementById('field-speaking').style.display=c.speak?'':'none';
-  document.getElementById('field-mcq-opts').style.display=c.opts?'':'none';
-  document.getElementById('field-cw-answers').style.display=c.cwans?'':'none';
-  document.getElementById('field-audio-upload').style.display=c.audio?'':'none';
-  document.getElementById('correction-info').innerHTML=`<p style="font-size:.8rem;color:#166534;line-height:1.6">${CORRECTION_INFO[type]||''}</p>`;
+function refreshPage(){
+  const title = document.getElementById('page-title').textContent;
+  const name = Object.entries(pageTitles).find(([k,v])=>v===title)?.[0];
+  if(name && pageLoaders[name]) pageLoaders[name]();
 }
 
-// ── فتح مودال إضافة/تعديل ──
-function openQuestionModal(q=null){
-  document.getElementById('qm-edit-id').value='';
-  document.getElementById('qmodal-title').textContent=q?`✏️ تعديل #${q.id}`:'➕ إضافة سؤال جديد';
-  switchFormSection('basic',document.querySelector('.section-tab'));
-  ['qm-topic','qm-text','qm-passage','qm-cw-passage','qm-words','qm-word-answer',
-   'qm-writing-prompt','qm-writing-sample','qm-speaking-prompt','qm-a','qm-b','qm-c','qm-d',
-   'qm-cw-answers','qm-explanation','qm-img-url','qm-audio-url','qm-img-link','qm-audio-link'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.value='';
-  });
-  document.getElementById('qm-diff').value='medium';
-  document.getElementById('qm-answer').value='a';
-  document.getElementById('qm-min-words').value='50';
-  document.getElementById('qm-xp').value='10';
-  document.getElementById('qm-result').innerHTML='';
-  document.getElementById('img-preview').style.display='none';
-  document.getElementById('audio-preview').style.display='none';
-  document.getElementById('img-zone').classList.remove('has-file');
-  document.getElementById('audio-zone').classList.remove('has-file');
-  if(q){
-    document.getElementById('qm-edit-id').value=q.id;
-    document.getElementById('qm-topic').value=q.topic||'';
-    document.getElementById('qm-text').value=q.question_text||'';
-    document.getElementById('qm-diff').value=q.difficulty||'medium';
-    document.getElementById('qm-a').value=q.option_a||'';
-    document.getElementById('qm-b').value=q.option_b||'';
-    document.getElementById('qm-c').value=q.option_c||'';
-    document.getElementById('qm-d').value=q.option_d||'';
-    document.getElementById('qm-answer').value=q.correct_option||'a';
-    document.getElementById('qm-passage').value=q.passage_text||'';
-    document.getElementById('qm-cw-passage').value=q.complete_words_passage||'';
-    document.getElementById('qm-words').value=q.word_order_words||'';
-    document.getElementById('qm-word-answer').value=q.word_order_answer||'';
-    document.getElementById('qm-writing-prompt').value=q.writing_prompt||'';
-    document.getElementById('qm-min-words').value=q.writing_min_words||50;
-    document.getElementById('qm-writing-sample').value=q.writing_sample||'';
-    document.getElementById('qm-speaking-prompt').value=q.speaking_prompt||'';
-    document.getElementById('qm-img-url').value=q.image_url||'';
-    document.getElementById('qm-img-link').value=q.image_url||'';
-    document.getElementById('qm-audio-url').value=q.audio_url||'';
-    document.getElementById('qm-audio-link').value=q.audio_url||'';
-    if(q.image_url)previewImageUrl(q.image_url);
-    if(q.audio_url){const ap=document.getElementById('audio-preview');ap.src=q.audio_url;ap.style.display='block';document.getElementById('audio-zone').classList.add('has-file');}
-    if(q.complete_words_answers){try{const ans=JSON.parse(q.complete_words_answers);document.getElementById('qm-cw-answers').value=Object.values(ans).join(', ');}catch(e){}}
-    const tb=document.querySelector(`.qtype-tab[data-type="${q.question_type}"]`);
-    selectQType(q.question_type||'mcq',tb);
-  }else{
-    selectQType('mcq',document.querySelector('.qtype-tab[data-type="mcq"]'));
-  }
-  openModal('modal-question');
-}
-
-// ── معاينة الوسائط ──
-function previewImage(input){
-  if(!input.files||!input.files[0])return;
-  if(input.files[0].size>5*1024*1024){toast('الصورة أكبر من 5MB!','err');return;}
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const img=document.getElementById('img-preview');
-    img.src=e.target.result;img.style.display='block';
-    document.getElementById('img-zone-text').style.display='none';
-    document.getElementById('img-zone').classList.add('has-file');
-    document.getElementById('qm-img-url').value=e.target.result;
-  };reader.readAsDataURL(input.files[0]);
-}
-function previewImageUrl(url){
-  if(!url)return;
-  const img=document.getElementById('img-preview');
-  img.src=url;img.style.display='block';
-  document.getElementById('img-zone-text').style.display='none';
-  document.getElementById('img-zone').classList.add('has-file');
-  img.onerror=()=>{img.style.display='none';document.getElementById('img-zone-text').style.display='';document.getElementById('img-zone').classList.remove('has-file');};
-}
-function previewAudio(input){
-  if(!input.files||!input.files[0])return;
-  const url=URL.createObjectURL(input.files[0]);
-  const ap=document.getElementById('audio-preview');
-  ap.src=url;ap.style.display='block';
-  document.getElementById('audio-zone-text').style.display='none';
-  document.getElementById('audio-zone').classList.add('has-file');
-  document.getElementById('qm-audio-url').value='[file:'+input.files[0].name+']';
-  toast('✅ تم تحميل الملف الصوتي','ok');
-}
-
-// ── تسجيل الميكروفون ──
-let _mediaRec=null,_recChunks=[],_recInterval=null,_recSeconds=0,_recBlob=null;
-async function toggleRecording(){
-  const btn=document.getElementById('rec-btn');
-  if(!_mediaRec||_mediaRec.state==='inactive'){
-    try{
-      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-      _mediaRec=new MediaRecorder(stream);_recChunks=[];
-      _mediaRec.ondataavailable=e=>_recChunks.push(e.data);
-      _mediaRec.onstop=()=>{
-        _recBlob=new Blob(_recChunks,{type:'audio/webm'});
-        const url=URL.createObjectURL(_recBlob);
-        const rp=document.getElementById('rec-preview');
-        rp.src=url;rp.style.display='block';
-        document.getElementById('rec-actions').style.display='flex';
-        document.getElementById('rec-status').textContent='راجع التسجيل';
-        clearInterval(_recInterval);
-      };
-      _mediaRec.start();
-      btn.className='rec-btn recording';btn.textContent='⏹️';
-      document.getElementById('rec-status').textContent='جاري التسجيل...';
-      _recSeconds=0;
-      _recInterval=setInterval(()=>{
-        _recSeconds++;
-        const m=String(Math.floor(_recSeconds/60)).padStart(2,'0');
-        const s=String(_recSeconds%60).padStart(2,'0');
-        document.getElementById('rec-timer').textContent=m+':'+s;
-        if(_recSeconds>=120)toggleRecording();
-      },1000);
-    }catch(e){toast('لا يمكن الوصول للميكروفون','err');}
-  }else{
-    _mediaRec.stop();_mediaRec.stream.getTracks().forEach(t=>t.stop());
-    btn.className='rec-btn idle';btn.textContent='🎙️';
-  }
-}
-function useRecording(){
-  if(!_recBlob){toast('لا يوجد تسجيل','err');return;}
-  document.getElementById('qm-audio-url').value='[recorded]';
-  document.getElementById('audio-preview').src=URL.createObjectURL(_recBlob);
-  document.getElementById('audio-preview').style.display='block';
-  document.getElementById('audio-zone').classList.add('has-file');
-  toast('✅ تم استخدام التسجيل','ok');
-  switchFormSection('media',document.querySelectorAll('.section-tab')[1]);
-}
-function discardRecording(){
-  _recBlob=null;_recChunks=[];
-  document.getElementById('rec-preview').style.display='none';
-  document.getElementById('rec-actions').style.display='none';
-  document.getElementById('rec-timer').textContent='00:00';
-  document.getElementById('rec-status').textContent='اضغط للبدء';
-  document.getElementById('rec-btn').className='rec-btn idle';
-  document.getElementById('rec-btn').textContent='🎙️';
-}
-
-// ── معاينة فراغات ──
-function previewCWAnswers(){
-  const passage=document.getElementById('qm-cw-passage').value;
-  const answers=document.getElementById('qm-cw-answers').value.split(',').map(a=>a.trim()).filter(Boolean);
-  const prev=document.getElementById('cw-answers-preview');
-  if(!passage){prev.innerHTML='<p style="color:#dc2626;font-size:.78rem">أدخل النص أولاً</p>';return;}
-  let i=0;
-  const filled=passage.replace(/___/g,()=>{
-    const ans=answers[i]||'[؟]';i++;
-    return `<span style="background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:4px;font-weight:700">${ans}</span>`;
-  });
-  prev.innerHTML=`<div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:.82rem;line-height:1.8;direction:ltr;text-align:left">${filled}</div>`;
-}
-
-// ── حفظ السؤال ──
-async function saveQuestionModal(){
-  const editId=document.getElementById('qm-edit-id').value;
-  const qtype=document.getElementById('qm-type').value;
-  const text=document.getElementById('qm-text').value.trim();
-  if(!text){toast('نص السؤال مطلوب!','err');switchFormSection('basic',document.querySelectorAll('.section-tab')[0]);return;}
-  let cwAnswers='{}';
-  if(qtype==='complete_words'){
-    const passage=document.getElementById('qm-cw-passage').value;
-    const answersRaw=document.getElementById('qm-cw-answers').value.split(',').map(a=>a.trim()).filter(Boolean);
-    const blanks=(passage.match(/___/g)||[]).length;
-    if(blanks!==answersRaw.length){toast(`عدد الفراغات (${blanks}) لا يتطابق مع الإجابات (${answersRaw.length})!`,'err');return;}
-    const map={};answersRaw.forEach((a,i)=>{map[`blank_${i+1}`]=a;});cwAnswers=JSON.stringify(map);
-  }
-  const data={
-    question_type:qtype,topic:document.getElementById('qm-topic').value.trim()||'General',
-    difficulty:document.getElementById('qm-diff').value,question_text:text,
-    passage_text:document.getElementById('qm-passage').value.trim(),
-    complete_words_passage:document.getElementById('qm-cw-passage').value.trim(),
-    complete_words_answers:cwAnswers,
-    word_order_words:document.getElementById('qm-words').value.trim(),
-    word_order_answer:document.getElementById('qm-word-answer').value.trim(),
-    writing_prompt:document.getElementById('qm-writing-prompt').value.trim(),
-    writing_min_words:parseInt(document.getElementById('qm-min-words').value)||50,
-    writing_sample:document.getElementById('qm-writing-sample').value.trim(),
-    speaking_prompt:document.getElementById('qm-speaking-prompt').value.trim(),
-    option_a:document.getElementById('qm-a').value.trim(),
-    option_b:document.getElementById('qm-b').value.trim(),
-    option_c:document.getElementById('qm-c').value.trim(),
-    option_d:document.getElementById('qm-d').value.trim(),
-    correct_option:document.getElementById('qm-answer').value,
-    audio_url:document.getElementById('qm-audio-url').value,
-    image_url:document.getElementById('qm-img-url').value,
-  };
-  if(['mcq','listening','reading_passage'].includes(qtype)&&(!data.option_a||!data.option_b)){
-    toast('الخيار A و B مطلوبان!','err');switchFormSection('options',document.querySelectorAll('.section-tab')[2]);return;
-  }
-  const saveBtn=document.getElementById('qm-save-btn');
-  const saveText=document.getElementById('qm-save-text');
-  saveBtn.disabled=true;saveText.textContent='⏳ جاري الحفظ...';
-  const rd=document.getElementById('qm-result');
-  try{
-    if(editId)await API(`/api/admin/questions/${editId}`,'PUT',data);
-    else await API('/api/admin/questions','POST',data);
-    rd.innerHTML='<span style="color:#15803d">✅ تم الحفظ بنجاح!</span>';
-    toast('✅ تم حفظ السؤال','ok');
-    setTimeout(()=>{closeModal('modal-question');loadQuestions();},800);
-  }catch(e){
-    rd.innerHTML=`<span style="color:#dc2626">❌ خطأ: ${e.message}</span>`;
-    toast('خطأ: '+e.message,'err');
-  }finally{saveBtn.disabled=false;saveText.textContent='💾 حفظ السؤال';}
-}
-
-// ── DASHBOARD ──
+// ═══ Dashboard ═══
 async function loadDashboard(){
-  try{
-    const[stats,students,qs]=await Promise.all([API('/api/admin/stats'),API('/api/admin/students'),API('/api/admin/questions')]);
-    const stuList=Array.isArray(students)?students:[];
-    const qList=Array.isArray(qs)?qs:[];
-    const active=stuList.filter(s=>s.is_active).length;
-    const totalXP=stuList.reduce((a,s)=>a+(s.xp||0),0);
-    document.getElementById('stat-students').textContent=stuList.length;
-    document.getElementById('stat-active').textContent=active;
-    document.getElementById('stat-pending').textContent=stats.pending_payments||0;
-    document.getElementById('stat-lessons').textContent=stats.total_lessons||0;
-    document.getElementById('stat-xp').textContent=totalXP.toLocaleString();
-    document.getElementById('stat-qcount').textContent=qList.length;
-    document.getElementById('nb-students').textContent=stuList.length;
-    document.getElementById('nb-questions').textContent=qList.length;
-    document.getElementById('nb-payments').textContent=stats.pending_payments||0;
-    const top5=[...stuList].sort((a,b)=>(b.xp||0)-(a.xp||0)).slice(0,5);
-    const medals=['🥇','🥈','🥉','4','5'];
-    document.getElementById('lb-tbody').innerHTML=top5.length
-      ?top5.map((s,i)=>`<tr><td><span class="badge ${i===0?'b-gold':i===1?'b-gray':'b-orange'}">${medals[i]}</span></td><td style="font-weight:700">${s.name||'—'}</td><td><span class="badge b-blue">${s.level||'—'}</span></td><td style="font-weight:700">${(s.xp||0).toLocaleString()}</td><td>🔥${s.streak_days||0}</td></tr>`).join('')
-      :'<tr><td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8">لا بيانات</td></tr>';
-  }catch(e){console.error(e);}
+  const data = await API('/api/admin/stats');
+  if(data.counts){
+    document.getElementById('stat-total').textContent = data.counts.total || 0;
+    document.getElementById('stat-paid').textContent = data.counts.paid || 0;
+    document.getElementById('stat-active').textContent = data.counts.active || 0;
+  }
+  const qData = await API('/api/admin/questions');
+  document.getElementById('stat-questions').textContent = qData.questions?.length || 0;
+  document.getElementById('badge-students').textContent = data.counts?.total || 0;
+  // Leaderboard
+  const tbody = document.querySelector('#tbl-leaderboard tbody');
+  tbody.innerHTML = '';
+  const medals = ['🥇','🥈','🥉'];
+  (data.leaderboard || []).forEach((s,i)=>{
+    const name = s.full_name || s.username || `#${s.user_id}`;
+    tbody.innerHTML += `<tr>
+      <td>${medals[i]||'🏅'}</td>
+      <td><b>${name}</b></td>
+      <td><span class="badge badge-purple">${s.xp} XP</span></td>
+      <td>🔥 ${s.streak} أيام</td>
+    </tr>`;
+  });
 }
 
-// ── STUDENTS ──
-let _allStudents=[];
-async function loadStudents(){
-  const tbody=document.getElementById('students-tbody');
-  tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:2rem;color:#94a3b8">جاري...</td></tr>';
-  try{const res=await API('/api/admin/students');_allStudents=Array.isArray(res)?res:[];renderStudents(_allStudents);document.getElementById('nb-students').textContent=_allStudents.length;}
-  catch(e){tbody.innerHTML=`<tr><td colspan="8" style="color:#dc2626;text-align:center;padding:1rem">${e.message}</td></tr>`;}
+// ═══ Students ═══
+async function loadStudents(query=''){
+  const url = query ? `/api/admin/students?q=${encodeURIComponent(query)}` : '/api/admin/students';
+  const data = await API(url);
+  const tbody = document.querySelector('#tbl-students tbody');
+  tbody.innerHTML = '';
+  (data.students || []).forEach(s=>{
+    const paidBadge = s.is_paid
+      ? `<span class="badge badge-green">مدفوع</span>`
+      : `<span class="badge badge-red">مجاني</span>`;
+    const activeBadge = s.is_active
+      ? `<span class="badge badge-blue">نشط</span>`
+      : `<span class="badge badge-yellow">موقوف</span>`;
+    tbody.innerHTML += `<tr>
+      <td><code style="font-size:11px">${s.user_id}</code></td>
+      <td><b>${s.full_name || '—'}</b></td>
+      <td style="color:#64748b">@${s.username || '—'}</td>
+      <td>${s.phone || '—'}</td>
+      <td><span class="badge badge-purple">${s.xp||0}</span></td>
+      <td>🔥 ${s.streak||0}</td>
+      <td>م${s.current_phase||1}</td>
+      <td>${paidBadge}</td>
+      <td>${activeBadge}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        ${s.is_paid
+          ? `<button class="btn btn-danger btn-sm" onclick="togglePaid(${s.user_id},false)">🔒 إلغاء</button>`
+          : `<button class="btn btn-success btn-sm" onclick="openActivateModal(${s.user_id},'${(s.full_name||'').replace(/'/g,"\\'")}')">✅ تفعيل</button>`
+        }
+        <button class="btn btn-ghost btn-sm" onclick="toggleActive(${s.user_id})">
+          ${s.is_active ? '⏸ إيقاف' : '▶ تنشيط'}
+        </button>
+      </td>
+    </tr>`;
+  });
 }
-function renderStudents(list){
-  const tbody=document.getElementById('students-tbody');
-  if(!list.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:2rem;color:#94a3b8">لا طلاب</td></tr>';return;}
-  const lvl={beginner:'b-blue',intermediate:'b-purple',advanced:'b-gold'};
-  tbody.innerHTML=list.map(s=>`<tr><td style="font-size:.75rem;color:#94a3b8">${s.id}</td><td><div style="font-weight:700;font-size:.85rem">${s.name||'—'}</div><div style="font-size:.72rem;color:#94a3b8">${s.email||''}</div></td><td><span class="badge ${lvl[s.level]||'b-gray'}">${s.level||'—'}</span></td><td style="font-weight:700">${(s.xp||0).toLocaleString()}</td><td>🔥${s.streak_days||0}</td><td><span class="badge ${s.is_active?'b-green':'b-red'}">${s.is_active?'✅ نشط':'🚫 موقوف'}</span></td><td style="font-size:.78rem">${s.package||'—'}</td><td><div style="display:flex;gap:4px"><button class="btn btn-navy btn-xs" onclick="toggleStudent(${s.id},${s.is_active})">${s.is_active?'🚫':'✅'}</button><button class="btn btn-red btn-xs" onclick="deleteStudent(${s.id},'${(s.name||'').replace(/'/g,"\\'")}')">🗑️</button></div></td></tr>`).join('');
-}
-function filterStudents(q){const f=q.toLowerCase();renderStudents(_allStudents.filter(s=>(s.name||'').toLowerCase().includes(f)||String(s.id).includes(f)));}
-async function toggleStudent(id,cur){try{await API(`/api/admin/students/${id}/toggle`,'POST');toast(cur?'🚫 موقوف':'✅ مفعل',cur?'warn':'ok');loadStudents();}catch(e){toast('خطأ','err');}}
-function deleteStudent(id,name){confirmAction(`حذف "${name}"؟`,async()=>{try{await API(`/api/admin/students/${id}`,'DELETE');toast('🗑️ تم الحذف','warn');loadStudents();}catch(e){toast('خطأ','err');}});}
 
-// ── QUESTIONS ──
-let _allQuestions=[];
-const QTYPE_LABELS={mcq:'MCQ',listening:'Listening',reading_passage:'Reading',complete_words:'Complete',build_sentence:'Build',writing_email:'Writing',writing_discussion:'Writing',speaking_interview:'Speaking',speaking_repeat:'Speaking'};
-const QTYPE_CLS={mcq:'qt-mcq',listening:'qt-listening',reading_passage:'qt-listening',complete_words:'qt-complete',build_sentence:'qt-build',writing_email:'qt-writing',writing_discussion:'qt-writing',speaking_interview:'qt-speaking',speaking_repeat:'qt-speaking'};
+let searchTimer;
+function debounceSearch(){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=>{
+    loadStudents(document.getElementById('student-search').value.trim());
+  }, 400);
+}
+
+let _activateUid = null;
+function openActivateModal(uid, name){
+  _activateUid = uid;
+  document.getElementById('modal-activate-body').innerHTML = `
+    <p>هل تريد تفعيل الحساب المدفوع لـ <b>${name}</b> (ID: ${uid})؟</p>
+    <p style="color:#64748b;font-size:13px;margin-top:8px">سيتمكن الطالب من الوصول إلى Mock Exam وزر التخرج.</p>`;
+  openModal('modal-activate');
+}
+async function confirmActivation(){
+  if(!_activateUid) return;
+  const r = await API(`/api/admin/students/${_activateUid}/activate`,'POST');
+  if(r.ok){ toast('✅ تم التفعيل بنجاح'); closeModal('modal-activate'); loadStudents(); }
+  else toast('خطأ في التفعيل','error');
+}
+async function togglePaid(uid, activate){
+  const ep = activate ? 'activate' : 'deactivate';
+  const r = await API(`/api/admin/students/${uid}/${ep}`,'POST');
+  if(r.ok){ toast(activate ? '✅ تم التفعيل' : '🔒 تم إلغاء التفعيل'); loadStudents(); }
+}
+async function toggleActive(uid){
+  const r = await API(`/api/admin/students/${uid}/toggle-active`,'POST');
+  if(r.ok){ toast('تم تحديث حالة الطالب'); loadStudents(); }
+}
+
+// ═══ Questions ═══
 async function loadQuestions(){
-  try{const qs=await API('/api/admin/questions');_allQuestions=Array.isArray(qs)?qs:[];document.getElementById('q-total-badge').textContent=_allQuestions.length;document.getElementById('nb-questions').textContent=_allQuestions.length;renderQuestions(_allQuestions);}
-  catch(e){document.getElementById('q-list-body').innerHTML=`<p style="color:#dc2626;padding:1rem">خطأ: ${e.message}</p>`;}
+  const skill = document.getElementById('q-filter-skill')?.value || '';
+  const url = skill ? `/api/admin/questions?skill=${skill}` : '/api/admin/questions';
+  const data = await API(url);
+  const tbody = document.querySelector('#tbl-questions tbody');
+  tbody.innerHTML = '';
+  const skillColors = {reading:'blue',listening:'purple',speaking:'yellow',writing:'green',grammar:'red',vocabulary:'yellow'};
+  (data.questions || []).forEach(q=>{
+    const color = skillColors[q.skill] || 'blue';
+    tbody.innerHTML += `<tr>
+      <td style="color:#64748b">${q.id}</td>
+      <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${q.question_text}">${q.question_text}</td>
+      <td><span class="badge badge-blue">${q.question_type}</span></td>
+      <td><span class="badge badge-${color}">${q.skill}</span></td>
+      <td><span class="badge badge-yellow">${q.difficulty||'medium'}</span></td>
+      <td>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${q.id})">🗑️</button>
+      </td>
+    </tr>`;
+  });
 }
-function renderQuestions(list){
-  const cont=document.getElementById('q-list-body');
-  if(!list.length){cont.innerHTML='<div style="text-align:center;color:#94a3b8;padding:2rem">لا أسئلة – اضغط "سؤال جديد"</div>';return;}
-  cont.innerHTML=list.map(q=>`<div class="q-item">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-          <span class="qtype-badge ${QTYPE_CLS[q.question_type]||'qt-mcq'}">${QTYPE_LABELS[q.question_type]||'MCQ'}</span>
-          <span class="badge b-blue">${q.topic||'—'}</span>
-          <span class="badge b-gray">${q.difficulty||'medium'}</span>
-          ${q.audio_url&&q.audio_url.trim()?'<span class="badge b-teal">🎵</span>':''}
-          ${q.image_url&&!q.image_url.startsWith('[')?'<span class="badge b-purple">🖼️</span>':''}
-          <span style="font-size:.7rem;color:#94a3b8">#${q.id}</span>
+
+function toggleQFields(){
+  const type = document.getElementById('q-type').value;
+  document.getElementById('q-options-group').style.display =
+    (type==='essay') ? 'none' : 'block';
+}
+
+async function submitQuestion(){
+  const text = document.getElementById('q-text').value.trim();
+  if(!text){ toast('نص السؤال مطلوب','error'); return; }
+  const type = document.getElementById('q-type').value;
+  const opts = document.getElementById('q-options').value.split('\n').map(o=>o.trim()).filter(Boolean);
+  const payload = {
+    question_text: text,
+    skill: document.getElementById('q-skill').value,
+    question_type: type,
+    options: opts.length ? opts : null,
+    correct_answer: document.getElementById('q-answer').value.trim(),
+    explanation: document.getElementById('q-explanation').value.trim()
+  };
+  const r = await API('/api/admin/questions','POST',payload);
+  if(r.ok){
+    toast('✅ تم إضافة السؤال');
+    closeModal('modal-add-question');
+    ['q-text','q-options','q-answer','q-explanation'].forEach(id=>document.getElementById(id).value='');
+    loadQuestions();
+  } else toast('خطأ في الحفظ','error');
+}
+
+async function deleteQuestion(id){
+  if(!confirm('حذف هذا السؤال؟')) return;
+  const r = await API(`/api/admin/questions/${id}`,'DELETE');
+  if(r.ok){ toast('🗑️ تم الحذف'); loadQuestions(); }
+}
+
+// ═══ Missions ═══
+async function loadMissions(){
+  const data = await API('/api/admin/missions');
+  const tbody = document.querySelector('#tbl-missions tbody');
+  tbody.innerHTML = '';
+  (data.missions || []).forEach(m=>{
+    const statusBadge = m.is_active
+      ? `<span class="badge badge-green">نشطة</span>`
+      : `<span class="badge badge-yellow">موقوفة</span>`;
+    tbody.innerHTML += `<tr>
+      <td style="color:#64748b">${m.id}</td>
+      <td><b>${m.title}</b><br><small style="color:#64748b">${m.description||''}</small></td>
+      <td><span class="badge badge-blue">${m.mission_type}</span></td>
+      <td><span class="badge badge-purple">+${m.xp_reward} XP</span></td>
+      <td>${m.target_date||'<span style="color:#64748b">يومياً</span>'}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <button class="btn btn-danger btn-sm" onclick="deleteMission(${m.id})">🗑️</button>
+      </td>
+    </tr>`;
+  });
+}
+
+async function submitMission(){
+  const title = document.getElementById('m-title').value.trim();
+  if(!title){ toast('العنوان مطلوب','error'); return; }
+  const r = await API('/api/admin/missions','POST',{
+    title, description: document.getElementById('m-desc').value.trim(),
+    mission_type: document.getElementById('m-type').value,
+    xp_reward: parseInt(document.getElementById('m-xp').value)||20,
+    target_date: document.getElementById('m-date').value||null
+  });
+  if(r.ok){ toast('✅ تمت الإضافة'); closeModal('modal-add-mission'); loadMissions(); }
+  else toast('خطأ','error');
+}
+
+async function deleteMission(id){
+  if(!confirm('حذف هذه المهمة؟')) return;
+  const r = await API(`/api/admin/missions/${id}`,'DELETE');
+  if(r.ok){ toast('🗑️ تم الحذف'); loadMissions(); }
+}
+
+// ═══ Grading ═══
+async function loadGrading(){
+  const data = await API('/api/admin/grading-rules');
+  const tbody = document.querySelector('#tbl-grading tbody');
+  tbody.innerHTML = '';
+  (data.rules || []).forEach(r=>{
+    tbody.innerHTML += `<tr>
+      <td style="color:#64748b">${r.id}</td>
+      <td><b>${r.topic}</b></td>
+      <td><span class="badge badge-blue">${r.skill}</span></td>
+      <td>${r.vocab_points}</td>
+      <td>${r.connector_points}</td>
+      <td>-${r.forbidden_penalty}</td>
+      <td>${r.max_score}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteGrading(${r.id})">🗑️</button></td>
+    </tr>`;
+  });
+}
+
+async function submitGrading(){
+  const topic = document.getElementById('gr-topic').value.trim();
+  if(!topic){ toast('الموضوع مطلوب','error'); return; }
+  const parseKw = id => document.getElementById(id).value.split(',').map(s=>s.trim()).filter(Boolean);
+  const r = await API('/api/admin/grading-rules','POST',{
+    topic, skill: document.getElementById('gr-skill').value,
+    vocab_keywords: parseKw('gr-vocab'),
+    connector_keywords: parseKw('gr-connectors'),
+    forbidden_words: parseKw('gr-forbidden'),
+    vocab_points: parseFloat(document.getElementById('gr-vpts').value)||2,
+    connector_points: parseFloat(document.getElementById('gr-cpts').value)||3,
+    forbidden_penalty: parseFloat(document.getElementById('gr-penalty').value)||1,
+    max_score: parseFloat(document.getElementById('gr-max').value)||100
+  });
+  if(r.ok){ toast('✅ تمت الإضافة'); closeModal('modal-add-grading'); loadGrading(); }
+  else toast('خطأ','error');
+}
+
+async function deleteGrading(id){
+  if(!confirm('حذف هذا المعيار؟')) return;
+  await API(`/api/admin/grading-rules/${id}`,'DELETE');
+  toast('🗑️ تم الحذف'); loadGrading();
+}
+
+// ═══ Phases ═══
+async function loadPhases(){
+  const data = await API('/api/admin/phase-settings');
+  const container = document.getElementById('phases-container');
+  container.innerHTML = '';
+  (data.phases || []).forEach(p=>{
+    container.innerHTML += `
+    <div class="card" style="border:1px solid #334155">
+      <div class="card-header">
+        <span class="card-title">المرحلة ${p.phase_number}: ${p.phase_name||''}</span>
+        <button class="btn btn-primary btn-sm" onclick="savePhase(${p.phase_number})">💾 حفظ</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">الحد الأدنى XP</label><input class="form-control" id="phase-${p.phase_number}-xp" value="${p.min_xp||0}" type="number"/></div>
+        <div class="form-group"><label class="form-label">الحد الأدنى Streak (أيام)</label><input class="form-control" id="phase-${p.phase_number}-streak" value="${p.min_streak||0}" type="number"/></div>
+        <div class="form-group"><label class="form-label">الحد الأدنى درجة الكويز (%)</label><input class="form-control" id="phase-${p.phase_number}-quiz" value="${p.min_quiz_score||0}" type="number"/></div>
+        <div class="form-group"><label class="form-label">الحد الأدنى أيام الحضور</label><input class="form-control" id="phase-${p.phase_number}-att" value="${p.min_attendance_days||0}" type="number"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">الوصف</label><input class="form-control" id="phase-${p.phase_number}-desc" value="${p.description||''}"/></div>
+    </div>`;
+  });
+}
+
+async function savePhase(num){
+  const r = await API(`/api/admin/phase-settings/${num}`,'PUT',{
+    min_xp: parseInt(document.getElementById(`phase-${num}-xp`).value)||0,
+    min_streak: parseInt(document.getElementById(`phase-${num}-streak`).value)||0,
+    min_quiz_score: parseFloat(document.getElementById(`phase-${num}-quiz`).value)||0,
+    min_attendance_days: parseInt(document.getElementById(`phase-${num}-att`).value)||0,
+    description: document.getElementById(`phase-${num}-desc`).value
+  });
+  if(r.ok) toast(`✅ تم حفظ شروط المرحلة ${num}`);
+  else toast('خطأ في الحفظ','error');
+}
+
+// ═══ Graduation ═══
+const gradKeys = [
+  {key:'graduation_min_xp', label:'الحد الأدنى XP', type:'number'},
+  {key:'graduation_min_tasks', label:'عدد المهام اليومية', type:'number'},
+  {key:'graduation_min_streak', label:'الحد الأدنى Streak (أيام)', type:'number'},
+  {key:'graduation_min_mock_score', label:'الحد الأدنى Mock Exam', type:'number'},
+  {key:'graduation_mock_bonus', label:'نقاط إضافية فوق required_score', type:'number'},
+];
+
+async function loadGraduation(){
+  const data = await API('/api/admin/settings');
+  const form = document.getElementById('graduation-form');
+  form.innerHTML = '';
+  const settings = {};
+  (data.settings||[]).forEach(s=>settings[s.key]=s.value);
+  gradKeys.forEach(({key,label,type})=>{
+    form.innerHTML += `
+    <div class="form-group">
+      <label class="form-label">${label}</label>
+      <input class="form-control" id="grad-${key}" type="${type}" value="${settings[key]||''}"/>
+    </div>`;
+  });
+}
+
+async function saveGraduationSettings(){
+  const payload = {};
+  gradKeys.forEach(({key})=>{
+    const el = document.getElementById(`grad-${key}`);
+    if(el) payload[key] = el.value;
+  });
+  const r = await API('/api/admin/settings','POST',payload);
+  if(r.ok) toast('✅ تم حفظ شروط التخرج');
+  else toast('خطأ في الحفظ','error');
+}
+
+async function checkStudentGraduation(){
+  const uid = document.getElementById('grad-check-uid').value.trim();
+  if(!uid){ toast('أدخل User ID','error'); return; }
+  const data = await API(`/api/user/graduation-status?user_id=${uid}`);
+  const div = document.getElementById('grad-check-result');
+  if(data.error){ div.innerHTML = `<span class="badge badge-red">${data.error}</span>`; return; }
+  const checksHtml = (data.checks||[]).map(c=>
+    `<div style="padding:6px 0;border-bottom:1px solid #334155">${c.message}</div>`
+  ).join('');
+  const eligible = data.eligible;
+  div.innerHTML = `
+    <div class="card" style="border-color:${eligible?'#4ade80':'#f87171'}">
+      <div style="margin-bottom:12px">
+        <span class="badge badge-${eligible?'green':'red'}" style="font-size:14px;padding:4px 14px">
+          ${eligible ? '✅ مؤهل للتخرج' : '❌ غير مؤهل بعد'}
+        </span>
+      </div>
+      ${checksHtml}
+    </div>`;
+}
+
+// ═══ Payments ═══
+async function loadPayments(){
+  const data = await API('/api/admin/payments');
+  const tbody = document.querySelector('#tbl-payments tbody');
+  tbody.innerHTML = '';
+  (data.payments || []).forEach(p=>{
+    const statusColor = {verified:'green',pending:'yellow',rejected:'red'}[p.status]||'yellow';
+    tbody.innerHTML += `<tr>
+      <td style="color:#64748b">${p.id}</td>
+      <td>${p.full_name||p.username||p.user_id}</td>
+      <td><b>${p.amount} ${p.currency||'$'}</b></td>
+      <td>${p.plan||'basic'}</td>
+      <td><span class="badge badge-${statusColor}">${p.status}</span></td>
+      <td style="color:#64748b">${(p.created_at||'').slice(0,10)}</td>
+      <td>
+        ${p.status!=='verified' ? `<button class="btn btn-success btn-sm" onclick="verifyPayment(${p.id})">✅ تحقق</button>` : ''}
+      </td>
+    </tr>`;
+  });
+}
+
+async function verifyPayment(id){
+  const r = await API(`/api/admin/payments/${id}/verify`,'POST');
+  if(r.ok){ toast('✅ تم التحقق وتفعيل الحساب'); loadPayments(); }
+  else toast('خطأ','error');
+}
+
+// ═══ Settings ═══
+async function loadSettings(){
+  const data = await API('/api/admin/settings');
+  const form = document.getElementById('settings-form');
+  form.innerHTML = '';
+  (data.settings||[]).forEach(s=>{
+    const isLong = s.value && s.value.length > 40;
+    form.innerHTML += `
+    <div class="form-group" ${isLong?'style="grid-column:1/-1"':''}>
+      <label class="form-label">${s.description||s.key}</label>
+      ${isLong
+        ? `<textarea class="form-control" id="setting-${s.key}" rows="2">${s.value}</textarea>`
+        : `<input class="form-control" id="setting-${s.key}" value="${s.value||''}"/>`
+      }
+    </div>`;
+  });
+}
+
+async function saveAllSettings(){
+  const data = await API('/api/admin/settings');
+  const payload = {};
+  (data.settings||[]).forEach(s=>{
+    const el = document.getElementById(`setting-${s.key}`);
+    if(el) payload[s.key] = el.value;
+  });
+  const r = await API('/api/admin/settings','POST',payload);
+  if(r.ok) toast('✅ تم حفظ جميع الإعدادات');
+  else toast('خطأ في الحفظ','error');
+}
+
+
+// ═══ Plans ═══
+pageTitles['plans'] = 'الباقات';
+pageLoaders['plans'] = loadPlans;
+
+async function loadPlans(){
+  const data = await API('/api/admin/plans');
+  const container = document.getElementById('plans-container');
+  if(!container) return;
+  container.innerHTML = '';
+  if(!data.plans || data.plans.length === 0){
+    container.innerHTML = '<p style="color:#64748b;text-align:center;padding:40px">لا توجد باقات — اضغط إضافة باقة</p>';
+    return;
+  }
+  data.plans.forEach(p => {
+    let features = [];
+    try { features = JSON.parse(p.features || '[]'); } catch(e){}
+    const featHtml = features.map(f =>
+      '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:13px;color:#94a3b8"><span style="color:#4ade80">✓</span>' + f + '</div>'
+    ).join('');
+    container.innerHTML += `
+    <div style="background:#0f172a;border:${p.is_featured?'2px solid #f59e0b':'1px solid #334155'};border-radius:16px;padding:20px;position:relative">
+      ${p.is_featured ? '<div style="position:absolute;top:-12px;right:16px;background:#f59e0b;color:#000;padding:2px 12px;border-radius:99px;font-size:11px;font-weight:700">موصى بها ⭐</div>' : ''}
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:#f1f5f9">${p.name_ar}</div>
+          <div style="font-size:11px;color:#64748b;margin-top:2px">${p.name}</div>
         </div>
-        <p style="font-weight:700;font-size:.85rem;margin-bottom:6px">${(q.question_text||'').substring(0,120)}${(q.question_text||'').length>120?'...':''}</p>
-        ${['mcq','listening','reading_passage'].includes(q.question_type)?`<div style="display:flex;flex-wrap:wrap;gap:4px">${['a','b','c','d'].map(opt=>`<span style="font-size:.72px;padding:2px 8px;border-radius:8px;font-weight:600;${q.correct_option===opt?'background:#dcfce7;color:#15803d;border:1px solid #bbf7d0':'background:#f8fafc;color:#64748b;border:1px solid #e2e8f0'}">${opt.toUpperCase()}: ${q['option_'+opt]||'—'}</span>`).join('')}</div>`:''}
-        ${q.question_type==='complete_words'?`<p style="font-size:.75rem;color:#7c3aed;margin-top:4px">🔤 ${(q.complete_words_passage||'').substring(0,80)}...</p>`:''}
-        ${q.question_type==='build_sentence'?`<p style="font-size:.75rem;color:#0369a1;margin-top:4px">🔀 ${q.word_order_answer||''}</p>`:''}
+        <span class="badge ${p.is_active ? 'badge-green' : 'badge-red'}">${p.is_active ? 'نشطة' : 'موقوفة'}</span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
-        <button class="btn btn-ghost btn-xs" onclick='editQuestion(${q.id})'>✏️</button>
-        <button class="btn btn-red btn-xs" onclick="deleteQuestionConfirm(${q.id})">🗑️</button>
+      <div style="font-size:26px;font-weight:800;color:#6366f1;margin-bottom:2px">
+        ${Number(p.price).toLocaleString()} <span style="font-size:13px;color:#94a3b8;font-weight:500">د.ع</span>
       </div>
-    </div>
-  </div>`).join('');
-}
-function filterQuestions(){
-  const type=document.getElementById('q-filter-type').value;
-  const topic=document.getElementById('q-filter-topic').value;
-  renderQuestions(_allQuestions.filter(q=>(!type||q.question_type===type)&&(!topic||q.topic===topic)));
-}
-function editQuestion(id){const q=_allQuestions.find(x=>x.id===id);if(q)openQuestionModal(q);}
-function deleteQuestionConfirm(id){
-  confirmAction(`حذف السؤال #${id}؟`,async()=>{try{await API(`/api/admin/questions/${id}`,'DELETE');toast('🗑️ تم الحذف','warn');loadQuestions();}catch(e){toast('خطأ','err');}});
+      <div style="font-size:12px;color:#64748b;margin-bottom:10px">لمدة ${p.duration_days} يوم</div>
+      ${p.description ? '<div style="font-size:12px;color:#94a3b8;margin-bottom:10px;padding:8px;background:#1e293b;border-radius:8px">' + p.description + '</div>' : ''}
+      <div style="margin-bottom:14px;min-height:20px">${featHtml}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="editPlan(${p.id})">✏️ تعديل</button>
+        <button class="btn btn-sm" style="background:${p.is_active?'#451a03':'#052e16'};color:${p.is_active?'#fb923c':'#4ade80'}" onclick="togglePlan(${p.id})">${p.is_active ? '⏸ إيقاف' : '▶ تنشيط'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePlan(${p.id})">🗑️ حذف</button>
+      </div>
+    </div>`;
+  });
 }
 
-// ── PAYMENTS ──
-async function loadPayments(status='pending'){
-  ['pending','approved','rejected'].forEach(s=>{const btn=document.getElementById('tab-'+s);if(btn)btn.className=s===status?`btn btn-sm ${s==='pending'?'btn-navy':s==='approved'?'btn-green':'btn-red'}`:'btn btn-ghost btn-sm';});
-  const tbody=document.getElementById('payments-tbody');
-  tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;color:#94a3b8">جاري...</td></tr>';
-  try{
-    const res=await API(`/api/admin/payments?status=${status}`);
-    const list=Array.isArray(res)?res:(res.payments||[]);
-    if(!list.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;color:#94a3b8">لا مدفوعات</td></tr>';return;}
-    const stB={pending:'b-orange',approved:'b-green',rejected:'b-red'};
-    tbody.innerHTML=list.map(p=>`<tr><td style="font-size:.75rem;color:#94a3b8">#${p.id}</td><td style="font-weight:700">${p.student_name||'—'}</td><td><span class="badge b-blue">${p.package||'—'}</span></td><td style="font-weight:700">${p.amount||'—'} د</td><td style="font-size:.75rem;color:#64748b">${(p.payment_date||'').substring(0,10)}</td><td><span class="badge ${stB[p.status]||'b-gray'}">${p.status==='pending'?'⏳':p.status==='approved'?'✅':'❌'}</span></td><td>${p.status==='pending'?`<div style="display:flex;gap:4px"><button class="btn btn-green btn-xs" onclick="approvePayment(${p.id})">✅</button><button class="btn btn-red btn-xs" onclick="rejectPayment(${p.id})">❌</button></div>`:'—'}</td></tr>`).join('');
-  }catch(e){tbody.innerHTML=`<tr><td colspan="7" style="color:#dc2626;text-align:center;padding:1rem">${e.message}</td></tr>`;}
+function openPlanModal(reset=true){
+  if(reset){
+    document.getElementById('plan-modal-title').textContent = '➕ إضافة باقة جديدة';
+    document.getElementById('plan-edit-id').value = '';
+    document.getElementById('plan-name').value = '';
+    document.getElementById('plan-name-ar').value = '';
+    document.getElementById('plan-price').value = '';
+    document.getElementById('plan-days').value = '30';
+    document.getElementById('plan-desc').value = '';
+    document.getElementById('plan-features').value = '';
+    document.getElementById('plan-active').checked = true;
+    document.getElementById('plan-featured').checked = false;
+  }
+  openModal('modal-plan');
 }
-async function approvePayment(id){try{await API(`/api/admin/payments/${id}/approve`,'POST');toast('✅ قبول','ok');loadPayments('pending');}catch(e){toast('خطأ','err');}}
-function rejectPayment(id){confirmAction(`رفض #${id}؟`,async()=>{try{await API(`/api/admin/payments/${id}/reject`,'POST');toast('❌ رفض','warn');loadPayments('pending');}catch(e){toast('خطأ','err');}});}
 
-async function loadLeaderboardAdmin(){try{const res=await API('/api/leaderboard');const list=Array.isArray(res)?res:[];const medals=['🥇','🥈','🥉','4','5','6','7','8','9','10'];document.getElementById('lb-admin-tbody').innerHTML=list.length?list.map((s,i)=>`<tr><td><span class="badge ${i===0?'b-gold':i===1?'b-gray':'b-orange'}">${medals[i]||i+1}</span></td><td style="font-weight:700">${s.name||'—'}</td><td style="font-weight:700">${(s.xp||0).toLocaleString()}</td><td>🔥${s.streak_days||0}</td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;padding:2rem;color:#94a3b8">لا بيانات</td></tr>';}catch(e){}}
-async function loadCourses(){try{const res=await API('/api/admin/courses');const list=Array.isArray(res)?res:[];const cont=document.getElementById('courses-body');if(!list.length){cont.innerHTML='<div style="text-align:center;color:#94a3b8;padding:2rem">لا دورات</div>';return;}cont.innerHTML=`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>الاسم</th><th>المستوى</th><th>الحد الأدنى</th><th>الحالة</th></tr></thead><tbody>${list.map(c=>`<tr><td style="color:#94a3b8">${c.id}</td><td style="font-weight:700">${c.title||'—'}</td><td><span class="badge b-blue">${c.level||'—'}</span></td><td><span class="badge b-orange">${c.min_score||70}%</span></td><td><span class="badge ${c.is_active?'b-green':'b-red'}">${c.is_active?'✅':'🚫'}</span></td></tr>`).join('')}</tbody></table></div>`;}catch(e){}}
-async function addCourse(){const data={name:document.getElementById('course-name').value.trim(),level:document.getElementById('course-level').value,min_score:Number(document.getElementById('course-minscore').value)};if(!data.name){toast('الاسم مطلوب','err');return;}try{await API('/api/admin/courses/add','POST',data);toast('✅ تمت الإضافة','ok');closeModal('modal-course');loadCourses();}catch(e){toast('خطأ','err');}}
-async function saveSetting(key,inputId,isCheckbox=false){const el=document.getElementById(inputId);const val=isCheckbox?el.checked:el.value;try{await API('/api/admin/settings','POST',{key,value:val});toast(`✅ حفظ: ${key}`,'ok');}catch(e){toast('خطأ','err');}}
-async function sendDailyChallenge(){try{await API('/api/admin/send-challenge','POST');toast('📨 تم الإرسال','ok');}catch(e){toast('خطأ','err');}}
-function refreshAll(){loadDashboard();toast('🔄 تم التحديث','ok');}
+async function editPlan(id){
+  const data = await API('/api/admin/plans');
+  const plan = (data.plans||[]).find(p=>p.id===id);
+  if(!plan) return;
+  document.getElementById('plan-modal-title').textContent = '✏️ تعديل الباقة';
+  document.getElementById('plan-edit-id').value = id;
+  document.getElementById('plan-name').value = plan.name || '';
+  document.getElementById('plan-name-ar').value = plan.name_ar || '';
+  document.getElementById('plan-price').value = plan.price || '';
+  document.getElementById('plan-days').value = plan.duration_days || 30;
+  document.getElementById('plan-desc').value = plan.description || '';
+  let features = [];
+  try { features = JSON.parse(plan.features||'[]'); } catch(e){}
+  document.getElementById('plan-features').value = features.join('\n');
+  document.getElementById('plan-active').checked = !!plan.is_active;
+  document.getElementById('plan-featured').checked = !!plan.is_featured;
+  openPlanModal(false);
+}
+
+async function submitPlan(){
+  const name = document.getElementById('plan-name').value.trim();
+  const nameAr = document.getElementById('plan-name-ar').value.trim();
+  const price = document.getElementById('plan-price').value;
+  if(!name || !nameAr || !price){ toast('يرجى تعبئة الاسم والسعر', 'error'); return; }
+  const features = document.getElementById('plan-features').value
+    .split('\n').map(s=>s.trim()).filter(Boolean);
+  const payload = {
+    name, name_ar: nameAr,
+    price: parseFloat(price)||0,
+    currency: 'IQD',
+    duration_days: parseInt(document.getElementById('plan-days').value)||30,
+    description: document.getElementById('plan-desc').value.trim(),
+    features,
+    is_active: document.getElementById('plan-active').checked ? 1 : 0,
+    is_featured: document.getElementById('plan-featured').checked ? 1 : 0,
+  };
+  const editId = document.getElementById('plan-edit-id').value;
+  const url = editId ? '/api/admin/plans/' + editId : '/api/admin/plans';
+  const method = editId ? 'PUT' : 'POST';
+  const r = await API(url, method, payload);
+  if(r.ok){
+    toast(editId ? '✅ تم تحديث الباقة' : '✅ تمت إضافة الباقة');
+    closeModal('modal-plan');
+    loadPlans();
+  } else {
+    toast('خطأ: ' + (r.error||'مجهول'), 'error');
+  }
+}
+
+async function togglePlan(id){
+  const r = await API('/api/admin/plans/' + id + '/toggle', 'POST');
+  if(r.ok){ toast(r.is_active ? '▶ تم التنشيط' : '⏸ تم الإيقاف'); loadPlans(); }
+  else toast('خطأ', 'error');
+}
+
+async function deletePlan(id){
+  if(!confirm('حذف هذه الباقة نهائياً؟')) return;
+  const r = await API('/api/admin/plans/' + id, 'DELETE');
+  if(r.ok){ toast('🗑️ تم الحذف'); loadPlans(); }
+  else toast('خطأ', 'error');
+}
+
+// ═══ Init ═══
 loadDashboard();
 </script>
 </body>
 </html>
+
+
+

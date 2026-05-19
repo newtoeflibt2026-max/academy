@@ -1,215 +1,180 @@
-# -*- coding: utf-8 -*-
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, WebAppInfo
-from aiogram.filters import CommandStart
-from aiogram.fsm.context import FSMContext
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+﻿# -*- coding: utf-8 -*-
+from aiogram import types, Router, F
+from aiogram.filters import CommandStart, Command
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database_v2 import (
-    get_student, create_student, get_subscription,
-    check_graduation, get_skills_progress, get_setting
+    create_student, get_student, update_streak,
+    get_skills_progress, check_graduation,
+    get_setting, get_daily_missions, get_leaderboard
 )
-from utils.states import RegistrationStates
-from config import settings
+import logging
 
+logger = logging.getLogger(__name__)
 router = Router(name="start")
 
-def main_menu_kb(is_paid=False, student_id=None):
-    kb = InlineKeyboardBuilder()
-    base_url = settings.WEBHOOK_HOST.rstrip("/")
-    toefl_active = get_setting("toefl_active", "1") == "1"
-
-    if toefl_active:
-        if is_paid and student_id:
-            kb.button(
-                text="🚀 لوحة التحكم",
-                web_app=WebAppInfo(
-                    url=f"{base_url}/student?student_id={student_id}"
-                )
-            )
-        kb.button(text="📚 دروسي اليومية", callback_data="menu:lessons")
-        kb.button(text="🔬 اختبار تحديد المستوى", callback_data="start_placement")
-        kb.button(text="✍️ تصحيح ذكي", callback_data="menu:correction")
-        kb.button(text="🏆 لوحة الصدارة", callback_data="menu:leaderboard")
-        kb.button(text="💎 الباقات والاشتراك", callback_data="menu:subscribe")
-        kb.button(text="👤 ملفي الشخصي", callback_data="menu:profile")
+def get_main_keyboard(is_paid: bool = False) -> InlineKeyboardMarkup:
+    buttons = [
+        [
+            InlineKeyboardButton(text="📚 الدروس", callback_data="menu_lessons"),
+            InlineKeyboardButton(text="🎯 المهام اليومية", callback_data="menu_missions"),
+        ],
+        [
+            InlineKeyboardButton(text="📊 تقدمي", callback_data="menu_progress"),
+            InlineKeyboardButton(text="🏆 المتصدرون", callback_data="menu_leaderboard"),
+        ],
+        [
+            InlineKeyboardButton(text="✍️ تدريب الكتابة", callback_data="menu_writing"),
+            InlineKeyboardButton(text="🎧 تدريب الاستماع", callback_data="menu_listening"),
+        ],
+        [
+            InlineKeyboardButton(text="🔬 امتحان تحديد المستوى", callback_data="start_placement"),
+        ],
+    ]
+    if is_paid:
+        buttons.append([InlineKeyboardButton(text="📝 Mock Exam", callback_data="menu_mock")])
+        buttons.append([InlineKeyboardButton(text="🎓 التخرج", callback_data="menu_graduation")])
     else:
-        kb.button(text="🔒 TOEFL — قريباً", callback_data="coming_soon")
+        buttons.append([InlineKeyboardButton(text="🔒 Mock Exam (مدفوع)", callback_data="locked_feature")])
+    buttons.append([InlineKeyboardButton(text="⚙️ الإعدادات", callback_data="menu_settings")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-    kb.button(text="🔒 IELTS — قريباً", callback_data="coming_soon")
-    kb.adjust(1)
-    return kb.as_markup()
-
-def path_kb():
-    kb = InlineKeyboardBuilder()
-    kb.button(text="🎓 TOEFL iBT الدولي", callback_data="reg:path:toefl")
-    kb.button(text="🔒 IELTS — قريباً", callback_data="coming_soon")
-    kb.adjust(1)
-    return kb.as_markup()
 
 @router.message(CommandStart())
-async def cmd_start(message: Message, state: FSMContext):
-    await state.clear()
-    user_id = str(message.from_user.id)
-    student = get_student(user_id)
+async def cmd_start(message: types.Message):
+    user_id = message.from_user.id
+    username = message.from_user.username or ""
+    full_name = message.from_user.full_name or ""
 
-    if student:
-        sub = get_subscription(user_id)
-        is_paid = bool(student.get("is_paid")) or sub is not None
-        status = "✅ مشترك مدفوع" if is_paid else "🆓 مجاني"
-        level_map = {
-            "beginner": "مبتدئ",
-            "intermediate": "متوسط",
-            "advanced": "متقدم"
-        }
-        level = level_map.get(student.get("level", "beginner"), "مبتدئ")
-        await message.answer(
-            f"🏠 <b>مرحباً {student['name']}!</b>\n\n"
-            f"🎯 المستوى: <b>{level}</b>\n"
-            f"⭐ XP: <b>{student.get('xp', 0)}</b>\n"
-            f"🔥 Streak: <b>{student.get('streak_days', 0)} يوم</b>\n"
-            f"💳 الاشتراك: <b>{status}</b>\n\n"
-            "اختر من القائمة 👇",
-            reply_markup=main_menu_kb(is_paid, user_id)
-        )
+    create_student(user_id, username=username, full_name=full_name)
+    student = get_student(user_id)
+    streak = update_streak(user_id)
+
+    welcome_msg = get_setting("bot_welcome_message", "مرحباً بك في أكاديمية يامن للتوفل! 🎓")
+    is_paid = bool(student.get("is_paid", 0)) if student else False
+    xp = student.get("xp", 0) if student else 0
+    level = student.get("level", "beginner") if student else "beginner"
+    placement_done = student.get("placement_done", 0) if student else 0
+
+    level_ar = {"beginner": "مبتدئ 🔵", "intermediate": "متوسط 🟡", "advanced": "متقدم 🟢"}.get(level, level)
+
+    text = (
+        f"{welcome_msg}\n\n"
+        f"👤 {full_name}\n"
+        f"⭐ XP: {xp} | 🔥 Streak: {streak} أيام | 📈 {level_ar}\n"
+    )
+    if is_paid:
+        text += "✅ حساب مفعّل\n"
     else:
-        await message.answer(
-            "👋 <b>أهلاً بك في أكاديمية يامن!</b>\n\n"
-            "🎓 منصتك الذكية للوصول لـ TOEFL iBT\n\n"
-            "📝 <b>أرسل اسمك الكامل للبدء:</b>"
-        )
-        await state.set_state(RegistrationStates.waiting_for_name)
+        text += "⚠️ حساب غير مفعّل — بعض الميزات مقفلة\n"
 
-@router.message(RegistrationStates.waiting_for_name)
-async def reg_name(message: Message, state: FSMContext):
-    name = (message.text or "").strip()
-    if len(name) < 2 or len(name) > 60:
-        await message.answer("⚠️ الاسم يجب أن يكون بين 2 و60 حرف:")
-        return
-    await state.update_data(name=name)
-    await message.answer(
-        f"✅ أهلاً <b>{name}</b>!\n\n🎓 <b>اختر مسارك:</b>",
-        reply_markup=path_kb()
-    )
-    await state.set_state(RegistrationStates.waiting_for_path)
+    if not placement_done:
+        text += "\n💡 <b>ننصحك بإجراء امتحان تحديد المستوى أولاً!</b>"
 
-@router.callback_query(RegistrationStates.waiting_for_path,
-                       F.data.startswith("reg:path:"))
-async def reg_path(cb: CallbackQuery, state: FSMContext):
-    path = cb.data.split(":")[2]
-    data = await state.get_data()
-    user_id = str(cb.from_user.id)
-    student = create_student(
-        telegram_id=user_id,
-        name=data["name"],
-        username=cb.from_user.username,
-        path_type=path
-    )
-    await state.clear()
-    await cb.message.edit_text(
-        f"🎉 <b>تم تسجيلك في أكاديمية يامن!</b>\n\n"
-        f"👤 الاسم: <b>{data['name']}</b>\n"
-        f"🎓 المسار: <b>TOEFL iBT</b>\n\n"
-        "ابدأ باختبار تحديد مستواك 👇",
-        reply_markup=main_menu_kb(False, user_id)
-    )
-    await cb.answer("✅ تم التسجيل!")
+    text += "\n\nاختر من القائمة:"
 
-@router.callback_query(F.data == "coming_soon")
-async def coming_soon(cb: CallbackQuery):
-    await cb.answer("🔒 هذا المسار سيفتح قريباً!", show_alert=True)
+    await message.answer(text, reply_markup=get_main_keyboard(is_paid), parse_mode="HTML")
 
-@router.callback_query(F.data == "menu:main")
-async def cb_main(cb: CallbackQuery, state: FSMContext):
-    await state.clear()
-    user_id = str(cb.from_user.id)
+
+@router.message(Command("progress"))
+async def cmd_progress(message: types.Message):
+    user_id = message.from_user.id
     student = get_student(user_id)
     if not student:
-        await cb.message.edit_text("⚠️ أرسل /start للتسجيل.")
-        await cb.answer()
-        return
-    sub = get_subscription(user_id)
-    is_paid = bool(student.get("is_paid")) or sub is not None
-    await cb.message.edit_text(
-        f"🏠 <b>القائمة الرئيسية</b>\n\n"
-        f"👤 {student['name']} | ⭐ {student.get('xp',0)} XP",
-        reply_markup=main_menu_kb(is_paid, user_id)
-    )
-    await cb.answer()
-
-@router.callback_query(F.data == "menu:profile")
-async def cb_profile(cb: CallbackQuery):
-    user_id = str(cb.from_user.id)
-    student = get_student(user_id)
-    if not student:
-        await cb.answer("أرسل /start أولاً", show_alert=True)
+        await message.answer("❌ سجّل أولاً بـ /start")
         return
     skills = get_skills_progress(user_id)
-    sub = get_subscription(user_id)
-    is_paid = bool(student.get("is_paid")) or sub is not None
-    sub_text = f"✅ مدفوع حتى {sub['end_date'][:10]}" if sub else \
-               ("✅ مفعّل" if is_paid else "🔒 مجاني")
-    can_grad, grad_msg = check_graduation(user_id)
-    kb = InlineKeyboardBuilder()
-    kb.button(text="💎 اشترك", callback_data="menu:subscribe")
-    kb.button(text="🏠 رجوع", callback_data="menu:main")
-    kb.adjust(2)
-    await cb.message.edit_text(
-        f"👤 <b>ملفك الشخصي</b>\n\n"
-        f"📛 {student['name']}\n"
-        f"🆔 <code>{user_id}</code>\n"
-        f"🎓 المستوى: {student.get('level','beginner')}\n"
-        f"⭐ XP: <b>{student.get('xp',0)}</b>\n"
-        f"🔥 Streak: <b>{student.get('streak_days',0)} يوم</b>\n"
-        f"✅ مهام: <b>{student.get('tasks_completed',0)}</b>\n"
-        f"💳 {sub_text}\n\n"
-        f"<b>📊 تقدم المهارات:</b>\n"
-        f"📖 Reading: {skills.get('reading_xp',0)} XP\n"
-        f"🎧 Listening: {skills.get('listening_xp',0)} XP\n"
-        f"🎤 Speaking: {skills.get('speaking_xp',0)} XP\n"
-        f"✍️ Writing: {skills.get('writing_xp',0)} XP\n\n"
-        f"🎓 بوابة التخرج: {'✅ مؤهل' if can_grad else '🔒 لم تكتمل الشروط'}",
-        reply_markup=kb.as_markup()
+    text = (
+        f"📊 <b>تقدمك في الأكاديمية</b>\n\n"
+        f"⭐ إجمالي XP: {student.get('xp', 0)}\n"
+        f"🔥 Streak: {student.get('streak', 0)} أيام\n"
+        f"✅ مهام مكتملة: {student.get('tasks_completed', 0)}\n\n"
+        f"<b>المهارات:</b>\n"
+        f"📖 القراءة: {skills.get('reading_xp', 0)} XP\n"
+        f"🎧 الاستماع: {skills.get('listening_xp', 0)} XP\n"
+        f"🗣️ التحدث: {skills.get('speaking_xp', 0)} XP\n"
+        f"✍️ الكتابة: {skills.get('writing_xp', 0)} XP\n"
+        f"📝 القواعد: {skills.get('grammar_xp', 0)} XP\n"
+        f"📚 المفردات: {skills.get('vocabulary_xp', 0)} XP\n"
     )
-    await cb.answer()
+    await message.answer(text, parse_mode="HTML")
 
-@router.callback_query(F.data == "menu:leaderboard")
-async def cb_leaderboard(cb: CallbackQuery):
-    from database_v2 import get_leaderboard_data, get_student_rank
-    board = get_leaderboard_data(10)
-    user_id = str(cb.from_user.id)
-    rank, xp = get_student_rank(user_id)
-    text = "🏆 <b>لوحة الصدارة</b>\n\n"
-    medals = ["🥇", "🥈", "🥉"]
-    for i, s in enumerate(board):
-        medal = medals[i] if i < 3 else f"{i+1}."
-        text += f"{medal} {s['name']} — {s['xp']} XP\n"
-    if rank:
-        text += f"\n📍 مرتبتك: <b>#{rank}</b> ({xp} XP)"
-    kb = InlineKeyboardBuilder()
-    kb.button(text="🏠 رجوع", callback_data="menu:main")
-    await cb.message.edit_text(text, reply_markup=kb.as_markup())
-    await cb.answer()
 
-@router.callback_query(F.data == "menu:subscribe")
-async def cb_subscribe(cb: CallbackQuery):
-    from handlers.subscriptions import show_plans
-    await show_plans(cb)
+@router.callback_query(F.data == "locked_feature")
+async def callback_locked(callback: types.CallbackQuery):
+    msg = get_setting("paid_required_message", "⚠️ هذه الميزة للمشتركين فقط. تواصل مع الأدمن.")
+    await callback.answer(msg, show_alert=True)
 
-@router.callback_query(F.data.in_({"menu:lessons", "menu:correction",
-                                    "start_placement"}))
-async def cb_feature(cb: CallbackQuery):
-    user_id = str(cb.from_user.id)
+
+@router.callback_query(F.data == "menu_graduation")
+async def callback_graduation(callback: types.CallbackQuery):
+    user_id = callback.from_user.id
+    student = get_student(user_id)
+    if not student or not student.get("is_paid"):
+        msg = get_setting("paid_required_message", "⚠️ هذه الميزة للمشتركين فقط.")
+        await callback.answer(msg, show_alert=True)
+        return
+    result = check_graduation(user_id)
+    checks_text = "\n".join(c["message"] for c in result.get("checks", []))
+    if result.get("eligible"):
+        text = f"🎓 <b>أهلاً بك في التخرج!</b>\n\n{checks_text}\n\n✅ أنت مؤهل للتخرج! تواصل مع الأدمن."
+    else:
+        text = f"🎓 <b>شروط التخرج:</b>\n\n{checks_text}\n\n❌ لم تستوفِ جميع الشروط بعد."
+    await callback.message.answer(text, parse_mode="HTML")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "menu_progress")
+async def callback_progress(callback: types.CallbackQuery):
+    await callback.answer()
+    await cmd_progress(callback.message)
+
+
+@router.callback_query(F.data == "menu_leaderboard")
+async def callback_leaderboard(callback: types.CallbackQuery):
+    await callback.answer()
+    leaders = get_leaderboard(10)
+    if not leaders:
+        await callback.message.answer("📊 لا توجد بيانات بعد")
+        return
+    text = "🏆 <b>المتصدرون:</b>\n\n"
+    medals = ["🥇", "🥈", "🥉"] + ["🏅"] * 7
+    for i, s in enumerate(leaders):
+        name = s.get("full_name") or s.get("username") or f"مجهول_{s['user_id']}"
+        text += f"{medals[i]} {name} — {s.get('xp', 0)} XP\n"
+    await callback.message.answer(text, parse_mode="HTML")
+
+
+@router.callback_query(F.data == "menu_missions")
+async def callback_missions(callback: types.CallbackQuery):
+    await callback.answer()
+    from datetime import date
+    today = date.today().isoformat()
+    missions = get_daily_missions(today)
+    if not missions:
+        missions = get_daily_missions()
+    if not missions:
+        await callback.message.answer("📋 لا توجد مهام يومية اليوم")
+        return
+    text = "🎯 <b>المهام اليومية:</b>\n\n"
+    for m in missions[:5]:
+        text += f"• {m['title']} (+{m.get('xp_reward', 0)} XP)\n  {m.get('description', '')}\n\n"
+    await callback.message.answer(text, parse_mode="HTML")
+
+
+@router.callback_query(F.data == "menu_settings")
+async def callback_settings(callback: types.CallbackQuery):
+    await callback.answer()
+    user_id = callback.from_user.id
     student = get_student(user_id)
     if not student:
-        await cb.answer("أرسل /start أولاً", show_alert=True)
+        await callback.message.answer("❌ سجّل أولاً بـ /start")
         return
-    if cb.data == "start_placement":
-        from handlers.placement_test import start_placement
-        start_placement(cb, state)
-    elif cb.data == "menu:lessons":
-        from handlers.lessons import show_lessons
-        await show_lessons(cb, state)
-    elif cb.data == "menu:correction":
-        from handlers.correction import correction_menu
-        await correction_menu(cb, state)
-    await cb.answer()
+    text = (
+        f"⚙️ <b>إعداداتك</b>\n\n"
+        f"🆔 ID: <code>{user_id}</code>\n"
+        f"👤 الاسم: {student.get('full_name', '—')}\n"
+        f"📱 الهاتف: {student.get('phone', 'غير مسجل')}\n"
+        f"💳 النوع: {'مدفوع ✅' if student.get('is_paid') else 'مجاني ⚠️'}\n\n"
+        f"للتواصل مع الدعم أو الاشتراك: @YamenAdmin"
+    )
+    await callback.message.answer(text, parse_mode="HTML")
