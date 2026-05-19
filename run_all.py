@@ -55,9 +55,9 @@ async def run_bot():
     from aiogram.fsm.storage.memory import MemoryStorage
     import importlib
 
-    from database_v2 import init_db_v2
+    from database_v2 import init_db
     from bot_database import init_bot_db
-    init_db_v2()
+    init_db()
     init_bot_db()
     
     # seed البيانات الأساسية تلقائياً
