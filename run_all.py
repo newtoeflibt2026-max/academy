@@ -1,98 +1,30 @@
-import sqlite3
-for db_name in ['instance/academy.db', 'instance/database_v2.db']:
-    try:
-        conn = sqlite3.connect(db_name)
-        cursor = conn.cursor()
-        cursor.execute('ALTER TABLE lessons ADD COLUMN description TEXT;')
-        conn.commit()
-        conn.close()
-        print(f'? Migration successful for {db_name}')
-    except sqlite3.OperationalError:
-        print(f'?? Column description already exists in {db_name}')
-    except Exception as e:
-        print(f'? Migration error for {db_name}: {e}')
 # -*- coding: utf-8 -*-
-import os
-import sys
-import asyncio
-import threading
-import logging
+import asyncio, logging, os, threading
+from dotenv import load_dotenv
 from loguru import logger
 
-# ── تحميل متغيرات البيئة ──────────────────────────────────────────────────
-# ── تحميل متغيرات البيئة ──────────────────────────────────────────────────
-def _load_env():
-    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-    if os.path.exists(env_path):
-        with open(env_path, "r", encoding="utf-8-sig") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    os.environ.setdefault(k.strip(), v.strip())
+load_dotenv()
 
-_load_env()
-
-PORT = int(os.environ.get("PORT", 8080))
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-
-# تحقق من التوكن قبل البدء
-if not BOT_TOKEN or len(BOT_TOKEN) < 20:
-    import sys
-    print("ERROR: BOT_TOKEN missing or invalid!")
-    print(f"PORT={PORT}")
-    print(f"All env vars: {[k for k in os.environ.keys() if not k.startswith('_')]}")
-    # شغّل Flask فقط بدون البوت
-    BOT_TOKEN = None
-
-WEBHOOK_HOST = os.environ.get("WEBHOOK_HOST", "")
+PORT      = int(os.environ.get("PORT", 8080))
 
 
-# ── تشغيل Flask ──────────────────────────────────────────────────────────
 def run_flask():
     from app import app
-    logger.info(f"Flask starting on port {PORT}")
+    from startup_seed import seed
+    seed()
     app.run(host="0.0.0.0", port=PORT, debug=False, use_reloader=False)
 
-# ── تشغيل البوت ──────────────────────────────────────────────────────────
+
 async def run_bot():
-    if not BOT_TOKEN:
-        logger.warning("BOT_TOKEN not set - bot disabled, running Flask only")
-        # اجعل البوت ينام بدل ما يكسر البرنامج
-        while True:
-            await asyncio.sleep(3600)
+    if not BOT_TOKEN or len(BOT_TOKEN) < 20:
+        logger.error("BOT_TOKEN missing — bot disabled")
+        return
 
     from aiogram import Bot, Dispatcher
     from aiogram.enums import ParseMode
     from aiogram.client.default import DefaultBotProperties
     from aiogram.fsm.storage.memory import MemoryStorage
-    import importlib
-
-    from database_v2 import init_db
-    from bot_database import init_bot_db
-    init_db()
-    init_bot_db()
-    # seed essential data on every startup
-    try:
-        from startup_seed import seed as run_seed
-        run_seed()
-        logger.info("startup seed OK")
-    except Exception as _seed_err:
-        logger.warning(f"seed error: {_seed_err}")
-
-        # auto seed on every startup
-    try:
-        import launch_fix
-        launch_fix.fix_all()
-    except Exception as _e:
-        logger.warning(f"seed skipped: {_e}")
-
-    # seed البيانات الأساسية تلقائياً
-    try:
-        import seed_data
-        seed_data.seed()
-    except Exception as e:
-        logger.warning(f"Seed skipped: {e}")
 
     bot = Bot(
         token=BOT_TOKEN,
@@ -101,24 +33,24 @@ async def run_bot():
     dp = Dispatcher(storage=MemoryStorage())
 
     # تحميل الـ handlers
-    routers = [
+    handler_modules = [
         "handlers.start",
-        "handlers.subscriptions",
-        "handlers.admin",
-        "handlers.listening",
-        "handlers.lessons",
         "handlers.placement_test",
+        "handlers.lessons",
+        "handlers.subscriptions",
         "handlers.writing",
         "handlers.speaking",
+        "handlers.listening",
         "handlers.correction",
+        "handlers.admin",
     ]
 
-    for mod_name in routers:
+    for mod_name in handler_modules:
         try:
+            import importlib
             mod = importlib.import_module(mod_name)
-            r = getattr(mod, "router", None)
-            if r:
-                dp.include_router(r)
+            if hasattr(mod, "router"):
+                dp.include_router(mod.router)
                 logger.info(f"  + {mod_name}")
         except Exception as e:
             logger.warning(f"  - {mod_name}: {e}")
@@ -127,18 +59,10 @@ async def run_bot():
     logger.info("=" * 40)
     logger.info("البوت يعمل الآن!")
     logger.info("=" * 40)
-    await dp.start_polling(bot, drop_pending_updates=True)
+    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
-# ── نقطة الدخول ──────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.WARNING)
-
-    # Flask في thread منفصل
-    flask_thread = threading.Thread(target=run_flask, daemon=True)
-    flask_thread.start()
-    logger.info("Flask thread started")
-
-    # البوت في الـ main event loop
+    t = threading.Thread(target=run_flask, daemon=True)
+    t.start()
     asyncio.run(run_bot())
-
-

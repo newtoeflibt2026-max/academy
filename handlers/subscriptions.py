@@ -2,189 +2,312 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from utils.states import PaymentStates
-from bot_database import create_payment, get_student
-from config import settings
-from loguru import logger
+import sqlite3, os, logging
+from datetime import datetime, timedelta
 
+logger = logging.getLogger(__name__)
 router = Router(name="subscriptions")
 
-PLANS = {
-    "flex_30": {
-        "name": "المسار المرن 30 يوم",
-        "price": 25,
-        "days": 30,
-        "speed": 1,
-        "desc": "درس واحد يومياً - مناسب للمبتدئين",
-        "emoji": "🌱"
-    },
-    "excellence_90": {
-        "name": "مسار التفوق 90 يوم",
-        "price": 60,
-        "days": 90,
-        "speed": 1,
-        "desc": "درس يومي + تتبع كامل للتقدم",
-        "emoji": "🎯"
-    },
-    "emergency_30": {
-        "name": "مسار الطوارئ المكثف",
-        "price": 80,
-        "days": 30,
-        "speed": 4,
-        "desc": "حتى 4 دروس يومياً - للمتقدمين قبل الامتحان",
-        "emoji": "🚀"
-    },
-    "vip_20h": {
-        "name": "باقة VIP 20 ساعة برايفت",
-        "price": 400,
-        "days": 90,
-        "speed": 4,
-        "desc": "20 ساعة تدريب خاص + مسار الطوارئ مجاناً",
-        "emoji": "👑"
-    },
-}
+DB_PATH = os.environ.get(
+    "DB_PATH",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "academy.db")
+)
+ADMIN_IDS = [
+    int(x) for x in os.environ.get("ADMIN_IDS", "5572314718").split(",")
+    if x.strip().isdigit()
+]
 
-def plans_keyboard():
-    kb = InlineKeyboardBuilder()
-    for key, plan in PLANS.items():
-        kb.button(
-            text=f"{plan['emoji']} {plan['name']} - {plan['price']} دينار",
-            callback_data=f"buy:{key}"
-        )
-    kb.button(text="📖 أدخل كود الكتاب", callback_data="book:code")
-    kb.button(text="🏠 رجوع", callback_data="menu:main")
-    kb.adjust(1)
-    return kb.as_markup()
 
+class SubStates(StatesGroup):
+    waiting_receipt = State()
+
+
+def db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def get_plans():
+    try:
+        conn = db()
+        rows = conn.execute(
+            "SELECT * FROM subscription_plans WHERE is_active=1 ORDER BY price"
+        ).fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+    except Exception as e:
+        logger.error(f"get_plans: {e}")
+        return []
+
+
+@router.callback_query(F.data == "menu_subscriptions")
 async def show_plans(cb: CallbackQuery):
-    await cb.message.edit_text(
-        "💎 <b>باقات أكاديمية يامن</b>\n\n"
-        "🌱 <b>المسار المرن 30 يوم</b> — 25 دينار\n"
-        "    درس واحد يومياً، مثالي للانطلاق\n\n"
-        "🎯 <b>مسار التفوق 90 يوم</b> — 60 دينار\n"
-        "    المسار الأكاديمي الكامل من الصفر للاحتراف\n\n"
-        "🚀 <b>مسار الطوارئ المكثف</b> — 80 دينار\n"
-        "    4 دروس يومياً للمتقدمين قبل الامتحان\n\n"
-        "👑 <b>VIP 20 ساعة برايفت</b> — 400 دينار\n"
-        "    20 ساعة تدريب خاص + مسار الطوارئ مجاناً\n\n"
-        "📖 <b>كتاب يامن؟</b> أدخل الكود للتفعيل الفوري!",
-        reply_markup=plans_keyboard()
-    )
     await cb.answer()
+    plans = get_plans()
 
-@router.callback_query(F.data.startswith("buy:"))
-async def buy_plan(cb: CallbackQuery, state: FSMContext):
-    plan_key = cb.data.split(":")[1]
-    plan = PLANS.get(plan_key)
-    if not plan:
-        await cb.answer("باقة غير موجودة!", show_alert=True)
+    if not plans:
+        kb = InlineKeyboardBuilder()
+        kb.button(text="🏠 الرئيسية", callback_data="menu_main")
+        await cb.message.answer(
+            "💳 لا توجد باقات متاحة حالياً.\nتواصل مع الأدمن: @YamenAdmin",
+            reply_markup=kb.as_markup()
+        )
         return
 
-    await state.update_data(plan_key=plan_key, plan=plan)
+    EMOJI = {"M": "📗", "T": "🏆", "E": "⚡", "V": "👑"}
 
-    kb = InlineKeyboardBuilder()
-    kb.button(text="✅ تأكيد الدفع وإرسال الإيصال", callback_data=f"confirm_pay:{plan_key}")
-    kb.button(text="🔙 رجوع للباقات", callback_data="menu:subscribe")
+    text = "💳 <b>باقات أكاديمية يامن للتوفل</b>\n\n"
+    kb   = InlineKeyboardBuilder()
+
+    for p in plans:
+        name  = p.get("plan_name", "باقة")
+        price = p.get("price", 0)
+        days  = p.get("days", 30)
+        speed = p.get("speed", 1)
+        desc  = p.get("description", "")
+        key   = p.get("plan_key", str(p.get("id")))
+        emoji = EMOJI.get(p.get("emoji", ""), "📚")
+
+        text += (
+            f"{emoji} <b>{name}</b>\n"
+            f"   💰 {price:,} دينار عراقي\n"
+            f"   📅 {days} يوم | 📖 {speed} درس/يوم\n"
+            f"   📝 {desc}\n\n"
+        )
+        kb.button(
+            text=f"{emoji} اشترك في {name}",
+            callback_data=f"sub_select:{key}"
+        )
+
+    kb.button(text="🏠 الرئيسية", callback_data="menu_main")
     kb.adjust(1)
 
-    await cb.message.edit_text(
-        f"{plan['emoji']} <b>{plan['name']}</b>\n\n"
-        f"💰 السعر: <b>{plan['price']} دينار أردني</b>\n"
-        f"📅 المدة: <b>{plan['days']} يوم</b>\n"
-        f"📖 {plan['desc']}\n\n"
-        "━━━━━━━━━━━━━━━━━━━━\n"
-        "💳 <b>طريقة الدفع:</b>\n"
-        "ارسل المبلغ عبر:\n"
-        "• <b>CliQ</b>: yamen_academy\n"
-        "• <b>زين كاش</b>: 0791234567\n\n"
-        "بعد الدفع اضغط <b>تأكيد</b> وأرسل صورة الإيصال 👇",
-        reply_markup=kb.as_markup()
-    )
-    await cb.answer()
+    await cb.message.answer(text, reply_markup=kb.as_markup(), parse_mode="HTML")
 
-@router.callback_query(F.data.startswith("confirm_pay:"))
-async def confirm_pay(cb: CallbackQuery, state: FSMContext):
+
+@router.callback_query(F.data.startswith("sub_select:"))
+async def select_plan(cb: CallbackQuery, state: FSMContext):
+    await cb.answer()
     plan_key = cb.data.split(":")[1]
-    plan = PLANS.get(plan_key)
-    await state.update_data(plan_key=plan_key, plan=plan)
+
+    try:
+        conn = db()
+        plan = conn.execute(
+            "SELECT * FROM subscription_plans WHERE plan_key=?", (plan_key,)
+        ).fetchone()
+        conn.close()
+        plan = dict(plan) if plan else None
+    except Exception:
+        plan = None
+
+    if not plan:
+        await cb.message.answer("❌ الباقة غير موجودة")
+        return
+
+    await state.update_data(selected_plan=plan_key, plan_name=plan.get("plan_name"))
+    await state.set_state(SubStates.waiting_receipt)
 
     kb = InlineKeyboardBuilder()
-    kb.button(text="❌ إلغاء", callback_data="menu:subscribe")
+    kb.button(text="❌ إلغاء", callback_data="menu_subscriptions")
+    kb.adjust(1)
 
-    await cb.message.edit_text(
-        "📸 <b>أرسل صورة إيصال الدفع الآن</b>\n\n"
-        "سيتم مراجعتها وتفعيل حسابك خلال دقائق ✅",
-        reply_markup=kb.as_markup()
+    await cb.message.answer(
+        f"💳 <b>تفعيل باقة: {plan.get('plan_name')}</b>\n\n"
+        f"💰 السعر: <b>{plan.get('price', 0):,} دينار</b>\n\n"
+        f"━━━━━━━━━━━━━━━━━━\n"
+        f"📲 <b>طريقة الدفع:</b>\n"
+        f"1. حوّل المبلغ عبر:\n"
+        f"   • زين كاش: <code>07XXXXXXXXX</code>\n"
+        f"   • آسيا حوالة: <code>07XXXXXXXXX</code>\n\n"
+        f"2. أرسل صورة إيصال التحويل هنا\n\n"
+        f"⏳ سيتم تفعيل حسابك خلال دقائق بعد المراجعة.",
+        reply_markup=kb.as_markup(), parse_mode="HTML"
     )
-    await state.set_state(PaymentStates.waiting_for_receipt)
-    await cb.answer()
 
-@router.message(PaymentStates.waiting_for_receipt, F.photo)
+
+@router.message(SubStates.waiting_receipt, F.photo | F.document)
 async def receive_receipt(message: Message, state: FSMContext):
-    data = await state.get_data()
-    plan_key = data.get("plan_key", "unknown")
-    plan = data.get("plan", PLANS.get(plan_key, {}))
-    plan_name = plan.get("name", plan_key)
-    amount = plan.get("price", 0)
-    days = plan.get("days", 30)
+    data      = await state.get_data()
+    plan_key  = data.get("selected_plan", "unknown")
+    plan_name = data.get("plan_name", "غير محدد")
+    user_id   = str(message.from_user.id)
+    username  = message.from_user.username or "بدون يوزرنيم"
+    full_name = message.from_user.full_name or ""
 
-    photo_id = message.photo[-1].file_id
-    user_id = message.from_user.id
+    # احفظ الدفعة في DB
+    file_id = ""
+    if message.photo:
+        file_id = message.photo[-1].file_id
+    elif message.document:
+        file_id = message.document.file_id
 
-    pid = create_payment(
-        telegram_id=user_id,
-        plan_key=plan_key,
-        plan_name=plan_name,
-        amount=amount,
-        receipt_photo_id=photo_id
-    )
-
-    kb = InlineKeyboardBuilder()
-    kb.button(text=f"✅ تفعيل {days}يوم", callback_data=f"adm_approve:{pid}:{plan_key}:{plan_name}:{user_id}:{days}")
-    kb.button(text="❌ رفض", callback_data=f"adm_reject:{pid}:{user_id}")
-    kb.adjust(2)
-
-    for admin_id in settings.ADMIN_IDS:
-        try:
-            student = get_student(user_id)
-            name = student.get("name", "غير معروف") if student else "غير معروف"
-            await message.bot.send_photo(
-                chat_id=admin_id,
-                photo=photo_id,
-                caption=(
-                    f"💰 <b>طلب اشتراك جديد</b>\n\n"
-                    f"👤 الاسم: <b>{name}</b>\n"
-                    f"🆔 ID: <code>{user_id}</code>\n"
-                    f"📦 الباقة: <b>{plan_name}</b>\n"
-                    f"💵 المبلغ: <b>{amount} دينار</b>\n"
-                    f"📅 المدة: <b>{days} يوم</b>\n"
-                    f"🔢 رقم الطلب: <b>#{pid}</b>"
-                ),
-                reply_markup=kb.as_markup()
-            )
-        except Exception as e:
-            logger.error(f"Failed to notify admin {admin_id}: {e}")
+    try:
+        conn = db()
+        conn.execute(
+            "INSERT INTO payments (telegram_id, plan_key, amount, status, receipt_file_id) "
+            "SELECT ?, plan_key, price, 'pending', ? FROM subscription_plans WHERE plan_key=?",
+            (user_id, file_id, plan_key)
+        )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        logger.error(f"save payment: {e}")
 
     await state.clear()
 
-    kb2 = InlineKeyboardBuilder()
-    kb2.button(text="🏠 الرئيسية", callback_data="menu:main")
+    # أرسل للأدمن
+    from aiogram import Bot
+    from aiogram.client.default import DefaultBotProperties
+    from aiogram.enums import ParseMode
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+    if BOT_TOKEN and ADMIN_IDS:
+        try:
+            bot = Bot(
+                token=BOT_TOKEN,
+                default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+            )
+            admin_text = (
+                f"💳 <b>طلب اشتراك جديد!</b>\n\n"
+                f"👤 {full_name} (@{username})\n"
+                f"🆔 <code>{user_id}</code>\n"
+                f"📦 الباقة: <b>{plan_name}</b>\n\n"
+                f"للتفعيل: /activate_{user_id}"
+            )
+            kb = InlineKeyboardBuilder()
+            kb.button(
+                text="✅ تفعيل الاشتراك",
+                callback_data=f"admin_activate:{user_id}:{plan_key}"
+            )
+            kb.button(
+                text="❌ رفض",
+                callback_data=f"admin_reject:{user_id}"
+            )
+            kb.adjust(1)
+            for admin_id in ADMIN_IDS:
+                try:
+                    if message.photo:
+                        await bot.send_photo(
+                            admin_id, file_id,
+                            caption=admin_text,
+                            reply_markup=kb.as_markup()
+                        )
+                    else:
+                        await bot.send_message(
+                            admin_id, admin_text,
+                            reply_markup=kb.as_markup()
+                        )
+                except Exception as e:
+                    logger.warning(f"notify admin {admin_id}: {e}")
+            await bot.session.close()
+        except Exception as e:
+            logger.error(f"admin notify: {e}")
+
     await message.answer(
         "✅ <b>تم استلام إيصالك!</b>\n\n"
-        "سيتم مراجعة الدفع وتفعيل حسابك خلال دقائق 🎉\n"
-        "ستصلك رسالة تأكيد فور التفعيل.",
-        reply_markup=kb2.as_markup()
+        "سيتم مراجعة طلبك وتفعيل حسابك خلال دقائق.\n"
+        "شكراً لانضمامك لأكاديمية يامن! 🎓",
+        parse_mode="HTML"
     )
 
-@router.callback_query(F.data == "book:code")
-async def book_code_prompt(cb: CallbackQuery, state: FSMContext):
-    kb = InlineKeyboardBuilder()
-    kb.button(text="❌ إلغاء", callback_data="menu:subscribe")
-    await cb.message.edit_text(
-        "📖 <b>تفعيل كتاب يامن</b>\n\n"
-        "أرسل كود التفعيل الموجود في الكتاب المطبوع:",
-        reply_markup=kb.as_markup()
+
+@router.callback_query(F.data.startswith("admin_activate:"))
+async def admin_activate(cb: CallbackQuery):
+    if cb.from_user.id not in ADMIN_IDS:
+        await cb.answer("❌ غير مصرح", show_alert=True)
+        return
+
+    parts    = cb.data.split(":")
+    user_id  = parts[1]
+    plan_key = parts[2]
+
+    try:
+        conn = db()
+        plan = conn.execute(
+            "SELECT * FROM subscription_plans WHERE plan_key=?", (plan_key,)
+        ).fetchone()
+
+        days     = plan["days"] if plan else 30
+        end_date = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
+
+        # فعّل الاشتراك
+        conn.execute(
+            "UPDATE students SET is_paid=1 WHERE telegram_id=?", (user_id,)
+        )
+        # أضف سجل اشتراك
+        conn.execute(
+            "INSERT INTO subscriptions "
+            "(telegram_id, plan_key, plan_name, start_date, end_date, is_active) "
+            "VALUES (?, ?, ?, date('now'), ?, 1)",
+            (user_id, plan_key,
+             plan["plan_name"] if plan else plan_key,
+             end_date)
+        )
+        # حدّث حالة الدفع
+        conn.execute(
+            "UPDATE payments SET status='approved' "
+            "WHERE telegram_id=? AND status='pending'",
+            (user_id,)
+        )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        logger.error(f"activate: {e}")
+        await cb.answer(f"❌ خطأ: {e}", show_alert=True)
+        return
+
+    # أبلغ الطالب
+    try:
+        from aiogram import Bot
+        from aiogram.client.default import DefaultBotProperties
+        from aiogram.enums import ParseMode
+        bot = Bot(
+            token=os.environ.get("BOT_TOKEN", ""),
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
+        await bot.send_message(
+            int(user_id),
+            f"🎉 <b>تم تفعيل اشتراكك!</b>\n\n"
+            f"📦 الباقة: <b>{plan['plan_name'] if plan else plan_key}</b>\n"
+            f"📅 تنتهي في: <b>{end_date}</b>\n\n"
+            f"ابدأ دروسك الآن بكتابة /start 🚀"
+        )
+        await bot.session.close()
+    except Exception as e:
+        logger.warning(f"notify student: {e}")
+
+    await cb.message.edit_caption(
+        cb.message.caption + "\n\n✅ <b>تم التفعيل</b>"
+        if cb.message.caption else "✅ تم التفعيل"
     )
-    await state.set_state(PaymentStates.waiting_for_receipt)
-    await cb.answer()
+    await cb.answer("✅ تم تفعيل الاشتراك!")
+
+
+@router.callback_query(F.data.startswith("admin_reject:"))
+async def admin_reject(cb: CallbackQuery):
+    if cb.from_user.id not in ADMIN_IDS:
+        await cb.answer("❌ غير مصرح", show_alert=True)
+        return
+
+    user_id = cb.data.split(":")[1]
+    try:
+        from aiogram import Bot
+        from aiogram.client.default import DefaultBotProperties
+        from aiogram.enums import ParseMode
+        bot = Bot(
+            token=os.environ.get("BOT_TOKEN", ""),
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
+        await bot.send_message(
+            int(user_id),
+            "❌ <b>تم رفض طلب الاشتراك.</b>\n\n"
+            "يرجى التواصل مع الأدمن للمزيد من المعلومات: @YamenAdmin"
+        )
+        await bot.session.close()
+    except Exception as e:
+        logger.warning(f"reject notify: {e}")
+
+    await cb.answer("تم الرفض")
+    await cb.message.reply("❌ تم رفض الطلب")
