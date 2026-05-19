@@ -216,68 +216,65 @@ def fix_all():
     else:
         print("questions already exist: " + str(count))
 
-    # 10. إصلاح جدول subscription_plans
-    tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
-    if "subscription_plans" in tables:
-        sp_cols = [r[1] for r in conn.execute("PRAGMA table_info(subscription_plans)").fetchall()]
-        sp_fixes = [
-            ("plan_id", "TEXT"),
-            ("name_ar", "TEXT"),
-            ("duration_days", "INTEGER DEFAULT 30"),
-            ("lessons_per_day", "INTEGER DEFAULT 1"),
-            ("features", "TEXT DEFAULT '[]'"),
-            ("emoji", "TEXT DEFAULT '📚'"),
-            ("is_active", "INTEGER DEFAULT 1"),
-        ]
-        for col, defn in sp_fixes:
-            if col not in sp_cols:
-                try:
-                    conn.execute("ALTER TABLE subscription_plans ADD COLUMN " + col + " " + defn)
-                    print("subscription_plans." + col + " added")
-                except Exception as e:
-                    print("skip " + col + ": " + str(e))
-    else:
+        # 10. subscription_plans - الأعمدة الحقيقية: plan_key, plan_name, price, days, speed
+    tables = [r[0] for r in conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+    ).fetchall()]
+
+    if "subscription_plans" not in tables:
         conn.execute(
             "CREATE TABLE subscription_plans ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "plan_id TEXT UNIQUE,"
-            "name_ar TEXT NOT NULL,"
+            "plan_key TEXT UNIQUE NOT NULL,"
+            "plan_name TEXT NOT NULL,"
             "price INTEGER NOT NULL,"
-            "duration_days INTEGER NOT NULL,"
-            "lessons_per_day INTEGER DEFAULT 1,"
+            "days INTEGER NOT NULL,"
+            "speed INTEGER DEFAULT 1,"
             "description TEXT,"
-            "features TEXT DEFAULT '[]',"
+            "emoji TEXT DEFAULT 'P',"
             "is_active INTEGER DEFAULT 1,"
-            "emoji TEXT DEFAULT '📚'"
+            "created_at TEXT DEFAULT CURRENT_TIMESTAMP"
             ")"
         )
-        print("subscription_plans created")
+        print("subscription_plans table created")
 
-    plans = [
-        ("flex_30", "الباقة المرنة 30 يوم", 25000, 30, 1,
-         "درس يومي + تصحيح كتابي", "[]", "P"),
-        ("excellence_90", "باقة التميز 90 يوم", 60000, 90, 1,
-         "90 يوما من التدريب المكثف", "[]", "T"),
-        ("emergency_30", "باقة الطوارئ 30 يوم", 45000, 30, 4,
-         "تدريب مكثف 4 دروس يوميا", "[]", "E"),
-        ("vip_20h", "VIP 20 ساعة خاصة", 400000, 60, 1,
-         "20 ساعة تدريس خاص", "[]", "V"),
+    # أضف plan_id كـ alias إذا لم يكن موجوداً (للتوافق مع الكود القديم)
+    sp_cols = [r[1] for r in conn.execute(
+        "PRAGMA table_info(subscription_plans)"
+    ).fetchall()]
+    if "plan_id" not in sp_cols:
+        try:
+            conn.execute("ALTER TABLE subscription_plans ADD COLUMN plan_id TEXT")
+            conn.execute("UPDATE subscription_plans SET plan_id = plan_key")
+            print("Added plan_id alias column")
+        except Exception as e:
+            print("plan_id skip: " + str(e))
+
+    plans_data = [
+        ("flex_30",       "الباقة المرنة 30 يوم",  25000,  30, 1, "درس يومي"),
+        ("excellence_90", "باقة التميز 90 يوم",    60000,  90, 1, "90 يوما"),
+        ("emergency_30",  "باقة الطوارئ 30 يوم",   45000,  30, 4, "مكثف"),
+        ("vip_20h",       "VIP 20 ساعة خاصة",     400000,  60, 1, "خاص"),
     ]
-    # احذف المكررات أولاً
-    seen = []
-    for p in plans:
+
+    for pid, name, price, days, speed, desc in plans_data:
         existing = conn.execute(
-            "SELECT id FROM subscription_plans WHERE plan_id=?", (p[0],)
+            "SELECT id FROM subscription_plans WHERE plan_key=?", (pid,)
         ).fetchone()
         if not existing:
             conn.execute(
-                "INSERT INTO subscription_plans "
-                "(plan_id, name_ar, price, duration_days, lessons_per_day, description, features, emoji) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                p
+                "INSERT INTO subscription_plans (plan_key, plan_name, price, days, speed, description) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (pid, name, price, days, speed, desc)
             )
-            seen.append(p[0])
-    print("plans ready: " + str(seen))
+            print("Plan added: " + pid)
+        else:
+            conn.execute(
+                "UPDATE subscription_plans SET plan_name=?, price=?, days=?, speed=?, description=? "
+                "WHERE plan_key=?",
+                (name, price, days, speed, desc, pid)
+            )
+            print("Plan updated: " + pid)
 
     conn.commit()
     conn.close()
