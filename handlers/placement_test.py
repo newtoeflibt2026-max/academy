@@ -35,14 +35,16 @@ def save_placement_result(user_id, score, ok, total):
 
         if "placement_done" in cols and "placement_score" in cols:
             conn.execute(
-                "UPDATE students SET placement_done=1, placement_score=?, level=? WHERE user_id=?",
-                (score, level, user_id)
-            )
+                "UPDATE students SET placement_done=1, placement_score=?, level=? WHERE telegram_id=?",
+                (score, level, str(user_id))
+)
+
         else:
             conn.execute(
-                "UPDATE students SET level=? WHERE user_id=?",
-                (level, user_id)
-            )
+                "UPDATE students SET level=? WHERE telegram_id=?",
+                (level, str(user_id))
+)
+
         conn.commit()
         conn.close()
         return level
