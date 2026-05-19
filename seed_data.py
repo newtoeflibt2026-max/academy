@@ -178,6 +178,69 @@ def seed():
                VALUES (?,?,?,?,?,?,?)""",
             plan
         )
+    # ══ الدروس الـ 12 ══
+    lessons_data = [
+        (1, 1, "Reading Skill 1: Main Idea", "reading",
+         "Finding the main idea is the most important reading skill.",
+         "main idea, topic sentence, paragraph, central theme",
+         "", 20),
+        (1, 2, "Reading Skill 2: Supporting Details", "reading",
+         "Supporting details explain or prove the main idea.",
+         "supporting details, evidence, examples, facts",
+         "", 20),
+        (1, 3, "Reading Skill 3: Vocabulary in Context", "reading",
+         "Use context clues to understand unknown words.",
+         "context clues, inference, definition, synonym",
+         "", 20),
+        (1, 4, "Reading Skill 4: Making Inferences", "reading",
+         "An inference is a conclusion drawn from evidence in the text.",
+         "inference, conclude, suggest, imply, indicate",
+         "", 25),
+        (1, 5, "Reading Skill 5: Author's Purpose", "reading",
+         "Authors write to inform, persuade, or entertain.",
+         "purpose, inform, persuade, entertain, argument",
+         "", 25),
+        (1, 6, "Reading Skill 6: Fact vs Opinion", "reading",
+         "A fact can be proven. An opinion is a personal belief.",
+         "fact, opinion, believe, argue, evidence, prove",
+         "", 25),
+        (2, 1, "Reading Skill 7: Cause and Effect", "reading",
+         "Cause and effect relationships explain why things happen.",
+         "cause, effect, because, therefore, as a result, consequently",
+         "", 30),
+        (2, 2, "Reading Skill 8: Compare and Contrast", "reading",
+         "Compare means to find similarities. Contrast means to find differences.",
+         "compare, contrast, similarly, however, on the other hand, whereas",
+         "", 30),
+        (2, 3, "Reading Skill 9: Text Organization", "reading",
+         "Academic texts are organized with introduction, body, and conclusion.",
+         "introduction, conclusion, furthermore, in addition, finally",
+         "", 30),
+        (2, 4, "Reading Skill 10: Critical Reading", "reading",
+         "Critical reading means evaluating the author's arguments and evidence.",
+         "evaluate, argument, evidence, bias, perspective, claim",
+         "", 35),
+        (2, 5, "Reading Skill 11: Academic Vocabulary", "reading",
+         "TOEFL uses academic vocabulary. Learn high-frequency academic words.",
+         "analyze, establish, indicate, significant, approach, concept",
+         "", 35),
+        (2, 6, "Reading Skill 12: Reading for TOEFL", "reading",
+         "TOEFL reading passages are 700 words. Practice speed and accuracy.",
+         "passage, paragraph, question type, detail, purpose, organization",
+         "", 40),
+    ]
+
+    conn.execute("DELETE FROM lessons")
+    for stage, order_num, title, skill_type, content, vocabulary, grammar_rule, xp in lessons_data:
+        conn.execute(
+            """INSERT INTO lessons
+               (stage, order_num, title, skill_type, content,
+                vocabulary, grammar_rule, xp_reward, is_active)
+               VALUES (?,?,?,?,?,?,?,?,1)""",
+            (stage, order_num, title, skill_type, content,
+             vocabulary, grammar_rule, xp)
+        )
+    print(f"Added {len(lessons_data)} lessons")
 
     conn.commit()
     conn.close()
