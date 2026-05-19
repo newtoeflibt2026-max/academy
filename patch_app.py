@@ -1,40 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request, jsonify, render_template, send_file
-import json, os, re
-from datetime import datetime
-from database import (
-    init_db, seed_demo_data, get_db,
-    get_student_by_id, get_student_by_telegram,
-    get_all_students, get_daily_tasks, toggle_task,
-    get_errors, get_leaderboard, get_admin_stats,
-    get_all_questions, get_all_payments,
-    get_writing_corrections_today, increment_writing_corrections,
-    save_writing_submission, save_speaking_submission
-)
+"""
+patch_app.py - يضيف المسارات الناقصة لـ app.py
+"""
+import os
 
-app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+APP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "app.py")
 
-# تهيئة قاعدة البيانات عند بدء التشغيل
-with app.app_context():
-    init_db()
-    seed_demo_data()
-# ─── Admin Routes Registration ───────────────────────────────
-try:
-    from admin_routes import register_admin_routes
-    register_admin_routes(app)
-    print('✅ Admin routes registered')
-except Exception as _e:
-    print(f'[WARN] admin_routes: {_e}')
-
-
-@app.route('/sw.js')
-def service_worker():
-    from flask import send_from_directory
-    return send_from_directory('static', 'sw.js', mimetype='application/javascript')
-
+STUDENTS_ROUTE = '''
 @app.route('/api/admin/students')
 def api_admin_students():
     try:
@@ -55,8 +27,9 @@ def api_admin_students():
         return jsonify({'students': rows, 'total': len(rows)})
     except Exception as e:
         return jsonify({'error': str(e), 'students': []}), 200
+'''
 
-
+GRADING_ROUTE = '''
 @app.route('/api/admin/grading-rules', methods=['GET'])
 def api_grading_rules_get():
     try:
@@ -128,6 +101,48 @@ def api_grading_rules_delete(rule_id):
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 200
+'''
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+SW_ROUTE = '''
+@app.route('/sw.js')
+def service_worker():
+    return send_from_directory('static', 'sw.js', mimetype='application/javascript')
+'''
+
+with open(APP_PATH, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+marker = "if __name__ == '__main__':"
+marker2 = 'if __name__ == "__main__":'
+
+insert_marker = marker if marker in content else marker2
+
+changed = False
+
+if '/api/admin/students' not in content:
+    content = content.replace(insert_marker, STUDENTS_ROUTE + '\n' + insert_marker)
+    print("added /api/admin/students route")
+    changed = True
+else:
+    print("/api/admin/students already exists")
+
+if '/api/admin/grading-rules' not in content:
+    content = content.replace(insert_marker, GRADING_ROUTE + '\n' + insert_marker)
+    print("added /api/admin/grading-rules routes")
+    changed = True
+else:
+    print("/api/admin/grading-rules already exists")
+
+if '/sw.js' not in content:
+    content = content.replace(insert_marker, SW_ROUTE + '\n' + insert_marker)
+    print("added /sw.js route")
+    changed = True
+else:
+    print("/sw.js already exists")
+
+if changed:
+    with open(APP_PATH, 'w', encoding='utf-8') as f:
+        f.write(content)
+    print("app.py updated!")
+else:
+    print("no changes needed")
