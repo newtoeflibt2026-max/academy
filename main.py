@@ -15,8 +15,6 @@ from handlers.admin import router as admin_router
 def run_flask():
     try:
         from app import app
-        from admin_routes import register_admin_routes
-        register_admin_routes(app)
         print(f"[Flask] starting on port {settings.PORT}")
         app.run(host="0.0.0.0", port=settings.PORT, debug=False, use_reloader=False)
     except Exception as e:
@@ -68,10 +66,6 @@ async def run_bot():
 # ─── Entry point ─────────────────────────────────────────
 if __name__ == "__main__":
     logging.basicConfig(level=logging.WARNING)
-
-    # شغّل Flask في thread منفصل
     flask_thread = threading.Thread(target=run_flask, daemon=True)
     flask_thread.start()
-
-    # شغّل البوت في الـ event loop الرئيسي
     asyncio.run(run_bot())
