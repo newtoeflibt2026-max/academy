@@ -1,3 +1,16 @@
+import sqlite3
+for db_name in ['instance/academy.db', 'instance/database_v2.db']:
+    try:
+        conn = sqlite3.connect(db_name)
+        cursor = conn.cursor()
+        cursor.execute('ALTER TABLE lessons ADD COLUMN description TEXT;')
+        conn.commit()
+        conn.close()
+        print(f'? Migration successful for {db_name}')
+    except sqlite3.OperationalError:
+        print(f'?? Column description already exists in {db_name}')
+    except Exception as e:
+        print(f'? Migration error for {db_name}: {e}')
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -113,4 +126,5 @@ if __name__ == "__main__":
 
     # البوت في الـ main event loop
     asyncio.run(run_bot())
+
 
