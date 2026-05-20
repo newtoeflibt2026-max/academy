@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -9,24 +9,34 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #0f0f1a;
-    --bg2:       #1a1a2e;
-    --bg3:       #16213e;
-    --card:      #1e1e35;
-    --card2:     #252545;
-    --accent:    #6c63ff;
-    --accent2:   #a78bfa;
+    --bg:        #f8fafc;
+    --bg2:       #f1f5f9;
+    --bg3:       #e2e8f0;
+    --card:      #ffffff;
+    --card2:     #f8fafc;
+    --accent:    #6366f1;
+    --accent2:   #8b5cf6;
     --gold:      #f59e0b;
-    --green:     #10b981;
+    --green:     #22c55e;
     --red:       #ef4444;
     --blue:      #3b82f6;
-    --text:      #e2e8f0;
-    --text2:     #94a3b8;
+    --text:      #0f172a;
+    --text2:     #475569;
     --text3:     #64748b;
+    --border:    #e2e8f0;
     --radius:    16px;
     --radius-sm: 10px;
-    --shadow:    0 4px 24px rgba(108,99,255,0.15);
+    --shadow:    0 4px 16px rgba(99,102,241,0.08);
   }
+
+  /* Force light theme on body and main containers */
+  body, html { background: #f8fafc !important; color: #0f172a !important; }
+  .tab-content, .container, main { background: transparent !important; color: #0f172a !important; }
+  .card, .skill-card, .stat-card, .section { background: #ffffff !important; border: 1px solid #e2e8f0 !important; }
+  .bottom-nav { background: #ffffff !important; border-top: 1px solid #e2e8f0 !important; box-shadow: 0 -4px 12px rgba(15,23,42,0.05) !important; }
+  .nav-item { color: #64748b !important; }
+  .nav-item.active { color: #6366f1 !important; }
+  .section-title { color: #0f172a !important; }
 
   html, body {
     background: var(--bg);
@@ -123,7 +133,7 @@
   }
   .xp-value { color: var(--accent2); font-weight: 700; }
   .xp-bar-wrap {
-    background: rgba(255,255,255,0.1);
+    background: rgba(15,23,42,0.08);
     border-radius: 999px;
     height: 10px;
     overflow: hidden;
@@ -162,7 +172,7 @@
     border-radius: var(--radius-sm);
     padding: 14px 8px;
     text-align: center;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(15,23,42,0.04);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: default;
   }
@@ -201,7 +211,7 @@
     background: var(--card);
     border-radius: var(--radius-sm);
     padding: 14px;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(15,23,42,0.04);
     transition: transform 0.2s;
   }
   .skill-card:hover { transform: translateY(-2px); }
@@ -215,7 +225,7 @@
   }
   .skill-xp { font-size: 11px; color: var(--accent2); font-weight: 700; }
   .skill-bar-wrap {
-    background: rgba(255,255,255,0.08);
+    background: rgba(15,23,42,0.06);
     border-radius: 999px;
     height: 6px;
     overflow: hidden;
@@ -275,7 +285,7 @@
   }
   .mission-bar-wrap {
     flex: 1;
-    background: rgba(255,255,255,0.08);
+    background: rgba(15,23,42,0.06);
     border-radius: 999px;
     height: 8px;
     overflow: hidden;
@@ -295,7 +305,7 @@
     background: var(--card);
     border-radius: var(--radius-sm);
     padding: 14px;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(15,23,42,0.04);
     transition: all 0.2s;
     cursor: pointer;
     text-decoration: none;
@@ -336,7 +346,7 @@
     background: var(--card);
     border-radius: var(--radius-sm);
     padding: 12px 14px;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(15,23,42,0.04);
   }
   .leader-item.me {
     border-color: rgba(108,99,255,0.5);
@@ -350,8 +360,8 @@
     flex-shrink: 0;
   }
   .rank-1 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
-  .rank-2 { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: #000; }
-  .rank-3 { background: linear-gradient(135deg, #b45309, #d97706); color: #fff; }
+  .rank-2 { background: linear-gradient(135deg, #64748b, #475569); color: #000; }
+  .rank-3 { background: linear-gradient(135deg, #b45309, #d97706); color: #0f172a; }
   .rank-n { background: var(--card2); color: var(--text2); font-size: 12px; }
   .leader-name  { flex: 1; font-size: 14px; font-weight: 600; }
   .leader-xp    { font-size: 13px; color: var(--gold); font-weight: 700; }
@@ -363,7 +373,7 @@
     width: 100%; max-width: 480px;
     background: rgba(26,26,46,0.95);
     backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(15,23,42,0.06);
     display: flex;
     padding: 8px 0 12px;
     z-index: 100;
@@ -435,7 +445,7 @@
   }
   .grad-locked {
     background: linear-gradient(135deg, var(--card), var(--card2));
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(15,23,42,0.06);
   }
   .grad-unlocked {
     background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(59,130,246,0.2));
@@ -474,7 +484,7 @@
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff;
+    color: #0f172a;
     box-shadow: 0 4px 15px rgba(108,99,255,0.4);
   }
   .btn-primary:hover {
@@ -601,7 +611,50 @@
     </div>
 
     <!-- Daily Mission -->
-    <div class="section-title">🎯 مهمة اليوم</div>
+    <div class="lessons-hero" onclick="goToLessons()">
+  <div class="lessons-hero-icon">📚</div>
+  <div class="lessons-hero-body">
+    <div class="lessons-hero-title">دروسي التعليمية</div>
+    <div class="lessons-hero-sub"><span id="lessonsCount">12</span> درس في انتظارك — ابدأ رحلتك الآن</div>
+  </div>
+  <div class="lessons-hero-arrow">←</div>
+</div>
+
+<style>
+.lessons-hero {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff;
+  border-radius: 18px;
+  padding: 20px 22px;
+  margin: 16px 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(99,102,241,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.lessons-hero:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99,102,241,0.35);
+}
+.lessons-hero-icon {
+  font-size: 44px;
+  background: rgba(255,255,255,0.2);
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.lessons-hero-body { flex: 1; }
+.lessons-hero-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.lessons-hero-sub { font-size: 13px; opacity: 0.92; }
+.lessons-hero-arrow {
+  font-size: 28px; font-weight: 700; opacity: 0.8;
+}
+</style>
+
+<div class="section-title">🎯 مهمة اليوم</div>
     <div class="mission-card" id="missionCard">
       <div class="mission-header">
         <div class="mission-tag">📚 درس يومي</div>
@@ -742,6 +795,30 @@ const studentId = new URLSearchParams(window.location.search).get('student_id')
 // ══════════════════════════════════════
 // Tab Switching
 // ══════════════════════════════════════
+// Save student_id to localStorage so lesson pages can read it
+if (studentId) {
+  try { localStorage.setItem('yamen_student_id', studentId); } catch(e){}
+}
+
+// Click on lessons hero card → open lessons tab
+function goToLessons() {
+  const btn = document.querySelector('.bottom-nav .nav-item[onclick*="lessons"]');
+  if (btn) btn.click();
+  else switchTab('lessons', null);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Update lesson count on dashboard
+async function updateLessonCount() {
+  try {
+    const r = await fetch('/api/lessons');
+    const d = await r.json();
+    const el = document.getElementById('lessonsCount');
+    if (el && d.lessons) el.textContent = d.lessons.length;
+  } catch(e){}
+}
+setTimeout(updateLessonCount, 500);
+
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -888,17 +965,27 @@ async function loadLessons() {
       writing:'icon-writing', grammar:'icon-grammar', vocabulary:'icon-vocabulary'
     };
 
-    // Group by stage
-    const stages = {};
+    // Group by skill (section)
+    const sections = {
+      reading:    { name: 'القراءة 📖',   icon: '📖', list: [] },
+      listening:  { name: 'الاستماع 🎧',  icon: '🎧', list: [] },
+      speaking:   { name: 'المحادثة 🗣️', icon: '🗣️', list: [] },
+      writing:    { name: 'الكتابة ✍️',   icon: '✍️', list: [] },
+      grammar:    { name: 'القواعد 📝',   icon: '📝', list: [] },
+      vocabulary: { name: 'المفردات 📚',  icon: '📚', list: [] },
+    };
     lessons.forEach(l => {
-      const s = l.stage || 1;
-      (stages[s] = stages[s] || []).push(l);
+      const sk = (l.skill_type || l.skill || 'reading').toLowerCase();
+      if (sections[sk]) sections[sk].list.push(l);
+      else sections.reading.list.push(l);
     });
 
     let html = '';
-    Object.keys(stages).sort().forEach(s => {
-      html += `<div class="section-title">المرحلة ${s}</div>`;
-      stages[s].forEach(l => {
+    Object.keys(sections).forEach(key => {
+      const sec = sections[key];
+      if (!sec.list.length) return;
+      html += `<div class="section-title">${sec.icon} ${sec.name} <span style="color:#64748b;font-weight:400;font-size:13px">(${sec.list.length} دروس)</span></div>`;
+      sec.list.forEach(l => {
         const sk = l.skill_type || 'reading';
         html += `
           <div class="lesson-item" onclick="openLesson(${l.id})">
@@ -924,8 +1011,9 @@ async function loadLessons() {
 }
 
 function openLesson(id) {
-  if (tg) tg.close();
-  window.open(`/lesson/${id}`, '_blank');
+  if (studentId) localStorage.setItem('yamen_student_id', studentId);
+  const url = studentId ? `/lesson/${id}?student_id=${studentId}` : `/lesson/${id}`;
+  window.location.href = url;
 }
 
 // ══════════════════════════════════════

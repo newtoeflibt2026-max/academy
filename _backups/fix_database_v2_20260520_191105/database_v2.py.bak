@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-
+"""database_v2.py - bridge to db.py"""
+from db import *
+from bot_database import (
+    init_bot_db, get_db, create_student, get_student,
+    update_student, get_all_students, add_xp,
+    get_daily_missions, get_questions, get_payments,
+    add_payment, verify_payment, get_setting, set_setting,
+    check_graduation, get_phase_settings, get_leaderboard
+)

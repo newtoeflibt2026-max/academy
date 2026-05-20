@@ -11,7 +11,15 @@ app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 
 # ─── Pages ───────────────────────────────────────────────
 @app.route("/")
+def index():
+    from flask import render_template
+    return render_template("admin_dashboard.html")
+
 @app.route("/student")
+def student():
+    from flask import render_template
+    return render_template("student_dashboard.html")
+
 @app.route("/api/admin/stats")
 def api_stats():
     conn = get_db()
@@ -39,7 +47,7 @@ def api_students():
                 (f"%{q}%",f"%{q}%",f"%{q}%")).fetchall()
         else:
             rows = conn.execute("SELECT * FROM students ORDER BY xp DESC LIMIT 200").fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"students":[dict(r) for r in rows]})
     finally:
         conn.close()
 
@@ -86,7 +94,7 @@ def api_get_questions():
             rows = conn.execute("SELECT * FROM questions WHERE skill=? ORDER BY id DESC", (skill,)).fetchall()
         else:
             rows = conn.execute("SELECT * FROM questions ORDER BY id DESC LIMIT 200").fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"questions":[dict(r) for r in rows]})
     finally:
         conn.close()
 
@@ -123,7 +131,7 @@ def api_get_lessons():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM lessons ORDER BY phase, order_num").fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"lessons":[dict(r) for r in rows]})
     finally:
         conn.close()
 
@@ -177,7 +185,7 @@ def api_get_missions():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM daily_missions ORDER BY id DESC").fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"missions":[dict(r) for r in rows]})
     finally:
         conn.close()
 
@@ -211,7 +219,7 @@ def api_get_plans():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM subscription_plans ORDER BY price").fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"plans":[dict(r) for r in rows]})
     finally:
         conn.close()
 
@@ -280,7 +288,7 @@ def api_get_payments():
         rows = conn.execute("""SELECT p.*, s.full_name, s.username
             FROM payments p LEFT JOIN students s ON p.user_id=s.telegram_id
             ORDER BY p.created_at DESC LIMIT 100""").fetchall()
-        return jsonify([dict(r) for r in rows])
+        return jsonify({"payments":[dict(r) for r in rows]})
     finally:
         conn.close()
 
@@ -539,3 +547,776 @@ def api_add_student():
         conn.close()
 
 # ── Phase Settings ────────────────────────────────────────
+
+# ─── Entry point ──────────────────────────────────────────────────────────────
+
+@app.route("/api/student/profile", methods=["GET"])
+def api_student_profile():
+    uid = request.args.get("user_id", "")
+    if not uid:
+        return jsonify({"error": "user_id required"}), 400
+    conn = get_db()
+    try:
+        # ابحث بكلا العمودين
+        s = conn.execute(
+            "SELECT * FROM students WHERE user_id=? OR telegram_id=?",
+            (uid, uid)
+        ).fetchone()
+        if not s:
+            return jsonify({"found": False})
+        d = dict(s)
+        return jsonify({
+            "found": True,
+            "is_paid": bool(d.get("is_paid", 0)),
+            "is_active": bool(d.get("is_active", 0)),
+            "full_name": d.get("full_name") or d.get("name", ""),
+            "level": d.get("level", "beginner"),
+            "xp": d.get("xp", 0) or d.get("total_xp", 0),
+            "streak": d.get("streak", 0) or d.get("streak_days", 0),
+            "placement_done": bool(d.get("placement_done", 0)),
+            "current_phase": d.get("current_phase", 1) or d.get("stage", 1),
+            "tasks_completed": d.get("tasks_completed", 0),
+            "completed_lessons": d.get("completed_lessons", 0),
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+# ═══════════════════════════════════════════════════════════
+# Payment Approval / Rejection endpoints
+# ═══════════════════════════════════════════════════════════
+
+@app.route("/api/admin/payments/<int:pid>/approve", methods=["POST"])
+def api_approve_payment(pid):
+    from datetime import datetime
+    conn = get_db()
+    try:
+        pay = conn.execute("SELECT * FROM payments WHERE id=?", (pid,)).fetchone()
+        if not pay:
+            return jsonify({"error": "Payment not found"}), 404
+        pay = dict(pay)
+        uid = pay.get("user_id") or pay.get("telegram_id")
+        plan_id = pay.get("plan_id", 1)
+
+        # تفعيل الطالب
+        conn.execute("""
+            UPDATE students SET is_paid=1, is_active=1,
+            subscription_type='paid',
+            last_activity=?
+            WHERE user_id=? OR telegram_id=?
+        """, (datetime.now().isoformat(), uid, str(uid)))
+
+        # تحديث حالة الدفع
+        conn.execute("""
+            UPDATE payments SET status='approved', verified_at=?
+            WHERE id=?
+        """, (datetime.now().isoformat(), pid))
+
+        conn.commit()
+
+        # إشعار الطالب عبر البوت
+        try:
+            import asyncio, os
+            from aiogram import Bot
+            from aiogram.client.default import DefaultBotProperties
+            from aiogram.enums import ParseMode
+            token = os.environ.get("BOT_TOKEN", "")
+            if token and uid:
+                async def notify():
+                    bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+                    await bot.send_message(
+                        chat_id=int(uid),
+                        text="✅ <b>تم تفعيل اشتراكك!</b>\n\nمرحباً بك في أكاديمية يامن للتوفل 🎓\nابدأ رحلتك التعليمية الآن!"
+                    )
+                    await bot.session.close()
+                asyncio.run(notify())
+        except Exception as e:
+            print(f"Bot notify error: {e}")
+
+        return jsonify({"ok": True, "message": "تم تفعيل الطالب"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/admin/payments/<int:pid>/reject", methods=["POST"])
+def api_reject_payment(pid):
+    conn = get_db()
+    try:
+        pay = conn.execute("SELECT * FROM payments WHERE id=?", (pid,)).fetchone()
+        if not pay:
+            return jsonify({"error": "Payment not found"}), 404
+        pay = dict(pay)
+        uid = pay.get("user_id") or pay.get("telegram_id")
+
+        conn.execute("UPDATE payments SET status='rejected' WHERE id=?", (pid,))
+        conn.commit()
+
+        # إشعار الطالب
+        try:
+            import asyncio, os
+            from aiogram import Bot
+            from aiogram.client.default import DefaultBotProperties
+            from aiogram.enums import ParseMode
+            token = os.environ.get("BOT_TOKEN", "")
+            if token and uid:
+                async def notify():
+                    bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+                    await bot.send_message(
+                        chat_id=int(uid),
+                        text="❌ <b>تم رفض طلب الاشتراك</b>\n\nيرجى التواصل مع الأدمن للمزيد من المعلومات."
+                    )
+                    await bot.session.close()
+                asyncio.run(notify())
+        except Exception as e:
+            print(f"Bot notify error: {e}")
+
+        return jsonify({"ok": True, "message": "تم رفض الطلب"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/admin/students/<int:uid>/delete", methods=["DELETE"])
+def api_delete_student(uid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM students WHERE user_id=? OR telegram_id=?", (uid, str(uid)))
+        conn.execute("DELETE FROM payments WHERE user_id=? OR telegram_id=?", (uid, str(uid)))
+        conn.commit()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/admin/students/<int:uid>/send-message", methods=["POST"])
+def api_send_message_to_student(uid):
+    d = request.json or {}
+    text = d.get("text", "").strip()
+    if not text:
+        return jsonify({"error": "النص مطلوب"}), 400
+    try:
+        import asyncio, os
+        from aiogram import Bot
+        from aiogram.client.default import DefaultBotProperties
+        from aiogram.enums import ParseMode
+        token = os.environ.get("BOT_TOKEN", "")
+        if not token:
+            return jsonify({"error": "BOT_TOKEN غير مضبوط"}), 500
+        async def send():
+            bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+            await bot.send_message(chat_id=uid, text=text)
+            await bot.session.close()
+        asyncio.run(send())
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+# ════════════════════════════════════════════════════════════
+# 📚 LESSON CONTENT MANAGEMENT — Phase 2A
+# ════════════════════════════════════════════════════════════
+
+ALLOWED_ITEM_TABLES = {
+    "words":     "lesson_letter_fill",
+    "texts":     "lesson_practice_texts",
+    "questions": "lesson_questions",
+    "dragdrop":  "lesson_drag_drop",
+}
+
+def _get_lesson_or_404(lid):
+    conn = get_db()
+    row = conn.execute("SELECT * FROM lessons WHERE id=?", (lid,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+@app.route("/api/admin/lessons/<int:lid>/full", methods=["GET"])
+def api_lesson_full(lid):
+    """Return everything for one lesson."""
+    try:
+        lesson = _get_lesson_or_404(lid)
+        if not lesson:
+            return jsonify({"error": "Lesson not found"}), 404
+
+        # parse explanation_json if exists
+        try:
+            lesson["explanation"] = json.loads(lesson.get("explanation_json") or "{}")
+        except Exception:
+            lesson["explanation"] = {}
+
+        conn = get_db()
+        words = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_letter_fill WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for w in words:
+            try:
+                w["letter_array"] = json.loads(w.get("letter_array_json") or "[]")
+            except Exception:
+                w["letter_array"] = []
+
+        texts = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_practice_texts WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for t in texts:
+            try:
+                t["answers"] = json.loads(t.get("answers_json") or "{}")
+            except Exception:
+                t["answers"] = {}
+
+        questions = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_questions WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for q in questions:
+            try:
+                q["options"] = json.loads(q.get("options_json") or "{}")
+            except Exception:
+                q["options"] = {}
+
+        dragdrops = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_drag_drop WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for d in dragdrops:
+            try:
+                d["items"] = json.loads(d.get("items_json") or "[]")
+                d["correct_order"] = json.loads(d.get("correct_order_json") or "[]")
+            except Exception:
+                d["items"] = []
+                d["correct_order"] = []
+
+        conn.close()
+        return jsonify({
+            "lesson": lesson,
+            "words": words,
+            "texts": texts,
+            "questions": questions,
+            "dragdrops": dragdrops,
+            "counts": {
+                "words": len(words),
+                "texts": len(texts),
+                "questions": len(questions),
+                "dragdrops": len(dragdrops),
+            }
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/words", methods=["POST"])
+def api_add_word(lid):
+    """Add a letter-fill word to a lesson."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        word = (d.get("word") or "").strip().upper()
+        if not word:
+            return jsonify({"error": "word required"}), 400
+        letter_array = d.get("letter_array") or list(word)
+
+        conn = get_db()
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_letter_fill WHERE lesson_id=?",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_letter_fill
+            (lesson_id, word, translation, sentence, hint, letter_array_json, order_num)
+            VALUES (?,?,?,?,?,?,?)
+        """, (lid, word, d.get("translation",""), d.get("sentence",""),
+              d.get("hint",""), json.dumps(letter_array, ensure_ascii=False), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/texts", methods=["POST"])
+def api_add_text(lid):
+    """Add a practice text."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        content = (d.get("content") or "").strip()
+        if not content:
+            return jsonify({"error": "content required"}), 400
+
+        conn = get_db()
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_practice_texts WHERE lesson_id=?",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_practice_texts
+            (lesson_id, text_id, level, text_type, content, answers_json, order_num)
+            VALUES (?,?,?,?,?,?,?)
+        """, (lid, d.get("text_id",""), d.get("level","easy"),
+              d.get("text_type","complete_words"), content,
+              json.dumps(d.get("answers", {}), ensure_ascii=False), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/questions", methods=["POST"])
+def api_add_lesson_question(lid):
+    """Add a question to a lesson (timer default 30s)."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        question = (d.get("question") or "").strip()
+        if not question:
+            return jsonify({"error": "question required"}), 400
+
+        conn = get_db()
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_questions WHERE lesson_id=? AND order_num<999",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_questions
+            (lesson_id, q_id, q_type, question, passage_ref,
+             options_json, correct_answer, explanation, evidence,
+             common_trap, tip, timer_seconds, order_num)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (lid, d.get("q_id",""), d.get("q_type","factual"),
+              question, d.get("passage_ref",""),
+              json.dumps(d.get("options", {}), ensure_ascii=False),
+              d.get("correct_answer","A"),
+              d.get("explanation",""), d.get("evidence",""),
+              d.get("common_trap",""), d.get("tip",""),
+              int(d.get("timer_seconds", 30)), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/dragdrop", methods=["POST"])
+def api_add_dragdrop(lid):
+    """Add a drag-and-drop exercise."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        title = (d.get("title") or "").strip()
+        items = d.get("items") or []
+        correct_order = d.get("correct_order") or []
+        if not items:
+            return jsonify({"error": "items required"}), 400
+
+        conn = get_db()
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_drag_drop WHERE lesson_id=?",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_drag_drop
+            (lesson_id, title, exercise_type, instructions,
+             items_json, correct_order_json, order_num)
+            VALUES (?,?,?,?,?,?,?)
+        """, (lid, title, d.get("exercise_type","sentence_order"),
+              d.get("instructions",""),
+              json.dumps(items, ensure_ascii=False),
+              json.dumps(correct_order, ensure_ascii=False), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/import-json", methods=["POST"])
+def api_import_lesson_json():
+    """Import a full lesson from JSON (single lesson object or {'lessons': [...]})"""
+    try:
+        d = request.get_json(force=True) or {}
+        # supports both: single lesson, or { "lessons": [...] }
+        lessons_in = d.get("lessons") if "lessons" in d else [d]
+        if not isinstance(lessons_in, list) or not lessons_in:
+            return jsonify({"error": "no lessons in JSON"}), 400
+
+        conn = get_db()
+        cur = conn.cursor()
+        added = []
+
+        XP_DEFAULT = 40
+
+        for L in lessons_in:
+            code = (L.get("lesson_id") or L.get("code") or "").strip()
+            title = (L.get("title") or "").strip() or "Untitled"
+            focus = L.get("focus_point","")
+            exp_json = json.dumps(L.get("explanation", {}), ensure_ascii=False)
+            xp = int(L.get("xp_reward", XP_DEFAULT))
+            skill = L.get("skill","reading")
+            phase = int(L.get("phase", 1))
+            timer_min = int(L.get("timer_minutes", 15))
+
+            # next order_num
+            order_num = (cur.execute(
+                "SELECT COALESCE(MAX(order_num),0)+1 FROM lessons").fetchone()[0])
+
+            cur.execute("""
+                INSERT INTO lessons
+                (title, title_ar, lesson_code, focus_point, explanation_json,
+                 skill, phase, order_num, xp_reward, timer_minutes, is_active, content)
+                VALUES (?,?,?,?,?,?,?,?,?,?,1,?)
+            """, (title, title, code, focus, exp_json, skill, phase,
+                  order_num, xp, timer_min, focus))
+            lesson_pk = cur.lastrowid
+
+            # words
+            for i, w in enumerate(L.get("letter_fill_exercise",{}).get("target_words",[]), start=1):
+                cur.execute("""
+                    INSERT INTO lesson_letter_fill
+                    (lesson_id, word, translation, sentence, hint, letter_array_json, order_num)
+                    VALUES (?,?,?,?,?,?,?)
+                """, (lesson_pk, w.get("word",""), w.get("translation",""),
+                      w.get("sentence",""), w.get("hint",""),
+                      json.dumps(w.get("letter_array",[]), ensure_ascii=False), i))
+
+            # practice texts (all levels merged)
+            order = 0
+            for level_key in ("easy","medium","intermediate","difficult"):
+                for t in L.get("practice_texts",{}).get(level_key, []):
+                    order += 1
+                    cur.execute("""
+                        INSERT INTO lesson_practice_texts
+                        (lesson_id, text_id, level, text_type, content, answers_json, order_num)
+                        VALUES (?,?,?,?,?,?,?)
+                    """, (lesson_pk, t.get("id",""), level_key, "complete_words",
+                          t.get("text",""),
+                          json.dumps(t.get("answers",{}), ensure_ascii=False), order))
+
+            # generic questions list (multiple shapes)
+            def _insert_question(q, qtype, passage=""):
+                cur.execute("""
+                    INSERT INTO lesson_questions
+                    (lesson_id, q_id, q_type, question, passage_ref,
+                     options_json, correct_answer, explanation, evidence,
+                     common_trap, tip, timer_seconds, order_num)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,30,0)
+                """, (lesson_pk, q.get("q_id",""), qtype,
+                      q.get("question",""), q.get("passage", passage),
+                      json.dumps(q.get("options",{}), ensure_ascii=False),
+                      q.get("correct_answer",""),
+                      q.get("explanation",""), q.get("evidence",""),
+                      q.get("common_trap",""), q.get("tip","")))
+
+            pq = L.get("practice_questions", {})
+            type_map = {
+                "factual_questions":"factual",
+                "negative_factual_questions":"negative_factual",
+                "vocabulary_questions":"vocabulary",
+                "inference_questions":"inference",
+                "rhetorical_purpose_questions":"rhetorical",
+                "insert_sentence_questions":"insert_sentence",
+                "paragraph_relationship_questions":"paragraph_relation",
+            }
+            if isinstance(pq, dict):
+                for cat, qlist in pq.items():
+                    if isinstance(qlist, list):
+                        for q in qlist:
+                            _insert_question(q, type_map.get(cat, cat))
+
+            for sk in ("practice_set","practice_set_1","practice_set_2"):
+                ps = L.get(sk, {})
+                for q in ps.get("questions", []):
+                    _insert_question(q, q.get("type","factual").lower().replace(" ","_"),
+                                     ps.get("passage_title",""))
+
+            fq = L.get("final_comprehensive_quiz", {})
+            for q in fq.get("questions", []):
+                _insert_question(q, q.get("type","factual").lower().replace(" ","_"))
+
+            iq = L.get("inference_question", {})
+            if iq:
+                cur.execute("""
+                    INSERT INTO lesson_questions
+                    (lesson_id, q_id, q_type, question, options_json,
+                     correct_answer, explanation, timer_seconds, order_num)
+                    VALUES (?,?,'inference',?,?,?,?,30,999)
+                """, (lesson_pk, f"{code}_final" if code else "final",
+                      iq.get("question",""),
+                      json.dumps(iq.get("options",{}), ensure_ascii=False),
+                      iq.get("correct_answer",""),
+                      iq.get("explanation","")))
+
+            added.append({"id": lesson_pk, "code": code, "title": title})
+
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "added": added, "count": len(added)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lesson-item/<table>/<int:item_id>", methods=["DELETE"])
+def api_delete_lesson_item(table, item_id):
+    """Delete a word/text/question/dragdrop item."""
+    try:
+        tbl = ALLOWED_ITEM_TABLES.get(table)
+        if not tbl:
+            return jsonify({"error": "invalid table"}), 400
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(f"DELETE FROM {tbl} WHERE id=?", (item_id,))
+        conn.commit()
+        affected = cur.rowcount
+        conn.close()
+        return jsonify({"ok": True, "deleted": affected})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lesson-item/<table>/<int:item_id>", methods=["PUT"])
+def api_update_lesson_item(table, item_id):
+    """Update a lesson item (partial update with whitelisted columns)."""
+    try:
+        tbl = ALLOWED_ITEM_TABLES.get(table)
+        if not tbl:
+            return jsonify({"error": "invalid table"}), 400
+        d = request.get_json(force=True) or {}
+
+        # whitelist columns per table
+        allowed_cols = {
+            "lesson_letter_fill":     ["word","translation","sentence","hint","letter_array_json","order_num"],
+            "lesson_practice_texts":  ["text_id","level","text_type","content","answers_json","order_num"],
+            "lesson_questions":       ["q_id","q_type","question","passage_ref","options_json",
+                                       "correct_answer","explanation","evidence","common_trap",
+                                       "tip","timer_seconds","order_num"],
+            "lesson_drag_drop":       ["title","exercise_type","instructions","items_json",
+                                       "correct_order_json","order_num"],
+        }[tbl]
+
+        # auto-convert dict/list fields to JSON string
+        json_fields = {"options","letter_array","answers","items","correct_order"}
+        body = {}
+        for k, v in d.items():
+            if k in json_fields:
+                body[k + "_json"] = json.dumps(v, ensure_ascii=False)
+            else:
+                body[k] = v
+
+        sets, vals = [], []
+        for col in allowed_cols:
+            if col in body:
+                sets.append(f"{col}=?")
+                vals.append(body[col])
+        if not sets:
+            return jsonify({"error": "no valid fields"}), 400
+        vals.append(item_id)
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(f"UPDATE {tbl} SET {', '.join(sets)} WHERE id=?", vals)
+        conn.commit()
+        affected = cur.rowcount
+        conn.close()
+        return jsonify({"ok": True, "updated": affected})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ─── Student Lessons API ─────────────────────────────────
+@app.route("/api/lessons", methods=["GET"])
+def api_student_lessons():
+    """Returns active lessons for students."""
+    conn = get_db()
+    try:
+        rows = conn.execute("""
+            SELECT id, lesson_code, title, title_ar, description,
+                   COALESCE(skill_type, skill) AS skill_type,
+                   COALESCE(skill, skill_type) AS skill,
+                   COALESCE(stage, phase, 1) AS stage,
+                   COALESCE(phase, stage, 1) AS phase,
+                   COALESCE(xp_reward, 20) AS xp_reward,
+                   COALESCE(order_num, id) AS order_num,
+                   focus_point, is_active
+            FROM lessons
+            WHERE COALESCE(is_active, 1) = 1
+            ORDER BY stage, phase, order_num, id
+        """).fetchall()
+        return jsonify({"lessons": [dict(r) for r in rows]})
+    finally:
+        conn.close()
+
+
+@app.route("/api/lessons/<int:lid>", methods=["GET"])
+def api_student_lesson_detail(lid):
+    """Returns one full lesson with words/texts/questions for students."""
+    conn = get_db()
+    try:
+        lesson_row = conn.execute(
+            "SELECT * FROM lessons WHERE id=? AND COALESCE(is_active,1)=1",
+            (lid,)
+        ).fetchone()
+        if not lesson_row:
+            return jsonify({"error": "Lesson not found"}), 404
+        lesson = dict(lesson_row)
+        try:
+            lesson["explanation"] = json.loads(lesson.get("explanation_json") or "{}")
+        except Exception:
+            lesson["explanation"] = {}
+
+        words = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_letter_fill WHERE lesson_id=? ORDER BY order_num, id",
+            (lid,)
+        ).fetchall()]
+        texts = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_practice_texts WHERE lesson_id=? ORDER BY order_num, id",
+            (lid,)
+        ).fetchall()]
+        questions = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_questions WHERE lesson_id=? ORDER BY order_num, id",
+            (lid,)
+        ).fetchall()]
+        dragdrops = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_drag_drop WHERE lesson_id=? ORDER BY order_num, id",
+            (lid,)
+        ).fetchall()]
+        return jsonify({
+            "lesson": lesson,
+            "words": words,
+            "texts": texts,
+            "questions": questions,
+            "dragdrops": dragdrops,
+            "counts": {
+                "words": len(words), "texts": len(texts),
+                "questions": len(questions), "dragdrops": len(dragdrops)
+            }
+        })
+    finally:
+        conn.close()
+
+
+@app.route("/api/lessons/<int:lid>/complete", methods=["POST"])
+def api_student_complete_lesson(lid):
+    """Marks a lesson as completed and awards XP."""
+    data = request.get_json(silent=True) or {}
+    user_id = data.get("user_id") or data.get("telegram_id")
+    if not user_id:
+        return jsonify({"error": "user_id required"}), 400
+    conn = get_db()
+    try:
+        lesson = conn.execute(
+            "SELECT id, xp_reward, COALESCE(skill, skill_type, 'reading') AS skill FROM lessons WHERE id=?",
+            (lid,)
+        ).fetchone()
+        if not lesson:
+            return jsonify({"error": "Lesson not found"}), 404
+        xp = int(lesson["xp_reward"] or 20)
+        skill = lesson["skill"] or "reading"
+        conn.execute(
+            "UPDATE students SET xp = COALESCE(xp,0) + ?, total_xp = COALESCE(total_xp,0) + ? WHERE telegram_id=?",
+            (xp, xp, user_id)
+        )
+        try:
+            conn.execute(
+                "INSERT INTO xp_log (user_id, amount, reason) VALUES (?,?,?)",
+                (user_id, xp, "lesson_" + str(lid) + "_" + skill)
+            )
+        except Exception:
+            pass
+        conn.commit()
+        return jsonify({"ok": True, "xp_awarded": xp, "skill": skill})
+    finally:
+        conn.close()
+
+
+
+# ─── Student Profile by ID (for student_dashboard) ───────
+@app.route("/api/student/<int:uid>", methods=["GET"])
+def api_student_by_id(uid):
+    """Returns full student profile by telegram_id for student dashboard."""
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT * FROM students WHERE telegram_id=?", (uid,)
+        ).fetchone()
+        if not row:
+            return jsonify({"error": "student not found"}), 404
+        d = dict(row)
+        # Normalize fields the dashboard expects
+        d.setdefault("level", "beginner")
+        d.setdefault("xp", d.get("total_xp", 0) or 0)
+        d.setdefault("streak", d.get("streak_days", 0) or 0)
+        d.setdefault("missions_completed", d.get("missions_completed", 0) or 0)
+        d.setdefault("placement_score", d.get("placement_score", 0) or 0)
+        d.setdefault("full_name", d.get("name") or d.get("username") or "طالب")
+        return jsonify(d)
+    finally:
+        conn.close()
+
+
+@app.route("/api/leaderboard", methods=["GET"])
+def api_leaderboard():
+    """Top students by XP for leaderboard tab."""
+    conn = get_db()
+    try:
+        rows = conn.execute("""
+            SELECT telegram_id, full_name, username,
+                   COALESCE(xp, total_xp, 0) AS xp,
+                   COALESCE(streak_days, streak, 0) AS streak,
+                   level
+            FROM students
+            WHERE COALESCE(is_active, 1) = 1
+            ORDER BY xp DESC
+            LIMIT 50
+        """).fetchall()
+        return jsonify({"leaderboard": [dict(r) for r in rows]})
+    finally:
+        conn.close()
+
+
+@app.route("/api/user/graduation-status", methods=["GET"])
+def api_graduation_status():
+    """Returns graduation eligibility for a student."""
+    sid = request.args.get("student_id", type=int)
+    if not sid:
+        return jsonify({"error": "student_id required"}), 400
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT * FROM students WHERE telegram_id=?", (sid,)
+        ).fetchone()
+        if not row:
+            return jsonify({"error": "not found"}), 404
+        d = dict(row)
+        return jsonify({
+            "is_graduated": bool(d.get("is_graduated", 0)),
+            "mock_score": d.get("mock_exam_score") or d.get("mock_score") or 0,
+            "required_score": d.get("required_score") or 80,
+            "tasks_completed": d.get("tasks_completed", 0) or 0,
+            "completed_lessons": d.get("completed_lessons", 0) or 0,
+            "xp": d.get("xp", 0) or 0,
+        })
+    finally:
+        conn.close()
+
+
+
+# ─── Lesson detail page ──────────────────────────────────
+@app.route("/lesson/<int:lid>")
+def lesson_page(lid):
+    """Serves the full lesson page for students."""
+    return render_template("lesson_view.html", lesson_id=lid)
+
+
+if __name__ == "__main__":
+    import os as _os
+    _port = int(_os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=_port, debug=False)

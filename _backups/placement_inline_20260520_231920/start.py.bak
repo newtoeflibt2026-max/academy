@@ -1,0 +1,261 @@
+# -*- coding: utf-8 -*-
+from aiogram import types, Router, F
+from aiogram.filters import CommandStart, Command
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from database_v2 import (
+    create_student, get_student, update_streak,
+    get_skills_progress, check_graduation,
+    get_setting, get_daily_missions, get_leaderboard
+)
+from config import settings
+import logging, sqlite3, os
+from datetime import datetime
+
+logger = logging.getLogger(__name__)
+router = Router(name="start")
+
+DB_PATH = settings.DB_PATH
+WEBAPP_BASE = settings.WEBHOOK_HOST.rstrip("/")
+
+
+def _db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def _save_track_and_target(user_id, track=None, target_score=None):
+    conn = _db()
+    cur = conn.cursor()
+    updates, params = [], []
+    if track:
+        updates.append("track=?"); params.append(track)
+    if target_score is not None:
+        updates.append("target_score=?"); params.append(int(target_score))
+    if updates:
+        cur.execute("SELECT signup_date FROM students WHERE telegram_id=?", (user_id,))
+        row = cur.fetchone()
+        if row and not row["signup_date"]:
+            updates.append("signup_date=?")
+            params.append(datetime.now().isoformat(timespec="seconds"))
+        params.append(user_id)
+        cur.execute(f"UPDATE students SET {','.join(updates)} WHERE telegram_id=?", params)
+        conn.commit()
+    conn.close()
+
+
+def _get_student_setup(user_id):
+    conn = _db()
+    cur = conn.cursor()
+    cur.execute("""SELECT track, target_score, placement_done, placement_score,
+                          placement_path, current_stage_id, is_paid
+                   FROM students WHERE telegram_id=?""", (user_id,))
+    row = cur.fetchone()
+    conn.close()
+    if not row:
+        return {}
+    return dict(row)
+
+
+def kb_choose_track():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🎯 TOEFL iBT الدولي", callback_data="track:toefl")],
+        [InlineKeyboardButton(text="🔒 IELTS — قريباً", callback_data="track:soon")],
+        [InlineKeyboardButton(text="🔒 SAT — قريباً", callback_data="track:soon")],
+        [InlineKeyboardButton(text="🔒 GRE — قريباً", callback_data="track:soon")],
+    ])
+
+
+def kb_choose_target():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🥉 59 — جامعات أساسية", callback_data="target:59")],
+        [InlineKeyboardButton(text="🥈 69 — جامعات متوسطة", callback_data="target:69")],
+        [InlineKeyboardButton(text="🥇 90 — جامعات مرموقة", callback_data="target:90")],
+        [InlineKeyboardButton(text="↩️ رجوع لاختيار المسار", callback_data="back:track")],
+    ])
+
+
+def kb_start_placement(user_id):
+    url = f"{WEBAPP_BASE}/placement?student_id={user_id}"
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", web_app=WebAppInfo(url=url))],
+        [InlineKeyboardButton(text="↩️ تغيير العلامة المستهدفة", callback_data="back:target")],
+    ])
+
+
+def get_main_keyboard(is_paid=False):
+    buttons = [
+        [
+            InlineKeyboardButton(text="📚 دروسي", callback_data="menu_lessons"),
+            InlineKeyboardButton(text="🎯 مهامي اليومية", callback_data="menu_missions"),
+        ],
+        [
+            InlineKeyboardButton(text="📊 تقدمي", callback_data="menu_progress"),
+            InlineKeyboardButton(text="🏆 المتصدرون", callback_data="menu_leaderboard"),
+        ],
+        [
+            InlineKeyboardButton(text="✍️ تدريب الكتابة", callback_data="menu_writing"),
+            InlineKeyboardButton(text="🎧 تدريب الاستماع", callback_data="menu_listening"),
+        ],
+        [InlineKeyboardButton(text="💳 الباقات والاشتراك", callback_data="menu_subscriptions")],
+    ]
+    if is_paid:
+        buttons.append([
+            InlineKeyboardButton(text="📝 Mock Exam", callback_data="menu_mock"),
+            InlineKeyboardButton(text="🎓 التخرج", callback_data="menu_graduation"),
+        ])
+    else:
+        buttons.append([InlineKeyboardButton(text="🔒 Mock Exam (مدفوع)", callback_data="locked_feature")])
+    buttons.append([InlineKeyboardButton(text="⚙️ إعداداتي", callback_data="menu_settings")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+@router.message(CommandStart())
+async def cmd_start(message: types.Message):
+    user_id = message.from_user.id
+    username = message.from_user.username or ""
+    full_name = message.from_user.full_name or ""
+
+    create_student(user_id, username=username, full_name=full_name)
+    student = get_student(user_id)
+    streak = update_streak(user_id)
+    setup = _get_student_setup(user_id)
+
+    if not setup.get("track"):
+        text = (
+            f"مرحباً بك يا <b>{full_name}</b> في أكاديمية يامن! 🎓\n\n"
+            "🚀 <b>اختر المسار الذي تريد التحضير له:</b>\n\n"
+            "🎯 <b>TOEFL iBT الدولي</b> — متاح الآن\n"
+            "🔒 IELTS و SAT و GRE — قريباً جداً\n\n"
+            "ابدأ بالنقر على المسار الذي يناسبك 👇"
+        )
+        await message.answer(text, reply_markup=kb_choose_track())
+        return
+
+    if not setup.get("target_score"):
+        text = (
+            f"👋 أهلاً بعودتك يا <b>{full_name}</b>!\n\n"
+            "🎯 <b>ما هي العلامة المستهدفة في TOEFL iBT؟</b>\n\n"
+            "اختر هدفك وسيُحدد لك بوابة التخرج تلقائياً:\n"
+            "• هدف 59 يعني بوابة تخرج 69 في الموك\n"
+            "• هدف 69 يعني بوابة تخرج 79 في الموك\n"
+            "• هدف 90 يعني بوابة تخرج 100 في الموك"
+        )
+        await message.answer(text, reply_markup=kb_choose_target())
+        return
+
+    if not setup.get("placement_done"):
+        target = setup.get("target_score", 0)
+        text = (
+            f"🎯 المسار: <b>TOEFL iBT</b> | الهدف: <b>{target}</b>\n\n"
+            "🔬 <b>اختبار تحديد المستوى</b>\n"
+            "10 أسئلة سريعة تُحدد ما إذا كنت تحتاج للتأسيس أم تبدأ بالتوفل مباشرة.\n\n"
+            "• نتيجة أقل من 50 بالمئة تعني مسار التأسيس (قواعد + مفردات) ثم TOEFL\n"
+            "• نتيجة 50 بالمئة فأكثر تعني البدء بـ TOEFL مباشرة\n\n"
+            "اضغط الزر التالي لبدء الاختبار 👇"
+        )
+        await message.answer(text, reply_markup=kb_start_placement(user_id))
+        return
+
+    welcome_msg = get_setting("bot_welcome_message", "أهلاً بك في أكاديمية يامن! 🎓")
+    is_paid = bool(student.get("is_paid", 0)) if student else False
+    xp = student.get("xp", 0) if student else 0
+    level = student.get("level", "beginner") if student else "beginner"
+    target = setup.get("target_score", 0)
+    path = setup.get("placement_path") or "toefl"
+    path_ar = "🛠️ تأسيس + TOEFL" if path == "foundation" else "🎯 TOEFL مباشر"
+    level_ar = {"beginner":"مبتدئ 🔵","intermediate":"متوسط 🟡","advanced":"متقدم 🟢"}.get(level, level)
+
+    text = (
+        f"{welcome_msg}\n\n"
+        f"👤 <b>{full_name}</b>\n"
+        f"⭐ XP: {xp} | 🔥 Streak: {streak} | 📈 {level_ar}\n"
+        f"🎯 الهدف: <b>{target}</b> | المسار: {path_ar}\n"
+    )
+    await message.answer(text, reply_markup=get_main_keyboard(is_paid))
+
+
+@router.callback_query(F.data == "track:toefl")
+async def cb_track_toefl(callback: types.CallbackQuery):
+    await callback.answer("✅ تم اختيار TOEFL iBT")
+    user_id = callback.from_user.id
+    _save_track_and_target(user_id, track="toefl")
+
+    text = (
+        "🎯 <b>تم اختيار TOEFL iBT الدولي</b> ✅\n\n"
+        "الآن حدد <b>العلامة المستهدفة</b>:\n\n"
+        "🥉 <b>59</b> — تكفي للقبول في معظم الجامعات الأساسية\n"
+        "🥈 <b>69</b> — مطلوبة في الجامعات المتوسطة والبرامج التخصصية\n"
+        "🥇 <b>90</b> — للجامعات المرموقة وبرامج المنح\n\n"
+        "💡 كلما كان هدفك أعلى، كانت بوابة Mock النهائية أعلى."
+    )
+    await callback.message.edit_text(text, reply_markup=kb_choose_target())
+
+
+@router.callback_query(F.data == "track:soon")
+async def cb_track_soon(callback: types.CallbackQuery):
+    await callback.answer("⏳ هذا المسار سيُفتح قريباً — تابعنا!", show_alert=True)
+
+
+@router.callback_query(F.data.startswith("target:"))
+async def cb_target(callback: types.CallbackQuery):
+    try:
+        target = int(callback.data.split(":")[1])
+    except (ValueError, IndexError):
+        await callback.answer("❌ خيار غير صالح", show_alert=True)
+        return
+    if target not in (59, 69, 90):
+        await callback.answer("❌ علامة غير مسموحة", show_alert=True)
+        return
+
+    user_id = callback.from_user.id
+    _save_track_and_target(user_id, track="toefl", target_score=target)
+    await callback.answer(f"✅ هدفك: {target}")
+
+    mock_gate = target + 10
+    text = (
+        f"🎯 <b>تم تثبيت هدفك: {target}</b> في TOEFL iBT ✅\n\n"
+        f"📊 <b>بوابة التخرج في Mock Exam: {mock_gate} من 120</b>\n\n"
+        "🔬 <b>الخطوة التالية: اختبار تحديد المستوى</b>\n"
+        "• 10 أسئلة سريعة (حوالي 10 دقائق)\n"
+        "• نتيجة أقل من 50 بالمئة تعني مسار التأسيس\n"
+        "• نتيجة 50 بالمئة فأكثر تعني TOEFL مباشرة\n\n"
+        "اضغط الزر لبدء الاختبار 👇"
+    )
+    await callback.message.edit_text(text, reply_markup=kb_start_placement(user_id))
+
+
+@router.callback_query(F.data == "back:track")
+async def cb_back_track(callback: types.CallbackQuery):
+    await callback.answer()
+    full_name = callback.from_user.full_name or ""
+    text = (
+        f"مرحباً يا <b>{full_name}</b>! 🎓\n\n"
+        "🚀 <b>اختر المسار:</b>\n\n"
+        "🎯 TOEFL iBT الدولي — متاح الآن\n"
+        "🔒 IELTS و SAT و GRE — قريباً"
+    )
+    await callback.message.edit_text(text, reply_markup=kb_choose_track())
+
+
+@router.callback_query(F.data == "back:target")
+async def cb_back_target(callback: types.CallbackQuery):
+    await callback.answer()
+    text = (
+        "🎯 <b>اختر العلامة المستهدفة</b> في TOEFL iBT:\n\n"
+        "🥉 59  •  🥈 69  •  🥇 90"
+    )
+    await callback.message.edit_text(text, reply_markup=kb_choose_target())
+
+
+@router.message(Command("menu"))
+async def cmd_menu(message: types.Message):
+    user_id = message.from_user.id
+    student = get_student(user_id) or {}
+    is_paid = bool(student.get("is_paid", 0))
+    await message.answer("📋 القائمة الرئيسية:", reply_markup=get_main_keyboard(is_paid))
+
+
+@router.callback_query(F.data == "locked_feature")
+async def cb_locked(callback: types.CallbackQuery):
+    await callback.answer("🔒 هذه الميزة متاحة للمشتركين فقط. اشترك من 💳 الباقات", show_alert=True)

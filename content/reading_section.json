@@ -1,0 +1,1950 @@
+{
+  "course": "TOEFL 2026 - Reading Section",
+  "language": "ar",
+  "total_lessons": 12,
+  "lessons": [
+
+    {
+      "lesson_id": "R-01",
+      "title": "بنية قسم القراءة الجديد",
+      "focus_point": "فهم هيكل القسم: المرحلتان التكيُّفيتان",
+      "explanation": {
+        "ar": "قسم القراءة مقسَّم إلى مرحلتين. Module 1 ثابتة للجميع (20 سؤال / 10-12 دقيقة)، وأداؤك فيها يحدد مستوى Module 2. بمجرد الانتقال لا عودة للأسئلة السابقة، لكن داخل كل وحدة يمكنك التنقل بحرية.",
+        "key_rule": "ركّز جهدك الأكبر في Module 1 — هي البوابة التي تفتح المسار الصعب."
+      },
+      "visual_summary": {
+        "module_1": {"questions": 20, "time": "10-12 min", "difficulty": "متوسط ثابت"},
+        "module_2": {"questions": "15-28", "time": "9-10 min", "difficulty": "متغير حسب الأداء"}
+      },
+      "letter_fill_exercise": {
+        "instructions": "اكتب الكلمة حرفاً بحرف. عند إدخال الحرف الصحيح يتحرك التظليل للحرف التالي تلقائياً.",
+        "target_words": [
+          {
+            "word": "ADAPTIVE",
+            "translation": "تكيُّفي",
+            "sentence": "The new TOEFL uses an ________ testing format.",
+            "letter_array": ["A","D","A","P","T","I","V","E"],
+            "hint": "يبدأ بـ A وينتهي بـ E"
+          },
+          {
+            "word": "MODULE",
+            "translation": "وحدة / مرحلة",
+            "sentence": "Each ________ has a fixed time limit.",
+            "letter_array": ["M","O","D","U","L","E"],
+            "hint": "يبدأ بـ M"
+          },
+          {
+            "word": "NAVIGATE",
+            "translation": "يتنقل / يتصفح",
+            "sentence": "You can ________ freely within each section.",
+            "letter_array": ["N","A","V","I","G","A","T","E"],
+            "hint": "يبدأ بـ N"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "What can be inferred about a student who receives harder questions in Module 2?",
+        "options": {
+          "A": "They performed poorly in Module 1.",
+          "B": "They performed well in Module 1.",
+          "C": "They skipped questions in Module 1.",
+          "D": "Module 2 is always difficult for everyone."
+        },
+        "correct_answer": "B",
+        "explanation": "النص يقول صراحةً أن صعوبة Module 2 تعتمد على الأداء في Module 1 — الأسئلة الصعبة تعني أداءً ممتازاً."
+      }
+    },
+
+    {
+      "lesson_id": "R-02",
+      "title": "تقنية SCAN-READ-ANSWER الذهبية",
+      "focus_point": "القراءة الذكية تحت ضغط الوقت",
+      "explanation": {
+        "ar": "التقنية الذهبية تعمل بثلاث خطوات متسلسلة: SCAN (مسح سريع 30 ثانية لفهم الفكرة العامة)، ثم READ (قراءة مركزة مع الانتباه للتفاصيل)، ثم ANSWER (إجابة مبنية على الفهم لا التخمين).",
+        "key_rule": "لا تقرأ النص كاملاً قبل الأسئلة. اقرأ السؤال أولاً، ثم اصطد الإجابة من النص."
+      },
+      "time_distribution": {
+        "complete_words_task": "3 دقائق (1.5 لكل مهمة)",
+        "short_text_task": "2 دقيقة (1 قراءة + 1 أسئلة)",
+        "long_text_task": "4 دقائق (1.5 قراءة + 2.5 أسئلة)",
+        "academic_text_task": "3 دقائق (1 قراءة + 2 أسئلة)"
+      },
+      "letter_fill_exercise": {
+        "instructions": "اكتب الكلمة حرفاً بحرف.",
+        "target_words": [
+          {
+            "word": "STRATEGY",
+            "translation": "استراتيجية",
+            "sentence": "Having a clear ________ saves time during the exam.",
+            "letter_array": ["S","T","R","A","T","E","G","Y"],
+            "hint": "يبدأ بـ S وينتهي بـ Y"
+          },
+          {
+            "word": "EFFICIENT",
+            "translation": "فعّال / كفء",
+            "sentence": "An ________ reader reads less but understands more.",
+            "letter_array": ["E","F","F","I","C","I","E","N","T"],
+            "hint": "يبدأ بـ E — حرف F مضاعف"
+          },
+          {
+            "word": "PRECISION",
+            "translation": "دقة",
+            "sentence": "Answer with ________, not with guesses.",
+            "letter_array": ["P","R","E","C","I","S","I","O","N"],
+            "hint": "يبدأ بـ P"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "According to the SCAN-READ-ANSWER technique, why is the SCAN step important?",
+        "options": {
+          "A": "It replaces the need to read the text.",
+          "B": "It helps you predict what the text is about before reading carefully.",
+          "C": "It allows you to answer all questions without reading.",
+          "D": "It is only useful for academic texts."
+        },
+        "correct_answer": "B",
+        "explanation": "المسح السريع يبني خريطة ذهنية أولية تجعل القراءة المركزة أكثر كفاءة."
+      }
+    },
+
+    {
+      "lesson_id": "R-03",
+      "title": "Task 1 — إكمال الكلمات (Complete the Words)",
+      "focus_point": "فهم آلية سؤال إكمال الكلمات وخطوات حله",
+      "explanation": {
+        "ar": "يُقدَّم نص من 70-100 كلمة. بعد الجملة الأولى الكاملة، يُحذف النصف الثاني من كل كلمة ثانية (10 كلمات ناقصة). الهدف قياس معالجة النص من حيث المعنى والبنية اللغوية معاً.",
+        "steps": [
+          "1. اقرأ الجملة الكاملة أولاً لفهم المعنى العام",
+          "2. حدّد نوع الكلمة المطلوبة (فعل / اسم / صفة)",
+          "3. استخدم السياق لاستنتاج الكلمة الصحيحة",
+          "4. تأكد من التوافق النحوي والمعنوي",
+          "5. اقرأ الجملة كاملة بعد الإكمال للتحقق"
+        ]
+      },
+      "worked_example": {
+        "original": "Psychology is the scientific study of behavior and mental processes. Researchers invest_____ how peo___ think and fe__ in var____ situations.",
+        "solution": {
+          "invest_____": "investigate",
+          "peo___": "people",
+          "fe__": "feel",
+          "var____": "various"
+        },
+        "full_sentence": "Psychology is the scientific study of behavior and mental processes. Researchers investigate how people think and feel in various situations."
+      },
+      "letter_fill_exercise": {
+        "instructions": "اكتب كل كلمة حرفاً بحرف — النظام يتحرك للحرف التالي تلقائياً عند الإدخال الصحيح.",
+        "target_words": [
+          {
+            "word": "INVESTIGATE",
+            "translation": "يحقق / يدرس",
+            "sentence": "Scientists ________ how the brain processes information.",
+            "letter_array": ["I","N","V","E","S","T","I","G","A","T","E"],
+            "hint": "يبدأ بـ IN — فعل بحثي"
+          },
+          {
+            "word": "PROCESS",
+            "translation": "يعالج / عملية",
+            "sentence": "The brain ________ information from all senses.",
+            "letter_array": ["P","R","O","C","E","S","S"],
+            "hint": "يبدأ بـ PR"
+          },
+          {
+            "word": "VARIOUS",
+            "translation": "مختلفة / متنوعة",
+            "sentence": "The study included participants from ________ backgrounds.",
+            "letter_array": ["V","A","R","I","O","U","S"],
+            "hint": "يبدأ بـ V — صفة تنوع"
+          },
+          {
+            "word": "ESSENTIAL",
+            "translation": "ضروري / أساسي",
+            "sentence": "A healthy diet is ________ for a long life.",
+            "letter_array": ["E","S","S","E","N","T","I","A","L"],
+            "hint": "يبدأ بـ ESS"
+          },
+          {
+            "word": "NUTRIENTS",
+            "translation": "المواد الغذائية",
+            "sentence": "Fruits and vegetables provide important ________ for the body.",
+            "letter_array": ["N","U","T","R","I","E","N","T","S"],
+            "hint": "يبدأ بـ NUT"
+          }
+        ]
+      },
+      "practice_texts": {
+        "easy": [
+          {
+            "id": "T1",
+            "text": "The human brain is a remarkable organ. It proc_____ informa____ from our sens__, contr___ our mov_______, and enab___ us to think and feel. Scien_______ are const trying to learn more about its myste_____.",
+            "answers": {
+              "proc_____": "processes",
+              "informa____": "information",
+              "sens__": "senses",
+              "contr___": "controls",
+              "mov_______": "movements",
+              "enab___": "enables",
+              "Scien_______": "Scientists",
+              "myste_____": "mysteries"
+            }
+          },
+          {
+            "id": "T2",
+            "text": "A healthy diet is essential for a long life. Eating fruits and veget_____ provides the body with impor____ vitam__ and miner___. These nutri____ help to protect the body from vari____ diseases and keep it funct________ properly.",
+            "answers": {
+              "veget_____": "vegetables",
+              "impor____": "important",
+              "vitam__": "vitamins",
+              "miner___": "minerals",
+              "nutri____": "nutrients",
+              "vari____": "various",
+              "funct________": "functioning"
+            }
+          },
+          {
+            "id": "T3",
+            "text": "The Internet has revolu________ the way we commun_____. People can now instan__ share mess____ and photos with friends and fam___ all over the world. This digital connec____ has made geography____ dist____ seem much smaller.",
+            "answers": {
+              "revolu________": "revolutionized",
+              "commun_____": "communicate",
+              "instan__": "instantly",
+              "mess____": "messages",
+              "fam___": "family",
+              "connec____": "connection",
+              "geography____": "geographical",
+              "dist____": "distances"
+            }
+          }
+        ],
+        "medium": [
+          {
+            "id": "T4",
+            "text": "Economic globalization is a complex and multifac____ phenom____. It involves the increase__ interdepe_______ of the world's econom___, primar__ driven by internat_____ trade and invest_____. This process has signif________ altered global market dynamics.",
+            "answers": {
+              "multifac____": "multifaceted",
+              "phenom____": "phenomenon",
+              "increase__": "increased",
+              "interdepe_______": "interdependence",
+              "econom___": "economies",
+              "primar__": "primarily",
+              "internat_____": "international",
+              "invest_____": "investment",
+              "signif________": "significantly"
+            }
+          },
+          {
+            "id": "T5",
+            "text": "Sustainable agriculture aims to meet society's food and textile needs without compro_______ the ability of future gener_______ to meet their own needs. It is based on an underst_______ of ecosystem services and the need to preserve critical resour___ like water and soil fertile___.",
+            "answers": {
+              "compro_______": "compromising",
+              "gener_______": "generations",
+              "underst_______": "understanding",
+              "resour___": "resources",
+              "fertile___": "fertility"
+            }
+          },
+          {
+            "id": "T6",
+            "text": "The Renaissance was a period of immense cultural and intellect__ achieve_____ in Europe. It was charac________ by a renewed interest in class____ art, litera____, and learn___. This era witness__ a profound trans_____________ in human thought.",
+            "answers": {
+              "intellect__": "intellectual",
+              "achieve_____": "achievement",
+              "charac________": "characterized",
+              "class____": "classical",
+              "litera____": "literature",
+              "learn___": "learning",
+              "witness__": "witnessed",
+              "trans_____________": "transformation"
+            }
+          },
+          {
+            "id": "T7",
+            "text": "Effective leadership requires a diver__ set of skills, include__ strategic thinking, clear communica_____, and emotional intel_______. Leaders must adapt____ and resili__ in the face of chall____, inspire__ their teams to achieve shared object_____.",
+            "answers": {
+              "diver__": "diverse",
+              "include__": "including",
+              "communica_____": "communication",
+              "intel_______": "intelligence",
+              "adapt____": "adaptable",
+              "resili__": "resilient",
+              "chall____": "challenges",
+              "inspire__": "inspiring",
+              "object_____": "objectives"
+            }
+          }
+        ],
+        "difficult": [
+          {
+            "id": "T8",
+            "text": "Cognitive psychologists study internal processes like memory and problem-solving. They examine how people encode, store, and retrieve informa____, often using complex experi_____ paradigms. Their research has signif________ contrib____ to our underst_______ of human cogni_____.",
+            "answers": {
+              "informa____": "information",
+              "experi_____": "experimental",
+              "signif________": "significantly",
+              "contrib____": "contributed",
+              "underst_______": "understanding",
+              "cogni_____": "cognition"
+            }
+          },
+          {
+            "id": "T9",
+            "text": "Quantum mechanics is a funda_______ theory in physics that provides a descript__ of the physical proper____ of nature at the scale of atoms and subatomic part_____. Its concepts are often counter-intui____ and challenge class____ notions of real___.",
+            "answers": {
+              "funda_______": "fundamental",
+              "descript__": "description",
+              "proper____": "properties",
+              "part_____": "particles",
+              "counter-intui____": "counter-intuitive",
+              "class____": "classical",
+              "real___": "reality"
+            }
+          },
+          {
+            "id": "T10",
+            "text": "The philosophical doctrine of determine___ posits that every event or situation, including every human decision and action, is the inevit____ conseq_______ of preceding events. This raises profound ques_____ about the existence of free will and moral responsib_______.",
+            "answers": {
+              "determine___": "determinism",
+              "inevit____": "inevitable",
+              "conseq_______": "consequence",
+              "ques_____": "questions",
+              "responsib_______": "responsibility"
+            }
+          },
+          {
+            "id": "T11",
+            "text": "Macroeconomic policy is often used by govern____ to influence a nation's economic perform____. This includes fiscal policy, which involves tax_____ and public expend_______, and monetary policy, which manages the money supply and interest rates to control infl_____ and stabilize the currency.",
+            "answers": {
+              "govern____": "governments",
+              "perform____": "performance",
+              "tax_____": "taxation",
+              "expend_______": "expenditure",
+              "infl_____": "inflation"
+            }
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "Why is it important to read the full sentence before completing a missing word?",
+        "options": {
+          "A": "To count how many letters are missing.",
+          "B": "To understand the grammatical structure and meaning of the word needed.",
+          "C": "To find synonyms in a dictionary.",
+          "D": "To check the spelling of other words."
+        },
+        "correct_answer": "B",
+        "explanation": "السياق الكامل يكشف نوع الكلمة ومعناها — بدون السياق، لا يمكن التمييز بين فعل واسم وصفة."
+      }
+    },
+
+    {
+      "lesson_id": "R-04",
+      "title": "Task 2 — القراءة في الحياة اليومية (Read in Daily Life)",
+      "focus_point": "فهم أنواع النصوص اليومية وخطوات حل أسئلتها",
+      "explanation": {
+        "ar": "هذه المهمة تقيس قدرتك على فهم نصوص قصيرة (15-150 كلمة) من الحياة اليومية: إعلانات، جداول، فواتير، رسائل إلكترونية، قوائم طعام، إشعارات. كل نص يتبعه 2-3 أسئلة اختيار من متعدد.",
+        "text_types": [
+          "poster / sign / notice — ملصق أو إشعار",
+          "advertisement — إعلان تجاري",
+          "menu — قائمة طعام",
+          "news article — مقال إخباري",
+          "social media post — منشور رقمي",
+          "form — نموذج / استمارة",
+          "schedule — جدول زمني",
+          "invoice — فاتورة",
+          "email — بريد إلكتروني",
+          "receipt — إيصال",
+          "text message chain — سلسلة رسائل نصية"
+        ],
+        "solving_steps": [
+          "1. اقرأ السؤال أولاً لتعرف ما تبحث عنه",
+          "2. حدّد الكلمات المفتاحية (Keywords)",
+          "3. ارجع للنص وحدّد موقع الفكرة المرتبطة بها",
+          "4. استبعد الخيارات الخاطئة واحدة تلو الأخرى",
+          "5. اختر الإجابة المدعومة بأدلة من النص فقط"
+        ]
+      },
+      "letter_fill_exercise": {
+        "instructions": "اكتب الكلمة حرفاً بحرف — كلمات شائعة في نصوص الحياة اليومية",
+        "target_words": [
+          {
+            "word": "MAINTENANCE",
+            "translation": "صيانة",
+            "sentence": "The library will be closed for ________ next week.",
+            "letter_array": ["M","A","I","N","T","E","N","A","N","C","E"],
+            "hint": "يبدأ بـ MAIN"
+          },
+          {
+            "word": "AVAILABLE",
+            "translation": "متاح",
+            "sentence": "Online resources are ________ during the closure.",
+            "letter_array": ["A","V","A","I","L","A","B","L","E"],
+            "hint": "يبدأ بـ AV"
+          },
+          {
+            "word": "RESERVATION",
+            "translation": "حجز",
+            "sentence": "You must make a ________ through the mobile app.",
+            "letter_array": ["R","E","S","E","R","V","A","T","I","O","N"],
+            "hint": "يبدأ بـ RES"
+          },
+          {
+            "word": "DISCOUNT",
+            "translation": "خصم",
+            "sentence": "Students receive a 10% ________ with valid ID.",
+            "letter_array": ["D","I","S","C","O","U","N","T"],
+            "hint": "يبدأ بـ DIS"
+          },
+          {
+            "word": "AMENDMENT",
+            "translation": "تعديل",
+            "sentence": "This notice serves as a lease ________ effective next month.",
+            "letter_array": ["A","M","E","N","D","M","E","N","T"],
+            "hint": "يبدأ بـ AMEND"
+          }
+        ]
+      },
+      "practice_exercises": {
+        "easy": [
+          {
+            "exercise_id": "E1",
+            "type": "Store Hours Sign",
+            "questions": [
+              {
+                "q_id": "E1Q1",
+                "question": "What time does the store open on Wednesday?",
+                "options": {"A": "8:00 AM", "B": "9:00 AM", "C": "10:00 AM", "D": "6:00 PM"},
+                "correct_answer": "C",
+                "tip": "ابحث عن كلمة Wednesday في الجدول مباشرة"
+              },
+              {
+                "q_id": "E1Q2",
+                "question": "On which day does the store close earliest?",
+                "options": {"A": "Monday", "B": "Saturday", "C": "Sunday", "D": "Friday"},
+                "correct_answer": "C",
+                "tip": "قارن أوقات الإغلاق في كل يوم"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E2",
+            "type": "Text Message",
+            "questions": [
+              {
+                "q_id": "E2Q1",
+                "question": "What time is the meeting?",
+                "options": {"A": "2:00 PM", "B": "3:00 PM", "C": "4:00 PM", "D": "Tomorrow"},
+                "correct_answer": "B",
+                "tip": "ابحث عن الوقت المذكور صراحةً في الرسالة"
+              },
+              {
+                "q_id": "E2Q2",
+                "question": "What will Emma bring?",
+                "options": {"A": "Coffee", "B": "Money", "C": "Books", "D": "Food"},
+                "correct_answer": "A",
+                "tip": "ابحث عن اسم Emma وما يليه"
+              },
+              {
+                "q_id": "E2Q3",
+                "question": "Where are they meeting?",
+                "options": {"A": "At a library", "B": "At Emma's house", "C": "At a café", "D": "At Sarah's office"},
+                "correct_answer": "C",
+                "tip": "ابحث عن ذكر المكان"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E3",
+            "type": "Medicine Label",
+            "questions": [
+              {
+                "q_id": "E3Q1",
+                "question": "How many tablets can an adult take at one time?",
+                "options": {"A": "1 tablet", "B": "2 tablets", "C": "4 tablets", "D": "8 tablets"},
+                "correct_answer": "B",
+                "tip": "ابحث عن adult في التعليمات"
+              },
+              {
+                "q_id": "E3Q2",
+                "question": "What should you do if the patient is 10 years old?",
+                "options": {"A": "Give 1 tablet", "B": "Give 2 tablets", "C": "Ask a doctor", "D": "Give no medicine"},
+                "correct_answer": "C",
+                "tip": "ابحث عن التعليمات الخاصة بالأطفال في العمر المذكور"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E4",
+            "type": "Restaurant Menu Note",
+            "questions": [
+              {
+                "q_id": "E4Q1",
+                "question": "What is included with the daily special?",
+                "options": {
+                  "A": "Only the main dish",
+                  "B": "Main dish and dessert",
+                  "C": "Main dish, soup or salad, and drink",
+                  "D": "Only soup and salad"
+                },
+                "correct_answer": "C",
+                "tip": "ابحث عن وصف العرض اليومي"
+              },
+              {
+                "q_id": "E4Q2",
+                "question": "How much discount do students receive?",
+                "options": {"A": "5%", "B": "10%", "C": "12%", "D": "15%"},
+                "correct_answer": "B",
+                "tip": "ابحث عن كلمة student discount"
+              },
+              {
+                "q_id": "E4Q3",
+                "question": "What must students show to get the discount?",
+                "options": {"A": "Receipt", "B": "Money", "C": "Valid ID", "D": "Menu"},
+                "correct_answer": "C",
+                "tip": "ابحث عن الشرط المذكور مع الخصم"
+              }
+            ]
+          }
+        ],
+        "intermediate": [
+          {
+            "exercise_id": "E5",
+            "type": "Apartment Notice",
+            "questions": [
+              {
+                "q_id": "E5Q1",
+                "question": "Why will the water be shut off?",
+                "options": {
+                  "A": "Regular maintenance",
+                  "B": "Emergency pipe repairs",
+                  "C": "Cleaning the tanks",
+                  "D": "Installing new pipes"
+                },
+                "correct_answer": "B",
+                "tip": "ابحث عن سبب الإغلاق في النص"
+              },
+              {
+                "q_id": "E5Q2",
+                "question": "How long will the water be off?",
+                "options": {"A": "3 hours", "B": "5 hours", "C": "6 hours", "D": "9 hours"},
+                "correct_answer": "C",
+                "tip": "احسب الفرق بين وقت البداية والنهاية"
+              },
+              {
+                "q_id": "E5Q3",
+                "question": "What should residents do if they have questions on Sunday?",
+                "options": {
+                  "A": "Call ext. 205",
+                  "B": "Wait until Monday",
+                  "C": "Email the manager",
+                  "D": "Visit the office immediately"
+                },
+                "correct_answer": "A",
+                "tip": "ابحث عن معلومات التواصل في نهاية الإشعار"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E6",
+            "type": "Gym Email",
+            "questions": [
+              {
+                "q_id": "E6Q1",
+                "question": "What time will the gym open on weekdays after March 1st?",
+                "options": {"A": "5:30 AM", "B": "6:00 AM", "C": "11:00 PM", "D": "12:00 AM"},
+                "correct_answer": "A",
+                "tip": "ابحث عن وقت الافتتاح الجديد"
+              },
+              {
+                "q_id": "E6Q2",
+                "question": "How must members reserve group fitness classes?",
+                "options": {
+                  "A": "By phone",
+                  "B": "At the front desk",
+                  "C": "Through the mobile app",
+                  "D": "By email"
+                },
+                "correct_answer": "C",
+                "tip": "ابحث عن طريقة الحجز المذكورة"
+              },
+              {
+                "q_id": "E6Q3",
+                "question": "What will happen to current membership rates?",
+                "options": {
+                  "A": "They will increase immediately",
+                  "B": "They will stay the same for 12 months",
+                  "C": "They will decrease",
+                  "D": "They will be determined later"
+                },
+                "correct_answer": "B",
+                "tip": "ابحث عن الجملة المتعلقة بـ membership rate"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E7",
+            "type": "Library Policy Update",
+            "questions": [
+              {
+                "q_id": "E7Q1",
+                "question": "How long can you borrow a new release book?",
+                "options": {
+                  "A": "2 weeks without renewal",
+                  "B": "3 weeks with one renewal",
+                  "C": "4 weeks with two renewals",
+                  "D": "21 days with automatic return"
+                },
+                "correct_answer": "A",
+                "tip": "ابحث عن new releases في جدول الاستعارة"
+              },
+              {
+                "q_id": "E7Q2",
+                "question": "What is the maximum late fee per item?",
+                "options": {"A": "$0.25", "B": "$2.50", "C": "$5.00", "D": "$15.00"},
+                "correct_answer": "C",
+                "tip": "ابحث عن كلمة maximum في قسم الغرامات"
+              },
+              {
+                "q_id": "E7Q3",
+                "question": "What happens if you don't pick up a hold within 5 days?",
+                "options": {
+                  "A": "You pay a fine",
+                  "B": "It goes to the next person",
+                  "C": "It's returned to the shelf",
+                  "D": "Your account is suspended"
+                },
+                "correct_answer": "B",
+                "tip": "ابحث عن جملة 'not picked up within 5 days'"
+              }
+            ]
+          }
+        ],
+        "difficult": [
+          {
+            "exercise_id": "E8",
+            "type": "Lease Amendment",
+            "questions": [
+              {
+                "q_id": "E8Q1",
+                "question": "If the tenant does nothing, what will happen?",
+                "options": {
+                  "A": "The lease will be canceled",
+                  "B": "The new terms will apply automatically",
+                  "C": "The rent will stay the same",
+                  "D": "They must sign a new lease"
+                },
+                "correct_answer": "B",
+                "tip": "ابحث عن 'RIGHTS' وما يلي عدم الاعتراض"
+              },
+              {
+                "q_id": "E8Q2",
+                "question": "How much total additional cost per month would a tenant with one parking space and a 20-lb dog pay?",
+                "options": {"A": "$75", "B": "$115", "C": "$145", "D": "$260"},
+                "correct_answer": "B",
+                "explanation": "Parking ($75) + Pet rent ($40) = $115. الوديعة $300 لمرة واحدة فقط ولا تحسب شهرياً.",
+                "tip": "احسب الرسوم الشهرية فقط (لا تضف الوديعة)"
+              },
+              {
+                "q_id": "E8Q3",
+                "question": "By what date must the tenant notify the office to terminate without penalty?",
+                "options": {
+                  "A": "August 1st",
+                  "B": "September 1st",
+                  "C": "30 days after receiving the notice",
+                  "D": "60 days after receiving the notice"
+                },
+                "correct_answer": "A",
+                "tip": "ابحث عن التاريخ المحدد في نهاية الرسالة"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E9",
+            "type": "Insurance Claim",
+            "questions": [
+              {
+                "q_id": "E9Q1",
+                "question": "In which situation is a police report NOT required?",
+                "options": {
+                  "A": "Someone is injured",
+                  "B": "Your car has $1,500 in damage and no one is hurt",
+                  "C": "The other driver left the scene",
+                  "D": "Property damage is $2,500"
+                },
+                "correct_answer": "B",
+                "explanation": "الشرط هو أن يتجاوز الضرر $2,000. $1,500 أقل من الحد المطلوب، ولا إصابات — إذن لا تقرير مطلوب.",
+                "tip": "قارن المبلغ بالحد المذكور ($2,000)"
+              },
+              {
+                "q_id": "E9Q2",
+                "question": "What is the maximum total rental car reimbursement?",
+                "options": {"A": "$45", "B": "$450", "C": "$630", "D": "$900"},
+                "correct_answer": "C",
+                "explanation": "$45/day × 14 days = $630",
+                "tip": "اضرب الحد اليومي في الحد الزمني"
+              },
+              {
+                "q_id": "E9Q3",
+                "question": "If you submit incomplete documentation, how long total might it take before payment/repair authorization?",
+                "options": {
+                  "A": "5 business days",
+                  "B": "10-15 business days",
+                  "C": "20-30 business days",
+                  "D": "7-10 business days"
+                },
+                "correct_answer": "C",
+                "explanation": "التأخير (10-15 أيام) + المراجعة (3-5 أيام) + الإذن (7-10 أيام) = 20-30 يوم عمل.",
+                "tip": "اجمع كل المراحل مع التأخير"
+              }
+            ]
+          },
+          {
+            "exercise_id": "E10",
+            "type": "Medical Consent Form",
+            "questions": [
+              {
+                "q_id": "E10Q1",
+                "question": "What must the patient do regarding blood-thinning medications?",
+                "options": {
+                  "A": "Stop them 8 hours before",
+                  "B": "Stop them 48 hours before with doctor's approval",
+                  "C": "Continue taking them as normal",
+                  "D": "Stop them permanently"
+                },
+                "correct_answer": "B",
+                "tip": "ابحث عن blood-thinning في النموذج"
+              },
+              {
+                "q_id": "E10Q2",
+                "question": "Which statement about recovery is accurate?",
+                "options": {
+                  "A": "Patients can drive immediately after",
+                  "B": "Most resume activities within 24 hours",
+                  "C": "Alcohol is permitted after 12 hours",
+                  "D": "Patients must stay in hospital overnight"
+                },
+                "correct_answer": "B",
+                "tip": "ابحث عن معلومات التعافي في النموذج"
+              },
+              {
+                "q_id": "E10Q3",
+                "question": "What is the main difference between this procedure and the alternative?",
+                "options": {
+                  "A": "Cost",
+                  "B": "Duration",
+                  "C": "Accuracy vs. invasiveness",
+                  "D": "Risk level"
+                },
+                "correct_answer": "C",
+                "tip": "ابحث عن مقارنة الإجراءين"
+              }
+            ]
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "Why should you read the question BEFORE the text in daily life reading tasks?",
+        "options": {
+          "A": "Because the text is too long to read fully.",
+          "B": "Because the question acts as a map, directing you to the specific information you need.",
+          "C": "Because all answers are in the first sentence.",
+          "D": "Because daily life texts contain no important details."
+        },
+        "correct_answer": "B",
+        "explanation": "السؤال هو البوصلة — يوجّهك مباشرةً للمعلومة المطلوبة بدلاً من قراءة النص كاملاً."
+      }
+    },
+
+    {
+      "lesson_id": "R-05",
+      "title": "Task 3 — أنواع أسئلة النص الأكاديمي (Part 1): Factual & Negative Factual",
+      "focus_point": "التمييز بين الحقائق المذكورة وغير المذكورة في النص",
+      "explanation": {
+        "factual": {
+          "ar": "سؤال المعلومات الحقيقية يطلب تفصيلة مذكورة مباشرةً في النص. الإجابة لا تحتاج استنتاجاً — هي موجودة كما هي.",
+          "signal_phrases": ["According to the passage...", "The author states that...", "The passage mentions that..."],
+          "strategy": ["حدّد الكلمات المفتاحية في السؤال", "ابحث عنها في النص", "اقرأ الجملة الكاملة التي تحتوي عليها", "اختر الإجابة التي تطابق المعنى تماماً"]
+        },
+        "negative_factual": {
+          "ar": "سؤال NOT/EXCEPT يطلب تحديد الخيار غير المذكور في النص. أنت تبحث عن الاستثناء.",
+          "signal_phrases": ["Which of the following is NOT...", "All of the following are mentioned EXCEPT...", "Which is LEAST likely..."],
+          "strategy": ["اقرأ كل خيار", "تحقق من وجود كل خيار في النص", "الإجابة الصحيحة هي الخيار الغائب عن النص", "استخدم عملية الحذف"]
+        }
+      },
+      "letter_fill_exercise": {
+        "instructions": "مفردات أكاديمية من نصوص قسم القراءة — اكتبها حرفاً بحرف",
+        "target_words": [
+          {
+            "word": "ORIGINATED",
+            "translation": "نشأ / بدأ",
+            "sentence": "Coffee ________ in Ethiopia before spreading worldwide.",
+            "letter_array": ["O","R","I","G","I","N","A","T","E","D"],
+            "hint": "يبدأ بـ ORIG — فعل ماضٍ"
+          },
+          {
+            "word": "CULTIVATED",
+            "translation": "زُرع / رُبِّي",
+            "sentence": "Coffee was first ________ in Yemen in the 15th century.",
+            "letter_array": ["C","U","L","T","I","V","A","T","E","D"],
+            "hint": "يبدأ بـ CULT"
+          },
+          {
+            "word": "PRECIPITATION",
+            "translation": "هطول (مطر/ثلج)",
+            "sentence": "________ occurs when clouds become heavy with water droplets.",
+            "letter_array": ["P","R","E","C","I","P","I","T","A","T","I","O","N"],
+            "hint": "يبدأ بـ PREC — مصطلح علمي"
+          },
+          {
+            "word": "EVAPORATION",
+            "translation": "تبخر",
+            "sentence": "________ is the first stage of the water cycle.",
+            "letter_array": ["E","V","A","P","O","R","A","T","I","O","N"],
+            "hint": "يبدأ بـ EVAP"
+          },
+          {
+            "word": "CONDENSATION",
+            "translation": "تكاثف",
+            "sentence": "Water vapor turns into clouds through the process of ________.",
+            "letter_array": ["C","O","N","D","E","N","S","A","T","I","O","N"],
+            "hint": "يبدأ بـ COND"
+          }
+        ]
+      },
+      "practice_questions": {
+        "passage_ref": "Passage 1 (Coffee) & Passage 2 (Water Cycle)",
+        "factual_questions": [
+          {
+            "q_id": "R05Q1",
+            "passage": "Coffee",
+            "question": "According to the passage, where did coffee originate?",
+            "options": {"A": "Yemen", "B": "Turkey", "C": "Ethiopia", "D": "Arabia"},
+            "correct_answer": "C",
+            "evidence": "'It originated in Ethiopia'",
+            "common_trap": "Yemen مذكورة في النص لكنها مكان الزراعة، ليس الأصل"
+          },
+          {
+            "q_id": "R05Q2",
+            "passage": "Water Cycle",
+            "question": "According to the passage, what causes evaporation?",
+            "options": {"A": "Wind", "B": "Cold temperatures", "C": "The sun's heat", "D": "Clouds"},
+            "correct_answer": "C",
+            "evidence": "'the sun heats water in oceans, lakes, and rivers, turning it into water vapor'"
+          },
+          {
+            "q_id": "R05Q3",
+            "passage": "Water Cycle",
+            "question": "What forms when water vapor rises and cools?",
+            "options": {"A": "Rain", "B": "Clouds", "C": "Rivers", "D": "Groundwater"},
+            "correct_answer": "B",
+            "evidence": "'As the water vapor rises and cools, it undergoes condensation, forming clouds'"
+          }
+        ],
+        "negative_factual_questions": [
+          {
+            "q_id": "R05Q4",
+            "passage": "Coffee",
+            "question": "All of the following are places where coffee spread by the 16th century EXCEPT:",
+            "options": {"A": "Persia", "B": "Egypt", "C": "China", "D": "Turkey"},
+            "correct_answer": "C",
+            "explanation": "النص يذكر Persia وEgypt وTurkey وSyria — لكن لم يُذكر China أبداً",
+            "common_trap": "لا تختر Syria لأنها مذكورة في النص. ابحث عن الغائب."
+          },
+          {
+            "q_id": "R05Q5",
+            "passage": "Urban Trees (النص التمهيدي)",
+            "question": "Which of the following is NOT mentioned as a benefit of urban trees?",
+            "options": {
+              "A": "They provide shade",
+              "B": "They absorb air pollutants",
+              "C": "They create habitats for animals",
+              "D": "They reduce noise pollution"
+            },
+            "correct_answer": "D",
+            "explanation": "A وB وC كلها مذكورة في النص. 'reduce noise pollution' غير مذكور إطلاقاً.",
+            "common_trap": "كلمة pollution موجودة في النص لكن بنوع مختلف (air وليس noise)"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "A student chose option A in a NOT question because it 'sounded similar' to text words. What mistake did they make?",
+        "options": {
+          "A": "They read the passage too quickly.",
+          "B": "They confused similarity of words with similarity of meaning, ignoring that NOT questions require the ABSENT option.",
+          "C": "They did not know the vocabulary.",
+          "D": "They chose the longest answer."
+        },
+        "correct_answer": "B",
+        "explanation": "في أسئلة NOT، الإجابة الصحيحة هي الخيار الغائب — وجود كلمات مشابهة في النص فخ كلاسيكي."
+      }
+    },
+
+    {
+      "lesson_id": "R-06",
+      "title": "Task 3 — أسئلة النص الأكاديمي (Part 2): Vocabulary in Context",
+      "focus_point": "معنى الكلمة حسب السياق وليس القاموس",
+      "explanation": {
+        "ar": "سؤال المفردات يطلب المعنى الأقرب لكلمة محددة كما استُخدمت في النص. السياق هو الملك — نفس الكلمة قد تعني شيئاً مختلفاً في سياقات مختلفة.",
+        "signal_phrase": "The word X in the passage is closest in meaning to...",
+        "strategy": [
+          "1. اقرأ الجملة الكاملة التي تحتوي على الكلمة",
+          "2. اقرأ الجملة السابقة واللاحقة للسياق الأوسع",
+          "3. جرّب كل خيار مكان الكلمة الأصلية",
+          "4. اختر الخيار الذي يحافظ على معنى الجملة"
+        ],
+        "common_trap": "لا تختر الكلمة التي تعرفها معجمياً — اختر التي تناسب السياق تحديداً"
+      },
+      "letter_fill_exercise": {
+        "instructions": "كلمات أكاديمية مهمة من نصوص المستوى المتوسط",
+        "target_words": [
+          {
+            "word": "PROFOUND",
+            "translation": "عميق / جوهري",
+            "sentence": "The Industrial Revolution had ________ effects on society.",
+            "letter_array": ["P","R","O","F","O","U","N","D"],
+            "hint": "يبدأ بـ PRO"
+          },
+          {
+            "word": "PHENOMENON",
+            "translation": "ظاهرة",
+            "sentence": "Animal migration is one of nature's most remarkable ________.",
+            "letter_array": ["P","H","E","N","O","M","E","N","O","N"],
+            "hint": "يبدأ بـ PHEN — مفرد phenomena"
+          },
+          {
+            "word": "ENCOMPASS",
+            "translation": "يشمل / يتضمن",
+            "sentence": "The new policy will ________ all departments.",
+            "letter_array": ["E","N","C","O","M","P","A","S","S"],
+            "hint": "يبدأ بـ ENC"
+          },
+          {
+            "word": "TRANSITION",
+            "translation": "تحوّل / انتقال",
+            "sentence": "The ________ from logographic to phonetic writing was crucial.",
+            "letter_array": ["T","R","A","N","S","I","T","I","O","N"],
+            "hint": "يبدأ بـ TRANS"
+          },
+          {
+            "word": "ACCESSIBLE",
+            "translation": "متاح / سهل الوصول",
+            "sentence": "The Phoenician alphabet made writing more ________ to everyone.",
+            "letter_array": ["A","C","C","E","S","S","I","B","L","E"],
+            "hint": "يبدأ بـ ACC"
+          }
+        ]
+      },
+      "practice_questions": {
+        "vocabulary_questions": [
+          {
+            "q_id": "R06Q1",
+            "word": "originated",
+            "passage_sentence": "Coffee is one of the most popular beverages in the world. It originated in Ethiopia.",
+            "question": "The word 'originated' is closest in meaning to:",
+            "options": {"A": "ended", "B": "began", "C": "traveled", "D": "disappeared"},
+            "correct_answer": "B",
+            "explanation": "السياق يتحدث عن بداية شيء في مكان معين — began يطابق هذا المعنى تماماً"
+          },
+          {
+            "q_id": "R06Q2",
+            "word": "habitats",
+            "passage_sentence": "They create habitats for birds and insects.",
+            "question": "The word 'habitats' is closest in meaning to:",
+            "options": {"A": "Homes", "B": "Games", "C": "Buildings", "D": "Food"},
+            "correct_answer": "A",
+            "explanation": "Habitats تعني المساكن الطبيعية للحيوانات. Buildings خادعة لكن السياق عن الطبيعة.",
+            "common_trap": "تجنب Buildings لأن الكلمة عن الحيوانات وليس البشر"
+          },
+          {
+            "q_id": "R06Q3",
+            "word": "continuous",
+            "passage_sentence": "The water cycle describes the continuous movement of water.",
+            "question": "The word 'continuous' is closest in meaning to:",
+            "options": {"A": "occasional", "B": "constant", "C": "rapid", "D": "slow"},
+            "correct_answer": "B",
+            "explanation": "continuous = constant = مستمر/دائم. السياق يصف حركة لا تتوقف."
+          },
+          {
+            "q_id": "R06Q4",
+            "word": "encompass",
+            "passage_sentence": "Over time, the system evolved to encompass literature, laws, and historical records.",
+            "question": "The word 'encompass' is closest in meaning to:",
+            "options": {"A": "exclude", "B": "include", "C": "reject", "D": "simplify"},
+            "correct_answer": "B",
+            "explanation": "encompass = include. السياق يتحدث عن توسّع النظام ليشمل أشياء جديدة."
+          },
+          {
+            "q_id": "R06Q5",
+            "word": "profound",
+            "passage_sentence": "This transformation had profound effects on social, economic, and cultural conditions.",
+            "question": "The word 'profound' is closest in meaning to:",
+            "options": {"A": "minor", "B": "deep and significant", "C": "temporary", "D": "confusing"},
+            "correct_answer": "B",
+            "explanation": "profound = deep and significant. السياق يصف تأثيراً كبيراً وشاملاً."
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "A student is asked about the word 'cultivated' in the sentence: 'Coffee was first cultivated in Yemen.' They know 'cultivated' can mean 'refined' in some contexts. What should they do?",
+        "options": {
+          "A": "Use the dictionary meaning automatically.",
+          "B": "Use the meaning that fits the specific context of farming and crops.",
+          "C": "Skip the question.",
+          "D": "Choose 'refined' because they know it."
+        },
+        "correct_answer": "B",
+        "explanation": "السياق (القهوة، اليمن، الزراعة) يحدد المعنى الصحيح: 'grown/farmed'. التجاهل للسياق هو الفخ الأكثر شيوعاً في أسئلة المفردات."
+      }
+    },
+
+    {
+      "lesson_id": "R-07",
+      "title": "Task 3 — أسئلة النص الأكاديمي (Part 3): Inference & Rhetorical Purpose",
+      "focus_point": "القراءة بين السطور وفهم نية الكاتب",
+      "explanation": {
+        "inference": {
+          "ar": "الاستنتاج يعني استخلاص معلومة غير مذكورة صراحةً لكن تدعمها الأدلة في النص. لا تذهب بعيداً — كل استنتاج صحيح يجب أن تجد له دليلاً مباشراً.",
+          "signal_phrases": ["What can be inferred from...", "What can be concluded about...", "The author implies that..."],
+          "strategy": [
+            "ابحث عن أدلة في النص تدعم كل خيار",
+            "فكر منطقياً: ماذا يعني هذا بشكل ضمني؟",
+            "تجنب الاستنتاجات المبالغ فيها أو البعيدة",
+            "تأكد أن استنتاجك مبني على معلومة فعلية من النص"
+          ]
+        },
+        "rhetorical_purpose": {
+          "ar": "الغرض البلاغي يسأل: لماذا ذكر المؤلف هذه المعلومة؟ ركّز على نية الكاتب، لا على المعلومة نفسها.",
+          "signal_phrases": ["Why does the author mention...", "The author uses X as an example of...", "What is the purpose of mentioning..."],
+          "strategy": [
+            "حدّد موقع المعلومة في النص",
+            "اقرأ الفقرة كاملة لفهم الفكرة المحيطة",
+            "فكر في العلاقة بين المعلومة والفكرة الرئيسية",
+            "اختر الإجابة التي تشرح الهدف من ذكر المعلومة"
+          ]
+        }
+      },
+      "letter_fill_exercise": {
+        "instructions": "مفردات من نصوص الاستنتاج والغرض البلاغي",
+        "target_words": [
+          {
+            "word": "IMPLICATION",
+            "translation": "تداعية / ما يُفهم ضمناً",
+            "sentence": "The ________ of the study is that trees improve mental health.",
+            "letter_array": ["I","M","P","L","I","C","A","T","I","O","N"],
+            "hint": "يبدأ بـ IMP — جذره imply"
+          },
+          {
+            "word": "INFER",
+            "translation": "يستنتج",
+            "sentence": "We can ________ from the data that migration is complex.",
+            "letter_array": ["I","N","F","E","R"],
+            "hint": "يبدأ بـ INF — فعل قصير"
+          },
+          {
+            "word": "CONTRAST",
+            "translation": "يتناقض / تباين",
+            "sentence": "The last sentence ________ benefits with challenges.",
+            "letter_array": ["C","O","N","T","R","A","S","T"],
+            "hint": "يبدأ بـ CON"
+          },
+          {
+            "word": "ILLUSTRATE",
+            "translation": "يوضح / يُبيّن",
+            "sentence": "The author uses examples to ________ the main point.",
+            "letter_array": ["I","L","L","U","S","T","R","A","T","E"],
+            "hint": "يبدأ بـ ILL"
+          },
+          {
+            "word": "UNDERLYING",
+            "translation": "الكامن / الأساسي",
+            "sentence": "The ________ cause of migration is seasonal change.",
+            "letter_array": ["U","N","D","E","R","L","Y","I","N","G"],
+            "hint": "يبدأ بـ UNDER"
+          }
+        ]
+      },
+      "practice_questions": {
+        "inference_questions": [
+          {
+            "q_id": "R07Q1",
+            "passage": "Urban Trees",
+            "question": "What can be inferred about people living in neighborhoods with fewer trees?",
+            "options": {
+              "A": "They might experience higher stress levels",
+              "B": "They never go outside",
+              "C": "They do not need air conditioning",
+              "D": "They have no birds in their area"
+            },
+            "correct_answer": "A",
+            "evidence": "النص يقول أن مناطق الأشجار الكثيرة تعني 'lower stress levels' — المنطق العكسي يعني أن أقل أشجار = أكثر توتراً",
+            "common_trap": "تجنب B وD — استنتاجات مبالغ فيها لا دليل عليها"
+          },
+          {
+            "q_id": "R07Q2",
+            "passage": "Animal Migration",
+            "question": "What can be inferred about salmon's navigation?",
+            "options": {
+              "A": "They use only visual cues",
+              "B": "They navigate randomly",
+              "C": "Their sense of smell plays an important role",
+              "D": "They cannot return to their birthplace"
+            },
+            "correct_answer": "C",
+            "evidence": "النص يذكر صراحةً: 'possibly using their sense of smell to recognize chemical signatures'"
+          },
+          {
+            "q_id": "R07Q3",
+            "passage": "Industrial Revolution",
+            "question": "What can be inferred about manufacturing before the Industrial Revolution?",
+            "options": {
+              "A": "It was faster than after the revolution",
+              "B": "It was less centralized and more labor-intensive",
+              "C": "It used steam power",
+              "D": "It only occurred in cities"
+            },
+            "correct_answer": "B",
+            "evidence": "النص يقول 'manufacturing was often done in homes using hand tools' — العمل اليدوي في المنازل يعني أقل مركزية وأكثر جهداً بشرياً"
+          }
+        ],
+        "rhetorical_purpose_questions": [
+          {
+            "q_id": "R07Q4",
+            "passage": "Urban Trees",
+            "question": "Why does the author mention 'regular watering, pruning, and protection from pests'?",
+            "options": {
+              "A": "To show that trees are always easy to care for",
+              "B": "To explain why some people dislike trees",
+              "C": "To highlight the challenges of maintaining urban trees",
+              "D": "To describe how trees grow naturally"
+            },
+            "correct_answer": "C",
+            "evidence": "جاءت بعد 'Despite these benefits, maintaining urban trees can be costly' — هدفها توضيح تكلفة وصعوبة الصيانة",
+            "common_trap": "A خادعة — كلمة regular لا تعني سهولة، بل استمرارية التكلفة"
+          },
+          {
+            "q_id": "R07Q5",
+            "passage": "Industrial Revolution",
+            "question": "Why does the author mention 'water wheels'?",
+            "options": {
+              "A": "To show they were superior to steam engines",
+              "B": "To contrast their geographical limitations with steam power's flexibility",
+              "C": "To explain how they polluted the environment",
+              "D": "To describe their use in cities"
+            },
+            "correct_answer": "B",
+            "evidence": "السياق يقارن: 'a reliable source of power that was not dependent on geographical location, unlike water wheels'"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "Why are inference questions considered harder than factual questions?",
+        "options": {
+          "A": "Because the answer is never in the text.",
+          "B": "Because they require logical reasoning based on indirect textual evidence.",
+          "C": "Because they always involve mathematics.",
+          "D": "Because you must memorize the entire passage."
+        },
+        "correct_answer": "B",
+        "explanation": "الاستنتاج يتطلب ربط معلومات مذكورة بمعلومة غير مذكورة عبر التفكير المنطقي — وهذا أصعب من القراءة المباشرة."
+      }
+    },
+
+    {
+      "lesson_id": "R-08",
+      "title": "Task 3 — أسئلة النص الأكاديمي (Part 4): Insert a Sentence & Paragraph Relationships",
+      "focus_point": "التدفق المنطقي للأفكار وإدراج الجمل في موضعها الصحيح",
+      "explanation": {
+        "insert_sentence": {
+          "ar": "يُطلب منك تحديد موضع جملة جديدة داخل فقرة بها علامات A, B, C, D. الهدف هو اختيار الموقع الأنسب للحفاظ على تسلسل الأفكار وسلاسة القراءة.",
+          "strategy": [
+            "1. اقرأ الفقرة كاملة بعناية وركّز على الأفكار الرئيسية",
+            "2. حدّد طبيعة الجملة الجديدة: سبب؟ نتيجة؟ مثال؟ توضيح؟",
+            "3. حدّد الموقع الأنسب: السبب يأتي قبل النتيجة، المثال يأتي بعد الفكرة العامة",
+            "4. اختبر كل خيار عن طريق قراءة الفقرة مع الجملة في كل موقع",
+            "5. اختر الموقع الأكثر منطقية وسلاسة"
+          ]
+        },
+        "paragraph_relationships": {
+          "ar": "هذا النوع يسأل عن كيفية ارتباط الفقرات بعضها ببعض: هل تتناقض؟ تكمل؟ تقدم مثالاً؟ تطرح مشكلة؟",
+          "signal_phrases": [
+            "How does paragraph X relate to paragraph Y?",
+            "What is the relationship between the first and second paragraphs?",
+            "The main purpose of paragraph 3 is to..."
+          ],
+          "key_transition_words": {
+            "contrast": ["however", "despite", "in contrast", "nevertheless"],
+            "addition": ["furthermore", "in addition", "moreover"],
+            "example": ["for example", "for instance", "such as"],
+            "result": ["therefore", "consequently", "as a result"]
+          }
+        }
+      },
+      "letter_fill_exercise": {
+        "instructions": "كلمات انتقالية وكلمات الربط — أساسية لفهم علاقات الفقرات",
+        "target_words": [
+          {
+            "word": "FURTHERMORE",
+            "translation": "علاوة على ذلك",
+            "sentence": "Trees provide shade. ________, they absorb air pollution.",
+            "letter_array": ["F","U","R","T","H","E","R","M","O","R","E"],
+            "hint": "يبدأ بـ FURT — كلمة إضافة"
+          },
+          {
+            "word": "CONSEQUENTLY",
+            "translation": "نتيجةً لذلك",
+            "sentence": "Steam power freed factories from rivers. ________, they could be built anywhere.",
+            "letter_array": ["C","O","N","S","E","Q","U","E","N","T","L","Y"],
+            "hint": "يبدأ بـ CONS — كلمة نتيجة"
+          },
+          {
+            "word": "NEVERTHELESS",
+            "translation": "على الرغم من ذلك",
+            "sentence": "Einstein disagreed with quantum theory. ________, it proved extremely useful.",
+            "letter_array": ["N","E","V","E","R","T","H","E","L","E","S","S"],
+            "hint": "يبدأ بـ NEVER — كلمة تناقض"
+          },
+          {
+            "word": "COHERENT",
+            "translation": "متماسك / منسجم",
+            "sentence": "A ________ paragraph connects ideas logically and smoothly.",
+            "letter_array": ["C","O","H","E","R","E","N","T"],
+            "hint": "يبدأ بـ COH"
+          }
+        ]
+      },
+      "practice_questions": {
+        "insert_sentence_questions": [
+          {
+            "q_id": "R08Q1",
+            "passage": "Photosynthesis",
+            "paragraph": "Leaves contain a green pigment called chlorophyll, which absorbs sunlight. [■A] During photosynthesis, plants take in carbon dioxide from the air through tiny pores called stomata [■B]. Water is absorbed through the roots and transported to the leaves. [■C] Using the energy from sunlight, the chlorophyll helps convert carbon dioxide and water into glucose. [■D]",
+            "sentence_to_insert": "These tiny openings can open and close to regulate gas exchange.",
+            "question": "Where would this sentence best fit?",
+            "options": {"A": "Position A", "B": "Position B", "C": "Position C", "D": "Position D"},
+            "correct_answer": "B",
+            "explanation": "الجملة المُدرجة تشرح الثغيرات (stomata) المذكورة في الجملة قبل ■B — إدراجها بعد ذكر stomata مباشرةً يجعل النص سلساً ومنطقياً."
+          },
+          {
+            "q_id": "R08Q2",
+            "passage": "Urban Trees (تمريني)",
+            "paragraph": "Many people enjoy living in areas with lots of trees. (A) Trees provide shade and help reduce air pollution. (B) They also offer spaces for recreation and relaxation. (C) Spending time in green areas has been linked to improved mental health. (D)",
+            "sentence_to_insert": "Research shows that people who live in tree-rich neighborhoods often report lower stress levels and better mental health.",
+            "question": "Where would this sentence best fit?",
+            "options": {"A": "Position A", "B": "Position B", "C": "Position C", "D": "Position D"},
+            "correct_answer": "C",
+            "explanation": "الجملة تشرح التأثير النفسي للأشجار — موضعها المثالي قبل جملة (D) التي تتحدث عن الصحة النفسية، وبعد ذكر المساحات الترفيهية في (B)."
+          }
+        ],
+        "paragraph_relationship_questions": [
+          {
+            "q_id": "R08Q3",
+            "passage": "Urban Trees",
+            "question": "How does the last sentence relate to the rest of the passage?",
+            "options": {
+              "A": "It gives an example of the benefits mentioned earlier",
+              "B": "It contrasts the benefits of trees with their maintenance challenges",
+              "C": "It repeats the same idea in different words",
+              "D": "It introduces an unrelated topic"
+            },
+            "correct_answer": "B",
+            "evidence": "الجملة الأخيرة تبدأ بـ 'Despite these benefits' — كلمة despite تشير صراحةً إلى التناقض",
+            "common_trap": "A خادع لأن الجملة ليست مثالاً — هي استثناء وتباين"
+          },
+          {
+            "q_id": "R08Q4",
+            "passage": "Writing Systems",
+            "question": "How does paragraph 2 relate to paragraph 1?",
+            "options": {
+              "A": "It contradicts paragraph 1",
+              "B": "It describes a further development beyond logographic systems",
+              "C": "It repeats the same information",
+              "D": "It provides historical background"
+            },
+            "correct_answer": "B",
+            "evidence": "الفقرة الأولى عن الكتابة المقطعية، والثانية تتحدث عن التطور نحو الكتابة الأبجدية — تقدم للأمام وليس تكراراً."
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "If a new sentence begins with 'However, this approach has its limitations,' where would it most logically be placed?",
+        "options": {
+          "A": "Before any mention of the approach's benefits",
+          "B": "After describing the benefits of the approach",
+          "C": "At the very beginning of the passage",
+          "D": "After describing a completely unrelated topic"
+        },
+        "correct_answer": "B",
+        "explanation": "كلمة However تدل على التناقض — فهي تأتي منطقياً بعد ذكر الإيجابيات لتُقدّم الجانب السلبي."
+      }
+    },
+
+    {
+      "lesson_id": "R-09",
+      "title": "بناء المفردات الأكاديمية — تقنية CRIS",
+      "focus_point": "حفظ المفردات بطريقة علمية في الذاكرة طويلة المدى",
+      "explanation": {
+        "ar": "تقنية CRIS تضمن رسوخ الكلمة في الذاكرة من خلال أربعة أبعاد: السياق، الجذر، الصورة الذهنية، والمرادف.",
+        "components": {
+          "C_Context": "تعلم الكلمة داخل جملة مفيدة — لا تحفظ المعنى المعزول",
+          "R_Root": "افهم جذر الكلمة وتصريفاتها (اسم/فعل/صفة) للاستنتاج من نفس العائلة",
+          "I_Image": "اربط الكلمة بصورة ذهنية — العقل يتذكر الصور أسرع",
+          "S_Synonym": "تعلم المرادفات والمضادات لتوسيع دائرتك اللغوية"
+        },
+        "vocabulary_plan": {
+          "week_1": "20 كلمة يومياً من قائمة AWL",
+          "week_2": "15 كلمة جديدة + مراجعة الأسبوع الأول",
+          "week_3": "15 كلمة جديدة + تطبيق عملي في نصوص",
+          "week_4": "مراجعة شاملة + اختبارات تطبيقية"
+        }
+      },
+      "cris_examples": [
+        {
+          "word": "SIGNIFICANT",
+          "C_context": "The Industrial Revolution had a significant impact on society.",
+          "R_root": "Sign (علامة) → significance (n), significantly (adv), insignificant (ant)",
+          "I_image": "تخيّل علامة كبيرة حمراء تشير لشيء مهم جداً",
+          "S_synonym": "Synonyms: important, substantial, considerable | Antonym: insignificant, minor"
+        },
+        {
+          "word": "ANALYZE",
+          "C_context": "Scientists analyze data to find patterns.",
+          "R_root": "Analysis (n), analytical (adj), analyst (person)",
+          "I_image": "تخيّل عالماً يفكك جهازاً بمكبر الزجاج",
+          "S_synonym": "Synonyms: examine, study, investigate | Antonym: ignore, overlook"
+        },
+        {
+          "word": "HYPOTHESIS",
+          "C_context": "Chomsky's hypothesis suggests humans have innate language ability.",
+          "R_root": "Hypothesize (v), hypothetical (adj)",
+          "I_image": "تخيّل عالماً يكتب علامة استفهام كبيرة على سبورة",
+          "S_synonym": "Synonyms: theory, assumption, proposition | Antonym: fact, proof"
+        }
+      ],
+      "letter_fill_exercise": {
+        "instructions": "مفردات أكاديمية من المستوى الصعب — اكتبها حرفاً بحرف",
+        "target_words": [
+          {
+            "word": "PRECIPITATED",
+            "translation": "أسرع في حدوث / تسبّب فجأة",
+            "sentence": "The discovery of the photoelectric effect ________ a revolution in physics.",
+            "letter_array": ["P","R","E","C","I","P","I","T","A","T","E","D"],
+            "hint": "يبدأ بـ PREC — فعل ماضٍ"
+          },
+          {
+            "word": "DETERMINISM",
+            "translation": "الحتمية (فلسفة)",
+            "sentence": "________ posits that every event is the inevitable result of preceding causes.",
+            "letter_array": ["D","E","T","E","R","M","I","N","I","S","M"],
+            "hint": "يبدأ بـ DETER — مصطلح فلسفي"
+          },
+          {
+            "word": "RECURSION",
+            "translation": "التكرار العودي / التضمين",
+            "sentence": "Human language uses ________ to embed phrases within phrases.",
+            "letter_array": ["R","E","C","U","R","S","I","O","N"],
+            "hint": "يبدأ بـ REC"
+          },
+          {
+            "word": "INCREMENTALLY",
+            "translation": "تدريجياً / بخطوات صغيرة",
+            "sentence": "Language may have evolved ________ over millions of years.",
+            "letter_array": ["I","N","C","R","E","M","E","N","T","A","L","L","Y"],
+            "hint": "يبدأ بـ INC — ظرف"
+          },
+          {
+            "word": "ELUSIVE",
+            "translation": "يصعب تحقيقه / بعيد المنال",
+            "sentence": "A unified theory of quantum gravity remains ________.",
+            "letter_array": ["E","L","U","S","I","V","E"],
+            "hint": "يبدأ بـ EL"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "Based on the CRIS method, why is learning the ROOT of a word especially helpful in academic reading?",
+        "options": {
+          "A": "Because roots are always the same across languages.",
+          "B": "Because understanding one root allows you to infer meanings of multiple related words.",
+          "C": "Because roots replace the need to read context.",
+          "D": "Because all academic words have only one meaning."
+        },
+        "correct_answer": "B",
+        "explanation": "معرفة الجذر تُضاعف مفرداتك — كلمة واحدة تفتح باب عائلة كاملة من الكلمات."
+      }
+    },
+
+    {
+      "lesson_id": "R-10",
+      "title": "تطبيق شامل — النصوص الأكاديمية (المستوى المتوسط)",
+      "focus_point": "تطبيق جميع أنواع الأسئلة على نصوص متوسطة المستوى",
+      "explanation": {
+        "ar": "في هذا الدرس ستطبّق جميع أنواع الأسئلة الستة على نصين أكاديميين: الثورة الصناعية وهجرة الحيوانات.",
+        "reminder": "استخدم الاستراتيجية المناسبة لكل نوع سؤال — لا تحل جميع الأسئلة بنفس الطريقة."
+      },
+      "practice_set_1": {
+        "passage_title": "The Industrial Revolution (Passage 6)",
+        "questions": [
+          {
+            "q_id": "R10Q1",
+            "type": "Vocabulary",
+            "question": "The phrase 'turning point' in paragraph 1 is closest in meaning to:",
+            "options": {"A": "rotation", "B": "crucial moment of change", "C": "circular motion", "D": "final destination"},
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R10Q2",
+            "type": "Factual",
+            "question": "According to the passage, where did the Industrial Revolution begin?",
+            "options": {"A": "The United States", "B": "France", "C": "Britain", "D": "Germany"},
+            "correct_answer": "C"
+          },
+          {
+            "q_id": "R10Q3",
+            "type": "Factual",
+            "question": "Which industry was among the first to adopt new machinery?",
+            "options": {"A": "Automotive", "B": "Textile", "C": "Steel", "D": "Chemical"},
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R10Q4",
+            "type": "Inference",
+            "question": "Which of the following can be inferred about the steam engine?",
+            "options": {
+              "A": "It was less efficient than water power",
+              "B": "It could only be used near rivers",
+              "C": "It gave factories more flexibility in location",
+              "D": "It was invented before the spinning jenny"
+            },
+            "correct_answer": "C",
+            "evidence": "النص يقول إنه 'not dependent on geographical location, unlike water wheels' — هذا يعني مرونة في الموقع"
+          },
+          {
+            "q_id": "R10Q5",
+            "type": "Rhetorical Purpose",
+            "question": "The author discusses 'poor working conditions, child labor, and environmental pollution' in order to:",
+            "options": {
+              "A": "Argue that the Industrial Revolution was entirely negative",
+              "B": "Show that progress came with significant social costs",
+              "C": "Explain why the revolution failed",
+              "D": "Describe conditions before the revolution"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R10Q6",
+            "type": "Main Idea",
+            "question": "What is the central idea of the passage about the Industrial Revolution?",
+            "options": {
+              "A": "It only affected Britain",
+              "B": "It was a transformative period with both positive and negative impacts",
+              "C": "It failed to change society",
+              "D": "It only improved working conditions"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R10Q7",
+            "type": "Paragraph Structure",
+            "question": "How does the passage develop the discussion of the Industrial Revolution?",
+            "options": {
+              "A": "By presenting only negative aspects",
+              "B": "By chronologically describing technological advances and their social impacts",
+              "C": "By comparing it unfavorably to previous eras",
+              "D": "By focusing solely on environmental issues"
+            },
+            "correct_answer": "B"
+          }
+        ]
+      },
+      "practice_set_2": {
+        "passage_title": "Animal Migration (Passage 7)",
+        "questions": [
+          {
+            "q_id": "R10Q8",
+            "type": "Vocabulary",
+            "question": "The word 'undertaken' in paragraph 1 is closest in meaning to:",
+            "options": {"A": "refused", "B": "forgotten", "C": "carried out", "D": "avoided"},
+            "correct_answer": "C"
+          },
+          {
+            "q_id": "R10Q9",
+            "type": "Factual",
+            "question": "How far does the Arctic tern travel annually?",
+            "options": {"A": "10,000 miles", "B": "25,000 miles", "C": "44,000 miles", "D": "50,000 miles"},
+            "correct_answer": "C"
+          },
+          {
+            "q_id": "R10Q10",
+            "type": "Negative Factual",
+            "question": "All of the following are mentioned as navigation methods EXCEPT:",
+            "options": {
+              "A": "Using the sun and stars",
+              "B": "Using Earth's magnetic field",
+              "C": "Using sense of smell",
+              "D": "Using echolocation"
+            },
+            "correct_answer": "D",
+            "explanation": "echolocation غير مذكور في النص — هو أسلوب الخفافيش والدلافين ولم يُذكر ضمن وسائل التوجه المذكورة."
+          },
+          {
+            "q_id": "R10Q11",
+            "type": "Inference",
+            "question": "Which of the following can be inferred about monarch butterfly migration?",
+            "options": {
+              "A": "Each butterfly completes the entire journey",
+              "B": "The migration is instinctive despite being multi-generational",
+              "C": "They travel farther than Arctic terns",
+              "D": "They migrate to the Arctic"
+            },
+            "correct_answer": "B",
+            "evidence": "الفراشات تجد نفس مناطق الشتاء التي استخدمها أجدادها دون أن تكون قد رأتها — هذا يدل على غريزة فطرية."
+          },
+          {
+            "q_id": "R10Q12",
+            "type": "Main Idea",
+            "question": "What is the most important point made about animal migration in this passage?",
+            "options": {
+              "A": "Only birds migrate long distances",
+              "B": "Migration is a complex behavior involving remarkable navigational abilities",
+              "C": "All animals use the same navigation methods",
+              "D": "Migration is a modern phenomenon"
+            },
+            "correct_answer": "B"
+          }
+        ]
+      },
+      "letter_fill_exercise": {
+        "instructions": "مفردات المستوى المتوسط من الدرسين",
+        "target_words": [
+          {
+            "word": "URBANIZATION",
+            "translation": "التحضر / النمو العمراني",
+            "sentence": "Rapid ________ followed the development of steam-powered factories.",
+            "letter_array": ["U","R","B","A","N","I","Z","A","T","I","O","N"],
+            "hint": "يبدأ بـ URB — من urban (حضري)"
+          },
+          {
+            "word": "ORIENTATION",
+            "translation": "التوجيه / تحديد الاتجاه",
+            "sentence": "Animals use various methods of ________ during migration.",
+            "letter_array": ["O","R","I","E","N","T","A","T","I","O","N"],
+            "hint": "يبدأ بـ ORIENT"
+          },
+          {
+            "word": "GENERATION",
+            "translation": "جيل",
+            "sentence": "It takes three to four ________ for monarch butterflies to complete their migration.",
+            "letter_array": ["G","E","N","E","R","A","T","I","O","N"],
+            "hint": "يبدأ بـ GEN"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "Based on the information in both passages, what general strategy works best when reading academic texts?",
+        "options": {
+          "A": "Read only the first and last sentences of each paragraph.",
+          "B": "Read questions first, identify keywords, then locate relevant sections in the text.",
+          "C": "Read the entire passage twice before answering any questions.",
+          "D": "Focus only on vocabulary questions, as they are easiest."
+        },
+        "correct_answer": "B",
+        "explanation": "قراءة السؤال أولاً تحوّل القراءة من عشوائية إلى هادفة — وهي جوهر استراتيجية SCAN-READ-ANSWER."
+      }
+    },
+
+    {
+      "lesson_id": "R-11",
+      "title": "تطبيق شامل — النصوص الأكاديمية الصعبة (Quantum & Language Evolution)",
+      "focus_point": "التعامل مع المصطلحات المعقدة والأفكار المجردة",
+      "explanation": {
+        "ar": "النصوص الصعبة تستخدم مفردات تخصصية ومصطلحات فلسفية/علمية. لا تخف من الكلمة الصعبة — استخدم السياق لاستنتاج معناها.",
+        "key_tip": "في النصوص الصعبة، ركّز على فهم الفكرة الكبيرة أولاً. لا تعلق عند كلمة واحدة — استمر واجمع المعنى من مجموع الجمل."
+      },
+      "practice_set": {
+        "passage_title": "Quantum Mechanics (Passage 9) + Language Evolution (Passage 10)",
+        "questions": [
+          {
+            "q_id": "R11Q1",
+            "type": "Vocabulary",
+            "passage": "Quantum Mechanics",
+            "question": "The word 'precipitated' in paragraph 1 is closest in meaning to:",
+            "options": {"A": "delayed", "B": "caused to happen suddenly", "C": "prevented", "D": "gradually reduced"},
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R11Q2",
+            "type": "Inference",
+            "passage": "Quantum Mechanics",
+            "question": "What can be inferred about Einstein's view of quantum mechanics?",
+            "options": {
+              "A": "He fully accepted all interpretations",
+              "B": "He had philosophical reservations despite its success",
+              "C": "He believed it was completely wrong",
+              "D": "He thought it explained everything perfectly"
+            },
+            "correct_answer": "B",
+            "evidence": "اقتبس النص قوله 'God does not play dice' — وهو يعترض فلسفياً لكن النص يؤكد 'extraordinary predictive power' مما يعني أنه لم ينكر نجاحها."
+          },
+          {
+            "q_id": "R11Q3",
+            "type": "Rhetorical Purpose",
+            "passage": "Quantum Mechanics",
+            "question": "The author mentions Einstein's statement 'God does not play dice with the universe' in order to:",
+            "options": {
+              "A": "Discuss Einstein's religious beliefs",
+              "B": "Illustrate philosophical resistance to quantum indeterminacy",
+              "C": "Show that Einstein knew nothing about quantum mechanics",
+              "D": "Prove that quantum mechanics is wrong"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R11Q4",
+            "type": "Factual",
+            "passage": "Quantum Mechanics",
+            "question": "According to the passage, what does Heisenberg's uncertainty principle establish?",
+            "options": {
+              "A": "All properties can be known precisely",
+              "B": "Certain pairs of properties cannot be simultaneously known with arbitrary precision",
+              "C": "Only position can be measured accurately",
+              "D": "Measurement technology will eventually overcome all limitations"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R11Q5",
+            "type": "Vocabulary",
+            "passage": "Language Evolution",
+            "question": "The word 'vexing' in paragraph 1 is closest in meaning to:",
+            "options": {"A": "simple", "B": "puzzling and frustrating", "C": "unimportant", "D": "resolved"},
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R11Q6",
+            "type": "Inference",
+            "passage": "Language Evolution",
+            "question": "What can be inferred about the difficulty of studying language evolution?",
+            "options": {
+              "A": "It is easy because of abundant physical evidence",
+              "B": "It requires synthesizing evidence from multiple disciplines due to lack of direct evidence",
+              "C": "It is impossible and should be abandoned",
+              "D": "It only requires linguistic analysis"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "R11Q7",
+            "type": "Negative Factual",
+            "passage": "Language Evolution",
+            "question": "All of the following are mentioned as challenges in studying language evolution EXCEPT:",
+            "options": {
+              "A": "Lack of direct archaeological evidence",
+              "B": "Need for cross-disciplinary synthesis",
+              "C": "Excessive funding for research",
+              "D": "Contested evolutionary trajectories"
+            },
+            "correct_answer": "C",
+            "explanation": "'Excessive funding' لم يُذكر في النص أبداً — النص يذكر صعوبة البحث لا وفرة تمويله."
+          },
+          {
+            "q_id": "R11Q8",
+            "type": "Main Idea",
+            "passage": "Language Evolution",
+            "question": "What is the central idea about language evolution presented in this passage?",
+            "options": {
+              "A": "Language evolution is fully understood",
+              "B": "Language evolution is complex, contested, and requires multi-disciplinary approaches",
+              "C": "Only one theory explains language evolution",
+              "D": "Language did not evolve but appeared suddenly without explanation"
+            },
+            "correct_answer": "B"
+          }
+        ]
+      },
+      "letter_fill_exercise": {
+        "instructions": "مفردات النصوص الصعبة جداً",
+        "target_words": [
+          {
+            "word": "QUANTUM",
+            "translation": "كمّي (فيزياء)",
+            "sentence": "________ mechanics revolutionized our understanding of atomic behavior.",
+            "letter_array": ["Q","U","A","N","T","U","M"],
+            "hint": "يبدأ بـ QU — مصطلح فيزيائي"
+          },
+          {
+            "word": "SUPERPOSITION",
+            "translation": "التراكب (الوجود في حالات متعددة)",
+            "sentence": "In quantum physics, particles exist in ________ until measured.",
+            "letter_array": ["S","U","P","E","R","P","O","S","I","T","I","O","N"],
+            "hint": "يبدأ بـ SUPER"
+          },
+          {
+            "word": "GENERATIVITY",
+            "translation": "القدرة التوليدية (لغوياً)",
+            "sentence": "Human language's ________ allows infinite sentences from finite rules.",
+            "letter_array": ["G","E","N","E","R","A","T","I","V","I","T","Y"],
+            "hint": "يبدأ بـ GENER"
+          },
+          {
+            "word": "INNATE",
+            "translation": "فطري / موروث",
+            "sentence": "Chomsky argued that language ability is ________, not learned.",
+            "letter_array": ["I","N","N","A","T","E"],
+            "hint": "يبدأ بـ INN — صفة قصيرة"
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "In difficult academic texts, if you encounter an unfamiliar word like 'saltational,' what is the best strategy?",
+        "options": {
+          "A": "Stop reading and look it up in a dictionary.",
+          "B": "Skip the entire sentence.",
+          "C": "Use surrounding sentences and context to infer its approximate meaning.",
+          "D": "Guess randomly and move on."
+        },
+        "correct_answer": "C",
+        "explanation": "السياق هو أقوى أداة — 'saltational scenario' يأتي في مقابل 'gradualist model' مما يدل على أنه يعني 'مفاجئ' وليس تدريجياً."
+      }
+    },
+
+    {
+      "lesson_id": "R-12",
+      "title": "أسرار العلامة الكاملة — 10 قواعد ذهبية",
+      "focus_point": "الاستراتيجيات النهائية لتحقيق أعلى الدرجات",
+      "explanation": {
+        "ar": "هذا الدرس يُلخّص أهم 10 قواعد استراتيجية لقسم القراءة في TOEFL 2026.",
+        "golden_rules": [
+          {
+            "rule_number": 1,
+            "title": "ابدأ بالسؤال لا بالنص",
+            "detail": "السؤال هو خريطتك. اقرأه أولاً ثم عد للنص لتصطاد الإجابة."
+          },
+          {
+            "rule_number": 2,
+            "title": "ركّز على المعنى لا الكلمات",
+            "detail": "الإجابة الصحيحة هي إعادة صياغة (Paraphrase) — لا نسخ ولصق من النص."
+          },
+          {
+            "rule_number": 3,
+            "title": "احترم قانون 30 ثانية",
+            "detail": "إذا تعثّرت، خمّن، ضع علامة للمراجعة، وانتقل فوراً."
+          },
+          {
+            "rule_number": 4,
+            "title": "ابتسم للصعوبة",
+            "detail": "أسئلة أصعب في Module 2 = أداء ممتاز في Module 1."
+          },
+          {
+            "rule_number": 5,
+            "title": "السياق هو الملك",
+            "detail": "في أسئلة المفردات، الجملة المحيطة تحدد المعنى — لا المعنى القاموسي."
+          },
+          {
+            "rule_number": 6,
+            "title": "احذر من NOT و EXCEPT",
+            "detail": "في هذه الأسئلة أنت تبحث عن الخطأ لا الصواب. التسرع هنا يكلفك درجات مجانية."
+          },
+          {
+            "rule_number": 7,
+            "title": "كن قناصاً للمعلومات",
+            "detail": "حدّد الكلمات المفتاحية في السؤال (أسماء، تواريخ، مصطلحات) قبل البحث في النص."
+          },
+          {
+            "rule_number": 8,
+            "title": "انظر للصورة الكبيرة",
+            "detail": "اسأل نفسك دائماً: لماذا كتب المؤلف هذه الفقرة؟ هذا مفتاح أسئلة الغرض."
+          },
+          {
+            "rule_number": 9,
+            "title": "المؤقت هو مدربك",
+            "detail": "تدرّب بمؤقت يومياً — الضغط في المنزل يمنحك هدوءاً يوم الامتحان."
+          },
+          {
+            "rule_number": 10,
+            "title": "الثقة تصنع الفارق",
+            "detail": "ادخل الامتحان بعقلية 'أنا مسيطر' — الهدوء النفسي يعادل 5 درجات إضافية."
+          }
+        ]
+      },
+      "letter_fill_exercise": {
+        "instructions": "مراجعة نهائية — أهم المفردات الأكاديمية عبر جميع النصوص",
+        "target_words": [
+          {
+            "word": "PARAPHRASE",
+            "translation": "إعادة صياغة",
+            "sentence": "The correct answer is usually a ________ of the text, not a direct copy.",
+            "letter_array": ["P","A","R","A","P","H","R","A","S","E"],
+            "hint": "يبدأ بـ PARA"
+          },
+          {
+            "word": "EVIDENCE",
+            "translation": "دليل",
+            "sentence": "Always choose the answer supported by ________ from the passage.",
+            "letter_array": ["E","V","I","D","E","N","C","E"],
+            "hint": "يبدأ بـ EV"
+          },
+          {
+            "word": "CONTEXT",
+            "translation": "السياق",
+            "sentence": "The ________ of a sentence reveals the true meaning of difficult words.",
+            "letter_array": ["C","O","N","T","E","X","T"],
+            "hint": "يبدأ بـ CON"
+          },
+          {
+            "word": "INFERENCE",
+            "translation": "استنتاج",
+            "sentence": "An ________ is a logical conclusion based on available evidence.",
+            "letter_array": ["I","N","F","E","R","E","N","C","E"],
+            "hint": "يبدأ بـ INF"
+          },
+          {
+            "word": "CHRONOLOGICAL",
+            "translation": "زمني / تسلسلي",
+            "sentence": "The passage presents history in ________ order.",
+            "letter_array": ["C","H","R","O","N","O","L","O","G","I","C","A","L"],
+            "hint": "يبدأ بـ CHRON — من اليونانية: الوقت"
+          }
+        ]
+      },
+      "final_comprehensive_quiz": {
+        "title": "اختبار المراجعة الشاملة — 10 أسئلة من جميع الأنواع",
+        "questions": [
+          {
+            "q_id": "FQ1",
+            "type": "Vocabulary",
+            "question": "The word 'crucial' is closest in meaning to:",
+            "options": {"A": "difficult", "B": "unnecessary", "C": "very important", "D": "complicated"},
+            "correct_answer": "C"
+          },
+          {
+            "q_id": "FQ2",
+            "type": "Factual",
+            "question": "According to Passage 4, what do plants take in from the air during photosynthesis?",
+            "options": {"A": "Oxygen", "B": "Nitrogen", "C": "Carbon dioxide", "D": "Hydrogen"},
+            "correct_answer": "C"
+          },
+          {
+            "q_id": "FQ3",
+            "type": "Negative Factual",
+            "question": "According to Passage 3, which of the following is NOT mentioned as a use of hieroglyphics?",
+            "options": {
+              "A": "Religious texts",
+              "B": "Government documents",
+              "C": "Monumental inscriptions",
+              "D": "Personal diaries"
+            },
+            "correct_answer": "D",
+            "explanation": "Personal diaries لم تُذكر — النص يذكر religious texts وgovernment documents وmonumental inscriptions."
+          },
+          {
+            "q_id": "FQ4",
+            "type": "Inference",
+            "question": "Based on Passage 6, what can be inferred about workers who moved to cities during the Industrial Revolution?",
+            "options": {
+              "A": "They were forced to move by the government",
+              "B": "They moved seeking job opportunities in factories",
+              "C": "They were all skilled engineers",
+              "D": "They preferred rural life but had no choice"
+            },
+            "correct_answer": "B",
+            "evidence": "النص يقول 'workers migrated from rural areas to cities in search of employment'"
+          },
+          {
+            "q_id": "FQ5",
+            "type": "Rhetorical Purpose",
+            "question": "Why does the author of Passage 8 mention that 'some languages like Chinese still employ logographic characters'?",
+            "options": {
+              "A": "To show Chinese writing is primitive",
+              "B": "To illustrate that different writing systems continue to coexist",
+              "C": "To argue alphabets are inferior",
+              "D": "To prove phonetic systems have failed"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "FQ6",
+            "type": "Insert Sentence",
+            "question": "Where would the sentence 'This innovation dramatically changed transportation networks' best fit in a paragraph about the steam engine?",
+            "paragraph": "James Watt developed the steam engine in 1769. (A) It provided a reliable source of power. (B) Factories could now be built anywhere. (C) Workers began moving to cities in large numbers. (D)",
+            "options": {"A": "After sentence A", "B": "After sentence B", "C": "After sentence C", "D": "After sentence D"},
+            "correct_answer": "B",
+            "explanation": "الجملة نتيجة مباشرة لـ 'reliable source of power' — إدراجها بعد B يشرح كيف غيّرت النقل قبل ذكر انتقال العمال."
+          },
+          {
+            "q_id": "FQ7",
+            "type": "Vocabulary",
+            "question": "The word 'elusive' (Passage 9) is closest in meaning to:",
+            "options": {"A": "easily achieved", "B": "simple to understand", "C": "difficult to achieve or define", "D": "completely impossible"},
+            "correct_answer": "C"
+          },
+          {
+            "q_id": "FQ8",
+            "type": "Main Idea",
+            "question": "What is the primary point the author makes about the development of alphabetic writing (Passage 8)?",
+            "options": {
+              "A": "It had little impact on society",
+              "B": "It made literacy more accessible and transformed civilization",
+              "C": "It was inferior to logographic systems",
+              "D": "It was only used for business"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "FQ9",
+            "type": "Paragraph Relationship",
+            "question": "In Passage 9, how does the mention of 'general relativity' in the final paragraph relate to the overall discussion?",
+            "options": {
+              "A": "It contradicts everything stated about quantum mechanics",
+              "B": "It introduces an ongoing unresolved challenge that quantum mechanics has not yet solved",
+              "C": "It proves quantum mechanics is superior",
+              "D": "It is unrelated to the main topic"
+            },
+            "correct_answer": "B"
+          },
+          {
+            "q_id": "FQ10",
+            "type": "Inference",
+            "question": "Based on Passage 10, what can be inferred about the FOXP2 gene's role in language?",
+            "options": {
+              "A": "It is solely responsible for all language ability",
+              "B": "It plays some role in language, but its function is complex and not fully understood",
+              "C": "It has no connection to language",
+              "D": "It only exists in humans"
+            },
+            "correct_answer": "B",
+            "evidence": "النص يقول 'its role is likely far more nuanced than initially supposed' — nuanced تعني معقدة وليست بسيطة."
+          }
+        ]
+      },
+      "inference_question": {
+        "question": "After completing all 12 lessons, what is the single most important habit a student should develop for TOEFL reading success?",
+        "options": {
+          "A": "Memorizing entire passages word by word.",
+          "B": "Reading questions strategically first, then locating evidence in the text.",
+          "C": "Always reading the text three times before answering.",
+          "D": "Only focusing on easy questions and skipping hard ones."
+        },
+        "correct_answer": "B",
+        "explanation": "القراءة الاستراتيجية القائمة على السؤال أولاً هي العادة الأكثر تأثيراً — تحوّل كل قراءة من جهد عشوائي إلى صيد مركّز للإجابات."
+      }
+    }
+
+  ],
+
+  "metadata": {
+    "created_for": "TOEFL 2026 Reading Section",
+    "total_letter_fill_words": 68,
+    "total_practice_questions": 98,
+    "difficulty_levels": ["easy", "intermediate", "difficult"],
+    "question_types_covered": [
+      "Factual Information",
+      "Negative Factual (NOT/EXCEPT)",
+      "Vocabulary in Context",
+      "Inference",
+      "Rhetorical Purpose",
+      "Paragraph Relationships",
+      "Insert a Sentence",
+      "Main Idea / Important Sentence"
+    ],
+    "adaptive_note": "الدروس R-01 إلى R-04 تُغطي البنية والمهام الأساسية. R-05 إلى R-08 تُغطي أنواع الأسئلة. R-09 تُغطي بناء المفردات. R-10 و R-11 تطبيق مكثّف. R-12 مراجعة شاملة ونهائية."
+  }
+}

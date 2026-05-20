@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 handlers/payments.py - نظام الدفع الكامل
 """
@@ -100,7 +100,7 @@ async def select_plan(cb: CallbackQuery, state: FSMContext):
         conn = get_db()
         try:
             conn.execute(
-                "UPDATE students SET is_paid=1, is_active=1 WHERE telegram_id=?", (uid,))
+            """UPDATE students SET is_paid=1, is_active=1, subscription_type='مجانية', package_end=date('now','+7 days') WHERE telegram_id=?""", (uid,))
             conn.execute(
                 """INSERT OR IGNORE INTO payments
                    (user_id,plan_id,amount,currency,status,notes)
@@ -245,7 +245,7 @@ async def admin_approve(cb: CallbackQuery):
         end_date = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
 
         conn.execute(
-            "UPDATE students SET is_paid=1, is_active=1 WHERE telegram_id=?", (uid,))
+            "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, package_end=? WHERE telegram_id=?", (name_ar, end_date, uid))
         conn.execute(
             "UPDATE payments SET status='verified', verified_at=CURRENT_TIMESTAMP WHERE id=?",
             (payment_id,))

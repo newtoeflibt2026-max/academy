@@ -1,0 +1,1018 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>أكاديمية يامن للتوفل</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f0f1a;
+    --bg2:       #1a1a2e;
+    --bg3:       #16213e;
+    --card:      #1e1e35;
+    --card2:     #252545;
+    --accent:    #6c63ff;
+    --accent2:   #a78bfa;
+    --gold:      #f59e0b;
+    --green:     #10b981;
+    --red:       #ef4444;
+    --blue:      #3b82f6;
+    --text:      #e2e8f0;
+    --text2:     #94a3b8;
+    --text3:     #64748b;
+    --radius:    16px;
+    --radius-sm: 10px;
+    --shadow:    0 4px 24px rgba(108,99,255,0.15);
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── Layout ── */
+  .app { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%);
+    padding: 20px 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(108,99,255,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(108,99,255,0.4);
+  }
+  .logo-text { font-size: 14px; font-weight: 700; color: var(--text); }
+  .logo-sub  { font-size: 11px; color: var(--text2); }
+
+  .streak-badge {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    border-radius: 20px;
+    padding: 6px 14px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
+    50%       { box-shadow: 0 4px 20px rgba(245,158,11,0.7); }
+  }
+
+  .student-info { position: relative; z-index: 1; }
+  .student-name {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  .student-level {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(108,99,255,0.2);
+    border: 1px solid rgba(108,99,255,0.4);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px; color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  /* ── XP Bar ── */
+  .xp-section { margin-top: 4px; }
+  .xp-header {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .xp-value { color: var(--accent2); font-weight: 700; }
+  .xp-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  .xp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), #ec4899);
+    border-radius: 999px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+  }
+  .xp-bar::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* ── Stats Grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 16px;
+    margin-top: -8px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px 8px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+  .stat-icon  { font-size: 20px; margin-bottom: 6px; display: block; }
+  .stat-value { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
+  .stat-label { font-size: 10px; color: var(--text3); margin-top: 2px; display: block; }
+
+  /* ── Section Title ── */
+  .section-title {
+    padding: 4px 16px 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(108,99,255,0.4), transparent);
+  }
+
+  /* ── Progress Cards (Skills) ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 16px 8px;
+  }
+  .skill-card {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s;
+  }
+  .skill-card:hover { transform: translateY(-2px); }
+  .skill-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .skill-name {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600;
+  }
+  .skill-xp { font-size: 11px; color: var(--accent2); font-weight: 700; }
+  .skill-bar-wrap {
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .skill-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bar-reading    { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .bar-listening  { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+  .bar-speaking   { background: linear-gradient(90deg, #ec4899, #f472b6); }
+  .bar-writing    { background: linear-gradient(90deg, #10b981, #34d399); }
+  .bar-grammar    { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  .bar-vocabulary { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+  /* ── Daily Mission Card ── */
+  .mission-card {
+    margin: 0 16px 10px;
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border-radius: var(--radius);
+    padding: 18px;
+    border: 1px solid rgba(108,99,255,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .mission-card::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+  }
+  .mission-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .mission-tag {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+  }
+  .mission-xp {
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.4);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .mission-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .mission-desc  { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .mission-progress {
+    margin-top: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mission-bar-wrap {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .mission-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 999px;
+    transition: width 1s ease;
+  }
+  .mission-pct { font-size: 12px; color: var(--accent2); font-weight: 700; min-width: 35px; }
+
+  /* ── Lessons List ── */
+  .lesson-item {
+    display: flex; align-items: center; gap: 14px;
+    margin: 0 16px 8px;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .lesson-item:hover {
+    background: var(--card2);
+    border-color: rgba(108,99,255,0.4);
+    transform: translateX(-3px);
+  }
+  .lesson-icon {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .icon-reading    { background: rgba(59,130,246,0.2); }
+  .icon-listening  { background: rgba(139,92,246,0.2); }
+  .icon-speaking   { background: rgba(236,72,153,0.2); }
+  .icon-writing    { background: rgba(16,185,129,0.2); }
+  .icon-grammar    { background: rgba(245,158,11,0.2); }
+  .icon-vocabulary { background: rgba(239,68,68,0.2); }
+
+  .lesson-info { flex: 1; min-width: 0; }
+  .lesson-title {
+    font-size: 14px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+  .lesson-meta { font-size: 11px; color: var(--text3); display: flex; gap: 8px; }
+  .lesson-xp   { color: var(--gold); font-weight: 600; }
+  .lesson-arrow { color: var(--text3); font-size: 16px; }
+
+  /* ── Leaderboard ── */
+  .leader-item {
+    display: flex; align-items: center; gap: 12px;
+    margin: 0 16px 8px;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .leader-item.me {
+    border-color: rgba(108,99,255,0.5);
+    background: rgba(108,99,255,0.1);
+  }
+  .leader-rank {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .rank-1 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+  .rank-2 { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: #000; }
+  .rank-3 { background: linear-gradient(135deg, #b45309, #d97706); color: #fff; }
+  .rank-n { background: var(--card2); color: var(--text2); font-size: 12px; }
+  .leader-name  { flex: 1; font-size: 14px; font-weight: 600; }
+  .leader-xp    { font-size: 13px; color: var(--gold); font-weight: 700; }
+
+  /* ── Bottom Nav ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: rgba(26,26,46,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    padding: 8px 0 12px;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    padding: 6px 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none; background: none; color: var(--text3);
+  }
+  .nav-item.active { color: var(--accent2); }
+  .nav-item:hover  { color: var(--text); }
+  .nav-icon { font-size: 22px; }
+  .nav-label { font-size: 10px; font-weight: 600; }
+  .nav-dot {
+    width: 4px; height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+  }
+
+  /* ── Tab Sections ── */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Badge / Status ── */
+  .status-banner {
+    margin: 8px 16px;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13px;
+  }
+  .status-paid {
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.4);
+    color: var(--green);
+  }
+  .status-free {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: var(--gold);
+  }
+
+  /* ── Motivational Quote ── */
+  .quote-card {
+    margin: 0 16px 10px;
+    background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(167,139,250,0.1));
+    border: 1px solid rgba(108,99,255,0.2);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .quote-text { font-size: 14px; color: var(--text2); line-height: 1.7; font-style: italic; }
+  .quote-author { font-size: 12px; color: var(--accent2); margin-top: 8px; font-weight: 700; }
+
+  /* ── Graduation Card ── */
+  .grad-card {
+    margin: 0 16px 10px;
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .grad-locked {
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .grad-unlocked {
+    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(59,130,246,0.2));
+    border: 1px solid rgba(16,185,129,0.4);
+  }
+  .grad-icon  { font-size: 48px; margin-bottom: 12px; display: block; }
+  .grad-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .grad-desc  { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  .grad-requirements {
+    margin-top: 16px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .req-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.04);
+  }
+  .req-ok   { color: var(--green); }
+  .req-fail { color: var(--text3); }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: none; cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 700;
+    padding: 12px 24px;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 12px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(108,99,255,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108,99,255,0.6);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(245,158,11,0.4);
+  }
+  .btn-disabled {
+    background: var(--card2);
+    color: var(--text3);
+    cursor: not-allowed;
+  }
+
+  /* ── Loading ── */
+  .loading {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; gap: 16px;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid rgba(108,99,255,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Animations ── */
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Empty State ── */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text3);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p style="color:var(--text2);font-size:14px">جاري التحميل...</p>
+</div>
+
+<!-- Main App -->
+<div class="app" id="app" style="display:none">
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <div>
+          <div class="logo-text">أكاديمية يامن</div>
+          <div class="logo-sub">TOEFL Academy</div>
+        </div>
+      </div>
+      <div class="streak-badge" id="streakBadge">
+        🔥 <span id="streakVal">0</span>
+      </div>
+    </div>
+    <div class="student-info">
+      <div class="student-name" id="studentName">...</div>
+      <div class="student-level" id="studentLevel">
+        <span>🔵</span> <span id="levelText">مبتدئ</span>
+      </div>
+      <div class="xp-section">
+        <div class="xp-header">
+          <span>⭐ نقاط الخبرة</span>
+          <span class="xp-value"><span id="xpVal">0</span> XP</span>
+        </div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar" id="xpBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: الرئيسية ══ -->
+  <div class="tab-content active fade-in" id="tab-home">
+
+    <!-- Status Banner -->
+    <div class="status-banner status-free" id="statusBanner">
+      ⚠️ حساب مجاني — فعّل اشتراكك لفتح جميع الميزات
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">⭐</span>
+        <span class="stat-value" id="xpStat">0</span>
+        <span class="stat-label">XP</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <span class="stat-value" id="streakStat">0</span>
+        <span class="stat-label">Streak</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">✅</span>
+        <span class="stat-value" id="missionsStat">0</span>
+        <span class="stat-label">مهام</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📊</span>
+        <span class="stat-value" id="scoreStat">0%</span>
+        <span class="stat-label">Placement</span>
+      </div>
+    </div>
+
+    <!-- Daily Mission -->
+    <div class="section-title">🎯 مهمة اليوم</div>
+    <div class="mission-card" id="missionCard">
+      <div class="mission-header">
+        <div class="mission-tag">📚 درس يومي</div>
+        <div class="mission-xp">+20 XP</div>
+      </div>
+      <div class="mission-title">ابدأ درس اليوم</div>
+      <div class="mission-desc">أكمل درس اليوم للحصول على نقاط وتقدم في مستواك</div>
+      <div class="mission-progress">
+        <div class="mission-bar-wrap">
+          <div class="mission-bar" id="missionBar" style="width:0%"></div>
+        </div>
+        <div class="mission-pct" id="missionPct">0%</div>
+      </div>
+    </div>
+
+    <!-- Motivational Quote -->
+    <div class="quote-card fade-in">
+      <div class="quote-text" id="quoteText">
+        "النجاح ليس نهائياً، والفشل ليس قاتلاً — الشجاعة على الاستمرار هي ما يهم"
+      </div>
+      <div class="quote-author">— Winston Churchill</div>
+    </div>
+
+    <!-- Skills Progress -->
+    <div class="section-title">💪 تقدم المهارات</div>
+    <div class="skills-grid" id="skillsGrid">
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">📖 القراءة</div>
+          <div class="skill-xp" id="readingXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-reading" id="readingBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">🎧 الاستماع</div>
+          <div class="skill-xp" id="listeningXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-listening" id="listeningBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">🗣️ التحدث</div>
+          <div class="skill-xp" id="speakingXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-speaking" id="speakingBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <div class="skill-name">✍️ الكتابة</div>
+          <div class="skill-xp" id="writingXp">0 XP</div>
+        </div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar bar-writing" id="writingBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-home -->
+
+  <!-- ══ TAB: الدروس ══ -->
+  <div class="tab-content fade-in" id="tab-lessons">
+    <div class="section-title" style="padding-top:16px">📚 الدروس المتاحة</div>
+    <div id="lessonsList">
+      <div class="empty-state">
+        <div class="icon">📚</div>
+        <p>جاري تحميل الدروس...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: المتصدرون ══ -->
+  <div class="tab-content fade-in" id="tab-leaders">
+    <div class="section-title" style="padding-top:16px">🏆 المتصدرون</div>
+    <div id="leadersList">
+      <div class="empty-state">
+        <div class="icon">🏆</div>
+        <p>جاري تحميل البيانات...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: التخرج ══ -->
+  <div class="tab-content fade-in" id="tab-grad">
+    <div class="section-title" style="padding-top:16px">🎓 التخرج</div>
+    <div id="gradCard" class="grad-card grad-locked">
+      <span class="grad-icon">🔒</span>
+      <div class="grad-title">بوابة التخرج</div>
+      <div class="grad-desc">أكمل جميع المتطلبات لفتح شهادة التخرج</div>
+      <div class="grad-requirements" id="gradReqs"></div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav" id="bottomNav" style="display:none">
+  <button class="nav-item active" onclick="switchTab('home',this)">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">الرئيسية</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('lessons',this)">
+    <span class="nav-icon">📚</span>
+    <span class="nav-label">الدروس</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('leaders',this)">
+    <span class="nav-icon">🏆</span>
+    <span class="nav-label">المتصدرون</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('grad',this)">
+    <span class="nav-icon">🎓</span>
+    <span class="nav-label">التخرج</span>
+  </button>
+</nav>
+
+<script>
+// ══════════════════════════════════════
+// Telegram WebApp Init
+// ══════════════════════════════════════
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#0f0f1a');
+  tg.setBackgroundColor('#0f0f1a');
+}
+
+const studentId = new URLSearchParams(window.location.search).get('student_id')
+  || tg?.initDataUnsafe?.user?.id
+  || null;
+
+// ══════════════════════════════════════
+// Tab Switching
+// ══════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const tab = document.getElementById('tab-' + name);
+  if (tab) { tab.classList.add('active'); tab.classList.add('fade-in'); }
+  if (btn)  btn.classList.add('active');
+  if (name === 'lessons' && !lessonsLoaded) loadLessons();
+  if (name === 'leaders' && !leadersLoaded) loadLeaders();
+  if (name === 'grad')    loadGrad();
+}
+
+let lessonsLoaded = false;
+let leadersLoaded = false;
+
+// ══════════════════════════════════════
+// Load Student Data
+// ══════════════════════════════════════
+const QUOTES = [
+  { text: "كل يوم تتعلم فيه هو انتصار على نفسك", author: "— يامن أكاديمي" },
+  { text: "النجاح ليس نهائياً والفشل ليس قاتلاً — الشجاعة على الاستمرار هي ما يهم", author: "— Winston Churchill" },
+  { text: "لا تنتظر الظروف المثالية — ابدأ الآن بما لديك", author: "— Arthur Ashe" },
+  { text: "التكرار هو أم التعلم", author: "— مثل تعليمي" },
+  { text: "كل خبير كان في يوم ما مبتدئاً", author: "— Helen Hayes" },
+];
+
+async function loadStudent() {
+  if (!studentId) {
+    showError();
+    return;
+  }
+  try {
+    const res  = await fetch(`/api/student/${studentId}`);
+    const data = await res.json();
+    if (data.error) { showError(data.error); return; }
+    renderStudent(data);
+  } catch(e) {
+    showError('تعذر الاتصال بالخادم');
+  }
+}
+
+function renderStudent(d) {
+  // Header
+  document.getElementById('studentName').textContent  = d.full_name || d.username || 'طالب';
+  document.getElementById('xpVal').textContent        = (d.xp || 0).toLocaleString();
+  document.getElementById('streakVal').textContent    = d.streak || 0;
+
+  // Level
+  const levelMap = {
+    beginner:     { ar: 'مبتدئ',  icon: '🔵' },
+    intermediate: { ar: 'متوسط',  icon: '🟡' },
+    advanced:     { ar: 'متقدم',  icon: '🟢' },
+  };
+  const lv = levelMap[d.level] || levelMap.beginner;
+  document.getElementById('levelText').textContent   = lv.ar;
+  document.getElementById('studentLevel').querySelector('span').textContent = lv.icon;
+
+  // XP Bar (max 1000 per level)
+  const xpPct = Math.min((d.xp || 0) % 500 / 500 * 100, 100);
+  setTimeout(() => {
+    document.getElementById('xpBar').style.width = xpPct + '%';
+  }, 300);
+
+  // Stats
+  document.getElementById('xpStat').textContent      = (d.xp || 0).toLocaleString();
+  document.getElementById('streakStat').textContent  = d.streak || 0;
+  document.getElementById('missionsStat').textContent= d.missions_completed || 0;
+  document.getElementById('scoreStat').textContent   = (d.placement_score || 0) + '%';
+
+  // Status Banner
+  const banner = document.getElementById('statusBanner');
+  if (d.is_paid) {
+    banner.className = 'status-banner status-paid';
+    banner.textContent = '✅ حساب مفعّل — جميع الميزات متاحة لك';
+  }
+
+  // Skills
+  const skills = d.skills || {};
+  const maxXp  = 200;
+  renderSkillBar('reading',   skills.reading_xp   || 0, maxXp);
+  renderSkillBar('listening', skills.listening_xp || 0, maxXp);
+  renderSkillBar('speaking',  skills.speaking_xp  || 0, maxXp);
+  renderSkillBar('writing',   skills.writing_xp   || 0, maxXp);
+
+  // Mission Progress
+  const missions = d.missions_completed || 0;
+  const mPct = Math.min(missions / 10 * 100, 100);
+  setTimeout(() => {
+    document.getElementById('missionBar').style.width = mPct + '%';
+    document.getElementById('missionPct').textContent = Math.round(mPct) + '%';
+  }, 500);
+
+  // Random Quote
+  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  document.getElementById('quoteText').textContent   = '"' + q.text + '"';
+  document.querySelector('.quote-author').textContent = q.author;
+
+  // Show App
+  document.getElementById('loading').style.display   = 'none';
+  document.getElementById('app').style.display       = 'block';
+  document.getElementById('bottomNav').style.display = 'flex';
+}
+
+function renderSkillBar(skill, xp, max) {
+  const pct = Math.min(xp / max * 100, 100);
+  document.getElementById(skill + 'Xp').textContent  = xp + ' XP';
+  setTimeout(() => {
+    document.getElementById(skill + 'Bar').style.width = pct + '%';
+  }, 600);
+}
+
+function showError(msg) {
+  document.getElementById('loading').innerHTML =
+    `<div style="text-align:center;padding:40px 20px">
+      <div style="font-size:48px;margin-bottom:16px">😕</div>
+      <div style="color:var(--text2);font-size:14px">${msg || 'تعذر تحميل البيانات'}</div>
+      <button onclick="loadStudent()" class="btn btn-primary" style="margin-top:20px;width:auto;padding:10px 24px">
+        🔄 إعادة المحاولة
+      </button>
+    </div>`;
+}
+
+// ══════════════════════════════════════
+// Load Lessons
+// ══════════════════════════════════════
+async function loadLessons() {
+  lessonsLoaded = true;
+  try {
+    const res  = await fetch('/api/lessons');
+    const data = await res.json();
+    const lessons = data.lessons || [];
+    const el = document.getElementById('lessonsList');
+
+    if (!lessons.length) {
+      el.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>لا توجد دروس بعد</p></div>`;
+      return;
+    }
+
+    const skillIcon = {
+      reading:'📖', listening:'🎧', speaking:'🗣️',
+      writing:'✍️', grammar:'📝', vocabulary:'📚'
+    };
+    const skillClass = {
+      reading:'icon-reading', listening:'icon-listening', speaking:'icon-speaking',
+      writing:'icon-writing', grammar:'icon-grammar', vocabulary:'icon-vocabulary'
+    };
+
+    // Group by stage
+    const stages = {};
+    lessons.forEach(l => {
+      const s = l.stage || 1;
+      (stages[s] = stages[s] || []).push(l);
+    });
+
+    let html = '';
+    Object.keys(stages).sort().forEach(s => {
+      html += `<div class="section-title">المرحلة ${s}</div>`;
+      stages[s].forEach(l => {
+        const sk = l.skill_type || 'reading';
+        html += `
+          <div class="lesson-item" onclick="openLesson(${l.id})">
+            <div class="lesson-icon ${skillClass[sk]||'icon-reading'}">
+              ${skillIcon[sk]||'📌'}
+            </div>
+            <div class="lesson-info">
+              <div class="lesson-title">${l.title}</div>
+              <div class="lesson-meta">
+                <span>${sk}</span>
+                <span class="lesson-xp">+${l.xp_reward||20} XP</span>
+              </div>
+            </div>
+            <span class="lesson-arrow">‹</span>
+          </div>`;
+      });
+    });
+    el.innerHTML = html;
+  } catch(e) {
+    document.getElementById('lessonsList').innerHTML =
+      `<div class="empty-state"><div class="icon">❌</div><p>خطأ في التحميل</p></div>`;
+  }
+}
+
+function openLesson(id) {
+  if (tg) tg.close();
+  window.open(`/lesson/${id}`, '_blank');
+}
+
+// ══════════════════════════════════════
+// Load Leaderboard
+// ══════════════════════════════════════
+async function loadLeaders() {
+  leadersLoaded = true;
+  try {
+    const res  = await fetch('/api/leaderboard');
+    const data = await res.json();
+    const leaders = data.leaderboard || data.leaders || [];
+    const el = document.getElementById('leadersList');
+
+    if (!leaders.length) {
+      el.innerHTML = `<div class="empty-state"><div class="icon">🏆</div><p>لا توجد بيانات بعد</p></div>`;
+      return;
+    }
+
+    const medals = ['rank-1','rank-2','rank-3'];
+    const mText  = ['🥇','🥈','🥉'];
+    let html = '';
+    leaders.forEach((l, i) => {
+      const isMe = String(l.telegram_id) === String(studentId);
+      const rc   = medals[i] || 'rank-n';
+      const rm   = mText[i]  || (i+1);
+      html += `
+        <div class="leader-item ${isMe ? 'me' : ''}">
+          <div class="leader-rank ${rc}">${rm}</div>
+          <div class="leader-name">
+            ${l.full_name || l.username || 'طالب'}
+            ${isMe ? ' <span style="color:var(--accent2);font-size:11px">(أنت)</span>' : ''}
+          </div>
+          <div class="leader-xp">${(l.xp||0).toLocaleString()} XP</div>
+        </div>`;
+    });
+    el.innerHTML = html;
+  } catch(e) {
+    document.getElementById('leadersList').innerHTML =
+      `<div class="empty-state"><div class="icon">❌</div><p>خطأ في التحميل</p></div>`;
+  }
+}
+
+// ══════════════════════════════════════
+// Graduation Check
+// ══════════════════════════════════════
+async function loadGrad() {
+  if (!studentId) return;
+  try {
+    const res  = await fetch(`/api/user/graduation-status?student_id=${studentId}`);
+    const data = await res.json();
+    const card = document.getElementById('gradCard');
+    const reqs = document.getElementById('gradReqs');
+
+    const checks = data.checks || [];
+    let reqHtml = '';
+    checks.forEach(c => {
+      reqHtml += `
+        <div class="req-item ${c.passed ? 'req-ok' : 'req-fail'}">
+          <span>${c.passed ? '✅' : '❌'}</span>
+          <span>${c.message}</span>
+        </div>`;
+    });
+    reqs.innerHTML = reqHtml;
+
+    if (data.eligible) {
+      card.className = 'grad-card grad-unlocked';
+      card.querySelector('.grad-icon').textContent  = '🎓';
+      card.querySelector('.grad-title').textContent = 'مبروك! أنت مؤهل للتخرج';
+      card.querySelector('.grad-desc').textContent  = 'تواصل مع الأدمن للحصول على شهادتك';
+      reqs.insertAdjacentHTML('afterend',
+        `<button class="btn btn-gold" onclick="contactAdmin()">
+          🎓 احصل على شهادتك الآن
+        </button>`
+      );
+    }
+  } catch(e) { /* silent */ }
+}
+
+function contactAdmin() {
+  if (tg) tg.openTelegramLink('https://t.me/YamenAdmin');
+  else window.open('https://t.me/YamenAdmin', '_blank');
+}
+
+// ══════════════════════════════════════
+// Boot
+// ══════════════════════════════════════
+loadStudent();
+</script>
+</body>
+</html>

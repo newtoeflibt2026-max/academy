@@ -1,0 +1,413 @@
+﻿
+# ════════════════════════════════════════════════════════════
+# 📚 LESSON CONTENT MANAGEMENT — Phase 2A
+# ════════════════════════════════════════════════════════════
+
+ALLOWED_ITEM_TABLES = {
+    "words":     "lesson_letter_fill",
+    "texts":     "lesson_practice_texts",
+    "questions": "lesson_questions",
+    "dragdrop":  "lesson_drag_drop",
+}
+
+def _get_lesson_or_404(lid):
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT * FROM lessons WHERE id=?", (lid,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+@app.route("/api/admin/lessons/<int:lid>/full", methods=["GET"])
+def api_lesson_full(lid):
+    """Return everything for one lesson."""
+    try:
+        lesson = _get_lesson_or_404(lid)
+        if not lesson:
+            return jsonify({"error": "Lesson not found"}), 404
+
+        # parse explanation_json if exists
+        try:
+            lesson["explanation"] = json.loads(lesson.get("explanation_json") or "{}")
+        except Exception:
+            lesson["explanation"] = {}
+
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+
+        words = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_letter_fill WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for w in words:
+            try:
+                w["letter_array"] = json.loads(w.get("letter_array_json") or "[]")
+            except Exception:
+                w["letter_array"] = []
+
+        texts = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_practice_texts WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for t in texts:
+            try:
+                t["answers"] = json.loads(t.get("answers_json") or "{}")
+            except Exception:
+                t["answers"] = {}
+
+        questions = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_questions WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for q in questions:
+            try:
+                q["options"] = json.loads(q.get("options_json") or "{}")
+            except Exception:
+                q["options"] = {}
+
+        dragdrops = [dict(r) for r in conn.execute(
+            "SELECT * FROM lesson_drag_drop WHERE lesson_id=? ORDER BY order_num, id", (lid,)).fetchall()]
+        for d in dragdrops:
+            try:
+                d["items"] = json.loads(d.get("items_json") or "[]")
+                d["correct_order"] = json.loads(d.get("correct_order_json") or "[]")
+            except Exception:
+                d["items"] = []
+                d["correct_order"] = []
+
+        conn.close()
+        return jsonify({
+            "lesson": lesson,
+            "words": words,
+            "texts": texts,
+            "questions": questions,
+            "dragdrops": dragdrops,
+            "counts": {
+                "words": len(words),
+                "texts": len(texts),
+                "questions": len(questions),
+                "dragdrops": len(dragdrops),
+            }
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/words", methods=["POST"])
+def api_add_word(lid):
+    """Add a letter-fill word to a lesson."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        word = (d.get("word") or "").strip().upper()
+        if not word:
+            return jsonify({"error": "word required"}), 400
+        letter_array = d.get("letter_array") or list(word)
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_letter_fill WHERE lesson_id=?",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_letter_fill
+            (lesson_id, word, translation, sentence, hint, letter_array_json, order_num)
+            VALUES (?,?,?,?,?,?,?)
+        """, (lid, word, d.get("translation",""), d.get("sentence",""),
+              d.get("hint",""), json.dumps(letter_array, ensure_ascii=False), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/texts", methods=["POST"])
+def api_add_text(lid):
+    """Add a practice text."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        content = (d.get("content") or "").strip()
+        if not content:
+            return jsonify({"error": "content required"}), 400
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_practice_texts WHERE lesson_id=?",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_practice_texts
+            (lesson_id, text_id, level, text_type, content, answers_json, order_num)
+            VALUES (?,?,?,?,?,?,?)
+        """, (lid, d.get("text_id",""), d.get("level","easy"),
+              d.get("text_type","complete_words"), content,
+              json.dumps(d.get("answers", {}), ensure_ascii=False), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/questions", methods=["POST"])
+def api_add_lesson_question(lid):
+    """Add a question to a lesson (timer default 30s)."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        question = (d.get("question") or "").strip()
+        if not question:
+            return jsonify({"error": "question required"}), 400
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_questions WHERE lesson_id=? AND order_num<999",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_questions
+            (lesson_id, q_id, q_type, question, passage_ref,
+             options_json, correct_answer, explanation, evidence,
+             common_trap, tip, timer_seconds, order_num)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (lid, d.get("q_id",""), d.get("q_type","factual"),
+              question, d.get("passage_ref",""),
+              json.dumps(d.get("options", {}), ensure_ascii=False),
+              d.get("correct_answer","A"),
+              d.get("explanation",""), d.get("evidence",""),
+              d.get("common_trap",""), d.get("tip",""),
+              int(d.get("timer_seconds", 30)), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/dragdrop", methods=["POST"])
+def api_add_dragdrop(lid):
+    """Add a drag-and-drop exercise."""
+    try:
+        if not _get_lesson_or_404(lid):
+            return jsonify({"error": "Lesson not found"}), 404
+        d = request.get_json(force=True) or {}
+        title = (d.get("title") or "").strip()
+        items = d.get("items") or []
+        correct_order = d.get("correct_order") or []
+        if not items:
+            return jsonify({"error": "items required"}), 400
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        order_num = (cur.execute(
+            "SELECT COALESCE(MAX(order_num),0)+1 FROM lesson_drag_drop WHERE lesson_id=?",
+            (lid,)).fetchone()[0])
+        cur.execute("""
+            INSERT INTO lesson_drag_drop
+            (lesson_id, title, exercise_type, instructions,
+             items_json, correct_order_json, order_num)
+            VALUES (?,?,?,?,?,?,?)
+        """, (lid, title, d.get("exercise_type","sentence_order"),
+              d.get("instructions",""),
+              json.dumps(items, ensure_ascii=False),
+              json.dumps(correct_order, ensure_ascii=False), order_num))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/import-json", methods=["POST"])
+def api_import_lesson_json():
+    """Import a full lesson from JSON (single lesson object or {'lessons': [...]})"""
+    try:
+        d = request.get_json(force=True) or {}
+        # supports both: single lesson, or { "lessons": [...] }
+        lessons_in = d.get("lessons") if "lessons" in d else [d]
+        if not isinstance(lessons_in, list) or not lessons_in:
+            return jsonify({"error": "no lessons in JSON"}), 400
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        added = []
+
+        XP_DEFAULT = 40
+
+        for L in lessons_in:
+            code = (L.get("lesson_id") or L.get("code") or "").strip()
+            title = (L.get("title") or "").strip() or "Untitled"
+            focus = L.get("focus_point","")
+            exp_json = json.dumps(L.get("explanation", {}), ensure_ascii=False)
+            xp = int(L.get("xp_reward", XP_DEFAULT))
+            skill = L.get("skill","reading")
+            phase = int(L.get("phase", 1))
+            timer_min = int(L.get("timer_minutes", 15))
+
+            # next order_num
+            order_num = (cur.execute(
+                "SELECT COALESCE(MAX(order_num),0)+1 FROM lessons").fetchone()[0])
+
+            cur.execute("""
+                INSERT INTO lessons
+                (title, title_ar, lesson_code, focus_point, explanation_json,
+                 skill, phase, order_num, xp_reward, timer_minutes, is_active, content)
+                VALUES (?,?,?,?,?,?,?,?,?,?,1,?)
+            """, (title, title, code, focus, exp_json, skill, phase,
+                  order_num, xp, timer_min, focus))
+            lesson_pk = cur.lastrowid
+
+            # words
+            for i, w in enumerate(L.get("letter_fill_exercise",{}).get("target_words",[]), start=1):
+                cur.execute("""
+                    INSERT INTO lesson_letter_fill
+                    (lesson_id, word, translation, sentence, hint, letter_array_json, order_num)
+                    VALUES (?,?,?,?,?,?,?)
+                """, (lesson_pk, w.get("word",""), w.get("translation",""),
+                      w.get("sentence",""), w.get("hint",""),
+                      json.dumps(w.get("letter_array",[]), ensure_ascii=False), i))
+
+            # practice texts (all levels merged)
+            order = 0
+            for level_key in ("easy","medium","intermediate","difficult"):
+                for t in L.get("practice_texts",{}).get(level_key, []):
+                    order += 1
+                    cur.execute("""
+                        INSERT INTO lesson_practice_texts
+                        (lesson_id, text_id, level, text_type, content, answers_json, order_num)
+                        VALUES (?,?,?,?,?,?,?)
+                    """, (lesson_pk, t.get("id",""), level_key, "complete_words",
+                          t.get("text",""),
+                          json.dumps(t.get("answers",{}), ensure_ascii=False), order))
+
+            # generic questions list (multiple shapes)
+            def _insert_question(q, qtype, passage=""):
+                cur.execute("""
+                    INSERT INTO lesson_questions
+                    (lesson_id, q_id, q_type, question, passage_ref,
+                     options_json, correct_answer, explanation, evidence,
+                     common_trap, tip, timer_seconds, order_num)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,30,0)
+                """, (lesson_pk, q.get("q_id",""), qtype,
+                      q.get("question",""), q.get("passage", passage),
+                      json.dumps(q.get("options",{}), ensure_ascii=False),
+                      q.get("correct_answer",""),
+                      q.get("explanation",""), q.get("evidence",""),
+                      q.get("common_trap",""), q.get("tip","")))
+
+            pq = L.get("practice_questions", {})
+            type_map = {
+                "factual_questions":"factual",
+                "negative_factual_questions":"negative_factual",
+                "vocabulary_questions":"vocabulary",
+                "inference_questions":"inference",
+                "rhetorical_purpose_questions":"rhetorical",
+                "insert_sentence_questions":"insert_sentence",
+                "paragraph_relationship_questions":"paragraph_relation",
+            }
+            if isinstance(pq, dict):
+                for cat, qlist in pq.items():
+                    if isinstance(qlist, list):
+                        for q in qlist:
+                            _insert_question(q, type_map.get(cat, cat))
+
+            for sk in ("practice_set","practice_set_1","practice_set_2"):
+                ps = L.get(sk, {})
+                for q in ps.get("questions", []):
+                    _insert_question(q, q.get("type","factual").lower().replace(" ","_"),
+                                     ps.get("passage_title",""))
+
+            fq = L.get("final_comprehensive_quiz", {})
+            for q in fq.get("questions", []):
+                _insert_question(q, q.get("type","factual").lower().replace(" ","_"))
+
+            iq = L.get("inference_question", {})
+            if iq:
+                cur.execute("""
+                    INSERT INTO lesson_questions
+                    (lesson_id, q_id, q_type, question, options_json,
+                     correct_answer, explanation, timer_seconds, order_num)
+                    VALUES (?,?,'inference',?,?,?,?,30,999)
+                """, (lesson_pk, f"{code}_final" if code else "final",
+                      iq.get("question",""),
+                      json.dumps(iq.get("options",{}), ensure_ascii=False),
+                      iq.get("correct_answer",""),
+                      iq.get("explanation","")))
+
+            added.append({"id": lesson_pk, "code": code, "title": title})
+
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "added": added, "count": len(added)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lesson-item/<table>/<int:item_id>", methods=["DELETE"])
+def api_delete_lesson_item(table, item_id):
+    """Delete a word/text/question/dragdrop item."""
+    try:
+        tbl = ALLOWED_ITEM_TABLES.get(table)
+        if not tbl:
+            return jsonify({"error": "invalid table"}), 400
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute(f"DELETE FROM {tbl} WHERE id=?", (item_id,))
+        conn.commit()
+        affected = cur.rowcount
+        conn.close()
+        return jsonify({"ok": True, "deleted": affected})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lesson-item/<table>/<int:item_id>", methods=["PUT"])
+def api_update_lesson_item(table, item_id):
+    """Update a lesson item (partial update with whitelisted columns)."""
+    try:
+        tbl = ALLOWED_ITEM_TABLES.get(table)
+        if not tbl:
+            return jsonify({"error": "invalid table"}), 400
+        d = request.get_json(force=True) or {}
+
+        # whitelist columns per table
+        allowed_cols = {
+            "lesson_letter_fill":     ["word","translation","sentence","hint","letter_array_json","order_num"],
+            "lesson_practice_texts":  ["text_id","level","text_type","content","answers_json","order_num"],
+            "lesson_questions":       ["q_id","q_type","question","passage_ref","options_json",
+                                       "correct_answer","explanation","evidence","common_trap",
+                                       "tip","timer_seconds","order_num"],
+            "lesson_drag_drop":       ["title","exercise_type","instructions","items_json",
+                                       "correct_order_json","order_num"],
+        }[tbl]
+
+        # auto-convert dict/list fields to JSON string
+        json_fields = {"options","letter_array","answers","items","correct_order"}
+        body = {}
+        for k, v in d.items():
+            if k in json_fields:
+                body[k + "_json"] = json.dumps(v, ensure_ascii=False)
+            else:
+                body[k] = v
+
+        sets, vals = [], []
+        for col in allowed_cols:
+            if col in body:
+                sets.append(f"{col}=?")
+                vals.append(body[col])
+        if not sets:
+            return jsonify({"error": "no valid fields"}), 400
+        vals.append(item_id)
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute(f"UPDATE {tbl} SET {', '.join(sets)} WHERE id=?", vals)
+        conn.commit()
+        affected = cur.rowcount
+        conn.close()
+        return jsonify({"ok": True, "updated": affected})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

@@ -1,0 +1,11 @@
+BOT_TOKEN=8518957777:AAEbyXkwPKQwEgMgUbj0FaXB97nn9y2Xx84
+GEMINI_API_KEY=AIzaSyBfu0gQwsBOqh6dzTVBaOcFByEzjJ9unxM
+ADMIN_IDS=5572314718
+WEBHOOK_HOST=https://yamenacademyapp.up.railway.app
+PORT=8080
+# قناة الاشتراك الإجباري (اتركها فارغة لتعطيل Force Sub)
+FORCE_SUB_CHANNELS=https://t.me/yamen_academy
+# توكن Ngrok (اختياري — من https://dashboard.ngrok.com)
+NGROK_AUTHTOKEN=
+# مسار قاعدة البيانات المحلية
+DB_PATH=

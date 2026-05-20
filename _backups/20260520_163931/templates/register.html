@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل | Yamen Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen">
+    <div class="container mx-auto px-4 py-12 max-w-lg">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="text-center mb-8">
+                <div class="text-5xl mb-3">🎯</div>
+                <h1 class="text-2xl font-bold text-gray-800">تسجيل حساب جديد</h1>
+                <p class="text-gray-600 mt-2">املأ بياناتك للبدء في رحلة IELTS</p>
+            </div>
+
+            <form id="registerForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">👤 الاسم الكامل</label>
+                    <input type="text" id="name" required minlength="2" maxlength="60"
+                           class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400 focus:border-transparent outline-none"
+                           placeholder="أدخل اسمك الكامل">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">📌 نوع الاختبار</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="border rounded-xl p-3 cursor-pointer hover:border-indigo-400 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                            <input type="radio" name="path_type" value="academic" checked class="hidden">
+                            <div class="text-center">
+                                <div class="text-2xl">🎓</div>
+                                <div class="font-bold text-sm">Academic</div>
+                                <div class="text-xs text-gray-500">جامعة وهجرة</div>
+                            </div>
+                        </label>
+                        <label class="border rounded-xl p-3 cursor-pointer hover:border-indigo-400 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                            <input type="radio" name="path_type" value="general" class="hidden">
+                            <div class="text-center">
+                                <div class="text-2xl">🌍</div>
+                                <div class="font-bold text-sm">General</div>
+                                <div class="text-xs text-gray-500">هجرة وعمل</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">🎯 الـ Band المستهدف</label>
+                    <select id="target_band" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-400 outline-none">
+                        <option value="5.0">Band 5.0</option>
+                        <option value="5.5">Band 5.5</option>
+                        <option value="6.0" selected>Band 6.0</option>
+                        <option value="6.5">Band 6.5</option>
+                        <option value="7.0">Band 7.0</option>
+                        <option value="7.5">Band 7.5</option>
+                        <option value="8.0">Band 8.0</option>
+                        <option value="8.5">Band 8.5</option>
+                        <option value="9.0">Band 9.0</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">⏳ الأيام المتاحة قبل الامتحان</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="border rounded-xl p-3 text-center cursor-pointer hover:border-indigo-400 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                            <input type="radio" name="days_left" value="20" class="hidden">
+                            <div>⚡ أقل من 30</div>
+                        </label>
+                        <label class="border rounded-xl p-3 text-center cursor-pointer hover:border-indigo-400 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                            <input type="radio" name="days_left" value="60" checked class="hidden">
+                            <div>📆 30-90</div>
+                        </label>
+                        <label class="border rounded-xl p-3 text-center cursor-pointer hover:border-indigo-400 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                            <input type="radio" name="days_left" value="120" class="hidden">
+                            <div>📚 +90</div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition text-lg">✅ سجّل وابدأ</button>
+            </form>
+
+            <div id="resultMsg" class="mt-4 hidden"></div>
+
+            <div class="text-center mt-6 text-sm text-gray-500">
+                لديك حساب؟ <a href="/" class="text-indigo-600 hover:underline">سجّل الدخول</a> |
+                <a href="/subscribe" class="text-indigo-600 hover:underline">عرض الباقات</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            if (name.length < 2) { alert('الاسم يجب أن يكون حرفين على الأقل'); return; }
+
+            const userId = 'web_' + crypto.randomUUID();
+            localStorage.setItem('yamen_user_id', userId);
+            localStorage.setItem('yamen_name', name);
+
+            const pathType = document.querySelector('[name=path_type]:checked').value;
+            const targetBand = parseFloat(document.getElementById('target_band').value);
+            const daysLeft = parseInt(document.querySelector('[name=days_left]:checked').value);
+
+            const res = await fetch('/api/payment/create', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: userId, plan_key: 'flexible', method: 'zain',
+                    name, path_type: pathType, target_band: targetBand, days_left: daysLeft
+                })
+            });
+
+            const div = document.getElementById('resultMsg');
+            div.classList.remove('hidden');
+            if (res.ok) {
+                div.innerHTML = <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                    <div class="text-3xl">🎉</div>
+                    <p class="font-bold text-green-700">تم التسجيل بنجاح!</p>
+                    <p class="text-sm mt-1">مرحباً <b></b> — هدفك Band </p>
+                    <a href="/subscribe" class="mt-3 inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">💎 اختر باقتك الآن</a>
+                </div>;
+            } else {
+                const err = await res.json();
+                div.innerHTML = <div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-600">❌ </div>;
+            }
+        });
+    </script>
+</body>
+</html>

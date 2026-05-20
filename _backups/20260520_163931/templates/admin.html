@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>لوحة الإدارة</title>
+    <style>
+        :root{
+            --bg:#f5f7fb;
+            --panel:#ffffff;
+            --panel-soft:#fafbfd;
+            --text:#1b2430;
+            --muted:#6b7280;
+            --line:#d9e1ec;
+            --primary:#2463eb;
+            --primary-dark:#1d4fd7;
+            --danger:#d14141;
+            --danger-soft:#fff1f1;
+            --success:#14855b;
+            --success-soft:#edf9f3;
+            --warning:#9a6a00;
+            --warning-soft:#fff8e8;
+            --radius-lg:20px;
+            --radius-md:14px;
+            --radius-sm:10px;
+            --shadow:0 14px 32px rgba(15, 23, 42, 0.07);
+            --container:1240px;
+        }
+
+        *{
+            box-sizing:border-box;
+        }
+
+        html,body{
+            margin:0;
+            padding:0;
+            background:var(--bg);
+            color:var(--text);
+            font-family:"Tahoma","Segoe UI","Arial",sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+        }
+
+        .page{
+            width:min(100%, var(--container));
+            margin:0 auto;
+            padding:24px;
+        }
+
+        .topbar{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+            padding:20px 22px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            margin-bottom:22px;
+        }
+
+        .topbar-title{
+            margin:0;
+            font-size:1.35rem;
+            font-weight:800;
+        }
+
+        .topbar-subtitle{
+            margin:6px 0 0;
+            color:var(--muted);
+            font-size:0.95rem;
+        }
+
+        .topbar-links{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .nav-link{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:42px;
+            padding:0 16px;
+            border-radius:12px;
+            border:1px solid var(--line);
+            background:#fff;
+            color:var(--text);
+            text-decoration:none;
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap:16px;
+            margin-bottom:22px;
+        }
+
+        .stat-card{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+            padding:20px;
+        }
+
+        .stat-label{
+            color:var(--muted);
+            font-size:0.93rem;
+            margin-bottom:10px;
+        }
+
+        .stat-value{
+            font-size:1.9rem;
+            font-weight:800;
+        }
+
+        .content-grid{
+            display:grid;
+            grid-template-columns:1.45fr 0.95fr;
+            gap:22px;
+        }
+
+        .panel{
+            background:var(--panel);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            box-shadow:var(--shadow);
+            overflow:hidden;
+        }
+
+        .panel-header{
+            padding:20px 22px 14px;
+            border-bottom:1px solid #edf1f7;
+        }
+
+        .panel-title{
+            margin:0;
+            font-size:1.08rem;
+            font-weight:800;
+        }
+
+        .panel-subtitle{
+            margin:7px 0 0;
+            color:var(--muted);
+            font-size:0.93rem;
+        }
+
+        .panel-body{
+            padding:20px 22px 22px;
+        }
+
+        .table-wrap{
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:860px;
+        }
+
+        th, td{
+            text-align:right;
+            vertical-align:top;
+            padding:14px 12px;
+            border-bottom:1px solid #eef2f7;
+        }
+
+        th{
+            background:#f9fbff;
+            font-weight:800;
+            font-size:0.95rem;
+        }
+
+        td{
+            font-size:0.95rem;
+            line-height:1.7;
+        }
+
+        tr:last-child td{
+            border-bottom:none;
+        }
+
+        .question-text{
+            font-weight:700;
+            margin-bottom:6px;
+        }
+
+        .options-list{
+            margin:0;
+            padding-right:18px;
+            color:var(--muted);
+        }
+
+        .correct-answer{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            padding:8px 12px;
+            border-radius:999px;
+            background:var(--success-soft);
+            color:var(--success);
+            font-weight:700;
+            white-space:nowrap;
+        }
+
+        .btn{
+            border:none;
+            cursor:pointer;
+            min-height:42px;
+            padding:0 16px;
+            border-radius:12px;
+            font-weight:700;
+            transition:0.18s ease;
+        }
+
+        .btn-primary{
+            background:var(--primary);
+            color:#fff;
+        }
+
+        .btn-primary:hover{
+            background:var(--primary-dark);
+        }
+
+        .btn-danger{
+            background:var(--danger-soft);
+            color:var(--danger);
+        }
+
+        .btn-secondary{
+            background:#f7f9fc;
+            color:var(--text);
+            border:1px solid var(--line);
+        }
+
+        .form-grid{
+            display:grid;
+            gap:14px;
+        }
+
+        .field{
+            display:grid;
+            gap:8px;
+        }
+
+        .field label{
+            font-size:0.94rem;
+            font-weight:700;
+        }
+
+        .field input,
+        .field textarea,
+        .field select{
+            width:100%;
+            border:1px solid var(--line);
+            border-radius:12px;
+            padding:12px 14px;
+            background:#fff;
+            color:var(--text);
+            outline:none;
+            font:inherit;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus{
+            border-color:#8eb0ff;
+            box-shadow:0 0 0 4px rgba(36,99,235,0.08);
+        }
+
+        .field textarea{
+            min-height:96px;
+            resize:vertical;
+        }
+
+        .hint{
+            color:var(--muted);
+            font-size:0.87rem;
+            line-height:1.8;
+        }
+
+        .status{
+            display:none;
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:12px;
+            font-weight:700;
+            line-height:1.8;
+        }
+
+        .status.show{
+            display:block;
+        }
+
+        .status.success{
+            background:var(--success-soft);
+            color:var(--success);
+            border:1px solid #ccebdc;
+        }
+
+        .status.error{
+            background:var(--danger-soft);
+            color:var(--danger);
+            border:1px solid #f0cccc;
+        }
+
+        .status.warning{
+            background:var(--warning-soft);
+            color:var(--warning);
+            border:1px solid #ead8a8;
+        }
+
+        .actions-row{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .meta-box{
+            background:var(--panel-soft);
+            border:1px solid #e8edf5;
+            border-radius:14px;
+            padding:14px 16px;
+            color:var(--muted);
+            line-height:1.9;
+            font-size:0.93rem;
+        }
+
+        @media (max-width: 1050px){
+            .content-grid{
+                grid-template-columns:1fr;
+            }
+
+            .stats-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media (max-width: 720px){
+            .page{
+                padding:14px;
+            }
+
+            .topbar{
+                flex-direction:column;
+                align-items:stretch;
+            }
+
+            .topbar-links{
+                width:100%;
+            }
+
+            .nav-link,
+            .btn{
+                width:100%;
+            }
+
+            .actions-row{
+                flex-direction:column;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% set questions = current_questions if current_questions is not none else [] %}
+    <div class="page">
+        <header class="topbar">
+            <div>
+                <h1 class="topbar-title">لوحة الإدارة</h1>
+                <p class="topbar-subtitle">إدارة بنك الأسئلة التشخيصية والإحصائيات الأساسية</p>
+            </div>
+            <div class="topbar-links">
+                <a class="nav-link" href="/dashboard">لوحة الطالب</a>
+                <a class="nav-link" href="/placement">الاختبار التشخيصي</a>
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <div class="stat-label">إجمالي الطلاب</div>
+                <div class="stat-value">{{ total_students if total_students is not none else 0 }}</div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">متوسط XP</div>
+                <div class="stat-value">{{ average_xp if average_xp is not none else 0 }}</div>
+            </article>
+            <article class="stat-card">
+                <div class="stat-label">عدد الأسئلة الحالية</div>
+                <div class="stat-value" id="questionsCount">{{ questions|length }}</div>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">الأسئلة الحالية</h2>
+                    <p class="panel-subtitle">يعرض الجدول النسخة الحالية من بنك الأسئلة مع إمكانية الحذف ثم الحفظ المباشر.</p>
+                </div>
+                <div class="panel-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:70px;">#</th>
+                                    <th>السؤال</th>
+                                    <th style="width:280px;">الخيارات</th>
+                                    <th style="width:180px;">الإجابة الصحيحة</th>
+                                    <th style="width:120px;">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="questionsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="tableStatus" class="status"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">إضافة سؤال جديد</h2>
+                    <p class="panel-subtitle">يتم تحديث ملف الأسئلة مباشرة بعد الإضافة.</p>
+                </div>
+                <div class="panel-body">
+                    <form id="questionForm" class="form-grid">
+                        <div class="field">
+                            <label for="questionText">نص السؤال</label>
+                            <textarea id="questionText" required></textarea>
+                        </div>
+
+                        <div class="field">
+                            <label for="option1">الخيار الأول</label>
+                            <input id="option1" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="option2">الخيار الثاني</label>
+                            <input id="option2" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="option3">الخيار الثالث</label>
+                            <input id="option3" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="option4">الخيار الرابع</label>
+                            <input id="option4" type="text" required />
+                        </div>
+
+                        <div class="field">
+                            <label for="correctAnswer">الإجابة الصحيحة</label>
+                            <select id="correctAnswer" required>
+                                <option value="">اختر الإجابة الصحيحة</option>
+                                <option value="A">الخيار الأول</option>
+                                <option value="B">الخيار الثاني</option>
+                                <option value="C">الخيار الثالث</option>
+                                <option value="D">الخيار الرابع</option>
+                            </select>
+                        </div>
+
+                        <div class="actions-row">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">إضافة وتحديث</button>
+                            <button type="button" class="btn btn-secondary" id="resetBtn">تفريغ الحقول</button>
+                        </div>
+                    </form>
+
+                    <div id="formStatus" class="status"></div>
+
+                    <div class="meta-box" style="margin-top:16px;">
+                        يتم حفظ جميع الأسئلة داخل الملف:
+                        <strong>data/diagnostic_questions.py</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const initialQuestions = {{ questions|tojson|safe }};
+        let questionsState = Array.isArray(initialQuestions) ? [...initialQuestions] : [];
+
+        const tableBody = document.getElementById("questionsTableBody");
+        const tableStatus = document.getElementById("tableStatus");
+        const formStatus = document.getElementById("formStatus");
+        const questionsCount = document.getElementById("questionsCount");
+
+        const form = document.getElementById("questionForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const resetBtn = document.getElementById("resetBtn");
+
+        const questionText = document.getElementById("questionText");
+        const option1 = document.getElementById("option1");
+        const option2 = document.getElementById("option2");
+        const option3 = document.getElementById("option3");
+        const option4 = document.getElementById("option4");
+        const correctAnswer = document.getElementById("correctAnswer");
+
+        function setStatus(element, message, type) {
+            element.className = "status show " + type;
+            element.textContent = message;
+        }
+
+        function clearStatus(element) {
+            element.className = "status";
+            element.textContent = "";
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function updateQuestionsCount() {
+            questionsCount.textContent = questionsState.length;
+        }
+
+        function normalizeQuestion(question, index) {
+            const options = Array.isArray(question.options) ? question.options : [];
+            return {
+                id: String(question.id || `dq_${index + 1}`),
+                section: String(question.section || "general"),
+                skill: String(question.skill || "general"),
+                difficulty: String(question.difficulty || "medium"),
+                question: String(question.question || "").trim(),
+                options: options.map(item => String(item || "").trim()).filter(Boolean),
+                correct_answer: String(question.correct_answer || "").trim(),
+                explanation: String(question.explanation || "").trim()
+            };
+        }
+
+        function renderTable() {
+            tableBody.innerHTML = "";
+
+            questionsState = questionsState.map((item, index) => normalizeQuestion(item, index));
+
+            if (!questionsState.length) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td colspan="5" style="text-align:center; color:#6b7280; padding:22px;">
+                        لا توجد أسئلة حالياً.
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                updateQuestionsCount();
+                return;
+            }
+
+            questionsState.forEach((question, index) => {
+                const row = document.createElement("tr");
+                const optionsHtml = (question.options || [])
+                    .map(option => `<li>${escapeHtml(option)}</li>`)
+                    .join("");
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="question-text">${escapeHtml(question.question)}</div>
+                        <div style="color:#6b7280; font-size:0.88rem;">
+                            القسم: ${escapeHtml(question.section)} |
+                            المهارة: ${escapeHtml(question.skill)} |
+                            الصعوبة: ${escapeHtml(question.difficulty)}
+                        </div>
+                    </td>
+                    <td>
+                        <ol class="options-list">${optionsHtml}</ol>
+                    </td>
+                    <td>
+                        <span class="correct-answer">${escapeHtml(question.correct_answer)}</span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-index="${index}">حذف</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            Array.from(tableBody.querySelectorAll(".btn-danger")).forEach(button => {
+                button.addEventListener("click", async () => {
+                    const index = Number(button.getAttribute("data-index"));
+                    if (Number.isNaN(index)) return;
+
+                    const updatedQuestions = questionsState.filter((_, i) => i !== index);
+                    await saveQuestions(updatedQuestions, "تم حذف السؤال وتحديث بنك الأسئلة.");
+                });
+            });
+
+            updateQuestionsCount();
+        }
+
+        async function saveQuestions(updatedQuestions, successMessage) {
+            clearStatus(tableStatus);
+            clearStatus(formStatus);
+
+            try {
+                const response = await fetch("/api/admin/questions/update", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        questions: updatedQuestions
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "تعذر تحديث بنك الأسئلة.");
+                }
+
+                questionsState = updatedQuestions;
+                renderTable();
+                setStatus(tableStatus, successMessage || "تم تحديث بنك الأسئلة.", "success");
+            } catch (error) {
+                setStatus(tableStatus, error.message || "حدث خطأ أثناء تحديث بنك الأسئلة.", "error");
+            }
+        }
+
+        function resetForm() {
+            questionText.value = "";
+            option1.value = "";
+            option2.value = "";
+            option3.value = "";
+            option4.value = "";
+            correctAnswer.value = "";
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearStatus(formStatus);
+            clearStatus(tableStatus);
+
+            const qText = questionText.value.trim();
+            const opt1 = option1.value.trim();
+            const opt2 = option2.value.trim();
+            const opt3 = option3.value.trim();
+            const opt4 = option4.value.trim();
+            const correctKey = correctAnswer.value.trim();
+
+            if (!qText || !opt1 || !opt2 || !opt3 || !opt4 || !correctKey) {
+                setStatus(formStatus, "جميع الحقول مطلوبة.", "error");
+                return;
+            }
+
+            const options = [opt1, opt2, opt3, opt4];
+            const map = { A: opt1, B: opt2, C: opt3, D: opt4 };
+            const resolvedCorrectAnswer = map[correctKey] || "";
+
+            if (!resolvedCorrectAnswer) {
+                setStatus(formStatus, "تعذر تحديد الإجابة الصحيحة.", "error");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "جارٍ التحديث...";
+
+            try {
+                const newQuestion = {
+                    id: `dq_${Date.now()}`,
+                    section: "general",
+                    skill: "general",
+                    difficulty: "medium",
+                    question: qText,
+                    options: options,
+                    correct_answer: resolvedCorrectAnswer,
+                    explanation: ""
+                };
+
+                const updatedQuestions = [...questionsState, newQuestion];
+
+                const response = await fetch("/api/admin/questions/update", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        questions: updatedQuestions
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "تعذر إضافة السؤال.");
+                }
+
+                questionsState = updatedQuestions;
+                renderTable();
+                resetForm();
+                setStatus(formStatus, "تمت إضافة السؤال وتحديث بنك الأسئلة بنجاح.", "success");
+            } catch (error) {
+                setStatus(formStatus, error.message || "حدث خطأ أثناء إضافة السؤال.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "إضافة وتحديث";
+            }
+        });
+
+        resetBtn.addEventListener("click", () => {
+            resetForm();
+            clearStatus(formStatus);
+        });
+
+        renderTable();
+    </script>
+</body>
+</html>

@@ -8,7 +8,6 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from config import settings
 from db import init_bot_db
 from handlers.start import router as start_router
-from handlers.subscriptions import router as sub_router
 from handlers.payments import router as pay_router
 from handlers.admin import router as admin_router
 
@@ -43,13 +42,12 @@ async def run_bot():
     dp = Dispatcher(storage=MemoryStorage())
 
     dp.include_router(start_router)
-    dp.include_router(sub_router)
     dp.include_router(pay_router)
     dp.include_router(admin_router)
 
     optional = [
         "handlers.listening", "handlers.lessons",
-        "handlers.placement_test", "handlers.writing",
+        "handlers.placement_test", "handlers.placement_inline", "handlers.writing",
         "handlers.speaking", "handlers.correction"
     ]
     print("تحميل الـ handlers الاختيارية:")

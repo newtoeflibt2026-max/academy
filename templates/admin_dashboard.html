@@ -138,6 +138,7 @@ body{background:#0f172a;color:#e2e8f0;display:flex;min-height:100vh}
       <div class="card">
         <div class="ch">
           <span class="ct">👥 الطلاب</span>
+          <button class="btn btn-p btn-sm" onclick="document.getElementById('modalAddStudent').classList.add('open')">&#43; إضافة طالب</button>
           <input class="fc" id="s-search" placeholder="🔍 بحث..." oninput="searchStudents()" style="width:260px"/>
         </div>
         <div style="overflow-x:auto"><table class="tbl" id="tbl-students"><thead><tr><th>ID</th><th>الاسم</th><th>المستخدم</th><th>XP</th><th>Streak</th><th>النوع</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody></tbody></table></div>
@@ -404,6 +405,7 @@ body{background:#0f172a;color:#e2e8f0;display:flex;min-height:100vh}
 <div id="toast"><span id="toast-ico">✅</span><span id="toast-msg"></span></div>
 
 <script>
+window.showToast = function(msg, type){ if(typeof toast==='function') return toast(msg, type); else alert(msg); };
 const PAGES={dashboard:'الرئيسية',students:'الطلاب',lessons:'الدروس',questions:'الأسئلة',missions:'المهام',grading:'التصحيح',phases:'المراحل',graduation:'التخرج',plans:'الباقات',payments:'المدفوعات',broadcast:'رسائل جماعية',messages:'رسائل الطلاب',settings:'الإعدادات'};
 const LOADERS={dashboard:loadDash,students:loadStudents,lessons:loadLessons,questions:loadQuestions,missions:loadMissions,grading:loadGrading,phases:loadPhases,graduation:loadGraduation,plans:loadPlans,payments:loadPayments,broadcast:loadBCHistory,messages:loadMsgs,settings:loadSettings};
 
@@ -454,23 +456,31 @@ async function loadDash(){
 // STUDENTS
 let _sTimer;
 function searchStudents(){clearTimeout(_sTimer);_sTimer=setTimeout(()=>loadStudents(document.getElementById('s-search').value.trim()),400);}
-async function loadStudents(q=''){
-  const d=await API('/api/admin/students'+(q?'?q='+encodeURIComponent(q):''));
-  const tb=document.querySelector('#tbl-students tbody');
-  tb.innerHTML='';
-  (d.students||[]).forEach(s=>{
-    tb.innerHTML+=`<tr>
-      <td><code style="font-size:11px">${s.user_id}</code></td>
-      <td><b>${s.full_name||'—'}</b></td>
-      <td style="color:#64748b">@${s.username||'—'}</td>
-      <td><span class="bg bg-p">${s.xp||0}</span></td>
-      <td>🔥${s.streak||0}</td>
-      <td>${s.is_paid?'<span class="bg bg-g">مدفوع</span>':'<span class="bg bg-r">مجاني</span>'}</td>
-      <td>${s.is_active?'<span class="bg bg-b">نشط</span>':'<span class="bg bg-y">موقوف</span>'}</td>
+async function loadStudents(q='') {
+  const d = await API('/api/admin/students' + (q ? '?q=' + encodeURIComponent(q) : ''));
+  const tb = document.querySelector('#tbl-students tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  (d.students || []).forEach(s => {
+    const paid = s.is_paid ? '✅ مفعّل' : '⏳ غير مفعّل';
+    const paidClass = s.is_paid ? 'bg-success' : 'bg-warning';
+    const uid = s.user_id || s.telegram_id;
+    tb.innerHTML += `<tr>
+      <td>${uid}</td>
+      <td>${s.full_name || s.name || '-'}</td>
+      <td>${s.username ? '@'+s.username : '-'}</td>
+      <td>${s.level || 'beginner'}</td>
+      <td><span class="bg ${paidClass}">${paid}</span></td>
+      <td>${s.xp || 0}</td>
       <td style="display:flex;gap:4px;flex-wrap:wrap">
-        ${s.is_paid?`<button class="btn btn-d btn-sm" onclick="togglePaid(${s.user_id},false)">🔒</button>`:`<button class="btn btn-g btn-sm" onclick="openActivate(${s.user_id},'${(s.full_name||s.username||s.user_id).toString().replace(/'/g,'')}')">✅</button>`}
-        <button class="btn btn-gh btn-sm" onclick="toggleActive(${s.user_id})">${s.is_active?'⏸':'▶'}</button>
-      </td></tr>`;
+        ${s.is_paid
+          ? `<button class="btn btn-d btn-sm" onclick="deactivateStudent(${uid})">🚫 إلغاء</button>`
+          : `<button class="btn btn-g btn-sm" onclick="activateStudent(${uid})">✅ تفعيل</button>`
+        }
+        <button class="btn btn-gh btn-sm" onclick="sendMsgToStudent(${uid})">💬 رسالة</button>
+        <button class="btn btn-d btn-sm" onclick="deleteStudent(${uid})">🗑️ حذف</button>
+      </td>
+    </tr>`;
   });
 }
 let _actUID=null;
@@ -638,14 +648,29 @@ async function togglePlan(id){const r=await API('/api/admin/plans/'+id+'/toggle'
 async function delPlan(id){if(!confirm('حذف الباقة؟'))return;const r=await API('/api/admin/plans/'+id,'DELETE');if(r.ok){toast('🗑️');loadPlans();}else toast('خطأ','error');}
 
 // PAYMENTS
-async function loadPayments(){
-  const d=await API('/api/admin/payments');
-  const tb=document.querySelector('#tbl-payments tbody');tb.innerHTML='';
-  (d.payments||[]).forEach(p=>{
-    const sc={verified:'bg-g',pending:'bg-y',rejected:'bg-r'};
-    tb.innerHTML+=`<tr><td style="color:#64748b">${p.id}</td><td>${p.full_name||p.username||p.user_id}</td><td><b>${Number(p.amount).toLocaleString()} د.ع</b></td><td>${p.plan||'basic'}</td><td><span class="bg ${sc[p.status]||'bg-y'}">${p.status}</span></td><td style="color:#64748b">${(p.created_at||'').slice(0,10)}</td><td>${p.status!=='verified'?`<button class="btn btn-g btn-sm" onclick="verifyPay(${p.id})">✅</button>`:'—'}</td></tr>`;
+async function loadPayments() {
+  const d = await API('/api/admin/payments');
+  const tb = document.querySelector('#tbl-payments tbody');
+  if (!tb) return;
+  tb.innerHTML = '';
+  (d.payments || []).forEach(p => {
+    const st = p.status || 'pending';
+    const stClass = st==='approved'?'bg-success':st==='rejected'?'bg-danger':'bg-warning';
+    const stAr = st==='approved'?'مفعّل':st==='rejected'?'مرفوض':'انتظار';
+    const actions = st==='pending' ? `
+      <button class="btn btn-g btn-sm" onclick="approvePayment(${p.id})">✅ موافقة</button>
+      <button class="btn btn-d btn-sm" onclick="rejectPayment(${p.id})">❌ رفض</button>
+    ` : `<span class="bg ${stClass}">${stAr}</span>`;
+    tb.innerHTML += `<tr>
+      <td>${p.id}</td>
+      <td>${p.full_name||p.user_id||p.telegram_id||'-'}</td>
+      <td>${p.plan_name||p.plan_id||'-'}</td>
+      <td>${(p.amount||0).toLocaleString()} ${p.currency||'JOD'}</td>
+      <td>${actions}</td>
+      <td>${(p.created_at||'').slice(0,16)}</td>
+    </tr>`;
   });
-}
+};
 async function verifyPay(id){const r=await API('/api/admin/payments/'+id+'/verify','POST');if(r.ok){toast('✅ تم التحقق والتفعيل');loadPayments();}else toast('خطأ','error');}
 
 // BROADCAST
@@ -705,6 +730,7 @@ loadDash();
   </div>
 </div>
 <script>
+window.showToast = function(msg, type){ if(typeof toast==='function') return toast(msg, type); else alert(msg); };
 function openAddStudent(){
   document.getElementById('modal-add-student').style.display='flex';
 }
@@ -729,5 +755,129 @@ async function submitAddStudent(){
   }
 }
 </script>
+
+<!-- Modal إضافة طالب -->
+<div class="modal-bg" id="modalAddStudent">
+  <div class="modal" style="max-width:420px">
+    <div class="mh">
+      <span style="font-weight:700;font-size:15px">&#x1F4CB; إضافة طالب يدوياً</span>
+      <button onclick="document.getElementById('modalAddStudent').classList.remove('open')"
+        style="background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div class="mb" style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">Telegram ID *</label>
+        <input class="fc" id="as_tid" type="number" placeholder="مثال: 5572314718">
+      </div>
+      <div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">الاسم الكامل</label>
+        <input class="fc" id="as_name" type="text" placeholder="اسم الطالب">
+      </div>
+      <div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">يوزرنيم تيليجرام</label>
+        <input class="fc" id="as_user" type="text" placeholder="@username (اختياري)">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="as_paid" style="width:16px;height:16px">
+        <label for="as_paid" style="font-size:13px;color:#cbd5e1">اشتراك مدفوع مفعّل</label>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-gh" onclick="document.getElementById('modalAddStudent').classList.remove('open')">إلغاء</button>
+      <button class="btn btn-p" onclick="doAddStudent()">&#x2714; إضافة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+window.showToast = function(msg, type){ if(typeof toast==='function') return toast(msg, type); else alert(msg); };
+async function doAddStudent() {
+  const tid  = document.getElementById('as_tid').value.trim();
+  const name = document.getElementById('as_name').value.trim();
+  const user = document.getElementById('as_user').value.trim();
+  const paid = document.getElementById('as_paid').checked ? 1 : 0;
+  if (!tid) { showToast('أدخل Telegram ID'); return; }
+  try {
+    const r = await fetch('/api/admin/students/add', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({telegram_id: parseInt(tid), full_name: name, username: user, is_paid: paid})
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showToast('تم إضافة الطالب بنجاح');
+      document.getElementById('modalAddStudent').classList.remove('open');
+      document.getElementById('as_tid').value = '';
+      document.getElementById('as_name').value = '';
+      document.getElementById('as_user').value = '';
+      document.getElementById('as_paid').checked = false;
+      if (typeof loadStudents === 'function') loadStudents();
+      else setTimeout(() => location.reload(), 1000);
+    } else {
+      showToast('خطأ: ' + (d.error || 'غير معروف'));
+    }
+  } catch(e) {
+    showToast('خطأ في الاتصال');
+  }
+}
+</script>
+
+
+<script>
+window.showToast = function(msg, type){ if(typeof toast==='function') return toast(msg, type); else alert(msg); };
+// ═══ Payment Actions ═══
+async function approvePayment(pid) {
+    if (!confirm('تأكيد الموافقة على الدفع وتفعيل الطالب؟')) return;
+    const r = await fetch('/api/admin/payments/' + pid + '/approve', {method:'POST'});
+    const d = await r.json();
+    if (d.ok) { showToast('✅ تم تفعيل الطالب'); loadPayments(); loadStudents(); }
+    else showToast('❌ ' + (d.error || 'خطأ'));
+}
+
+async function rejectPayment(pid) {
+    if (!confirm('تأكيد رفض طلب الدفع؟')) return;
+    const r = await fetch('/api/admin/payments/' + pid + '/reject', {method:'POST'});
+    const d = await r.json();
+    if (d.ok) { showToast('تم الرفض'); loadPayments(); }
+    else showToast('❌ ' + (d.error || 'خطأ'));
+}
+
+// ═══ Student Actions ═══
+async function deleteStudent(uid) {
+    if (!confirm('حذف الطالب نهائياً؟ لا يمكن التراجع!')) return;
+    const r = await fetch('/api/admin/students/' + uid + '/delete', {method:'DELETE'});
+    const d = await r.json();
+    if (d.ok) { showToast('تم الحذف'); loadStudents(); }
+    else showToast('❌ ' + (d.error || 'خطأ'));
+}
+
+async function activateStudent(uid) {
+    const r = await fetch('/api/admin/students/' + uid + '/activate-paid', {method:'POST'});
+    const d = await r.json();
+    if (d.ok) { showToast('✅ تم التفعيل'); loadStudents(); }
+    else showToast('❌ ' + (d.error||'خطأ'));
+}
+
+async function deactivateStudent(uid) {
+    const r = await fetch('/api/admin/students/' + uid + '/deactivate-paid', {method:'POST'});
+    const d = await r.json();
+    if (d.ok) { showToast('تم إلغاء التفعيل'); loadStudents(); }
+    else showToast('❌ ' + (d.error||'خطأ'));
+}
+
+async function sendMsgToStudent(uid) {
+    const txt = prompt('أدخل الرسالة للطالب:');
+    if (!txt) return;
+    const r = await fetch('/api/admin/students/' + uid + '/send-message', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({text: txt})
+    });
+    const d = await r.json();
+    if (d.ok) showToast('✅ تم الإرسال');
+    else showToast('❌ ' + (d.error||'خطأ'));
+}
+</script>
+
 </body>
 </html>

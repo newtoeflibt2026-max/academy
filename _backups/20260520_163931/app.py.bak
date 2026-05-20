@@ -1,0 +1,724 @@
+# -*- coding: utf-8 -*-
+from flask import Flask, jsonify, render_template, request
+import os, json
+from datetime import datetime
+from db import (get_db, get_all_students_db, get_student,
+                activate_paid, deactivate_paid, update_student,
+                get_setting, set_setting)
+
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
+
+# ─── Pages ───────────────────────────────────────────────
+@app.route("/")
+def index():
+    from flask import render_template
+    return render_template("admin_dashboard.html")
+
+@app.route("/student")
+def student():
+    from flask import render_template
+    return render_template("student_portal.html")
+
+@app.route("/api/admin/stats")
+def api_stats():
+    conn = get_db()
+    try:
+        total    = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
+        paid     = conn.execute("SELECT COUNT(*) FROM students WHERE is_paid=1").fetchone()[0]
+        active   = conn.execute("SELECT COUNT(*) FROM students WHERE is_active=1").fetchone()[0]
+        pending  = conn.execute("SELECT COUNT(*) FROM payments WHERE status='pending'").fetchone()[0]
+        plans_c  = conn.execute("SELECT COUNT(*) FROM subscription_plans WHERE is_active=1").fetchone()[0]
+        revenue  = conn.execute("SELECT COALESCE(SUM(amount),0) FROM payments WHERE status='verified'").fetchone()[0]
+        return jsonify({"total_students":total,"paid_students":paid,"active_students":active,
+                        "pending_payments":pending,"active_plans":plans_c,"total_revenue":revenue})
+    finally:
+        conn.close()
+
+# ─── Students ────────────────────────────────────────────
+@app.route("/api/admin/students")
+def api_students():
+    q = request.args.get("q","").strip()
+    conn = get_db()
+    try:
+        if q:
+            rows = conn.execute(
+                "SELECT * FROM students WHERE full_name LIKE ? OR username LIKE ? OR CAST(telegram_id AS TEXT) LIKE ? ORDER BY xp DESC",
+                (f"%{q}%",f"%{q}%",f"%{q}%")).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM students ORDER BY xp DESC LIMIT 200").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/students/<int:uid>")
+def api_student_detail(uid):
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT * FROM students WHERE telegram_id=?", (uid,)).fetchone()
+        if not row: return jsonify({"error":"not found"}), 404
+        return jsonify(dict(row))
+    finally:
+        conn.close()
+
+@app.route("/api/admin/students/<int:uid>/activate-paid", methods=["POST"])
+def api_activate_paid(uid):
+    activate_paid(uid)
+    return jsonify({"ok": True})
+
+@app.route("/api/admin/students/<int:uid>/deactivate-paid", methods=["POST"])
+def api_deactivate_paid(uid):
+    deactivate_paid(uid)
+    return jsonify({"ok": True})
+
+@app.route("/api/admin/students/<int:uid>/toggle-active", methods=["POST"])
+def api_toggle_active(uid):
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT is_active FROM students WHERE telegram_id=?", (uid,)).fetchone()
+        if not row: return jsonify({"error":"not found"}), 404
+        new_val = 0 if row[0] else 1
+        conn.execute("UPDATE students SET is_active=? WHERE telegram_id=?", (new_val, uid))
+        conn.commit()
+        return jsonify({"ok": True, "is_active": new_val})
+    finally:
+        conn.close()
+
+# ─── Questions ───────────────────────────────────────────
+@app.route("/api/admin/questions", methods=["GET"])
+def api_get_questions():
+    skill = request.args.get("skill","")
+    conn = get_db()
+    try:
+        if skill:
+            rows = conn.execute("SELECT * FROM questions WHERE skill=? ORDER BY id DESC", (skill,)).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM questions ORDER BY id DESC LIMIT 200").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/questions", methods=["POST"])
+def api_add_question():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO questions
+            (question_text,option_a,option_b,option_c,option_d,correct_option,skill,difficulty,explanation,timer_seconds)
+            VALUES (?,?,?,?,?,?,?,?,?,?)""",
+            (d.get("question_text",""), d.get("option_a",""), d.get("option_b",""),
+             d.get("option_c",""), d.get("option_d",""), d.get("correct_option","a"),
+             d.get("skill","grammar"), d.get("difficulty","medium"),
+             d.get("explanation",""), int(d.get("timer_seconds",30))))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/questions/<int:qid>", methods=["DELETE"])
+def api_delete_question(qid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM questions WHERE id=?", (qid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ─── Lessons ─────────────────────────────────────────────
+@app.route("/api/admin/lessons", methods=["GET"])
+def api_get_lessons():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM lessons ORDER BY phase, order_num").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/lessons", methods=["POST"])
+def api_add_lesson():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO lessons
+            (title,title_ar,description,skill,phase,order_num,content,xp_reward,timer_minutes,is_active)
+            VALUES (?,?,?,?,?,?,?,?,?,?)""",
+            (d.get("title",""), d.get("title_ar",""), d.get("description",""),
+             d.get("skill","reading"), int(d.get("phase",1)), int(d.get("order_num",0)),
+             d.get("content",""), int(d.get("xp_reward",10)),
+             int(d.get("timer_minutes",0)), int(d.get("is_active",1))))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/lessons/<int:lid>", methods=["PUT"])
+def api_update_lesson(lid):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE lessons SET title=?,title_ar=?,description=?,skill=?,
+            phase=?,order_num=?,content=?,xp_reward=?,timer_minutes=?,is_active=?
+            WHERE id=?""",
+            (d.get("title",""), d.get("title_ar",""), d.get("description",""),
+             d.get("skill","reading"), int(d.get("phase",1)), int(d.get("order_num",0)),
+             d.get("content",""), int(d.get("xp_reward",10)),
+             int(d.get("timer_minutes",0)), int(d.get("is_active",1)), lid))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/lessons/<int:lid>", methods=["DELETE"])
+def api_delete_lesson(lid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM lessons WHERE id=?", (lid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ─── Missions ────────────────────────────────────────────
+@app.route("/api/admin/missions", methods=["GET"])
+def api_get_missions():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM daily_missions ORDER BY id DESC").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/missions", methods=["POST"])
+def api_add_mission():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO daily_missions (title,description,mission_type,target_count,xp_reward)
+            VALUES (?,?,?,?,?)""",
+            (d.get("title",""), d.get("description",""), d.get("mission_type","quiz"),
+             int(d.get("target_count",1)), int(d.get("xp_reward",20))))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/missions/<int:mid>", methods=["DELETE"])
+def api_delete_mission(mid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM daily_missions WHERE id=?", (mid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ─── Plans ───────────────────────────────────────────────
+@app.route("/api/admin/plans", methods=["GET"])
+def api_get_plans():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM subscription_plans ORDER BY price").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/plans", methods=["POST"])
+def api_add_plan():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO subscription_plans
+            (name,name_ar,price,currency,duration_days,description,features,is_active,is_featured)
+            VALUES (?,?,?,?,?,?,?,?,?)""",
+            (d.get("name",""), d.get("name_ar",""), float(d.get("price",25000)),
+             d.get("currency","IQD"), int(d.get("duration_days",30)),
+             d.get("description",""), json.dumps(d.get("features",[])),
+             int(d.get("is_active",1)), int(d.get("is_featured",0))))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/plans/<int:pid>", methods=["PUT"])
+def api_update_plan(pid):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE subscription_plans SET
+            name=?,name_ar=?,price=?,currency=?,duration_days=?,
+            description=?,features=?,is_active=?,is_featured=? WHERE id=?""",
+            (d.get("name",""), d.get("name_ar",""), float(d.get("price",25000)),
+             d.get("currency","IQD"), int(d.get("duration_days",30)),
+             d.get("description",""), json.dumps(d.get("features",[])),
+             int(d.get("is_active",1)), int(d.get("is_featured",0)), pid))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/plans/<int:pid>", methods=["DELETE"])
+def api_delete_plan(pid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM subscription_plans WHERE id=?", (pid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/plans/<int:pid>/toggle", methods=["POST"])
+def api_toggle_plan(pid):
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT is_active FROM subscription_plans WHERE id=?", (pid,)).fetchone()
+        if not row: return jsonify({"error":"not found"}), 404
+        new_val = 0 if row[0] else 1
+        conn.execute("UPDATE subscription_plans SET is_active=? WHERE id=?", (new_val, pid))
+        conn.commit()
+        return jsonify({"ok": True, "is_active": new_val})
+    finally:
+        conn.close()
+
+# ─── Payments ────────────────────────────────────────────
+@app.route("/api/admin/payments", methods=["GET"])
+def api_get_payments():
+    conn = get_db()
+    try:
+        rows = conn.execute("""SELECT p.*, s.full_name, s.username
+            FROM payments p LEFT JOIN students s ON p.user_id=s.telegram_id
+            ORDER BY p.created_at DESC LIMIT 100""").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/payments/<int:pid>/verify", methods=["POST"])
+def api_verify_payment(pid):
+    conn = get_db()
+    try:
+        row = conn.execute("SELECT user_id FROM payments WHERE id=?", (pid,)).fetchone()
+        if not row: return jsonify({"error":"not found"}), 404
+        conn.execute("UPDATE payments SET status='verified', verified_at=CURRENT_TIMESTAMP WHERE id=?", (pid,))
+        conn.execute("UPDATE students SET is_paid=1 WHERE telegram_id=?", (row[0],))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ─── Settings ────────────────────────────────────────────
+@app.route("/api/admin/settings", methods=["GET"])
+def api_get_settings():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM system_settings").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/settings", methods=["POST"])
+def api_update_settings():
+    d = request.json or {}
+    for key, value in d.items():
+        set_setting(key, str(value))
+    return jsonify({"ok": True})
+
+# ─── Phase settings ──────────────────────────────────────
+@app.route("/api/admin/phases", methods=["GET"])
+def api_get_phases():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM phase_settings ORDER BY phase_number").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/phases/<int:phase_num>", methods=["PUT"])
+def api_update_phase(phase_num):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE phase_settings SET
+            phase_name=?,min_xp=?,min_streak=?,min_quiz_score=?,min_attendance_days=?,description=?
+            WHERE phase_number=?""",
+            (d.get("phase_name",""), int(d.get("min_xp",0)), int(d.get("min_streak",0)),
+             float(d.get("min_quiz_score",0)), int(d.get("min_attendance_days",0)),
+             d.get("description",""), phase_num))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ─── Broadcast ───────────────────────────────────────────
+@app.route("/api/admin/broadcast", methods=["POST"])
+def api_broadcast():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO broadcasts (title,message,target,target_user_id)
+            VALUES (?,?,?,?)""",
+            (d.get("title",""), d.get("message",""),
+             d.get("target","all"), int(d.get("target_user_id",0))))
+        conn.commit()
+        return jsonify({"ok": True, "note": "saved - bot will send on next cycle"})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/broadcast/history", methods=["GET"])
+def api_broadcast_history():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM broadcasts ORDER BY created_at DESC LIMIT 50").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+# ─── Student messages ────────────────────────────────────
+@app.route("/api/admin/messages", methods=["GET"])
+def api_get_messages():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM student_messages ORDER BY created_at DESC LIMIT 100").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/messages/<int:mid>/read", methods=["POST"])
+def api_mark_read(mid):
+    conn = get_db()
+    try:
+        conn.execute("UPDATE student_messages SET is_read=1 WHERE id=?", (mid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/student/message", methods=["POST"])
+def api_student_message():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO student_messages (user_id,username,full_name,message)
+            VALUES (?,?,?,?)""",
+            (int(d.get("user_id",0)), d.get("username",""),
+             d.get("full_name",""), d.get("message","")))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ─── Public endpoints ────────────────────────────────────
+@app.route("/api/public/plans", methods=["GET"])
+def api_public_plans():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM subscription_plans WHERE is_active=1 ORDER BY price").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/user/graduation-status", methods=["GET"])
+def api_grad_status():
+    uid = request.args.get("user_id", 0, type=int)
+    if not uid:
+        return jsonify({"error": "user_id required"}), 400
+    conn = get_db()
+    try:
+        student = conn.execute("SELECT * FROM students WHERE telegram_id=?", (uid,)).fetchone()
+        if not student:
+            return jsonify({"error": "not found"}), 404
+        s = dict(student)
+        min_xp    = int(get_setting("graduation_min_xp", "500"))
+        min_tasks = int(get_setting("graduation_min_tasks", "50"))
+        min_streak= int(get_setting("graduation_min_streak", "7"))
+        min_mock  = float(get_setting("graduation_min_mock_score", "70"))
+        checks = {
+            "xp":     {"current": s.get("xp",0),             "required": min_xp,    "ok": s.get("xp",0) >= min_xp},
+            "tasks":  {"current": s.get("tasks_completed",0), "required": min_tasks, "ok": s.get("tasks_completed",0) >= min_tasks},
+            "streak": {"current": s.get("streak",0),          "required": min_streak,"ok": s.get("streak",0) >= min_streak},
+            "mock":   {"current": s.get("mock_score",0),       "required": min_mock,  "ok": s.get("mock_score",0) >= min_mock},
+        }
+        ready = all(v["ok"] for v in checks.values())
+        return jsonify({"ready": ready, "checks": checks, "student": s})
+    finally:
+        conn.close()
+
+
+# ── Phase Settings ────────────────────────────────────────────
+@app.route("/api/admin/phase-settings", methods=["GET"])
+def api_phase_settings_get():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM phase_settings ORDER BY phase_number").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/phase-settings/<int:pid>", methods=["PUT"])
+def api_phase_settings_put(pid):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE phase_settings SET phase_name=?,min_xp=?,min_streak=?,
+            min_quiz_score=?,min_attendance_days=?,description=? WHERE phase_number=?""",
+            (d.get("phase_name",""), int(d.get("min_xp",0)), int(d.get("min_streak",0)),
+             float(d.get("min_quiz_score",0)), int(d.get("min_attendance_days",0)),
+             d.get("description",""), pid))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ── Grading Rules ─────────────────────────────────────────────
+@app.route("/api/admin/grading-rules", methods=["GET"])
+def api_grading_rules_get():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM essay_grading_rules ORDER BY id").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules", methods=["POST"])
+def api_grading_rules_post():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("INSERT INTO essay_grading_rules (criteria,max_score,description) VALUES (?,?,?)",
+            (d.get("criteria",""), int(d.get("max_score",10)), d.get("description","")))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules/<int:rid>", methods=["DELETE"])
+def api_grading_rules_delete(rid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM essay_grading_rules WHERE id=?", (rid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+
+# ── Quiz Result from Student Portal ──────────────────────
+@app.route("/api/student/quiz-result", methods=["POST"])
+def api_quiz_result():
+    d = request.json or {}
+    uid      = int(d.get("user_id", 0))
+    skill    = d.get("skill", "")
+    xp_earned= int(d.get("xp_earned", 0))
+    score    = float(d.get("score", 0))
+    if uid and xp_earned > 0:
+        conn = get_db()
+        try:
+            conn.execute("UPDATE students SET xp=xp+?, tasks_completed=tasks_completed+1 WHERE telegram_id=?",
+                         (xp_earned, uid))
+            conn.execute("INSERT INTO xp_log (user_id,amount,reason) VALUES (?,?,?)",
+                         (uid, xp_earned, f"quiz_{skill}_{score:.0f}%"))
+            conn.commit()
+        finally:
+            conn.close()
+    return jsonify({"ok": True})
+
+
+# ── Add Student Manually ──────────────────────────────────
+@app.route("/api/admin/students/add", methods=["POST"])
+def api_add_student():
+    d = request.json or {}
+    tid  = int(d.get("telegram_id", 0))
+    name = d.get("full_name", "").strip()
+    user = d.get("username", "").strip()
+    paid = int(d.get("is_paid", 0))
+    if not tid:
+        return jsonify({"error": "telegram_id مطلوب"}), 400
+    conn = get_db()
+    try:
+        conn.execute("""INSERT OR IGNORE INTO students
+            (telegram_id, full_name, username, is_paid, is_active)
+            VALUES (?,?,?,?,1)""", (tid, name, user, paid))
+        if paid:
+            conn.execute("UPDATE students SET is_paid=1 WHERE telegram_id=?", (tid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# ── Phase Settings ────────────────────────────────────────
+
+# ─── Entry point ──────────────────────────────────────────────────────────────
+
+@app.route("/api/student/profile", methods=["GET"])
+def api_student_profile():
+    uid = request.args.get("user_id", "")
+    if not uid:
+        return jsonify({"error": "user_id required"}), 400
+    conn = get_db()
+    try:
+        # ابحث بكلا العمودين
+        s = conn.execute(
+            "SELECT * FROM students WHERE user_id=? OR telegram_id=?",
+            (uid, uid)
+        ).fetchone()
+        if not s:
+            return jsonify({"found": False})
+        d = dict(s)
+        return jsonify({
+            "found": True,
+            "is_paid": bool(d.get("is_paid", 0)),
+            "is_active": bool(d.get("is_active", 0)),
+            "full_name": d.get("full_name") or d.get("name", ""),
+            "level": d.get("level", "beginner"),
+            "xp": d.get("xp", 0) or d.get("total_xp", 0),
+            "streak": d.get("streak", 0) or d.get("streak_days", 0),
+            "placement_done": bool(d.get("placement_done", 0)),
+            "current_phase": d.get("current_phase", 1) or d.get("stage", 1),
+            "tasks_completed": d.get("tasks_completed", 0),
+            "completed_lessons": d.get("completed_lessons", 0),
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+# ═══════════════════════════════════════════════════════════
+# Payment Approval / Rejection endpoints
+# ═══════════════════════════════════════════════════════════
+
+@app.route("/api/admin/payments/<int:pid>/approve", methods=["POST"])
+def api_approve_payment(pid):
+    from datetime import datetime
+    conn = get_db()
+    try:
+        pay = conn.execute("SELECT * FROM payments WHERE id=?", (pid,)).fetchone()
+        if not pay:
+            return jsonify({"error": "Payment not found"}), 404
+        pay = dict(pay)
+        uid = pay.get("user_id") or pay.get("telegram_id")
+        plan_id = pay.get("plan_id", 1)
+
+        # تفعيل الطالب
+        conn.execute("""
+            UPDATE students SET is_paid=1, is_active=1,
+            subscription_type='paid',
+            last_activity=?
+            WHERE user_id=? OR telegram_id=?
+        """, (datetime.now().isoformat(), uid, str(uid)))
+
+        # تحديث حالة الدفع
+        conn.execute("""
+            UPDATE payments SET status='approved', verified_at=?
+            WHERE id=?
+        """, (datetime.now().isoformat(), pid))
+
+        conn.commit()
+
+        # إشعار الطالب عبر البوت
+        try:
+            import asyncio, os
+            from aiogram import Bot
+            from aiogram.client.default import DefaultBotProperties
+            from aiogram.enums import ParseMode
+            token = os.environ.get("BOT_TOKEN", "")
+            if token and uid:
+                async def notify():
+                    bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+                    await bot.send_message(
+                        chat_id=int(uid),
+                        text="✅ <b>تم تفعيل اشتراكك!</b>\n\nمرحباً بك في أكاديمية يامن للتوفل 🎓\nابدأ رحلتك التعليمية الآن!"
+                    )
+                    await bot.session.close()
+                asyncio.run(notify())
+        except Exception as e:
+            print(f"Bot notify error: {e}")
+
+        return jsonify({"ok": True, "message": "تم تفعيل الطالب"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/admin/payments/<int:pid>/reject", methods=["POST"])
+def api_reject_payment(pid):
+    conn = get_db()
+    try:
+        pay = conn.execute("SELECT * FROM payments WHERE id=?", (pid,)).fetchone()
+        if not pay:
+            return jsonify({"error": "Payment not found"}), 404
+        pay = dict(pay)
+        uid = pay.get("user_id") or pay.get("telegram_id")
+
+        conn.execute("UPDATE payments SET status='rejected' WHERE id=?", (pid,))
+        conn.commit()
+
+        # إشعار الطالب
+        try:
+            import asyncio, os
+            from aiogram import Bot
+            from aiogram.client.default import DefaultBotProperties
+            from aiogram.enums import ParseMode
+            token = os.environ.get("BOT_TOKEN", "")
+            if token and uid:
+                async def notify():
+                    bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+                    await bot.send_message(
+                        chat_id=int(uid),
+                        text="❌ <b>تم رفض طلب الاشتراك</b>\n\nيرجى التواصل مع الأدمن للمزيد من المعلومات."
+                    )
+                    await bot.session.close()
+                asyncio.run(notify())
+        except Exception as e:
+            print(f"Bot notify error: {e}")
+
+        return jsonify({"ok": True, "message": "تم رفض الطلب"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/admin/students/<int:uid>/delete", methods=["DELETE"])
+def api_delete_student(uid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM students WHERE user_id=? OR telegram_id=?", (uid, str(uid)))
+        conn.execute("DELETE FROM payments WHERE user_id=? OR telegram_id=?", (uid, str(uid)))
+        conn.commit()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+
+@app.route("/api/admin/students/<int:uid>/send-message", methods=["POST"])
+def api_send_message_to_student(uid):
+    d = request.json or {}
+    text = d.get("text", "").strip()
+    if not text:
+        return jsonify({"error": "النص مطلوب"}), 400
+    try:
+        import asyncio, os
+        from aiogram import Bot
+        from aiogram.client.default import DefaultBotProperties
+        from aiogram.enums import ParseMode
+        token = os.environ.get("BOT_TOKEN", "")
+        if not token:
+            return jsonify({"error": "BOT_TOKEN غير مضبوط"}), 500
+        async def send():
+            bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+            await bot.send_message(chat_id=uid, text=text)
+            await bot.session.close()
+        asyncio.run(send())
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    import os as _os
+    _port = int(_os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=_port, debug=False)

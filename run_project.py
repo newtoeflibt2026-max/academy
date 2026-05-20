@@ -308,7 +308,7 @@ def main():
     parser.add_argument("--no-ngrok",  action="store_true", help="بدون Ngrok")
     parser.add_argument("--bot-only",  action="store_true", help="بوت فقط")
     parser.add_argument("--web-only",  action="store_true", help="Flask فقط")
-    parser.add_argument("--port",      type=int, default=5000, help="منفذ Flask")
+    parser.add_argument("--port",      type=int, default=int(os.environ.get("PORT", 8080)), help="منفذ Flask")
     parser.add_argument("--webhook",   action="store_true", help="استخدام Webhook بدل Polling")
     args = parser.parse_args()
 

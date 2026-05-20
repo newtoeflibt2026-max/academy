@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>الدرس</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI','Tahoma',sans-serif;background:#f8fafc;color:#0f172a;line-height:1.8}
+  .container{max-width:900px;margin:0 auto;padding:20px}
+  .back-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;color:#6366f1;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;margin-bottom:16px;border:1px solid #e2e8f0;cursor:pointer;font-size:14px}
+  .back-btn:hover{background:#6366f1;color:#fff}
+  .header{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:28px 24px;border-radius:18px;margin-bottom:20px;box-shadow:0 10px 30px rgba(99,102,241,.25)}
+  .header .code{display:inline-block;background:rgba(255,255,255,.22);padding:4px 12px;border-radius:8px;font-size:12px;margin-bottom:10px;font-weight:600}
+  .header h1{font-size:22px;font-weight:700;margin-bottom:8px;line-height:1.4}
+  .header .focus{opacity:.95;font-size:14px;margin-top:6px}
+  .header .meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .header .meta span{background:rgba(255,255,255,.18);padding:5px 12px;border-radius:16px;font-size:13px}
+  .section{background:#fff;padding:22px;border-radius:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(15,23,42,.04);border:1px solid #e2e8f0}
+  .section h2{font-size:17px;color:#6366f1;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-weight:700}
+  .section h2::before{content:'';width:4px;height:22px;background:#6366f1;border-radius:2px}
+  .sub-block{background:#f1f5f9;padding:14px 16px;border-radius:10px;margin-bottom:10px;border-right:3px solid #6366f1}
+  .sub-block .label{font-weight:700;color:#4f46e5;margin-bottom:6px;font-size:14px}
+  .sub-block .text{color:#334155;font-size:14px}
+  .sub-block ul{margin:8px 0 0 0;padding-right:18px}
+  .sub-block li{margin-bottom:6px;color:#475569;font-size:13.5px}
+  .key-rule{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:14px 16px;border-radius:10px;border-right:4px solid #f59e0b;margin-top:10px}
+  .key-rule .label{color:#92400e;font-weight:700;margin-bottom:4px;font-size:14px}
+  .key-rule .text{color:#78350f;font-size:14px}
+  .word-card{background:#fef9c3;padding:14px;border-radius:10px;margin-bottom:10px;border-right:3px solid #eab308}
+  .word-card .w{font-size:17px;font-weight:700;color:#854d0e}
+  .word-card .t{color:#475569;margin:4px 0;font-size:14px}
+  .word-card .s{font-size:13px;color:#64748b;font-style:italic;margin-top:4px}
+  .question{background:#eff6ff;padding:16px;border-radius:10px;margin-bottom:14px;border-right:3px solid #3b82f6}
+  .question .qhead{display:flex;justify-content:space-between;align-items:start;margin-bottom:10px}
+  .question .qnum{background:#3b82f6;color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-left:8px}
+  .question .qtype{background:#dbeafe;color:#1e40af;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600}
+  .question .q{font-weight:600;color:#1e3a8a;font-size:15px;flex:1}
+  .question .opts{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .opt{padding:10px 14px;background:#fff;border-radius:8px;border:1.5px solid #dbeafe;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px;font-size:14px}
+  .opt:hover{background:#dbeafe;border-color:#3b82f6}
+  .opt .ltr{background:#e0e7ff;color:#4338ca;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+  .opt.correct{background:#dcfce7;border-color:#22c55e;color:#166534;font-weight:600}
+  .opt.correct .ltr{background:#22c55e;color:#fff}
+  .opt.wrong{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+  .opt.wrong .ltr{background:#ef4444;color:#fff}
+  .explanation-box{background:#f0fdf4;padding:12px 14px;border-radius:8px;margin-top:10px;border-right:3px solid #22c55e;font-size:13.5px;color:#166534;display:none}
+  .explanation-box.show{display:block}
+  .explanation-box .lbl{font-weight:700;margin-bottom:4px}
+  .text-card{background:#f1f5f9;padding:16px;border-radius:10px;margin-bottom:10px;border-right:3px solid #64748b}
+  .text-card .lvl{display:inline-block;background:#6366f1;color:#fff;padding:2px 10px;border-radius:12px;font-size:11px;margin-bottom:8px;font-weight:600}
+  .text-card .content{font-size:14px;color:#334155;white-space:pre-wrap;line-height:1.7}
+  .loading{text-align:center;padding:60px;color:#64748b}
+  .complete-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:20px;width:100%;box-shadow:0 4px 12px rgba(34,197,94,.3)}
+  .complete-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(34,197,94,.4)}
+  .complete-btn:disabled{opacity:.7;cursor:not-allowed}
+  .check-btn{background:#3b82f6;color:#fff;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;margin-top:8px}
+  .check-btn:hover{background:#2563eb}
+</style>
+</head>
+<body>
+<div class="container">
+  <button class="back-btn" onclick="goBack()">← العودة للدروس</button>
+  <div id="content" class="loading">⏳ جاري تحميل الدرس...</div>
+</div>
+<script>
+const LESSON_ID = {{ lesson_id }};
+// Read student_id from URL or localStorage (saved by dashboard)
+const studentId = new URLSearchParams(window.location.search).get('student_id')
+  || localStorage.getItem('yamen_student_id');
+
+function goBack(){
+  if(studentId) window.location.href = '/student?student_id=' + studentId;
+  else history.back();
+}
+
+async function loadLesson(){
+  try{
+    const r = await fetch('/api/lessons/' + LESSON_ID);
+    if(!r.ok) throw new Error('not found');
+    const d = await r.json();
+    render(d);
+  }catch(e){
+    document.getElementById('content').innerHTML = '<p style="color:#ef4444;text-align:center;padding:40px">❌ تعذر تحميل الدرس</p>';
+  }
+}
+
+// Smart explanation renderer
+function renderExplanation(exp){
+  if(!exp || typeof exp !== 'object') return '';
+  let html = '<div class="section"><h2>📖 الشرح والمفاهيم</h2>';
+  let hasContent = false;
+
+  const labels = {
+    ar: 'الشرح', en: 'English', strategy: 'الاستراتيجية',
+    signal_phrases: 'عبارات دلالية', key_transitions: 'كلمات الربط',
+    steps: 'الخطوات', tips: 'نصائح', examples: 'أمثلة',
+    insert_sentence: '➕ إدراج جملة', paragraph_relationships: '🔗 علاقات الفقرات',
+    factual: 'الأسئلة الواقعية', inference: 'أسئلة الاستنتاج',
+    vocabulary: 'المفردات في السياق', rhetorical_purpose: 'الغرض البلاغي',
+    technique: 'التقنية', overview: 'نظرة عامة'
+  };
+
+  function renderValue(v, indent){
+    if(typeof v === 'string') return `<div class="text">${v}</div>`;
+    if(Array.isArray(v)){
+      return '<ul>' + v.map(item => {
+        if(typeof item === 'string') return `<li>${item}</li>`;
+        if(typeof item === 'object') return `<li>${JSON.stringify(item)}</li>`;
+        return `<li>${item}</li>`;
+      }).join('') + '</ul>';
+    }
+    if(typeof v === 'object' && v !== null){
+      let inner = '';
+      Object.entries(v).forEach(([k, val]) => {
+        const lbl = labels[k] || k;
+        inner += `<div style="margin-top:8px"><b style="color:#4f46e5">${lbl}:</b> ${renderValue(val, indent+1)}</div>`;
+      });
+      return inner;
+    }
+    return String(v);
+  }
+
+  // key_rule gets special treatment
+  if(exp.key_rule){
+    html += `<div class="key-rule"><div class="label">🔑 قاعدة ذهبية</div><div class="text">${exp.key_rule}</div></div>`;
+    hasContent = true;
+  }
+
+  Object.entries(exp).forEach(([key, val]) => {
+    if(key === 'key_rule') return;
+    const label = labels[key] || key;
+    html += `<div class="sub-block"><div class="label">${label}</div>${renderValue(val, 0)}</div>`;
+    hasContent = true;
+  });
+
+  html += '</div>';
+  return hasContent ? html : '';
+}
+
+function render(d){
+  const L = d.lesson || {};
+  let html = `
+    <div class="header">
+      ${L.lesson_code ? `<div class="code">${L.lesson_code}</div>` : ''}
+      <h1>${L.title || 'الدرس'}</h1>
+      ${L.focus_point ? `<div class="focus">🎯 ${L.focus_point}</div>` : ''}
+      <div class="meta">
+        <span>💎 +${L.xp_reward||20} XP</span>
+        <span>📚 ${L.skill || 'reading'}</span>
+        <span>📊 المرحلة ${L.stage||1}</span>
+        ${d.counts ? `<span>❓ ${d.counts.questions} سؤال</span>` : ''}
+      </div>
+    </div>`;
+
+  // Explanation (smart)
+  html += renderExplanation(L.explanation);
+
+  // Words
+  if(d.words && d.words.length){
+    html += `<div class="section"><h2>🔤 المفردات (${d.words.length})</h2>`;
+    d.words.forEach(w => {
+      html += `<div class="word-card">
+        <div class="w">${w.word||''}</div>
+        ${w.translation ? `<div class="t">${w.translation}</div>` : ''}
+        ${w.sentence ? `<div class="s">"${w.sentence}"</div>` : ''}
+        ${w.hint ? `<div class="s" style="color:#92400e">💡 ${w.hint}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Texts
+  if(d.texts && d.texts.length){
+    html += `<div class="section"><h2>📄 نصوص تطبيقية (${d.texts.length})</h2>`;
+    d.texts.forEach(t => {
+      const content = t.content || '';
+      html += `<div class="text-card">
+        ${t.level ? `<span class="lvl">${t.level}</span>` : ''}
+        <div class="content">${content.substring(0,800)}${content.length>800?'...':''}</div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Questions with options
+  if(d.questions && d.questions.length){
+    html += `<div class="section"><h2>❓ الأسئلة (${d.questions.length})</h2>`;
+    d.questions.forEach((q, i) => {
+      let opts = '';
+      try{
+        const o = JSON.parse(q.options_json || '{}');
+        // options can be object {A:"..", B:".."} OR array
+        let entries;
+        if(Array.isArray(o)){
+          entries = o.map((v,idx) => [String.fromCharCode(65+idx), v]);
+        } else if(typeof o === 'object' && o !== null){
+          entries = Object.entries(o);
+        } else {
+          entries = [];
+        }
+        entries.forEach(([letter, text]) => {
+          opts += `<div class="opt" data-q="${q.id}" data-l="${letter}" data-correct="${q.correct_answer||''}" onclick="checkAnswer(this)">
+            <span class="ltr">${letter}</span>
+            <span>${text}</span>
+          </div>`;
+        });
+      }catch(e){
+        opts = '<div style="color:#94a3b8;font-size:13px">⚠️ تعذر تحميل الخيارات</div>';
+      }
+
+      const qTypeLabel = {
+        factual: 'واقعي', inference: 'استنتاج', vocabulary: 'مفردات',
+        insert_sentence: 'إدراج جملة', rhetorical_purpose: 'غرض بلاغي',
+        negative_factual: 'سلبي', summary: 'تلخيص'
+      }[q.q_type] || q.q_type;
+
+      html += `<div class="question">
+        <div class="qhead">
+          <div style="display:flex;align-items:start;flex:1">
+            <span class="qnum">${i+1}</span>
+            <div class="q">${q.question||''}</div>
+          </div>
+          ${qTypeLabel ? `<span class="qtype">${qTypeLabel}</span>` : ''}
+        </div>
+        <div class="opts">${opts}</div>
+        ${q.explanation ? `<div class="explanation-box" id="exp-${q.id}"><div class="lbl">💡 الشرح:</div>${q.explanation}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Complete button
+  html += `<button class="complete-btn" id="completeBtn" onclick="completeLesson()">✅ إنهاء الدرس واستلام +${L.xp_reward||20} XP</button>`;
+
+  document.getElementById('content').innerHTML = html;
+}
+
+// Click to check answer
+function checkAnswer(el){
+  const q = el.dataset.q;
+  const letter = el.dataset.l;
+  const correct = el.dataset.correct;
+  const parent = el.parentElement;
+  // disable all options in this question
+  parent.querySelectorAll('.opt').forEach(o => {
+    o.style.pointerEvents = 'none';
+    if(o.dataset.l === correct) o.classList.add('correct');
+    else if(o === el && letter !== correct) o.classList.add('wrong');
+  });
+  // show explanation
+  const exp = document.getElementById('exp-' + q);
+  if(exp) exp.classList.add('show');
+}
+
+async function completeLesson(){
+  if(!studentId){
+    alert('⚠️ يجب فتح الدرس من بوابة الطالب لاستلام النقاط.\n\nاذهب إلى: /student?student_id=YOUR_ID');
+    return;
+  }
+  const btn = document.getElementById('completeBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الحفظ...';
+  try{
+    const r = await fetch('/api/lessons/' + LESSON_ID + '/complete', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: parseInt(studentId)})
+    });
+    const d = await r.json();
+    if(d.ok){
+      btn.style.background = 'linear-gradient(135deg,#16a34a,#15803d)';
+      btn.textContent = '🎉 تم! حصلت على +' + d.xp_awarded + ' XP';
+      setTimeout(() => { window.location.href = '/student?student_id=' + studentId; }, 1800);
+    } else {
+      btn.disabled = false;
+      btn.textContent = '❌ فشل - ' + (d.error || 'حاول مرة أخرى');
+    }
+  }catch(e){
+    btn.disabled = false;
+    btn.textContent = '❌ خطأ في الاتصال';
+  }
+}
+
+loadLesson();
+</script>
+</body>
+</html>

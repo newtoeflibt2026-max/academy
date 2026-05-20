@@ -721,4 +721,4 @@ create_payment = add_payment
 init_bot_db = init_db
 
 # ── unified db alias ──
-from db import init_bot_db, get_db, create_student, get_student, update_student, add_xp, activate_paid, deactivate_paid, get_setting, set_setting, get_all_students_db
+from db import init_bot_db, get_db, create_student, get_student, update_student, activate_paid, deactivate_paid, get_setting, set_setting, get_all_students_db
