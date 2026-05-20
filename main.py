@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import asyncio, logging, importlib, threading
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode

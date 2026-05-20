@@ -1,4 +1,4 @@
-﻿"""
+"""
 admin_routes.py — All admin & user API routes
 """
 from flask import jsonify, request as req, render_template, send_from_directory
