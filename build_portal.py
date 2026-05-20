@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+﻿import os
+
+html = """<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
@@ -722,9 +724,7 @@ function openGate(skill){
   document.getElementById('gate-title').textContent = `بوابة قسم ${sk.name}`;
   const total = (STATE.questions[skill]||[]).length;
   document.getElementById('gate-desc').textContent =
-    `ستبدأ اختبار ${sk.name} الآن.
-${total ? 'عدد الأسئلة: '+total : 'سيتم تحميل الأسئلة'}
-لديك 30 ثانية لكل سؤال — الوقت يُضغط عليك!`;
+    `ستبدأ اختبار ${sk.name} الآن.\n${total ? 'عدد الأسئلة: '+total : 'سيتم تحميل الأسئلة'}\nلديك 30 ثانية لكل سؤال — الوقت يُضغط عليك!`;
   document.getElementById('gate-overlay').classList.add('open');
 }
 
@@ -913,4 +913,8 @@ function showToast(msg, type=''){
 }
 </script>
 </body>
-</html>
+</html>"""
+
+with open("templates/student_portal.html","w",encoding="utf-8") as f:
+    f.write(html)
+print("DONE - size:", len(html), "chars")

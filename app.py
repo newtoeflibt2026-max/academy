@@ -442,3 +442,184 @@ def api_grad_status():
         return jsonify({"ready": ready, "checks": checks, "student": s})
     finally:
         conn.close()
+
+
+# ── Phase Settings ────────────────────────────────────────────
+@app.route("/api/admin/phase-settings", methods=["GET"])
+def api_phase_settings_get():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM phase_settings ORDER BY phase_number").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/phase-settings/<int:pid>", methods=["PUT"])
+def api_phase_settings_put(pid):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE phase_settings SET phase_name=?,min_xp=?,min_streak=?,
+            min_quiz_score=?,min_attendance_days=?,description=? WHERE phase_number=?""",
+            (d.get("phase_name",""), int(d.get("min_xp",0)), int(d.get("min_streak",0)),
+             float(d.get("min_quiz_score",0)), int(d.get("min_attendance_days",0)),
+             d.get("description",""), pid))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ── Grading Rules ─────────────────────────────────────────────
+@app.route("/api/admin/grading-rules", methods=["GET"])
+def api_grading_rules_get():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM essay_grading_rules ORDER BY id").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules", methods=["POST"])
+def api_grading_rules_post():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("INSERT INTO essay_grading_rules (criteria,max_score,description) VALUES (?,?,?)",
+            (d.get("criteria",""), int(d.get("max_score",10)), d.get("description","")))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules/<int:rid>", methods=["DELETE"])
+def api_grading_rules_delete(rid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM essay_grading_rules WHERE id=?", (rid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+
+# ── Quiz Result from Student Portal ──────────────────────
+@app.route("/api/student/quiz-result", methods=["POST"])
+def api_quiz_result():
+    d = request.json or {}
+    uid      = int(d.get("user_id", 0))
+    skill    = d.get("skill", "")
+    xp_earned= int(d.get("xp_earned", 0))
+    score    = float(d.get("score", 0))
+    if uid and xp_earned > 0:
+        conn = get_db()
+        try:
+            conn.execute("UPDATE students SET xp=xp+?, tasks_completed=tasks_completed+1 WHERE telegram_id=?",
+                         (xp_earned, uid))
+            conn.execute("INSERT INTO xp_log (user_id,amount,reason) VALUES (?,?,?)",
+                         (uid, xp_earned, f"quiz_{skill}_{score:.0f}%"))
+            conn.commit()
+        finally:
+            conn.close()
+    return jsonify({"ok": True})
+
+
+# ── Add Student Manually ──────────────────────────────────
+@app.route("/api/admin/students/add", methods=["POST"])
+def api_add_student():
+    d = request.json or {}
+    tid  = int(d.get("telegram_id", 0))
+    name = d.get("full_name", "").strip()
+    user = d.get("username", "").strip()
+    paid = int(d.get("is_paid", 0))
+    if not tid:
+        return jsonify({"error": "telegram_id مطلوب"}), 400
+    conn = get_db()
+    try:
+        conn.execute("""INSERT OR IGNORE INTO students
+            (telegram_id, full_name, username, is_paid, is_active)
+            VALUES (?,?,?,?,1)""", (tid, name, user, paid))
+        if paid:
+            conn.execute("UPDATE students SET is_paid=1 WHERE telegram_id=?", (tid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# ── Phase Settings ────────────────────────────────────────
+@app.route("/api/admin/phase-settings", methods=["GET"])
+def api_phase_settings_get():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM phase_settings ORDER BY phase_number").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/phase-settings/<int:pid>", methods=["PUT"])
+def api_phase_settings_put(pid):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE phase_settings SET phase_name=?,min_xp=?,min_streak=?,
+            min_quiz_score=?,min_attendance_days=?,description=? WHERE phase_number=?""",
+            (d.get("phase_name",""), int(d.get("min_xp",0)), int(d.get("min_streak",0)),
+             float(d.get("min_quiz_score",0)), int(d.get("min_attendance_days",0)),
+             d.get("description",""), pid))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ── Grading Rules ─────────────────────────────────────────
+@app.route("/api/admin/grading-rules", methods=["GET"])
+def api_grading_rules_get():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM essay_grading_rules ORDER BY id").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules", methods=["POST"])
+def api_grading_rules_post():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("INSERT INTO essay_grading_rules (criteria,max_score,description) VALUES (?,?,?)",
+            (d.get("criteria",""), int(d.get("max_score",10)), d.get("description","")))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules/<int:rid>", methods=["DELETE"])
+def api_grading_rules_delete(rid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM essay_grading_rules WHERE id=?", (rid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+# ── Quiz Result ───────────────────────────────────────────
+@app.route("/api/student/quiz-result", methods=["POST"])
+def api_quiz_result():
+    d = request.json or {}
+    uid       = int(d.get("user_id", 0))
+    skill     = d.get("skill", "")
+    xp_earned = int(d.get("xp_earned", 0))
+    score     = float(d.get("score", 0))
+    if uid and xp_earned > 0:
+        conn = get_db()
+        try:
+            conn.execute("UPDATE students SET xp=xp+?, tasks_completed=tasks_completed+1 WHERE telegram_id=?",
+                         (xp_earned, uid))
+            conn.execute("INSERT INTO xp_log (user_id,amount,reason) VALUES (?,?,?)",
+                         (uid, xp_earned, f"quiz_{skill}_{score:.0f}pct"))
+            conn.commit()
+        finally:
+            conn.close()
+    return jsonify({"ok": True})
