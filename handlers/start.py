@@ -12,10 +12,7 @@ import logging, sqlite3, os
 logger = logging.getLogger(__name__)
 router = Router(name="start")
 
-DB_PATH = os.environ.get(
-    "DB_PATH",
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "academy.db")
-)
+DB_PATH = r"C:\Users\nelt2\yamen_academy\academy.db"
 
 
 def get_main_keyboard(is_paid: bool = False) -> InlineKeyboardMarkup:
@@ -108,7 +105,7 @@ async def callback_lessons(callback: types.CallbackQuery):
         conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT * FROM lessons WHERE is_active=1 ORDER BY stage, order_num LIMIT 10"
+            "SELECT * FROM lessons WHERE is_active=1 ORDER BY phase, order_num LIMIT 20"
         ).fetchall()
         conn.close()
         lessons = [dict(r) for r in rows]
@@ -225,7 +222,7 @@ async def callback_subscriptions(callback: types.CallbackQuery):
         name_col = "name_ar" if "name_ar" in cols else "plan_name"
         key_col = "plan_key" if "plan_key" in cols else "plan_id"
         rows = conn.execute(
-            f"SELECT * FROM subscription_plans WHERE is_active=1 ORDER BY price"
+            "SELECT * FROM subscription_plans WHERE is_active=1 ORDER BY price LIMIT 5"
         ).fetchall()
         conn.close()
         plans = [dict(r) for r in rows]
@@ -245,22 +242,16 @@ async def callback_subscriptions(callback: types.CallbackQuery):
     kb = InlineKeyboardBuilder()
 
     for p in plans:
-        name = p.get("name_ar") or p.get("plan_name", "باقة")
+        name = p.get("name_ar") or p.get("name", "باقة")
         price = p.get("price", 0)
         days = p.get("duration_days") or p.get("days", 30)
-        speed = p.get("lessons_per_day") or p.get("speed", 1)
+        speed = p.get("duration_days", 30)
         desc = p.get("description", "")
         key = p.get("plan_key") or p.get("plan_id", str(p.get("id")))
         emoji = p.get("emoji", "📚")
 
-        text += (
-            f"{emoji} <b>{name}</b>\n"
-            f"💰 السعر: {price:,} دينار\n"
-            f"📅 المدة: {days} يوم\n"
-            f"📖 {speed} درس/يوم\n"
-            f"📝 {desc}\n"
-            f"━━━━━━━━━━━━\n\n"
-        )
+        price_text = "مجاني 🎁" if price == 0 else f"{price:,.0f} د.أ"
+        text += f"{emoji} <b>{name}</b> — {price_text} | {days} يوم\n"
         kb.button(text=f"{emoji} اشترك — {name}", callback_data=f"subscribe:{key}")
 
     kb.button(text="🏠 رجوع", callback_data="menu_main")
@@ -396,7 +387,7 @@ async def callback_missions(callback: types.CallbackQuery):
     await callback.answer()
     from datetime import date
     today = date.today().isoformat()
-    missions = get_daily_missions(today)
+    missions = get_daily_missions()
     if not missions:
         missions = get_daily_missions()
     if not missions:

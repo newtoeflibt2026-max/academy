@@ -9,10 +9,7 @@ import sqlite3, os, logging
 logger = logging.getLogger(__name__)
 router = Router(name="placement_test")
 
-DB_PATH = os.environ.get(
-    "DB_PATH",
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "academy.db")
-)
+DB_PATH = r"C:\Users\nelt2\yamen_academy\academy.db"
 
 
 def get_questions():
@@ -207,7 +204,7 @@ async def on_answer(cb: CallbackQuery, state: FSMContext):
         level = save_result(cb.from_user.id, score)
 
         try:
-            add_xp(str(cb.from_user.id), 50, "general", "placement_test")
+            add_xp(cb.from_user.id, 50, "placement_test")
         except Exception as e:
             logger.warning(f"add_xp: {e}")
 

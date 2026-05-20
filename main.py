@@ -9,6 +9,7 @@ from config import settings
 from db import init_bot_db
 from handlers.start import router as start_router
 from handlers.subscriptions import router as sub_router
+from handlers.payments import router as pay_router
 from handlers.admin import router as admin_router
 
 # ─── Flask ───────────────────────────────────────────────
@@ -43,6 +44,7 @@ async def run_bot():
 
     dp.include_router(start_router)
     dp.include_router(sub_router)
+    dp.include_router(pay_router)
     dp.include_router(admin_router)
 
     optional = [

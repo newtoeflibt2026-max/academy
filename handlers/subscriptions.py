@@ -10,10 +10,7 @@ from datetime import datetime, timedelta
 logger = logging.getLogger(__name__)
 router = Router(name="subscriptions")
 
-DB_PATH = os.environ.get(
-    "DB_PATH",
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "academy.db")
-)
+DB_PATH = r"C:\Users\nelt2\yamen_academy\academy.db"
 ADMIN_IDS = [
     int(x) for x in os.environ.get("ADMIN_IDS", "5572314718").split(",")
     if x.strip().isdigit()

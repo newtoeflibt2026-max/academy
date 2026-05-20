@@ -488,15 +488,9 @@ def check_graduation(user_id):
 def get_daily_missions(target_date=None):
     conn = get_db()
     try:
-        if target_date:
-            rows = conn.execute(
-                "SELECT * FROM daily_missions WHERE target_date=? AND is_active=1",
-                (target_date,)
-            ).fetchall()
-        else:
-            rows = conn.execute(
-                "SELECT * FROM daily_missions WHERE is_active=1 ORDER BY created_at DESC"
-            ).fetchall()
+        rows = conn.execute(
+            "SELECT * FROM daily_missions WHERE is_active=1 ORDER BY id DESC LIMIT 10"
+        ).fetchall()
         return [dict(r) for r in rows]
     finally:
         conn.close()

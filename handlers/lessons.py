@@ -8,10 +8,7 @@ import sqlite3, os, logging, json
 logger = logging.getLogger(__name__)
 router = Router(name="lessons")
 
-DB_PATH = os.environ.get(
-    "DB_PATH",
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "academy.db")
-)
+DB_PATH = r"C:\Users\nelt2\yamen_academy\academy.db"
 
 SKILL_EMOJI = {
     "reading":    "📖",
