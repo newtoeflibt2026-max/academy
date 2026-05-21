@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from aiogram import types, Router, F
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import CommandStart, Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from database_v2 import (
@@ -10,6 +11,18 @@ from database_v2 import (
 from config import settings
 import logging, sqlite3, os
 from datetime import datetime
+
+# ─── Safe edit helper ───
+async def _safe_edit(message, text, reply_markup=None):
+    """يتجاهل خطأ 'message is not modified' عند تعديل رسالة بنفس المحتوى."""
+    try:
+        await message.edit_text(text, reply_markup=reply_markup)
+    except TelegramBadRequest as e:
+        if "message is not modified" in str(e).lower():
+            pass  # تجاهل بصمت
+        else:
+            raise
+
 
 logger = logging.getLogger(__name__)
 router = Router(name="start")
@@ -188,7 +201,7 @@ async def cb_track_toefl(callback: types.CallbackQuery):
         "🥇 <b>90</b> — للجامعات المرموقة وبرامج المنح\n\n"
         "💡 كلما كان هدفك أعلى، كانت بوابة Mock النهائية أعلى."
     )
-    await callback.message.edit_text(text, reply_markup=kb_choose_target())
+    await _safe_edit(callback.message, text, reply_markup=kb_choose_target())
 
 
 @router.callback_query(F.data == "track:soon")
@@ -221,7 +234,7 @@ async def cb_target(callback: types.CallbackQuery):
         "• نتيجة 50 بالمئة فأكثر تعني TOEFL مباشرة\n\n"
         "اضغط الزر لبدء الاختبار 👇"
     )
-    await callback.message.edit_text(text, reply_markup=kb_start_placement(user_id))
+    await _safe_edit(callback.message, text, reply_markup=kb_start_placement(user_id))
 
 
 @router.callback_query(F.data == "back:track")
@@ -234,7 +247,7 @@ async def cb_back_track(callback: types.CallbackQuery):
         "🎯 TOEFL iBT الدولي — متاح الآن\n"
         "🔒 IELTS و SAT و GRE — قريباً"
     )
-    await callback.message.edit_text(text, reply_markup=kb_choose_track())
+    await _safe_edit(callback.message, text, reply_markup=kb_choose_track())
 
 
 @router.callback_query(F.data == "back:target")
@@ -244,7 +257,7 @@ async def cb_back_target(callback: types.CallbackQuery):
         "🎯 <b>اختر العلامة المستهدفة</b> في TOEFL iBT:\n\n"
         "🥉 59  •  🥈 69  •  🥇 90"
     )
-    await callback.message.edit_text(text, reply_markup=kb_choose_target())
+    await _safe_edit(callback.message, text, reply_markup=kb_choose_target())
 
 
 @router.message(Command("menu"))

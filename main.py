@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+
+from init_db import ensure_db
+ensure_db()  # Initialize DB on Railway Volume
 import asyncio, logging, importlib, threading
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
@@ -11,7 +14,7 @@ from handlers.start import router as start_router
 from handlers.payments import router as pay_router
 from handlers.admin import router as admin_router
 
-# ─── Flask ───────────────────────────────────────────────
+# â”€â”€â”€ Flask â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def run_flask():
     try:
         from app import app
@@ -20,7 +23,7 @@ def run_flask():
     except Exception as e:
         print(f"[Flask] ERROR: {e}")
 
-# ─── Optional handlers ───────────────────────────────────
+# â”€â”€â”€ Optional handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def try_router(mod_name):
     try:
         mod = importlib.import_module(mod_name)
@@ -32,7 +35,7 @@ def try_router(mod_name):
         print(f"  - {mod_name}: {e}")
         return None
 
-# ─── Bot (Polling) ───────────────────────────────────────
+# â”€â”€â”€ Bot (Polling) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async def run_bot():
     init_bot_db()
     bot = Bot(
@@ -47,10 +50,10 @@ async def run_bot():
 
     optional = [
         "handlers.listening", "handlers.lessons",
-        "handlers.placement_test", "handlers.placement_inline", "handlers.writing",
+        "handlers.placement_inline", "handlers.writing",
         "handlers.speaking", "handlers.correction"
     ]
-    print("تحميل الـ handlers الاختيارية:")
+    print("ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù€ handlers Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±ÙŠØ©:")
     for mod in optional:
         r = try_router(mod)
         if r:
@@ -58,12 +61,12 @@ async def run_bot():
 
     await bot.delete_webhook(drop_pending_updates=True)
     print("=" * 40)
-    print("البوت يعمل الان!")
+    print("Ø§Ù„Ø¨ÙˆØª ÙŠØ¹Ù…Ù„ Ø§Ù„Ø§Ù†!")
     print(f"DB: {settings.DB_PATH}")
     print("=" * 40)
     await dp.start_polling(bot, drop_pending_updates=True)
 
-# ─── Entry point ─────────────────────────────────────────
+# â”€â”€â”€ Entry point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if __name__ == "__main__":
     logging.basicConfig(level=logging.WARNING)
     flask_thread = threading.Thread(target=run_flask, daemon=True)

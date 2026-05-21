@@ -1,10 +1,35 @@
-﻿__pycache__/
+﻿# Python
+__pycache__/
 *.pyc
 *.pyo
+
+# Environment
 .env
-academy.db
-*.db
 .venv/
 venv/
-ngrok.exe
+
+# Logs
 *.log
+
+# Tools
+ngrok.exe
+
+# Backups & Archives (don't track)
+_backups/
+_archive_cleanup_*/
+_scripts/
+*.bak
+*.OLD
+*.before_merge
+
+# Old DB copies (keep academy.db tracked as seed!)
+academy.db.backup*
+academy.db.final_backup
+yamen_academy.db*
+data/academy.db
+data/*.db-*
+
+# IDE
+.vscode/
+.idea/
+*.swp

@@ -132,13 +132,16 @@ def _save_placement_result(user_id, score_pct, path, stage_id):
 
 
 def _get_first_stage_id(path):
-    """يرجع ID المرحلة الأولى حسب المسار."""
+    """يرجع ID المرحلة الأولى حسب المسار (للتوافق مع الكود القديم)."""
+    code = "F1" if path == "foundation" else "TR1"
+    return _get_first_stage_id_by_code(code)
+
+
+def _get_first_stage_id_by_code(code):
+    """يرجع ID المرحلة حسب الكود (F1, TR1, TR2 ...)."""
     conn = _db()
     cur = conn.cursor()
-    if path == "foundation":
-        cur.execute("SELECT id FROM stages WHERE code='F1'")
-    else:
-        cur.execute("SELECT id FROM stages WHERE code='TR1'")
+    cur.execute("SELECT id FROM stages WHERE code=?", (code,))
     row = cur.fetchone()
     conn.close()
     return row["id"] if row else None
@@ -155,7 +158,6 @@ def kb_question(qid):
             text=f"{letter}) {q['options'][letter]}",
             callback_data=f"pl:ans:{qid}:{letter}"
         )])
-    rows.append([InlineKeyboardButton(text="❌ إلغاء الاختبار", callback_data="pl:cancel")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
@@ -236,7 +238,7 @@ async def cb_answer(callback: types.CallbackQuery):
     if is_correct:
         session["correct"] += 1
 
-    await callback.answer("✅ صحيح!" if is_correct else f"❌ الإجابة الصحيحة: {q['answer']}", show_alert=False)
+    await callback.answer("✅ تم التسجيل", show_alert=False)
 
     # الانتقال للسؤال التالي
     next_idx = qid + 1
@@ -248,48 +250,64 @@ async def cb_answer(callback: types.CallbackQuery):
 
 
 async def _finish_test(callback, user_id):
-    """ينهي الاختبار، يحسب النتيجة، يحفظها، ويُظهر التوجيه."""
+    """ينهي الاختبار، يحسب المستوى، يحفظه، ويُظهر التوجيه (بدون كشف النسبة)."""
     session = SESSIONS.get(user_id, {})
     correct = session.get("correct", 0)
     total = len(QUESTIONS)
     score_pct = round((correct / total) * 100, 1)
 
-    # تحديد المسار
+    # ─── تصنيف المستوى ───
     if score_pct < 50:
+        level_emoji = "🔴"
+        level_name = "ضعيف"
+        level_desc = "تحتاج لتقوية الأساسيات أولاً"
         path = "foundation"
         path_msg = (
-            "🛠️ <b>المسار: التأسيس الإجباري</b>\n\n"
+            "🛠️ <b>مسارك: التأسيس الشامل</b>\n\n"
             "ستبدأ بمراحل التأسيس (قواعد + مفردات + قراءة تمهيدية) "
-            "قبل الانتقال لـ TOEFL.\n\n"
-            "هذا المسار مُصمم لتقوية أساسياتك أولاً، ثم تنطلق بثقة."
+            "قبل الانتقال إلى TOEFL.\n\n"
+            "💡 هذا المسار مُصمَّم لبناء قاعدة قوية تنطلق منها بثقة."
         )
         first_stage_code = "F1"
-    else:
+    elif score_pct < 80:
+        level_emoji = "🟡"
+        level_name = "متوسط"
+        level_desc = "أساسياتك جيدة، يمكنك البدء بـ TOEFL"
         path = "toefl"
         path_msg = (
-            "🎯 <b>المسار: TOEFL iBT مباشر</b>\n\n"
-            "أساسياتك جيدة، يمكنك البدء مباشرة بمراحل TOEFL.\n\n"
-            "ستبدأ من القراءة (TR1) ثم تتقدم لباقي المهارات."
+            "🎯 <b>مسارك: TOEFL iBT مباشر</b>\n\n"
+            "ستبدأ من القراءة المبتدئة (TR1) ثم تتقدم تدريجياً في باقي المهارات.\n\n"
+            "💪 أساسياتك تسمح بالانطلاق مباشرة."
         )
         first_stage_code = "TR1"
+    else:
+        level_emoji = "🟢"
+        level_name = "متقدم"
+        level_desc = "مستواك ممتاز، ستتخطى المبتدئ"
+        path = "toefl"
+        path_msg = (
+            "🎯 <b>مسارك: TOEFL iBT (مستوى متقدم)</b>\n\n"
+            "نظراً لمستواك القوي، ستبدأ مباشرة من القراءة المتوسطة (TR2) "
+            "وتتخطى المرحلة المبتدئة.\n\n"
+            "🚀 جاهز للتقدم بسرعة!"
+        )
+        first_stage_code = "TR2"
 
-    # حفظ في DB
-    stage_id = _get_first_stage_id(path)
+    # ─── حفظ في DB ───
+    stage_id = _get_first_stage_id_by_code(first_stage_code)
     _save_placement_result(user_id, score_pct, path, stage_id)
 
-    # رسالة النتيجة
-    bar = "🟩" * int(score_pct / 10) + "⬜" * (10 - int(score_pct / 10))
+    # ─── رسالة النتيجة (بدون نسبة، بدون عدد إجابات صحيحة) ───
     text = (
-        f"🎉 <b>انتهى الاختبار!</b>\n\n"
-        f"📊 <b>نتيجتك: {correct}/{total} = {score_pct}%</b>\n"
-        f"{bar}\n\n"
+        f"🎉 <b>اكتمل اختبار تحديد المستوى!</b>\n\n"
+        f"📊 <b>تقييم مستواك:</b>\n"
+        f"{level_emoji} <b>{level_name}</b> — {level_desc}\n\n"
         f"{path_msg}\n\n"
         f"📍 المرحلة الأولى: <b>{first_stage_code}</b>\n"
-        "اضغط الزر التالي للانطلاق 👇"
+        "اضغط الزر للانطلاق 👇"
     )
     await callback.message.edit_text(text, reply_markup=kb_after_result(path))
 
-    # تنظيف الجلسة
     SESSIONS.pop(user_id, None)
 
 

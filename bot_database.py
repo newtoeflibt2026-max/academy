@@ -349,20 +349,74 @@ def get_students_count():
 # ─── XP & Skills ───────────────────────────────────────────────────────────────
 
 def add_xp(user_id, amount, skill=None, reason=None):
+    """
+    يضيف XP للطالب ويسجل في xp_log.
+    user_id: telegram_id (str or int)
+    amount: قيمة XP (int)
+    skill: نوع المهارة (grammar/vocabulary/reading/listening/speaking/writing/lesson/stage)
+    reason: سبب الإضافة (يُحفظ مع skill في عمود reason)
+    """
+    import logging
+    log = logging.getLogger(__name__)
+    
+    # توحيد telegram_id كنص
+    tid_str = str(user_id)
+    try:
+        tid_int = int(user_id)
+    except (ValueError, TypeError):
+        tid_int = None
+    
+    # دمج skill داخل reason
+    reason_full = reason or ""
+    if skill:
+        reason_full = f"{reason_full}:{skill}" if reason_full else skill
+    
     conn = get_db()
     try:
-        conn.execute("UPDATE students SET xp=xp+? WHERE user_id=?", (amount, user_id))
-        allowed = ["reading_xp","listening_xp","speaking_xp","writing_xp","grammar_xp","vocabulary_xp"]
-        if skill and (skill + "_xp") in allowed:
-            conn.execute(
-                "UPDATE user_skills_progress SET " + skill + "_xp=" + skill + "_xp+? WHERE user_id=?",
-                (amount, user_id)
-            )
-        conn.execute(
-            "INSERT INTO xp_log (user_id,xp_amount,reason,skill) VALUES (?,?,?,?)",
-            (user_id, amount, reason, skill)
+        # 1) تحديث xp في students (بحث بـ telegram_id كنص)
+        cur = conn.execute(
+            "UPDATE students SET xp=COALESCE(xp,0)+? WHERE telegram_id=?",
+            (amount, tid_str)
         )
+        if cur.rowcount == 0 and tid_int is not None:
+            # محاولة بحث بـ user_id كنوع int (توافق رجعي)
+            conn.execute(
+                "UPDATE students SET xp=COALESCE(xp,0)+? WHERE user_id=?",
+                (amount, tid_int)
+            )
+        
+        # 2) تحديث total_xp إن وُجد
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(students)").fetchall()]
+        if "total_xp" in cols:
+            conn.execute(
+                "UPDATE students SET total_xp=COALESCE(total_xp,0)+? WHERE telegram_id=?",
+                (amount, tid_str)
+            )
+        
+        # 3) تحديث {skill}_xp إن كان العمود موجوداً
+        if skill:
+            skill_col = f"{skill}_xp"
+            if skill_col in cols:
+                conn.execute(
+                    f"UPDATE students SET {skill_col}=COALESCE({skill_col},0)+? WHERE telegram_id=?",
+                    (amount, tid_str)
+                )
+        
+        # 4) تسجيل في xp_log (الأعمدة الفعلية: user_id, amount, reason)
+        if tid_int is not None:
+            conn.execute(
+                "INSERT INTO xp_log (user_id, amount, reason) VALUES (?, ?, ?)",
+                (tid_int, amount, reason_full)
+            )
+        
         conn.commit()
+        log.debug(f"add_xp OK: tid={tid_str}, amount={amount}, reason={reason_full}")
+    except Exception as e:
+        log.warning(f"add_xp: {e}")
+        try:
+            conn.rollback()
+        except Exception:
+            pass
     finally:
         conn.close()
 
