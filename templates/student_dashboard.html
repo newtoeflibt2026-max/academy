@@ -1242,7 +1242,7 @@ function renderLessonsList(filter) {
 function openLesson(id) {
   haptic('medium');
   if (studentId) localStorage.setItem('yamen_student_id', studentId);
-  const url = studentId ? `/lesson/${id}?student_id=${studentId}` : `/lesson/${id}`;
+  const url = studentId ? `/lesson/${id}?student_id=${studentId || window.__resolveStudentId() || ''}` : `/lesson/${id}`;
   window.location.href = url;
 }
 
@@ -1320,12 +1320,12 @@ function handlePlacementMode() {
           ]
         }, (btnId) => {
           if (btnId === 'start') {
-            window.location.href = `/placement?student_id=${studentId}`;
+            window.location.href = `/placement?student_id=${studentId || window.__resolveStudentId() || ''}`;
           }
         });
       } else {
         if (confirm('بدء اختبار تحديد المستوى الآن؟')) {
-          window.location.href = `/placement?student_id=${studentId}`;
+          window.location.href = `/placement?student_id=${studentId || window.__resolveStudentId() || ''}`;
         }
       }
     }, 800);
@@ -1350,7 +1350,7 @@ function handlePlacementMode() {
 async function openFirstAvailableLesson() {
   if (!studentId) return;
   try {
-    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId}`);
+    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId || window.__resolveStudentId() || ''}`);
     const data = await r.json();
     if (data.error) { alert(data.error); return; }
     
@@ -1359,7 +1359,7 @@ async function openFirstAvailableLesson() {
       for (const lesson of (stage.lessons || [])) {
         if (lesson.status === 'available') {
           if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId}`;
+          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId || window.__resolveStudentId() || ''}`;
           return;
         }
       }
@@ -1375,13 +1375,13 @@ async function openFirstAvailableLesson() {
 function openLesson(lessonId) {
   if (!studentId || !lessonId) return;
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-  window.location.href = `/miniapp/lesson/${lessonId}?student_id=${studentId}`;
+  window.location.href = `/miniapp/lesson/${lessonId}?student_id=${studentId || window.__resolveStudentId() || ''}`;
 }
 
 async function openSkillLessons(skillName) {
   if (!studentId) return;
   try {
-    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId}`);
+    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId || window.__resolveStudentId() || ''}`);
     const data = await r.json();
     if (data.error) return;
     
@@ -1389,7 +1389,7 @@ async function openSkillLessons(skillName) {
     for (const stage of (data.stages || [])) {
       for (const lesson of (stage.lessons || [])) {
         if (lesson.skill === skillName && lesson.status === 'available') {
-          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId}`;
+          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId || window.__resolveStudentId() || ''}`;
           return;
         }
       }
@@ -1399,7 +1399,7 @@ async function openSkillLessons(skillName) {
     for (const stage of (data.stages || [])) {
       for (const lesson of (stage.lessons || [])) {
         if (lesson.skill === skillName) {
-          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId}`;
+          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId || window.__resolveStudentId() || ''}`;
           return;
         }
       }
@@ -1410,6 +1410,59 @@ async function openSkillLessons(skillName) {
     console.error('openSkillLessons:', e);
   }
 }
+</script>
+
+
+<script>
+/* ========== Phase 5: Deep-linking + student_id resolver ========== */
+(function(){
+  function resolveSid(){
+    var qs = new URLSearchParams(window.location.search);
+    var sid = qs.get('student_id') || qs.get('user_id') || qs.get('uid');
+    if(sid==='null'||sid==='undefined'||sid==='') sid=null;
+    if(!sid){
+      try{
+        var tg=window.Telegram&&window.Telegram.WebApp;
+        if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user) sid=String(tg.initDataUnsafe.user.id);
+      }catch(e){}
+    }
+    if(!sid){ try{ sid=localStorage.getItem('yamen_student_id'); }catch(e){} }
+    if(sid){ try{ localStorage.setItem('yamen_student_id', sid); }catch(e){} }
+    return sid;
+  }
+  window.__resolveStudentId = resolveSid;
+
+  function handleDeepLink(){
+    var qs = new URLSearchParams(window.location.search);
+    var section = qs.get('section');
+    var skill = qs.get('skill');
+    if(!section && !skill) return;
+    setTimeout(function(){
+      try{
+        var sid = resolveSid();
+        if(section==='plans' || section==='pricing'){
+          window.location.href='/miniapp/plans?student_id='+(sid||''); return;
+        }
+        if(section==='lessons' || section==='quiz' || section==='mission' || section==='daily'){
+          if(typeof openFirstAvailableLesson==='function'){ openFirstAvailableLesson(); return; }
+        }
+        if(skill && typeof openSkillLessons==='function'){
+          openSkillLessons(skill); return;
+        }
+        if(section==='skills'){
+          var sk=document.querySelector('.skills-grid,.skills-section,[data-section=\"skills\"]');
+          if(sk) sk.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      }catch(e){ console.warn('deeplink',e); }
+    }, 900);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', handleDeepLink);
+  } else {
+    handleDeepLink();
+  }
+})();
 </script>
 
 </body>
