@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>الدرس - أكاديمية يامن</title>
+<title>Ø§Ù„Ø¯Ø±Ø³ - Ø£ÙƒØ§Ø¯ÙŠÙ…ÙŠØ© ÙŠØ§Ù…Ù†</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -196,13 +196,17 @@ body {
   margin: 2px;
 }
 </style>
+<script>
+  // Injected by Flask
+  window.LESSON_ID = {{ lesson_id|tojson }};
+</script>
 </head>
 <body>
 
 <div id="root">
   <div class="loading">
     <div class="loading-spinner"></div>
-    <p style="margin-top:16px">جاري تحميل الدرس...</p>
+    <p style="margin-top:16px">Ø¬Ø§Ø±ÙŠ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¯Ø±Ø³...</p>
   </div>
 </div>
 
@@ -219,17 +223,17 @@ const studentId = tg?.initDataUnsafe?.user?.id
 const lessonId = window.LESSON_ID || urlParams.get('lesson_id');
 
 const SKILL_LABELS = {
-  reading: '📖 القراءة',
-  writing: '✍️ الكتابة',
-  listening: '🎧 الاستماع',
-  speaking: '🎤 المحادثة',
-  general: '📚 عام',
-  grammar: '📝 قواعد'
+  reading: 'ðŸ“– Ø§Ù„Ù‚Ø±Ø§Ø¡Ø©',
+  writing: 'âœï¸ Ø§Ù„ÙƒØªØ§Ø¨Ø©',
+  listening: 'ðŸŽ§ Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹',
+  speaking: 'ðŸŽ¤ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©',
+  general: 'ðŸ“š Ø¹Ø§Ù…',
+  grammar: 'ðŸ“ Ù‚ÙˆØ§Ø¹Ø¯'
 };
 
 async function loadLesson() {
   if (!studentId || !lessonId) {
-    showError('معلومات ناقصة - student_id أو lesson_id');
+    showError('Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ù†Ø§Ù‚ØµØ© - student_id Ø£Ùˆ lesson_id');
     return;
   }
   
@@ -244,82 +248,82 @@ async function loadLesson() {
     
     render(data);
   } catch (e) {
-    showError('فشل تحميل الدرس: ' + e.message);
+    showError('ÙØ´Ù„ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¯Ø±Ø³: ' + e.message);
   }
 }
 
 function render(d) {
-  const skillLabel = SKILL_LABELS[d.skill] || SKILL_LABELS[d.section] || '📚 درس';
+  const skillLabel = SKILL_LABELS[d.skill] || SKILL_LABELS[d.section] || 'ðŸ“š Ø¯Ø±Ø³';
   const isCompleted = d.completed;
   const lastScore = d.last_score ? Math.round(d.last_score) : null;
   
   const html = `
     <div class="header">
       <div class="header-row">
-        <button class="back-btn" onclick="goBack()">←</button>
+        <button class="back-btn" onclick="goBack()">â†</button>
         <span class="skill-badge">${skillLabel}</span>
       </div>
       <div class="lesson-title">${d.title}</div>
       <div class="lesson-meta">
-        <span>📊 ${d.questions.length} سؤال</span>
-        <span>⚡ ${d.xp_reward} XP</span>
-        ${lastScore !== null ? `<span>🎯 آخر نتيجة: ${lastScore}%</span>` : ''}
+        <span>ðŸ“Š ${d.questions.length} Ø³Ø¤Ø§Ù„</span>
+        <span>âš¡ ${d.xp_reward} XP</span>
+        ${lastScore !== null ? `<span>ðŸŽ¯ Ø¢Ø®Ø± Ù†ØªÙŠØ¬Ø©: ${lastScore}%</span>` : ''}
       </div>
     </div>
     
     <div class="container">
       ${isCompleted ? `
         <div class="completed-banner">
-          ✅ أكملت هذا الدرس بنجاح — يمكنك المراجعة
+          âœ… Ø£ÙƒÙ…Ù„Øª Ù‡Ø°Ø§ Ø§Ù„Ø¯Ø±Ø³ Ø¨Ù†Ø¬Ø§Ø­ â€” ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©
         </div>
       ` : ''}
       
       <div class="card">
-        <div class="card-title">📖 محتوى الدرس</div>
-        <div class="content-text">${escapeHtml(d.content || 'لا يوجد محتوى متاح')}</div>
+        <div class="card-title">ðŸ“– Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø¯Ø±Ø³</div>
+        <div class="content-text">${escapeHtml(d.content || 'Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù…Ø­ØªÙˆÙ‰ Ù…ØªØ§Ø­')}</div>
       </div>
       
       ${d.grammar_rule ? `
         <div class="card">
-          <div class="card-title">📐 القاعدة</div>
+          <div class="card-title">ðŸ“ Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø©</div>
           <div class="content-text">${escapeHtml(d.grammar_rule)}</div>
         </div>
       ` : ''}
       
       ${d.vocabulary ? `
         <div class="card">
-          <div class="card-title">📚 المفردات</div>
+          <div class="card-title">ðŸ“š Ø§Ù„Ù…ÙØ±Ø¯Ø§Øª</div>
           <div class="content-text">${escapeHtml(d.vocabulary)}</div>
         </div>
       ` : ''}
       
       ${d.focus_point ? `
         <div class="card">
-          <div class="card-title">🎯 نقطة التركيز</div>
+          <div class="card-title">ðŸŽ¯ Ù†Ù‚Ø·Ø© Ø§Ù„ØªØ±ÙƒÙŠØ²</div>
           <div class="content-text">${escapeHtml(d.focus_point)}</div>
         </div>
       ` : ''}
       
       <div class="card">
-        <div class="card-title">📋 تفاصيل الاختبار</div>
+        <div class="card-title">ðŸ“‹ ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø±</div>
         <div class="info-grid">
           <div class="info-box">
-            <div class="info-box-label">عدد الأسئلة</div>
+            <div class="info-box-label">Ø¹Ø¯Ø¯ Ø§Ù„Ø£Ø³Ø¦Ù„Ø©</div>
             <div class="info-box-value">${d.questions.length}</div>
           </div>
           <div class="info-box">
-            <div class="info-box-label">نقاط الخبرة</div>
+            <div class="info-box-label">Ù†Ù‚Ø§Ø· Ø§Ù„Ø®Ø¨Ø±Ø©</div>
             <div class="info-box-value">${d.xp_reward}+</div>
           </div>
         </div>
         <p style="margin-top:12px;color:var(--text-light);font-size:13px;text-align:center">
-          🏆 نسبة النجاح المطلوبة: 70% | ⏱️ كل سؤال له مؤقت
+          ðŸ† Ù†Ø³Ø¨Ø© Ø§Ù„Ù†Ø¬Ø§Ø­ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø©: 70% | â±ï¸ ÙƒÙ„ Ø³Ø¤Ø§Ù„ Ù„Ù‡ Ù…Ø¤Ù‚Øª
         </p>
       </div>
     </div>
     
     <button class="start-btn ${isCompleted ? 'retry' : ''}" onclick="startQuiz()">
-      ${isCompleted ? '🔄 إعادة الاختبار' : '🚀 ابدأ الاختبار الآن'}
+      ${isCompleted ? 'ðŸ”„ Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø±' : 'ðŸš€ Ø§Ø¨Ø¯Ø£ Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø± Ø§Ù„Ø¢Ù†'}
     </button>
   `;
   
@@ -330,10 +334,10 @@ function render(d) {
 function showError(msg) {
   document.getElementById('root').innerHTML = `
     <div class="error-box">
-      <h3 style="margin-bottom:8px">⚠️ خطأ</h3>
+      <h3 style="margin-bottom:8px">âš ï¸ Ø®Ø·Ø£</h3>
       <p>${escapeHtml(msg)}</p>
       <button onclick="goBack()" style="margin-top:16px;padding:10px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer">
-        رجوع
+        Ø±Ø¬ÙˆØ¹
       </button>
     </div>
   `;
@@ -349,7 +353,7 @@ function goBack() {
 }
 
 function startQuiz() {
-  // Phase 4 — quiz page; for now show notice
+  // Phase 4 â€” quiz page; for now show notice
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
   window.location.href = `/miniapp/quiz/${lessonId}?student_id=${studentId}`;
 }
