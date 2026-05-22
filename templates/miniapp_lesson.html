@@ -5,94 +5,389 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الدرس - أكاديمية يامن</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script>
     window.LESSON_ID = {{ lesson_id|tojson }};
   </script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', 'Tahoma', sans-serif; }
-    body { background: #f5f7fb; color: #1a1a2e; min-height: 100vh; padding-bottom: 40px; }
-    .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white; padding: 20px; border-radius: 0 0 20px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 4px 16px rgba(102,126,234,0.3);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+    body {
+      font-family: 'Cairo', 'Inter', -apple-system, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+      padding-bottom: 40px;
+      line-height: 1.6;
+    }
+    [dir="rtl"] .ltr { direction: ltr; text-align: left; }
+    .english { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+    /* ========== HEADER ========== */
+    .nav-header {
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
     .btn-back {
-      background: rgba(255,255,255,0.2); border: none; color: white;
-      padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gray-100);
+      border: none;
+      color: var(--gray-700);
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.15s;
     }
-    .btn-back:hover { background: rgba(255,255,255,0.3); }
-    .header-title { font-size: 20px; font-weight: 700; text-align: left; }
-    .header-meta { font-size: 13px; opacity: 0.9; margin-top: 6px; }
-    .container { padding: 20px; max-width: 800px; margin: 0 auto; }
-    .card {
-      background: white; border-radius: 16px; padding: 24px;
-      margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    .btn-back:hover { background: var(--gray-200); }
+    .nav-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+      flex: 1;
+      text-align: center;
+      max-width: 60%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .card h2 {
-      font-size: 18px; color: #2d3748; margin-bottom: 12px;
-      padding-bottom: 8px; border-bottom: 2px solid #e2e8f0;
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
     }
-    .content-text { font-size: 16px; line-height: 1.8; color: #4a5568; }
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-    .info-box {
-      background: #f7f5fc; border-radius: 12px; padding: 16px;
-      text-align: center; border: 1px solid #e9d8fd;
+    .status-pill.completed { background: var(--success-light); color: #065f46; }
+    .status-pill.in-progress { background: var(--warning-light); color: #92400e; }
+    .status-pill.new { background: var(--primary-light); color: var(--primary-dark); }
+    /* ========== CONTAINER ========== */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px;
     }
-    .info-label { font-size: 12px; color: #718096; margin-bottom: 4px; }
-    .info-value { font-size: 24px; font-weight: 700; color: #667eea; }
-    .pass-hint {
-      text-align: center; margin-top: 12px; font-size: 13px; color: #718096;
+    /* ========== HERO CARD ========== */
+    .hero-card {
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
     }
-    .btn-primary {
-      display: block; width: 100%; max-width: 400px; margin: 24px auto 0;
-      background: linear-gradient(135deg, #667eea, #764ba2); color: white;
-      padding: 16px 24px; border: none; border-radius: 14px;
-      font-size: 17px; font-weight: 700; cursor: pointer;
-      box-shadow: 0 4px 16px rgba(102,126,234,0.4); transition: transform 0.15s;
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
     }
-    .btn-primary:hover { transform: translateY(-2px); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-    .error-box {
-      background: #fff5f5; border: 1px solid #fc8181; color: #c53030;
-      padding: 20px; border-radius: 12px; text-align: center; margin: 20px;
+    .hero-card::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      right: -10%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
     }
-    .badge {
-      display: inline-block; background: #48bb78; color: white;
-      padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-top: 8px;
+    .hero-skill {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      position: relative;
     }
-    .loading { text-align: center; padding: 40px; color: #718096; }
+    .hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.3;
+      position: relative;
+    }
+    .hero-subtitle {
+      font-size: 14px;
+      opacity: 0.85;
+      position: relative;
+    }
+    /* ========== STATS GRID ========== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: white;
+      padding: 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      text-align: center;
+      transition: transform 0.15s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-icon { font-size: 24px; margin-bottom: 6px; }
+    .stat-value { font-size: 22px; font-weight: 800; color: var(--gray-900); line-height: 1; }
+    .stat-label { font-size: 11px; color: var(--gray-500); margin-top: 4px; font-weight: 600; }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-title { font-size: 22px; }
+    }
+    /* ========== TABS ========== */
+    .tabs-container {
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .tabs-nav {
+      display: flex;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-50);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 14px 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--gray-500);
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--gray-700); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: white; }
+    .tab-content { padding: 24px; display: none; }
+    .tab-content.active { display: block; }
+    /* ========== CONTENT STYLING ========== */
+    .content-text {
+      font-size: 16px;
+      line-height: 1.9;
+      color: var(--gray-700);
+    }
+    .content-text p { margin-bottom: 14px; }
+    .content-text strong { color: var(--gray-900); font-weight: 700; }
+    .content-text code, .english-inline {
+      font-family: 'Inter', monospace;
+      direction: ltr;
+      display: inline-block;
+      background: var(--gray-100);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.95em;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    .example-box {
+      background: var(--primary-light);
+      border-right: 4px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin: 16px 0;
+      font-size: 15px;
+    }
+    .example-box .label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+    /* ========== INFO PANEL (Quiz Info) ========== */
+    .info-panel {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .info-panel h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .last-attempt {
+      background: var(--warning-light);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-right: 4px solid var(--warning);
+    }
+    .last-attempt.success {
+      background: var(--success-light);
+      border-color: var(--success);
+    }
+    .last-attempt-icon { font-size: 28px; }
+    .last-attempt-text { flex: 1; }
+    .last-attempt-text strong { display: block; color: var(--gray-900); margin-bottom: 2px; }
+    .last-attempt-text small { color: var(--gray-700); font-size: 13px; }
+    /* ========== CTA BUTTON ========== */
+    .cta-section {
+      text-align: center;
+      margin-top: 28px;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(37,99,235,0.3);
+      transition: all 0.2s;
+      min-width: 280px;
+    }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 20px rgba(37,99,235,0.4); }
+    .btn-cta:active { transform: translateY(0); }
+    .btn-cta-icon { font-size: 22px; }
+    /* ========== LOADING + ERROR ========== */
+    .loading-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--gray-500);
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-state {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 40px 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .error-icon { font-size: 48px; margin-bottom: 12px; }
+    .error-title { font-size: 20px; font-weight: 700; color: var(--danger); margin-bottom: 8px; }
+    .error-desc { color: var(--gray-500); margin-bottom: 20px; }
+    /* ========== VOCAB / GRAMMAR LISTS ========== */
+    .vocab-list, .grammar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .vocab-item {
+      background: var(--gray-50);
+      padding: 14px 16px;
+      border-radius: 10px;
+      border-right: 3px solid var(--primary);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--gray-500);
+    }
+    .empty-state-icon { font-size: 40px; margin-bottom: 8px; opacity: 0.6; }
   </style>
 </head>
 <body>
-  <div class="header">
-    <button class="btn-back" onclick="goBack()">رجوع</button>
-    <div>
-      <div class="header-title" id="lesson-title">جارٍ التحميل...</div>
-      <div class="header-meta" id="lesson-meta"></div>
+  <header class="nav-header">
+    <div class="nav-content">
+      <button class="btn-back" onclick="goBack()">
+        <span>→</span><span>رجوع</span>
+      </button>
+      <div class="nav-title" id="nav-title">جارٍ التحميل...</div>
+      <div id="status-pill"></div>
     </div>
-  </div>
+  </header>
 
-  <div id="main" class="container">
-    <div class="loading">جارٍ تحميل الدرس...</div>
-  </div>
+  <main id="main" class="container">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>جارٍ تحميل الدرس...</p>
+    </div>
+  </main>
 
   <script>
     const tg = window.Telegram && window.Telegram.WebApp;
     if (tg) tg.ready();
 
-    function goBack() {
-      const sid = getStudentId();
-      window.location.href = '/student?student_id=' + (sid || '');
-    }
-
     function getStudentId() {
-      // Priority: Telegram > URL > localStorage
       const tgId = tg?.initDataUnsafe?.user?.id;
       const urlParams = new URLSearchParams(window.location.search);
       const urlSid = urlParams.get('student_id');
       const lsId = localStorage.getItem('yamen_student_id');
-      // Filter out 'null' string
       const candidates = [tgId, urlSid, lsId].filter(x => x && x !== 'null' && x !== 'undefined');
       const sid = candidates[0];
       if (sid) localStorage.setItem('yamen_student_id', sid);
@@ -100,75 +395,209 @@
     }
 
     function getLessonId() {
-      const fromWindow = window.LESSON_ID;
       const urlParams = new URLSearchParams(window.location.search);
-      const fromUrl = urlParams.get('lesson_id');
-      return fromWindow || fromUrl;
+      return window.LESSON_ID || urlParams.get('lesson_id');
     }
 
-    function showError(msg) {
+    function goBack() {
+      const sid = getStudentId();
+      window.location.href = '/student?student_id=' + (sid || '');
+    }
+
+    function showError(title, desc) {
       document.getElementById('main').innerHTML =
-        '<div class="error-box"><h2>خطأ</h2><p>' + msg + '</p>' +
-        '<button class="btn-primary" onclick="goBack()" style="margin-top:16px">رجوع</button></div>';
+        '<div class="error-state">' +
+          '<div class="error-icon">⚠️</div>' +
+          '<div class="error-title">' + title + '</div>' +
+          '<div class="error-desc">' + desc + '</div>' +
+          '<button class="btn-cta" onclick="goBack()">العودة للوحة</button>' +
+        '</div>';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function formatContent(text) {
+      if (!text) return '<p>لا يوجد محتوى متاح حالياً.</p>';
+      // Wrap English words/phrases in .english span
+      let html = escapeHtml(text);
+      // Convert line breaks
+      html = html.replace(/\n\n/g, '</p><p>');
+      html = html.replace(/\n/g, '<br>');
+      // Wrap inline English (basic heuristic)
+      html = html.replace(/([A-Za-z][A-Za-z\s,.'!?]{2,}[A-Za-z!?.])/g, '<span class="english">$1</span>');
+      return '<p>' + html + '</p>';
+    }
+
+    function getSkillBadge(skill) {
+      const map = {
+        'reading': '📖 القراءة',
+        'writing': '✍️ الكتابة',
+        'listening': '🎧 الاستماع',
+        'speaking': '🗣️ المحادثة',
+        'grammar': '📝 القواعد',
+        'vocabulary': '📚 المفردات',
+        'general': '🎯 عام'
+      };
+      return map[skill] || '🎯 ' + (skill || 'عام');
+    }
+
+    function getDifficultyLabel(stageId) {
+      if (!stageId) return { label: 'مبتدئ', color: 'var(--success)' };
+      if (stageId <= 4) return { label: 'مبتدئ', color: '#10b981' };
+      if (stageId <= 10) return { label: 'متوسط', color: '#f59e0b' };
+      if (stageId <= 15) return { label: 'متقدم', color: '#ef4444' };
+      return { label: 'إتقان', color: '#7c3aed' };
+    }
+
+    function calcEstimatedTime(questions) {
+      if (!questions || !questions.length) return '5 د';
+      const totalSec = questions.reduce((sum, q) => sum + (q.timer || 30), 0);
+      const min = Math.ceil(totalSec / 60);
+      return min + ' د';
     }
 
     async function loadLesson() {
       const studentId = getStudentId();
       const lessonId = getLessonId();
-
-      if (!studentId) {
-        showError('لم يتم العثور على معرّف الطالب. افتح الدرس من بوت تلغرام.');
-        return;
-      }
-      if (!lessonId) {
-        showError('لم يتم العثور على رقم الدرس.');
-        return;
-      }
-
+      if (!studentId) { showError('معرّف الطالب مفقود', 'افتح الدرس من بوت تلغرام.'); return; }
+      if (!lessonId) { showError('رقم الدرس مفقود', 'أعد المحاولة من اللوحة.'); return; }
       try {
         const r = await fetch('/api/miniapp/lesson/' + lessonId + '?student_id=' + studentId);
-        if (!r.ok) {
-          showError('تعذّر تحميل الدرس (HTTP ' + r.status + ')');
-          return;
-        }
+        if (!r.ok) { showError('تعذّر تحميل الدرس', 'HTTP ' + r.status); return; }
         const data = await r.json();
-        renderLesson(data, studentId);
+        renderLesson(data);
       } catch (e) {
-        showError('خطأ في الاتصال: ' + e.message);
+        showError('خطأ في الاتصال', e.message);
       }
     }
 
-    function renderLesson(d, studentId) {
-      document.getElementById('lesson-title').textContent = d.title || 'الدرس';
-      document.getElementById('lesson-meta').textContent =
-        (d.xp_reward || 0) + ' XP • ' + (d.total_questions || 0) + ' أسئلة';
+    function renderLesson(d) {
+      const totalQ = (d.total_questions != null) ? d.total_questions : (d.questions ? d.questions.length : 0);
+      const skill = d.skill || 'general';
+      const diff = getDifficultyLabel(d.stage_id);
+      const estTime = calcEstimatedTime(d.questions);
+      const xp = d.xp_reward || 10;
+      // Header
+      document.getElementById('nav-title').textContent = d.title || 'الدرس';
+      let statusHtml = '';
+      if (d.completed) {
+        statusHtml = '<span class="status-pill completed">✓ مكتمل</span>';
+      } else if (d.last_score) {
+        statusHtml = '<span class="status-pill in-progress">قيد التقدم</span>';
+      } else {
+        statusHtml = '<span class="status-pill new">جديد</span>';
+      }
+      document.getElementById('status-pill').innerHTML = statusHtml;
 
-      const lessonId = getLessonId();
-      const completedBadge = d.completed
-        ? '<span class="badge">مكتمل - آخر نتيجة: ' + (d.last_score || 0).toFixed(0) + '%</span>'
-        : '';
+      // Last attempt notice
+      let lastAttemptHtml = '';
+      if (d.last_score != null) {
+        const passed = d.last_score >= 70;
+        const icon = passed ? '🎉' : '💪';
+        const cls = passed ? 'success' : '';
+        const txt = passed
+          ? 'نجحت في آخر محاولة بنتيجة <strong class="english">' + d.last_score.toFixed(0) + '%</strong>'
+          : 'آخر محاولة: <strong class="english">' + d.last_score.toFixed(0) + '%</strong> — جرّب مرة أخرى لتحسين نتيجتك!';
+        lastAttemptHtml =
+          '<div class="last-attempt ' + cls + '">' +
+            '<div class="last-attempt-icon">' + icon + '</div>' +
+            '<div class="last-attempt-text">' +
+              '<strong>' + (passed ? 'أحسنت!' : 'لم تنجح بعد') + '</strong>' +
+              '<small>' + txt + '</small>' +
+            '</div>' +
+          '</div>';
+      }
+
+      // Vocabulary tab
+      let vocabHtml = '';
+      if (d.vocabulary && d.vocabulary.trim()) {
+        vocabHtml = '<div class="content-text">' + formatContent(d.vocabulary) + '</div>';
+      } else {
+        vocabHtml = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>لا توجد مفردات إضافية لهذا الدرس.</p></div>';
+      }
+
+      // Grammar tab
+      let grammarHtml = '';
+      if (d.grammar_rule && d.grammar_rule.trim()) {
+        grammarHtml = '<div class="content-text">' + formatContent(d.grammar_rule) + '</div>';
+      } else {
+        grammarHtml = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>لا توجد قاعدة محددة لهذا الدرس.</p></div>';
+      }
+
       const btnLabel = d.completed ? 'إعادة الاختبار' : 'ابدأ الاختبار الآن';
+      const btnIcon = d.completed ? '🔄' : '▶️';
 
       document.getElementById('main').innerHTML =
-        '<div class="card">' +
-          '<h2>شرح الدرس ' + completedBadge + '</h2>' +
-          '<div class="content-text">' + (d.content || 'لا يوجد محتوى') + '</div>' +
+        // Hero
+        '<div class="hero-card">' +
+          '<span class="hero-skill">' + getSkillBadge(skill) + '</span>' +
+          '<h1 class="hero-title">' + escapeHtml(d.title || 'الدرس') + '</h1>' +
+          '<div class="hero-subtitle">المرحلة ' + (d.stage_id || 1) + ' • ' + diff.label + '</div>' +
         '</div>' +
-        '<div class="card">' +
-          '<h2>معلومات الاختبار</h2>' +
-          '<div class="info-grid">' +
-            '<div class="info-box">' +
-              '<div class="info-label">نقاط الخبرة</div>' +
-              '<div class="info-value">+' + (d.xp_reward || 10) + '</div>' +
-            '</div>' +
-            '<div class="info-box">' +
-              '<div class="info-label">عدد الأسئلة</div>' +
-              '<div class="info-value">' + (d.total_questions || 0) + '</div>' +
-            '</div>' +
+        // Stats
+        '<div class="stats-grid">' +
+          '<div class="stat-card">' +
+            '<div class="stat-icon">📝</div>' +
+            '<div class="stat-value">' + totalQ + '</div>' +
+            '<div class="stat-label">أسئلة</div>' +
           '</div>' +
-          '<div class="pass-hint">درجة النجاح: 70% فأعلى • عدد المحاولات: غير محدود</div>' +
+          '<div class="stat-card">' +
+            '<div class="stat-icon">⭐</div>' +
+            '<div class="stat-value">+' + xp + '</div>' +
+            '<div class="stat-label">نقطة خبرة</div>' +
+          '</div>' +
+          '<div class="stat-card">' +
+            '<div class="stat-icon">⏱️</div>' +
+            '<div class="stat-value">' + estTime + '</div>' +
+            '<div class="stat-label">مدة متوقعة</div>' +
+          '</div>' +
+          '<div class="stat-card">' +
+            '<div class="stat-icon">📊</div>' +
+            '<div class="stat-value" style="color:' + diff.color + ';font-size:16px">' + diff.label + '</div>' +
+            '<div class="stat-label">مستوى</div>' +
+          '</div>' +
         '</div>' +
-        '<button class="btn-primary" onclick="startQuiz()">' + btnLabel + '</button>';
+        // Tabs
+        '<div class="tabs-container">' +
+          '<div class="tabs-nav">' +
+            '<button class="tab-btn active" data-tab="content">📑 شرح الدرس</button>' +
+            '<button class="tab-btn" data-tab="vocab">📚 المفردات</button>' +
+            '<button class="tab-btn" data-tab="grammar">✍️ القاعدة</button>' +
+          '</div>' +
+          '<div class="tab-content active" id="tab-content">' +
+            '<div class="content-text">' + formatContent(d.content) + '</div>' +
+          '</div>' +
+          '<div class="tab-content" id="tab-vocab">' + vocabHtml + '</div>' +
+          '<div class="tab-content" id="tab-grammar">' + grammarHtml + '</div>' +
+        '</div>' +
+        // Info panel
+        '<div class="info-panel">' +
+          '<h3>📊 معلومات الاختبار</h3>' +
+          '<p style="color:var(--gray-500);font-size:14px">درجة النجاح المطلوبة: <strong class="english" style="color:var(--gray-900)">70%</strong> • عدد المحاولات: غير محدود • تأخير عند الرسوب يبدأ من 5 دقائق</p>' +
+          lastAttemptHtml +
+        '</div>' +
+        // CTA
+        '<div class="cta-section">' +
+          '<button class="btn-cta" onclick="startQuiz()">' +
+            '<span class="btn-cta-icon">' + btnIcon + '</span>' +
+            '<span>' + btnLabel + '</span>' +
+          '</button>' +
+        '</div>';
+
+      // Bind tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById('tab-' + target).classList.add('active');
+        });
+      });
     }
 
     function startQuiz() {
