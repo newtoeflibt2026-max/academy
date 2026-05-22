@@ -2,1105 +2,1327 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>أكاديمية يامن للتوفل</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<title>أكاديمية يامن — بوابة الطالب</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ── Reset & Base ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #f8fafc;
+  --bg-soft: #f1f5f9;
+  --card: #ffffff;
+  --card-hover: #fafbff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-soft: #94a3b8;
+  --primary: #6366f1;
+  --primary-soft: #eef2ff;
+  --primary-dark: #4f46e5;
+  --success: #10b981;
+  --success-soft: #d1fae5;
+  --warning: #f59e0b;
+  --warning-soft: #fef3c7;
+  --danger: #ef4444;
+  --reading: #3b82f6;
+  --listening: #8b5cf6;
+  --writing: #ec4899;
+  --speaking: #f59e0b;
+  --grammar: #06b6d4;
+  --vocab: #84cc16;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.04);
+  --shadow: 0 4px 16px rgba(99,102,241,0.08);
+  --shadow-lg: 0 12px 32px rgba(99,102,241,0.12);
+  --radius: 18px;
+  --radius-sm: 12px;
+}
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body { padding-bottom: 90px; }
 
-  :root {
-    --bg:        #f8fafc;
-    --bg2:       #f1f5f9;
-    --bg3:       #e2e8f0;
-    --card:      #ffffff;
-    --card2:     #f8fafc;
-    --accent:    #6366f1;
-    --accent2:   #8b5cf6;
-    --gold:      #f59e0b;
-    --green:     #22c55e;
-    --red:       #ef4444;
-    --blue:      #3b82f6;
-    --text:      #0f172a;
-    --text2:     #475569;
-    --text3:     #64748b;
-    --border:    #e2e8f0;
-    --radius:    16px;
-    --radius-sm: 10px;
-    --shadow:    0 4px 16px rgba(99,102,241,0.08);
-  }
+/* ═══ Header ═══ */
+.header {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  padding: 20px 18px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 300px; height: 300px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+  filter: blur(40px);
+}
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+.greeting {
+  color: white;
+}
+.greeting-text {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+.student-name {
+  font-size: 20px;
+  font-weight: 800;
+}
+.streak-badge {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+}
 
-  /* Force light theme on body and main containers */
-  body, html { background: #f8fafc !important; color: #0f172a !important; }
-  .tab-content, .container, main { background: transparent !important; color: #0f172a !important; }
-  .card, .skill-card, .stat-card, .section { background: #ffffff !important; border: 1px solid #e2e8f0 !important; }
-  .bottom-nav { background: #ffffff !important; border-top: 1px solid #e2e8f0 !important; box-shadow: 0 -4px 12px rgba(15,23,42,0.05) !important; }
-  .nav-item { color: #64748b !important; }
-  .nav-item.active { color: #6366f1 !important; }
-  .section-title { color: #0f172a !important; }
+/* ═══ Hero Card (overlap with header) ═══ */
+.hero-wrap {
+  padding: 0 16px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 3;
+}
+.hero-card {
+  background: var(--card);
+  border-radius: 22px;
+  padding: 22px 20px;
+  box-shadow: var(--shadow-lg);
+}
+.hero-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.progress-ring {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  flex-shrink: 0;
+}
+.progress-ring svg {
+  transform: rotate(-90deg);
+}
+.progress-ring circle {
+  fill: none;
+  stroke-width: 8;
+}
+.progress-ring .bg-circle { stroke: var(--bg-soft); }
+.progress-ring .fg-circle {
+  stroke: url(#gradStroke);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+.progress-ring-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.progress-ring-pct {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary);
+}
+.progress-ring-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: -2px;
+}
+.hero-info { flex: 1; }
+.hero-target-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.target-badge {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.level-badge {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.hero-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.hero-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.motivation-bar {
+  background: linear-gradient(90deg, var(--success-soft), #ecfdf5);
+  border-right: 3px solid var(--success);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: #065f46;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  html, body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-    font-size: 15px;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ═══ Stats Row ═══ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 18px 16px 8px;
+}
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 12px 8px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: transform 0.2s;
+}
+.stat-card:active { transform: scale(0.95); }
+.stat-icon {
+  font-size: 22px;
+  margin-bottom: 4px;
+  display: block;
+}
+.stat-value {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+}
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
 
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg2); }
-  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+/* ═══ Section Title ═══ */
+.section {
+  padding: 18px 16px 6px;
+}
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.section-title .emoji { font-size: 20px; }
 
-  /* ── Layout ── */
-  .app { max-width: 480px; margin: 0 auto; padding-bottom: 80px; }
+/* ═══ Daily Mission Hero ═══ */
+.daily-mission {
+  margin: 4px 16px 0;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(99,102,241,0.25);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.daily-mission:active { transform: scale(0.98); }
+.daily-mission::before {
+  content: '✨';
+  position: absolute;
+  top: 10px; left: 14px;
+  font-size: 24px;
+  opacity: 0.6;
+}
+.dm-label {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.dm-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.dm-desc {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.dm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dm-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.dm-meta span { display: flex; align-items: center; gap: 4px; }
+.dm-btn {
+  background: white;
+  color: var(--primary-dark);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
 
-  /* ── Header ── */
-  .header {
-    background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%);
-    padding: 20px 20px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(108,99,255,0.3) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo-icon {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    box-shadow: 0 4px 12px rgba(108,99,255,0.4);
-  }
-  .logo-text { font-size: 14px; font-weight: 700; color: var(--text); }
-  .logo-sub  { font-size: 11px; color: var(--text2); }
+/* ═══ Skills Grid (2x2) ═══ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 16px;
+}
+.skill-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.skill-card:active { transform: scale(0.97); }
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.15;
+}
+.skill-card.reading::before { background: var(--reading); }
+.skill-card.listening::before { background: var(--listening); }
+.skill-card.writing::before { background: var(--writing); }
+.skill-card.speaking::before { background: var(--speaking); }
 
-  .streak-badge {
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
-    border-radius: 20px;
-    padding: 6px 14px;
-    display: flex; align-items: center; gap: 6px;
-    font-size: 14px; font-weight: 700;
-    box-shadow: 0 4px 12px rgba(245,158,11,0.4);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
-    50%       { box-shadow: 0 4px 20px rgba(245,158,11,0.7); }
-  }
+.skill-icon-wrap {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.skill-card.reading .skill-icon-wrap { background: #dbeafe; }
+.skill-card.listening .skill-icon-wrap { background: #ede9fe; }
+.skill-card.writing .skill-icon-wrap { background: #fce7f3; }
+.skill-card.speaking .skill-icon-wrap { background: #fef3c7; }
 
-  .student-info { position: relative; z-index: 1; }
-  .student-name {
-    font-size: 22px; font-weight: 800;
-    background: linear-gradient(135deg, #fff, var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 4px;
-  }
-  .student-level {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(108,99,255,0.2);
-    border: 1px solid rgba(108,99,255,0.4);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px; color: var(--accent2);
-    margin-bottom: 16px;
-  }
+.skill-name {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.skill-name-en {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.skill-progress-bar {
+  background: var(--bg-soft);
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.skill-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s ease-out;
+}
+.skill-card.reading .skill-progress-fill { background: var(--reading); }
+.skill-card.listening .skill-progress-fill { background: var(--listening); }
+.skill-card.writing .skill-progress-fill { background: var(--writing); }
+.skill-card.speaking .skill-progress-fill { background: var(--speaking); }
 
-  /* ── XP Bar ── */
-  .xp-section { margin-top: 4px; }
-  .xp-header {
-    display: flex; justify-content: space-between;
-    font-size: 12px; color: var(--text2);
-    margin-bottom: 8px;
-  }
-  .xp-value { color: var(--accent2); font-weight: 700; }
-  .xp-bar-wrap {
-    background: rgba(15,23,42,0.08);
-    border-radius: 999px;
-    height: 10px;
-    overflow: hidden;
-    position: relative;
-  }
-  .xp-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2), #ec4899);
-    border-radius: 999px;
-    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-    position: relative;
-    overflow: hidden;
-  }
-  .xp-bar::after {
-    content: '';
-    position: absolute; top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 2s infinite;
-  }
-  @keyframes shimmer {
-    0%   { left: -100%; }
-    100% { left: 100%; }
-  }
+.skill-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.skill-lock {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  gap: 4px;
+}
+.skill-lock-icon { font-size: 28px; }
 
-  /* ── Stats Grid ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    padding: 16px;
-    margin-top: -8px;
-  }
-  .stat-card {
-    background: var(--card);
-    border-radius: var(--radius-sm);
-    padding: 14px 8px;
-    text-align: center;
-    border: 1px solid rgba(15,23,42,0.04);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: default;
-  }
-  .stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-  }
-  .stat-icon  { font-size: 20px; margin-bottom: 6px; display: block; }
-  .stat-value { font-size: 18px; font-weight: 800; color: var(--text); display: block; }
-  .stat-label { font-size: 10px; color: var(--text3); margin-top: 2px; display: block; }
+/* ═══ Library Row ═══ */
+.library-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 0 16px;
+}
+.lib-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.lib-card:active { transform: scale(0.97); }
+.lib-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.lib-card.grammar .lib-icon { background: #cffafe; }
+.lib-card.vocab .lib-icon { background: #ecfccb; }
+.lib-info { flex: 1; min-width: 0; }
+.lib-title {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.lib-count {
+  font-size: 11px;
+  color: var(--text-muted);
+}
 
-  /* ── Section Title ── */
-  .section-title {
-    padding: 4px 16px 8px;
-    font-size: 13px; font-weight: 700;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(108,99,255,0.4), transparent);
-  }
+/* ═══ Graduation Gate Card ═══ */
+.grad-card {
+  margin: 18px 16px 0;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px dashed #f59e0b;
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+.grad-card.locked { opacity: 0.85; }
+.grad-icon {
+  font-size: 44px;
+  margin-bottom: 8px;
+}
+.grad-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #92400e;
+  margin-bottom: 6px;
+}
+.grad-desc {
+  font-size: 12px;
+  color: #78350f;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.grad-progress {
+  background: rgba(255,255,255,0.6);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.grad-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  border-radius: 999px;
+  transition: width 1s;
+}
+.grad-status {
+  font-size: 12px;
+  font-weight: 700;
+  color: #92400e;
+}
 
-  /* ── Progress Cards (Skills) ── */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 0 16px 8px;
-  }
-  .skill-card {
-    background: var(--card);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    border: 1px solid rgba(15,23,42,0.04);
-    transition: transform 0.2s;
-  }
-  .skill-card:hover { transform: translateY(-2px); }
-  .skill-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px;
-  }
-  .skill-name {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 13px; font-weight: 600;
-  }
-  .skill-xp { font-size: 11px; color: var(--accent2); font-weight: 700; }
-  .skill-bar-wrap {
-    background: rgba(15,23,42,0.06);
-    border-radius: 999px;
-    height: 6px;
-    overflow: hidden;
-  }
-  .skill-bar {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
-  }
-  .bar-reading    { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-  .bar-listening  { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-  .bar-speaking   { background: linear-gradient(90deg, #ec4899, #f472b6); }
-  .bar-writing    { background: linear-gradient(90deg, #10b981, #34d399); }
-  .bar-grammar    { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-  .bar-vocabulary { background: linear-gradient(90deg, #ef4444, #f87171); }
+/* ═══ Mini Leaderboard ═══ */
+.leaderboard-mini {
+  background: var(--card);
+  margin: 0 16px;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg-soft);
+}
+.lb-item:last-child { border-bottom: none; }
+.lb-rank {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+}
+.lb-rank.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; }
+.lb-rank.silver { background: linear-gradient(135deg, #d1d5db, #9ca3af); color: white; }
+.lb-rank.bronze { background: linear-gradient(135deg, #fb923c, #ea580c); color: white; }
+.lb-name { flex: 1; font-weight: 600; font-size: 13px; }
+.lb-xp {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.lb-item.me { background: var(--primary-soft); margin: 4px -8px; padding: 8px; border-radius: var(--radius-sm); border: none; }
 
-  /* ── Daily Mission Card ── */
-  .mission-card {
-    margin: 0 16px 10px;
-    background: linear-gradient(135deg, var(--card), var(--card2));
-    border-radius: var(--radius);
-    padding: 18px;
-    border: 1px solid rgba(108,99,255,0.3);
-    position: relative;
-    overflow: hidden;
-  }
-  .mission-card::before {
-    content: '';
-    position: absolute; top: 0; right: 0;
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
-  }
-  .mission-header {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    margin-bottom: 12px;
-  }
-  .mission-tag {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 11px; font-weight: 700;
-  }
-  .mission-xp {
-    background: rgba(245,158,11,0.2);
-    border: 1px solid rgba(245,158,11,0.4);
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 11px;
-    color: var(--gold);
-    font-weight: 700;
-  }
-  .mission-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-  .mission-desc  { font-size: 13px; color: var(--text2); line-height: 1.6; }
-  .mission-progress {
-    margin-top: 14px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .mission-bar-wrap {
-    flex: 1;
-    background: rgba(15,23,42,0.06);
-    border-radius: 999px;
-    height: 8px;
-    overflow: hidden;
-  }
-  .mission-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 999px;
-    transition: width 1s ease;
-  }
-  .mission-pct { font-size: 12px; color: var(--accent2); font-weight: 700; min-width: 35px; }
+/* ═══ Bottom Nav ═══ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+  z-index: 50;
+}
+.nav-btn {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.nav-btn.active { color: var(--primary); }
+.nav-icon { font-size: 22px; }
 
-  /* ── Lessons List ── */
-  .lesson-item {
-    display: flex; align-items: center; gap: 14px;
-    margin: 0 16px 8px;
-    background: var(--card);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    border: 1px solid rgba(15,23,42,0.04);
-    transition: all 0.2s;
-    cursor: pointer;
-    text-decoration: none;
-    color: var(--text);
-  }
-  .lesson-item:hover {
-    background: var(--card2);
-    border-color: rgba(108,99,255,0.4);
-    transform: translateX(-3px);
-  }
-  .lesson-icon {
-    width: 44px; height: 44px;
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-  }
-  .icon-reading    { background: rgba(59,130,246,0.2); }
-  .icon-listening  { background: rgba(139,92,246,0.2); }
-  .icon-speaking   { background: rgba(236,72,153,0.2); }
-  .icon-writing    { background: rgba(16,185,129,0.2); }
-  .icon-grammar    { background: rgba(245,158,11,0.2); }
-  .icon-vocabulary { background: rgba(239,68,68,0.2); }
+/* ═══ Tabs / Sections (hidden by default) ═══ */
+.view { display: none; }
+.view.active { display: block; }
 
-  .lesson-info { flex: 1; min-width: 0; }
-  .lesson-title {
-    font-size: 14px; font-weight: 600;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    margin-bottom: 4px;
-  }
-  .lesson-meta { font-size: 11px; color: var(--text3); display: flex; gap: 8px; }
-  .lesson-xp   { color: var(--gold); font-weight: 600; }
-  .lesson-arrow { color: var(--text3); font-size: 16px; }
+/* ═══ Lessons Tab ═══ */
+.lessons-list {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lesson-item {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lesson-item:active { transform: scale(0.98); }
+.lesson-item.completed { background: linear-gradient(90deg, var(--success-soft), white); }
+.lesson-icon-box {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  background: var(--primary-soft);
+}
+.lesson-item.completed .lesson-icon-box { background: var(--success-soft); }
+.lesson-info { flex: 1; min-width: 0; }
+.lesson-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.lesson-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  gap: 10px;
+}
+.lesson-xp {
+  background: var(--warning-soft);
+  color: #92400e;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
 
-  /* ── Leaderboard ── */
-  .leader-item {
-    display: flex; align-items: center; gap: 12px;
-    margin: 0 16px 8px;
-    background: var(--card);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    border: 1px solid rgba(15,23,42,0.04);
-  }
-  .leader-item.me {
-    border-color: rgba(108,99,255,0.5);
-    background: rgba(108,99,255,0.1);
-  }
-  .leader-rank {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 800;
-    flex-shrink: 0;
-  }
-  .rank-1 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
-  .rank-2 { background: linear-gradient(135deg, #64748b, #475569); color: #000; }
-  .rank-3 { background: linear-gradient(135deg, #b45309, #d97706); color: #0f172a; }
-  .rank-n { background: var(--card2); color: var(--text2); font-size: 12px; }
-  .leader-name  { flex: 1; font-size: 14px; font-weight: 600; }
-  .leader-xp    { font-size: 13px; color: var(--gold); font-weight: 700; }
+/* ═══ Loading & Error ═══ */
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--bg-soft);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Bottom Nav ── */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 50%;
-    transform: translateX(-50%);
-    width: 100%; max-width: 480px;
-    background: rgba(26,26,46,0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(15,23,42,0.06);
-    display: flex;
-    padding: 8px 0 12px;
-    z-index: 100;
-  }
-  .nav-item {
-    flex: 1;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 4px;
-    padding: 6px 0;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none; background: none; color: var(--text3);
-  }
-  .nav-item.active { color: var(--accent2); }
-  .nav-item:hover  { color: var(--text); }
-  .nav-icon { font-size: 22px; }
-  .nav-label { font-size: 10px; font-weight: 600; }
-  .nav-dot {
-    width: 4px; height: 4px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: absolute;
-    top: 6px;
-  }
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.empty-state .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
 
-  /* ── Tab Sections ── */
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+/* ═══ Animations ═══ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease-out both; }
+.fade-up:nth-child(1) { animation-delay: 0.05s; }
+.fade-up:nth-child(2) { animation-delay: 0.1s; }
+.fade-up:nth-child(3) { animation-delay: 0.15s; }
+.fade-up:nth-child(4) { animation-delay: 0.2s; }
 
-  /* ── Badge / Status ── */
-  .status-banner {
-    margin: 8px 16px;
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 12px;
-    font-size: 13px;
-  }
-  .status-paid {
-    background: rgba(16,185,129,0.15);
-    border: 1px solid rgba(16,185,129,0.4);
-    color: var(--green);
-  }
-  .status-free {
-    background: rgba(245,158,11,0.1);
-    border: 1px solid rgba(245,158,11,0.3);
-    color: var(--gold);
-  }
-
-  /* ── Motivational Quote ── */
-  .quote-card {
-    margin: 0 16px 10px;
-    background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(167,139,250,0.1));
-    border: 1px solid rgba(108,99,255,0.2);
-    border-radius: var(--radius);
-    padding: 16px;
-    text-align: center;
-  }
-  .quote-text { font-size: 14px; color: var(--text2); line-height: 1.7; font-style: italic; }
-  .quote-author { font-size: 12px; color: var(--accent2); margin-top: 8px; font-weight: 700; }
-
-  /* ── Graduation Card ── */
-  .grad-card {
-    margin: 0 16px 10px;
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .grad-locked {
-    background: linear-gradient(135deg, var(--card), var(--card2));
-    border: 1px solid rgba(15,23,42,0.06);
-  }
-  .grad-unlocked {
-    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(59,130,246,0.2));
-    border: 1px solid rgba(16,185,129,0.4);
-  }
-  .grad-icon  { font-size: 48px; margin-bottom: 12px; display: block; }
-  .grad-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
-  .grad-desc  { font-size: 13px; color: var(--text2); line-height: 1.7; }
-  .grad-requirements {
-    margin-top: 16px;
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .req-item {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: var(--radius-sm);
-    background: rgba(255,255,255,0.04);
-  }
-  .req-ok   { color: var(--green); }
-  .req-fail { color: var(--text3); }
-
-  /* ── Buttons ── */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    border: none; cursor: pointer;
-    border-radius: var(--radius-sm);
-    font-size: 14px; font-weight: 700;
-    padding: 12px 24px;
-    transition: all 0.2s;
-    width: 100%;
-    margin-top: 12px;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #0f172a;
-    box-shadow: 0 4px 15px rgba(108,99,255,0.4);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(108,99,255,0.6);
-  }
-  .btn-gold {
-    background: linear-gradient(135deg, #f59e0b, #fbbf24);
-    color: #000;
-    box-shadow: 0 4px 15px rgba(245,158,11,0.4);
-  }
-  .btn-disabled {
-    background: var(--card2);
-    color: var(--text3);
-    cursor: not-allowed;
-  }
-
-  /* ── Loading ── */
-  .loading {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    min-height: 100vh; gap: 16px;
-  }
-  .spinner {
-    width: 48px; height: 48px;
-    border: 3px solid rgba(108,99,255,0.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Animations ── */
-  .fade-in {
-    animation: fadeIn 0.4s ease forwards;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── Empty State ── */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text3);
-  }
-  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; line-height: 1.7; }
+/* ═══ Responsive ═══ */
+@media (max-width: 360px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .student-name { font-size: 17px; }
+  .hero-title { font-size: 15px; }
+}
 </style>
 </head>
 <body>
 
-<!-- Loading Screen -->
-<div class="loading" id="loading">
-  <div class="spinner"></div>
-  <p style="color:var(--text2);font-size:14px">جاري التحميل...</p>
+<!-- SVG gradient defs (used by progress ring) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="gradStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-row">
+    <div class="greeting">
+      <div class="greeting-text">مرحباً بعودتك 👋</div>
+      <div class="student-name" id="studentName">جاري التحميل...</div>
+    </div>
+    <div class="streak-badge">
+      🔥 <span id="streakDays">0</span> يوم
+    </div>
+  </div>
+</header>
+
+<!-- ═══ HERO CARD ═══ -->
+<div class="hero-wrap">
+  <div class="hero-card fade-up" id="heroCard">
+    <div class="hero-top">
+      <div class="progress-ring">
+        <svg width="92" height="92">
+          <circle class="bg-circle" cx="46" cy="46" r="40"/>
+          <circle class="fg-circle" cx="46" cy="46" r="40"
+                  stroke-dasharray="251.2" stroke-dashoffset="251.2"
+                  id="progressCircle"/>
+        </svg>
+        <div class="progress-ring-text">
+          <div class="progress-ring-pct" id="progressPct">0%</div>
+          <div class="progress-ring-label">للتخرج</div>
+        </div>
+      </div>
+      <div class="hero-info">
+        <div class="hero-target-row">
+          <span class="target-badge">🎯 هدفك: <span id="targetScore">59</span></span>
+          <span class="level-badge" id="levelBadge">Beginner</span>
+        </div>
+        <div class="hero-title" id="heroTitle">رحلتك إلى TOEFL</div>
+        <div class="hero-subtitle"><span id="currentXP">0</span> / <span id="goalXP">500</span> XP — استمر! أنت تتقدم 🚀</div>
+      </div>
+    </div>
+    <div class="motivation-bar" id="motivationBar">
+      ✨ كل يوم تكسب فيه XP يقربك خطوة من حلمك بالشهادة!
+    </div>
+  </div>
 </div>
 
-<!-- Main App -->
-<div class="app" id="app" style="display:none">
-
-  <!-- ══ HEADER ══ -->
-  <div class="header">
-    <div class="header-top">
-      <div class="logo">
-        <div class="logo-icon">🎓</div>
-        <div>
-          <div class="logo-text">أكاديمية يامن</div>
-          <div class="logo-sub">TOEFL Academy</div>
-        </div>
-      </div>
-      <div class="streak-badge" id="streakBadge">
-        🔥 <span id="streakVal">0</span>
-      </div>
-    </div>
-    <div class="student-info">
-      <div class="student-name" id="studentName">...</div>
-      <div class="student-level" id="studentLevel">
-        <span>🔵</span> <span id="levelText">مبتدئ</span>
-      </div>
-      <div class="xp-section">
-        <div class="xp-header">
-          <span>⭐ نقاط الخبرة</span>
-          <span class="xp-value"><span id="xpVal">0</span> XP</span>
-        </div>
-        <div class="xp-bar-wrap">
-          <div class="xp-bar" id="xpBar" style="width:0%"></div>
-        </div>
-      </div>
-    </div>
+<!-- ═══ STATS ROW ═══ -->
+<div class="stats-row">
+  <div class="stat-card fade-up">
+    <span class="stat-icon">⚡</span>
+    <div class="stat-value" id="statXP">0</div>
+    <div class="stat-label">XP الكلية</div>
   </div>
-
-  <!-- ══ TAB: الرئيسية ══ -->
-  <div class="tab-content active fade-in" id="tab-home">
-
-    <!-- Status Banner -->
-    <div class="status-banner status-free" id="statusBanner">
-      ⚠️ حساب مجاني — فعّل اشتراكك لفتح جميع الميزات
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-icon">⭐</span>
-        <span class="stat-value" id="xpStat">0</span>
-        <span class="stat-label">XP</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">🔥</span>
-        <span class="stat-value" id="streakStat">0</span>
-        <span class="stat-label">Streak</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">✅</span>
-        <span class="stat-value" id="missionsStat">0</span>
-        <span class="stat-label">مهام</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-icon">📊</span>
-        <span class="stat-value" id="scoreStat">0%</span>
-        <span class="stat-label">Placement</span>
-      </div>
-    </div>
-
-    <!-- Daily Mission -->
-    <div class="lessons-hero" onclick="goToLessons()">
-  <div class="lessons-hero-icon">📚</div>
-  <div class="lessons-hero-body">
-    <div class="lessons-hero-title">دروسي التعليمية</div>
-    <div class="lessons-hero-sub"><span id="lessonsCount">12</span> درس في انتظارك — ابدأ رحلتك الآن</div>
+  <div class="stat-card fade-up">
+    <span class="stat-icon">✅</span>
+    <div class="stat-value" id="statLessons">0</div>
+    <div class="stat-label">دروس مكتملة</div>
   </div>
-  <div class="lessons-hero-arrow">←</div>
+  <div class="stat-card fade-up">
+    <span class="stat-icon">🔥</span>
+    <div class="stat-value" id="statStreak">0</div>
+    <div class="stat-label">يوم متواصل</div>
+  </div>
+  <div class="stat-card fade-up">
+    <span class="stat-icon">🏆</span>
+    <div class="stat-value" id="statRank">—</div>
+    <div class="stat-label">ترتيبك</div>
+  </div>
 </div>
 
-<style>
-.lessons-hero {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  color: #fff;
-  border-radius: 18px;
-  padding: 20px 22px;
-  margin: 16px 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(99,102,241,0.25);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.lessons-hero:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(99,102,241,0.35);
-}
-.lessons-hero-icon {
-  font-size: 44px;
-  background: rgba(255,255,255,0.2);
-  width: 64px; height: 64px;
-  border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.lessons-hero-body { flex: 1; }
-.lessons-hero-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.lessons-hero-sub { font-size: 13px; opacity: 0.92; }
-.lessons-hero-arrow {
-  font-size: 28px; font-weight: 700; opacity: 0.8;
-}
-</style>
+<!-- ═══ MAIN VIEW (HOME) ═══ -->
+<div class="view active" id="viewHome">
 
-<div class="section-title">🎯 مهمة اليوم</div>
-    <div class="mission-card" id="missionCard">
-      <div class="mission-header">
-        <div class="mission-tag">📚 درس يومي</div>
-        <div class="mission-xp">+20 XP</div>
+  <!-- Daily Mission -->
+  <div class="section">
+    <div class="section-title"><span class="emoji">🎯</span> مهمة اليوم</div>
+  </div>
+  <div class="daily-mission fade-up" id="dailyMission" onclick="startDailyLesson()">
+    <div class="dm-label">📚 الدرس اليومي</div>
+    <div class="dm-title" id="dmTitle">جاري التحميل...</div>
+    <div class="dm-desc" id="dmDesc">سيتم تحديد درسك التالي قريباً</div>
+    <div class="dm-row">
+      <div class="dm-meta">
+        <span>⏱️ <span id="dmTime">15</span> دقيقة</span>
+        <span>⚡ +<span id="dmXP">20</span> XP</span>
       </div>
-      <div class="mission-title">ابدأ درس اليوم</div>
-      <div class="mission-desc">أكمل درس اليوم للحصول على نقاط وتقدم في مستواك</div>
-      <div class="mission-progress">
-        <div class="mission-bar-wrap">
-          <div class="mission-bar" id="missionBar" style="width:0%"></div>
-        </div>
-        <div class="mission-pct" id="missionPct">0%</div>
+      <button class="dm-btn">ابدأ الآن ←</button>
+    </div>
+  </div>
+
+  <!-- TOEFL Skills -->
+  <div class="section">
+    <div class="section-title"><span class="emoji">📚</span> مهارات TOEFL الأربع</div>
+  </div>
+  <div class="skills-grid" id="skillsGrid">
+    <div class="skill-card reading" onclick="openSkill('reading')">
+      <div class="skill-icon-wrap">📖</div>
+      <div class="skill-name">الفهم القرائي</div>
+      <div class="skill-name-en">Reading</div>
+      <div class="skill-progress-bar"><div class="skill-progress-fill" id="readingFill" style="width:0%"></div></div>
+      <div class="skill-meta">
+        <span id="readingCount">0 / 0 دروس</span>
+        <span id="readingPct">0%</span>
       </div>
     </div>
-
-    <!-- Motivational Quote -->
-    <div class="quote-card fade-in">
-      <div class="quote-text" id="quoteText">
-        "النجاح ليس نهائياً، والفشل ليس قاتلاً — الشجاعة على الاستمرار هي ما يهم"
-      </div>
-      <div class="quote-author">— Winston Churchill</div>
-    </div>
-
-    <!-- Skills Progress -->
-    <div class="section-title">💪 تقدم المهارات</div>
-    <div class="skills-grid" id="skillsGrid">
-      <div class="skill-card">
-        <div class="skill-header">
-          <div class="skill-name">📖 القراءة</div>
-          <div class="skill-xp" id="readingXp">0 XP</div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar bar-reading" id="readingBar" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-header">
-          <div class="skill-name">🎧 الاستماع</div>
-          <div class="skill-xp" id="listeningXp">0 XP</div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar bar-listening" id="listeningBar" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-header">
-          <div class="skill-name">🗣️ التحدث</div>
-          <div class="skill-xp" id="speakingXp">0 XP</div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar bar-speaking" id="speakingBar" style="width:0%"></div>
-        </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-header">
-          <div class="skill-name">✍️ الكتابة</div>
-          <div class="skill-xp" id="writingXp">0 XP</div>
-        </div>
-        <div class="skill-bar-wrap">
-          <div class="skill-bar bar-writing" id="writingBar" style="width:0%"></div>
-        </div>
+    <div class="skill-card listening" onclick="openSkill('listening')">
+      <div class="skill-icon-wrap">🎧</div>
+      <div class="skill-name">الاستماع</div>
+      <div class="skill-name-en">Listening</div>
+      <div class="skill-progress-bar"><div class="skill-progress-fill" id="listeningFill" style="width:0%"></div></div>
+      <div class="skill-meta">
+        <span id="listeningCount">0 / 0 دروس</span>
+        <span id="listeningPct">0%</span>
       </div>
     </div>
-
-  </div><!-- /tab-home -->
-
-  <!-- ══ TAB: الدروس ══ -->
-  <div class="tab-content fade-in" id="tab-lessons">
-    <div class="section-title" style="padding-top:16px">📚 الدروس المتاحة</div>
-    <div id="lessonsList">
-      <div class="empty-state">
-        <div class="icon">📚</div>
-        <p>جاري تحميل الدروس...</p>
+    <div class="skill-card writing" onclick="openSkill('writing')">
+      <div class="skill-icon-wrap">✍️</div>
+      <div class="skill-name">الكتابة</div>
+      <div class="skill-name-en">Writing</div>
+      <div class="skill-progress-bar"><div class="skill-progress-fill" id="writingFill" style="width:0%"></div></div>
+      <div class="skill-meta">
+        <span id="writingCount">0 / 0 دروس</span>
+        <span id="writingPct">0%</span>
+      </div>
+    </div>
+    <div class="skill-card speaking" onclick="openSkill('speaking')">
+      <div class="skill-icon-wrap">🎤</div>
+      <div class="skill-name">المحادثة</div>
+      <div class="skill-name-en">Speaking</div>
+      <div class="skill-progress-bar"><div class="skill-progress-fill" id="speakingFill" style="width:0%"></div></div>
+      <div class="skill-meta">
+        <span id="speakingCount">0 / 0 دروس</span>
+        <span id="speakingPct">0%</span>
       </div>
     </div>
   </div>
 
-  <!-- ══ TAB: المتصدرون ══ -->
-  <div class="tab-content fade-in" id="tab-leaders">
-    <div class="section-title" style="padding-top:16px">🏆 المتصدرون</div>
-    <div id="leadersList">
-      <div class="empty-state">
-        <div class="icon">🏆</div>
-        <p>جاري تحميل البيانات...</p>
+  <!-- Supporting Libraries -->
+  <div class="section">
+    <div class="section-title"><span class="emoji">📖</span> مكتباتك الداعمة</div>
+  </div>
+  <div class="library-row">
+    <div class="lib-card grammar" onclick="openSkill('grammar')">
+      <div class="lib-icon">📝</div>
+      <div class="lib-info">
+        <div class="lib-title">قواعد</div>
+        <div class="lib-count"><span id="grammarCount">0</span> درس</div>
+      </div>
+    </div>
+    <div class="lib-card vocab" onclick="openSkill('vocab')">
+      <div class="lib-icon">🔤</div>
+      <div class="lib-info">
+        <div class="lib-title">مفردات</div>
+        <div class="lib-count"><span id="vocabCount">0</span> كلمة</div>
       </div>
     </div>
   </div>
 
-  <!-- ══ TAB: التخرج ══ -->
-  <div class="tab-content fade-in" id="tab-grad">
-    <div class="section-title" style="padding-top:16px">🎓 التخرج</div>
-    <div id="gradCard" class="grad-card grad-locked">
-      <span class="grad-icon">🔒</span>
-      <div class="grad-title">بوابة التخرج</div>
-      <div class="grad-desc">أكمل جميع المتطلبات لفتح شهادة التخرج</div>
-      <div class="grad-requirements" id="gradReqs"></div>
+  <!-- Graduation Gate -->
+  <div class="section">
+    <div class="section-title"><span class="emoji">🎓</span> بوابة التخرج</div>
+  </div>
+  <div class="grad-card locked" id="gradCard" onclick="onGradClick()">
+    <div class="grad-icon">🎓</div>
+    <div class="grad-title">امتحان Mock النهائي</div>
+    <div class="grad-desc">
+      أكمل جميع المراحل واحصل على <strong id="gradGate">69</strong>/120 في Mock Exam لتحصل على شهادة التخرج المعتمدة
     </div>
+    <div class="grad-progress"><div class="grad-progress-fill" id="gradFill" style="width:0%"></div></div>
+    <div class="grad-status" id="gradStatus">🔒 أكمل المزيد من الدروس لفتح Mock Exam</div>
   </div>
 
-</div><!-- /app -->
+  <!-- Mini Leaderboard -->
+  <div class="section">
+    <div class="section-title"><span class="emoji">🏆</span> المتصدرون هذا الأسبوع</div>
+  </div>
+  <div class="leaderboard-mini" id="leaderboardMini">
+    <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
+  </div>
 
-<!-- ══ BOTTOM NAV ══ -->
-<nav class="bottom-nav" id="bottomNav" style="display:none">
-  <button class="nav-item active" onclick="switchTab('home',this)">
+  <div style="height:20px"></div>
+</div>
+
+<!-- ═══ LESSONS VIEW ═══ -->
+<div class="view" id="viewLessons">
+  <div class="section">
+    <div class="section-title" id="lessonsViewTitle"><span class="emoji">📚</span> جميع الدروس</div>
+  </div>
+  <div class="lessons-list" id="lessonsList">
+    <div class="loading"><div class="spinner"></div>جاري تحميل الدروس...</div>
+  </div>
+  <div style="height:20px"></div>
+</div>
+
+<!-- ═══ LEADERBOARD VIEW ═══ -->
+<div class="view" id="viewLeaderboard">
+  <div class="section">
+    <div class="section-title"><span class="emoji">🏆</span> ترتيب جميع الطلاب</div>
+  </div>
+  <div class="leaderboard-mini" id="leaderboardFull" style="margin:0 16px">
+    <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
+  </div>
+  <div style="height:20px"></div>
+</div>
+
+<!-- ═══ PROFILE VIEW ═══ -->
+<div class="view" id="viewProfile">
+  <div class="section">
+    <div class="section-title"><span class="emoji">👤</span> ملفي الشخصي</div>
+  </div>
+  <div class="leaderboard-mini" style="margin:0 16px">
+    <div id="profileContent">
+      <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="viewHome" onclick="switchView(this)">
     <span class="nav-icon">🏠</span>
-    <span class="nav-label">الرئيسية</span>
+    <span>الرئيسية</span>
   </button>
-  <button class="nav-item" onclick="switchTab('lessons',this)">
+  <button class="nav-btn" data-view="viewLessons" onclick="switchView(this)">
     <span class="nav-icon">📚</span>
-    <span class="nav-label">الدروس</span>
+    <span>الدروس</span>
   </button>
-  <button class="nav-item" onclick="switchTab('leaders',this)">
+  <button class="nav-btn" data-view="viewLeaderboard" onclick="switchView(this)">
     <span class="nav-icon">🏆</span>
-    <span class="nav-label">المتصدرون</span>
+    <span>المتصدرون</span>
   </button>
-  <button class="nav-item" onclick="switchTab('grad',this)">
-    <span class="nav-icon">🎓</span>
-    <span class="nav-label">التخرج</span>
+  <button class="nav-btn" data-view="viewProfile" onclick="switchView(this)">
+    <span class="nav-icon">👤</span>
+    <span>ملفي</span>
   </button>
 </nav>
 
 <script>
-// ══════════════════════════════════════
-// Telegram WebApp Init
-// ══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// Telegram Web App Initialization
+// ═══════════════════════════════════════════════════════════
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  tg.setHeaderColor('#0f0f1a');
-  tg.setBackgroundColor('#0f0f1a');
+  tg.setHeaderColor('#6366f1');
+  tg.setBackgroundColor('#f8fafc');
+  console.log('✅ Telegram WebApp ready, user:', tg.initDataUnsafe?.user);
 }
 
-const studentId = new URLSearchParams(window.location.search).get('student_id')
-  || tg?.initDataUnsafe?.user?.id
-  || null;
+// ═══════════════════════════════════════════════════════════
+// Get student_id from URL or Telegram
+// ═══════════════════════════════════════════════════════════
+const urlParams = new URLSearchParams(window.location.search);
+let studentId = urlParams.get('student_id') ||
+                tg?.initDataUnsafe?.user?.id ||
+                localStorage.getItem('yamen_student_id');
+const mode = urlParams.get('mode'); // 'placement' or null
 
-// ══════════════════════════════════════
-// Tab Switching
-// ══════════════════════════════════════
-// Save student_id to localStorage so lesson pages can read it
 if (studentId) {
-  try { localStorage.setItem('yamen_student_id', studentId); } catch(e){}
+  localStorage.setItem('yamen_student_id', studentId);
 }
 
-// Click on lessons hero card → open lessons tab
-function goToLessons() {
-  const btn = document.querySelector('.bottom-nav .nav-item[onclick*="lessons"]');
-  if (btn) btn.click();
-  else switchTab('lessons', null);
-  window.scrollTo({top: 0, behavior: 'smooth'});
-}
-
-// Update lesson count on dashboard
-async function updateLessonCount() {
-  try {
-    const r = await fetch('/api/lessons');
-    const d = await r.json();
-    const el = document.getElementById('lessonsCount');
-    if (el && d.lessons) el.textContent = d.lessons.length;
-  } catch(e){}
-}
-setTimeout(updateLessonCount, 500);
-
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  const tab = document.getElementById('tab-' + name);
-  if (tab) { tab.classList.add('active'); tab.classList.add('fade-in'); }
-  if (btn)  btn.classList.add('active');
-  if (name === 'lessons' && !lessonsLoaded) loadLessons();
-  if (name === 'leaders' && !leadersLoaded) loadLeaders();
-  if (name === 'grad')    loadGrad();
-}
-
-let lessonsLoaded = false;
-let leadersLoaded = false;
-
-// ══════════════════════════════════════
-// Load Student Data
-// ══════════════════════════════════════
-const QUOTES = [
-  { text: "كل يوم تتعلم فيه هو انتصار على نفسك", author: "— يامن أكاديمي" },
-  { text: "النجاح ليس نهائياً والفشل ليس قاتلاً — الشجاعة على الاستمرار هي ما يهم", author: "— Winston Churchill" },
-  { text: "لا تنتظر الظروف المثالية — ابدأ الآن بما لديك", author: "— Arthur Ashe" },
-  { text: "التكرار هو أم التعلم", author: "— مثل تعليمي" },
-  { text: "كل خبير كان في يوم ما مبتدئاً", author: "— Helen Hayes" },
+const motivationalMessages = [
+  "✨ كل يوم تكسب فيه XP يقربك خطوة من حلمك بالشهادة!",
+  "🚀 المثابرة سر النجاح — أنت على الطريق الصحيح!",
+  "💪 درس واحد اليوم = خطوة كبيرة نحو TOEFL!",
+  "🎯 ركز على الهدف — الشهادة بانتظارك!",
+  "🌟 أنت أقوى مما تظن — استمر!",
+  "📚 المعرفة قوة، والمواظبة بطولة!",
+  "🏆 المتصدرون يستمرون عندما يستسلم الآخرون"
 ];
 
+// ═══════════════════════════════════════════════════════════
+// Helpers
+// ═══════════════════════════════════════════════════════════
+function haptic(type='light') {
+  try { tg?.HapticFeedback?.impactOccurred(type); } catch(e) {}
+}
+
+async function api(path) {
+  try {
+    const r = await fetch(path);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch (e) {
+    console.warn('API error', path, e);
+    return null;
+  }
+}
+
+function setProgressRing(percent) {
+  const circle = document.getElementById('progressCircle');
+  const circumference = 2 * Math.PI * 40;
+  const offset = circumference - (percent / 100) * circumference;
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = offset;
+  document.getElementById('progressPct').textContent = Math.round(percent) + '%';
+}
+
+function getLevelFromXP(xp) {
+  if (xp < 100) return { name: 'Beginner', emoji: '🌱' };
+  if (xp < 300) return { name: 'Explorer', emoji: '🔍' };
+  if (xp < 600) return { name: 'Achiever', emoji: '⭐' };
+  if (xp < 1000) return { name: 'Advanced', emoji: '💎' };
+  if (xp < 1500) return { name: 'Expert', emoji: '🏆' };
+  return { name: 'Master', emoji: '👑' };
+}
+
+// ═══════════════════════════════════════════════════════════
+// Load Student Data
+// ═══════════════════════════════════════════════════════════
 async function loadStudent() {
   if (!studentId) {
-    showError();
-    return;
+    document.getElementById('studentName').textContent = 'مستخدم تجريبي';
+    return null;
   }
-  try {
-    const res  = await fetch(`/api/student/${studentId}`);
-    const data = await res.json();
-    if (data.error) { showError(data.error); return; }
-    renderStudent(data);
-  } catch(e) {
-    showError('تعذر الاتصال بالخادم');
-  }
-}
 
-function renderStudent(d) {
+  const data = await api(`/api/student/${studentId}`);
+  if (!data) {
+    document.getElementById('studentName').textContent = 'مستخدم تجريبي';
+    return null;
+  }
+
   // Header
-  document.getElementById('studentName').textContent  = d.full_name || d.username || 'طالب';
-  document.getElementById('xpVal').textContent        = (d.xp || 0).toLocaleString();
-  document.getElementById('streakVal').textContent    = d.streak || 0;
+  document.getElementById('studentName').textContent = data.full_name || data.username || 'طالب';
+  document.getElementById('streakDays').textContent = data.streak || 0;
 
-  // Level
-  const levelMap = {
-    beginner:     { ar: 'مبتدئ',  icon: '🔵' },
-    intermediate: { ar: 'متوسط',  icon: '🟡' },
-    advanced:     { ar: 'متقدم',  icon: '🟢' },
-  };
-  const lv = levelMap[d.level] || levelMap.beginner;
-  document.getElementById('levelText').textContent   = lv.ar;
-  document.getElementById('studentLevel').querySelector('span').textContent = lv.icon;
+  // Hero
+  const xp = data.xp || data.total_xp || 0;
+  const target = data.target_score || 59;
+  const goalXP = target === 90 ? 1200 : target === 69 ? 800 : 500;
+  const percent = Math.min(100, (xp / goalXP) * 100);
 
-  // XP Bar (max 1000 per level)
-  const xpPct = Math.min((d.xp || 0) % 500 / 500 * 100, 100);
-  setTimeout(() => {
-    document.getElementById('xpBar').style.width = xpPct + '%';
-  }, 300);
+  document.getElementById('targetScore').textContent = target;
+  document.getElementById('currentXP').textContent = xp;
+  document.getElementById('goalXP').textContent = goalXP;
+  document.getElementById('gradGate').textContent = target + 10;
+
+  setTimeout(() => setProgressRing(percent), 200);
+
+  const level = getLevelFromXP(xp);
+  document.getElementById('levelBadge').textContent = level.emoji + ' ' + level.name;
 
   // Stats
-  document.getElementById('xpStat').textContent      = (d.xp || 0).toLocaleString();
-  document.getElementById('streakStat').textContent  = d.streak || 0;
-  document.getElementById('missionsStat').textContent= d.missions_completed || 0;
-  document.getElementById('scoreStat').textContent   = (d.placement_score || 0) + '%';
+  document.getElementById('statXP').textContent = xp;
+  document.getElementById('statLessons').textContent = data.lessons_completed || 0;
+  document.getElementById('statStreak').textContent = data.streak || 0;
 
-  // Status Banner
-  const banner = document.getElementById('statusBanner');
-  if (d.is_paid) {
-    banner.className = 'status-banner status-paid';
-    banner.textContent = '✅ حساب مفعّل — جميع الميزات متاحة لك';
+  // Motivational rotation
+  const msg = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+  document.getElementById('motivationBar').innerHTML = msg;
+
+  // Graduation progress
+  document.getElementById('gradFill').style.width = percent + '%';
+  if (percent >= 80) {
+    document.getElementById('gradStatus').textContent = '🎉 جاهز للامتحان النهائي!';
+    document.getElementById('gradCard').classList.remove('locked');
+  } else if (percent >= 50) {
+    document.getElementById('gradStatus').textContent = '💪 أنت في منتصف الطريق — استمر!';
+  } else {
+    document.getElementById('gradStatus').textContent = `🎯 أكمل ${Math.round(goalXP - xp)} XP إضافي لتقترب من البوابة`;
   }
 
-  // Skills
-  const skills = d.skills || {};
-  const maxXp  = 200;
-  renderSkillBar('reading',   skills.reading_xp   || 0, maxXp);
-  renderSkillBar('listening', skills.listening_xp || 0, maxXp);
-  renderSkillBar('speaking',  skills.speaking_xp  || 0, maxXp);
-  renderSkillBar('writing',   skills.writing_xp   || 0, maxXp);
-
-  // Mission Progress
-  const missions = d.missions_completed || 0;
-  const mPct = Math.min(missions / 10 * 100, 100);
-  setTimeout(() => {
-    document.getElementById('missionBar').style.width = mPct + '%';
-    document.getElementById('missionPct').textContent = Math.round(mPct) + '%';
-  }, 500);
-
-  // Random Quote
-  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-  document.getElementById('quoteText').textContent   = '"' + q.text + '"';
-  document.querySelector('.quote-author').textContent = q.author;
-
-  // Show App
-  document.getElementById('loading').style.display   = 'none';
-  document.getElementById('app').style.display       = 'block';
-  document.getElementById('bottomNav').style.display = 'flex';
+  return data;
 }
 
-function renderSkillBar(skill, xp, max) {
-  const pct = Math.min(xp / max * 100, 100);
-  document.getElementById(skill + 'Xp').textContent  = xp + ' XP';
-  setTimeout(() => {
-    document.getElementById(skill + 'Bar').style.width = pct + '%';
-  }, 600);
-}
+// ═══════════════════════════════════════════════════════════
+// Load Lessons & group by skill
+// ═══════════════════════════════════════════════════════════
+let allLessons = [];
 
-function showError(msg) {
-  document.getElementById('loading').innerHTML =
-    `<div style="text-align:center;padding:40px 20px">
-      <div style="font-size:48px;margin-bottom:16px">😕</div>
-      <div style="color:var(--text2);font-size:14px">${msg || 'تعذر تحميل البيانات'}</div>
-      <button onclick="loadStudent()" class="btn btn-primary" style="margin-top:20px;width:auto;padding:10px 24px">
-        🔄 إعادة المحاولة
-      </button>
-    </div>`;
-}
-
-// ══════════════════════════════════════
-// Load Lessons
-// ══════════════════════════════════════
 async function loadLessons() {
-  lessonsLoaded = true;
-  try {
-    const res  = await fetch('/api/lessons');
-    const data = await res.json();
-    const lessons = data.lessons || [];
-    const el = document.getElementById('lessonsList');
+  const data = await api('/api/lessons');
+  if (!data || !data.lessons) return;
+  allLessons = data.lessons;
 
-    if (!lessons.length) {
-      el.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>لا توجد دروس بعد</p></div>`;
-      return;
-    }
+  // Group by skill
+  const skills = { reading: [], listening: [], writing: [], speaking: [], grammar: [], vocab: [] };
+  allLessons.forEach(l => {
+    const s = (l.skill_type || l.skill || 'reading').toLowerCase();
+    if (skills[s]) skills[s].push(l);
+    else if (s.includes('grammar')) skills.grammar.push(l);
+    else if (s.includes('vocab')) skills.vocab.push(l);
+    else skills.reading.push(l);
+  });
 
-    const skillIcon = {
-      reading:'📖', listening:'🎧', speaking:'🗣️',
-      writing:'✍️', grammar:'📝', vocabulary:'📚'
-    };
-    const skillClass = {
-      reading:'icon-reading', listening:'icon-listening', speaking:'icon-speaking',
-      writing:'icon-writing', grammar:'icon-grammar', vocabulary:'icon-vocabulary'
-    };
+  // Update counts (assume 12 total per main skill as target)
+  ['reading','listening','writing','speaking'].forEach(s => {
+    const lessons = skills[s];
+    const total = Math.max(lessons.length, 12);
+    const done = lessons.filter(l => l.completed).length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    const countEl = document.getElementById(s + 'Count');
+    const pctEl = document.getElementById(s + 'Pct');
+    const fillEl = document.getElementById(s + 'Fill');
+    if (countEl) countEl.textContent = `${done} / ${total} دروس`;
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (fillEl) setTimeout(() => fillEl.style.width = Math.max(pct, lessons.length > 0 ? 5 : 0) + '%', 300);
+  });
 
-    // Group by skill (section)
-    const sections = {
-      reading:    { name: 'القراءة 📖',   icon: '📖', list: [] },
-      listening:  { name: 'الاستماع 🎧',  icon: '🎧', list: [] },
-      speaking:   { name: 'المحادثة 🗣️', icon: '🗣️', list: [] },
-      writing:    { name: 'الكتابة ✍️',   icon: '✍️', list: [] },
-      grammar:    { name: 'القواعد 📝',   icon: '📝', list: [] },
-      vocabulary: { name: 'المفردات 📚',  icon: '📚', list: [] },
-    };
-    lessons.forEach(l => {
-      const sk = (l.skill_type || l.skill || 'reading').toLowerCase();
-      if (sections[sk]) sections[sk].list.push(l);
-      else sections.reading.list.push(l);
-    });
+  document.getElementById('grammarCount').textContent = skills.grammar.length;
+  document.getElementById('vocabCount').textContent = skills.vocab.length;
 
-    let html = '';
-    Object.keys(sections).forEach(key => {
-      const sec = sections[key];
-      if (!sec.list.length) return;
-      html += `<div class="section-title">${sec.icon} ${sec.name} <span style="color:#64748b;font-weight:400;font-size:13px">(${sec.list.length} دروس)</span></div>`;
-      sec.list.forEach(l => {
-        const sk = l.skill_type || 'reading';
-        html += `
-          <div class="lesson-item" onclick="openLesson(${l.id})">
-            <div class="lesson-icon ${skillClass[sk]||'icon-reading'}">
-              ${skillIcon[sk]||'📌'}
-            </div>
-            <div class="lesson-info">
-              <div class="lesson-title">${l.title}</div>
-              <div class="lesson-meta">
-                <span>${sk}</span>
-                <span class="lesson-xp">+${l.xp_reward||20} XP</span>
-              </div>
-            </div>
-            <span class="lesson-arrow">‹</span>
-          </div>`;
-      });
-    });
-    el.innerHTML = html;
-  } catch(e) {
-    document.getElementById('lessonsList').innerHTML =
-      `<div class="empty-state"><div class="icon">❌</div><p>خطأ في التحميل</p></div>`;
+  // Daily mission = first incomplete lesson
+  const next = allLessons.find(l => !l.completed) || allLessons[0];
+  if (next) {
+    document.getElementById('dmTitle').textContent = next.title || 'درس جديد بانتظارك';
+    document.getElementById('dmDesc').textContent = next.description || `استمر في تطوير مهاراتك في ${next.skill_type || 'TOEFL'}`;
+    document.getElementById('dmTime').textContent = next.timer_minutes || 15;
+    document.getElementById('dmXP').textContent = next.xp_reward || 20;
+    document.getElementById('dailyMission').dataset.lessonId = next.id;
   }
+
+  return allLessons;
+}
+
+// ═══════════════════════════════════════════════════════════
+// Load Leaderboard
+// ═══════════════════════════════════════════════════════════
+async function loadLeaderboard() {
+  const data = await api('/api/leaderboard');
+  const container = document.getElementById('leaderboardMini');
+  const fullContainer = document.getElementById('leaderboardFull');
+
+  if (!data || !data.leaderboard || data.leaderboard.length === 0) {
+    const empty = `<div class="empty-state"><span class="emoji">🏆</span><div>كن أول المتصدرين!</div></div>`;
+    container.innerHTML = empty;
+    fullContainer.innerHTML = empty;
+    return;
+  }
+
+  const top = data.leaderboard.slice(0, 3);
+  const myRank = data.leaderboard.findIndex(s => String(s.telegram_id) === String(studentId));
+  if (myRank >= 0) {
+    document.getElementById('statRank').textContent = '#' + (myRank + 1);
+  }
+
+  let html = '';
+  top.forEach((s, i) => {
+    const rankCls = i === 0 ? 'gold' : i === 1 ? 'silver' : 'bronze';
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+    const isMe = String(s.telegram_id) === String(studentId) ? ' me' : '';
+    html += `<div class="lb-item${isMe}">
+      <div class="lb-rank ${rankCls}">${medal}</div>
+      <div class="lb-name">${s.full_name || s.username || 'طالب'}</div>
+      <div class="lb-xp">⚡ ${s.xp || 0}</div>
+    </div>`;
+  });
+  if (myRank >= 3) {
+    const me = data.leaderboard[myRank];
+    html += `<div class="lb-item me">
+      <div class="lb-rank">#${myRank + 1}</div>
+      <div class="lb-name">${me.full_name || 'أنت'}</div>
+      <div class="lb-xp">⚡ ${me.xp || 0}</div>
+    </div>`;
+  }
+  container.innerHTML = html;
+
+  // Full
+  let fullHtml = '';
+  data.leaderboard.slice(0, 30).forEach((s, i) => {
+    const rankCls = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const isMe = String(s.telegram_id) === String(studentId) ? ' me' : '';
+    fullHtml += `<div class="lb-item${isMe}">
+      <div class="lb-rank ${rankCls}">${i+1}</div>
+      <div class="lb-name">${s.full_name || s.username || 'طالب'}</div>
+      <div class="lb-xp">⚡ ${s.xp || 0}</div>
+    </div>`;
+  });
+  fullContainer.innerHTML = fullHtml;
+}
+
+// ═══════════════════════════════════════════════════════════
+// Navigation
+// ═══════════════════════════════════════════════════════════
+function switchView(btn) {
+  haptic('light');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.view).classList.add('active');
+
+  if (btn.dataset.view === 'viewLessons') renderLessonsList('all');
+  if (btn.dataset.view === 'viewProfile') renderProfile();
+  window.scrollTo(0, 0);
+}
+
+function openSkill(skill) {
+  haptic('medium');
+  // Switch to lessons tab + filter
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector('[data-view="viewLessons"]').classList.add('active');
+  document.getElementById('viewLessons').classList.add('active');
+  renderLessonsList(skill);
+  window.scrollTo(0, 0);
+}
+
+function renderLessonsList(filter) {
+  const titleMap = {
+    'all': '📚 جميع الدروس',
+    'reading': '📖 الفهم القرائي',
+    'listening': '🎧 الاستماع',
+    'writing': '✍️ الكتابة',
+    'speaking': '🎤 المحادثة',
+    'grammar': '📝 القواعد',
+    'vocab': '🔤 المفردات'
+  };
+  const iconMap = { reading:'📖', listening:'🎧', writing:'✍️', speaking:'🎤', grammar:'📝', vocab:'🔤' };
+  document.getElementById('lessonsViewTitle').innerHTML =
+    `<span class="emoji">${titleMap[filter].split(' ')[0]}</span> ${titleMap[filter].split(' ').slice(1).join(' ')}`;
+
+  let list = allLessons;
+  if (filter !== 'all') {
+    list = allLessons.filter(l => {
+      const s = (l.skill_type || l.skill || '').toLowerCase();
+      return s === filter || (filter === 'vocab' && s.includes('vocab')) || (filter === 'grammar' && s.includes('grammar'));
+    });
+  }
+
+  const container = document.getElementById('lessonsList');
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty-state"><span class="emoji">📭</span><div>لا توجد دروس في هذا القسم بعد<br><small>سيتم إضافتها قريباً</small></div></div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(l => {
+    const skill = (l.skill_type || l.skill || 'reading').toLowerCase();
+    const icon = iconMap[skill] || '📖';
+    const completed = l.completed ? ' completed' : '';
+    return `<div class="lesson-item${completed}" onclick="openLesson(${l.id})">
+      <div class="lesson-icon-box">${l.completed ? '✅' : icon}</div>
+      <div class="lesson-info">
+        <div class="lesson-title">${l.title || 'درس'}</div>
+        <div class="lesson-meta">
+          <span>${l.lesson_code || ''}</span>
+          ${l.timer_minutes ? '<span>⏱️ ' + l.timer_minutes + ' د</span>' : ''}
+        </div>
+      </div>
+      <div class="lesson-xp">+${l.xp_reward || 20} XP</div>
+    </div>`;
+  }).join('');
 }
 
 function openLesson(id) {
+  haptic('medium');
   if (studentId) localStorage.setItem('yamen_student_id', studentId);
   const url = studentId ? `/lesson/${id}?student_id=${studentId}` : `/lesson/${id}`;
   window.location.href = url;
 }
 
-// ══════════════════════════════════════
-// Load Leaderboard
-// ══════════════════════════════════════
-async function loadLeaders() {
-  leadersLoaded = true;
-  try {
-    const res  = await fetch('/api/leaderboard');
-    const data = await res.json();
-    const leaders = data.leaderboard || data.leaders || [];
-    const el = document.getElementById('leadersList');
+function startDailyLesson() {
+  const id = document.getElementById('dailyMission').dataset.lessonId;
+  if (id) openLesson(parseInt(id));
+}
 
-    if (!leaders.length) {
-      el.innerHTML = `<div class="empty-state"><div class="icon">🏆</div><p>لا توجد بيانات بعد</p></div>`;
-      return;
-    }
-
-    const medals = ['rank-1','rank-2','rank-3'];
-    const mText  = ['🥇','🥈','🥉'];
-    let html = '';
-    leaders.forEach((l, i) => {
-      const isMe = String(l.telegram_id) === String(studentId);
-      const rc   = medals[i] || 'rank-n';
-      const rm   = mText[i]  || (i+1);
-      html += `
-        <div class="leader-item ${isMe ? 'me' : ''}">
-          <div class="leader-rank ${rc}">${rm}</div>
-          <div class="leader-name">
-            ${l.full_name || l.username || 'طالب'}
-            ${isMe ? ' <span style="color:var(--accent2);font-size:11px">(أنت)</span>' : ''}
-          </div>
-          <div class="leader-xp">${(l.xp||0).toLocaleString()} XP</div>
-        </div>`;
-    });
-    el.innerHTML = html;
-  } catch(e) {
-    document.getElementById('leadersList').innerHTML =
-      `<div class="empty-state"><div class="icon">❌</div><p>خطأ في التحميل</p></div>`;
+function onGradClick() {
+  haptic('heavy');
+  const card = document.getElementById('gradCard');
+  if (card.classList.contains('locked')) {
+    if (tg) tg.showAlert('🔒 أكمل المزيد من الدروس أولاً لفتح Mock Exam!');
+    else alert('🔒 أكمل المزيد من الدروس أولاً لفتح Mock Exam!');
+  } else {
+    if (tg) tg.showAlert('🎓 Mock Exam قريباً!');
+    else alert('🎓 Mock Exam قريباً!');
   }
 }
 
-// ══════════════════════════════════════
-// Graduation Check
-// ══════════════════════════════════════
-async function loadGrad() {
-  if (!studentId) return;
-  try {
-    const res  = await fetch(`/api/user/graduation-status?student_id=${studentId}`);
-    const data = await res.json();
-    const card = document.getElementById('gradCard');
-    const reqs = document.getElementById('gradReqs');
+function renderProfile() {
+  const xp = parseInt(document.getElementById('statXP').textContent) || 0;
+  const lessons = parseInt(document.getElementById('statLessons').textContent) || 0;
+  const streak = parseInt(document.getElementById('statStreak').textContent) || 0;
+  const name = document.getElementById('studentName').textContent;
+  const target = document.getElementById('targetScore').textContent;
+  const level = getLevelFromXP(xp);
 
-    const checks = data.checks || [];
-    let reqHtml = '';
-    checks.forEach(c => {
-      reqHtml += `
-        <div class="req-item ${c.passed ? 'req-ok' : 'req-fail'}">
-          <span>${c.passed ? '✅' : '❌'}</span>
-          <span>${c.message}</span>
-        </div>`;
-    });
-    reqs.innerHTML = reqHtml;
-
-    if (data.eligible) {
-      card.className = 'grad-card grad-unlocked';
-      card.querySelector('.grad-icon').textContent  = '🎓';
-      card.querySelector('.grad-title').textContent = 'مبروك! أنت مؤهل للتخرج';
-      card.querySelector('.grad-desc').textContent  = 'تواصل مع الأدمن للحصول على شهادتك';
-      reqs.insertAdjacentHTML('afterend',
-        `<button class="btn btn-gold" onclick="contactAdmin()">
-          🎓 احصل على شهادتك الآن
-        </button>`
-      );
-    }
-  } catch(e) { /* silent */ }
+  document.getElementById('profileContent').innerHTML = `
+    <div style="text-align:center;padding:16px 0">
+      <div style="width:80px;height:80px;margin:0 auto 12px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#ec4899);display:flex;align-items:center;justify-content:center;font-size:36px;color:white;font-weight:800">
+        ${(name || 'ط').charAt(0)}
+      </div>
+      <div style="font-size:18px;font-weight:800">${name}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${level.emoji} ${level.name}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div style="background:var(--primary-soft);padding:12px;border-radius:12px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted)">الهدف</div>
+        <div style="font-size:18px;font-weight:800;color:var(--primary-dark)">🎯 ${target}</div>
+      </div>
+      <div style="background:var(--success-soft);padding:12px;border-radius:12px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted)">XP</div>
+        <div style="font-size:18px;font-weight:800;color:var(--success)">⚡ ${xp}</div>
+      </div>
+      <div style="background:var(--warning-soft);padding:12px;border-radius:12px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted)">دروس</div>
+        <div style="font-size:18px;font-weight:800;color:#92400e">✅ ${lessons}</div>
+      </div>
+      <div style="background:#fee2e2;padding:12px;border-radius:12px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted)">streak</div>
+        <div style="font-size:18px;font-weight:800;color:var(--danger)">🔥 ${streak}</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:var(--bg-soft);border-radius:12px;font-size:12px;color:var(--text-muted);text-align:center;line-height:1.6">
+      💡 استمر في التعلم اليومي للحفاظ على streak الخاص بك!<br>
+      🎯 هدفك التالي: الوصول إلى ${level.name === 'Master' ? 'إتقان كامل' : 'المستوى التالي'}
+    </div>
+  `;
 }
 
-function contactAdmin() {
-  if (tg) tg.openTelegramLink('https://t.me/YamenAdmin');
-  else window.open('https://t.me/YamenAdmin', '_blank');
+// ═══════════════════════════════════════════════════════════
+// Placement Test Mode
+// ═══════════════════════════════════════════════════════════
+function handlePlacementMode() {
+  if (mode === 'placement') {
+    setTimeout(() => {
+      if (tg) {
+        tg.showPopup({
+          title: '🔬 اختبار تحديد المستوى',
+          message: 'سيبدأ الاختبار الآن: 10 أسئلة في حوالي 10 دقائق. هل أنت جاهز؟',
+          buttons: [
+            { id: 'start', type: 'default', text: 'ابدأ الآن' },
+            { id: 'later', type: 'cancel', text: 'لاحقاً' }
+          ]
+        }, (btnId) => {
+          if (btnId === 'start') {
+            window.location.href = `/placement?student_id=${studentId}`;
+          }
+        });
+      } else {
+        if (confirm('بدء اختبار تحديد المستوى الآن؟')) {
+          window.location.href = `/placement?student_id=${studentId}`;
+        }
+      }
+    }, 800);
+  }
 }
 
-// ══════════════════════════════════════
-// Boot
-// ══════════════════════════════════════
-loadStudent();
+// ═══════════════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════════════
+(async function init() {
+  await Promise.all([
+    loadStudent(),
+    loadLessons(),
+    loadLeaderboard()
+  ]);
+  handlePlacementMode();
+})();
 </script>
+
 </body>
 </html>
