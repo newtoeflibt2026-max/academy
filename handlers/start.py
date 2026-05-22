@@ -89,14 +89,17 @@ def kb_choose_target():
 
 
 def kb_start_placement(user_id):
+    webapp_url = f"{settings.WEBHOOK_HOST}/student?student_id={user_id}&mode=placement"
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", callback_data="pl:begin")],
+        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", web_app=WebAppInfo(url=webapp_url))],
         [InlineKeyboardButton(text="↩️ تغيير العلامة المستهدفة", callback_data="back:target")],
     ])
 
 
-def get_main_keyboard(is_paid=False):
+def get_main_keyboard(is_paid=False, user_id=0):
+    portal_url = f"{settings.WEBHOOK_HOST}/student?student_id={user_id}"
     buttons = [
+        [InlineKeyboardButton(text="🌐 افتح بوابة الطالب", web_app=WebAppInfo(url=portal_url))],
         [
             InlineKeyboardButton(text="📚 دروسي", callback_data="menu_lessons"),
             InlineKeyboardButton(text="🎯 مهامي اليومية", callback_data="menu_missions"),
