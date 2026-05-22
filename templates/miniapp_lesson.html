@@ -1,375 +1,183 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ø§Ù„Ø¯Ø±Ø³ - Ø£ÙƒØ§Ø¯ÙŠÙ…ÙŠØ© ÙŠØ§Ù…Ù†</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root {
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --text: #1e293b;
-  --text-light: #64748b;
-  --border: #e2e8f0;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Cairo', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding-bottom: 100px;
-}
-.header {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  padding: 20px 16px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 2px 12px rgba(99,102,241,.25);
-}
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-.back-btn {
-  background: rgba(255,255,255,.2);
-  border: none;
-  color: white;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.skill-badge {
-  background: rgba(255,255,255,.25);
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.lesson-title {
-  font-size: 22px;
-  font-weight: 800;
-  margin-top: 4px;
-  line-height: 1.4;
-}
-.lesson-meta {
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
-  font-size: 13px;
-  opacity: .92;
-}
-.lesson-meta span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.container {
-  padding: 16px;
-  max-width: 720px;
-  margin: 0 auto;
-}
-.card {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.04);
-}
-.card-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.content-text {
-  font-size: 15px;
-  line-height: 1.9;
-  color: var(--text);
-  white-space: pre-wrap;
-}
-.info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.info-box {
-  background: linear-gradient(135deg, #f3f4ff, #fef3ff);
-  border-radius: 12px;
-  padding: 14px;
-  text-align: center;
-}
-.info-box-label {
-  font-size: 12px;
-  color: var(--text-light);
-  margin-bottom: 4px;
-}
-.info-box-value {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--primary);
-}
-.completed-banner {
-  background: linear-gradient(135deg, #10b981, #34d399);
-  color: white;
-  padding: 14px;
-  border-radius: 12px;
-  text-align: center;
-  margin-bottom: 16px;
-  font-weight: 700;
-}
-.start-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  max-width: 400px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white;
-  border: none;
-  padding: 16px;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 800;
-  font-family: 'Cairo', sans-serif;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(99,102,241,.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.start-btn:active { transform: translateX(-50%) scale(.97); }
-.start-btn.retry {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
-  box-shadow: 0 8px 24px rgba(245,158,11,.35);
-}
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-light);
-}
-.loading-spinner {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--border);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.error-box {
-  background: #fee;
-  color: #c00;
-  padding: 16px;
-  border-radius: 12px;
-  text-align: center;
-  margin: 20px 16px;
-}
-.tag {
-  display: inline-block;
-  background: #f1f5f9;
-  color: var(--text-light);
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  margin: 2px;
-}
-</style>
-<script>
-  // Injected by Flask
-  window.LESSON_ID = {{ lesson_id|tojson }};
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الدرس - أكاديمية يامن</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    window.LESSON_ID = {{ lesson_id|tojson }};
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', 'Tahoma', sans-serif; }
+    body { background: #f5f7fb; color: #1a1a2e; min-height: 100vh; padding-bottom: 40px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white; padding: 20px; border-radius: 0 0 20px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 4px 16px rgba(102,126,234,0.3);
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.3); }
+    .header-title { font-size: 20px; font-weight: 700; text-align: left; }
+    .header-meta { font-size: 13px; opacity: 0.9; margin-top: 6px; }
+    .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+    .card {
+      background: white; border-radius: 16px; padding: 24px;
+      margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 18px; color: #2d3748; margin-bottom: 12px;
+      padding-bottom: 8px; border-bottom: 2px solid #e2e8f0;
+    }
+    .content-text { font-size: 16px; line-height: 1.8; color: #4a5568; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .info-box {
+      background: #f7f5fc; border-radius: 12px; padding: 16px;
+      text-align: center; border: 1px solid #e9d8fd;
+    }
+    .info-label { font-size: 12px; color: #718096; margin-bottom: 4px; }
+    .info-value { font-size: 24px; font-weight: 700; color: #667eea; }
+    .pass-hint {
+      text-align: center; margin-top: 12px; font-size: 13px; color: #718096;
+    }
+    .btn-primary {
+      display: block; width: 100%; max-width: 400px; margin: 24px auto 0;
+      background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+      padding: 16px 24px; border: none; border-radius: 14px;
+      font-size: 17px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(102,126,234,0.4); transition: transform 0.15s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-box {
+      background: #fff5f5; border: 1px solid #fc8181; color: #c53030;
+      padding: 20px; border-radius: 12px; text-align: center; margin: 20px;
+    }
+    .badge {
+      display: inline-block; background: #48bb78; color: white;
+      padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-top: 8px;
+    }
+    .loading { text-align: center; padding: 40px; color: #718096; }
+  </style>
 </head>
 <body>
-
-<div id="root">
-  <div class="loading">
-    <div class="loading-spinner"></div>
-    <p style="margin-top:16px">Ø¬Ø§Ø±ÙŠ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¯Ø±Ø³...</p>
+  <div class="header">
+    <button class="btn-back" onclick="goBack()">رجوع</button>
+    <div>
+      <div class="header-title" id="lesson-title">جارٍ التحميل...</div>
+      <div class="header-meta" id="lesson-meta"></div>
+    </div>
   </div>
-</div>
 
-<script>
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  try { tg.ready(); tg.expand(); } catch(e){}
-}
+  <div id="main" class="container">
+    <div class="loading">جارٍ تحميل الدرس...</div>
+  </div>
 
-const urlParams = new URLSearchParams(window.location.search);
-const studentId = tg?.initDataUnsafe?.user?.id 
-                || urlParams.get('student_id') 
-                || localStorage.getItem('yamen_student_id');
-const lessonId = window.LESSON_ID || urlParams.get('lesson_id');
+  <script>
+    const tg = window.Telegram && window.Telegram.WebApp;
+    if (tg) tg.ready();
 
-const SKILL_LABELS = {
-  reading: 'ðŸ“– Ø§Ù„Ù‚Ø±Ø§Ø¡Ø©',
-  writing: 'âœï¸ Ø§Ù„ÙƒØªØ§Ø¨Ø©',
-  listening: 'ðŸŽ§ Ø§Ù„Ø§Ø³ØªÙ…Ø§Ø¹',
-  speaking: 'ðŸŽ¤ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©',
-  general: 'ðŸ“š Ø¹Ø§Ù…',
-  grammar: 'ðŸ“ Ù‚ÙˆØ§Ø¹Ø¯'
-};
-
-async function loadLesson() {
-  if (!studentId || !lessonId) {
-    showError('Ù…Ø¹Ù„ÙˆÙ…Ø§Øª Ù†Ø§Ù‚ØµØ© - student_id Ø£Ùˆ lesson_id');
-    return;
-  }
-  
-  try {
-    const r = await fetch(`/api/miniapp/lesson/${lessonId}?student_id=${studentId}`);
-    const data = await r.json();
-    
-    if (data.error) {
-      showError(data.error);
-      return;
+    function goBack() {
+      const sid = getStudentId();
+      window.location.href = '/student?student_id=' + (sid || '');
     }
-    
-    render(data);
-  } catch (e) {
-    showError('ÙØ´Ù„ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¯Ø±Ø³: ' + e.message);
-  }
-}
 
-function render(d) {
-  const skillLabel = SKILL_LABELS[d.skill] || SKILL_LABELS[d.section] || 'ðŸ“š Ø¯Ø±Ø³';
-  const isCompleted = d.completed;
-  const lastScore = d.last_score ? Math.round(d.last_score) : null;
-  
-  const html = `
-    <div class="header">
-      <div class="header-row">
-        <button class="back-btn" onclick="goBack()">â†</button>
-        <span class="skill-badge">${skillLabel}</span>
-      </div>
-      <div class="lesson-title">${d.title}</div>
-      <div class="lesson-meta">
-        <span>ðŸ“Š ${d.questions.length} Ø³Ø¤Ø§Ù„</span>
-        <span>âš¡ ${d.xp_reward} XP</span>
-        ${lastScore !== null ? `<span>ðŸŽ¯ Ø¢Ø®Ø± Ù†ØªÙŠØ¬Ø©: ${lastScore}%</span>` : ''}
-      </div>
-    </div>
-    
-    <div class="container">
-      ${isCompleted ? `
-        <div class="completed-banner">
-          âœ… Ø£ÙƒÙ…Ù„Øª Ù‡Ø°Ø§ Ø§Ù„Ø¯Ø±Ø³ Ø¨Ù†Ø¬Ø§Ø­ â€” ÙŠÙ…ÙƒÙ†Ùƒ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©
-        </div>
-      ` : ''}
-      
-      <div class="card">
-        <div class="card-title">ðŸ“– Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø¯Ø±Ø³</div>
-        <div class="content-text">${escapeHtml(d.content || 'Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù…Ø­ØªÙˆÙ‰ Ù…ØªØ§Ø­')}</div>
-      </div>
-      
-      ${d.grammar_rule ? `
-        <div class="card">
-          <div class="card-title">ðŸ“ Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø©</div>
-          <div class="content-text">${escapeHtml(d.grammar_rule)}</div>
-        </div>
-      ` : ''}
-      
-      ${d.vocabulary ? `
-        <div class="card">
-          <div class="card-title">ðŸ“š Ø§Ù„Ù…ÙØ±Ø¯Ø§Øª</div>
-          <div class="content-text">${escapeHtml(d.vocabulary)}</div>
-        </div>
-      ` : ''}
-      
-      ${d.focus_point ? `
-        <div class="card">
-          <div class="card-title">ðŸŽ¯ Ù†Ù‚Ø·Ø© Ø§Ù„ØªØ±ÙƒÙŠØ²</div>
-          <div class="content-text">${escapeHtml(d.focus_point)}</div>
-        </div>
-      ` : ''}
-      
-      <div class="card">
-        <div class="card-title">ðŸ“‹ ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø±</div>
-        <div class="info-grid">
-          <div class="info-box">
-            <div class="info-box-label">Ø¹Ø¯Ø¯ Ø§Ù„Ø£Ø³Ø¦Ù„Ø©</div>
-            <div class="info-box-value">${d.questions.length}</div>
-          </div>
-          <div class="info-box">
-            <div class="info-box-label">Ù†Ù‚Ø§Ø· Ø§Ù„Ø®Ø¨Ø±Ø©</div>
-            <div class="info-box-value">${d.xp_reward}+</div>
-          </div>
-        </div>
-        <p style="margin-top:12px;color:var(--text-light);font-size:13px;text-align:center">
-          ðŸ† Ù†Ø³Ø¨Ø© Ø§Ù„Ù†Ø¬Ø§Ø­ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø©: 70% | â±ï¸ ÙƒÙ„ Ø³Ø¤Ø§Ù„ Ù„Ù‡ Ù…Ø¤Ù‚Øª
-        </p>
-      </div>
-    </div>
-    
-    <button class="start-btn ${isCompleted ? 'retry' : ''}" onclick="startQuiz()">
-      ${isCompleted ? 'ðŸ”„ Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø±' : 'ðŸš€ Ø§Ø¨Ø¯Ø£ Ø§Ù„Ø§Ø®ØªØ¨Ø§Ø± Ø§Ù„Ø¢Ù†'}
-    </button>
-  `;
-  
-  document.getElementById('root').innerHTML = html;
-  document.body.style.overflow = 'auto';
-}
+    function getStudentId() {
+      // Priority: Telegram > URL > localStorage
+      const tgId = tg?.initDataUnsafe?.user?.id;
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlSid = urlParams.get('student_id');
+      const lsId = localStorage.getItem('yamen_student_id');
+      // Filter out 'null' string
+      const candidates = [tgId, urlSid, lsId].filter(x => x && x !== 'null' && x !== 'undefined');
+      const sid = candidates[0];
+      if (sid) localStorage.setItem('yamen_student_id', sid);
+      return sid;
+    }
 
-function showError(msg) {
-  document.getElementById('root').innerHTML = `
-    <div class="error-box">
-      <h3 style="margin-bottom:8px">âš ï¸ Ø®Ø·Ø£</h3>
-      <p>${escapeHtml(msg)}</p>
-      <button onclick="goBack()" style="margin-top:16px;padding:10px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer">
-        Ø±Ø¬ÙˆØ¹
-      </button>
-    </div>
-  `;
-}
+    function getLessonId() {
+      const fromWindow = window.LESSON_ID;
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromUrl = urlParams.get('lesson_id');
+      return fromWindow || fromUrl;
+    }
 
-function goBack() {
-  if (tg && tg.close) {
-    // If in Telegram, go to dashboard
-    window.location.href = `/student?student_id=${studentId}`;
-  } else {
-    window.history.back();
-  }
-}
+    function showError(msg) {
+      document.getElementById('main').innerHTML =
+        '<div class="error-box"><h2>خطأ</h2><p>' + msg + '</p>' +
+        '<button class="btn-primary" onclick="goBack()" style="margin-top:16px">رجوع</button></div>';
+    }
 
-function startQuiz() {
-  // Phase 4 â€” quiz page; for now show notice
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-  window.location.href = `/miniapp/quiz/${lessonId}?student_id=${studentId}`;
-}
+    async function loadLesson() {
+      const studentId = getStudentId();
+      const lessonId = getLessonId();
 
-function escapeHtml(s) {
-  if (!s) return '';
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/\n/g, '<br>');
-}
+      if (!studentId) {
+        showError('لم يتم العثور على معرّف الطالب. افتح الدرس من بوت تلغرام.');
+        return;
+      }
+      if (!lessonId) {
+        showError('لم يتم العثور على رقم الدرس.');
+        return;
+      }
 
-// Boot
-loadLesson();
-</script>
+      try {
+        const r = await fetch('/api/miniapp/lesson/' + lessonId + '?student_id=' + studentId);
+        if (!r.ok) {
+          showError('تعذّر تحميل الدرس (HTTP ' + r.status + ')');
+          return;
+        }
+        const data = await r.json();
+        renderLesson(data, studentId);
+      } catch (e) {
+        showError('خطأ في الاتصال: ' + e.message);
+      }
+    }
+
+    function renderLesson(d, studentId) {
+      document.getElementById('lesson-title').textContent = d.title || 'الدرس';
+      document.getElementById('lesson-meta').textContent =
+        (d.xp_reward || 0) + ' XP • ' + (d.total_questions || 0) + ' أسئلة';
+
+      const lessonId = getLessonId();
+      const completedBadge = d.completed
+        ? '<span class="badge">مكتمل - آخر نتيجة: ' + (d.last_score || 0).toFixed(0) + '%</span>'
+        : '';
+      const btnLabel = d.completed ? 'إعادة الاختبار' : 'ابدأ الاختبار الآن';
+
+      document.getElementById('main').innerHTML =
+        '<div class="card">' +
+          '<h2>شرح الدرس ' + completedBadge + '</h2>' +
+          '<div class="content-text">' + (d.content || 'لا يوجد محتوى') + '</div>' +
+        '</div>' +
+        '<div class="card">' +
+          '<h2>معلومات الاختبار</h2>' +
+          '<div class="info-grid">' +
+            '<div class="info-box">' +
+              '<div class="info-label">نقاط الخبرة</div>' +
+              '<div class="info-value">+' + (d.xp_reward || 10) + '</div>' +
+            '</div>' +
+            '<div class="info-box">' +
+              '<div class="info-label">عدد الأسئلة</div>' +
+              '<div class="info-value">' + (d.total_questions || 0) + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pass-hint">درجة النجاح: 70% فأعلى • عدد المحاولات: غير محدود</div>' +
+        '</div>' +
+        '<button class="btn-primary" onclick="startQuiz()">' + btnLabel + '</button>';
+    }
+
+    function startQuiz() {
+      const sid = getStudentId();
+      const lid = getLessonId();
+      window.location.href = '/miniapp/quiz/' + lid + '?student_id=' + sid;
+    }
+
+    loadLesson();
+  </script>
 </body>
 </html>
