@@ -1672,6 +1672,175 @@ def miniapp_plans():
 #  End of Mini App APIs
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
+
+
+# ============ PHASE 4B: QUIZ ROUTES + APIs ============
+@app.route("/miniapp/quiz/<int:lid>")
+def miniapp_quiz_page(lid):
+    from flask import render_template
+    return render_template("miniapp_quiz.html", lesson_id=lid)
+
+
+@app.route("/api/miniapp/quiz/start", methods=["POST"])
+def miniapp_quiz_start():
+    """Start quiz: check cooldown, start attempt, return questions (no answers)."""
+    try:
+        import quiz_engine as qe
+        data = _request.get_json(force=True) or {}
+        sid = str(data.get("student_id") or "")
+        lid = data.get("lesson_id")
+        if not sid or not lid:
+            return _jsonify({"error": "student_id and lesson_id required"}), 400
+
+        # Cooldown check
+        try:
+            cd = qe.get_cooldown_status(sid, int(lid))
+            if cd and cd.get("locked"):
+                return _jsonify({"cooldown": cd})
+        except Exception as _e:
+            pass
+
+        # Get questions (without correct answers)
+        questions = qe.get_lesson_quiz(int(lid), shuffle=True)
+        safe_questions = []
+        for q in questions:
+            safe_questions.append({
+                "id": q.get("id"),
+                "question": q.get("question"),
+                "option_a": q.get("option_a"),
+                "option_b": q.get("option_b"),
+                "option_c": q.get("option_c"),
+                "option_d": q.get("option_d"),
+                "q_type": q.get("q_type"),
+                "timer_seconds": q.get("timer_seconds"),
+            })
+
+        # Start attempt
+        attempt_id = None
+        try:
+            attempt_id = qe.start_quiz_attempt(sid, int(lid))
+        except Exception as _e:
+            pass
+
+        return _jsonify({
+            "attempt_id": attempt_id,
+            "questions": safe_questions,
+            "total": len(safe_questions),
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/miniapp/quiz/answer", methods=["POST"])
+def miniapp_quiz_answer():
+    """Check single answer; record mistake in error_bank if wrong."""
+    try:
+        import quiz_engine as qe
+        data = _request.get_json(force=True) or {}
+        sid = str(data.get("student_id") or "")
+        qid = data.get("question_id")
+        user_answer = (data.get("answer") or "").strip().upper()
+        if not qid:
+            return _jsonify({"error": "question_id required"}), 400
+
+        # Use quiz_engine.check_answer
+        is_correct, correct_ans, explanation = qe.check_answer(int(qid), user_answer)
+
+        # Get concept/tip from DB
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT concept, tip FROM lesson_questions WHERE id=?", (int(qid),))
+        row = cur.fetchone()
+        conn.close()
+        concept = row["concept"] if row else ""
+        tip = row["tip"] if row else ""
+
+        # Record mistake if wrong
+        if not is_correct and sid:
+            try:
+                qe.record_mistake(sid, int(qid), user_answer, correct_ans or "")
+            except Exception as _e:
+                pass
+
+        return _jsonify({
+            "is_correct": is_correct,
+            "correct_answer": correct_ans or "",
+            "explanation": explanation or "",
+            "concept": concept or "",
+            "tip": tip or ""
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/miniapp/quiz/finish", methods=["POST"])
+def miniapp_quiz_finish():
+    """Finish quiz: compute score, save attempt, award XP or trigger cooldown."""
+    try:
+        import quiz_engine as qe
+        data = _request.get_json(force=True) or {}
+        sid = str(data.get("student_id") or "")
+        lid = data.get("lesson_id")
+        attempt_id = data.get("attempt_id")
+        answers = data.get("answers") or []
+
+        if not sid or not lid:
+            return _jsonify({"error": "student_id and lesson_id required"}), 400
+
+        total = len(answers)
+        correct = sum(1 for a in answers if a.get("is_correct"))
+        score = (correct / total * 100) if total else 0
+        passed = score >= 70
+
+        # Get xp_reward
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT xp_reward FROM lessons WHERE id=?", (int(lid),))
+        lrow = cur.fetchone()
+        xp_reward = (lrow["xp_reward"] if lrow else 10) or 10
+        conn.close()
+
+        xp_earned = 0
+        cooldown = None
+
+        if passed:
+            # finish_quiz_attempt awards XP + updates streak
+            try:
+                qe.finish_quiz_attempt(attempt_id, correct, total, passed=True, score=score)
+                xp_earned = xp_reward
+            except Exception as _e:
+                xp_earned = xp_reward
+            # Clear cooldown on success
+            try:
+                qe.clear_cooldown(sid, int(lid))
+            except Exception:
+                pass
+        else:
+            # Register failed attempt -> Smart Cooldown
+            try:
+                cooldown = qe.register_failed_attempt(sid, int(lid))
+            except Exception as _e:
+                pass
+            try:
+                qe.finish_quiz_attempt(attempt_id, correct, total, passed=False, score=score)
+            except Exception:
+                pass
+            # Partial XP
+            xp_earned = int(xp_reward * (score / 100))
+
+        return _jsonify({
+            "correct": correct,
+            "total": total,
+            "score": score,
+            "passed": passed,
+            "xp_earned": xp_earned,
+            "cooldown": cooldown
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+# ============ END PHASE 4B ============
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
