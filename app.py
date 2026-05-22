@@ -1318,6 +1318,15 @@ def lesson_page(lid):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+
+# ─── Mini App lesson page ──────────────────────────────────────────
+@app.route("/miniapp/lesson/<int:lid>")
+def miniapp_lesson_page(lid):
+    from flask import render_template, make_response
+    resp = make_response(render_template("miniapp_lesson.html"))
+    # Inject lesson_id via response (template reads from URL)
+    return resp
+
 #  Mini App APIs — Phase 2 (added by automated script)
 # ═══════════════════════════════════════════════════════════════════════
 import json as _json

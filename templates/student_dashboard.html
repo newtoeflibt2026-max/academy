@@ -759,7 +759,7 @@ body { padding-bottom: 90px; }
         <span>⏱️ <span id="dmTime">15</span> دقيقة</span>
         <span>⚡ +<span id="dmXP">20</span> XP</span>
       </div>
-      <button class="dm-btn">ابدأ الآن ←</button>
+      <button class="dm-btn" onclick="openFirstAvailableLesson()">ابدأ الآن ←</button>
     </div>
   </div>
 
@@ -1343,6 +1343,73 @@ function handlePlacementMode() {
   ]);
   handlePlacementMode();
 })();
+
+// ═══════════════════════════════════════════════════════════
+//  Phase 3 — Open lesson page
+// ═══════════════════════════════════════════════════════════
+async function openFirstAvailableLesson() {
+  if (!studentId) return;
+  try {
+    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId}`);
+    const data = await r.json();
+    if (data.error) { alert(data.error); return; }
+    
+    // Find first available lesson
+    for (const stage of (data.stages || [])) {
+      for (const lesson of (stage.lessons || [])) {
+        if (lesson.status === 'available') {
+          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId}`;
+          return;
+        }
+      }
+    }
+    
+    // All completed
+    alert('🎉 أحسنت! أكملت جميع الدروس المتاحة. سيتم فتح المرحلة التالية قريباً.');
+  } catch (e) {
+    console.error('openFirstAvailableLesson error:', e);
+  }
+}
+
+function openLesson(lessonId) {
+  if (!studentId || !lessonId) return;
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  window.location.href = `/miniapp/lesson/${lessonId}?student_id=${studentId}`;
+}
+
+async function openSkillLessons(skillName) {
+  if (!studentId) return;
+  try {
+    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId}`);
+    const data = await r.json();
+    if (data.error) return;
+    
+    // Find first available lesson of this skill
+    for (const stage of (data.stages || [])) {
+      for (const lesson of (stage.lessons || [])) {
+        if (lesson.skill === skillName && lesson.status === 'available') {
+          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId}`;
+          return;
+        }
+      }
+    }
+    
+    // No available; show first locked or completed
+    for (const stage of (data.stages || [])) {
+      for (const lesson of (stage.lessons || [])) {
+        if (lesson.skill === skillName) {
+          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId}`;
+          return;
+        }
+      }
+    }
+    
+    alert(`لا توجد دروس ${skillName} متاحة حالياً.`);
+  } catch (e) {
+    console.error('openSkillLessons:', e);
+  }
+}
 </script>
 
 </body>
