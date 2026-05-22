@@ -139,7 +139,12 @@
       <div class="passage-body" id="passage-body">جاري التحميل...</div>
     </div>
 
-    <div class="q-card" id="q-card">
+    <div id="streak-bar" style="background:#fff;border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.04)">
+        <div style="font-size:13px;color:#64748b;font-weight:700">🎯 السلسلة المتتالية</div>
+        <div id="streak-dots" style="font-size:22px;letter-spacing:4px"></div>
+        <div id="streak-text" style="font-size:13px;font-weight:800;color:#4f46e5">0/3</div>
+      </div>
+      <div class="q-card" id="q-card">
       <span class="q-type-tag" id="q-type-tag">سؤال</span>
       <div class="q-text" id="q-text">...</div>
       <div class="options" id="options"></div>
@@ -231,6 +236,11 @@
   let timerInterval = null;
   let timeLeft = 30;
   let correctCount = 0;
+  let currentStreak = 0;
+  let bestStreak = 0;
+  let requiredStreak = 3;
+  let targetScore = 69;
+  let answersLog = [];
   let wrongCount = 0;
 
   async function loadQuiz(){
@@ -249,6 +259,9 @@
       }
       quizData = data;
       attemptId = data.attempt_id;
+      requiredStreak = data.required_streak || 3;
+      targetScore = data.target_score || 69;
+      updateStreakBar();
       document.getElementById('q-total').textContent = data.questions.length;
       document.getElementById('loading').style.display='none';
       document.getElementById('quiz-area').style.display='block';
@@ -346,8 +359,18 @@
         if(o.dataset.letter === selectedOption && !data.is_correct) o.classList.add('wrong-ans');
       });
 
-      if(data.is_correct){ correctCount++; fireConfetti(); }
-      else { wrongCount++; }
+      // Track streak + log answer
+      answersLog.push({question_id: q.id, answer: selectedOption, is_correct: !!data.is_correct});
+      if(data.is_correct){
+        correctCount++;
+        currentStreak++;
+        if(currentStreak > bestStreak) bestStreak = currentStreak;
+        fireConfetti();
+      } else {
+        wrongCount++;
+        currentStreak = 0;
+      }
+      updateStreakBar();
 
       showFeedback(data, q);
     }catch(e){ alert('خطأ: '+e.message); }
@@ -361,7 +384,7 @@
     document.getElementById('m-title').textContent = correct?'إجابة صحيحة!':'إجابة خاطئة';
     document.getElementById('m-sub').textContent = correct?'أحسنت، استمر بهذا التميّز':'لا بأس، تعلّم من خطئك';
 
-    setBlock('b-correct','t-correct', !correct && data.correct_answer ? data.correct_answer+' — '+(q.options[data.correct_answer]||'') : null);
+    // removed: never reveal correct answer
     setBlock('b-concept','t-concept', data.concept);
     setBlock('b-explain','t-explain', data.explanation);
     setBlock('b-trap','t-trap', data.common_trap);
@@ -381,6 +404,11 @@
 
   function nextQuestion(){
     document.getElementById('modal').classList.remove('show');
+    if(currentStreak >= requiredStreak){
+      // ✅ Reached required streak — finish immediately
+      finishQuiz();
+      return;
+    }
     currentIdx++;
     if(currentIdx >= quizData.questions.length){ finishQuiz(); }
     else { renderQuestion(); }
@@ -394,7 +422,7 @@
     try{
       const r = await fetch('/api/miniapp/quiz/finish', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({attempt_id: attemptId, student_id: STUDENT_ID, lesson_id: LESSON_ID})
+        body: JSON.stringify({attempt_id: attemptId, student_id: STUDENT_ID, lesson_id: LESSON_ID, answers: answersLog})
       });
       const data = await r.json();
       showResult(data);
@@ -405,7 +433,9 @@
     const screen = document.getElementById('result-screen');
     screen.classList.add('show');
     const pct = Math.round(data.score || 0);
-    const passed = pct >= 70;
+    const passed = !!data.passed;
+    const bs = data.best_streak || bestStreak;
+    const rs = data.required_streak || requiredStreak;
 
     setTimeout(()=>{
       const ring = document.getElementById('fg-ring');
@@ -417,7 +447,7 @@
 
     document.getElementById('r-grade').textContent = passed?'ناجح':'يحتاج مراجعة';
     document.getElementById('r-title').textContent = passed?'🎉 مبروك النجاح!':'💪 حاول مجدداً';
-    document.getElementById('r-msg').textContent = passed?'لقد اجتزت الاختبار بنجاح وحصلت على نقاط الخبرة.':'لم تصل للحد الأدنى (70%). راجع الدرس وحاول مرة أخرى.';
+    document.getElementById('r-msg').textContent = passed ? ('🏆 حققت '+rs+' إجابات متتالية صحيحة! هدفك TOEFL '+targetScore+'.') : ('🎯 المطلوب '+rs+' متتالية. أفضل سلسلة وصلت لها: '+bs+'. راجع الدرس وحاول مجدداً.');
     document.getElementById('s-correct').textContent = correctCount;
     document.getElementById('s-wrong').textContent = wrongCount;
     document.getElementById('s-xp').textContent = data.xp_earned || 0;
@@ -514,6 +544,17 @@
     if(sec<60) return sec+' ثانية';
     if(sec<3600) return Math.ceil(sec/60)+' دقيقة';
     return Math.ceil(sec/3600)+' ساعة';
+  }
+
+
+  function updateStreakBar(){
+    const dots = document.getElementById('streak-dots');
+    const txt = document.getElementById('streak-text');
+    if(!dots||!txt) return;
+    let s = '';
+    for(let i=0;i<requiredStreak;i++){ s += (i<currentStreak ? '🟢' : '⚪'); }
+    dots.textContent = s;
+    txt.textContent = currentStreak + '/' + requiredStreak;
   }
 
   loadQuiz();

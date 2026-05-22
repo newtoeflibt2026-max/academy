@@ -1690,7 +1690,14 @@ def miniapp_quiz_start():
         sid = str(data.get("student_id") or "")
         lid = data.get("lesson_id")
         if not sid or not lid:
-            return _jsonify({"error": "student_id and lesson_id required"}), 400
+                try:
+        import quiz_engine as qe
+        _target_for_start = qe.get_student_target(sid)
+        _req_for_start = qe.get_required_streak(_target_for_start)
+    except Exception:
+        _target_for_start = 69
+        _req_for_start = 3
+    return _jsonify({"error": "student_id and lesson_id required"}), 400
 
         # Cooldown check
         try:
@@ -1745,6 +1752,7 @@ def miniapp_quiz_start():
 
         return _jsonify({
             "attempt_id": attempt_id,
+        "target_score": _target_for_start, "required_streak": _req_for_start,
             "questions": safe_questions,
             "total": len(safe_questions),
         })
@@ -1804,7 +1812,7 @@ def miniapp_quiz_answer():
 
 @app.route("/api/miniapp/quiz/finish", methods=["POST"])
 def miniapp_quiz_finish():
-    """Finish quiz: compute score, save attempt, award XP or trigger cooldown."""
+    """Finish quiz using streak-based passing (get_required_streak)."""
     try:
         import quiz_engine as qe
         data = _request.get_json(force=True) or {}
@@ -1818,10 +1826,32 @@ def miniapp_quiz_finish():
 
         total = len(answers)
         correct = sum(1 for a in answers if a.get("is_correct"))
-        score = (correct / total * 100) if total else 0
-        passed = score >= 70
 
-        # Get xp_reward
+        # Compute MAX consecutive correct streak from answers list (in order)
+        best_streak = 0
+        cur_streak = 0
+        for a in answers:
+            if a.get("is_correct"):
+                cur_streak += 1
+                if cur_streak > best_streak:
+                    best_streak = cur_streak
+            else:
+                cur_streak = 0
+
+        # Get student target -> required streak
+        try:
+            target = qe.get_student_target(sid)
+        except Exception:
+            target = 69
+        try:
+            required = qe.get_required_streak(target)
+        except Exception:
+            required = 3
+
+        passed = best_streak >= required
+        score = (correct / total * 100) if total else 0
+
+        # xp_reward from lessons
         conn = _miniapp_db()
         cur = conn.cursor()
         cur.execute("SELECT xp_reward FROM lessons WHERE id=?", (int(lid),))
@@ -1830,47 +1860,45 @@ def miniapp_quiz_finish():
         conn.close()
 
         xp_earned = 0
-        cooldown = None
+        cooldown_seconds = 0
+        cooldown_message = ""
 
         if passed:
-            # finish_quiz_attempt awards XP + updates streak
             try:
-                qe.finish_quiz_attempt(attempt_id, correct, total, passed=True, score=score)
+                qe.finish_quiz_attempt(attempt_id, correct, total, answers)
                 xp_earned = xp_reward
-            except Exception as _e:
+            except Exception:
                 xp_earned = xp_reward
-            # Clear cooldown on success
             try:
                 qe.clear_cooldown(sid, int(lid))
             except Exception:
                 pass
         else:
-            # Register failed attempt -> Smart Cooldown
             try:
-                cooldown = qe.register_failed_attempt(sid, int(lid))
-            except Exception as _e:
-                pass
-            try:
-                qe.finish_quiz_attempt(attempt_id, correct, total, passed=False, score=score)
+                qe.finish_quiz_attempt(attempt_id, correct, total, answers)
             except Exception:
                 pass
-            # Partial XP
-            xp_earned = int(xp_reward * (score / 100))
+            try:
+                fail_info = qe.register_failed_attempt(sid, int(lid))
+                cooldown_seconds = int(fail_info.get("wait_seconds", 0) or 0)
+                cooldown_message = fail_info.get("motivation", "") or ""
+            except Exception:
+                cooldown_seconds = 300
 
         return _jsonify({
-            "correct": correct,
-            "total": total,
-            "score": score,
             "passed": passed,
+            "score": round(score, 1),
+            "correct": correct,
+            "wrong": total - correct,
+            "total": total,
+            "best_streak": best_streak,
+            "required_streak": required,
+            "target_score": target,
             "xp_earned": xp_earned,
-            "cooldown": cooldown
+            "cooldown_seconds": cooldown_seconds,
+            "cooldown_message": cooldown_message,
         })
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
-# ============ END PHASE 4B ============
 
 
-if __name__ == "__main__":
-    import os as _os
-    _port = int(_os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=_port, debug=False)
