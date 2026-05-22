@@ -1320,6 +1320,12 @@ def lesson_page(lid):
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 # â”€â”€â”€ Mini App lesson page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+@app.route("/miniapp/plans")
+def miniapp_plans_page():
+    """Render pricing page (reads plans dynamically from /api/miniapp/plans)."""
+    sid = _request.args.get("student_id", "")
+    return render_template("pricing.html", student_id=sid)
+
 @app.route("/miniapp/lesson/<int:lid>")
 def miniapp_lesson_page(lid):
     from flask import render_template
