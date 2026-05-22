@@ -1316,6 +1316,355 @@ def lesson_page(lid):
     return render_template("lesson_view.html", lesson_id=lid)
 
 
+
+# ═══════════════════════════════════════════════════════════════════════
+#  Mini App APIs — Phase 2 (added by automated script)
+# ═══════════════════════════════════════════════════════════════════════
+import json as _json
+import sqlite3 as _sqlite3
+from datetime import datetime as _datetime, timedelta as _timedelta
+from flask import jsonify as _jsonify, request as _request
+
+def _miniapp_db():
+    """Get DB connection using same path resolver as the bot."""
+    import os as _os
+    _path = "/app/data/academy.db" if _os.path.exists("/app/data") else _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "academy.db")
+    _conn = _sqlite3.connect(_path)
+    _conn.row_factory = _sqlite3.Row
+    return _conn
+
+
+@app.route("/api/miniapp/lessons")
+def miniapp_lessons_list():
+    """List lessons for student with status (locked/available/completed)."""
+    try:
+        sid = _request.args.get("student_id", type=int)
+        if not sid:
+            return _jsonify({"error": "student_id required"}), 400
+        
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        
+        # Get student
+        cur.execute("SELECT user_id, current_phase, xp, track FROM students WHERE user_id=?", (sid,))
+        student = cur.fetchone()
+        if not student:
+            conn.close()
+            return _jsonify({"error": "student not found"}), 404
+        
+        current_phase = student["current_phase"] or 1
+        
+        # Get last attempt for cooldown
+        cur.execute("""
+            SELECT lesson_id, finished_at, passed 
+            FROM lesson_attempts 
+            WHERE telegram_id=? AND passed=1 
+            ORDER BY finished_at DESC LIMIT 1
+        """, (str(sid),))
+        last_attempt = cur.fetchone()
+        
+        cooldown_lesson_id = None
+        cooldown_until = None
+        if last_attempt and last_attempt["finished_at"]:
+            try:
+                finished = _datetime.fromisoformat(last_attempt["finished_at"].replace(" ", "T"))
+                unlock_at = finished + _timedelta(hours=24)
+                if unlock_at > _datetime.utcnow():
+                    cooldown_lesson_id = last_attempt["lesson_id"]
+                    cooldown_until = unlock_at.isoformat()
+            except Exception:
+                pass
+        
+        # Get all completed lesson IDs for this student
+        cur.execute("""
+            SELECT DISTINCT lesson_id FROM lesson_attempts 
+            WHERE telegram_id=? AND passed=1
+        """, (str(sid),))
+        completed_ids = {row["lesson_id"] for row in cur.fetchall()}
+        
+        # Get lessons grouped by stage
+        cur.execute("""
+            SELECT l.id, l.title, l.title_ar, l.skill, l.stage_id, l.order_index, 
+                   l.xp_reward, l.section_name, l.content,
+                   s.code as stage_code, s.name_ar as stage_name,
+                   (SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=l.id) as q_count
+            FROM lessons l
+            LEFT JOIN stages s ON s.id = l.stage_id
+            WHERE l.is_active=1 AND l.stage_id <= ?
+            ORDER BY l.stage_id, l.order_index
+        """, (current_phase + 1,))  # show current + next stage
+        
+        lessons_by_stage = {}
+        for row in cur.fetchall():
+            lid = row["id"]
+            stage_id = row["stage_id"]
+            
+            # Determine status
+            if lid in completed_ids:
+                status = "completed"
+            elif cooldown_lesson_id and lid > cooldown_lesson_id and stage_id == current_phase:
+                status = "locked_cooldown"
+            elif stage_id > current_phase:
+                status = "locked_stage"
+            else:
+                status = "available"
+            
+            if stage_id not in lessons_by_stage:
+                lessons_by_stage[stage_id] = {
+                    "stage_id": stage_id,
+                    "stage_code": row["stage_code"],
+                    "stage_name": row["stage_name"],
+                    "lessons": []
+                }
+            
+            title = row["title"] or row["title_ar"] or f"Lesson {lid}"
+            lessons_by_stage[stage_id]["lessons"].append({
+                "id": lid,
+                "title": title,
+                "skill": row["skill"] or "general",
+                "section": row["section_name"] or "general",
+                "xp_reward": row["xp_reward"] or 10,
+                "questions_count": row["q_count"],
+                "status": status,
+                "order": row["order_index"]
+            })
+        
+        conn.close()
+        return _jsonify({
+            "student_id": sid,
+            "current_phase": current_phase,
+            "cooldown_until": cooldown_until,
+            "stages": list(lessons_by_stage.values())
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/miniapp/lesson/<int:lid>")
+def miniapp_lesson_detail(lid):
+    """Get lesson content + questions (without correct answers)."""
+    try:
+        sid = _request.args.get("student_id", type=int)
+        
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        
+        # Get lesson
+        cur.execute("""
+            SELECT id, title, title_ar, content, skill, stage_id, xp_reward, 
+                   vocabulary, grammar_rule, focus_point, section_name
+            FROM lessons WHERE id=? AND is_active=1
+        """, (lid,))
+        lesson = cur.fetchone()
+        if not lesson:
+            conn.close()
+            return _jsonify({"error": "lesson not found"}), 404
+        
+        # Get questions (without correct_answer, without explanation, without tip)
+        cur.execute("""
+            SELECT id, q_id, q_type, question, options_json, timer_seconds, order_num
+            FROM lesson_questions 
+            WHERE lesson_id=? 
+            ORDER BY order_num, id
+        """, (lid,))
+        questions = []
+        for row in cur.fetchall():
+            opts = {}
+            try:
+                opts = _json.loads(row["options_json"] or "{}")
+            except Exception:
+                pass
+            questions.append({
+                "id": row["id"],
+                "q_id": row["q_id"],
+                "type": row["q_type"],
+                "question": row["question"],
+                "options": opts,
+                "timer": row["timer_seconds"] or 30,
+                "order": row["order_num"]
+            })
+        
+        # Has the student completed this lesson?
+        completed = False
+        last_score = None
+        if sid:
+            cur.execute("""
+                SELECT score_percent FROM lesson_attempts 
+                WHERE telegram_id=? AND lesson_id=? AND passed=1 
+                ORDER BY finished_at DESC LIMIT 1
+            """, (str(sid), lid))
+            r = cur.fetchone()
+            if r:
+                completed = True
+                last_score = r["score_percent"]
+        
+        conn.close()
+        title = lesson["title"] or lesson["title_ar"] or f"Lesson {lid}"
+        return _jsonify({
+            "id": lesson["id"],
+            "title": title,
+            "content": lesson["content"] or "",
+            "skill": lesson["skill"] or "general",
+            "stage_id": lesson["stage_id"],
+            "xp_reward": lesson["xp_reward"] or 10,
+            "vocabulary": lesson["vocabulary"],
+            "grammar_rule": lesson["grammar_rule"],
+            "focus_point": lesson["focus_point"],
+            "section": lesson["section_name"],
+            "questions": questions,
+            "completed": completed,
+            "last_score": last_score
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/miniapp/quiz/check", methods=["POST"])
+def miniapp_quiz_check():
+    """Check single answer; return correctness + concept + explanation if wrong."""
+    try:
+        data = _request.get_json(force=True) or {}
+        question_id = data.get("question_id")
+        user_answer = (data.get("answer") or "").strip().upper()
+        if not question_id:
+            return _jsonify({"error": "question_id required"}), 400
+        
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT correct_answer, concept, explanation, tip 
+            FROM lesson_questions WHERE id=?
+        """, (question_id,))
+        q = cur.fetchone()
+        conn.close()
+        if not q:
+            return _jsonify({"error": "question not found"}), 404
+        
+        correct = (q["correct_answer"] or "").strip().upper()
+        is_correct = (user_answer == correct)
+        
+        resp = {
+            "is_correct": is_correct,
+            "correct_answer": correct,
+        }
+        # Show concept + explanation only on wrong answers
+        if not is_correct:
+            resp["concept"] = q["concept"] or ""
+            resp["explanation"] = q["explanation"] or ""
+            resp["tip"] = q["tip"] or ""
+        return _jsonify(resp)
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/miniapp/quiz/submit", methods=["POST"])
+def miniapp_quiz_submit():
+    """Submit full quiz; save attempt; award XP; return result."""
+    try:
+        data = _request.get_json(force=True) or {}
+        sid = data.get("student_id")
+        lid = data.get("lesson_id")
+        answers = data.get("answers") or []  # [{"q_id":..., "user":..., "correct":..., "is_correct":bool}, ...]
+        
+        if not sid or not lid:
+            return _jsonify({"error": "student_id and lesson_id required"}), 400
+        
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        
+        # Compute score
+        total = len(answers)
+        correct = sum(1 for a in answers if a.get("is_correct"))
+        score = (correct / total * 100) if total else 0
+        passed = 1 if score >= 70 else 0
+        
+        now = _datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Get lesson xp reward
+        cur.execute("SELECT xp_reward FROM lessons WHERE id=?", (lid,))
+        lrow = cur.fetchone()
+        xp_reward = (lrow["xp_reward"] if lrow else 10) or 10
+        xp_earned = xp_reward if passed else int(xp_reward * (score / 100))
+        
+        # Save attempt
+        cur.execute("""
+            INSERT INTO lesson_attempts 
+              (telegram_id, lesson_id, started_at, finished_at, correct_count, total_questions, passed, score_percent, answers_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (str(sid), lid, now, now, correct, total, passed, score, _json.dumps(answers, ensure_ascii=False)))
+        
+        # Update student XP only if passed
+        if passed:
+            cur.execute("UPDATE students SET xp = COALESCE(xp,0) + ? WHERE user_id=?", (xp_earned, sid))
+            # Log XP
+            try:
+                cur.execute("""
+                    INSERT INTO xp_log (user_id, amount, reason, created_at)
+                    VALUES (?, ?, ?, ?)
+                """, (sid, xp_earned, f"lesson_{lid}_quiz", now))
+            except Exception:
+                pass  # xp_log may have different schema
+        
+        # Get updated XP
+        cur.execute("SELECT xp FROM students WHERE user_id=?", (sid,))
+        new_xp = cur.fetchone()
+        new_xp_val = new_xp["xp"] if new_xp else 0
+        
+        conn.commit()
+        conn.close()
+        
+        return _jsonify({
+            "passed": bool(passed),
+            "score": round(score, 1),
+            "correct": correct,
+            "total": total,
+            "xp_earned": xp_earned if passed else 0,
+            "total_xp": new_xp_val,
+            "cooldown_hours": 24 if passed else 0
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/miniapp/plans")
+def miniapp_plans():
+    """Get active subscription plans."""
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, name, name_ar, price, currency, duration_days, 
+                   description, features, is_featured
+            FROM subscription_plans 
+            WHERE is_active=1 
+            ORDER BY is_featured DESC, price ASC
+        """)
+        plans = []
+        for row in cur.fetchall():
+            features = []
+            try:
+                features = _json.loads(row["features"] or "[]")
+            except Exception:
+                features = [row["features"]] if row["features"] else []
+            plans.append({
+                "id": row["id"],
+                "name": row["name_ar"] or row["name"],
+                "price": row["price"],
+                "currency": row["currency"],
+                "duration_days": row["duration_days"],
+                "description": row["description"],
+                "features": features,
+                "is_featured": bool(row["is_featured"])
+            })
+        conn.close()
+        return _jsonify({"plans": plans})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+# ═══════════════════════════════════════════════════════════════════════
+#  End of Mini App APIs
+# ═══════════════════════════════════════════════════════════════════════
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
