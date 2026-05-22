@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
 import os, json
 from datetime import datetime
@@ -18,7 +18,7 @@ def index():
 @app.route("/student")
 def student():
     from flask import render_template
-    return render_template("student_portal.html")
+    return render_template("student_dashboard.html")
 
 @app.route("/api/admin/stats")
 def api_stats():
