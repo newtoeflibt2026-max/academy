@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
 import os, json
 from datetime import datetime
@@ -9,7 +9,7 @@ from db import (get_db, get_all_students_db, get_student,
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 
-# ─── Pages ───────────────────────────────────────────────
+# â”€â”€â”€ Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/")
 def index():
     from flask import render_template
@@ -18,7 +18,7 @@ def index():
 @app.route("/student")
 def student():
     from flask import render_template
-    return render_template("student_dashboard.html")
+    return render_template("student_portal.html")
 
 @app.route("/api/admin/stats")
 def api_stats():
@@ -35,7 +35,7 @@ def api_stats():
     finally:
         conn.close()
 
-# ─── Students ────────────────────────────────────────────
+# â”€â”€â”€ Students â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/students")
 def api_students():
     q = request.args.get("q","").strip()
@@ -84,7 +84,7 @@ def api_toggle_active(uid):
     finally:
         conn.close()
 
-# ─── Questions ───────────────────────────────────────────
+# â”€â”€â”€ Questions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/questions", methods=["GET"])
 def api_get_questions():
     skill = request.args.get("skill","")
@@ -125,7 +125,7 @@ def api_delete_question(qid):
     finally:
         conn.close()
 
-# ─── Lessons ─────────────────────────────────────────────
+# â”€â”€â”€ Lessons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/lessons", methods=["GET"])
 def api_get_lessons():
     conn = get_db()
@@ -179,7 +179,7 @@ def api_delete_lesson(lid):
     finally:
         conn.close()
 
-# ─── Missions ────────────────────────────────────────────
+# â”€â”€â”€ Missions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/missions", methods=["GET"])
 def api_get_missions():
     conn = get_db()
@@ -213,7 +213,7 @@ def api_delete_mission(mid):
     finally:
         conn.close()
 
-# ─── Plans ───────────────────────────────────────────────
+# â”€â”€â”€ Plans â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/plans", methods=["GET"])
 def api_get_plans():
     conn = get_db()
@@ -280,7 +280,7 @@ def api_toggle_plan(pid):
     finally:
         conn.close()
 
-# ─── Payments ────────────────────────────────────────────
+# â”€â”€â”€ Payments â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/payments", methods=["GET"])
 def api_get_payments():
     conn = get_db()
@@ -305,7 +305,7 @@ def api_verify_payment(pid):
     finally:
         conn.close()
 
-# ─── Settings ────────────────────────────────────────────
+# â”€â”€â”€ Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/settings", methods=["GET"])
 def api_get_settings():
     conn = get_db()
@@ -322,7 +322,7 @@ def api_update_settings():
         set_setting(key, str(value))
     return jsonify({"ok": True})
 
-# ─── Phase settings ──────────────────────────────────────
+# â”€â”€â”€ Phase settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/phases", methods=["GET"])
 def api_get_phases():
     conn = get_db()
@@ -348,7 +348,7 @@ def api_update_phase(phase_num):
     finally:
         conn.close()
 
-# ─── Broadcast ───────────────────────────────────────────
+# â”€â”€â”€ Broadcast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/broadcast", methods=["POST"])
 def api_broadcast():
     d = request.json or {}
@@ -372,7 +372,7 @@ def api_broadcast_history():
     finally:
         conn.close()
 
-# ─── Student messages ────────────────────────────────────
+# â”€â”€â”€ Student messages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/messages", methods=["GET"])
 def api_get_messages():
     conn = get_db()
@@ -406,7 +406,7 @@ def api_student_message():
     finally:
         conn.close()
 
-# ─── Public endpoints ────────────────────────────────────
+# â”€â”€â”€ Public endpoints â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/public/plans", methods=["GET"])
 def api_public_plans():
     conn = get_db()
@@ -443,7 +443,7 @@ def api_grad_status():
         conn.close()
 
 
-# ── Phase Settings ────────────────────────────────────────────
+# â”€â”€ Phase Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/phase-settings", methods=["GET"])
 def api_phase_settings_get():
     conn = get_db()
@@ -468,7 +468,7 @@ def api_phase_settings_put(pid):
     finally:
         conn.close()
 
-# ── Grading Rules ─────────────────────────────────────────────
+# â”€â”€ Grading Rules â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/grading-rules", methods=["GET"])
 def api_grading_rules_get():
     conn = get_db()
@@ -501,7 +501,7 @@ def api_grading_rules_delete(rid):
         conn.close()
 
 
-# ── Quiz Result from Student Portal ──────────────────────
+# â”€â”€ Quiz Result from Student Portal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/student/quiz-result", methods=["POST"])
 def api_quiz_result():
     d = request.json or {}
@@ -522,7 +522,7 @@ def api_quiz_result():
     return jsonify({"ok": True})
 
 
-# ── Add Student Manually ──────────────────────────────────
+# â”€â”€ Add Student Manually â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/students/add", methods=["POST"])
 def api_add_student():
     d = request.json or {}
@@ -531,7 +531,7 @@ def api_add_student():
     user = d.get("username", "").strip()
     paid = int(d.get("is_paid", 0))
     if not tid:
-        return jsonify({"error": "telegram_id مطلوب"}), 400
+        return jsonify({"error": "telegram_id Ù…Ø·Ù„ÙˆØ¨"}), 400
     conn = get_db()
     try:
         conn.execute("""INSERT OR IGNORE INTO students
@@ -546,9 +546,9 @@ def api_add_student():
     finally:
         conn.close()
 
-# ── Phase Settings ────────────────────────────────────────
+# â”€â”€ Phase Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-# ─── Entry point ──────────────────────────────────────────────────────────────
+# â”€â”€â”€ Entry point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @app.route("/api/student/profile", methods=["GET"])
 def api_student_profile():
@@ -557,7 +557,7 @@ def api_student_profile():
         return jsonify({"error": "user_id required"}), 400
     conn = get_db()
     try:
-        # ابحث بكلا العمودين
+        # Ø§Ø¨Ø­Ø« Ø¨ÙƒÙ„Ø§ Ø§Ù„Ø¹Ù…ÙˆØ¯ÙŠÙ†
         s = conn.execute(
             "SELECT * FROM students WHERE user_id=? OR telegram_id=?",
             (uid, uid)
@@ -584,9 +584,9 @@ def api_student_profile():
         conn.close()
 
 
-# ═══════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # Payment Approval / Rejection endpoints
-# ═══════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 @app.route("/api/admin/payments/<int:pid>/approve", methods=["POST"])
 def api_approve_payment(pid):
@@ -600,7 +600,7 @@ def api_approve_payment(pid):
         uid = pay.get("user_id") or pay.get("telegram_id")
         plan_id = pay.get("plan_id", 1)
 
-        # تفعيل الطالب
+        # ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø·Ø§Ù„Ø¨
         conn.execute("""
             UPDATE students SET is_paid=1, is_active=1,
             subscription_type='paid',
@@ -608,7 +608,7 @@ def api_approve_payment(pid):
             WHERE user_id=? OR telegram_id=?
         """, (datetime.now().isoformat(), uid, str(uid)))
 
-        # تحديث حالة الدفع
+        # ØªØ­Ø¯ÙŠØ« Ø­Ø§Ù„Ø© Ø§Ù„Ø¯ÙØ¹
         conn.execute("""
             UPDATE payments SET status='approved', verified_at=?
             WHERE id=?
@@ -616,7 +616,7 @@ def api_approve_payment(pid):
 
         conn.commit()
 
-        # إشعار الطالب عبر البوت
+        # Ø¥Ø´Ø¹Ø§Ø± Ø§Ù„Ø·Ø§Ù„Ø¨ Ø¹Ø¨Ø± Ø§Ù„Ø¨ÙˆØª
         try:
             import asyncio, os
             from aiogram import Bot
@@ -628,14 +628,14 @@ def api_approve_payment(pid):
                     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
                     await bot.send_message(
                         chat_id=int(uid),
-                        text="✅ <b>تم تفعيل اشتراكك!</b>\n\nمرحباً بك في أكاديمية يامن للتوفل 🎓\nابدأ رحلتك التعليمية الآن!"
+                        text="âœ… <b>ØªÙ… ØªÙØ¹ÙŠÙ„ Ø§Ø´ØªØ±Ø§ÙƒÙƒ!</b>\n\nÙ…Ø±Ø­Ø¨Ø§Ù‹ Ø¨Ùƒ ÙÙŠ Ø£ÙƒØ§Ø¯ÙŠÙ…ÙŠØ© ÙŠØ§Ù…Ù† Ù„Ù„ØªÙˆÙÙ„ ðŸŽ“\nØ§Ø¨Ø¯Ø£ Ø±Ø­Ù„ØªÙƒ Ø§Ù„ØªØ¹Ù„ÙŠÙ…ÙŠØ© Ø§Ù„Ø¢Ù†!"
                     )
                     await bot.session.close()
                 asyncio.run(notify())
         except Exception as e:
             print(f"Bot notify error: {e}")
 
-        return jsonify({"ok": True, "message": "تم تفعيل الطالب"})
+        return jsonify({"ok": True, "message": "ØªÙ… ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø·Ø§Ù„Ø¨"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -655,7 +655,7 @@ def api_reject_payment(pid):
         conn.execute("UPDATE payments SET status='rejected' WHERE id=?", (pid,))
         conn.commit()
 
-        # إشعار الطالب
+        # Ø¥Ø´Ø¹Ø§Ø± Ø§Ù„Ø·Ø§Ù„Ø¨
         try:
             import asyncio, os
             from aiogram import Bot
@@ -667,14 +667,14 @@ def api_reject_payment(pid):
                     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
                     await bot.send_message(
                         chat_id=int(uid),
-                        text="❌ <b>تم رفض طلب الاشتراك</b>\n\nيرجى التواصل مع الأدمن للمزيد من المعلومات."
+                        text="âŒ <b>ØªÙ… Ø±ÙØ¶ Ø·Ù„Ø¨ Ø§Ù„Ø§Ø´ØªØ±Ø§Ùƒ</b>\n\nÙŠØ±Ø¬Ù‰ Ø§Ù„ØªÙˆØ§ØµÙ„ Ù…Ø¹ Ø§Ù„Ø£Ø¯Ù…Ù† Ù„Ù„Ù…Ø²ÙŠØ¯ Ù…Ù† Ø§Ù„Ù…Ø¹Ù„ÙˆÙ…Ø§Øª."
                     )
                     await bot.session.close()
                 asyncio.run(notify())
         except Exception as e:
             print(f"Bot notify error: {e}")
 
-        return jsonify({"ok": True, "message": "تم رفض الطلب"})
+        return jsonify({"ok": True, "message": "ØªÙ… Ø±ÙØ¶ Ø§Ù„Ø·Ù„Ø¨"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -700,7 +700,7 @@ def api_send_message_to_student(uid):
     d = request.json or {}
     text = d.get("text", "").strip()
     if not text:
-        return jsonify({"error": "النص مطلوب"}), 400
+        return jsonify({"error": "Ø§Ù„Ù†Øµ Ù…Ø·Ù„ÙˆØ¨"}), 400
     try:
         import asyncio, os
         from aiogram import Bot
@@ -708,7 +708,7 @@ def api_send_message_to_student(uid):
         from aiogram.enums import ParseMode
         token = os.environ.get("BOT_TOKEN", "")
         if not token:
-            return jsonify({"error": "BOT_TOKEN غير مضبوط"}), 500
+            return jsonify({"error": "BOT_TOKEN ØºÙŠØ± Ù…Ø¶Ø¨ÙˆØ·"}), 500
         async def send():
             bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
             await bot.send_message(chat_id=uid, text=text)
@@ -720,9 +720,9 @@ def api_send_message_to_student(uid):
 
 
 
-# ════════════════════════════════════════════════════════════
-# 📚 LESSON CONTENT MANAGEMENT — Phase 2A
-# ════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ðŸ“š LESSON CONTENT MANAGEMENT â€” Phase 2A
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 ALLOWED_ITEM_TABLES = {
     "words":     "lesson_letter_fill",
@@ -1131,7 +1131,7 @@ def api_update_lesson_item(table, item_id):
         return jsonify({"error": str(e)}), 500
 
 
-# ─── Student Lessons API ─────────────────────────────────
+# â”€â”€â”€ Student Lessons API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/lessons", methods=["GET"])
 def api_student_lessons():
     """Returns active lessons for students."""
@@ -1238,7 +1238,7 @@ def api_student_complete_lesson(lid):
 
 
 
-# ─── Student Profile by ID (for student_dashboard) ───────
+# â”€â”€â”€ Student Profile by ID (for student_dashboard) â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/student/<int:uid>", methods=["GET"])
 def api_student_by_id(uid):
     """Returns full student profile by telegram_id for student dashboard."""
@@ -1256,7 +1256,7 @@ def api_student_by_id(uid):
         d.setdefault("streak", d.get("streak_days", 0) or 0)
         d.setdefault("missions_completed", d.get("missions_completed", 0) or 0)
         d.setdefault("placement_score", d.get("placement_score", 0) or 0)
-        d.setdefault("full_name", d.get("name") or d.get("username") or "طالب")
+        d.setdefault("full_name", d.get("name") or d.get("username") or "Ø·Ø§Ù„Ø¨")
         return jsonify(d)
     finally:
         conn.close()
@@ -1309,7 +1309,7 @@ def api_graduation_status():
 
 
 
-# ─── Lesson detail page ──────────────────────────────────
+# â”€â”€â”€ Lesson detail page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/lesson/<int:lid>")
 def lesson_page(lid):
     """Serves the full lesson page for students."""
