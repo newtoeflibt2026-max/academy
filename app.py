@@ -1701,18 +1701,39 @@ def miniapp_quiz_start():
             pass
 
         # Get questions (without correct answers)
-        questions = qe.get_lesson_quiz(int(lid), shuffle=True)
+        # Fetch questions directly from DB (bypass quiz_engine for accurate options_json reading)
+        conn_q = _miniapp_db()
+        cur_q = conn_q.cursor()
+        cur_q.execute("""
+            SELECT id, q_id, q_type, question, options_json, passage_ref,
+                   timer_seconds, order_num
+            FROM lesson_questions
+            WHERE lesson_id=?
+            ORDER BY order_num, id
+        """, (int(lid),))
+        rows = cur_q.fetchall()
+        conn_q.close()
+
+        # Shuffle order
+        import random as _rnd
+        rows_list = list(rows)
+        _rnd.shuffle(rows_list)
+
         safe_questions = []
-        for q in questions:
+        for row in rows_list:
+            try:
+                opts = _json.loads(row["options_json"] or "{}")
+            except Exception:
+                opts = {}
             safe_questions.append({
-                "id": q.get("id"),
-                "question": q.get("question"),
-                "option_a": q.get("option_a"),
-                "option_b": q.get("option_b"),
-                "option_c": q.get("option_c"),
-                "option_d": q.get("option_d"),
-                "q_type": q.get("q_type"),
-                "timer_seconds": q.get("timer_seconds"),
+                "id": row["id"],
+                "q_id": row["q_id"],
+                "q_type": row["q_type"] or "mcq",
+                "question": row["question"] or "",
+                "options": opts,
+                "passage_ref": row["passage_ref"] or "",
+                "timer_seconds": row["timer_seconds"] or 30,
+                "order_num": row["order_num"] or 0,
             })
 
         # Start attempt
@@ -1746,14 +1767,18 @@ def miniapp_quiz_answer():
         # Use quiz_engine.check_answer
         is_correct, correct_ans, explanation = qe.check_answer(int(qid), user_answer)
 
-        # Get concept/tip from DB
+        # Get concept, tip, evidence, common_trap from DB
         conn = _miniapp_db()
         cur = conn.cursor()
-        cur.execute("SELECT concept, tip FROM lesson_questions WHERE id=?", (int(qid),))
+        cur.execute("SELECT concept, tip, evidence, common_trap, q_type, passage_ref FROM lesson_questions WHERE id=?", (int(qid),))
         row = cur.fetchone()
         conn.close()
         concept = row["concept"] if row else ""
         tip = row["tip"] if row else ""
+        evidence = row["evidence"] if row else ""
+        common_trap = row["common_trap"] if row else ""
+        q_type_meta = row["q_type"] if row else ""
+        passage_ref_meta = row["passage_ref"] if row else ""
 
         # Record mistake if wrong
         if not is_correct and sid:
@@ -1767,7 +1792,11 @@ def miniapp_quiz_answer():
             "correct_answer": correct_ans or "",
             "explanation": explanation or "",
             "concept": concept or "",
-            "tip": tip or ""
+            "tip": tip or "",
+            "evidence": evidence or "",
+            "common_trap": common_trap or "",
+            "q_type": q_type_meta or "",
+            "passage_ref": passage_ref_meta or ""
         })
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
