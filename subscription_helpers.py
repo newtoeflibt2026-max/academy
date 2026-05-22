@@ -16,7 +16,11 @@ from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
-DB_PATH = r"C:\Users\nelt2\yamen_academy\academy.db"
+# Dynamic DB path (Railway volume / local fallback)
+import os as _os_dbpath
+_RAILWAY_DB = "/app/data/academy.db"
+_LOCAL_DB = _os_dbpath.path.join(_os_dbpath.path.dirname(_os_dbpath.path.abspath(__file__)), "academy.db")
+DB_PATH = _RAILWAY_DB if _os_dbpath.path.exists("/app/data") else _LOCAL_DB
 DAILY_LOCK_HOURS = 24
 ISO_FMT = "%Y-%m-%d %H:%M:%S"
 

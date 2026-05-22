@@ -35,7 +35,13 @@ from quiz_engine import (
 logger = logging.getLogger(__name__)
 router = Router(name="lessons")
 
-DB_PATH = r"C:\Users\nelt2\yamen_academy\academy.db"
+# DB_PATH: works on Windows (local) and Linux (Railway)
+# On Railway: /app/data/academy.db (from Volume)
+# Locally: ./academy.db (next to the project)
+import os as _os
+_VOLUME_DB = "/app/data/academy.db"
+_LOCAL_DB = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "academy.db")
+DB_PATH = _VOLUME_DB if _os.path.exists(_VOLUME_DB) else _LOCAL_DB
 LESSONS_PER_STAGE = 5
 XP_PER_LESSON = 20
 

@@ -927,10 +927,31 @@ if (tg) {
 // Get student_id from URL or Telegram
 // ═══════════════════════════════════════════════════════════
 const urlParams = new URLSearchParams(window.location.search);
-let studentId = urlParams.get('student_id') ||
-                tg?.initDataUnsafe?.user?.id ||
+// Priority: 1) Telegram WebApp (most secure, automatic),
+//           2) URL ?student_id=, 3) localStorage
+let studentId = tg?.initDataUnsafe?.user?.id ||
+                urlParams.get('student_id') ||
                 localStorage.getItem('yamen_student_id');
 const mode = urlParams.get('mode'); // 'placement' or null
+
+// If still no student_id, show friendly screen instead of asking number
+if (!studentId) {
+  document.body.innerHTML = `
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Cairo,sans-serif;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;text-align:center">
+      <div style="max-width:340px">
+        <div style="font-size:80px;margin-bottom:16px">🤖</div>
+        <h1 style="font-size:24px;font-weight:800;margin-bottom:12px">افتح من بوت Telegram</h1>
+        <p style="font-size:15px;opacity:.9;line-height:1.6;margin-bottom:24px">
+          هذه البوابة تعمل فقط من داخل بوت أكاديمية يامن.<br>
+          افتح البوت واضغط على زر "بوابة الطالب".
+        </p>
+        <a href="https://t.me/YamenAcademy_Bot" style="display:inline-block;background:white;color:#6366f1;padding:12px 28px;border-radius:999px;font-weight:800;text-decoration:none;font-size:14px">
+          📱 فتح البوت
+        </a>
+      </div>
+    </div>`;
+  throw new Error('No student_id - showing redirect screen');
+}
 
 if (studentId) {
   localStorage.setItem('yamen_student_id', studentId);

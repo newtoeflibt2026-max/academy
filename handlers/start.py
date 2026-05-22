@@ -274,3 +274,66 @@ async def cmd_menu(message: types.Message):
 @router.callback_query(F.data == "locked_feature")
 async def cb_locked(callback: types.CallbackQuery):
     await callback.answer("🔒 هذه الميزة متاحة للمشتركين فقط. اشترك من 💳 الباقات", show_alert=True)
+
+# ═══════════════════════════════════════════════════════════
+# Universal Menu Handlers - all open WebApp (Wave 7)
+# ═══════════════════════════════════════════════════════════
+_MENU_BUTTONS_TO_WEBAPP = {
+    "menu_lessons": "📚 دروسي",
+    "menu_progress": "📊 تقدمي",
+    "menu_leaderboard": "🏆 المتصدرون",
+    "menu_writing": "✍️ تدريب الكتابة",
+    "menu_listening": "🎧 تدريب الاستماع",
+    "menu_missions": "🎯 مهامي اليومية",
+    "menu_mock": "📝 Mock Exam",
+    "menu_graduation": "🎓 التخرج",
+    "menu_subscriptions": "💳 الباقات",
+    "menu_settings": "⚙️ إعداداتي",
+}
+
+@router.callback_query(F.data.in_(list(_MENU_BUTTONS_TO_WEBAPP.keys())))
+async def cb_menu_to_webapp(callback: types.CallbackQuery):
+    """All menu buttons -> open WebApp."""
+    btn_label = _MENU_BUTTONS_TO_WEBAPP.get(callback.data, "البوابة")
+    user_id = callback.from_user.id
+    webapp_url = f"{settings.WEBHOOK_HOST}/student?student_id={user_id}"
+
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=f"🌐 افتح {btn_label}", web_app=WebAppInfo(url=webapp_url))],
+        [InlineKeyboardButton(text="↩️ رجوع للقائمة", callback_data="back:menu")],
+    ])
+
+    await callback.answer()
+    try:
+        await callback.message.edit_text(
+            f"<b>{btn_label}</b>\n\n"
+            "اضغط الزر أدناه لفتح البوابة داخل Telegram 👇\n\n"
+            "✨ تجربة سلسة وسريعة بدون مغادرة المحادثة.",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        logging.warning(f"cb_menu_to_webapp edit failed: {e}")
+        await callback.message.answer(
+            f"<b>{btn_label}</b>\n\nاضغط الزر أدناه لفتح البوابة 👇",
+            reply_markup=kb,
+            parse_mode="HTML"
+        )
+
+
+@router.callback_query(F.data == "back:menu")
+async def cb_back_to_main_menu(callback: types.CallbackQuery):
+    """Return to main menu."""
+    await callback.answer()
+    user_id = callback.from_user.id
+    student = _get_student_setup(user_id)
+    is_paid = student.get("is_paid", False) if student else False
+
+    try:
+        await callback.message.edit_text(
+            "🎓 <b>القائمة الرئيسية</b>\n\nاختر من القائمة:",
+            reply_markup=get_main_keyboard(is_paid=is_paid, user_id=user_id),
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        logging.warning(f"cb_back_to_main_menu edit failed: {e}")
