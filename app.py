@@ -2890,6 +2890,7 @@ def api_admin_lesson_question_create():
 
         import json as _json
         conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("PRAGMA foreign_keys=OFF;")
 
         # Get actual columns
         cols_info = cur.execute("PRAGMA table_info(lesson_questions)").fetchall()

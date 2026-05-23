@@ -461,7 +461,14 @@ document.addEventListener('click', e => { if(e.target.classList.contains('modal'
 
 async function api(url, opts={}){
   const r = await fetch(url, opts);
-  return r.json();
+  try{
+    const j = await r.json();
+    if(!r.ok && !j.error) j.error = 'HTTP '+r.status;
+    if(!('ok' in j)) j.ok = r.ok;
+    return j;
+  }catch(e){
+    return {ok:false, error:'HTTP '+r.status};
+  }
 }
 
 // ========== DASHBOARD ==========
@@ -713,7 +720,7 @@ async function saveStage(id){
   if(ord) data.order_index = parseInt(ord);
   const url = id ? `/api/admin/stages/${id}/update` : '/api/admin/stages/create';
   const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  toast((r.ok||r.success)?'تم':(r.error||r.message||'فشل'), r.ok?'success':'error');
+  const qok=r.ok||r.success; toast(qok?'تم حفظ السؤال':(r.error||r.message||'فشل'), qok?'success':'error');
   if(r.ok){ closeModal(); loadStages(); loadDashboard(); }
 }
 async function deleteStage(id){
@@ -743,16 +750,17 @@ async function saveLesson(id, stageId){
   if(ord) data.order_index = parseInt(ord);
   const url = id ? `/api/admin/lessons/${id}/update` : '/api/admin/lessons/create';
   const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  toast((r.ok||r.success)?'تم':(r.error||r.message||'فشل'), r.ok?'success':'error');
+  const qok=r.ok||r.success; toast(qok?'تم حفظ السؤال':(r.error||r.message||'فشل'), qok?'success':'error');
   if(r.ok){ closeModal(); document.querySelector(`.stage-block[data-stage="${stageId}"]`).classList.remove('open'); toggleStage(stageId); loadDashboard(); }
 }
 async function deleteLesson(lid, sid){
   if(!confirm('حذف هذا الدرس وكل أسئلته؟')) return;
   try{
     const r = await api(`/api/admin/lessons/${lid}/delete`,{method:'POST'});
-    toast(r.ok?'تم':'فشل', r.ok?'success':'error');
-    loadLessonsHierarchy();
-    if(typeof loadDashboard==='function') loadDashboard();
+    const ok = r.ok || r.success;
+    toast(ok?'تم الحذف':('فشل: '+(r.error||'')), ok?'success':'error');
+    try{ await loadLessonsHierarchy(); }catch(e2){}
+    try{ if(typeof loadDashboard==='function') loadDashboard(); }catch(e3){}
   }catch(e){ toast('خطأ: '+e.message,'error'); }
 }
 async function manageLessonQuestions(lid, title){
@@ -803,8 +811,8 @@ async function saveQuestion(id, lid){
   };
   const url = id ? `/api/admin/lesson-questions/${id}/update` : '/api/admin/lesson-questions/create';
   const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  toast((r.ok||r.success)?'تم':(r.error||r.message||'فشل'), r.ok?'success':'error');
-  if(r.ok) closeModal();
+  const qok=r.ok||r.success; toast(qok?'تم حفظ السؤال':(r.error||r.message||'فشل'), qok?'success':'error');
+  if(r.ok||r.success){ closeModal(); manageLessonQuestions(lid, ''); }
 }
 async function deleteQuestion(qid, lid, title){
   if(!confirm('حذف هذا السؤال؟')) return;
