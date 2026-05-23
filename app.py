@@ -3290,6 +3290,224 @@ def api_admin_student_journey(user_id):
 
 
 
+
+
+# ═══════════════════════════════════════════════
+# Phase 12D — Admin Lessons/Questions Management
+# ═══════════════════════════════════════════════
+def _ensure_lesson_columns():
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        cols = [r[1] for r in c.execute("PRAGMA table_info(lessons)").fetchall()]
+        if "pass_score" not in cols:
+            c.execute("ALTER TABLE lessons ADD COLUMN pass_score INTEGER DEFAULT 70")
+        if "title" not in cols:
+            c.execute("ALTER TABLE lessons ADD COLUMN title TEXT")
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print("ensure_lesson_columns:", e)
+
+_ensure_lesson_columns()
+
+@app.route("/api/admin/lessons/create", methods=["POST"])
+def api_admin_lessons_create_v2():
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        stage_id = data.get("stage_id")
+        title = data.get("title") or data.get("name") or "درس جديد"
+        pass_score = int(data.get("pass_score", 70))
+        if not stage_id:
+            return jsonify({"success":False,"message":"stage_id required"}), 400
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        # أعلى order_index في المرحلة
+        row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM lessons WHERE stage_id=?",(stage_id,)).fetchone()
+        new_order = (row[0] or 0) + 1
+        cols = [r[1] for r in c.execute("PRAGMA table_info(lessons)").fetchall()]
+        # محاولة insert ذكي
+        fields = ["stage_id","order_index","pass_score"]
+        values = [stage_id, new_order, pass_score]
+        if "title" in cols: fields.append("title"); values.append(title)
+        if "name" in cols: fields.append("name"); values.append(title)
+        if "type" in cols: fields.append("type"); values.append(data.get("type","lesson"))
+        if "created_at" in cols:
+            from datetime import datetime
+            fields.append("created_at"); values.append(datetime.now().isoformat())
+        placeholders = ",".join(["?"]*len(values))
+        c.execute(f"INSERT INTO lessons ({','.join(fields)}) VALUES ({placeholders})", values)
+        new_id = c.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"success":True,"id":new_id,"order_index":new_order})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}), 500
+
+@app.route("/api/admin/lessons/<int:lid>/update", methods=["POST"])
+def api_admin_lessons_update_v2(lid):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        cols = [r[1] for r in c.execute("PRAGMA table_info(lessons)").fetchall()]
+        updates = []; vals = []
+        if "title" in data and "title" in cols: updates.append("title=?"); vals.append(data["title"])
+        if ("name" in data or "title" in data) and "name" in cols:
+            updates.append("name=?"); vals.append(data.get("name") or data.get("title"))
+        if "pass_score" in data: updates.append("pass_score=?"); vals.append(int(data["pass_score"]))
+        if not updates:
+            return jsonify({"success":False,"message":"nothing to update"}), 400
+        vals.append(lid)
+        c.execute(f"UPDATE lessons SET {','.join(updates)} WHERE id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}), 500
+
+@app.route("/api/admin/lessons/<int:lid>/delete", methods=["POST"])
+def api_admin_lessons_delete_v2(lid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        # احذف الأسئلة أولاً
+        try: c.execute("DELETE FROM lesson_questions WHERE lesson_id=?",(lid,))
+        except: pass
+        c.execute("DELETE FROM lessons WHERE id=?",(lid,))
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}), 500
+
+@app.route("/api/admin/lessons/<int:lid>/move", methods=["POST"])
+def api_admin_lessons_move_v2(lid):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        new_stage = data.get("stage_id")
+        if not new_stage: return jsonify({"success":False,"message":"stage_id required"}),400
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM lessons WHERE stage_id=?",(new_stage,)).fetchone()
+        new_order = (row[0] or 0) + 1
+        c.execute("UPDATE lessons SET stage_id=?,order_index=? WHERE id=?",(new_stage,new_order,lid))
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+@app.route("/api/admin/lessons/reorder", methods=["POST"])
+def api_admin_lessons_reorder_v2():
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        order = data.get("order", [])
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        for item in order:
+            c.execute("UPDATE lessons SET order_index=? WHERE id=?",(item["order_index"],item["id"]))
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+@app.route("/api/admin/lessons/<int:lid>/questions/create", methods=["POST"])
+def api_admin_lesson_question_create_v2(lid):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        # ensure table
+        c.execute("""CREATE TABLE IF NOT EXISTS lesson_questions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            lesson_id INTEGER,
+            question_text TEXT,
+            option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
+            correct_answer TEXT,
+            order_index INTEGER DEFAULT 0
+        )""")
+        row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM lesson_questions WHERE lesson_id=?",(lid,)).fetchone()
+        order = (row[0] or 0) + 1
+        c.execute("""INSERT INTO lesson_questions(lesson_id,question_text,option_a,option_b,option_c,option_d,correct_answer,order_index)
+                     VALUES(?,?,?,?,?,?,?,?)""",
+                  (lid,data.get("question_text",""),data.get("option_a",""),data.get("option_b",""),
+                   data.get("option_c",""),data.get("option_d",""),data.get("correct_answer","A"),order))
+        new_id = c.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"success":True,"id":new_id})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+@app.route("/api/admin/questions/<int:qid>/delete", methods=["POST"])
+def api_admin_question_delete_v2(qid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        c.execute("DELETE FROM lesson_questions WHERE id=?",(qid,))
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+@app.route("/api/admin/stages/create", methods=["POST"])
+def api_admin_stages_create_v2():
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        name = data.get("name_ar") or data.get("name") or "مرحلة جديدة"
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
+        row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM stages").fetchone()
+        new_order = (row[0] or 0) + 1
+        fields = ["order_index"]; values = [new_order]
+        if "name_ar" in cols: fields.append("name_ar"); values.append(name)
+        if "name_en" in cols: fields.append("name_en"); values.append(data.get("name_en",name))
+        if "name" in cols: fields.append("name"); values.append(name)
+        placeholders = ",".join(["?"]*len(values))
+        c.execute(f"INSERT INTO stages({','.join(fields)}) VALUES({placeholders})", values)
+        new_id = c.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"success":True,"id":new_id})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+@app.route("/api/admin/stages/<int:sid>/update", methods=["POST"])
+def api_admin_stages_update_v2(sid):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
+        updates = []; vals = []
+        if "name_ar" in data and "name_ar" in cols: updates.append("name_ar=?"); vals.append(data["name_ar"])
+        if "name_en" in data and "name_en" in cols: updates.append("name_en=?"); vals.append(data["name_en"])
+        if "name" in data and "name" in cols: updates.append("name=?"); vals.append(data["name"])
+        if not updates:
+            return jsonify({"success":False,"message":"nothing"}),400
+        vals.append(sid)
+        c.execute(f"UPDATE stages SET {','.join(updates)} WHERE id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+@app.route("/api/admin/stages/<int:sid>/delete", methods=["POST"])
+def api_admin_stages_delete_v2(sid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        # حذف الأسئلة والدروس أولاً
+        try:
+            lesson_ids = [r[0] for r in c.execute("SELECT id FROM lessons WHERE stage_id=?",(sid,)).fetchall()]
+            for lid in lesson_ids:
+                c.execute("DELETE FROM lesson_questions WHERE lesson_id=?",(lid,))
+            c.execute("DELETE FROM lessons WHERE stage_id=?",(sid,))
+        except: pass
+        c.execute("DELETE FROM stages WHERE id=?",(sid,))
+        conn.commit(); conn.close()
+        return jsonify({"success":True})
+    except Exception as e:
+        return jsonify({"success":False,"message":str(e)}),500
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))

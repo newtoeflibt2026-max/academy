@@ -180,6 +180,16 @@ tr:last-child td{border-bottom:none}
 .cm-btn-success:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,.4)}
 .cm-hint{font-size:12px;color:#94a3b8;margin-top:8px}
 
+
+.btn-small{padding:5px 10px;border-radius:6px;border:1px solid rgba(148,163,184,.2);background:rgba(59,130,246,.1);color:#cbd5e1;cursor:pointer;font-size:12px;transition:.15s}
+.btn-small:hover{background:rgba(59,130,246,.25)}
+.btn-danger-small{background:rgba(239,68,68,.1);color:#fca5a5}
+.btn-danger-small:hover{background:rgba(239,68,68,.25)}
+.btn-questions{background:rgba(168,85,247,.15);color:#c084fc}
+.btn-questions:hover{background:rgba(168,85,247,.3)}
+.btn-primary{padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:600;cursor:pointer}
+.btn-secondary{padding:9px 18px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:rgba(148,163,184,.1);color:#cbd5e1;cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -712,59 +722,8 @@ async function deleteStage(id){
 }
 
 // ========== LESSONS HIERARCHY ==========
-async function loadLessonsHierarchy(){
-  const track = document.getElementById('lessonsTrackFilter').value;
-  try{
-    const url = track ? `/api/admin/stages?track=${track}` : '/api/admin/stages';
-    const j = await api(url);
-    const stages = j.stages || [];
-    document.getElementById('lessonsHierarchy').innerHTML = stages.map(s => `
-      <div class="stage-block" data-stage="${s.id}">
-        <div class="stage-head" onclick="toggleStage(${s.id})">
-          <span class="arrow">▶</span>
-          <strong>${s.code} — ${s.name_ar||s.name}</strong>
-          <span class="tag tag-purple" style="margin-right:auto">${s.track||s.path}</span>
-          <button class="btn btn-sm" onclick="event.stopPropagation();openLessonModal(${s.id})">➕ درس</button>
-        </div>
-        <div class="stage-body" id="stage-body-${s.id}"><div style="text-align:center;color:var(--muted);padding:10px">اضغط لتحميل الدروس</div></div>
-      </div>`).join('');
-  }catch(e){ toast('خطأ','error'); }
-}
-async function toggleStage(sid){
-  const block = document.querySelector(`.stage-block[data-stage="${sid}"]`);
-  block.classList.toggle('open');
-  if(block.classList.contains('open')){
-    const body = document.getElementById('stage-body-' + sid);
-    try{
-      const j = await api('/api/admin/lessons/by-stage/' + sid);
-      const lessons = j.lessons || [];
-      body.innerHTML = lessons.length ? `<div id="lessons-${sid}">${lessons.map((l,i) => `
-        <div class="lesson-row" data-id="${l.id}">
-          <span class="drag-handle">⋮⋮</span>
-          <div class="num">${i+1}</div>
-          <div class="title">${l.title||'(بدون عنوان)'}</div>
-          <div class="q-count">❓ ${l.q_count||0} سؤال</div>
-          <button class="btn btn-sm btn-info" onclick="manageLessonQuestions(${l.id},'${(l.title||'').replace(/'/g,'')}')">❓</button>
-          <button class="btn btn-sm" onclick='editLesson(${JSON.stringify(l).replace(/'/g,"&#39;")})'>✏️</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteLesson(${l.id},${sid})">🗑️</button>
-        </div>`).join('')}</div>` : '<div style="text-align:center;color:var(--muted);padding:20px">لا توجد دروس — أضف الأول</div>';
-      // Enable sortable
-      if(lessons.length){
-        const container = document.getElementById('lessons-' + sid);
-        new Sortable(container, {
-          handle: '.drag-handle',
-          animation: 150,
-          onEnd: async () => {
-            const ids = Array.from(container.querySelectorAll('.lesson-row')).map(r => parseInt(r.dataset.id));
-            await api('/api/admin/lessons/reorder', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({stage_id:sid,ordered_ids:ids})});
-            toast('تم إعادة الترتيب','success');
-            toggleStage(sid); toggleStage(sid); // refresh
-          }
-        });
-      }
-    }catch(e){ body.innerHTML = '<div style="color:var(--danger)">خطأ في التحميل</div>'; }
-  }
-}
+
+async 
 function openLessonModal(stageId, l=null){
   l = l || {title:'',content:'',stage_id:stageId};
   showModal(`<div class="modal-header"><h3 class="modal-title">📚 ${l.id?'تعديل':'إضافة'} درس</h3><button class="modal-close" onclick="closeModal()">×</button></div>
@@ -995,5 +954,291 @@ window.addEventListener('DOMContentLoaded', () => {
   loadDashboard();
   setInterval(loadDashboard, 60000); // refresh كل دقيقة
 });
+
+
+// ===== Lessons Hierarchy (Phase 12D) =====
+let _lessonsData = {stages:[], lessons:{}};
+
+async function loadLessonsHierarchy(){
+  const c = document.getElementById('page-lessons');
+  if(!c) return;
+  c.innerHTML = '<div style="padding:40px;text-align:center;color:#94a3b8">⏳ جاري التحميل...</div>';
+  try{
+    const sr = await fetch('/api/admin/stages/list');
+    const sd = await sr.json();
+    const stages = sd.stages || sd.data || [];
+    _lessonsData.stages = stages;
+
+    let html = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap">
+        <h2 style="margin:0">📚 إدارة الدروس</h2>
+        <div style="display:flex;gap:10px">
+          <button class="btn-primary" onclick="addStage()">➕ إضافة مرحلة جديدة</button>
+          <button class="btn-secondary" onclick="loadLessonsHierarchy()">🔄 تحديث</button>
+        </div>
+      </div>
+      <div id="stagesList"></div>
+    `;
+    c.innerHTML = html;
+
+    const list = document.getElementById('stagesList');
+    for(const stage of stages){
+      const sid = stage.id;
+      const lr = await fetch('/api/admin/lessons/by-stage/'+sid);
+      const ld = await lr.json();
+      const lessons = ld.lessons || ld.data || [];
+      _lessonsData.lessons[sid] = lessons;
+
+      const stageDiv = document.createElement('div');
+      stageDiv.className = 'stage-card';
+      stageDiv.style.cssText = 'background:#1e293b;border:1px solid rgba(148,163,184,.15);border-radius:12px;margin-bottom:14px;overflow:hidden';
+      stageDiv.innerHTML = `
+        <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(168,85,247,.1));cursor:pointer" onclick="toggleStage(${sid})">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span id="stageArrow_${sid}" style="font-size:14px;transition:.2s">▶</span>
+            <strong style="font-size:16px">${stage.name_ar||stage.name||'مرحلة '+sid}</strong>
+            <span style="background:rgba(59,130,246,.2);padding:3px 10px;border-radius:20px;font-size:12px">${lessons.length} درس</span>
+          </div>
+          <div onclick="event.stopPropagation()" style="display:flex;gap:6px">
+            <button class="btn-small" onclick="addLessonToStage(${sid})" title="إضافة درس">➕ درس</button>
+            <button class="btn-small" onclick="editStage(${sid})" title="تعديل المرحلة">✏️</button>
+            <button class="btn-small btn-danger-small" onclick="deleteStage(${sid})" title="حذف المرحلة">🗑️</button>
+          </div>
+        </div>
+        <div id="stageBody_${sid}" style="display:none;padding:10px 18px 18px"></div>
+      `;
+      list.appendChild(stageDiv);
+
+      const body = document.getElementById('stageBody_'+sid);
+      if(lessons.length===0){
+        body.innerHTML = '<div style="padding:20px;text-align:center;color:#64748b">لا توجد دروس بعد. اضغط ➕ درس لإضافة درس.</div>';
+      } else {
+        const ul = document.createElement('div');
+        ul.id = 'sortable_'+sid;
+        ul.style.cssText = 'display:flex;flex-direction:column;gap:6px';
+        lessons.forEach(L=>{
+          const row = document.createElement('div');
+          row.dataset.lessonId = L.id;
+          row.style.cssText = 'background:#0f172a;border:1px solid rgba(148,163,184,.1);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:grab';
+          row.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;flex:1">
+              <span style="color:#64748b;font-size:13px">⋮⋮</span>
+              <span style="background:rgba(168,85,247,.2);padding:2px 8px;border-radius:6px;font-size:12px">${L.order_index||'?'}</span>
+              <strong>${L.title||L.name||'درس '+L.id}</strong>
+              <span style="font-size:11px;color:#94a3b8">نجاح: ${L.pass_score||70}%</span>
+              ${L.type?`<span style="background:rgba(34,197,94,.15);color:#22c55e;padding:2px 8px;border-radius:6px;font-size:11px">${L.type}</span>`:''}
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn-small" onclick="editLesson(${L.id})" title="تعديل">✏️</button>
+              <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id})" title="الأسئلة">❓</button>
+              <button class="btn-small" onclick="moveLessonToStage(${L.id})" title="نقل لمرحلة">🔀</button>
+              <button class="btn-small btn-danger-small" onclick="deleteLesson(${L.id})" title="حذف">🗑️</button>
+            </div>
+          `;
+          ul.appendChild(row);
+        });
+        body.appendChild(ul);
+
+        if(typeof Sortable!=='undefined'){
+          new Sortable(ul,{
+            animation:150,
+            onEnd: async function(evt){
+              const newOrder = Array.from(ul.children).map((el,i)=>({id:parseInt(el.dataset.lessonId),order_index:i+1}));
+              await fetch('/api/admin/lessons/reorder',{
+                method:'POST',headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({stage_id:sid,order:newOrder})
+              });
+              loadLessonsHierarchy();
+            }
+          });
+        }
+      }
+    }
+  }catch(e){
+    c.innerHTML = '<div style="padding:20px;color:#ef4444">❌ خطأ: '+e.message+'</div>';
+  }
+}
+
+function toggleStage(sid){
+  const b = document.getElementById('stageBody_'+sid);
+  const a = document.getElementById('stageArrow_'+sid);
+  if(b.style.display==='none'){ b.style.display='block'; a.textContent='▼'; }
+  else { b.style.display='none'; a.textContent='▶'; }
+}
+
+// ===== إضافة مرحلة جديدة =====
+async function addStage(){
+  const name = await customPrompt('إضافة مرحلة جديدة','اكتب اسم المرحلة بالعربية:',{icon:'📚',default:'مرحلة جديدة'});
+  if(!name) return;
+  try{
+    const r = await fetch('/api/admin/stages/create',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name_ar:name,name_en:name})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم بنجاح','تم إنشاء المرحلة 📚','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function editStage(sid){
+  const stage = _lessonsData.stages.find(s=>s.id===sid);
+  if(!stage){ await customAlert('خطأ','المرحلة غير موجودة','error'); return; }
+  const name = await customPrompt('تعديل المرحلة','اسم المرحلة:',{icon:'✏️',default:stage.name_ar||stage.name||''});
+  if(!name) return;
+  try{
+    const r = await fetch('/api/admin/stages/'+sid+'/update',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name_ar:name,name_en:name})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم التعديل','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function deleteStage(sid){
+  const ok = await customConfirm('🗑️ حذف المرحلة','سيتم حذف المرحلة وجميع دروسها وأسئلتها!<br><b style="color:#ef4444">لا يمكن التراجع.</b>','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/stages/'+sid+'/delete',{method:'POST'});
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم الحذف','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+// ===== إضافة درس لمرحلة =====
+async function addLessonToStage(sid){
+  const title = await customPrompt('إضافة درس جديد','اكتب عنوان الدرس:',{icon:'📖',default:'درس جديد'});
+  if(!title) return;
+  const passScore = await customPrompt('شرط النجاح','أقل علامة للانتقال للدرس التالي (%):',{icon:'🎯',type:'number',default:'70',hint:'بين 50 و 100'});
+  if(!passScore) return;
+  const ps = parseInt(passScore);
+  if(isNaN(ps)||ps<50||ps>100){ await customAlert('قيمة غير صالحة','بين 50 و 100','warning'); return; }
+  try{
+    const r = await fetch('/api/admin/lessons/create',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({stage_id:sid,title:title,name:title,pass_score:ps})
+    });
+    const d = await r.json();
+    if(d.success){
+      await customAlert('تم بنجاح','تم إضافة الدرس ✅<br>الآن أضف أسئلة الدرس','success');
+      loadLessonsHierarchy();
+    }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function editLesson(lid){
+  let lesson = null; let stageId = null;
+  for(const sid in _lessonsData.lessons){
+    const f = _lessonsData.lessons[sid].find(l=>l.id===lid);
+    if(f){ lesson = f; stageId = sid; break; }
+  }
+  if(!lesson){ await customAlert('خطأ','الدرس غير موجود','error'); return; }
+  const title = await customPrompt('تعديل الدرس','عنوان الدرس:',{icon:'✏️',default:lesson.title||lesson.name||''});
+  if(!title) return;
+  const passScore = await customPrompt('شرط النجاح','أقل علامة للنجاح (%):',{icon:'🎯',type:'number',default:String(lesson.pass_score||70)});
+  if(!passScore) return;
+  try{
+    const r = await fetch('/api/admin/lessons/'+lid+'/update',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({title:title,name:title,pass_score:parseInt(passScore)})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم التعديل','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function deleteLesson(lid){
+  const ok = await customConfirm('🗑️ حذف الدرس','سيتم حذف الدرس وجميع أسئلته!<br><b style="color:#ef4444">لا يمكن التراجع.</b>','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/lessons/'+lid+'/delete',{method:'POST'});
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم الحذف','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function moveLessonToStage(lid){
+  const choices = _lessonsData.stages.map(s=>({value:String(s.id),label:s.name_ar||s.name||'مرحلة '+s.id}));
+  const newStageId = await customPrompt('نقل الدرس','اختر المرحلة الجديدة:',{icon:'🔀',choices:choices});
+  if(!newStageId) return;
+  try{
+    const r = await fetch('/api/admin/lessons/'+lid+'/move',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({stage_id:parseInt(newStageId)})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم النقل','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+// ===== إدارة أسئلة الدرس =====
+async function manageLessonQuestions(lid){
+  try{
+    const r = await fetch('/api/admin/lessons/'+lid+'/questions');
+    const d = await r.json();
+    const qs = d.questions || d.data || [];
+    let body = `<div style="text-align:right;max-height:400px;overflow-y:auto">`;
+    if(qs.length===0){
+      body += '<div style="text-align:center;color:#64748b;padding:20px">لا توجد أسئلة. اضغط إضافة سؤال.</div>';
+    } else {
+      qs.forEach((q,i)=>{
+        body += `<div style="background:#0f172a;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid rgba(148,163,184,.1)">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px">
+            <div style="flex:1">
+              <strong>س${i+1}:</strong> ${q.question_text||q.text||''}<br>
+              <small style="color:#22c55e">✓ الإجابة: ${q.correct_answer||''}</small>
+            </div>
+            <button class="btn-small btn-danger-small" onclick="deleteQuestion(${q.id},${lid})">🗑️</button>
+          </div>
+        </div>`;
+      });
+    }
+    body += `</div><button class="btn-primary" style="margin-top:10px;width:100%" onclick="addQuestion(${lid})">➕ إضافة سؤال جديد</button>`;
+    await customAlert('❓ أسئلة الدرس ('+qs.length+')', body, 'info');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function addQuestion(lid){
+  const qtext = await customPrompt('إضافة سؤال','نص السؤال:',{icon:'❓',default:''});
+  if(!qtext) return;
+  const optA = await customPrompt('الخيار A','نص الخيار الأول:',{icon:'🅰️',default:''}); if(!optA) return;
+  const optB = await customPrompt('الخيار B','نص الخيار الثاني:',{icon:'🅱️',default:''}); if(!optB) return;
+  const optC = await customPrompt('الخيار C','نص الخيار الثالث (اختياري):',{icon:'©️',default:''});
+  const optD = await customPrompt('الخيار D','نص الخيار الرابع (اختياري):',{icon:'Ⓓ',default:''});
+  const correct = await customPrompt('الإجابة الصحيحة','اختر الإجابة الصحيحة:',{icon:'✅',default:'A',choices:[
+    {value:'A',label:'A — '+optA},{value:'B',label:'B — '+optB},
+    ...(optC?[{value:'C',label:'C — '+optC}]:[]),
+    ...(optD?[{value:'D',label:'D — '+optD}]:[])
+  ]});
+  if(!correct) return;
+  try{
+    const r = await fetch('/api/admin/lessons/'+lid+'/questions/create',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question_text:qtext,option_a:optA,option_b:optB,option_c:optC||'',option_d:optD||'',correct_answer:correct})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم إضافة السؤال ✅','success'); manageLessonQuestions(lid); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function deleteQuestion(qid,lid){
+  const ok = await customConfirm('🗑️ حذف السؤال','هل أنت متأكد؟','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/questions/'+qid+'/delete',{method:'POST'});
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم الحذف','success'); manageLessonQuestions(lid); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
 </script>
 </html>
