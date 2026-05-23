@@ -3904,6 +3904,65 @@ if __name__ == "__main__":
 
 
 # ===================== Phase 9: Admin + Placement Questions CRUD =====================
+
+def _ensure_stages_columns():
+    """Phase12F: Ensure stages table has all required columns (idempotent)."""
+    import sqlite3
+    try:
+        db = DB_PATH if "DB_PATH" in globals() else "academy.db"
+        conn = sqlite3.connect(db)
+        cur = conn.cursor()
+        cur.execute("PRAGMA table_info(stages)")
+        cols = {r[1] for r in cur.fetchall()}
+        added = []
+        if "order_index" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN order_index INTEGER DEFAULT 0")
+            cur.execute("UPDATE stages SET order_index = id WHERE order_index IS NULL OR order_index = 0")
+            added.append("order_index")
+        if "name_ar" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN name_ar TEXT")
+            added.append("name_ar")
+        if "name_en" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN name_en TEXT")
+            added.append("name_en")
+        if "path" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN path TEXT DEFAULT 'foundation'")
+            added.append("path")
+        if "section_name" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN section_name TEXT DEFAULT 'grammar'")
+            added.append("section_name")
+        if "min_score" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN min_score REAL DEFAULT 70")
+            added.append("min_score")
+        if "code" not in cols:
+            cur.execute("ALTER TABLE stages ADD COLUMN code TEXT")
+            added.append("code")
+        # تأكد lessons فيها order_index و pass_score
+        cur.execute("PRAGMA table_info(lessons)")
+        lcols = {r[1] for r in cur.fetchall()}
+        if "order_index" not in lcols:
+            cur.execute("ALTER TABLE lessons ADD COLUMN order_index INTEGER DEFAULT 0")
+            cur.execute("UPDATE lessons SET order_index = id WHERE order_index IS NULL OR order_index = 0")
+            added.append("lessons.order_index")
+        if "pass_score" not in lcols:
+            cur.execute("ALTER TABLE lessons ADD COLUMN pass_score INTEGER DEFAULT 70")
+            added.append("lessons.pass_score")
+        if "title" not in lcols:
+            cur.execute("ALTER TABLE lessons ADD COLUMN title TEXT")
+            added.append("lessons.title")
+        conn.commit()
+        conn.close()
+        if added:
+            print(f"[Phase12F] stages/lessons columns ensured: {added}")
+        else:
+            print("[Phase12F] stages/lessons schema OK")
+    except Exception as e:
+        print(f"[Phase12F] ERROR: {e}")
+
+_ensure_stages_columns()
+
+
+
 @app.route("/admin")
 def admin_page():
     from flask import render_template
