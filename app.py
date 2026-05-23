@@ -2633,53 +2633,6 @@ def page_weekly_task():
 # ============================================================
 # ADMIN STAGES CRUD
 # ============================================================
-@app.route("/api/admin/stages/create", methods=["POST"])
-def api_admin_stage_create():
-    try:
-        data = request.get_json(force=True) or {}
-        code_ = (data.get("code") or "").strip()
-        name = (data.get("name") or "").strip()
-        path = (data.get("path") or "foundation").strip()
-        section = (data.get("section") or "grammar").strip()
-        min_score = float(data.get("min_score") or 70)
-        order_idx = data.get("order_index")
-        if not code_ or not name:
-            return jsonify({"error": "code and name required"}), 400
-        conn = _miniapp_db()
-        cur = conn.cursor()
-        if order_idx is None:
-            cur.execute("SELECT COALESCE(MAX(order_index),0)+1 FROM stages")
-            order_idx = cur.fetchone()[0]
-        else:
-            order_idx = int(order_idx)
-            cur.execute("UPDATE stages SET order_index = order_index + 1 WHERE order_index >= ?", (order_idx,))
-        cur.execute("INSERT INTO stages (code, name, path, section, min_score, order_index) VALUES (?,?,?,?,?,?)",
-                    (code_, name, path, section, min_score, order_idx))
-        sid = cur.lastrowid
-        conn.commit(); conn.close()
-        return jsonify({"ok": True, "id": sid})
-    except Exception as e:
-        import traceback; traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/admin/stages/<int:sid>/update", methods=["POST", "PUT"])
-def api_admin_stage_update(sid):
-    try:
-        data = request.get_json(force=True) or {}
-        conn = _miniapp_db(); cur = conn.cursor()
-        fields, vals = [], []
-        for col in ["code", "name", "path", "section", "min_score", "order_index"]:
-            if col in data:
-                fields.append(col + "=?"); vals.append(data[col])
-        if not fields:
-            return jsonify({"error": "no fields"}), 400
-        vals.append(sid)
-        cur.execute("UPDATE stages SET " + ", ".join(fields) + " WHERE id=?", vals)
-        conn.commit(); conn.close()
-        return jsonify({"ok": True})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/admin/stages/<int:sid>/delete", methods=["POST", "DELETE"])
@@ -3457,45 +3410,90 @@ def api_admin_question_delete_v2(qid):
 
 @app.route("/api/admin/stages/create", methods=["POST"])
 def api_admin_stages_create_v2():
+    """Create a new stage with all possible fields (tolerant)."""
     import sqlite3
     try:
-        data = request.get_json() or {}
-        name = data.get("name_ar") or data.get("name") or "مرحلة جديدة"
+        data = request.get_json(force=True) or {}
+        name = (data.get("name_ar") or data.get("name") or "مرحلة جديدة").strip()
+        name_en = (data.get("name_en") or name).strip()
+        code = (data.get("code") or f"S{int(__import__('time').time())%100000}").strip()
+        path = (data.get("path") or data.get("track") or "foundation").strip()
+        section = (data.get("section") or data.get("section_name") or "grammar").strip()
+        min_score = float(data.get("min_score") or data.get("pass_score") or 70)
+        
         conn = sqlite3.connect(DB_PATH); c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
+        
         row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM stages").fetchone()
-        new_order = (row[0] or 0) + 1
-        fields = ["order_index"]; values = [new_order]
-        if "name_ar" in cols: fields.append("name_ar"); values.append(name)
-        if "name_en" in cols: fields.append("name_en"); values.append(data.get("name_en",name))
-        if "name" in cols: fields.append("name"); values.append(name)
+        new_order = int(data.get("order_index") or (row[0] or 0) + 1)
+        
+        fields, values = [], []
+        def add(col, val):
+            if col in cols:
+                fields.append(col); values.append(val)
+        
+        add("order_index", new_order)
+        add("name", name)
+        add("name_ar", name)
+        add("name_en", name_en)
+        add("code", code)
+        add("path", path)
+        add("section", section)
+        add("section_name", section)
+        add("min_score", min_score)
+        
         placeholders = ",".join(["?"]*len(values))
         c.execute(f"INSERT INTO stages({','.join(fields)}) VALUES({placeholders})", values)
         new_id = c.lastrowid
         conn.commit(); conn.close()
-        return jsonify({"success":True,"id":new_id})
+        return jsonify({"success":True,"ok":True,"id":new_id,"order_index":new_order})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        import traceback; traceback.print_exc()
+        return jsonify({"success":False,"ok":False,"error":str(e),"message":str(e)}), 500
 
-@app.route("/api/admin/stages/<int:sid>/update", methods=["POST"])
+
+@app.route("/api/admin/stages/<int:sid>/update", methods=["POST","PUT"])
 def api_admin_stages_update_v2(sid):
+    """Update a stage with any provided fields (tolerant)."""
     import sqlite3
     try:
-        data = request.get_json() or {}
+        data = request.get_json(force=True) or {}
         conn = sqlite3.connect(DB_PATH); c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
-        updates = []; vals = []
-        if "name_ar" in data and "name_ar" in cols: updates.append("name_ar=?"); vals.append(data["name_ar"])
-        if "name_en" in data and "name_en" in cols: updates.append("name_en=?"); vals.append(data["name_en"])
-        if "name" in data and "name" in cols: updates.append("name=?"); vals.append(data["name"])
+        
+        # خريطة الحقول من JSON إلى أعمدة DB
+        field_map = {
+            "name_ar": "name_ar", "name_en": "name_en", "name": "name",
+            "code": "code", "path": "path", "track": "path",
+            "section": "section", "section_name": "section",
+            "min_score": "min_score", "pass_score": "min_score",
+            "order_index": "order_index",
+            "description": "description", "description_ar": "description_ar"
+        }
+        
+        updates, vals = [], []
+        for json_key, db_col in field_map.items():
+            if json_key in data and db_col in cols and not any(u.startswith(db_col+"=") for u in updates):
+                updates.append(f"{db_col}=?"); vals.append(data[json_key])
+        
+        # إذا أُرسلت name_ar فقط، انسخها لـ name أيضاً للتوافق
+        if "name_ar" in data and "name" in cols and not any(u.startswith("name=") for u in updates):
+            updates.append("name=?"); vals.append(data["name_ar"])
+        
         if not updates:
-            return jsonify({"success":False,"message":"nothing"}),400
+            return jsonify({"success":False,"ok":False,"message":"no valid fields","error":"no valid fields"}), 400
+        
         vals.append(sid)
         c.execute(f"UPDATE stages SET {','.join(updates)} WHERE id=?", vals)
+        affected = c.rowcount
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        if affected == 0:
+            return jsonify({"success":False,"ok":False,"message":"stage not found","error":"stage not found"}), 404
+        return jsonify({"success":True,"ok":True})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        import traceback; traceback.print_exc()
+        return jsonify({"success":False,"ok":False,"error":str(e),"message":str(e)}), 500
+
 
 @app.route("/api/admin/stages/<int:sid>/delete", methods=["POST"])
 def api_admin_stages_delete_v2(sid):
