@@ -2887,30 +2887,72 @@ def api_admin_lesson_question_create():
         q_text = (data.get("question_text") or "").strip()
         if not lid or not q_text:
             return jsonify({"error": "lesson_id and question_text required"}), 400
-        conn = _miniapp_db(); cur = conn.cursor()
-        # Check actual columns in lesson_questions
-        cols = [r[1] for r in cur.execute("PRAGMA table_info(lesson_questions)").fetchall()]
-        # Ensure needed columns exist (migration)
-        for col, ctype in [("question_text","TEXT"),("option_a","TEXT"),("option_b","TEXT"),("option_c","TEXT"),("option_d","TEXT"),("order_index","INTEGER DEFAULT 0")]:
-            if col not in cols:
-                try: cur.execute(f"ALTER TABLE lesson_questions ADD COLUMN {col} {ctype}")
-                except: pass
-        # Build options_json for backward compat
+
         import json as _json
+        conn = _miniapp_db(); cur = conn.cursor()
+
+        # Get actual columns
+        cols_info = cur.execute("PRAGMA table_info(lesson_questions)").fetchall()
+        existing_cols = [r[1] for r in cols_info]
+
+        # Add missing columns if needed
+        migrations = [
+            ("question_text", "TEXT"), ("option_a", "TEXT"), ("option_b", "TEXT"),
+            ("option_c", "TEXT"), ("option_d", "TEXT"), ("order_index", "INTEGER DEFAULT 0")
+        ]
+        for col, ctype in migrations:
+            if col not in existing_cols:
+                try:
+                    cur.execute(f"ALTER TABLE lesson_questions ADD COLUMN {col} {ctype}")
+                    existing_cols.append(col)
+                except Exception:
+                    pass
+
+        # Build options_json
         opts = {"A": data.get("option_a",""), "B": data.get("option_b",""), "C": data.get("option_c",""), "D": data.get("option_d","")}
+
         # Get next order
-        row = cur.execute("SELECT COALESCE(MAX(order_num),0) FROM lesson_questions WHERE lesson_id=?", (lid,)).fetchone()
-        order = (row[0] or 0) + 1
-        # Insert using actual DB columns
-        cur.execute("""INSERT INTO lesson_questions
-            (lesson_id, question, question_text, options_json, option_a, option_b, option_c, option_d,
-             correct_answer, explanation, order_num, q_type)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (lid, q_text, q_text, _json.dumps(opts, ensure_ascii=False),
-             data.get("option_a",""), data.get("option_b",""), data.get("option_c",""), data.get("option_d",""),
-             data.get("correct_answer","A"), data.get("explanation",""), order, "mcq"))
+        try:
+            order_col = "order_num" if "order_num" in existing_cols else "order_index"
+            row = cur.execute(f"SELECT COALESCE(MAX({order_col}),0) FROM lesson_questions WHERE lesson_id=?", (lid,)).fetchone()
+            order = (row[0] or 0) + 1
+        except Exception:
+            order = 1
+
+        # Build INSERT dynamically - only use columns that exist
+        insert_map = {
+            "lesson_id": lid,
+            "question": q_text,
+            "question_text": q_text,
+            "options_json": _json.dumps(opts, ensure_ascii=False),
+            "option_a": data.get("option_a", ""),
+            "option_b": data.get("option_b", ""),
+            "option_c": data.get("option_c", ""),
+            "option_d": data.get("option_d", ""),
+            "correct_answer": data.get("correct_answer", "A"),
+            "explanation": data.get("explanation", ""),
+            "q_type": "mcq",
+        }
+        # Add order column
+        if "order_num" in existing_cols:
+            insert_map["order_num"] = order
+        if "order_index" in existing_cols:
+            insert_map["order_index"] = order
+
+        # Filter to only existing columns
+        final_cols = []
+        final_vals = []
+        for col, val in insert_map.items():
+            if col in existing_cols:
+                final_cols.append(col)
+                final_vals.append(val)
+
+        placeholders = ",".join(["?"] * len(final_cols))
+        sql = f"INSERT INTO lesson_questions ({','.join(final_cols)}) VALUES ({placeholders})"
+        cur.execute(sql, final_vals)
         qid = cur.lastrowid
-        conn.commit(); conn.close()
+        conn.commit()
+        conn.close()
         return jsonify({"ok": True, "id": qid})
     except Exception as e:
         import traceback; traceback.print_exc()
