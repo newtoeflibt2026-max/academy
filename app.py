@@ -55,6 +55,7 @@ def _ensure_stages_track_default():
     try:
         conn = _db_safe()
         c = conn.cursor()
+        try:
             c.execute("PRAGMA table_info(stages)")
             cols = [row[1] for row in c.fetchall()]
             if "track" not in cols:
@@ -64,6 +65,8 @@ def _ensure_stages_track_default():
             c.execute("UPDATE stages SET track = 'foundation' WHERE track IS NULL OR track = ''")
             conn.commit()
             print(f"[Phase12G] Normalized stages.track rows: {c.rowcount}")
+        finally:
+            conn.close()
     except Exception as e:
         if "duplicate column name" not in str(e).lower():
             print(f"[Phase12G] Ensure error: {e}")
@@ -3484,10 +3487,12 @@ def api_admin_stages_create_v2():
 
         conn = _db_safe()
         c = conn.cursor()
+        try:
             c.execute(f"INSERT INTO stages ({','.join(fields)}) VALUES ({placeholders})", values)
             stage_id = c.lastrowid
             conn.commit()
-
+        finally:
+            conn.close()
         if "stages_cache" in globals():
             globals()["stages_cache"] = None
 
