@@ -77,17 +77,6 @@ try:
 except Exception as _e:
     print(f"[Phase12G] startup hook error: {_e}")
 # ===== End Phase 12G =====
-@app.route("/api/debug/table-info/<table_name>")
-def debug_table_info(table_name):
-    """Temporary debug endpoint - shows table schema"""
-    try:
-        conn = _db_safe()
-        c = conn.cursor()
-        cols = c.execute(f"PRAGMA table_info({table_name})").fetchall()
-        conn.close()
-        return jsonify({"table": table_name, "columns": [{"cid": r[0], "name": r[1], "type": r[2], "notnull": r[3], "default": r[4], "pk": r[5]} for r in cols]})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 
@@ -2727,7 +2716,6 @@ def _ensure_lessons_schema():
 def api_admin_lessons_by_stage(stage_id):
     try:
         import sqlite3
-        import sqlite3
         _ensure_lessons_schema()
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
@@ -2864,13 +2852,25 @@ def api_admin_lessons_reorder():
 def api_admin_lesson_questions(lid):
     try:
         import sqlite3
-        import sqlite3
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         try:
             cur.execute("SELECT * FROM lesson_questions WHERE lesson_id=? ORDER BY id ASC", (lid,))
             rows = [dict(r) for r in cur.fetchall()]
+            # Map 'question' -> 'question_text' for JS compatibility
+            for row in rows:
+                if 'question' in row and 'question_text' not in row:
+                    row['question_text'] = row['question']
+                if 'options_json' in row and row.get('options_json'):
+                    import json as _j
+                    try:
+                        opts = _j.loads(row['options_json'])
+                        if 'option_a' not in row: row['option_a'] = opts.get('A','')
+                        if 'option_b' not in row: row['option_b'] = opts.get('B','')
+                        if 'option_c' not in row: row['option_c'] = opts.get('C','')
+                        if 'option_d' not in row: row['option_d'] = opts.get('D','')
+                    except: pass
         except Exception:
             rows = []
         conn.close()
@@ -2888,15 +2888,33 @@ def api_admin_lesson_question_create():
         if not lid or not q_text:
             return jsonify({"error": "lesson_id and question_text required"}), 400
         conn = _miniapp_db(); cur = conn.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS lesson_questions (id INTEGER PRIMARY KEY AUTOINCREMENT, lesson_id INTEGER, question_text TEXT, option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT, correct_answer TEXT, explanation TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)")
-        cur.execute("INSERT INTO lesson_questions (lesson_id, question_text, option_a, option_b, option_c, option_d, correct_answer, explanation) VALUES (?,?,?,?,?,?,?,?)",
-                    (lid, q_text, data.get("option_a",""), data.get("option_b",""), data.get("option_c",""), data.get("option_d",""), data.get("correct_answer","A"), data.get("explanation","")))
+        # Check actual columns in lesson_questions
+        cols = [r[1] for r in cur.execute("PRAGMA table_info(lesson_questions)").fetchall()]
+        # Ensure needed columns exist (migration)
+        for col, ctype in [("question_text","TEXT"),("option_a","TEXT"),("option_b","TEXT"),("option_c","TEXT"),("option_d","TEXT"),("order_index","INTEGER DEFAULT 0")]:
+            if col not in cols:
+                try: cur.execute(f"ALTER TABLE lesson_questions ADD COLUMN {col} {ctype}")
+                except: pass
+        # Build options_json for backward compat
+        import json as _json
+        opts = {"A": data.get("option_a",""), "B": data.get("option_b",""), "C": data.get("option_c",""), "D": data.get("option_d","")}
+        # Get next order
+        row = cur.execute("SELECT COALESCE(MAX(order_num),0) FROM lesson_questions WHERE lesson_id=?", (lid,)).fetchone()
+        order = (row[0] or 0) + 1
+        # Insert using actual DB columns
+        cur.execute("""INSERT INTO lesson_questions
+            (lesson_id, question, question_text, options_json, option_a, option_b, option_c, option_d,
+             correct_answer, explanation, order_num, q_type)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (lid, q_text, q_text, _json.dumps(opts, ensure_ascii=False),
+             data.get("option_a",""), data.get("option_b",""), data.get("option_c",""), data.get("option_d",""),
+             data.get("correct_answer","A"), data.get("explanation",""), order, "mcq"))
         qid = cur.lastrowid
         conn.commit(); conn.close()
         return jsonify({"ok": True, "id": qid})
     except Exception as e:
         import traceback; traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 @app.route("/api/admin/lesson-questions/<int:qid>/update", methods=["POST", "PUT"])
@@ -2934,7 +2952,6 @@ def api_admin_lesson_question_delete(qid):
 @app.route("/api/admin/students/list", methods=["GET"])
 def api_admin_students_list():
     try:
-        import sqlite3
         import sqlite3
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
@@ -3012,7 +3029,6 @@ def api_admin_student_delete(user_id):
 @app.route("/api/admin/students/<user_id>/detail", methods=["GET"])
 def api_admin_student_detail(user_id):
     try:
-        import sqlite3
         import sqlite3
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
