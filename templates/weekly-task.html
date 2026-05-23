@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>المهمة الأسبوعية - أكاديمية يامن</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:16px;color:#333}
+.container{max-width:600px;margin:0 auto}
+.header{background:#fff;border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.15);text-align:center}
+.header h1{font-size:22px;color:#5b3fa0;margin-bottom:6px}
+.header p{color:#666;font-size:14px}
+.week-badge{display:inline-block;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:bold;margin-top:8px}
+.card{background:#fff;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.task-icon{font-size:60px;text-align:center;margin-bottom:12px}
+.task-title{font-size:20px;font-weight:bold;color:#5b3fa0;text-align:center;margin-bottom:12px}
+.task-desc{background:#f8f9fe;border-right:4px solid #667eea;padding:14px;border-radius:10px;line-height:1.8;color:#444;margin-bottom:16px;font-size:15px}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;text-align:center;text-decoration:none;transition:transform .15s,box-shadow .15s;margin-bottom:10px}
+.btn:active{transform:scale(.97)}
+.btn-link{background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff}
+.btn-link:hover{box-shadow:0 4px 15px rgba(79,172,254,.4)}
+.btn-submit{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff}
+.btn-submit:hover{box-shadow:0 4px 15px rgba(67,233,123,.4)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.upload-area{border:3px dashed #c0c4d6;border-radius:14px;padding:30px 16px;text-align:center;cursor:pointer;transition:all .2s;background:#fafbff;margin-bottom:14px}
+.upload-area:hover,.upload-area.drag{border-color:#667eea;background:#eef0ff}
+.upload-area.has-file{border-color:#43e97b;background:#e8fdf3;border-style:solid}
+.upload-icon{font-size:48px;margin-bottom:8px}
+.upload-text{color:#666;font-size:14px}
+.upload-text strong{color:#5b3fa0;display:block;margin-bottom:4px;font-size:15px}
+#fileInput{display:none}
+.preview{max-width:100%;max-height:240px;border-radius:12px;margin-top:10px;display:none}
+.timer{display:flex;justify-content:space-around;background:#fff3cd;border-radius:12px;padding:12px;margin-bottom:14px}
+.timer-item{text-align:center}
+.timer-num{font-size:22px;font-weight:bold;color:#856404}
+.timer-lbl{font-size:11px;color:#856404;margin-top:2px}
+.status-pending{background:#fff3cd;color:#856404;border:2px solid #ffc107}
+.status-approved{background:#d4edda;color:#155724;border:2px solid #28a745}
+.status-rejected{background:#f8d7da;color:#721c24;border:2px solid #dc3545}
+.status-banner{padding:14px;border-radius:12px;text-align:center;margin-bottom:14px;font-weight:bold}
+.history-title{font-size:16px;font-weight:bold;color:#5b3fa0;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #eef}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f8f9fe;border-radius:10px;margin-bottom:8px;font-size:14px}
+.badge{padding:4px 10px;border-radius:10px;font-size:12px;font-weight:bold}
+.badge-pending{background:#fff3cd;color:#856404}
+.badge-approved{background:#d4edda;color:#155724}
+.badge-rejected{background:#f8d7da;color:#721c24}
+.loading{text-align:center;padding:40px;color:#fff;font-size:16px}
+.spinner{display:inline-block;width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;color:#999;padding:20px;font-size:14px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.modal.show{display:flex}
+.modal-box{background:#fff;border-radius:20px;padding:24px;max-width:380px;width:100%;text-align:center}
+.modal-icon{font-size:54px;margin-bottom:10px}
+.modal-title{font-size:18px;font-weight:bold;color:#333;margin-bottom:8px}
+.modal-msg{color:#666;line-height:1.6;margin-bottom:16px;font-size:14px}
+.modal-btn{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:10px 26px;border-radius:10px;font-weight:bold;cursor:pointer;font-size:15px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="loading" class="loading"><div class="spinner"></div> جاري التحميل...</div>
+  <div id="content" style="display:none">
+    <div class="header">
+      <h1>🎯 المهمة الأسبوعية</h1>
+      <p>أكمل مهمة كل أسبوع للاستمرار في الباقة المجانية</p>
+      <div class="week-badge" id="weekBadge">الأسبوع 1 من 4</div>
+    </div>
+    <div id="statusBanner"></div>
+    <div id="timer" class="timer" style="display:none">
+      <div class="timer-item"><div class="timer-num" id="daysLeft">7</div><div class="timer-lbl">يوم متبقي</div></div>
+      <div class="timer-item"><div class="timer-num" id="daysPassed">0</div><div class="timer-lbl">يوم مضى</div></div>
+      <div class="timer-item"><div class="timer-num" id="weekNum">1</div><div class="timer-lbl">الأسبوع</div></div>
+    </div>
+    <div class="card" id="taskCard">
+      <div class="task-icon" id="taskIcon">⭐</div>
+      <div class="task-title" id="taskTitle">المهمة</div>
+      <div class="task-desc" id="taskDesc">الوصف</div>
+      <a id="actionLink" class="btn btn-link" target="_blank" style="display:none">🔗 افتح الرابط</a>
+      <div id="uploadSection">
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">
+            <strong>اضغط هنا لرفع الصورة</strong>
+            <span>screenshot يثبت إنجاز المهمة (حد أقصى 5MB)</span>
+          </div>
+          <img id="preview" class="preview" alt="معاينة">
+        </div>
+        <input type="file" id="fileInput" accept="image/*">
+        <button class="btn btn-submit" id="submitBtn" disabled>📤 إرسال الإثبات</button>
+      </div>
+    </div>
+    <div class="card" id="historyCard" style="display:none">
+      <div class="history-title">📜 سجل المهام السابقة</div>
+      <div id="historyList"></div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-icon" id="mIcon">✅</div>
+    <div class="modal-title" id="mTitle">تم</div>
+    <div class="modal-msg" id="mMsg">رسالة</div>
+    <button class="modal-btn" onclick="closeModal()">حسناً</button>
+  </div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const STUDENT_ID = params.get('student_id') || '';
+let CURRENT = null;
+let SELECTED_FILE = null;
+
+function showModal(icon,title,msg){
+  document.getElementById('mIcon').textContent = icon;
+  document.getElementById('mTitle').textContent = title;
+  document.getElementById('mMsg').textContent = msg;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+
+async function loadTask(){
+  if(!STUDENT_ID){
+    document.getElementById('loading').innerHTML = '❌ معرّف الطالب مفقود';
+    return;
+  }
+  try{
+    const [curRes, statRes] = await Promise.all([
+      fetch('/api/student/weekly-task/current?student_id='+STUDENT_ID),
+      fetch('/api/student/weekly-task/status?student_id='+STUDENT_ID)
+    ]);
+    const cur = await curRes.json();
+    const stat = await statRes.json();
+    
+    if(!cur.has_free_plan){
+      document.getElementById('loading').innerHTML = '⚠️ هذه الصفحة للطلاب أصحاب الباقة المجانية فقط';
+      return;
+    }
+    CURRENT = cur;
+    render(cur, stat);
+  }catch(e){
+    document.getElementById('loading').innerHTML = '❌ خطأ: '+e.message;
+  }
+}
+
+function render(cur, stat){
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+  
+  const wk = cur.current_week || 1;
+  const daysPassed = cur.days_passed || 0;
+  const daysLeft = Math.max(0, 7 - daysPassed);
+  
+  document.getElementById('weekBadge').textContent = 'الأسبوع '+wk+' من 4';
+  document.getElementById('weekNum').textContent = wk;
+  document.getElementById('daysPassed').textContent = daysPassed;
+  document.getElementById('daysLeft').textContent = daysLeft;
+  document.getElementById('timer').style.display = 'flex';
+  
+  const tpl = cur.template;
+  if(tpl){
+    document.getElementById('taskIcon').textContent = tpl.icon || '⭐';
+    document.getElementById('taskTitle').textContent = tpl.title || 'المهمة';
+    document.getElementById('taskDesc').textContent = tpl.description || '';
+    if(tpl.action_url){
+      const lnk = document.getElementById('actionLink');
+      lnk.href = tpl.action_url;
+      lnk.textContent = tpl.action_label || '🔗 افتح الرابط';
+      lnk.style.display = 'block';
+    }
+  } else {
+    document.getElementById('taskTitle').textContent = 'لا توجد مهمة لهذا الأسبوع';
+    document.getElementById('taskDesc').textContent = 'تواصل مع الإدارة';
+  }
+  
+  const sub = cur.submission;
+  const banner = document.getElementById('statusBanner');
+  if(sub){
+    if(sub.status === 'pending'){
+      banner.className = 'status-banner status-pending';
+      banner.innerHTML = '⏳ تم إرسال الإثبات — قيد المراجعة';
+      document.getElementById('uploadSection').style.display = 'none';
+    } else if(sub.status === 'approved'){
+      banner.className = 'status-banner status-approved';
+      banner.innerHTML = '✅ تم قبول مهمة هذا الأسبوع! 🎉';
+      document.getElementById('uploadSection').style.display = 'none';
+    } else if(sub.status === 'rejected'){
+      banner.className = 'status-banner status-rejected';
+      banner.innerHTML = '❌ تم رفض الإثبات: ' + (sub.admin_note || 'يرجى المحاولة مرة أخرى');
+    }
+  } else if(stat.is_blocked){
+    banner.className = 'status-banner status-rejected';
+    banner.innerHTML = '🚫 تم حظر التقدم — يجب إكمال مهمة الأسبوع السابق';
+  }
+  
+  const hist = stat.history || [];
+  if(hist.length > 0){
+    document.getElementById('historyCard').style.display = 'block';
+    document.getElementById('historyList').innerHTML = hist.map(h => {
+      const cls = 'badge-' + (h.status || 'pending');
+      const lbl = h.status === 'approved' ? '✅ مقبول' : h.status === 'rejected' ? '❌ مرفوض' : '⏳ معلّق';
+      return '<div class="history-item"><span>الأسبوع '+h.week_number+'</span><span class="badge '+cls+'">'+lbl+'</span></div>';
+    }).join('');
+  }
+}
+
+// Upload area handlers
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag');
+  if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if(e.target.files[0]) handleFile(e.target.files[0]); });
+
+function handleFile(f){
+  if(!f.type.startsWith('image/')){ showModal('⚠️','نوع غير صالح','اختر صورة فقط'); return; }
+  if(f.size > 5*1024*1024){ showModal('⚠️','حجم كبير','الحد الأقصى 5MB'); return; }
+  SELECTED_FILE = f;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('preview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    uploadArea.classList.add('has-file');
+    document.getElementById('submitBtn').disabled = false;
+  };
+  reader.readAsDataURL(f);
+}
+
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  if(!SELECTED_FILE || !CURRENT) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> جاري الإرسال...';
+  try{
+    const fd = new FormData();
+    fd.append('student_id', STUDENT_ID);
+    fd.append('week_number', CURRENT.current_week);
+    fd.append('task_type', 'review');
+    fd.append('proof_image', SELECTED_FILE);
+    const r = await fetch('/api/student/weekly-task/submit', { method:'POST', body:fd });
+    const j = await r.json();
+    if(j.ok || j.success){
+      showModal('🎉','تم الإرسال','سيتم مراجعة الإثبات قريباً');
+      setTimeout(() => location.reload(), 1500);
+    } else {
+      showModal('❌','فشل', j.error || 'حدث خطأ');
+      btn.disabled = false;
+      btn.innerHTML = '📤 إرسال الإثبات';
+    }
+  }catch(e){
+    showModal('❌','خطأ', e.message);
+    btn.disabled = false;
+    btn.innerHTML = '📤 إرسال الإثبات';
+  }
+});
+
+loadTask();
+</script>
+</body>
+</html>
