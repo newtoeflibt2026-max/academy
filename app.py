@@ -53,8 +53,7 @@ def _ensure_wal_once():
 def _ensure_stages_track_default():
     """Ensure track column and default value - Final Fix"""
     try:
-        conn = _db_safe()
-        c = conn.cursor()
+        with _db_safe() as (conn, c):
             c.execute("PRAGMA table_info(stages)")
             cols = [row[1] for row in c.fetchall()]
             if "track" not in cols:
@@ -3482,8 +3481,7 @@ def api_admin_stages_create_v2():
 
         placeholders = ",".join(["?"] * len(fields))
 
-        conn = _db_safe()
-        c = conn.cursor()
+        with _db_safe() as (conn, c):
             c.execute(f"INSERT INTO stages ({','.join(fields)}) VALUES ({placeholders})", values)
             stage_id = c.lastrowid
             conn.commit()
