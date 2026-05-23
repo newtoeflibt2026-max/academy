@@ -33,3 +33,11 @@ data/*.db-*
 .vscode/
 .idea/
 *.swp
+# Temp / generated files (added by automation scripts)
+_plans_current.json
+_backups/
+_*.py
+_*.html
+_*.txt
+__pycache__/
+*.pyc
