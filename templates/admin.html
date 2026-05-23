@@ -723,8 +723,7 @@ async function deleteStage(id){
 
 // ========== LESSONS HIERARCHY ==========
 
-async 
-function openLessonModal(stageId, l=null){
+async function openLessonModal(stageId, l=null){
   l = l || {title:'',content:'',stage_id:stageId};
   showModal(`<div class="modal-header"><h3 class="modal-title">📚 ${l.id?'تعديل':'إضافة'} درس</h3><button class="modal-close" onclick="closeModal()">×</button></div>
     <div class="form-row"><label>عنوان الدرس</label><input type="text" id="l_title" value="${l.title||''}"></div>
