@@ -830,8 +830,7 @@ async function loadStudents(){
       <td>${s.placement_score!=null ? `<strong>${s.placement_score}</strong>` : '-'}</td>
       <td class="actions">
         <button class="btn btn-sm btn-info" onclick="viewJourney('${s.user_id}')">📊</button>
-              <button class="btn-small" onclick="setPersonalPassScore(${s.user_id||s.id}, ${s.personal_pass_score||70})" title="شرط النجاح" style="background:rgba(245,158,11,.15);color:#fbbf24">🎯</button>
-        <button class="btn btn-sm btn-warning" onclick="unlockGrad('${s.user_id}')" title="فتح بوابة التخرج">🎓</button>
+              <button class="btn btn-sm btn-warning" onclick="unlockGrad('${s.user_id}')" title="فتح بوابة التخرج">🎓</button>
         <button class="btn btn-sm" onclick="changeStudentPath('${s.user_id}','${s.current_path||'foundation'}')" title="تغيير المسار">⚡</button>
         <button class="btn btn-sm btn-ghost" onclick="grantXP('${s.user_id}')" title="منحه XP">💎</button>
         <button class="btn btn-sm btn-ghost" onclick="resetProgress('${s.user_id}')" title="إعادة تعيين">🔄</button>
@@ -985,6 +984,9 @@ async function loadLessonsHierarchy(){
     const list = document.getElementById('stagesList');
     for(const stage of stages){
       const sid = stage.id;
+      const stageName = stage.name_ar||stage.name||stage.name_en||('مرحلة '+sid);
+      window._stageNames = window._stageNames || {};
+      window._stageNames[sid] = stageName;
       const lr = await fetch('/api/admin/lessons/by-stage/'+sid);
       const ld = await lr.json();
       const lessons = ld.lessons || ld.data || [];
@@ -1001,7 +1003,8 @@ async function loadLessonsHierarchy(){
             <span style="background:rgba(59,130,246,.2);padding:3px 10px;border-radius:20px;font-size:12px">${lessons.length} درس</span>
           </div>
           <div onclick="event.stopPropagation()" style="display:flex;gap:6px">
-            <button class="btn-small" onclick="event.stopPropagation();manageStageExam(${sid}, ${JSON.stringify(stage.name_ar||stage.name||'مرحلة '+sid)})" title="امتحان المرحلة" style="background:rgba(168,85,247,.15);color:#c084fc">🎯 امتحان</button>
+            
+            <button class="btn-small" onclick="event.stopPropagation();manageStageExamSafe(${sid})" title="امتحان المرحلة" style="background:rgba(168,85,247,.15);color:#c084fc">🎯 امتحان</button>
             <button class="btn-small" onclick="addLessonToStage(${sid})" title="إضافة درس">➕ درس</button>
             <button class="btn-small" onclick="editStage(${sid})" title="تعديل المرحلة">✏️</button>
             <button class="btn-small btn-danger-small" onclick="deleteStage(${sid})" title="حذف المرحلة">🗑️</button>
