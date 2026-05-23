@@ -2691,17 +2691,7 @@ def page_weekly_task():
 # ============================================================
 
 
-@app.route("/api/admin/stages/<int:sid>/delete", methods=["POST", "DELETE"])
-def api_admin_stage_delete(sid):
-    try:
-        conn = _miniapp_db(); cur = conn.cursor()
-        try: cur.execute("DELETE FROM lessons WHERE stage_id=?", (sid,))
-        except Exception: pass
-        cur.execute("DELETE FROM stages WHERE id=?", (sid,))
-        conn.commit(); conn.close()
-        return jsonify({"ok": True})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+# [Phase12H] Old duplicate delete route removed - using v2 below
 
 
 # ============================================================
@@ -3378,7 +3368,7 @@ def api_admin_lessons_update_v2(lid):
         vals.append(lid)
         c.execute(f"UPDATE lessons SET {','.join(updates)} WHERE id=?", vals)
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        return jsonify({"ok":True,"success":True})
     except Exception as e:
         return jsonify({"success":False,"message":str(e)}), 500
 
@@ -3392,7 +3382,7 @@ def api_admin_lessons_delete_v2(lid):
         except: pass
         c.execute("DELETE FROM lessons WHERE id=?",(lid,))
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        return jsonify({"ok":True,"success":True})
     except Exception as e:
         return jsonify({"success":False,"message":str(e)}), 500
 
@@ -3408,9 +3398,9 @@ def api_admin_lessons_move_v2(lid):
         new_order = (row[0] or 0) + 1
         c.execute("UPDATE lessons SET stage_id=?,order_index=? WHERE id=?",(new_stage,new_order,lid))
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        return jsonify({"ok":True,"success":True})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        return jsonify({"ok":False,"success":False,"error":str(e)}),500
 
 @app.route("/api/admin/lessons/reorder", methods=["POST"])
 def api_admin_lessons_reorder_v2():
@@ -3422,9 +3412,9 @@ def api_admin_lessons_reorder_v2():
         for item in order:
             c.execute("UPDATE lessons SET order_index=? WHERE id=?",(item["order_index"],item["id"]))
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        return jsonify({"ok":True,"success":True})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        return jsonify({"ok":False,"success":False,"error":str(e)}),500
 
 @app.route("/api/admin/lessons/<int:lid>/questions/create", methods=["POST"])
 def api_admin_lesson_question_create_v2(lid):
@@ -3451,7 +3441,7 @@ def api_admin_lesson_question_create_v2(lid):
         conn.commit(); conn.close()
         return jsonify({"success":True,"id":new_id})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        return jsonify({"ok":False,"success":False,"error":str(e)}),500
 
 @app.route("/api/admin/questions/<int:qid>/delete", methods=["POST"])
 def api_admin_question_delete_v2(qid):
@@ -3460,9 +3450,9 @@ def api_admin_question_delete_v2(qid):
         conn = _db_safe(); c = conn.cursor()
         c.execute("DELETE FROM lesson_questions WHERE id=?",(qid,))
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        return jsonify({"ok":True,"success":True})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        return jsonify({"ok":False,"success":False,"error":str(e)}),500
 
 @app.route("/api/admin/stages/create", methods=["POST"])
 def api_admin_stages_create_v2():
@@ -3560,9 +3550,9 @@ def api_admin_stages_delete_v2(sid):
         except: pass
         c.execute("DELETE FROM stages WHERE id=?",(sid,))
         conn.commit(); conn.close()
-        return jsonify({"success":True})
+        return jsonify({"ok":True,"success":True})
     except Exception as e:
-        return jsonify({"success":False,"message":str(e)}),500
+        return jsonify({"ok":False,"success":False,"error":str(e)}),500
 
 
 
