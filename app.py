@@ -2109,6 +2109,7 @@ def api_admin_plan_toggle(pid):
 def api_payment_free_activate():
     """Activate free plan for a student (one-time only, keeps progress)."""
     try:
+        _ensure_phase11b_schema()
         data = _request.get_json(force=True, silent=True) or {}
         sid = str(data.get("student_id", "")).strip()
         pid = data.get("plan_id")
@@ -2374,6 +2375,22 @@ def api_admin_weekly_task_action(tid):
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
 # ===================== End Weekly Tasks =====================
+
+
+@app.route("/api/admin/stages")
+def api_admin_stages():
+    """List all stages for admin panel."""
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM stages ORDER BY order_num, id")
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return _jsonify({"stages": rows, "count": len(rows)})
+    except Exception as e:
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400], "stages": []}), 500
+
 
 if __name__ == "__main__":
     import os as _os
