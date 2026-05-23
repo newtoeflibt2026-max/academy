@@ -1056,7 +1056,7 @@ async function loadLessonsHierarchy(){
             </div>
             <div style="display:flex;gap:6px">
               <button class="btn-small" onclick="editLesson(${L.id})" title="تعديل">✏️</button>
-              <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id}, `${L.title||L.name||''}`)" title="الأسئلة">❓</button>
+              <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id}, '')" title="الأسئلة">❓</button>
               <button class="btn-small" onclick="moveLessonToStage(${L.id})" title="نقل لمرحلة">🔀</button>
               <button class="btn-small btn-danger-small" onclick="deleteLesson(${L.id},${sid})" title="حذف">🗑️</button>
             </div>
