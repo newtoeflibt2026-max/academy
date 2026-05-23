@@ -141,6 +141,45 @@ tr:last-child td{border-bottom:none}
   .sb-logo h1,.sb-logo small{display:none}
   .main{margin-right:60px;padding:14px}
 }
+
+/* ===== Custom Modals ===== */
+.cm-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;z-index:99999;animation:cmFadeIn .2s ease}
+.cm-backdrop.show{display:flex}
+@keyframes cmFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cmSlideUp{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cm-box{background:linear-gradient(145deg,#1e293b,#0f172a);border:1px solid rgba(148,163,184,.2);
+  border-radius:16px;width:90%;max-width:480px;box-shadow:0 25px 50px rgba(0,0,0,.5);
+  animation:cmSlideUp .25s ease;overflow:hidden}
+.cm-head{padding:20px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(148,163,184,.1)}
+.cm-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0}
+.cm-icon.success{background:rgba(34,197,94,.15);color:#22c55e}
+.cm-icon.error{background:rgba(239,68,68,.15);color:#ef4444}
+.cm-icon.warning{background:rgba(245,158,11,.15);color:#f59e0b}
+.cm-icon.info{background:rgba(59,130,246,.15);color:#3b82f6}
+.cm-icon.confirm{background:rgba(168,85,247,.15);color:#a855f7}
+.cm-title{font-size:18px;font-weight:700;color:#f1f5f9;margin:0}
+.cm-body{padding:20px 24px;color:#cbd5e1;font-size:15px;line-height:1.6}
+.cm-input{width:100%;padding:12px 14px;background:#0f172a;border:1px solid rgba(148,163,184,.3);
+  border-radius:10px;color:#f1f5f9;font-size:15px;margin-top:12px;outline:none;transition:border .2s}
+.cm-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.cm-select{width:100%;padding:12px 14px;background:#0f172a;border:1px solid rgba(148,163,184,.3);
+  border-radius:10px;color:#f1f5f9;font-size:15px;margin-top:12px;outline:none;cursor:pointer}
+.cm-actions{padding:16px 24px;display:flex;gap:10px;justify-content:flex-end;
+  background:rgba(15,23,42,.5);border-top:1px solid rgba(148,163,184,.1)}
+.cm-btn{padding:10px 20px;border:none;border-radius:10px;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:inherit}
+.cm-btn-cancel{background:rgba(148,163,184,.15);color:#cbd5e1}
+.cm-btn-cancel:hover{background:rgba(148,163,184,.25)}
+.cm-btn-confirm{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
+.cm-btn-confirm:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.4)}
+.cm-btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.cm-btn-danger:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(239,68,68,.4)}
+.cm-btn-success{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.cm-btn-success:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,.4)}
+.cm-hint{font-size:12px;color:#94a3b8;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -274,6 +313,105 @@ tr:last-child td{border-bottom:none}
 <!-- Generic Modal -->
 <div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
 <div class="modal" id="modalLg"><div class="modal-box lg" id="modalLgBox"></div></div>
+
+
+<!-- ===== Custom Modals ===== -->
+<div id="cmBackdrop" class="cm-backdrop" onclick="if(event.target===this)cmClose()">
+  <div class="cm-box" id="cmBox">
+    <div class="cm-head">
+      <div class="cm-icon" id="cmIcon">ℹ️</div>
+      <h3 class="cm-title" id="cmTitle">عنوان</h3>
+    </div>
+    <div class="cm-body" id="cmBody">رسالة</div>
+    <div class="cm-actions" id="cmActions"></div>
+  </div>
+</div>
+
+<script>
+let _cmResolve = null;
+function cmClose(){
+  document.getElementById('cmBackdrop').classList.remove('show');
+  if(_cmResolve){ _cmResolve(null); _cmResolve = null; }
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') cmClose();
+});
+
+function customAlert(title, message, type){
+  type = type || 'info';
+  const icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  return new Promise(res=>{
+    _cmResolve = res;
+    document.getElementById('cmIcon').className = 'cm-icon ' + type;
+    document.getElementById('cmIcon').textContent = icons[type] || 'ℹ️';
+    document.getElementById('cmTitle').textContent = title;
+    document.getElementById('cmBody').innerHTML = message;
+    document.getElementById('cmActions').innerHTML = 
+      '<button class="cm-btn cm-btn-confirm" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(true);})()">حسناً</button>';
+    document.getElementById('cmBackdrop').classList.add('show');
+  });
+}
+
+function customConfirm(title, message, type){
+  type = type || 'confirm';
+  const icons = {confirm:'❓',warning:'⚠️',danger:'🗑️'};
+  const btnClass = type==='danger' ? 'cm-btn-danger' : (type==='warning' ? 'cm-btn-danger' : 'cm-btn-confirm');
+  return new Promise(res=>{
+    _cmResolve = res;
+    document.getElementById('cmIcon').className = 'cm-icon ' + (type==='danger'?'error':type);
+    document.getElementById('cmIcon').textContent = icons[type] || '❓';
+    document.getElementById('cmTitle').textContent = title;
+    document.getElementById('cmBody').innerHTML = message;
+    document.getElementById('cmActions').innerHTML = 
+      '<button class="cm-btn cm-btn-cancel" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(false);})()">إلغاء</button>' +
+      '<button class="cm-btn '+btnClass+'" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(true);})()">تأكيد</button>';
+    document.getElementById('cmBackdrop').classList.add('show');
+  });
+}
+
+function customPrompt(title, message, opts){
+  opts = opts || {};
+  const defaultVal = opts.default || '';
+  const inputType = opts.type || 'text';
+  const choices = opts.choices || null;
+  const hint = opts.hint || '';
+  return new Promise(res=>{
+    _cmResolve = res;
+    document.getElementById('cmIcon').className = 'cm-icon info';
+    document.getElementById('cmIcon').textContent = opts.icon || '✏️';
+    document.getElementById('cmTitle').textContent = title;
+    let inputHtml = '';
+    if(choices){
+      inputHtml = '<select id="cmInput" class="cm-select">';
+      choices.forEach(c=>{
+        const sel = (c.value===defaultVal)?' selected':'';
+        inputHtml += '<option value="'+c.value+'"'+sel+'>'+c.label+'</option>';
+      });
+      inputHtml += '</select>';
+    } else {
+      inputHtml = '<input id="cmInput" class="cm-input" type="'+inputType+'" value="'+defaultVal.toString().replace(/"/g,'&quot;')+'" />';
+    }
+    if(hint) inputHtml += '<div class="cm-hint">'+hint+'</div>';
+    document.getElementById('cmBody').innerHTML = '<div>'+message+'</div>' + inputHtml;
+    document.getElementById('cmActions').innerHTML = 
+      '<button class="cm-btn cm-btn-cancel" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(null);})()">إلغاء</button>' +
+      '<button class="cm-btn cm-btn-confirm" onclick="(function(){var v=document.getElementById(\'cmInput\').value;var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(v);})()">تأكيد</button>';
+    document.getElementById('cmBackdrop').classList.add('show');
+    setTimeout(()=>{
+      const inp = document.getElementById('cmInput');
+      if(inp){ inp.focus(); if(inp.select)inp.select();
+        inp.addEventListener('keydown', e=>{
+          if(e.key==='Enter' && inp.tagName!=='TEXTAREA'){
+            const v = inp.value; const r = _cmResolve; _cmResolve=null;
+            document.getElementById('cmBackdrop').classList.remove('show');
+            if(r) r(v);
+          }
+        });
+      }
+    }, 50);
+  });
+}
+</script>
 
 </body>
 <script>
@@ -765,30 +903,67 @@ async function viewJourney(uid){
         </div>`).join('')}`, true);
   }catch(e){ toast('خطأ','error'); }
 }
-async function unlockGrad(uid){
-  if(!confirm('فتح بوابة التخرج لهذا الطالب فوراً؟\nسيُسمح له بدخول الامتحان النهائي بدون إكمال كل المراحل.')) return;
-  const r = await api(`/api/admin/students/${uid}/graduation/unlock`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({admin_id:'admin'})});
-  toast(r.ok?'🎓 تم فتح البوابة':'فشل', r.ok?'success':'error');
-  loadStudents();
+async function unlockGrad(studentId){
+  const ok = await customConfirm('🎓 فتح بوابة التخرج',
+    'سيتم السماح للطالب بالوصول إلى الاختبار النهائي مباشرة، حتى لو لم يكمل جميع الدروس.<br>هل أنت متأكد؟','confirm');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/graduation/unlock',{method:'POST'});
+    const d = await r.json();
+    if(d.success){ await customAlert('تم بنجاح','🎓 تم فتح بوابة التخرج للطالب','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
 }
-async function changeStudentPath(uid, current){
-  const newPath = prompt(`المسار الحالي: ${current}\nاكتب المسار الجديد (foundation/toefl/intermediate/advanced/master):`, current);
+async function changeStudentPath(studentId){
+  const newPath = await customPrompt('تغيير المسار التعليمي','اختر المسار الجديد للطالب:',{
+    icon:'⚡',
+    default:'foundation',
+    choices:[
+      {value:'foundation',label:'🌱 Foundation - تأسيسي (15 درس)'},
+      {value:'intermediate',label:'📘 Intermediate - متوسط (10 دروس)'},
+      {value:'advanced',label:'🚀 Advanced - متقدم (7 دروس)'},
+      {value:'master',label:'🏆 Master - محترف (3 دروس)'}
+    ],
+    hint:'سيتم تطبيق المسار فوراً على الطالب'
+  });
   if(!newPath) return;
-  const r = await api(`/api/admin/students/${uid}/path/change`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:newPath.trim()})});
-  toast(r.ok?'تم':'فشل', r.ok?'success':'error');
-  loadStudents();
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/path/change',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({new_path:newPath})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم بنجاح','تم تغيير مسار الطالب إلى: <b>'+newPath+'</b>','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل التغيير','error');
+  }catch(e){ await customAlert('خطأ في الاتصال',e.message,'error'); }
 }
-async function grantXP(uid){
-  const amount = prompt('كم XP لمنحه؟', '100');
+async function grantXP(studentId){
+  const amount = await customPrompt('منح نقاط خبرة (XP)','كم نقطة XP تريد منحها للطالب؟',{
+    icon:'💎',type:'number',default:'50',hint:'القيمة بين 1 و 10000'
+  });
   if(!amount) return;
-  const r = await api(`/api/admin/students/${uid}/xp/grant`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:parseInt(amount)})});
-  toast(r.ok?'💎 تم':'فشل', r.ok?'success':'error');
+  const n = parseInt(amount);
+  if(isNaN(n)||n<1||n>10000){ await customAlert('قيمة غير صالحة','أدخل رقماً بين 1 و 10000','warning'); return; }
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/xp/grant',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({amount:n})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم بنجاح','تم منح <b>'+n+' XP</b> للطالب 💎','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل المنح','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
 }
-async function resetProgress(uid){
-  if(!confirm('إعادة تعيين تقدّم هذا الطالب بالكامل؟ سيخسر XP والـ streak.')) return;
-  const r = await api(`/api/admin/students/${uid}/progress/reset`,{method:'POST'});
-  toast(r.ok?'تم':'فشل', r.ok?'success':'error');
-  loadStudents();
+async function resetProgress(studentId){
+  const ok = await customConfirm('⚠️ إعادة تعيين التقدم',
+    'سيتم حذف كامل تقدم الطالب في جميع الدروس!<br><b style="color:#ef4444">هذا الإجراء لا يمكن التراجع عنه.</b>','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/progress/reset',{method:'POST'});
+    const d = await r.json();
+    if(d.success){ await customAlert('تم بنجاح','تمت إعادة تعيين تقدم الطالب بالكامل','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
 }
 async function deleteStudent(uid){
   if(!confirm('حذف هذا الطالب وكل بياناته؟ لا يمكن التراجع.')) return;
