@@ -1,1744 +1,458 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TOEFL Placement Test 2026 | Yamen Academy</title>
-    <meta name="description" content="اختبار تحديد مستوى احترافي لأكاديمية يامن مع تهيئة الطالب وربط النتيجة بالخطة الشخصية تلقائياً." />
-    <style>
-        :root {
-            --navy: #34485f;
-            --navy-deep: #27384b;
-            --orange: #e58a2b;
-            --orange-strong: #f08a24;
-            --orange-soft: rgba(229, 138, 43, 0.12);
-            --bg: #f6f7f8;
-            --surface: #ffffff;
-            --text: #4a4a4a;
-            --muted: #7b8794;
-            --border: #e7ebf0;
-            --border-strong: #e39a4c;
-            --purple: #6a3fa0;
-            --blue: #6aaae8;
-            --gray-icon: #b8b8b8;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --shadow: 0 18px 40px rgba(23, 43, 77, 0.12);
-            --radius-xl: 30px;
-            --radius-lg: 24px;
-            --radius-md: 18px;
-            --radius-sm: 14px;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-            background: linear-gradient(180deg, #eef2f6 0%, #f8f9fb 100%);
-            color: var(--text);
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        .page {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .hero {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
-            color: #ffffff;
-            padding: 28px 0 58px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before,
-        .hero::after {
-            content: "";
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(40px);
-            opacity: 0.18;
-            pointer-events: none;
-        }
-
-        .hero::before {
-            width: 240px;
-            height: 240px;
-            background: var(--orange);
-            top: -60px;
-            left: -50px;
-        }
-
-        .hero::after {
-            width: 280px;
-            height: 280px;
-            background: #ffffff;
-            bottom: -150px;
-            right: -100px;
-        }
-
-        .container {
-            width: min(1180px, calc(100% - 28px));
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 36px;
-            flex-wrap: wrap;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .brand-mark {
-            width: 58px;
-            height: 58px;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.14);
-            display: grid;
-            place-items: center;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-        }
-
-        .brand-copy h1 {
-            margin: 0 0 4px;
-            font-size: 1.18rem;
-            font-weight: 800;
-        }
-
-        .brand-copy p {
-            margin: 0;
-            color: rgba(255,255,255,0.82);
-            font-size: 0.95rem;
-        }
-
-        .hero-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .hero-link {
-            padding: 12px 16px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.10);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #fff;
-            font-weight: 700;
-            transition: 0.24s ease;
-        }
-
-        .hero-link:hover {
-            transform: translateY(-2px);
-            background: rgba(255,255,255,0.16);
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1.08fr 0.92fr;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .hero-copy h2 {
-            margin: 0 0 12px;
-            font-size: clamp(2rem, 4vw, 3.4rem);
-            line-height: 1.18;
-            font-weight: 900;
-        }
-
-        .hero-copy p {
-            margin: 0;
-            max-width: 720px;
-            line-height: 2;
-            color: rgba(255,255,255,0.86);
-            font-size: 1.02rem;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 18px;
-            padding: 9px 14px;
-            border-radius: 999px;
-            background: rgba(229,138,43,0.16);
-            border: 1px solid rgba(229,138,43,0.28);
-            color: #ffe6c7;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .hero-card {
-            background: rgba(255,255,255,0.10);
-            border: 1px solid rgba(255,255,255,0.14);
-            border-radius: 28px;
-            padding: 26px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.18);
-        }
-
-        .hero-card h3 {
-            margin: 0 0 10px;
-            font-size: 1.18rem;
-        }
-
-        .hero-card p {
-            margin: 0 0 18px;
-            color: rgba(255,255,255,0.84);
-            line-height: 1.8;
-        }
-
-        .hero-signals {
-            display: grid;
-            gap: 12px;
-        }
-
-        .signal {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 13px 14px;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .signal span {
-            color: rgba(255,255,255,0.78);
-            font-size: 0.94rem;
-        }
-
-        .signal strong {
-            font-size: 0.96rem;
-        }
-
-        .main {
-            margin-top: -26px;
-            padding-bottom: 48px;
-        }
-
-        .section-card {
-            background: var(--surface);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            margin-bottom: 22px;
-        }
-
-        .section-card-header {
-            padding: 22px 26px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .section-card-header h3 {
-            margin: 0 0 8px;
-            color: var(--navy);
-            font-size: 1.22rem;
-        }
-
-        .section-card-header p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.8;
-        }
-
-        .section-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 12px;
-            border-radius: 999px;
-            background: var(--orange-soft);
-            border: 1px solid rgba(227, 154, 76, 0.26);
-            color: #9a5812;
-            font-size: 0.85rem;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .section-body {
-            padding: 26px;
-        }
-
-        .module-box {
-            border: 1px solid rgba(227,154,76,0.28);
-            border-top: 4px solid var(--border-strong);
-            border-radius: 24px;
-            padding: 24px;
-            background: #fff;
-        }
-
-        .module-box h3 {
-            margin: 0 0 10px;
-            color: var(--navy);
-            font-size: 1.28rem;
-        }
-
-        .module-box p {
-            margin: 0 0 20px;
-            color: var(--muted);
-            line-height: 1.85;
-        }
-
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        .module-item {
-            background: var(--surface);
-            border: 1px solid rgba(227,154,76,0.30);
-            border-radius: 20px;
-            padding: 18px;
-            box-shadow: 0 10px 24px rgba(23,43,77,0.06);
-            transition: 0.24s ease;
-            text-align: center;
-        }
-
-        .module-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 18px 32px rgba(23,43,77,0.10);
-        }
-
-        .module-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 14px;
-            border-radius: 18px;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(135deg, #fffaf2, #f7f2ff);
-            border: 1px solid #f1e2c8;
-        }
-
-        .module-title {
-            margin: 0 0 8px;
-            color: var(--text);
-            font-size: 1rem;
-            font-weight: 800;
-        }
-
-        .module-copy {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.75;
-            font-size: 0.92rem;
-        }
-
-        .two-col {
-            display: grid;
-            grid-template-columns: 0.96fr 1.04fr;
-            gap: 22px;
-        }
-
-        .stepper {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 22px;
-        }
-
-        .step-pill {
-            min-width: 116px;
-            padding: 10px 14px;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-            background: #f8fafc;
-            color: var(--muted);
-            font-size: 0.9rem;
-            font-weight: 800;
-            text-align: center;
-            transition: 0.2s ease;
-        }
-
-        .step-pill.active {
-            background: linear-gradient(135deg, var(--orange), var(--orange-strong));
-            color: #fff;
-            border-color: transparent;
-            box-shadow: 0 10px 24px rgba(229,138,43,0.20);
-        }
-
-        .step-pill.done {
-            background: rgba(16,185,129,0.10);
-            border-color: rgba(16,185,129,0.20);
-            color: #0b7f57;
-        }
-
-        .step-card {
-            display: none;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 24px;
-            background: #fff;
-        }
-
-        .step-card.active {
-            display: block;
-            animation: fadeUp 0.28s ease;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .step-card h4 {
-            margin: 0 0 10px;
-            color: var(--navy);
-            font-size: 1.18rem;
-        }
-
-        .step-card p {
-            margin: 0 0 18px;
-            color: var(--muted);
-            line-height: 1.8;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .field label {
-            color: var(--navy);
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .field input,
-        .field select {
-            width: 100%;
-            padding: 14px 14px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background: #fff;
-            color: var(--text);
-            outline: none;
-            transition: 0.2s ease;
-        }
-
-        .field input:focus,
-        .field select:focus {
-            border-color: var(--orange);
-            box-shadow: 0 0 0 4px rgba(229,138,43,0.12);
-        }
-
-        .helper-box {
-            border-radius: 18px;
-            padding: 16px;
-            background: #fbfcfe;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            line-height: 1.8;
-            font-size: 0.94rem;
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .primary-btn,
-        .secondary-btn,
-        .ghost-btn {
-            appearance: none;
-            border: none;
-            cursor: pointer;
-            transition: 0.24s ease;
-            font-weight: 800;
-            border-radius: 16px;
-            padding: 14px 18px;
-        }
-
-        .primary-btn {
-            background: linear-gradient(135deg, var(--orange), var(--orange-strong));
-            color: #fff;
-            box-shadow: 0 14px 28px rgba(229,138,43,0.24);
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 34px rgba(229,138,43,0.28);
-        }
-
-        .secondary-btn {
-            background: var(--navy);
-            color: #fff;
-        }
-
-        .secondary-btn:hover,
-        .ghost-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .ghost-btn {
-            background: #fff;
-            color: var(--navy);
-            border: 1px solid var(--border);
-        }
-
-        .mini-note {
-            margin-top: 12px;
-            color: var(--muted);
-            line-height: 1.8;
-            font-size: 0.93rem;
-        }
-
-        .status-box {
-            display: none;
-            margin-top: 16px;
-            padding: 14px 16px;
-            border-radius: 16px;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-
-        .status-box.info {
-            display: block;
-            background: rgba(52,72,95,0.08);
-            border: 1px solid rgba(52,72,95,0.14);
-            color: var(--navy);
-        }
-
-        .status-box.success {
-            display: block;
-            background: rgba(16,185,129,0.10);
-            border: 1px solid rgba(16,185,129,0.18);
-            color: #0c7f57;
-        }
-
-        .status-box.error {
-            display: block;
-            background: rgba(239,68,68,0.08);
-            border: 1px solid rgba(239,68,68,0.16);
-            color: #b42318;
-        }
-
-        .exam-shell {
-            display: none;
-        }
-
-        .exam-shell.active {
-            display: block;
-        }
-
-        .exam-progress {
-            margin-bottom: 16px;
-        }
-
-        .progress-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 10px;
-            border-radius: 999px;
-            background: #edf1f5;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--orange), #ffb45e);
-            border-radius: inherit;
-            transition: width 0.25s ease;
-        }
-
-        .question-card {
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 24px;
-            background: #fff;
-            box-shadow: 0 10px 28px rgba(23,43,77,0.06);
-        }
-
-        .question-meta {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 14px;
-        }
-
-        .meta-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 10px;
-            border-radius: 999px;
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 0.84rem;
-            font-weight: 700;
-        }
-
-        .question-title {
-            margin: 0 0 18px;
-            color: var(--navy);
-            font-size: 1.22rem;
-            line-height: 1.7;
-        }
-
-        .options-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .option-card {
-            position: relative;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            background: #fff;
-            transition: 0.2s ease;
-            overflow: hidden;
-        }
-
-        .option-card:hover {
-            border-color: rgba(227,154,76,0.45);
-            box-shadow: 0 10px 20px rgba(229,138,43,0.08);
-        }
-
-        .option-card input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .option-card label {
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            padding: 16px;
-            cursor: pointer;
-        }
-
-        .option-letter {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            display: grid;
-            place-items: center;
-            font-weight: 900;
-            color: var(--navy);
-            flex-shrink: 0;
-        }
-
-        .option-text {
-            color: var(--text);
-            line-height: 1.85;
-        }
-
-        .option-card.selected {
-            border-color: var(--orange);
-            background: #fffaf5;
-            box-shadow: 0 12px 24px rgba(229,138,43,0.12);
-        }
-
-        .option-card.selected .option-letter {
-            background: linear-gradient(135deg, var(--orange), var(--orange-strong));
-            border-color: transparent;
-            color: #fff;
-        }
-
-        .exam-actions {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 18px;
-        }
-
-        .question-index-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 18px;
-        }
-
-        .question-index-btn {
-            height: 44px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background: #fff;
-            color: var(--navy);
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .question-index-btn:hover {
-            transform: translateY(-2px);
-            border-color: rgba(227,154,76,0.4);
-        }
-
-        .question-index-btn.current {
-            background: var(--navy);
-            color: #fff;
-            border-color: var(--navy);
-        }
-
-        .question-index-btn.answered {
-            background: rgba(16,185,129,0.10);
-            color: #0b7f57;
-            border-color: rgba(16,185,129,0.18);
-        }
-
-        .question-index-btn.current.answered {
-            background: linear-gradient(135deg, var(--orange), var(--orange-strong));
-            color: #fff;
-            border-color: transparent;
-        }
-
-        .result-shell {
-            display: none;
-        }
-
-        .result-shell.active {
-            display: block;
-        }
-
-        .result-hero {
-            border-radius: 28px;
-            padding: 28px;
-            background: linear-gradient(135deg, var(--navy) 0%, #3b516b 100%);
-            color: #fff;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-
-        .result-hero h3 {
-            margin: 0 0 10px;
-            font-size: 1.5rem;
-        }
-
-        .result-hero p {
-            margin: 0;
-            color: rgba(255,255,255,0.84);
-            line-height: 1.9;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .result-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 24px rgba(23,43,77,0.06);
-        }
-
-        .result-card .label {
-            color: var(--muted);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        .result-card .value {
-            color: var(--navy);
-            font-size: 1.7rem;
-            font-weight: 900;
-            line-height: 1.3;
-        }
-
-        .result-card .note {
-            margin-top: 10px;
-            color: var(--muted);
-            font-size: 0.92rem;
-            line-height: 1.75;
-        }
-
-        .milestones-grid {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .milestone-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 18px;
-            box-shadow: 0 10px 20px rgba(23,43,77,0.05);
-        }
-
-        .milestone-card .tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: var(--orange-soft);
-            color: #9a5812;
-            font-size: 0.8rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .milestone-score {
-            font-size: 1.6rem;
-            color: var(--navy);
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-
-        .milestone-focus {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 10px;
-            border-radius: 999px;
-            background: rgba(52,72,95,0.08);
-            color: var(--navy);
-            font-size: 0.82rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .milestone-copy {
-            color: var(--muted);
-            font-size: 0.92rem;
-            line-height: 1.8;
-        }
-
-        .footer-note {
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.92rem;
-            padding: 10px 0 30px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        @media (max-width: 1100px) {
-            .hero-grid,
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-
-            .modules-grid,
-            .result-grid,
-            .milestones-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 780px) {
-            .container {
-                width: min(100% - 16px, 100%);
-            }
-
-            .hero {
-                padding-bottom: 42px;
-            }
-
-            .section-card-header,
-            .section-body {
-                padding: 20px;
-            }
-
-            .question-card,
-            .step-card,
-            .module-box,
-            .result-hero {
-                padding: 20px;
-            }
-
-            .modules-grid,
-            .result-grid,
-            .milestones-grid,
-            .question-index-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .exam-actions,
-            .actions {
-                flex-direction: column;
-            }
-
-            .primary-btn,
-            .secondary-btn,
-            .ghost-btn {
-                width: 100%;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>امتحان تحديد المستوى | Yamen Academy</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Cairo', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+.app { max-width: 720px; margin: 0 auto; padding: 16px; min-height: 100vh; }
+
+/* ===== Loading ===== */
+.loader { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; color: white; }
+.spinner { width: 56px; height: 56px; border: 4px solid rgba(255,255,255,0.25); border-top-color: white; border-radius: 50%; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Welcome Screen ===== */
+.welcome-card {
+  background: white;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  text-align: center;
+  margin-top: 8vh;
+  animation: slideUp 0.5s ease;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.welcome-icon { font-size: 64px; margin-bottom: 12px; }
+.welcome-hi { font-size: 28px; font-weight: 900; color: #1f2937; margin-bottom: 8px; }
+.welcome-sub { font-size: 16px; color: #6b7280; margin-bottom: 28px; line-height: 1.7; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+.info-box { background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%); border-radius: 16px; padding: 16px 12px; }
+.info-num { font-size: 32px; font-weight: 900; color: #4f46e5; line-height: 1; }
+.info-lbl { font-size: 13px; color: #6b7280; margin-top: 4px; font-weight: 600; }
+.tips { background: #fef3c7; border-right: 4px solid #f59e0b; padding: 14px 16px; border-radius: 12px; text-align: right; margin-bottom: 24px; font-size: 14px; color: #78350f; line-height: 1.8; }
+.tips strong { display: block; margin-bottom: 4px; color: #92400e; }
+.btn-primary {
+  width: 100%; padding: 18px; border: none; border-radius: 16px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white; font-size: 18px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 10px 30px rgba(79,70,229,0.4); transition: transform 0.2s;
+  font-family: inherit;
+}
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ===== Quiz Screen ===== */
+.topbar {
+  background: white; border-radius: 20px; padding: 14px 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15); display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 14px;
+}
+.q-counter { font-weight: 800; color: #4f46e5; font-size: 15px; }
+.timer-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white; padding: 8px 14px; border-radius: 12px;
+  font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums;
+  display: flex; align-items: center; gap: 6px;
+}
+.timer-badge.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.timer-badge.danger { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 1s infinite; }
+@keyframes pulse { 50% { transform: scale(1.05); } }
+.progress-track { height: 8px; background: rgba(255,255,255,0.3); border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #10b981); border-radius: 999px; transition: width 0.4s ease; }
+
+.question-card {
+  background: white; border-radius: 24px; padding: 24px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2); margin-bottom: 16px;
+  animation: slideUp 0.3s ease;
+}
+.skill-tag {
+  display: inline-block; background: #ede9fe; color: #6d28d9;
+  padding: 4px 12px; border-radius: 999px; font-size: 12px;
+  font-weight: 700; margin-bottom: 12px;
+}
+.q-text { font-size: 18px; font-weight: 700; color: #1f2937; line-height: 1.7; margin-bottom: 8px; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 14px;
+  padding: 14px 16px; cursor: pointer; display: flex; align-items: center;
+  gap: 12px; transition: all 0.2s; font-family: inherit;
+}
+.option:hover { border-color: #c7d2fe; background: #f5f3ff; }
+.option.selected { border-color: #4f46e5; background: #ede9fe; box-shadow: 0 4px 12px rgba(79,70,229,0.2); }
+.option-letter {
+  width: 36px; height: 36px; min-width: 36px; border-radius: 10px;
+  background: #e5e7eb; color: #4b5563; display: flex; align-items: center;
+  justify-content: center; font-weight: 800; font-size: 16px; transition: all 0.2s;
+}
+.option.selected .option-letter { background: #4f46e5; color: white; }
+.option-text { font-size: 15px; color: #374151; flex: 1; line-height: 1.6; }
+
+/* ===== Result Screen ===== */
+.result-card {
+  background: white; border-radius: 24px; padding: 32px 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25); text-align: center;
+  margin-top: 4vh; animation: slideUp 0.5s ease;
+}
+.result-title { font-size: 22px; font-weight: 900; margin-bottom: 6px; color: #1f2937; }
+.result-sub { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
+.score-ring { position: relative; width: 180px; height: 180px; margin: 0 auto 20px; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring circle { fill: none; stroke-width: 14; }
+.ring-bg { stroke: #e5e7eb; }
+.ring-fg { stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
+.score-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-num { font-size: 44px; font-weight: 900; line-height: 1; }
+.score-lbl { font-size: 13px; color: #6b7280; margin-top: 4px; }
+
+.level-badge { display: inline-block; padding: 8px 20px; border-radius: 999px; font-weight: 800; font-size: 16px; margin-bottom: 20px; }
+.level-A1, .level-A2 { background: #fee2e2; color: #991b1b; }
+.level-B1, .level-B2 { background: #fef3c7; color: #92400e; }
+.level-C1, .level-C2 { background: #d1fae5; color: #065f46; }
+
+.target-box {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+  border-radius: 16px; padding: 18px; margin-bottom: 24px;
+}
+.target-lbl { font-size: 13px; color: #6b7280; font-weight: 700; margin-bottom: 6px; }
+.target-num { font-size: 36px; font-weight: 900; color: #4f46e5; line-height: 1; }
+.target-desc { font-size: 13px; color: #6b7280; margin-top: 6px; }
+
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.stat-mini { background: #f9fafb; border-radius: 12px; padding: 14px; }
+.stat-mini-num { font-size: 24px; font-weight: 900; color: #1f2937; }
+.stat-mini-lbl { font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+.btn-secondary {
+  width: 100%; padding: 16px; border: 2px solid #e5e7eb; border-radius: 14px;
+  background: white; color: #4f46e5; font-size: 16px; font-weight: 800;
+  cursor: pointer; margin-top: 10px; font-family: inherit; transition: all 0.2s;
+}
+.btn-secondary:hover { background: #f5f3ff; border-color: #c7d2fe; }
+
+.hidden { display: none !important; }
+.err-box { background: #fee2e2; color: #991b1b; padding: 16px; border-radius: 12px; margin: 20px 0; text-align: center; font-weight: 700; }
+</style>
 </head>
 <body>
-<div class="page">
-    <header class="hero">
-        <div class="container">
-            <div class="hero-topbar">
-                <div class="brand">
-                    <div class="brand-mark" aria-hidden="true">
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 3L20 7V12.5C20 17.5 16.5 21 12 22C7.5 21 4 17.5 4 12.5V7L12 3Z" stroke="white" stroke-width="1.7"/>
-                            <path d="M8.5 12.5L10.8 14.8L15.8 9.8" stroke="#F3C46E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="brand-copy">
-                        <h1>Yamen Academy TOEFL 2026</h1>
-                        <p>نظام التقييم المتقدم — الأستاذ يامن المرجع الأول للتوفل</p>
-                    </div>
-                </div>
+<div class="app">
 
-                <div class="hero-links">
-                    <a class="hero-link" href="/">العودة للدشبورد</a>
-                    <a class="hero-link" href="#onboarding-card">تهيئة الطالب</a>
-                    <a class="hero-link" href="#modules-card">أقسام الاختبار</a>
-                </div>
-            </div>
+  <!-- Loading -->
+  <div id="screen-loading" class="loader">
+    <div class="spinner"></div>
+    <p style="margin-top: 16px; font-size: 16px;">جاري التحضير...</p>
+  </div>
 
-            <div class="hero-grid">
-                <div class="hero-copy">
-                    <div class="hero-badge">
-                        <span>TOEFL Placement Test 2026</span>
-                        <span>•</span>
-                        <span>تصميم احترافي</span>
-                    </div>
-                    <h2>ابدأ رحلة التميز من بيانات دقيقة إلى مسار واضح ونتيجة قابلة للقياس.</h2>
-                    <p>
-                        تبدأ التجربة بتهيئة ملف الطالب خطوة بخطوة، ثم يتم تحميل أسئلة الاختبار التشخيصي
-                        ديناميكياً من الخادم، وبعد الإرسال تحصل فوراً على الدرجة، المسار المخصص، وإشارات
-                        الخطة القادمة — كل ذلك ضمن تجربة متسقة مع هوية أكاديمية يامن.
-                    </p>
-                </div>
+  <!-- Welcome -->
+  <div id="screen-welcome" class="hidden">
+    <div class="welcome-card">
+      <div class="welcome-icon">🎯</div>
+      <div class="welcome-hi">مرحباً <span id="student-name">بك</span></div>
+      <p class="welcome-sub">سنحدد مستواك الحالي لنبني لك خطة دراسية مناسبة 100%.</p>
 
-                <div class="hero-card">
-                    <h3>لماذا هذا الاختبار مهم؟</h3>
-                    <p>
-                        لأن النتيجة الصحيحة تبدأ بتشخيص صحيح. يتم هنا ربط اسم الطالب، هدفه، موعد اختباره،
-                        والباقة الزمنية مع اختبار فعلي يولّد مساراً دراسياً قابلاً للتنفيذ.
-                    </p>
-
-                    <div class="hero-signals">
-                        <div class="signal">
-                            <span>عدد الأسئلة</span>
-                            <strong>20 سؤالاً ديناميكياً</strong>
-                        </div>
-                        <div class="signal">
-                            <span>المخرجات</span>
-                            <strong>Score + Track + Dashboard Route</strong>
-                        </div>
-                        <div class="signal">
-                            <span>الربط</span>
-                            <strong>Student Initialize → Placement → Dashboard</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-num">10</div>
+          <div class="info-lbl">أسئلة</div>
         </div>
-    </header>
-
-    <main class="main">
-        <div class="container">
-            <section id="modules-card" class="section-card">
-                <div class="section-card-header">
-                    <div>
-                        <h3>أقسام الاختبار</h3>
-                        <p>يعمل النظام على بناء صورة أولية دقيقة عن أداء الطالب عبر المهارات الأساسية الأربع.</p>
-                    </div>
-                    <div class="section-chip">تصميم معتمد لأكاديمية يامن</div>
-                </div>
-                <div class="section-body">
-                    <div class="module-box">
-                        <h3>ابدأ رحلة التميز</h3>
-                        <p>
-                            سيتم أولاً جمع المعلومات الأساسية للطالب، ثم تحميل اختبار تحديد المستوى تلقائياً
-                            من الباك إند، ثم إظهار النتيجة النهائية والمسار المناسب فور إنهاء الحل.
-                        </p>
-
-                        <div class="modules-grid">
-                            <article class="module-item">
-                                <div class="module-icon" aria-hidden="true">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                                        <path d="M6 5.5C6 4.67 6.67 4 7.5 4H18V18H7.5C6.67 18 6 17.33 6 16.5V5.5Z" stroke="#6AAAE8" stroke-width="1.7"/>
-                                        <path d="M9 8H15M9 11H15M9 14H13" stroke="#34485F" stroke-width="1.7" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <h4 class="module-title">Reading + Vocabulary</h4>
-                                <p class="module-copy">مقاطع أكاديمية ومفردات أساسية في الفهم والاستنتاج.</p>
-                            </article>
-
-                            <article class="module-item">
-                                <div class="module-icon" aria-hidden="true">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 5C9.79 5 8 6.79 8 9V12C8 14.21 9.79 16 12 16C14.21 16 16 14.21 16 12V9C16 6.79 14.21 5 12 5Z" stroke="#B8B8B8" stroke-width="1.8"/>
-                                        <path d="M6.5 11.5V12C6.5 15.04 8.96 17.5 12 17.5C15.04 17.5 17.5 15.04 17.5 12V11.5M12 17.5V20" stroke="#34485F" stroke-width="1.8" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <h4 class="module-title">Listening</h4>
-                                <p class="module-copy">فهم المحاضرات القصيرة والتقاط الإشارات والفكرة الرئيسية.</p>
-                            </article>
-
-                            <article class="module-item">
-                                <div class="module-icon" aria-hidden="true">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                                        <path d="M8 19H16M9 5H15C16.1 5 17 5.9 17 7V15L13.5 12.8C12.57 12.22 11.43 12.22 10.5 12.8L7 15V7C7 5.9 7.9 5 9 5Z" stroke="#F6A623" stroke-width="1.8" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <h4 class="module-title">Speaking</h4>
-                                <p class="module-copy">صياغة رأي، تنظيم إجابة، وقياس الجاهزية التعبيرية.</p>
-                            </article>
-
-                            <article class="module-item">
-                                <div class="module-icon" aria-hidden="true">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                                        <path d="M7 5H14L17 8V19H7V5Z" stroke="#6A3FA0" stroke-width="1.8" stroke-linejoin="round"/>
-                                        <path d="M14 5V8H17M9 12H15M9 15H15" stroke="#34485F" stroke-width="1.8" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <h4 class="module-title">Writing</h4>
-                                <p class="module-copy">بنية أكاديمية سليمة وتماسك لغوي ورسالة واضحة.</p>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="two-col">
-                <section id="onboarding-card" class="section-card">
-                    <div class="section-card-header">
-                        <div>
-                            <h3>التهيئة الأولية للطالب</h3>
-                            <p>ابدأ بإدخال البيانات الأساسية خطوة بخطوة قبل إطلاق الاختبار التشخيصي.</p>
-                        </div>
-                        <div class="section-chip">Onboarding Form</div>
-                    </div>
-                    <div class="section-body">
-                        <div id="onboardingSection">
-                            <div class="stepper" id="stepper"></div>
-
-                            <form id="onboardingForm" novalidate>
-                                <div class="step-card active" data-step="0">
-                                    <h4>الخطوة 1 — اسم الطالب</h4>
-                                    <p>أدخل الاسم كما تريد أن يظهر في لوحة التحكم والخطة الشخصية.</p>
-                                    <div class="field">
-                                        <label for="username">الاسم الكامل</label>
-                                        <input id="username" name="username" type="text" placeholder="مثال: دانيا الهاشمي" required />
-                                    </div>
-                                </div>
-
-                                <div class="step-card" data-step="1">
-                                    <h4>الخطوة 2 — الدرجة المطلوبة</h4>
-                                    <p>ما هي النتيجة المستهدفة من 120؟ سيتم استخدامها لحساب التقدم اليومي المطلوب.</p>
-                                    <div class="field">
-                                        <label for="target_score">الدرجة المطلوبة</label>
-                                        <input id="target_score" name="target_score" type="number" min="1" max="120" step="1" placeholder="مثال: 105" required />
-                                    </div>
-                                </div>
-
-                                <div class="step-card" data-step="2">
-                                    <h4>الخطوة 3 — موعد الاختبار</h4>
-                                    <p>حدد التاريخ النهائي حتى يبني النظام توقعاً زمنياً واقعياً للوصول إلى الهدف.</p>
-                                    <div class="field">
-                                        <label for="test_date">موعد الاختبار</label>
-                                        <input id="test_date" name="test_date" type="date" required />
-                                    </div>
-                                </div>
-
-                                <div class="step-card" data-step="3">
-                                    <h4>الخطوة 4 — نوع الباقة</h4>
-                                    <p>اختر الباقة الزمنية التي تمثل مدة التنفيذ الرئيسية للخطة.</p>
-                                    <div class="field">
-                                        <label for="package_type">الباقة</label>
-                                        <select id="package_type" name="package_type" required>
-                                            <option value="">اختر الباقة</option>
-                                            <option value="30">30 يوم</option>
-                                            <option value="60">60 يوم</option>
-                                            <option value="90">90 يوم</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="step-card" data-step="4">
-                                    <h4>الخطوة 5 — المرحلة الحالية</h4>
-                                    <p>اختر المرحلة التشغيلية الحالية للطالب قبل الدخول للاختبار.</p>
-                                    <div class="field">
-                                        <label for="student_stage">المرحلة الحالية</label>
-                                        <select id="student_stage" name="student_stage" required>
-                                            <option value="">اختر المرحلة</option>
-                                            <option value="pre-diagnostic">قبل التشخيص</option>
-                                            <option value="foundation-build">بناء الأساس</option>
-                                            <option value="score-push">رفع الدرجة</option>
-                                            <option value="intensive-revision">مراجعة مكثفة</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="step-card" data-step="5">
-                                    <h4>الخطوة 6 — ساعات الدراسة اليومية</h4>
-                                    <p>أدخل عدد الساعات اليومية المتاحة. ثم سنرسل البيانات ونبدأ تحميل الاختبار.</p>
-                                    <div class="field">
-                                        <label for="study_hours_per_day">ساعات الدراسة اليومية</label>
-                                        <input id="study_hours_per_day" name="study_hours_per_day" type="number" min="0.5" max="16" step="0.5" placeholder="مثال: 3" required />
-                                    </div>
-
-                                    <div class="helper-box" style="margin-top: 18px;">
-                                        بعد الضغط على <strong>إرسال وبدء التهيئة</strong> سيتم استدعاء
-                                        <strong>POST /api/student/initialize</strong>، وعند النجاح سيظهر الاختبار
-                                        التشخيصي مباشرة مع الأسئلة الديناميكية القادمة من
-                                        <strong>GET /api/placement/questions</strong>.
-                                    </div>
-                                </div>
-
-                                <div class="actions">
-                                    <button id="prevStepButton" class="ghost-btn" type="button">السابق</button>
-                                    <button id="nextStepButton" class="secondary-btn" type="button">التالي</button>
-                                    <button id="submitOnboardingButton" class="primary-btn hidden" type="submit">إرسال وبدء التهيئة</button>
-                                </div>
-                            </form>
-
-                            <div id="onboardingStatus" class="status-box"></div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section-card">
-                    <div class="section-card-header">
-                        <div>
-                            <h3>كيف تسير التجربة؟</h3>
-                            <p>المسار التنفيذي الكامل من أول بيانات الطالب حتى النتيجة النهائية.</p>
-                        </div>
-                        <div class="section-chip">Workflow</div>
-                    </div>
-                    <div class="section-body">
-                        <div class="helper-box">
-                            <strong style="display:block; margin-bottom: 8px; color: var(--navy);">1) تهيئة الطالب</strong>
-                            نجمع الاسم، الدرجة المطلوبة، موعد الاختبار، الباقة، المرحلة، وساعات الدراسة.
-                        </div>
-
-                        <div class="helper-box" style="margin-top: 14px;">
-                            <strong style="display:block; margin-bottom: 8px; color: var(--navy);">2) تحميل الاختبار</strong>
-                            بعد نجاح التسجيل يتم سحب أسئلة تحديد المستوى ديناميكياً من الباك إند دون أي بيانات ثابتة.
-                        </div>
-
-                        <div class="helper-box" style="margin-top: 14px;">
-                            <strong style="display:block; margin-bottom: 8px; color: var(--navy);">3) تحليل النتيجة</strong>
-                            بعد الإرسال نحصل على النتيجة النهائية، المسار المناسب، والبيانات التي ستنعكس مباشرة على لوحة التحكم.
-                        </div>
-
-                        <div class="helper-box" style="margin-top: 14px;">
-                            <strong style="display:block; margin-bottom: 8px; color: var(--navy);">4) الانتقال للدشبورد</strong>
-                            ينطلق الطالب إلى لوحة تنفيذية تعرض المسار، التقدم اليومي، ومحطات الإنجاز القادمة.
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <section id="examSection" class="section-card exam-shell">
-                <div class="section-card-header">
-                    <div>
-                        <h3>الاختبار التشخيصي الديناميكي</h3>
-                        <p>الأسئلة القادمة من الخادم الآن مرتبطة مباشرة بالمحاولة الحالية للطالب.</p>
-                    </div>
-                    <div class="section-chip" id="examMetaChip">Loading...</div>
-                </div>
-                <div class="section-body">
-                    <div class="exam-progress">
-                        <div class="progress-top">
-                            <strong id="progressLabel">السؤال 1 من 20</strong>
-                            <span id="answeredCounter" style="color: var(--muted);">تمت الإجابة على 0 / 20</span>
-                        </div>
-                        <div class="progress-track">
-                            <div id="progressFill" class="progress-fill"></div>
-                        </div>
-                    </div>
-
-                    <div id="examStatus" class="status-box info" style="display:block;">جارٍ تحميل الأسئلة...</div>
-
-                    <div id="questionContainer" class="question-card hidden">
-                        <div class="question-meta">
-                            <div class="meta-chip" id="questionSectionChip">Section</div>
-                            <div class="meta-chip" id="questionDifficultyChip">Difficulty</div>
-                            <div class="meta-chip" id="questionIdChip">Question</div>
-                        </div>
-
-                        <h4 id="questionTitle" class="question-title">...</h4>
-                        <div id="optionsList" class="options-list"></div>
-
-                        <div class="exam-actions">
-                            <button id="prevQuestionButton" class="ghost-btn" type="button">السؤال السابق</button>
-                            <button id="nextQuestionButton" class="secondary-btn" type="button">السؤال التالي</button>
-                            <button id="submitExamButton" class="primary-btn hidden" type="button">إنهاء الامتحان وإرسال الإجابات</button>
-                        </div>
-
-                        <div id="questionIndexGrid" class="question-index-grid"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="resultSection" class="section-card result-shell">
-                <div class="section-card-header">
-                    <div>
-                        <h3>نتيجة الاختبار التشخيصي</h3>
-                        <p>تم تحليل المحاولة وتحديد المسار المناسب وربط النتيجة بملف الطالب.</p>
-                    </div>
-                    <div class="section-chip">Result</div>
-                </div>
-
-                <div class="section-body">
-                    <div class="result-hero">
-                        <h3 id="resultHeroTitle">تم احتساب النتيجة بنجاح</h3>
-                        <p id="resultHeroCopy">يمكنك الآن الانتقال إلى لوحة التحكم لمتابعة التقدم اليومي والمعالم الزمنية.</p>
-                    </div>
-
-                    <div class="result-grid">
-                        <article class="result-card">
-                            <div class="label">الدرجة النهائية</div>
-                            <div id="resultScore" class="value">—</div>
-                            <div class="note">من أصل 120 نقطة</div>
-                        </article>
-
-                        <article class="result-card">
-                            <div class="label">المسار المخصص</div>
-                            <div id="resultTrack" class="value" style="font-size: 1.15rem;">—</div>
-                            <div class="note">المسار الناتج من تحليل الأداء</div>
-                        </article>
-
-                        <article class="result-card">
-                            <div class="label">الإجابات الصحيحة</div>
-                            <div id="resultCorrect" class="value">—</div>
-                            <div class="note">عدد الإجابات الصحيحة من إجمالي الأسئلة</div>
-                        </article>
-
-                        <article class="result-card">
-                            <div class="label">الوجهة التالية</div>
-                            <div class="value" style="font-size: 1.2rem;">Dashboard</div>
-                            <div class="note">انتقل الآن لمتابعة الخطة والمعالم</div>
-                        </article>
-                    </div>
-
-                    <div style="margin-bottom: 18px;">
-                        <h4 style="margin: 0 0 12px; color: var(--navy);">محطات الإنجاز المتوقعة</h4>
-                        <div id="resultMilestones" class="milestones-grid"></div>
-                    </div>
-
-                    <div class="actions">
-                        <a href="/dashboard" class="primary-btn" style="display:inline-flex; align-items:center; justify-content:center;">
-                            الانتقال إلى لوحة التحكم
-                        </a>
-                        <button id="restartFlowButton" class="ghost-btn" type="button">إعادة التجربة من البداية</button>
-                    </div>
-
-                    <div id="resultStatus" class="status-box"></div>
-                </div>
-            </section>
+        <div class="info-box">
+          <div class="info-num">5</div>
+          <div class="info-lbl">دقائق</div>
         </div>
-    </main>
+      </div>
 
-    <div class="footer-note">
-        Yamen Academy TOEFL 2026 — اختبار تشخيصي احترافي متصل بالباك إند الديناميكي والخطة الشخصية.
+      <div class="tips">
+        <strong>💡 قبل البدء:</strong>
+        أجب بصدق وبدون مساعدة. النتيجة تحدد نقطة انطلاقك، وليست حكماً عليك.
+      </div>
+
+      <button class="btn-primary" id="btn-start" onclick="startQuiz()">ابدأ الآن ←</button>
     </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="screen-quiz" class="hidden">
+    <div class="topbar">
+      <div class="q-counter">سؤال <span id="q-current">1</span> من <span id="q-total">10</span></div>
+      <div class="timer-badge" id="timer">⏱ 5:00</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress" style="width: 0%"></div></div>
+
+    <div class="question-card">
+      <div class="skill-tag" id="skill-tag">المهارة</div>
+      <div class="q-text" id="q-text">...</div>
+    </div>
+
+    <div class="options" id="options"></div>
+
+    <button class="btn-primary" id="btn-next" onclick="nextQuestion()" disabled style="margin-top: 18px;">التالي ←</button>
+  </div>
+
+  <!-- Result -->
+  <div id="screen-result" class="hidden">
+    <div class="result-card">
+      <div class="result-title">🎉 اكتمل تحديد المستوى</div>
+      <p class="result-sub">إليك نتيجتك التفصيلية</p>
+
+      <div class="score-ring">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="78"></circle>
+          <circle class="ring-fg" id="ring-fg" cx="90" cy="90" r="78"
+                  stroke-dasharray="490" stroke-dashoffset="490" stroke="#4f46e5"></circle>
+        </svg>
+        <div class="score-text">
+          <div class="score-num" id="r-score">0%</div>
+          <div class="score-lbl">نسبة النجاح</div>
+        </div>
+      </div>
+
+      <div class="level-badge" id="r-level">—</div>
+
+      <div class="target-box">
+        <div class="target-lbl">🎯 الهدف المقترح</div>
+        <div class="target-num">TOEFL <span id="r-target">—</span></div>
+        <div class="target-desc" id="r-path">—</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-mini-num" id="r-correct">0</div>
+          <div class="stat-mini-lbl">✅ صحيحة</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-num" id="r-wrong">0</div>
+          <div class="stat-mini-lbl">❌ خاطئة</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="goPlans()">💎 اختر باقتك الآن</button>
+      <button class="btn-secondary" onclick="goDashboard()">العودة للوحة</button>
+    </div>
+  </div>
+
+  <div id="err-box" class="hidden err-box"></div>
 </div>
 
 <script>
-(function () {
-    const stepLabels = [
-        "الاسم",
-        "الدرجة",
-        "الموعد",
-        "الباقة",
-        "المرحلة",
-        "الساعات"
-    ];
+(function(){ try { window.Telegram?.WebApp?.ready(); window.Telegram?.WebApp?.expand(); } catch(e){} })();
 
-    const onboardingForm = document.getElementById("onboardingForm");
-    const onboardingSection = document.getElementById("onboardingSection");
-    const onboardingStatus = document.getElementById("onboardingStatus");
-    const stepper = document.getElementById("stepper");
-    const stepCards = Array.from(document.querySelectorAll(".step-card"));
+// ===== State =====
+const STUDENT_ID = new URLSearchParams(location.search).get('student_id') || '';
+let questions = [];
+let currentIdx = 0;
+let selectedOpt = null;
+let answers = [];
+let timeLeft = 300; // 5 minutes
+let timerInterval = null;
 
-    const prevStepButton = document.getElementById("prevStepButton");
-    const nextStepButton = document.getElementById("nextStepButton");
-    const submitOnboardingButton = document.getElementById("submitOnboardingButton");
+// ===== Helpers =====
+function show(id){ ['screen-loading','screen-welcome','screen-quiz','screen-result'].forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id)); }
+function showErr(msg){ const e = document.getElementById('err-box'); e.textContent = msg; e.classList.remove('hidden'); }
 
-    const examSection = document.getElementById("examSection");
-    const examStatus = document.getElementById("examStatus");
-    const examMetaChip = document.getElementById("examMetaChip");
-    const questionContainer = document.getElementById("questionContainer");
-    const questionTitle = document.getElementById("questionTitle");
-    const questionSectionChip = document.getElementById("questionSectionChip");
-    const questionDifficultyChip = document.getElementById("questionDifficultyChip");
-    const questionIdChip = document.getElementById("questionIdChip");
-    const optionsList = document.getElementById("optionsList");
-    const prevQuestionButton = document.getElementById("prevQuestionButton");
-    const nextQuestionButton = document.getElementById("nextQuestionButton");
-    const submitExamButton = document.getElementById("submitExamButton");
-    const questionIndexGrid = document.getElementById("questionIndexGrid");
-    const progressFill = document.getElementById("progressFill");
-    const progressLabel = document.getElementById("progressLabel");
-    const answeredCounter = document.getElementById("answeredCounter");
-
-    const resultSection = document.getElementById("resultSection");
-    const resultHeroTitle = document.getElementById("resultHeroTitle");
-    const resultHeroCopy = document.getElementById("resultHeroCopy");
-    const resultScore = document.getElementById("resultScore");
-    const resultTrack = document.getElementById("resultTrack");
-    const resultCorrect = document.getElementById("resultCorrect");
-    const resultMilestones = document.getElementById("resultMilestones");
-    const resultStatus = document.getElementById("resultStatus");
-    const restartFlowButton = document.getElementById("restartFlowButton");
-
-    let currentStep = 0;
-    let initializedStudent = null;
-    let questions = [];
-    let currentQuestionIndex = 0;
-    let answers = {};
-
-    function setStatus(target, message, type) {
-        target.className = "status-box " + type;
-        target.textContent = message;
-        target.style.display = "block";
+// ===== Init =====
+async function init(){
+  if(!STUDENT_ID){ showErr('معرّف الطالب مفقود'); return; }
+  // Try to fetch student name (optional)
+  try {
+    const r = await fetch(`/api/student/profile?student_id=${STUDENT_ID}`);
+    if(r.ok){
+      const d = await r.json();
+      const name = d.full_name || d.name || d.first_name || '';
+      if(name) document.getElementById('student-name').textContent = name;
     }
+  } catch(e){}
 
-    function clearStatus(target) {
-        target.className = "status-box";
-        target.textContent = "";
-        target.style.display = "none";
+  // Pre-fetch questions
+  try {
+    const r = await fetch('/api/placement/questions');
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    questions = await r.json();
+    if(!questions.length) throw new Error('لا توجد أسئلة متاحة');
+    document.getElementById('q-total').textContent = questions.length;
+    show('screen-welcome');
+  } catch(err){
+    showErr('تعذر تحميل الأسئلة: ' + err.message);
+    show('screen-loading');
+    document.querySelector('#screen-loading p').textContent = 'حدث خطأ';
+  }
+}
+
+// ===== Start =====
+function startQuiz(){
+  currentIdx = 0;
+  selectedOpt = null;
+  answers = [];
+  timeLeft = 300;
+  show('screen-quiz');
+  startTimer();
+  renderQuestion();
+}
+
+// ===== Timer =====
+function startTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      finishQuiz(true);
     }
+  }, 1000);
+}
+function updateTimerDisplay(){
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  const t = document.getElementById('timer');
+  t.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
+  t.classList.toggle('warning', timeLeft <= 120 && timeLeft > 60);
+  t.classList.toggle('danger', timeLeft <= 60);
+}
 
-    function buildStepper() {
-        stepper.innerHTML = stepLabels.map((label, index) => {
-            return `<div class="step-pill" data-step-pill="${index}">${label}</div>`;
-        }).join("");
-    }
+// ===== Render Question =====
+function renderQuestion(){
+  const q = questions[currentIdx];
+  document.getElementById('q-current').textContent = currentIdx + 1;
+  document.getElementById('progress').style.width = ((currentIdx) / questions.length * 100) + '%';
+  document.getElementById('skill-tag').textContent = skillLabel(q.skill);
+  document.getElementById('q-text').textContent = q.question_text || q.question;
 
-    function updateStepper() {
-        const pills = Array.from(stepper.querySelectorAll(".step-pill"));
-        pills.forEach((pill, index) => {
-            pill.classList.remove("active", "done");
-            if (index < currentStep) {
-                pill.classList.add("done");
-            } else if (index === currentStep) {
-                pill.classList.add("active");
-            }
-        });
-    }
+  const opts = [
+    {letter:'A', text: q.option_a},
+    {letter:'B', text: q.option_b},
+    {letter:'C', text: q.option_c},
+    {letter:'D', text: q.option_d}
+  ].filter(o => o.text);
 
-    function updateStepView() {
-        stepCards.forEach((card, index) => {
-            card.classList.toggle("active", index === currentStep);
-        });
+  const wrap = document.getElementById('options');
+  wrap.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<div class="option-letter">${o.letter}</div><div class="option-text">${escapeHtml(o.text)}</div>`;
+    btn.onclick = () => selectOption(o.letter, btn);
+    wrap.appendChild(btn);
+  });
 
-        prevStepButton.classList.toggle("hidden", currentStep === 0);
-        nextStepButton.classList.toggle("hidden", currentStep === stepCards.length - 1);
-        submitOnboardingButton.classList.toggle("hidden", currentStep !== stepCards.length - 1);
+  selectedOpt = null;
+  document.getElementById('btn-next').disabled = true;
+  document.getElementById('btn-next').textContent = (currentIdx === questions.length - 1) ? 'إنهاء الامتحان ✓' : 'التالي ←';
+}
 
-        updateStepper();
-    }
+function selectOption(letter, btn){
+  document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOpt = letter;
+  document.getElementById('btn-next').disabled = false;
+}
 
-    function getStepField(stepIndex) {
-        const fieldMap = {
-            0: document.getElementById("username"),
-            1: document.getElementById("target_score"),
-            2: document.getElementById("test_date"),
-            3: document.getElementById("package_type"),
-            4: document.getElementById("student_stage"),
-            5: document.getElementById("study_hours_per_day")
-        };
-        return fieldMap[stepIndex];
-    }
+function nextQuestion(){
+  if(!selectedOpt) return;
+  answers.push({ question_id: questions[currentIdx].id, answer: selectedOpt });
+  currentIdx++;
+  if(currentIdx >= questions.length){
+    finishQuiz(false);
+  } else {
+    renderQuestion();
+  }
+}
 
-    function validateCurrentStep() {
-        const field = getStepField(currentStep);
-        if (!field) {
-            return true;
-        }
+function skillLabel(s){
+  const map = {
+    reading:'القراءة', writing:'الكتابة', listening:'الاستماع',
+    speaking:'المحادثة', grammar:'القواعد', vocabulary:'المفردات'
+  };
+  return map[(s||'').toLowerCase()] || 'سؤال عام';
+}
 
-        const value = String(field.value || "").trim();
+function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-        if (!value) {
-            setStatus(onboardingStatus, "يرجى تعبئة هذه الخطوة قبل المتابعة.", "error");
-            field.focus();
-            return false;
-        }
+// ===== Finish =====
+async function finishQuiz(timedOut){
+  if(timerInterval) clearInterval(timerInterval);
+  document.getElementById('progress').style.width = '100%';
 
-        if (field.id === "target_score") {
-            const score = Number(value);
-            if (!Number.isFinite(score) || score < 1 || score > 120) {
-                setStatus(onboardingStatus, "الدرجة المطلوبة يجب أن تكون بين 1 و 120.", "error");
-                field.focus();
-                return false;
-            }
-        }
+  // If timeout, fill remaining as null
+  while(answers.length < questions.length){
+    answers.push({ question_id: questions[answers.length].id, answer: '' });
+  }
 
-        if (field.id === "study_hours_per_day") {
-            const hours = Number(value);
-            if (!Number.isFinite(hours) || hours <= 0) {
-                setStatus(onboardingStatus, "ساعات الدراسة اليومية يجب أن تكون أكبر من صفر.", "error");
-                field.focus();
-                return false;
-            }
-        }
+  show('screen-loading');
+  document.querySelector('#screen-loading p').textContent = 'جاري حساب نتيجتك...';
 
-        clearStatus(onboardingStatus);
-        return true;
-    }
-
-    function collectOnboardingPayload() {
-        return {
-            uid: 1,
-            username: document.getElementById("username").value.trim(),
-            target_score: Number(document.getElementById("target_score").value),
-            test_date: document.getElementById("test_date").value,
-            package_type: document.getElementById("package_type").value,
-            student_stage: document.getElementById("student_stage").value,
-            study_hours_per_day: Number(document.getElementById("study_hours_per_day").value)
-        };
-    }
-
-    async function initializeStudent() {
-        const payload = collectOnboardingPayload();
-
-        setStatus(onboardingStatus, "جارٍ إرسال بيانات الطالب وتهيئة الجلسة...", "info");
-
-        const response = await fetch("/api/student/initialize", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || data.status !== "success") {
-            throw new Error(data.message || "فشل في تهيئة بيانات الطالب.");
-        }
-
-        initializedStudent = data.student || payload;
-        setStatus(onboardingStatus, "تمت تهيئة الطالب بنجاح. جارٍ الآن تحميل الاختبار...", "success");
-        return data;
-    }
-
-    async function loadQuestions() {
-        examSection.classList.add("active");
-        examStatus.style.display = "block";
-        setStatus(examStatus, "جارٍ تحميل أسئلة الاختبار التشخيصي...", "info");
-
-        const response = await fetch("/api/placement/questions", {
-            method: "GET",
-            headers: { "Accept": "application/json" }
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || data.status !== "success") {
-            throw new Error(data.message || "تعذر تحميل الأسئلة الديناميكية.");
-        }
-
-        questions = Array.isArray(data.questions) ? data.questions : [];
-        answers = {};
-        currentQuestionIndex = 0;
-
-        if (!questions.length) {
-            throw new Error("لم يتم استلام أي أسئلة من الخادم.");
-        }
-
-        examMetaChip.textContent = `${questions.length} سؤال ديناميكي`;
-        questionContainer.classList.remove("hidden");
-        clearStatus(examStatus);
-        renderQuestion();
-    }
-
-    function renderQuestionIndexGrid() {
-        questionIndexGrid.innerHTML = questions.map((question, index) => {
-            const isCurrent = index === currentQuestionIndex;
-            const isAnswered = Boolean(answers[question.id]);
-            return `
-                <button
-                    type="button"
-                    class="question-index-btn ${isCurrent ? "current" : ""} ${isAnswered ? "answered" : ""}"
-                    data-question-jump="${index}">
-                    ${index + 1}
-                </button>
-            `;
-        }).join("");
-
-        Array.from(questionIndexGrid.querySelectorAll("[data-question-jump]")).forEach((button) => {
-            button.addEventListener("click", function () {
-                currentQuestionIndex = Number(this.getAttribute("data-question-jump"));
-                renderQuestion();
-            });
-        });
-    }
-
-    function renderQuestion() {
-        if (!questions.length) {
-            return;
-        }
-
-        const question = questions[currentQuestionIndex];
-        const total = questions.length;
-        const answeredCount = Object.keys(answers).length;
-        const currentAnswer = answers[question.id] || "";
-
-        progressLabel.textContent = `السؤال ${currentQuestionIndex + 1} من ${total}`;
-        answeredCounter.textContent = `تمت الإجابة على ${answeredCount} / ${total}`;
-        progressFill.style.width = `${((currentQuestionIndex + 1) / total) * 100}%`;
-
-        questionSectionChip.textContent = `القسم: ${question.section || "general"}`;
-        questionDifficultyChip.textContent = `المستوى: ${question.difficulty || "standard"}`;
-        questionIdChip.textContent = `السؤال #${question.id}`;
-        questionTitle.textContent = question.question || "Question";
-
-        const options = question.options || {};
-        optionsList.innerHTML = Object.keys(options).map((letter) => {
-            const checked = currentAnswer === letter;
-            return `
-                <div class="option-card ${checked ? "selected" : ""}" data-option-card="${letter}">
-                    <input type="radio" id="option_${question.id}_${letter}" name="question_option" value="${letter}" ${checked ? "checked" : ""} />
-                    <label for="option_${question.id}_${letter}">
-                        <div class="option-letter">${letter}</div>
-                        <div class="option-text">${escapeHtml(options[letter])}</div>
-                    </label>
-                </div>
-            `;
-        }).join("");
-
-        Array.from(optionsList.querySelectorAll(".option-card")).forEach((card) => {
-            card.addEventListener("click", function () {
-                const value = this.getAttribute("data-option-card");
-                answers[question.id] = value;
-                renderQuestion();
-            });
-        });
-
-        prevQuestionButton.disabled = currentQuestionIndex === 0;
-        nextQuestionButton.classList.toggle("hidden", currentQuestionIndex === total - 1);
-        submitExamButton.classList.toggle("hidden", currentQuestionIndex !== total - 1);
-
-        renderQuestionIndexGrid();
-    }
-
-    async function submitExam() {
-        const total = questions.length;
-        if (Object.keys(answers).length < total) {
-            setStatus(examStatus, "يرجى الإجابة على جميع الأسئلة قبل إرسال الامتحان.", "error");
-            examStatus.style.display = "block";
-            return;
-        }
-
-        setStatus(examStatus, "جارٍ إرسال الإجابات وتحليل النتيجة...", "info");
-        examStatus.style.display = "block";
-
-        const response = await fetch("/api/placement/submit", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({ answers: answers })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || data.status !== "success") {
-            throw new Error(data.message || "فشل إرسال الامتحان.");
-        }
-
-        renderResult(data);
-    }
-
-    function renderMilestoneCard(dayLabel, milestone) {
-        const expectedScore = milestone && milestone.expected_mock_score !== undefined
-            ? milestone.expected_mock_score
-            : "—";
-        const focusSkill = milestone && milestone.focus_skill
-            ? milestone.focus_skill
-            : "general";
-        const focusSummary = milestone && milestone.focus_summary
-            ? milestone.focus_summary
-            : "سيتم بناء هذه المحطة بعد اكتمال التحليل.";
-
-        return `
-            <article class="milestone-card">
-                <div class="tag">${dayLabel}</div>
-                <div class="milestone-score">${escapeHtml(expectedScore)}</div>
-                <div class="milestone-focus">${escapeHtml(focusSkill)}</div>
-                <div class="milestone-copy">${escapeHtml(focusSummary)}</div>
-            </article>
-        `;
-    }
-
-    function renderResult(data) {
-        resultSection.classList.add("active");
-        resultScore.textContent = String(data.score ?? "—");
-        resultTrack.textContent = data.track_arabic || data.track || "—";
-        resultCorrect.textContent = `${data.correct_count ?? "—"} / ${data.total_questions ?? "—"}`;
-
-        resultHeroTitle.textContent = `تم تحديد المسار: ${data.track_arabic || data.track || "—"}`;
-        resultHeroCopy.textContent = "أصبح بإمكانك الآن الانتقال إلى لوحة التحكم لمتابعة التقدم اليومي والمعالم الزمنية المتوقعة والخطة الشخصية.";
-
-        const milestones = data.milestones || {};
-        resultMilestones.innerHTML = [
-            renderMilestoneCard("DAY 1", milestones.day_1 || {}),
-            renderMilestoneCard("DAY 15", milestones.day_15 || {}),
-            renderMilestoneCard("DAY 30", milestones.day_30 || {}),
-            renderMilestoneCard("DAY 45", milestones.day_45 || {}),
-            renderMilestoneCard("DAY 60", milestones.day_60 || {})
-        ].join("");
-
-        setStatus(resultStatus, "تم إرسال الإجابات وربط النتيجة بملف الطالب بنجاح.", "success");
-        resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function escapeHtml(value) {
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    prevStepButton.addEventListener("click", function () {
-        if (currentStep > 0) {
-            currentStep -= 1;
-            updateStepView();
-            clearStatus(onboardingStatus);
-        }
+  try {
+    const r = await fetch('/api/placement/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ student_id: STUDENT_ID, answers: answers })
     });
+    const d = await r.json();
+    if(d.status !== 'ok') throw new Error(d.message || 'فشل الحفظ');
+    showResult(d);
+  } catch(err){
+    showErr('تعذّر حفظ النتيجة: ' + err.message);
+  }
+}
 
-    nextStepButton.addEventListener("click", function () {
-        if (!validateCurrentStep()) {
-            return;
-        }
+function showResult(d){
+  show('screen-result');
+  const pct = d.score || 0;
+  const correct = d.correct || 0;
+  const total = d.total || questions.length;
+  const wrong = total - correct;
 
-        if (currentStep < stepCards.length - 1) {
-            currentStep += 1;
-            updateStepView();
-        }
-    });
+  document.getElementById('r-score').textContent = pct + '%';
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-target').textContent = d.target_score || 69;
 
-    onboardingForm.addEventListener("submit", async function (event) {
-        event.preventDefault();
+  // Level badge
+  const lvl = d.level || 'B1';
+  const lblMap = {A1:'مبتدئ (A1)', A2:'أساسي (A2)', B1:'متوسط (B1)', B2:'فوق المتوسط (B2)', C1:'متقدم (C1)'};
+  const badge = document.getElementById('r-level');
+  badge.textContent = lblMap[lvl] || lvl;
+  badge.className = 'level-badge level-' + lvl;
 
-        if (!validateCurrentStep()) {
-            return;
-        }
+  // Path description
+  const pathMap = {
+    foundation: 'مسار التأسيس — نبدأ من الأساسيات بثقة',
+    intermediate: 'المسار المتوسط — نبني على معرفتك الحالية',
+    advanced: 'المسار المتقدم — تركيز على نقاط التميز'
+  };
+  document.getElementById('r-path').textContent = pathMap[d.path] || 'مسار مخصص';
 
-        try {
-            await initializeStudent();
-            onboardingSection.classList.add("hidden");
-            await loadQuestions();
-            examSection.scrollIntoView({ behavior: "smooth", block: "start" });
-        } catch (error) {
-            setStatus(onboardingStatus, error.message || "حدث خطأ أثناء التهيئة.", "error");
-        }
-    });
+  // Animate ring
+  const circumference = 2 * Math.PI * 78;
+  const offset = circumference * (1 - pct / 100);
+  const ring = document.getElementById('ring-fg');
+  ring.setAttribute('stroke-dasharray', circumference);
+  setTimeout(() => { ring.setAttribute('stroke-dashoffset', offset); }, 100);
 
-    prevQuestionButton.addEventListener("click", function () {
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex -= 1;
-            renderQuestion();
-        }
-    });
+  // Color by score
+  let color = '#ef4444';
+  if(pct >= 80) color = '#10b981';
+  else if(pct >= 50) color = '#f59e0b';
+  ring.setAttribute('stroke', color);
+  document.getElementById('r-score').style.color = color;
+}
 
-    nextQuestionButton.addEventListener("click", function () {
-        const currentQuestion = questions[currentQuestionIndex];
-        if (currentQuestion && !answers[currentQuestion.id]) {
-            setStatus(examStatus, "يرجى اختيار إجابة لهذا السؤال قبل الانتقال.", "error");
-            examStatus.style.display = "block";
-            return;
-        }
+function goPlans(){ location.href = '/miniapp/plans?student_id=' + STUDENT_ID; }
+function goDashboard(){ location.href = '/student?student_id=' + STUDENT_ID; }
 
-        clearStatus(examStatus);
-        if (currentQuestionIndex < questions.length - 1) {
-            currentQuestionIndex += 1;
-            renderQuestion();
-        }
-    });
-
-    submitExamButton.addEventListener("click", async function () {
-        try {
-            await submitExam();
-        } catch (error) {
-            setStatus(examStatus, error.message || "حدث خطأ أثناء إرسال الامتحان.", "error");
-            examStatus.style.display = "block";
-        }
-    });
-
-    restartFlowButton.addEventListener("click", function () {
-        window.location.reload();
-    });
-
-    buildStepper();
-    updateStepView();
-
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    document.getElementById("test_date").value = `${yyyy}-${mm}-${dd}`;
-})();
+init();
 </script>
 </body>
 </html>

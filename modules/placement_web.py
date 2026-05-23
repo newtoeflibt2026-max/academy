@@ -51,7 +51,7 @@ def placement_questions_api():
             FROM placement_questions
             WHERE is_active=1
             ORDER BY RANDOM()
-            LIMIT 20
+            LIMIT 10
         """).fetchall()
         conn.close()
         out = []
@@ -173,3 +173,4 @@ def placement_status(student_id):
     except Exception as e:
         traceback.print_exc()
         return jsonify({"status": "error", "message": str(e)}), 500
+
