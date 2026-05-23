@@ -830,6 +830,7 @@ async function loadStudents(){
       <td>${s.placement_score!=null ? `<strong>${s.placement_score}</strong>` : '-'}</td>
       <td class="actions">
         <button class="btn btn-sm btn-info" onclick="viewJourney('${s.user_id}')">📊</button>
+              <button class="btn-small" onclick="setPersonalPassScore(${s.user_id||s.id}, ${s.personal_pass_score||70})" title="شرط النجاح" style="background:rgba(245,158,11,.15);color:#fbbf24">🎯</button>
         <button class="btn btn-sm btn-warning" onclick="unlockGrad('${s.user_id}')" title="فتح بوابة التخرج">🎓</button>
         <button class="btn btn-sm" onclick="changeStudentPath('${s.user_id}','${s.current_path||'foundation'}')" title="تغيير المسار">⚡</button>
         <button class="btn btn-sm btn-ghost" onclick="grantXP('${s.user_id}')" title="منحه XP">💎</button>
@@ -1000,6 +1001,7 @@ async function loadLessonsHierarchy(){
             <span style="background:rgba(59,130,246,.2);padding:3px 10px;border-radius:20px;font-size:12px">${lessons.length} درس</span>
           </div>
           <div onclick="event.stopPropagation()" style="display:flex;gap:6px">
+            <button class="btn-small" onclick="event.stopPropagation();manageStageExam(${sid}, ${JSON.stringify(stage.name_ar||stage.name||'مرحلة '+sid)})" title="امتحان المرحلة" style="background:rgba(168,85,247,.15);color:#c084fc">🎯 امتحان</button>
             <button class="btn-small" onclick="addLessonToStage(${sid})" title="إضافة درس">➕ درس</button>
             <button class="btn-small" onclick="editStage(${sid})" title="تعديل المرحلة">✏️</button>
             <button class="btn-small btn-danger-small" onclick="deleteStage(${sid})" title="حذف المرحلة">🗑️</button>
@@ -1238,6 +1240,218 @@ async function deleteQuestion(qid,lid){
     if(d.success){ await customAlert('تم','تم الحذف','success'); manageLessonQuestions(lid); }
     else await customAlert('خطأ',d.message||'فشل','error');
   }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+
+
+// ═══ Phase 12E-2: Stage Exam Bank Management ═══
+
+async function manageStageExam(stageId, stageName){
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-questions');
+    const d = await r.json();
+    if(!d.success){ await customAlert('خطأ', d.message||'فشل التحميل', 'error'); return; }
+
+    const qs = d.questions || [];
+    const cnt = d.exam_questions_count || 10;
+
+    let body = '<div style="text-align:right;max-height:60vh;overflow-y:auto;padding-left:8px">';
+
+    // قسم 1: الإعدادات
+    body += `
+      <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);padding:14px;border-radius:10px;margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div>
+            <strong style="color:#60a5fa">⚙️ إعدادات الامتحان</strong>
+            <div style="font-size:12px;color:#94a3b8;margin-top:4px">عدد الأسئلة الظاهرة لكل طالب في كل محاولة</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="number" id="examCntInput_${stageId}" value="${cnt}" min="1" max="100" style="width:70px;padding:8px;background:#0f172a;border:1px solid rgba(148,163,184,.3);border-radius:8px;color:#f1f5f9;text-align:center"/>
+            <button class="cm-btn cm-btn-confirm" style="padding:8px 14px" onclick="saveExamSettings(${stageId})">حفظ</button>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:#cbd5e1">
+          📊 بنك الأسئلة: <strong style="color:#22c55e">${qs.length}</strong> سؤال
+          ${qs.length < cnt ? '<span style="color:#ef4444;margin-right:8px">⚠️ يجب إضافة '+(cnt-qs.length)+' سؤال على الأقل ليبدأ الامتحان</span>' : '<span style="color:#22c55e;margin-right:8px">✅ كافٍ لبدء الامتحان</span>'}
+        </div>
+      </div>
+    `;
+
+    // قسم 2: زر إضافة
+    body += `
+      <button class="cm-btn cm-btn-success" style="width:100%;margin-bottom:14px;padding:12px" onclick="addStageExamQuestion(${stageId},'${(stageName||'').replace(/'/g,"\\'")}')">
+        ➕ إضافة سؤال جديد للبنك
+      </button>
+    `;
+
+    // قسم 3: قائمة الأسئلة
+    if(qs.length === 0){
+      body += '<div style="text-align:center;color:#64748b;padding:30px;background:#0f172a;border-radius:10px">📭 بنك الأسئلة فارغ. ابدأ بإضافة أسئلة لتفعيل الامتحان.</div>';
+    } else {
+      qs.forEach((q,i) => {
+        const opts = ['A','B','C','D'].map(L => {
+          const v = q['option_'+L.toLowerCase()];
+          if(!v) return '';
+          const isCorrect = (q.correct_answer||'').toUpperCase() === L;
+          return `<div style="padding:4px 8px;${isCorrect?'background:rgba(34,197,94,.15);color:#86efac;border-radius:6px':''}">
+            ${isCorrect?'✓ ':''}<strong>${L}.</strong> ${escapeHtml(v)}
+          </div>`;
+        }).filter(x=>x).join('');
+
+        body += `
+          <div style="background:#0f172a;border:1px solid rgba(148,163,184,.1);padding:12px;border-radius:10px;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:8px">
+              <strong style="flex:1">س${i+1}: ${escapeHtml(q.question_text||'')}</strong>
+              <div style="display:flex;gap:5px">
+                <button class="btn-small" onclick="editStageExamQuestion(${q.id},${stageId})" title="تعديل">✏️</button>
+                <button class="btn-small btn-danger-small" onclick="deleteStageExamQuestion(${q.id},${stageId},'${(stageName||'').replace(/'/g,"\\'")}')" title="حذف">🗑️</button>
+              </div>
+            </div>
+            <div style="font-size:13px;color:#cbd5e1;margin-bottom:6px">${opts}</div>
+            ${q.explanation ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(168,85,247,.08);border-right:3px solid #a855f7;border-radius:6px;font-size:12px;color:#c084fc"><strong>💡 الشرح:</strong> ${escapeHtml(q.explanation)}</div>` : '<div style="font-size:11px;color:#64748b;margin-top:6px">⚠️ لا يوجد شرح — أضف شرحاً لمساعدة الطالب عند الفشل</div>'}
+          </div>
+        `;
+      });
+    }
+
+    body += '</div>';
+    await customAlert('🎯 امتحان المرحلة: '+stageName, body, 'info');
+  }catch(e){
+    await customAlert('خطأ', e.message, 'error');
+  }
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+async function saveExamSettings(stageId){
+  const inp = document.getElementById('examCntInput_'+stageId);
+  if(!inp) return;
+  const cnt = parseInt(inp.value);
+  if(isNaN(cnt) || cnt < 1 || cnt > 100){
+    await customAlert('قيمة غير صالحة','أدخل رقماً بين 1 و 100','warning');
+    return;
+  }
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-settings',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({exam_questions_count: cnt})
+    });
+    const d = await r.json();
+    if(d.success){ await customAlert('تم','تم حفظ عدد الأسئلة: '+cnt,'success'); }
+    else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+async function addStageExamQuestion(stageId, stageName){
+  const qtext = await customPrompt('➕ سؤال جديد - بنك '+stageName,'اكتب نص السؤال:',{icon:'❓',default:''});
+  if(!qtext) return;
+  const optA = await customPrompt('الخيار A','نص الخيار الأول:',{icon:'🅰️',default:''}); if(!optA) return;
+  const optB = await customPrompt('الخيار B','نص الخيار الثاني:',{icon:'🅱️',default:''}); if(!optB) return;
+  const optC = await customPrompt('الخيار C','نص الخيار الثالث (اتركه فارغاً للتخطي):',{icon:'©️',default:''});
+  const optD = await customPrompt('الخيار D','نص الخيار الرابع (اتركه فارغاً للتخطي):',{icon:'Ⓓ',default:''});
+
+  const choices = [{value:'A',label:'A — '+optA},{value:'B',label:'B — '+optB}];
+  if(optC) choices.push({value:'C',label:'C — '+optC});
+  if(optD) choices.push({value:'D',label:'D — '+optD});
+
+  const correct = await customPrompt('الإجابة الصحيحة','اختر الإجابة الصحيحة:',{icon:'✅',default:'A',choices:choices});
+  if(!correct) return;
+
+  const explanation = await customPrompt('💡 شرح الفكرة','اكتب شرحاً للفكرة (يظهر للطالب بعد الإجابة لتوصيل المفهوم دون كشف الإجابة):',{icon:'💡',default:'',hint:'مهم جداً — الطالب يرى الشرح فقط عند الفشل'});
+  // explanation اختياري لكن مستحسن
+
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-questions/create',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        question_text: qtext,
+        option_a: optA, option_b: optB,
+        option_c: optC||'', option_d: optD||'',
+        correct_answer: correct,
+        explanation: explanation||''
+      })
+    });
+    const d = await r.json();
+    if(d.success){
+      await customAlert('تم','تم إضافة السؤال إلى البنك ✅','success');
+      manageStageExam(stageId, stageName);  // إعادة فتح
+    } else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+async function editStageExamQuestion(qid, stageId){
+  // نحتاج جلب السؤال الحالي — لا يوجد endpoint مفرد، نجلب القائمة ونبحث
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-questions');
+    const d = await r.json();
+    const q = (d.questions||[]).find(x => x.id === qid);
+    if(!q){ await customAlert('خطأ','السؤال غير موجود','error'); return; }
+
+    const qtext = await customPrompt('تعديل السؤال','نص السؤال:',{icon:'✏️',default:q.question_text||''});
+    if(!qtext) return;
+    const optA = await customPrompt('الخيار A','',{icon:'🅰️',default:q.option_a||''}); if(!optA) return;
+    const optB = await customPrompt('الخيار B','',{icon:'🅱️',default:q.option_b||''}); if(!optB) return;
+    const optC = await customPrompt('الخيار C','',{icon:'©️',default:q.option_c||''});
+    const optD = await customPrompt('الخيار D','',{icon:'Ⓓ',default:q.option_d||''});
+
+    const choices = [{value:'A',label:'A — '+optA},{value:'B',label:'B — '+optB}];
+    if(optC) choices.push({value:'C',label:'C — '+optC});
+    if(optD) choices.push({value:'D',label:'D — '+optD});
+    const correct = await customPrompt('الإجابة الصحيحة','',{icon:'✅',default:q.correct_answer||'A',choices:choices});
+    if(!correct) return;
+
+    const explanation = await customPrompt('💡 شرح الفكرة','الشرح:',{icon:'💡',default:q.explanation||''});
+
+    const u = await fetch('/api/admin/exam-questions/'+qid+'/update',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        question_text: qtext, option_a: optA, option_b: optB,
+        option_c: optC||'', option_d: optD||'',
+        correct_answer: correct, explanation: explanation||''
+      })
+    });
+    const ud = await u.json();
+    if(ud.success){ await customAlert('تم','تم التعديل ✅','success'); }
+    else await customAlert('خطأ', ud.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+async function deleteStageExamQuestion(qid, stageId, stageName){
+  const ok = await customConfirm('🗑️ حذف سؤال','سيتم حذف هذا السؤال من بنك أسئلة المرحلة نهائياً.','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/exam-questions/'+qid+'/delete',{method:'POST'});
+    const d = await r.json();
+    if(d.success){
+      await customAlert('تم','تم الحذف','success');
+      manageStageExam(stageId, stageName);
+    } else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+// ═══ تعديل شرط النجاح الشخصي للطالب ═══
+async function setPersonalPassScore(studentId, currentScore){
+  const ps = await customPrompt(
+    '🎯 شرط النجاح الشخصي',
+    'حدد علامة الإتقان للطالب. الطالب يحتاج <b>هذه العلامة + 10</b> للانتقال لمرحلة جديدة.<br>مثلاً: 59 → ينتقل بـ 69%، 79 → ينتقل بـ 89%',
+    {icon:'🎯', type:'number', default: String(currentScore||70), hint:'بين 30 و 95'}
+  );
+  if(!ps) return;
+  const n = parseInt(ps);
+  if(isNaN(n)||n<30||n>95){ await customAlert('قيمة غير صالحة','بين 30 و 95','warning'); return; }
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/pass-score',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({personal_pass_score: n})
+    });
+    const d = await r.json();
+    if(d.success){
+      await customAlert('تم بنجاح','شرط النجاح: <b>'+n+'%</b><br>المطلوب للانتقال: <b>'+(n+10)+'%</b>','success');
+      if(typeof loadStudents === 'function') loadStudents();
+    } else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
 }
 
 </script>
