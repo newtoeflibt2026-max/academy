@@ -1008,8 +1008,8 @@ async function loadLessonsHierarchy(){
       const stageName = stage.name_ar||stage.name||stage.name_en||('مرحلة '+sid);
       window._stageNames = window._stageNames || {};
       window._stageNames[sid] = stageName;
-      const lr = await fetch('/api/admin/lessons/by-stage/'+sid);
-      const ld = await lr.json();
+      const lr = await api('/api/admin/lessons/by-stage/'+sid);
+      const ld = lr;
       const lessons = ld.lessons || ld.data || [];
       _lessonsData.lessons[sid] = lessons;
 
@@ -1056,7 +1056,7 @@ async function loadLessonsHierarchy(){
             </div>
             <div style="display:flex;gap:6px">
               <button class="btn-small" onclick="editLesson(${L.id})" title="تعديل">✏️</button>
-              <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id})" title="الأسئلة">❓</button>
+              <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id}, `${L.title||L.name||''}`)" title="الأسئلة">❓</button>
               <button class="btn-small" onclick="moveLessonToStage(${L.id})" title="نقل لمرحلة">🔀</button>
               <button class="btn-small btn-danger-small" onclick="deleteLesson(${L.id},${sid})" title="حذف">🗑️</button>
             </div>
@@ -1070,7 +1070,7 @@ async function loadLessonsHierarchy(){
             animation:150,
             onEnd: async function(evt){
               const newOrder = Array.from(ul.children).map((el,i)=>({id:parseInt(el.dataset.lessonId),order_index:i+1}));
-              await fetch('/api/admin/lessons/reorder',{
+              await api('/api/admin/lessons/reorder',{
                 method:'POST',headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({stage_id:sid,order:newOrder})
               });
@@ -1155,7 +1155,7 @@ async function addLessonToStage(sid){
   const ps = parseInt(passScore);
   if(isNaN(ps)||ps<50||ps>100){ await customAlert('قيمة غير صالحة','بين 50 و 100','warning'); return; }
   try{
-    const r = await fetch('/api/admin/lessons/create',{
+    const r = await api('/api/admin/lessons/create',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({stage_id:sid,title:title,name:title,pass_score:ps})
     });
@@ -1180,7 +1180,7 @@ async function editLesson(lid){
   const passScore = await customPrompt('شرط النجاح','أقل علامة للنجاح (%):',{icon:'🎯',type:'number',default:String(lesson.pass_score||70)});
   if(!passScore) return;
   try{
-    const r = await fetch('/api/admin/lessons/'+lid+'/update',{
+    const r = await api('/api/admin/lessons/'+lid+'/update',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({title:title,name:title,pass_score:parseInt(passScore)})
     });
@@ -1190,93 +1190,6 @@ async function editLesson(lid){
   }catch(e){ await customAlert('خطأ',e.message,'error'); }
 }
 
-async function deleteLesson(lid){
-  const ok = await customConfirm('🗑️ حذف الدرس','سيتم حذف الدرس وجميع أسئلته!<br><b style="color:#ef4444">لا يمكن التراجع.</b>','danger');
-  if(!ok) return;
-  try{
-    const r = await fetch('/api/admin/lessons/'+lid+'/delete',{method:'POST'});
-    const d = await r.json();
-    if(d.success){ await customAlert('تم','تم الحذف','success'); loadLessonsHierarchy(); }
-    else await customAlert('خطأ',d.message||'فشل','error');
-  }catch(e){ await customAlert('خطأ',e.message,'error'); }
-}
-
-async function moveLessonToStage(lid){
-  const choices = _lessonsData.stages.map(s=>({value:String(s.id),label:s.name_ar||s.name||'مرحلة '+s.id}));
-  const newStageId = await customPrompt('نقل الدرس','اختر المرحلة الجديدة:',{icon:'🔀',choices:choices});
-  if(!newStageId) return;
-  try{
-    const r = await fetch('/api/admin/lessons/'+lid+'/move',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({stage_id:parseInt(newStageId)})
-    });
-    const d = await r.json();
-    if(d.success){ await customAlert('تم','تم النقل','success'); loadLessonsHierarchy(); }
-    else await customAlert('خطأ',d.message||'فشل','error');
-  }catch(e){ await customAlert('خطأ',e.message,'error'); }
-}
-
-// ===== إدارة أسئلة الدرس =====
-async function manageLessonQuestions(lid){
-  try{
-    const r = await fetch('/api/admin/lessons/'+lid+'/questions');
-    const d = await r.json();
-    const qs = d.questions || d.data || [];
-    let body = `<div style="text-align:right;max-height:400px;overflow-y:auto">`;
-    if(qs.length===0){
-      body += '<div style="text-align:center;color:#64748b;padding:20px">لا توجد أسئلة. اضغط إضافة سؤال.</div>';
-    } else {
-      qs.forEach((q,i)=>{
-        body += `<div style="background:#0f172a;padding:10px;border-radius:8px;margin-bottom:8px;border:1px solid rgba(148,163,184,.1)">
-          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px">
-            <div style="flex:1">
-              <strong>س${i+1}:</strong> ${q.question_text||q.text||''}<br>
-              <small style="color:#22c55e">✓ الإجابة: ${q.correct_answer||''}</small>
-            </div>
-            <button class="btn-small btn-danger-small" onclick="deleteQuestion(${q.id},${lid})">🗑️</button>
-          </div>
-        </div>`;
-      });
-    }
-    body += `</div><button class="btn-primary" style="margin-top:10px;width:100%" onclick="addQuestion(${lid})">➕ إضافة سؤال جديد</button>`;
-    await customAlert('❓ أسئلة الدرس ('+qs.length+')', body, 'info');
-  }catch(e){ await customAlert('خطأ',e.message,'error'); }
-}
-
-async function addQuestion(lid){
-  const qtext = await customPrompt('إضافة سؤال','نص السؤال:',{icon:'❓',default:''});
-  if(!qtext) return;
-  const optA = await customPrompt('الخيار A','نص الخيار الأول:',{icon:'🅰️',default:''}); if(!optA) return;
-  const optB = await customPrompt('الخيار B','نص الخيار الثاني:',{icon:'🅱️',default:''}); if(!optB) return;
-  const optC = await customPrompt('الخيار C','نص الخيار الثالث (اختياري):',{icon:'©️',default:''});
-  const optD = await customPrompt('الخيار D','نص الخيار الرابع (اختياري):',{icon:'Ⓓ',default:''});
-  const correct = await customPrompt('الإجابة الصحيحة','اختر الإجابة الصحيحة:',{icon:'✅',default:'A',choices:[
-    {value:'A',label:'A — '+optA},{value:'B',label:'B — '+optB},
-    ...(optC?[{value:'C',label:'C — '+optC}]:[]),
-    ...(optD?[{value:'D',label:'D — '+optD}]:[])
-  ]});
-  if(!correct) return;
-  try{
-    const r = await fetch('/api/admin/lessons/'+lid+'/questions/create',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({question_text:qtext,option_a:optA,option_b:optB,option_c:optC||'',option_d:optD||'',correct_answer:correct})
-    });
-    const d = await r.json();
-    if(d.success){ await customAlert('تم','تم إضافة السؤال ✅','success'); manageLessonQuestions(lid); }
-    else await customAlert('خطأ',d.message||'فشل','error');
-  }catch(e){ await customAlert('خطأ',e.message,'error'); }
-}
-
-async function deleteQuestion(qid,lid){
-  const ok = await customConfirm('🗑️ حذف السؤال','هل أنت متأكد؟','danger');
-  if(!ok) return;
-  try{
-    const r = await fetch('/api/admin/questions/'+qid+'/delete',{method:'POST'});
-    const d = await r.json();
-    if(d.success){ await customAlert('تم','تم الحذف','success'); manageLessonQuestions(lid); }
-    else await customAlert('خطأ',d.message||'فشل','error');
-  }catch(e){ await customAlert('خطأ',e.message,'error'); }
-}
 
 
 
