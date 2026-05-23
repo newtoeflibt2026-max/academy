@@ -2620,6 +2620,434 @@ def page_weekly_task():
     """صفحة المهمة الأسبوعية للطالب"""
     return render_template('weekly-task.html')
 
+
+
+# ============================================================
+# ADMIN STAGES CRUD
+# ============================================================
+@app.route("/api/admin/stages/create", methods=["POST"])
+def api_admin_stage_create():
+    try:
+        data = request.get_json(force=True) or {}
+        code_ = (data.get("code") or "").strip()
+        name = (data.get("name") or "").strip()
+        path = (data.get("path") or "foundation").strip()
+        section = (data.get("section") or "grammar").strip()
+        min_score = float(data.get("min_score") or 70)
+        order_idx = data.get("order_index")
+        if not code_ or not name:
+            return jsonify({"error": "code and name required"}), 400
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        if order_idx is None:
+            cur.execute("SELECT COALESCE(MAX(order_index),0)+1 FROM stages")
+            order_idx = cur.fetchone()[0]
+        else:
+            order_idx = int(order_idx)
+            cur.execute("UPDATE stages SET order_index = order_index + 1 WHERE order_index >= ?", (order_idx,))
+        cur.execute("INSERT INTO stages (code, name, path, section, min_score, order_index) VALUES (?,?,?,?,?,?)",
+                    (code_, name, path, section, min_score, order_idx))
+        sid = cur.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"ok": True, "id": sid})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/stages/<int:sid>/update", methods=["POST", "PUT"])
+def api_admin_stage_update(sid):
+    try:
+        data = request.get_json(force=True) or {}
+        conn = _miniapp_db(); cur = conn.cursor()
+        fields, vals = [], []
+        for col in ["code", "name", "path", "section", "min_score", "order_index"]:
+            if col in data:
+                fields.append(col + "=?"); vals.append(data[col])
+        if not fields:
+            return jsonify({"error": "no fields"}), 400
+        vals.append(sid)
+        cur.execute("UPDATE stages SET " + ", ".join(fields) + " WHERE id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/stages/<int:sid>/delete", methods=["POST", "DELETE"])
+def api_admin_stage_delete(sid):
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        try: cur.execute("DELETE FROM lessons WHERE stage_id=?", (sid,))
+        except Exception: pass
+        cur.execute("DELETE FROM stages WHERE id=?", (sid,))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================
+# ADMIN LESSONS CRUD
+# ============================================================
+def _ensure_lessons_schema():
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("PRAGMA table_info(lessons)")
+        cols = [r[1] for r in cur.fetchall()]
+        if "stage_id" not in cols:
+            cur.execute("ALTER TABLE lessons ADD COLUMN stage_id INTEGER")
+        if "order_index" not in cols:
+            cur.execute("ALTER TABLE lessons ADD COLUMN order_index INTEGER DEFAULT 0")
+        conn.commit(); conn.close()
+    except Exception as e:
+        print("[_ensure_lessons_schema]", e)
+
+
+@app.route("/api/admin/lessons/by-stage/<int:stage_id>", methods=["GET"])
+def api_admin_lessons_by_stage(stage_id):
+    try:
+        _ensure_lessons_schema()
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT l.*, (SELECT COUNT(*) FROM lesson_questions lq WHERE lq.lesson_id=l.id) AS q_count FROM lessons l WHERE l.stage_id=? ORDER BY COALESCE(l.order_index, l.id) ASC", (stage_id,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"lessons": rows, "count": len(rows)})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e), "lessons": []}), 500
+
+
+@app.route("/api/admin/lessons/create", methods=["POST"])
+def api_admin_lesson_create():
+    try:
+        _ensure_lessons_schema()
+        data = request.get_json(force=True) or {}
+        title = (data.get("title") or "").strip()
+        stage_id = data.get("stage_id")
+        content = data.get("content") or ""
+        order_idx = data.get("order_index")
+        if not title or not stage_id:
+            return jsonify({"error": "title and stage_id required"}), 400
+        conn = _miniapp_db(); cur = conn.cursor()
+        if order_idx is None:
+            cur.execute("SELECT COALESCE(MAX(order_index),0)+1 FROM lessons WHERE stage_id=?", (stage_id,))
+            order_idx = cur.fetchone()[0]
+        else:
+            order_idx = int(order_idx)
+            cur.execute("UPDATE lessons SET order_index = order_index + 1 WHERE stage_id=? AND order_index >= ?", (stage_id, order_idx))
+        cur.execute("PRAGMA table_info(lessons)")
+        cols = [r[1] for r in cur.fetchall()]
+        ic = ["title", "stage_id", "order_index"]; iv = [title, stage_id, order_idx]
+        if "content" in cols: ic.append("content"); iv.append(content)
+        if "is_active" in cols: ic.append("is_active"); iv.append(1)
+        ph = ",".join(["?"] * len(iv))
+        cur.execute("INSERT INTO lessons (" + ",".join(ic) + ") VALUES (" + ph + ")", iv)
+        lid = cur.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"ok": True, "id": lid, "order_index": order_idx})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/update", methods=["POST", "PUT"])
+def api_admin_lesson_update(lid):
+    try:
+        data = request.get_json(force=True) or {}
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("PRAGMA table_info(lessons)")
+        cols = [r[1] for r in cur.fetchall()]
+        fields, vals = [], []
+        for col in ["title", "stage_id", "order_index", "content", "is_active"]:
+            if col in data and col in cols:
+                fields.append(col + "=?"); vals.append(data[col])
+        if not fields: return jsonify({"error": "no fields"}), 400
+        vals.append(lid)
+        cur.execute("UPDATE lessons SET " + ", ".join(fields) + " WHERE id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/delete", methods=["POST", "DELETE"])
+def api_admin_lesson_delete(lid):
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("SELECT stage_id, order_index FROM lessons WHERE id=?", (lid,))
+        row = cur.fetchone()
+        if row:
+            stage_id, order_idx = row
+            try: cur.execute("DELETE FROM lesson_questions WHERE lesson_id=?", (lid,))
+            except Exception: pass
+            cur.execute("DELETE FROM lessons WHERE id=?", (lid,))
+            if stage_id is not None and order_idx is not None:
+                cur.execute("UPDATE lessons SET order_index = order_index - 1 WHERE stage_id=? AND order_index > ?", (stage_id, order_idx))
+            conn.commit()
+        conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/<int:lid>/move", methods=["POST"])
+def api_admin_lesson_move(lid):
+    try:
+        data = request.get_json(force=True) or {}
+        new_stage_id = data.get("stage_id")
+        new_order = data.get("order_index")
+        if new_stage_id is None: return jsonify({"error": "stage_id required"}), 400
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("SELECT stage_id, order_index FROM lessons WHERE id=?", (lid,))
+        row = cur.fetchone()
+        if not row: conn.close(); return jsonify({"error": "not found"}), 404
+        old_stage, old_order = row
+        if old_stage is not None and old_order is not None:
+            cur.execute("UPDATE lessons SET order_index = order_index - 1 WHERE stage_id=? AND order_index > ?", (old_stage, old_order))
+        if new_order is None:
+            cur.execute("SELECT COALESCE(MAX(order_index),0)+1 FROM lessons WHERE stage_id=?", (new_stage_id,))
+            new_order = cur.fetchone()[0]
+        else:
+            new_order = int(new_order)
+            cur.execute("UPDATE lessons SET order_index = order_index + 1 WHERE stage_id=? AND order_index >= ? AND id<>?", (new_stage_id, new_order, lid))
+        cur.execute("UPDATE lessons SET stage_id=?, order_index=? WHERE id=?", (new_stage_id, new_order, lid))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lessons/reorder", methods=["POST"])
+def api_admin_lessons_reorder():
+    try:
+        data = request.get_json(force=True) or {}
+        ordered_ids = data.get("ordered_ids") or []
+        stage_id = data.get("stage_id")
+        if not ordered_ids or stage_id is None: return jsonify({"error": "ordered_ids and stage_id required"}), 400
+        conn = _miniapp_db(); cur = conn.cursor()
+        for idx, lid in enumerate(ordered_ids, start=1):
+            cur.execute("UPDATE lessons SET stage_id=?, order_index=? WHERE id=?", (stage_id, idx, lid))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True, "count": len(ordered_ids)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================
+# ADMIN LESSON QUESTIONS CRUD
+# ============================================================
+@app.route("/api/admin/lessons/<int:lid>/questions", methods=["GET"])
+def api_admin_lesson_questions(lid):
+    try:
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        try:
+            cur.execute("SELECT * FROM lesson_questions WHERE lesson_id=? ORDER BY id ASC", (lid,))
+            rows = [dict(r) for r in cur.fetchall()]
+        except Exception:
+            rows = []
+        conn.close()
+        return jsonify({"questions": rows, "count": len(rows)})
+    except Exception as e:
+        return jsonify({"error": str(e), "questions": []}), 500
+
+
+@app.route("/api/admin/lesson-questions/create", methods=["POST"])
+def api_admin_lesson_question_create():
+    try:
+        data = request.get_json(force=True) or {}
+        lid = data.get("lesson_id")
+        q_text = (data.get("question_text") or "").strip()
+        if not lid or not q_text:
+            return jsonify({"error": "lesson_id and question_text required"}), 400
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS lesson_questions (id INTEGER PRIMARY KEY AUTOINCREMENT, lesson_id INTEGER, question_text TEXT, option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT, correct_answer TEXT, explanation TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP)")
+        cur.execute("INSERT INTO lesson_questions (lesson_id, question_text, option_a, option_b, option_c, option_d, correct_answer, explanation) VALUES (?,?,?,?,?,?,?,?)",
+                    (lid, q_text, data.get("option_a",""), data.get("option_b",""), data.get("option_c",""), data.get("option_d",""), data.get("correct_answer","A"), data.get("explanation","")))
+        qid = cur.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"ok": True, "id": qid})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lesson-questions/<int:qid>/update", methods=["POST", "PUT"])
+def api_admin_lesson_question_update(qid):
+    try:
+        data = request.get_json(force=True) or {}
+        conn = _miniapp_db(); cur = conn.cursor()
+        fields, vals = [], []
+        for col in ["question_text","option_a","option_b","option_c","option_d","correct_answer","explanation"]:
+            if col in data:
+                fields.append(col + "=?"); vals.append(data[col])
+        if not fields: return jsonify({"error": "no fields"}), 400
+        vals.append(qid)
+        cur.execute("UPDATE lesson_questions SET " + ", ".join(fields) + " WHERE id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/lesson-questions/<int:qid>/delete", methods=["POST", "DELETE"])
+def api_admin_lesson_question_delete(qid):
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("DELETE FROM lesson_questions WHERE id=?", (qid,))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================
+# ADMIN STUDENTS CRUD
+# ============================================================
+@app.route("/api/admin/students/list", methods=["GET"])
+def api_admin_students_list():
+    try:
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        q = (request.args.get("q") or "").strip()
+        level = (request.args.get("level") or "").strip()
+        page = int(request.args.get("page") or 1)
+        per_page = int(request.args.get("per_page") or 50)
+        offset = (page - 1) * per_page
+        where, params = [], []
+        if q:
+            where.append("(CAST(user_id AS TEXT) LIKE ? OR full_name LIKE ?)")
+            params.extend(["%" + q + "%", "%" + q + "%"])
+        if level:
+            where.append("level=?"); params.append(level)
+        where_sql = ("WHERE " + " AND ".join(where)) if where else ""
+        cur.execute("SELECT COUNT(*) FROM students " + where_sql, params)
+        total = cur.fetchone()[0]
+        cur.execute("PRAGMA table_info(students)")
+        cols = [r[1] for r in cur.fetchall()]
+        select_cols = "user_id"
+        for c in ["full_name","level","placement_done","placement_score","placement_path","free_plan_used","free_plan_used_at","free_week_number","created_at"]:
+            if c in cols: select_cols += ", " + c
+        cur.execute("SELECT " + select_cols + " FROM students " + where_sql + " ORDER BY rowid DESC LIMIT ? OFFSET ?", params + [per_page, offset])
+        rows = [dict(r) for r in cur.fetchall()]
+        for r in rows:
+            try:
+                cur.execute("SELECT plan_name, end_date, is_active FROM subscriptions WHERE user_id=? AND is_active=1 ORDER BY id DESC LIMIT 1", (r["user_id"],))
+                sub = cur.fetchone()
+                r["subscription"] = dict(sub) if sub else None
+            except Exception:
+                r["subscription"] = None
+        conn.close()
+        return jsonify({"students": rows, "total": total, "page": page, "per_page": per_page})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e), "students": []}), 500
+
+
+@app.route("/api/admin/students/<user_id>/update", methods=["POST", "PUT"])
+def api_admin_student_update(user_id):
+    try:
+        data = request.get_json(force=True) or {}
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("PRAGMA table_info(students)")
+        cols = [r[1] for r in cur.fetchall()]
+        fields, vals = [], []
+        for c in ["full_name","level","placement_score","placement_path","free_plan_used"]:
+            if c in data and c in cols:
+                fields.append(c + "=?"); vals.append(data[c])
+        if not fields: return jsonify({"error": "no fields"}), 400
+        vals.append(user_id)
+        cur.execute("UPDATE students SET " + ", ".join(fields) + " WHERE user_id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/students/<user_id>/delete", methods=["POST", "DELETE"])
+def api_admin_student_delete(user_id):
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("DELETE FROM students WHERE user_id=?", (user_id,))
+        try: cur.execute("DELETE FROM subscriptions WHERE user_id=?", (user_id,))
+        except Exception: pass
+        try: cur.execute("DELETE FROM free_plan_weekly_tasks WHERE user_id=?", (user_id,))
+        except Exception: pass
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/students/<user_id>/detail", methods=["GET"])
+def api_admin_student_detail(user_id):
+    try:
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM students WHERE user_id=?", (user_id,))
+        s = cur.fetchone()
+        if not s: return jsonify({"error": "not found"}), 404
+        out = dict(s)
+        try:
+            cur.execute("SELECT * FROM subscriptions WHERE user_id=? ORDER BY id DESC", (user_id,))
+            out["subscriptions"] = [dict(r) for r in cur.fetchall()]
+        except Exception: out["subscriptions"] = []
+        try:
+            cur.execute("SELECT * FROM free_plan_weekly_tasks WHERE user_id=? ORDER BY week_number", (user_id,))
+            out["weekly_tasks"] = [dict(r) for r in cur.fetchall()]
+        except Exception: out["weekly_tasks"] = []
+        conn.close()
+        return jsonify(out)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================
+# ADMIN DASHBOARD STATS
+# ============================================================
+@app.route("/api/admin/dashboard/stats", methods=["GET"])
+def api_admin_dashboard_stats():
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        stats = {}
+        try:
+            cur.execute("SELECT COUNT(*) FROM students"); stats["total_students"] = cur.fetchone()[0]
+        except Exception: stats["total_students"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM subscriptions WHERE is_active=1"); stats["active_subscriptions"] = cur.fetchone()[0]
+        except Exception: stats["active_subscriptions"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM payments WHERE status='pending'"); stats["pending_payments"] = cur.fetchone()[0]
+        except Exception: stats["pending_payments"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM free_plan_weekly_tasks WHERE status='pending'"); stats["pending_tasks"] = cur.fetchone()[0]
+        except Exception: stats["pending_tasks"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM stages"); stats["total_stages"] = cur.fetchone()[0]
+        except Exception: stats["total_stages"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM lessons"); stats["total_lessons"] = cur.fetchone()[0]
+        except Exception: stats["total_lessons"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM lesson_questions"); stats["total_questions"] = cur.fetchone()[0]
+        except Exception: stats["total_questions"] = 0
+        try:
+            cur.execute("SELECT COUNT(*) FROM students WHERE created_at >= datetime('now','-7 days')")
+            stats["new_students_7d"] = cur.fetchone()[0]
+        except Exception: stats["new_students_7d"] = 0
+        conn.close()
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
