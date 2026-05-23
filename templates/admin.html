@@ -748,9 +748,12 @@ async function saveLesson(id, stageId){
 }
 async function deleteLesson(lid, sid){
   if(!confirm('حذف هذا الدرس وكل أسئلته؟')) return;
-  const r = await api(`/api/admin/lessons/${lid}/delete`,{method:'POST'});
-  toast(r.ok?'تم':'فشل', r.ok?'success':'error');
-  document.querySelector(`.stage-block[data-stage="${sid}"]`).classList.remove('open'); toggleStage(sid); loadDashboard();
+  try{
+    const r = await api(`/api/admin/lessons/${lid}/delete`,{method:'POST'});
+    toast(r.ok?'تم':'فشل', r.ok?'success':'error');
+    loadLessonsHierarchy();
+    if(typeof loadDashboard==='function') loadDashboard();
+  }catch(e){ toast('خطأ: '+e.message,'error'); }
 }
 async function manageLessonQuestions(lid, title){
   const j = await api('/api/admin/lessons/' + lid + '/questions');
@@ -1047,7 +1050,7 @@ async function loadLessonsHierarchy(){
               <button class="btn-small" onclick="editLesson(${L.id})" title="تعديل">✏️</button>
               <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id})" title="الأسئلة">❓</button>
               <button class="btn-small" onclick="moveLessonToStage(${L.id})" title="نقل لمرحلة">🔀</button>
-              <button class="btn-small btn-danger-small" onclick="deleteLesson(${L.id})" title="حذف">🗑️</button>
+              <button class="btn-small btn-danger-small" onclick="deleteLesson(${L.id},${sid})" title="حذف">🗑️</button>
             </div>
           `;
           ul.appendChild(row);
