@@ -1,717 +1,387 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة | Yamen Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+body{background:#f3f4f6;color:#1f2937;min-height:100vh}
+.header{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.header h1{font-size:24px;font-weight:900}
+.header p{opacity:0.85;font-size:14px;margin-top:4px}
+.container{max-width:1200px;margin:0 auto;padding:24px 16px}
+.tabs{# ===== 5. كتابة admin.html جديد كامل =====
+$adminHtml = @'
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>لوحة الإدارة</title>
-    <style>
-        :root{
-            --bg:#f5f7fb;
-            --panel:#ffffff;
-            --panel-soft:#fafbfd;
-            --text:#1b2430;
-            --muted:#6b7280;
-            --line:#d9e1ec;
-            --primary:#2463eb;
-            --primary-dark:#1d4fd7;
-            --danger:#d14141;
-            --danger-soft:#fff1f1;
-            --success:#14855b;
-            --success-soft:#edf9f3;
-            --warning:#9a6a00;
-            --warning-soft:#fff8e8;
-            --radius-lg:20px;
-            --radius-md:14px;
-            --radius-sm:10px;
-            --shadow:0 14px 32px rgba(15, 23, 42, 0.07);
-            --container:1240px;
-        }
-
-        *{
-            box-sizing:border-box;
-        }
-
-        html,body{
-            margin:0;
-            padding:0;
-            background:var(--bg);
-            color:var(--text);
-            font-family:"Tahoma","Segoe UI","Arial",sans-serif;
-        }
-
-        body{
-            min-height:100vh;
-        }
-
-        .page{
-            width:min(100%, var(--container));
-            margin:0 auto;
-            padding:24px;
-        }
-
-        .topbar{
-            background:var(--panel);
-            border:1px solid var(--line);
-            border-radius:var(--radius-lg);
-            box-shadow:var(--shadow);
-            padding:20px 22px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:16px;
-            margin-bottom:22px;
-        }
-
-        .topbar-title{
-            margin:0;
-            font-size:1.35rem;
-            font-weight:800;
-        }
-
-        .topbar-subtitle{
-            margin:6px 0 0;
-            color:var(--muted);
-            font-size:0.95rem;
-        }
-
-        .topbar-links{
-            display:flex;
-            gap:10px;
-            flex-wrap:wrap;
-        }
-
-        .nav-link{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-height:42px;
-            padding:0 16px;
-            border-radius:12px;
-            border:1px solid var(--line);
-            background:#fff;
-            color:var(--text);
-            text-decoration:none;
-        }
-
-        .stats-grid{
-            display:grid;
-            grid-template-columns:repeat(3, 1fr);
-            gap:16px;
-            margin-bottom:22px;
-        }
-
-        .stat-card{
-            background:var(--panel);
-            border:1px solid var(--line);
-            border-radius:var(--radius-lg);
-            box-shadow:var(--shadow);
-            padding:20px;
-        }
-
-        .stat-label{
-            color:var(--muted);
-            font-size:0.93rem;
-            margin-bottom:10px;
-        }
-
-        .stat-value{
-            font-size:1.9rem;
-            font-weight:800;
-        }
-
-        .content-grid{
-            display:grid;
-            grid-template-columns:1.45fr 0.95fr;
-            gap:22px;
-        }
-
-        .panel{
-            background:var(--panel);
-            border:1px solid var(--line);
-            border-radius:var(--radius-lg);
-            box-shadow:var(--shadow);
-            overflow:hidden;
-        }
-
-        .panel-header{
-            padding:20px 22px 14px;
-            border-bottom:1px solid #edf1f7;
-        }
-
-        .panel-title{
-            margin:0;
-            font-size:1.08rem;
-            font-weight:800;
-        }
-
-        .panel-subtitle{
-            margin:7px 0 0;
-            color:var(--muted);
-            font-size:0.93rem;
-        }
-
-        .panel-body{
-            padding:20px 22px 22px;
-        }
-
-        .table-wrap{
-            overflow-x:auto;
-        }
-
-        table{
-            width:100%;
-            border-collapse:collapse;
-            min-width:860px;
-        }
-
-        th, td{
-            text-align:right;
-            vertical-align:top;
-            padding:14px 12px;
-            border-bottom:1px solid #eef2f7;
-        }
-
-        th{
-            background:#f9fbff;
-            font-weight:800;
-            font-size:0.95rem;
-        }
-
-        td{
-            font-size:0.95rem;
-            line-height:1.7;
-        }
-
-        tr:last-child td{
-            border-bottom:none;
-        }
-
-        .question-text{
-            font-weight:700;
-            margin-bottom:6px;
-        }
-
-        .options-list{
-            margin:0;
-            padding-right:18px;
-            color:var(--muted);
-        }
-
-        .correct-answer{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            padding:8px 12px;
-            border-radius:999px;
-            background:var(--success-soft);
-            color:var(--success);
-            font-weight:700;
-            white-space:nowrap;
-        }
-
-        .btn{
-            border:none;
-            cursor:pointer;
-            min-height:42px;
-            padding:0 16px;
-            border-radius:12px;
-            font-weight:700;
-            transition:0.18s ease;
-        }
-
-        .btn-primary{
-            background:var(--primary);
-            color:#fff;
-        }
-
-        .btn-primary:hover{
-            background:var(--primary-dark);
-        }
-
-        .btn-danger{
-            background:var(--danger-soft);
-            color:var(--danger);
-        }
-
-        .btn-secondary{
-            background:#f7f9fc;
-            color:var(--text);
-            border:1px solid var(--line);
-        }
-
-        .form-grid{
-            display:grid;
-            gap:14px;
-        }
-
-        .field{
-            display:grid;
-            gap:8px;
-        }
-
-        .field label{
-            font-size:0.94rem;
-            font-weight:700;
-        }
-
-        .field input,
-        .field textarea,
-        .field select{
-            width:100%;
-            border:1px solid var(--line);
-            border-radius:12px;
-            padding:12px 14px;
-            background:#fff;
-            color:var(--text);
-            outline:none;
-            font:inherit;
-        }
-
-        .field input:focus,
-        .field textarea:focus,
-        .field select:focus{
-            border-color:#8eb0ff;
-            box-shadow:0 0 0 4px rgba(36,99,235,0.08);
-        }
-
-        .field textarea{
-            min-height:96px;
-            resize:vertical;
-        }
-
-        .hint{
-            color:var(--muted);
-            font-size:0.87rem;
-            line-height:1.8;
-        }
-
-        .status{
-            display:none;
-            margin-top:14px;
-            padding:12px 14px;
-            border-radius:12px;
-            font-weight:700;
-            line-height:1.8;
-        }
-
-        .status.show{
-            display:block;
-        }
-
-        .status.success{
-            background:var(--success-soft);
-            color:var(--success);
-            border:1px solid #ccebdc;
-        }
-
-        .status.error{
-            background:var(--danger-soft);
-            color:var(--danger);
-            border:1px solid #f0cccc;
-        }
-
-        .status.warning{
-            background:var(--warning-soft);
-            color:var(--warning);
-            border:1px solid #ead8a8;
-        }
-
-        .actions-row{
-            display:flex;
-            gap:10px;
-            flex-wrap:wrap;
-        }
-
-        .meta-box{
-            background:var(--panel-soft);
-            border:1px solid #e8edf5;
-            border-radius:14px;
-            padding:14px 16px;
-            color:var(--muted);
-            line-height:1.9;
-            font-size:0.93rem;
-        }
-
-        @media (max-width: 1050px){
-            .content-grid{
-                grid-template-columns:1fr;
-            }
-
-            .stats-grid{
-                grid-template-columns:1fr;
-            }
-        }
-
-        @media (max-width: 720px){
-            .page{
-                padding:14px;
-            }
-
-            .topbar{
-                flex-direction:column;
-                align-items:stretch;
-            }
-
-            .topbar-links{
-                width:100%;
-            }
-
-            .nav-link,
-            .btn{
-                width:100%;
-            }
-
-            .actions-row{
-                flex-direction:column;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة | Yamen Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+body{background:#f3f4f6;color:#1f2937;min-height:100vh}
+.header{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.header h1{font-size:24px;font-weight:900}
+.header p{opacity:0.85;font-size:14px;margin-top:4px}
+.container{max-width:1200px;margin:0 auto;padding:24px 16px}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;background:white;padding:8px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.tab-btn{padding:10px 18px;border:none;background:transparent;color:#6b7280;font-weight:700;cursor:pointer;border-radius:10px;font-size:14px;transition:all 0.2s;font-family:inherit}
+.tab-btn:hover{background:#f5f3ff;color:#4f46e5}
+.tab-btn.active{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;box-shadow:0 4px 12px rgba(79,70,229,0.3)}
+.tab-content{display:none;animation:fadeIn 0.3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.stat-num{font-size:28px;font-weight:900;color:#4f46e5;line-height:1}
+.stat-lbl{font-size:13px;color:#6b7280;margin-top:6px;font-weight:600}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;background:white;padding:12px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.toolbar input,.toolbar select{padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;flex:1;min-width:140px}
+.toolbar input:focus,.toolbar select:focus{border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.btn{padding:10px 18px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;box-shadow:0 4px 12px rgba(79,70,229,0.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(79,70,229,0.4)}
+.btn-danger{background:#ef4444;color:white}
+.btn-danger:hover{background:#dc2626}
+.btn-secondary{background:#f3f4f6;color:#374151}
+.btn-secondary:hover{background:#e5e7eb}
+.btn-sm{padding:6px 10px;font-size:12px}
+table{width:100%;background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-collapse:collapse}
+th{background:#f9fafb;padding:14px 12px;text-align:right;font-size:13px;font-weight:800;color:#374151;border-bottom:2px solid #e5e7eb}
+td{padding:12px;border-bottom:1px solid #f3f4f6;font-size:14px;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.q-cell{max-width:380px;line-height:1.6}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.badge-grammar{background:#dbeafe;color:#1e40af}
+.badge-vocabulary{background:#fce7f3;color:#9d174d}
+.badge-reading{background:#d1fae5;color:#065f46}
+.badge-listening{background:#fef3c7;color:#92400e}
+.badge-easy{background:#d1fae5;color:#065f46}
+.badge-medium{background:#fef3c7;color:#92400e}
+.badge-hard{background:#fee2e2;color:#991b1b}
+.badge-active{background:#d1fae5;color:#065f46}
+.badge-inactive{background:#fee2e2;color:#991b1b}
+.actions{display:flex;gap:4px;flex-wrap:wrap}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:white;border-radius:18px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal h3{font-size:20px;font-weight:900;margin-bottom:16px;color:#1f2937}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:6px}
+.form-row input,.form-row textarea,.form-row select{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+.form-row textarea{min-height:80px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;border-top:1px solid #e5e7eb;padding-top:16px}
+.empty{text-align:center;padding:40px;color:#9ca3af}
+.toast{position:fixed;bottom:24px;right:24px;background:#10b981;color:white;padding:14px 22px;border-radius:12px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,0.2);z-index:200;animation:slideUp 0.3s ease}
+.toast.error{background:#ef4444}
+.loading-row{text-align:center;padding:40px;color:#6b7280}
+</style>
 </head>
 <body>
-    {% set questions = current_questions if current_questions is not none else [] %}
-    <div class="page">
-        <header class="topbar">
-            <div>
-                <h1 class="topbar-title">لوحة الإدارة</h1>
-                <p class="topbar-subtitle">إدارة بنك الأسئلة التشخيصية والإحصائيات الأساسية</p>
-            </div>
-            <div class="topbar-links">
-                <a class="nav-link" href="/dashboard">لوحة الطالب</a>
-                <a class="nav-link" href="/placement">الاختبار التشخيصي</a>
-            </div>
-        </header>
 
-        <section class="stats-grid">
-            <article class="stat-card">
-                <div class="stat-label">إجمالي الطلاب</div>
-                <div class="stat-value">{{ total_students if total_students is not none else 0 }}</div>
-            </article>
-            <article class="stat-card">
-                <div class="stat-label">متوسط XP</div>
-                <div class="stat-value">{{ average_xp if average_xp is not none else 0 }}</div>
-            </article>
-            <article class="stat-card">
-                <div class="stat-label">عدد الأسئلة الحالية</div>
-                <div class="stat-value" id="questionsCount">{{ questions|length }}</div>
-            </article>
-        </section>
+<div class="header">
+  <h1>🎓 لوحة إدارة Yamen Academy</h1>
+  <p>إدارة الطلاب، الدروس، الباقات، وأسئلة تحديد المستوى</p>
+</div>
 
-        <section class="content-grid">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">الأسئلة الحالية</h2>
-                    <p class="panel-subtitle">يعرض الجدول النسخة الحالية من بنك الأسئلة مع إمكانية الحذف ثم الحفظ المباشر.</p>
-                </div>
-                <div class="panel-body">
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="width:70px;">#</th>
-                                    <th>السؤال</th>
-                                    <th style="width:280px;">الخيارات</th>
-                                    <th style="width:180px;">الإجابة الصحيحة</th>
-                                    <th style="width:120px;">إجراء</th>
-                                </tr>
-                            </thead>
-                            <tbody id="questionsTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div id="tableStatus" class="status"></div>
-                </div>
-            </div>
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('placement')">📝 أسئلة تحديد المستوى</button>
+    <button class="tab-btn" onclick="showTab('students')">👥 الطلاب</button>
+    <button class="tab-btn" onclick="showTab('plans')">💎 الباقات</button>
+    <button class="tab-btn" onclick="showTab('stats')">📊 الإحصائيات</button>
+  </div>
 
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">إضافة سؤال جديد</h2>
-                    <p class="panel-subtitle">يتم تحديث ملف الأسئلة مباشرة بعد الإضافة.</p>
-                </div>
-                <div class="panel-body">
-                    <form id="questionForm" class="form-grid">
-                        <div class="field">
-                            <label for="questionText">نص السؤال</label>
-                            <textarea id="questionText" required></textarea>
-                        </div>
+  <!-- ===== Placement Tab ===== -->
+  <div id="tab-placement" class="tab-content active">
+    <div class="stats-row" id="placement-stats"></div>
 
-                        <div class="field">
-                            <label for="option1">الخيار الأول</label>
-                            <input id="option1" type="text" required />
-                        </div>
-
-                        <div class="field">
-                            <label for="option2">الخيار الثاني</label>
-                            <input id="option2" type="text" required />
-                        </div>
-
-                        <div class="field">
-                            <label for="option3">الخيار الثالث</label>
-                            <input id="option3" type="text" required />
-                        </div>
-
-                        <div class="field">
-                            <label for="option4">الخيار الرابع</label>
-                            <input id="option4" type="text" required />
-                        </div>
-
-                        <div class="field">
-                            <label for="correctAnswer">الإجابة الصحيحة</label>
-                            <select id="correctAnswer" required>
-                                <option value="">اختر الإجابة الصحيحة</option>
-                                <option value="A">الخيار الأول</option>
-                                <option value="B">الخيار الثاني</option>
-                                <option value="C">الخيار الثالث</option>
-                                <option value="D">الخيار الرابع</option>
-                            </select>
-                        </div>
-
-                        <div class="actions-row">
-                            <button type="submit" class="btn btn-primary" id="submitBtn">إضافة وتحديث</button>
-                            <button type="button" class="btn btn-secondary" id="resetBtn">تفريغ الحقول</button>
-                        </div>
-                    </form>
-
-                    <div id="formStatus" class="status"></div>
-
-                    <div class="meta-box" style="margin-top:16px;">
-                        يتم حفظ جميع الأسئلة داخل الملف:
-                        <strong>data/diagnostic_questions.py</strong>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div class="toolbar">
+      <input type="text" id="search-q" placeholder="🔍 ابحث في نص السؤال..." oninput="renderQuestions()">
+      <select id="filter-skill" onchange="renderQuestions()">
+        <option value="">كل المهارات</option>
+        <option value="grammar">Grammar</option>
+        <option value="vocabulary">Vocabulary</option>
+        <option value="reading">Reading</option>
+        <option value="listening">Listening</option>
+      </select>
+      <select id="filter-diff" onchange="renderQuestions()">
+        <option value="">كل المستويات</option>
+        <option value="easy">سهل</option>
+        <option value="medium">متوسط</option>
+        <option value="hard">صعب</option>
+      </select>
+      <select id="filter-active" onchange="renderQuestions()">
+        <option value="">الكل</option>
+        <option value="1">نشط</option>
+        <option value="0">معطّل</option>
+      </select>
+      <button class="btn btn-primary" onclick="openQuestionModal(null)">➕ سؤال جديد</button>
     </div>
 
-    <script>
-        const initialQuestions = {{ questions|tojson|safe }};
-        let questionsState = Array.isArray(initialQuestions) ? [...initialQuestions] : [];
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px">#</th>
+          <th>السؤال</th>
+          <th style="width:90px">المهارة</th>
+          <th style="width:80px">المستوى</th>
+          <th style="width:70px">الإجابة</th>
+          <th style="width:80px">الحالة</th>
+          <th style="width:160px">إجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="q-tbody">
+        <tr><td colspan="7" class="loading-row">جاري التحميل...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-        const tableBody = document.getElementById("questionsTableBody");
-        const tableStatus = document.getElementById("tableStatus");
-        const formStatus = document.getElementById("formStatus");
-        const questionsCount = document.getElementById("questionsCount");
+  <!-- Placeholder tabs -->
+  <div id="tab-students" class="tab-content"><div class="empty">قسم الطلاب — قيد التطوير</div></div>
+  <div id="tab-plans" class="tab-content"><div class="empty">قسم الباقات — قيد التطوير<br><br><a href="/miniapp/plans" target="_blank" class="btn btn-primary">عرض صفحة الباقات</a></div></div>
+  <div id="tab-stats" class="tab-content"><div class="empty">الإحصائيات — قيد التطوير</div></div>
+</div>
 
-        const form = document.getElementById("questionForm");
-        const submitBtn = document.getElementById("submitBtn");
-        const resetBtn = document.getElementById("resetBtn");
+<!-- ===== Modal ===== -->
+<div class="modal-overlay" id="q-modal">
+  <div class="modal">
+    <h3 id="modal-title">➕ سؤال جديد</h3>
+    <input type="hidden" id="q-id">
+    <div class="form-row">
+      <label>نص السؤال</label>
+      <textarea id="q-text" placeholder="اكتب نص السؤال هنا..."></textarea>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label>الخيار A</label>
+        <input id="q-a" type="text">
+      </div>
+      <div class="form-row">
+        <label>الخيار B</label>
+        <input id="q-b" type="text">
+      </div>
+      <div class="form-row">
+        <label>الخيار C</label>
+        <input id="q-c" type="text">
+      </div>
+      <div class="form-row">
+        <label>الخيار D</label>
+        <input id="q-d" type="text">
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label>الإجابة الصحيحة</label>
+        <select id="q-correct">
+          <option value="A">A</option><option value="B">B</option>
+          <option value="C">C</option><option value="D">D</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>المهارة</label>
+        <select id="q-skill">
+          <option value="grammar">Grammar</option>
+          <option value="vocabulary">Vocabulary</option>
+          <option value="reading">Reading</option>
+          <option value="listening">Listening</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>المستوى</label>
+        <select id="q-diff">
+          <option value="easy">سهل (A1-A2)</option>
+          <option value="medium" selected>متوسط (B1-B2)</option>
+          <option value="hard">صعب (C1)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>الحالة</label>
+        <select id="q-active">
+          <option value="1">نشط</option>
+          <option value="0">معطّل</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveQuestion()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
 
-        const questionText = document.getElementById("questionText");
-        const option1 = document.getElementById("option1");
-        const option2 = document.getElementById("option2");
-        const option3 = document.getElementById("option3");
-        const option4 = document.getElementById("option4");
-        const correctAnswer = document.getElementById("correctAnswer");
+<script>
+let allQuestions = [];
 
-        function setStatus(element, message, type) {
-            element.className = "status show " + type;
-            element.textContent = message;
-        }
+function showTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
 
-        function clearStatus(element) {
-            element.className = "status";
-            element.textContent = "";
-        }
+function toast(msg, isError){
+  const t = document.createElement('div');
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
 
-        function escapeHtml(value) {
-            return String(value ?? "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+async function loadQuestions(){
+  try {
+    const r = await fetch('/api/admin/placement-questions');
+    const d = await r.json();
+    allQuestions = d.questions || [];
+    renderStats();
+    renderQuestions();
+  } catch(err){
+    toast('فشل التحميل: ' + err.message, true);
+  }
+}
 
-        function updateQuestionsCount() {
-            questionsCount.textContent = questionsState.length;
-        }
+function renderStats(){
+  const total = allQuestions.length;
+  const active = allQuestions.filter(q => q.is_active === 1).length;
+  const skills = {};
+  allQuestions.forEach(q => { skills[q.skill] = (skills[q.skill]||0) + 1; });
+  const html = `
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-lbl">إجمالي الأسئلة</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#10b981">${active}</div><div class="stat-lbl">أسئلة نشطة</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#f59e0b">${total-active}</div><div class="stat-lbl">معطّلة</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#7c3aed">${Object.keys(skills).length}</div><div class="stat-lbl">مهارات مختلفة</div></div>
+  `;
+  document.getElementById('placement-stats').innerHTML = html;
+}
 
-        function normalizeQuestion(question, index) {
-            const options = Array.isArray(question.options) ? question.options : [];
-            return {
-                id: String(question.id || `dq_${index + 1}`),
-                section: String(question.section || "general"),
-                skill: String(question.skill || "general"),
-                difficulty: String(question.difficulty || "medium"),
-                question: String(question.question || "").trim(),
-                options: options.map(item => String(item || "").trim()).filter(Boolean),
-                correct_answer: String(question.correct_answer || "").trim(),
-                explanation: String(question.explanation || "").trim()
-            };
-        }
+function renderQuestions(){
+  const search = (document.getElementById('search-q').value || '').toLowerCase();
+  const fSkill = document.getElementById('filter-skill').value;
+  const fDiff = document.getElementById('filter-diff').value;
+  const fAct = document.getElementById('filter-active').value;
 
-        function renderTable() {
-            tableBody.innerHTML = "";
+  let list = allQuestions.filter(q => {
+    if(search && !(q.question_text||'').toLowerCase().includes(search)) return false;
+    if(fSkill && q.skill !== fSkill) return false;
+    if(fDiff && q.difficulty !== fDiff) return false;
+    if(fAct !== '' && String(q.is_active) !== fAct) return false;
+    return true;
+  });
 
-            questionsState = questionsState.map((item, index) => normalizeQuestion(item, index));
+  if(!list.length){
+    document.getElementById('q-tbody').innerHTML = '<tr><td colspan="7" class="empty">لا توجد أسئلة مطابقة</td></tr>';
+    return;
+  }
 
-            if (!questionsState.length) {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td colspan="5" style="text-align:center; color:#6b7280; padding:22px;">
-                        لا توجد أسئلة حالياً.
-                    </td>
-                `;
-                tableBody.appendChild(row);
-                updateQuestionsCount();
-                return;
-            }
+  const rows = list.map(q => `
+    <tr>
+      <td><strong>#${q.id}</strong></td>
+      <td class="q-cell">${escapeHtml(q.question_text||'')}</td>
+      <td><span class="badge badge-${q.skill||'grammar'}">${q.skill||'-'}</span></td>
+      <td><span class="badge badge-${q.difficulty||'medium'}">${diffLabel(q.difficulty)}</span></td>
+      <td><strong>${q.correct_option||'-'}</strong></td>
+      <td><span class="badge ${q.is_active==1?'badge-active':'badge-inactive'}">${q.is_active==1?'نشط':'معطّل'}</span></td>
+      <td class="actions">
+        <button class="btn btn-secondary btn-sm" onclick="openQuestionModal(${q.id})">✏️</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleQuestion(${q.id})">${q.is_active==1?'⏸':'▶️'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${q.id})">🗑</button>
+      </td>
+    </tr>
+  `).join('');
+  document.getElementById('q-tbody').innerHTML = rows;
+}
 
-            questionsState.forEach((question, index) => {
-                const row = document.createElement("tr");
-                const optionsHtml = (question.options || [])
-                    .map(option => `<li>${escapeHtml(option)}</li>`)
-                    .join("");
+function diffLabel(d){ return {easy:'سهل', medium:'متوسط', hard:'صعب'}[d] || d || '-'; }
+function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>
-                        <div class="question-text">${escapeHtml(question.question)}</div>
-                        <div style="color:#6b7280; font-size:0.88rem;">
-                            القسم: ${escapeHtml(question.section)} |
-                            المهارة: ${escapeHtml(question.skill)} |
-                            الصعوبة: ${escapeHtml(question.difficulty)}
-                        </div>
-                    </td>
-                    <td>
-                        <ol class="options-list">${optionsHtml}</ol>
-                    </td>
-                    <td>
-                        <span class="correct-answer">${escapeHtml(question.correct_answer)}</span>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger" data-index="${index}">حذف</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
+function openQuestionModal(qid){
+  const modal = document.getElementById('q-modal');
+  if(qid){
+    const q = allQuestions.find(x => x.id === qid);
+    if(!q) return;
+    document.getElementById('modal-title').textContent = '✏️ تعديل السؤال #' + qid;
+    document.getElementById('q-id').value = qid;
+    document.getElementById('q-text').value = q.question_text || '';
+    document.getElementById('q-a').value = q.option_a || '';
+    document.getElementById('q-b').value = q.option_b || '';
+    document.getElementById('q-c').value = q.option_c || '';
+    document.getElementById('q-d').value = q.option_d || '';
+    document.getElementById('q-correct').value = q.correct_option || 'A';
+    document.getElementById('q-skill').value = q.skill || 'grammar';
+    document.getElementById('q-diff').value = q.difficulty || 'medium';
+    document.getElementById('q-active').value = String(q.is_active);
+  } else {
+    document.getElementById('modal-title').textContent = '➕ سؤال جديد';
+    document.getElementById('q-id').value = '';
+    ['q-text','q-a','q-b','q-c','q-d'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('q-correct').value = 'A';
+    document.getElementById('q-skill').value = 'grammar';
+    document.getElementById('q-diff').value = 'medium';
+    document.getElementById('q-active').value = '1';
+  }
+  modal.classList.add('show');
+}
 
-            Array.from(tableBody.querySelectorAll(".btn-danger")).forEach(button => {
-                button.addEventListener("click", async () => {
-                    const index = Number(button.getAttribute("data-index"));
-                    if (Number.isNaN(index)) return;
+function closeModal(){ document.getElementById('q-modal').classList.remove('show'); }
 
-                    const updatedQuestions = questionsState.filter((_, i) => i !== index);
-                    await saveQuestions(updatedQuestions, "تم حذف السؤال وتحديث بنك الأسئلة.");
-                });
-            });
+async function saveQuestion(){
+  const qid = document.getElementById('q-id').value;
+  const body = {
+    question_text: document.getElementById('q-text').value.trim(),
+    option_a: document.getElementById('q-a').value.trim(),
+    option_b: document.getElementById('q-b').value.trim(),
+    option_c: document.getElementById('q-c').value.trim(),
+    option_d: document.getElementById('q-d').value.trim(),
+    correct_option: document.getElementById('q-correct').value,
+    skill: document.getElementById('q-skill').value,
+    difficulty: document.getElementById('q-diff').value,
+    is_active: document.getElementById('q-active').value === '1'
+  };
+  if(!body.question_text || !body.option_a || !body.option_b){
+    toast('السؤال والخيارات A و B مطلوبة', true); return;
+  }
+  try {
+    const url = qid ? `/api/admin/placement-questions/${qid}` : '/api/admin/placement-questions';
+    const method = qid ? 'PUT' : 'POST';
+    const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(qid ? '✅ تم التعديل' : '✅ تم الإضافة');
+    closeModal();
+    loadQuestions();
+  } catch(err){ toast('خطأ: ' + err.message, true); }
+}
 
-            updateQuestionsCount();
-        }
+async function toggleQuestion(qid){
+  try {
+    const r = await fetch(`/api/admin/placement-questions/${qid}/toggle`, { method: 'POST' });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('✅ تم تغيير الحالة');
+    loadQuestions();
+  } catch(err){ toast('خطأ: ' + err.message, true); }
+}
 
-        async function saveQuestions(updatedQuestions, successMessage) {
-            clearStatus(tableStatus);
-            clearStatus(formStatus);
+async function deleteQuestion(qid){
+  if(!confirm('هل أنت متأكد من حذف هذا السؤال؟ لا يمكن التراجع.')) return;
+  try {
+    const r = await fetch(`/api/admin/placement-questions/${qid}`, { method: 'DELETE' });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('🗑 تم الحذف');
+    loadQuestions();
+  } catch(err){ toast('خطأ: ' + err.message, true); }
+}
 
-            try {
-                const response = await fetch("/api/admin/questions/update", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        questions: updatedQuestions
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success) {
-                    throw new Error(data.message || "تعذر تحديث بنك الأسئلة.");
-                }
-
-                questionsState = updatedQuestions;
-                renderTable();
-                setStatus(tableStatus, successMessage || "تم تحديث بنك الأسئلة.", "success");
-            } catch (error) {
-                setStatus(tableStatus, error.message || "حدث خطأ أثناء تحديث بنك الأسئلة.", "error");
-            }
-        }
-
-        function resetForm() {
-            questionText.value = "";
-            option1.value = "";
-            option2.value = "";
-            option3.value = "";
-            option4.value = "";
-            correctAnswer.value = "";
-        }
-
-        form.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            clearStatus(formStatus);
-            clearStatus(tableStatus);
-
-            const qText = questionText.value.trim();
-            const opt1 = option1.value.trim();
-            const opt2 = option2.value.trim();
-            const opt3 = option3.value.trim();
-            const opt4 = option4.value.trim();
-            const correctKey = correctAnswer.value.trim();
-
-            if (!qText || !opt1 || !opt2 || !opt3 || !opt4 || !correctKey) {
-                setStatus(formStatus, "جميع الحقول مطلوبة.", "error");
-                return;
-            }
-
-            const options = [opt1, opt2, opt3, opt4];
-            const map = { A: opt1, B: opt2, C: opt3, D: opt4 };
-            const resolvedCorrectAnswer = map[correctKey] || "";
-
-            if (!resolvedCorrectAnswer) {
-                setStatus(formStatus, "تعذر تحديد الإجابة الصحيحة.", "error");
-                return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = "جارٍ التحديث...";
-
-            try {
-                const newQuestion = {
-                    id: `dq_${Date.now()}`,
-                    section: "general",
-                    skill: "general",
-                    difficulty: "medium",
-                    question: qText,
-                    options: options,
-                    correct_answer: resolvedCorrectAnswer,
-                    explanation: ""
-                };
-
-                const updatedQuestions = [...questionsState, newQuestion];
-
-                const response = await fetch("/api/admin/questions/update", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        questions: updatedQuestions
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success) {
-                    throw new Error(data.message || "تعذر إضافة السؤال.");
-                }
-
-                questionsState = updatedQuestions;
-                renderTable();
-                resetForm();
-                setStatus(formStatus, "تمت إضافة السؤال وتحديث بنك الأسئلة بنجاح.", "success");
-            } catch (error) {
-                setStatus(formStatus, error.message || "حدث خطأ أثناء إضافة السؤال.", "error");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "إضافة وتحديث";
-            }
-        });
-
-        resetBtn.addEventListener("click", () => {
-            resetForm();
-            clearStatus(formStatus);
-        });
-
-        renderTable();
-    </script>
+loadQuestions();
+</script>
 </body>
 </html>

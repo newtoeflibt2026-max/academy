@@ -168,8 +168,7 @@ body {
           <div class="info-lbl">أسئلة</div>
         </div>
         <div class="info-box">
-          <div class="info-num">5</div>
-          <div class="info-lbl">دقائق</div>
+          <div class="info-num">10</div><div class="info-lbl">دقائق</div>
         </div>
       </div>
 
@@ -186,7 +185,7 @@ body {
   <div id="screen-quiz" class="hidden">
     <div class="topbar">
       <div class="q-counter">سؤال <span id="q-current">1</span> من <span id="q-total">10</span></div>
-      <div class="timer-badge" id="timer">⏱ 5:00</div>
+      <div class="timer-badge" id="timer">⏱ 10:00</div>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progress" style="width: 0%"></div></div>
 
@@ -254,7 +253,7 @@ let questions = [];
 let currentIdx = 0;
 let selectedOpt = null;
 let answers = [];
-let timeLeft = 300; // 5 minutes
+let timeLeft = 600; // 5 minutes
 let timerInterval = null;
 
 // ===== Helpers =====
@@ -294,7 +293,7 @@ function startQuiz(){
   currentIdx = 0;
   selectedOpt = null;
   answers = [];
-  timeLeft = 300;
+  timeLeft = 600;
   show('screen-quiz');
   startTimer();
   renderQuestion();
@@ -456,3 +455,4 @@ init();
 </script>
 </body>
 </html>
+

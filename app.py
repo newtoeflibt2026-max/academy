@@ -1927,3 +1927,90 @@ if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=_port, debug=False)
+
+
+# ===================== Phase 9: Admin + Placement Questions CRUD =====================
+@app.route("/admin")
+def admin_page():
+    from flask import render_template
+    return render_template("admin.html")
+
+@app.route("/api/admin/placement-questions", methods=["GET"])
+def api_admin_placement_list():
+    import sqlite3
+    try:
+        conn = sqlite3.connect("academy.db"); conn.row_factory = sqlite3.Row
+        rows = conn.execute("SELECT * FROM placement_questions ORDER BY id DESC").fetchall()
+        conn.close()
+        return _jsonify({"questions": [dict(r) for r in rows]})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions", methods=["POST"])
+def api_admin_placement_create():
+    import sqlite3
+    try:
+        d = _request.get_json(force=True) or {}
+        conn = sqlite3.connect("academy.db")
+        conn.execute("""
+            INSERT INTO placement_questions
+            (question_text, option_a, option_b, option_c, option_d, correct_option, skill, skill_type, difficulty, is_active)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            d.get("question_text",""), d.get("option_a",""), d.get("option_b",""),
+            d.get("option_c",""), d.get("option_d",""), (d.get("correct_option","A") or "A").upper(),
+            d.get("skill","grammar"), d.get("skill","grammar"),
+            d.get("difficulty","medium"), 1 if d.get("is_active", True) else 0
+        ))
+        conn.commit(); conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions/<int:qid>", methods=["PUT"])
+def api_admin_placement_update(qid):
+    import sqlite3
+    try:
+        d = _request.get_json(force=True) or {}
+        conn = sqlite3.connect("academy.db")
+        conn.execute("""
+            UPDATE placement_questions
+            SET question_text=?, option_a=?, option_b=?, option_c=?, option_d=?,
+                correct_option=?, skill=?, skill_type=?, difficulty=?, is_active=?
+            WHERE id=?
+        """, (
+            d.get("question_text",""), d.get("option_a",""), d.get("option_b",""),
+            d.get("option_c",""), d.get("option_d",""), (d.get("correct_option","A") or "A").upper(),
+            d.get("skill","grammar"), d.get("skill","grammar"),
+            d.get("difficulty","medium"), 1 if d.get("is_active", True) else 0, qid
+        ))
+        conn.commit(); conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions/<int:qid>", methods=["DELETE"])
+def api_admin_placement_delete(qid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect("academy.db")
+        conn.execute("DELETE FROM placement_questions WHERE id=?", (qid,))
+        conn.commit(); conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/placement-questions/<int:qid>/toggle", methods=["POST"])
+def api_admin_placement_toggle(qid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect("academy.db")
+        row = conn.execute("SELECT is_active FROM placement_questions WHERE id=?", (qid,)).fetchone()
+        if not row: return _jsonify({"error": "not found"}), 404
+        new_val = 0 if row[0] == 1 else 1
+        conn.execute("UPDATE placement_questions SET is_active=? WHERE id=?", (new_val, qid))
+        conn.commit(); conn.close()
+        return _jsonify({"ok": True, "is_active": new_val})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
