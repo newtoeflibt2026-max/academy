@@ -7,6 +7,15 @@ from db import (get_db, get_all_students_db, get_student,
                 get_setting, set_setting)
 
 app = Flask(__name__)
+
+# Phase 7: Placement test blueprint
+try:
+    from modules.placement_web import placement_bp
+    app.register_blueprint(placement_bp)
+    print('[OK] placement_bp registered')
+except Exception as _e:
+    print('[WARN] placement_bp not loaded:', _e)
+
 app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Pages Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
