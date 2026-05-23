@@ -1408,12 +1408,11 @@ from datetime import datetime as _datetime, timedelta as _timedelta
 from flask import jsonify as _jsonify, request as _request
 
 def _miniapp_db():
-    """Get DB connection using same path resolver as the bot."""
-    import os as _os
-    _path = "/app/data/academy.db" if _os.path.exists("/app/data") else _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "academy.db")
-    _conn = _sqlite3.connect(_path)
-    _conn.row_factory = _sqlite3.Row
-    return _conn
+    """Get DB connection via _db_safe (WAL+busy_timeout) + row_factory."""
+    import sqlite3 as _sq
+    conn = _db_safe()
+    conn.row_factory = _sq.Row
+    return conn
 
 
 
@@ -2496,7 +2495,7 @@ def api_admin_stages():
     try:
         conn = _miniapp_db()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM stages ORDER BY order_num, id")
+        cur.execute("SELECT * FROM stages ORDER BY order_index, id")
         rows = [dict(r) for r in cur.fetchall()]
         conn.close()
         return _jsonify({"stages": rows, "count": len(rows)})
@@ -3316,7 +3315,7 @@ def api_admin_student_journey(user_id):
 def _ensure_lesson_columns():
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = _db_safe()
         c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(lessons)").fetchall()]
         if "pass_score" not in cols:
@@ -3340,7 +3339,7 @@ def api_admin_lessons_create_v2():
         pass_score = int(data.get("pass_score", 70))
         if not stage_id:
             return jsonify({"success":False,"message":"stage_id required"}), 400
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         # أعلى order_index في المرحلة
         row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM lessons WHERE stage_id=?",(stage_id,)).fetchone()
         new_order = (row[0] or 0) + 1
@@ -3367,7 +3366,7 @@ def api_admin_lessons_update_v2(lid):
     import sqlite3
     try:
         data = request.get_json() or {}
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(lessons)").fetchall()]
         updates = []; vals = []
         if "title" in data and "title" in cols: updates.append("title=?"); vals.append(data["title"])
@@ -3387,7 +3386,7 @@ def api_admin_lessons_update_v2(lid):
 def api_admin_lessons_delete_v2(lid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         # احذف الأسئلة أولاً
         try: c.execute("DELETE FROM lesson_questions WHERE lesson_id=?",(lid,))
         except: pass
@@ -3404,7 +3403,7 @@ def api_admin_lessons_move_v2(lid):
         data = request.get_json() or {}
         new_stage = data.get("stage_id")
         if not new_stage: return jsonify({"success":False,"message":"stage_id required"}),400
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM lessons WHERE stage_id=?",(new_stage,)).fetchone()
         new_order = (row[0] or 0) + 1
         c.execute("UPDATE lessons SET stage_id=?,order_index=? WHERE id=?",(new_stage,new_order,lid))
@@ -3419,7 +3418,7 @@ def api_admin_lessons_reorder_v2():
     try:
         data = request.get_json() or {}
         order = data.get("order", [])
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         for item in order:
             c.execute("UPDATE lessons SET order_index=? WHERE id=?",(item["order_index"],item["id"]))
         conn.commit(); conn.close()
@@ -3432,7 +3431,7 @@ def api_admin_lesson_question_create_v2(lid):
     import sqlite3
     try:
         data = request.get_json() or {}
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         # ensure table
         c.execute("""CREATE TABLE IF NOT EXISTS lesson_questions(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -3458,7 +3457,7 @@ def api_admin_lesson_question_create_v2(lid):
 def api_admin_question_delete_v2(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         c.execute("DELETE FROM lesson_questions WHERE id=?",(qid,))
         conn.commit(); conn.close()
         return jsonify({"success":True})
@@ -3551,7 +3550,7 @@ def api_admin_stages_update_v2(sid):
 def api_admin_stages_delete_v2(sid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         # حذف الأسئلة والدروس أولاً
         try:
             lesson_ids = [r[0] for r in c.execute("SELECT id FROM lessons WHERE stage_id=?",(sid,)).fetchall()]
@@ -3574,7 +3573,7 @@ def api_admin_stages_delete_v2(sid):
 def _ensure_stage_exam_schema():
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = _db_safe()
         c = conn.cursor()
 
         # students.personal_pass_score + stages_passed
@@ -3630,7 +3629,7 @@ _ensure_stage_exam_schema()
 def api_admin_stage_exam_list(sid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        conn = _db_safe(); conn.row_factory = sqlite3.Row
         c = conn.cursor()
         rows = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=? ORDER BY order_index, id", (sid,)).fetchall()
         # settings
@@ -3653,7 +3652,7 @@ def api_admin_stage_exam_create(sid):
     from datetime import datetime
     try:
         data = request.get_json() or {}
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM stage_exam_questions WHERE stage_id=?",(sid,)).fetchone()
         order = (row[0] or 0) + 1
         c.execute('''INSERT INTO stage_exam_questions
@@ -3688,7 +3687,7 @@ def api_admin_stage_exam_update(qid):
         if not fields:
             return jsonify({"success": False, "message": "nothing"}), 400
         vals.append(qid)
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         c.execute(f"UPDATE stage_exam_questions SET {','.join(fields)} WHERE id=?", vals)
         conn.commit(); conn.close()
         return jsonify({"success": True})
@@ -3700,7 +3699,7 @@ def api_admin_stage_exam_update(qid):
 def api_admin_stage_exam_delete(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         c.execute("DELETE FROM stage_exam_questions WHERE id=?", (qid,))
         conn.commit(); conn.close()
         return jsonify({"success": True})
@@ -3716,7 +3715,7 @@ def api_admin_stage_exam_settings(sid):
         cnt = int(data.get("exam_questions_count", 10))
         if cnt < 1 or cnt > 100:
             return jsonify({"success": False, "message": "count must be 1-100"}), 400
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         c.execute("UPDATE stages SET exam_questions_count=? WHERE id=?", (cnt, sid))
         conn.commit(); conn.close()
         return jsonify({"success": True})
@@ -3733,7 +3732,7 @@ def api_admin_student_pass_score(student_id):
         ps = int(data.get("personal_pass_score", 70))
         if ps < 30 or ps > 95:
             return jsonify({"success": False, "message": "must be 30-95 (so +10 stays valid)"}), 400
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         c.execute("UPDATE students SET personal_pass_score=? WHERE user_id=?", (ps, student_id))
         conn.commit(); conn.close()
         return jsonify({"success": True, "personal_pass_score": ps, "required_for_pass": ps + 10})
@@ -3749,7 +3748,7 @@ def api_student_stage_exam_start(sid):
         user_id = request.args.get("user_id") or request.args.get("student_id")
         if not user_id:
             return jsonify({"success": False, "message": "user_id required"}), 400
-        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        conn = _db_safe(); conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
         # شرط النجاح الشخصي
@@ -3816,7 +3815,7 @@ def api_student_stage_exam_submit(sid):
         if not user_id:
             return jsonify({"success": False, "message": "user_id required"}), 400
 
-        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        conn = _db_safe(); conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
         # شرط النجاح
@@ -3896,7 +3895,7 @@ def api_student_stages_progress():
         user_id = request.args.get("user_id") or request.args.get("student_id")
         if not user_id:
             return jsonify({"success": False, "message": "user_id required"}), 400
-        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        conn = _db_safe(); conn.row_factory = sqlite3.Row
         c = conn.cursor()
         st = c.execute("SELECT personal_pass_score, stages_passed FROM students WHERE user_id=?", (user_id,)).fetchone()
         try:

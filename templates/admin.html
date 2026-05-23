@@ -278,6 +278,7 @@ tr:last-child td{border-bottom:none}
         <select id="stageFilter" onchange="loadStages()">
           <option value="">جميع المسارات</option>
           <option value="foundation">Foundation</option>
+          <option value="intermediate">Intermediate</option>
           <option value="toefl">TOEFL</option>
           <option value="intermediate">Intermediate</option>
           <option value="advanced">Advanced</option>
@@ -718,7 +719,7 @@ async function saveStage(id){
 async function deleteStage(id){
   if(!confirm('حذف هذه المرحلة (مع كل دروسها)؟')) return;
   const r = await api(`/api/admin/stages/${id}/delete`,{method:'POST'});
-  toast(r.ok?'تم':'فشل', r.ok?'success':'error'); loadStages(); loadDashboard();
+  toast(r.ok?'تم':'فشل', r.ok?'success':'error'); loadLessonsHierarchy(); if(typeof loadStages==='function') loadStages(); if(typeof loadDashboard==='function') loadDashboard();
 }
 
 // ========== LESSONS HIERARCHY ==========
@@ -968,10 +969,20 @@ async function loadLessonsHierarchy(){
     const stages = sd.stages || sd.data || [];
     _lessonsData.stages = stages;
 
+    // Phase 12H: filter by track
+    const trackVal = document.getElementById('lessonsTrackFilter') ? document.getElementById('lessonsTrackFilter').value : '';
+    const filteredStages = trackVal ? stages.filter(s => (s.track||s.path||'') === trackVal) : stages;
+
     let html = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap">
         <h2 style="margin:0">📚 إدارة الدروس</h2>
-        <div style="display:flex;gap:10px">
+        <div style="display:flex;gap:10px;align-items:center">
+          <select id="lessonsTrackFilter" onchange="loadLessonsHierarchy()" style="padding:8px 12px;border-radius:8px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(148,163,184,.2)">
+            <option value="" ${!trackVal?'selected':''}>جميع المسارات</option>
+            <option value="foundation" ${trackVal==='foundation'?'selected':''}>Foundation</option>
+            <option value="intermediate" ${trackVal==='intermediate'?'selected':''}>Intermediate</option>
+            <option value="toefl" ${trackVal==='toefl'?'selected':''}>TOEFL</option>
+          </select>
           <button class="btn-primary" onclick="addStage()">➕ إضافة مرحلة جديدة</button>
           <button class="btn-secondary" onclick="loadLessonsHierarchy()">🔄 تحديث</button>
         </div>
@@ -981,7 +992,7 @@ async function loadLessonsHierarchy(){
     c.innerHTML = html;
 
     const list = document.getElementById('stagesList');
-    for(const stage of stages){
+    for(const stage of filteredStages){
       const sid = stage.id;
       const stageName = stage.name_ar||stage.name||stage.name_en||('مرحلة '+sid);
       window._stageNames = window._stageNames || {};
