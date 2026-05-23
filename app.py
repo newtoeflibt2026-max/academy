@@ -3703,7 +3703,11 @@ def api_student_stage_exam_start(sid):
         required = personal + 10
 
         # عدد الأسئلة المطلوب
-        stg = c.execute("SELECT exam_questions_count, name_ar, name_en FROM stages WHERE id=?", (sid,)).fetchone()
+        scols2 = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
+        sel2 = ["exam_questions_count"]
+        for col in ["name_ar","name_en","name"]:
+            if col in scols2: sel2.append(col)
+        stg = c.execute(f"SELECT {','.join(sel2)} FROM stages WHERE id=?", (sid,)).fetchone()
         if not stg:
             return jsonify({"success": False, "message": "stage not found"}), 404
         cnt = stg["exam_questions_count"] or 10
@@ -3735,7 +3739,7 @@ def api_student_stage_exam_start(sid):
         return jsonify({
             "success": True,
             "stage_id": sid,
-            "stage_name": stg["name_ar"] or stg["name_en"] or f"المرحلة {sid}",
+            "stage_name": (stg["name_ar"] if "name_ar" in stg.keys() and stg["name_ar"] else None) or (stg["name_en"] if "name_en" in stg.keys() and stg["name_en"] else None) or (stg["name"] if "name" in stg.keys() and stg["name"] else None) or f"المرحلة {sid}",
             "personal_pass_score": personal,
             "required_score": required,
             "total_questions": cnt,
@@ -3846,7 +3850,13 @@ def api_student_stages_progress():
             passed_list = []
         personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
 
-        stages = c.execute("SELECT id, name_ar, name_en, order_index FROM stages ORDER BY order_index, id").fetchall()
+        # اكتشاف الأعمدة المتاحة
+        scols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
+        order_col = "order_index" if "order_index" in scols else "id"
+        sel_fields = ["id"]
+        for col in ["name_ar","name_en","name","order_index"]:
+            if col in scols: sel_fields.append(col)
+        stages = c.execute(f"SELECT {','.join(sel_fields)} FROM stages ORDER BY {order_col}, id").fetchall()
         result = []
         for s in stages:
             sid = s["id"]
@@ -3862,8 +3872,8 @@ def api_student_stages_progress():
             ).fetchone()[0]
             result.append({
                 "stage_id": sid,
-                "name": s["name_ar"] or s["name_en"] or f"المرحلة {sid}",
-                "order_index": s["order_index"],
+                "name": (s["name_ar"] if "name_ar" in s.keys() and s["name_ar"] else None) or (s["name_en"] if "name_en" in s.keys() and s["name_en"] else None) or (s["name"] if "name" in s.keys() and s["name"] else None) or f"المرحلة {sid}",
+                "order_index": (s["order_index"] if "order_index" in s.keys() else s["id"]),
                 "passed": (sid in passed_list),
                 "best_score": best_score,
                 "attempts": attempts
