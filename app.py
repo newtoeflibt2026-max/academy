@@ -77,6 +77,18 @@ try:
 except Exception as _e:
     print(f"[Phase12G] startup hook error: {_e}")
 # ===== End Phase 12G =====
+@app.route("/api/debug/table-info/<table_name>")
+def debug_table_info(table_name):
+    """Temporary debug endpoint - shows table schema"""
+    try:
+        conn = _db_safe()
+        c = conn.cursor()
+        cols = c.execute(f"PRAGMA table_info({table_name})").fetchall()
+        conn.close()
+        return jsonify({"table": table_name, "columns": [{"cid": r[0], "name": r[1], "type": r[2], "notnull": r[3], "default": r[4], "pk": r[5]} for r in cols]})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 @app.route("/")
