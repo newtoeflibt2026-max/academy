@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
+
+import os
+DB_PATH = os.environ.get("DB_PATH", "academy.db")
 import os, json
 from datetime import datetime
 from db import (get_db, get_all_students_db, get_student,
