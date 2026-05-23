@@ -2708,6 +2708,7 @@ def _ensure_lessons_schema():
 def api_admin_lessons_by_stage(stage_id):
     try:
         import sqlite3
+        import sqlite3
         _ensure_lessons_schema()
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
@@ -2844,6 +2845,7 @@ def api_admin_lessons_reorder():
 def api_admin_lesson_questions(lid):
     try:
         import sqlite3
+        import sqlite3
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
@@ -2913,6 +2915,7 @@ def api_admin_lesson_question_delete(qid):
 @app.route("/api/admin/students/list", methods=["GET"])
 def api_admin_students_list():
     try:
+        import sqlite3
         import sqlite3
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
@@ -2990,6 +2993,7 @@ def api_admin_student_delete(user_id):
 @app.route("/api/admin/students/<user_id>/detail", methods=["GET"])
 def api_admin_student_detail(user_id):
     try:
+        import sqlite3
         import sqlite3
         conn = _miniapp_db()
         conn.row_factory = sqlite3.Row
