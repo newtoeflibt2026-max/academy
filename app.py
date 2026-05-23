@@ -3056,6 +3056,240 @@ def api_admin_dashboard_stats():
 
 
 
+
+
+# ============================================================
+# PHASE 12B: PATHS, GRADUATION, MASTERY LEARNING
+# ============================================================
+
+def _ensure_phase12b_schema():
+    import sqlite3
+    conn = _miniapp_db()
+    cur = conn.cursor()
+    # students new columns
+    cur.execute("PRAGMA table_info(students)")
+    cols = [r[1] for r in cur.fetchall()]
+    new_cols = {
+        "current_path": "TEXT DEFAULT 'foundation'",
+        "xp_total": "INTEGER DEFAULT 0",
+        "streak_days": "INTEGER DEFAULT 0",
+        "last_active_date": "TEXT",
+        "graduation_unlocked": "INTEGER DEFAULT 0",
+        "graduation_unlocked_by": "TEXT",
+        "graduation_unlocked_at": "TEXT",
+        "graduated": "INTEGER DEFAULT 0",
+        "graduation_score": "REAL",
+        "certificate_url": "TEXT",
+    }
+    for col, ddl in new_cols.items():
+        if col not in cols:
+            try:
+                cur.execute("ALTER TABLE students ADD COLUMN " + col + " " + ddl)
+            except Exception as e:
+                print("[12B alter students]", col, e)
+    # student_progress
+    cur.execute("""CREATE TABLE IF NOT EXISTS student_progress (
+        user_id TEXT, lesson_id INTEGER,
+        status TEXT DEFAULT 'locked',
+        score REAL DEFAULT 0, best_score REAL DEFAULT 0,
+        attempts INTEGER DEFAULT 0, xp_earned INTEGER DEFAULT 0,
+        started_at TEXT, completed_at TEXT,
+        PRIMARY KEY (user_id, lesson_id)
+    )""")
+    # final exam questions
+    cur.execute("""CREATE TABLE IF NOT EXISTS final_exam_questions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        path TEXT, section TEXT, difficulty INTEGER DEFAULT 3,
+        question_text TEXT,
+        option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
+        correct_answer TEXT, explanation TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )""")
+    # path config
+    cur.execute("""CREATE TABLE IF NOT EXISTS path_config (
+        path TEXT PRIMARY KEY,
+        display_name TEXT, min_score REAL, max_score REAL,
+        passing_threshold REAL DEFAULT 70,
+        graduation_threshold REAL DEFAULT 70,
+        exam_questions_count INTEGER DEFAULT 30,
+        icon TEXT, color TEXT
+    )""")
+    # seed default paths if empty
+    cur.execute("SELECT COUNT(*) FROM path_config")
+    if cur.fetchone()[0] == 0:
+        defaults = [
+            ("foundation",   "Beginner - Foundation",  0,  30, 70, 70, 30, "S",  "#10b981"),
+            ("intermediate", "Intermediate",          31, 50, 70, 70, 30, "M", "#3b82f6"),
+            ("advanced",     "Advanced",              51, 70, 75, 75, 30, "L", "#8b5cf6"),
+            ("master",       "Master",                71,100, 80, 80, 30, "G",  "#f59e0b"),
+        ]
+        for d in defaults:
+            cur.execute("INSERT INTO path_config (path, display_name, min_score, max_score, passing_threshold, graduation_threshold, exam_questions_count, icon, color) VALUES (?,?,?,?,?,?,?,?,?)", d)
+    # final exam answers/attempts
+    cur.execute("""CREATE TABLE IF NOT EXISTS final_exam_attempts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT, path TEXT,
+        score REAL, passed INTEGER DEFAULT 0,
+        answers_json TEXT,
+        started_at TEXT, completed_at TEXT
+    )""")
+    conn.commit(); conn.close()
+
+
+# auto-run schema on import
+try:
+    _ensure_phase12b_schema()
+except Exception as e:
+    print("[12B init]", e)
+
+
+# ============================================================
+# PATH CONFIG ADMIN
+# ============================================================
+@app.route("/api/admin/paths/list", methods=["GET"])
+def api_admin_paths_list():
+    try:
+        import sqlite3
+        _ensure_phase12b_schema()
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM path_config ORDER BY min_score ASC")
+        rows = [dict(r) for r in cur.fetchall()]
+        for r in rows:
+            cur.execute("SELECT COUNT(*) FROM stages WHERE path=?", (r["path"],))
+            r["stages_count"] = cur.fetchone()[0]
+            cur.execute("SELECT COUNT(*) FROM lessons l JOIN stages s ON l.stage_id=s.id WHERE s.path=?", (r["path"],))
+            r["lessons_count"] = cur.fetchone()[0]
+            cur.execute("SELECT COUNT(*) FROM final_exam_questions WHERE path=?", (r["path"],))
+            r["exam_questions"] = cur.fetchone()[0]
+            cur.execute("SELECT COUNT(*) FROM students WHERE current_path=?", (r["path"],))
+            r["students_count"] = cur.fetchone()[0]
+        conn.close()
+        return jsonify({"paths": rows})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e), "paths": []}), 500
+
+
+@app.route("/api/admin/paths/<path>/update", methods=["POST", "PUT"])
+def api_admin_path_update(path):
+    try:
+        data = request.get_json(force=True) or {}
+        conn = _miniapp_db(); cur = conn.cursor()
+        fields, vals = [], []
+        for col in ["display_name", "min_score", "max_score", "passing_threshold", "graduation_threshold", "exam_questions_count", "icon", "color"]:
+            if col in data:
+                fields.append(col + "=?"); vals.append(data[col])
+        if not fields: return jsonify({"error": "no fields"}), 400
+        vals.append(path)
+        cur.execute("UPDATE path_config SET " + ", ".join(fields) + " WHERE path=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================
+# GRADUATION CONTROL (the magic admin button)
+# ============================================================
+@app.route("/api/admin/students/<user_id>/graduation/unlock", methods=["POST"])
+def api_admin_unlock_graduation(user_id):
+    try:
+        data = request.get_json(force=True) or {}
+        admin_id = (data.get("admin_id") or "admin").strip()
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("UPDATE students SET graduation_unlocked=1, graduation_unlocked_by=?, graduation_unlocked_at=datetime('now') WHERE user_id=?", (admin_id, user_id))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True, "message": "graduation gate unlocked for student"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/students/<user_id>/graduation/lock", methods=["POST"])
+def api_admin_lock_graduation(user_id):
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("UPDATE students SET graduation_unlocked=0 WHERE user_id=?", (user_id,))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/students/<user_id>/path/change", methods=["POST"])
+def api_admin_change_student_path(user_id):
+    try:
+        data = request.get_json(force=True) or {}
+        new_path = (data.get("path") or "").strip()
+        if not new_path: return jsonify({"error": "path required"}), 400
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("UPDATE students SET current_path=? WHERE user_id=?", (new_path, user_id))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/students/<user_id>/progress/reset", methods=["POST"])
+def api_admin_reset_progress(user_id):
+    try:
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("DELETE FROM student_progress WHERE user_id=?", (user_id,))
+        cur.execute("UPDATE students SET xp_total=0, streak_days=0, graduated=0, graduation_score=NULL, certificate_url=NULL WHERE user_id=?", (user_id,))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/students/<user_id>/xp/grant", methods=["POST"])
+def api_admin_grant_xp(user_id):
+    try:
+        data = request.get_json(force=True) or {}
+        amount = int(data.get("amount") or 0)
+        conn = _miniapp_db(); cur = conn.cursor()
+        cur.execute("UPDATE students SET xp_total = COALESCE(xp_total,0) + ? WHERE user_id=?", (amount, user_id))
+        conn.commit(); conn.close()
+        return jsonify({"ok": True, "amount": amount})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================
+# STUDENT-PATH PROGRESS SUMMARY (for admin view)
+# ============================================================
+@app.route("/api/admin/students/<user_id>/journey", methods=["GET"])
+def api_admin_student_journey(user_id):
+    try:
+        import sqlite3
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT user_id, full_name, current_path, xp_total, streak_days, graduation_unlocked, graduated, graduation_score, placement_score FROM students WHERE user_id=?", (user_id,))
+        s = cur.fetchone()
+        if not s: return jsonify({"error": "not found"}), 404
+        out = dict(s)
+        path = out.get("current_path") or "foundation"
+        cur.execute("SELECT * FROM stages WHERE path=? ORDER BY order_index ASC", (path,))
+        stages = [dict(r) for r in cur.fetchall()]
+        for st in stages:
+            cur.execute("SELECT l.id, l.title, l.order_index, p.status, p.best_score, p.attempts FROM lessons l LEFT JOIN student_progress p ON p.lesson_id=l.id AND p.user_id=? WHERE l.stage_id=? ORDER BY COALESCE(l.order_index,l.id) ASC", (user_id, st["id"]))
+            st["lessons"] = [dict(r) for r in cur.fetchall()]
+            completed = sum(1 for l in st["lessons"] if l.get("status") == "completed")
+            st["completed_lessons"] = completed
+            st["total_lessons"] = len(st["lessons"])
+            st["progress_pct"] = round(100*completed/max(1,len(st["lessons"])), 1)
+        out["stages"] = stages
+        out["overall_progress"] = round(sum(s["progress_pct"] for s in stages) / max(1, len(stages)), 1)
+        conn.close()
+        return jsonify(out)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
