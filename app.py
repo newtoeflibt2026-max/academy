@@ -3508,6 +3508,377 @@ def api_admin_stages_delete_v2(sid):
         return jsonify({"success":False,"message":str(e)}),500
 
 
+
+
+# ═══════════════════════════════════════════════
+# Phase 12E — Stage Exam System (bank + attempts)
+# ═══════════════════════════════════════════════
+def _ensure_stage_exam_schema():
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+
+        # students.personal_pass_score + stages_passed
+        cols_s = [r[1] for r in c.execute("PRAGMA table_info(students)").fetchall()]
+        if "personal_pass_score" not in cols_s:
+            c.execute("ALTER TABLE students ADD COLUMN personal_pass_score INTEGER DEFAULT 70")
+        if "stages_passed" not in cols_s:
+            c.execute("ALTER TABLE students ADD COLUMN stages_passed TEXT DEFAULT '[]'")
+        if "current_stage_id" not in cols_s:
+            c.execute("ALTER TABLE students ADD COLUMN current_stage_id INTEGER")
+
+        # stages.exam_questions_count
+        cols_st = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
+        if "exam_questions_count" not in cols_st:
+            c.execute("ALTER TABLE stages ADD COLUMN exam_questions_count INTEGER DEFAULT 10")
+
+        # stage_exam_questions
+        c.execute('''CREATE TABLE IF NOT EXISTS stage_exam_questions(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            stage_id INTEGER NOT NULL,
+            question_text TEXT NOT NULL,
+            option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
+            correct_answer TEXT NOT NULL,
+            explanation TEXT,
+            order_index INTEGER DEFAULT 0,
+            created_at TEXT
+        )''')
+
+        # stage_exam_attempts
+        c.execute('''CREATE TABLE IF NOT EXISTS stage_exam_attempts(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
+            stage_id INTEGER NOT NULL,
+            questions_shown TEXT,
+            answers TEXT,
+            score REAL,
+            required_score REAL,
+            passed INTEGER DEFAULT 0,
+            created_at TEXT
+        )''')
+
+        conn.commit()
+        conn.close()
+        print("[Phase12E] Schema ensured")
+    except Exception as e:
+        print("[Phase12E] schema error:", e)
+
+_ensure_stage_exam_schema()
+
+
+# ─── Admin: قائمة بنك الأسئلة لمرحلة ───
+@app.route("/api/admin/stages/<int:sid>/exam-questions", methods=["GET"])
+def api_admin_stage_exam_list(sid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        rows = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=? ORDER BY order_index, id", (sid,)).fetchall()
+        # settings
+        st = c.execute("SELECT exam_questions_count FROM stages WHERE id=?", (sid,)).fetchone()
+        cnt = st[0] if st else 10
+        conn.close()
+        return jsonify({
+            "success": True,
+            "questions": [dict(r) for r in rows],
+            "total": len(rows),
+            "exam_questions_count": cnt
+        })
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@app.route("/api/admin/stages/<int:sid>/exam-questions/create", methods=["POST"])
+def api_admin_stage_exam_create(sid):
+    import sqlite3
+    from datetime import datetime
+    try:
+        data = request.get_json() or {}
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM stage_exam_questions WHERE stage_id=?",(sid,)).fetchone()
+        order = (row[0] or 0) + 1
+        c.execute('''INSERT INTO stage_exam_questions
+            (stage_id,question_text,option_a,option_b,option_c,option_d,correct_answer,explanation,order_index,created_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?)''',
+            (sid,
+             data.get("question_text",""),
+             data.get("option_a",""),
+             data.get("option_b",""),
+             data.get("option_c",""),
+             data.get("option_d",""),
+             data.get("correct_answer","A"),
+             data.get("explanation",""),
+             order,
+             datetime.now().isoformat()))
+        new_id = c.lastrowid
+        conn.commit(); conn.close()
+        return jsonify({"success": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@app.route("/api/admin/exam-questions/<int:qid>/update", methods=["POST"])
+def api_admin_stage_exam_update(qid):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        fields = []; vals = []
+        for k in ["question_text","option_a","option_b","option_c","option_d","correct_answer","explanation"]:
+            if k in data:
+                fields.append(f"{k}=?"); vals.append(data[k])
+        if not fields:
+            return jsonify({"success": False, "message": "nothing"}), 400
+        vals.append(qid)
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        c.execute(f"UPDATE stage_exam_questions SET {','.join(fields)} WHERE id=?", vals)
+        conn.commit(); conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@app.route("/api/admin/exam-questions/<int:qid>/delete", methods=["POST"])
+def api_admin_stage_exam_delete(qid):
+    import sqlite3
+    try:
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        c.execute("DELETE FROM stage_exam_questions WHERE id=?", (qid,))
+        conn.commit(); conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+@app.route("/api/admin/stages/<int:sid>/exam-settings", methods=["POST"])
+def api_admin_stage_exam_settings(sid):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        cnt = int(data.get("exam_questions_count", 10))
+        if cnt < 1 or cnt > 100:
+            return jsonify({"success": False, "message": "count must be 1-100"}), 400
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        c.execute("UPDATE stages SET exam_questions_count=? WHERE id=?", (cnt, sid))
+        conn.commit(); conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ─── Admin: تعديل شرط النجاح الشخصي للطالب ───
+@app.route("/api/admin/students/<student_id>/pass-score", methods=["POST"])
+def api_admin_student_pass_score(student_id):
+    import sqlite3
+    try:
+        data = request.get_json() or {}
+        ps = int(data.get("personal_pass_score", 70))
+        if ps < 30 or ps > 95:
+            return jsonify({"success": False, "message": "must be 30-95 (so +10 stays valid)"}), 400
+        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        c.execute("UPDATE students SET personal_pass_score=? WHERE user_id=?", (ps, student_id))
+        conn.commit(); conn.close()
+        return jsonify({"success": True, "personal_pass_score": ps, "required_for_pass": ps + 10})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ─── Student: بدء امتحان مرحلة ───
+@app.route("/api/student/stage/<int:sid>/exam-start", methods=["GET"])
+def api_student_stage_exam_start(sid):
+    import sqlite3, random, json
+    try:
+        user_id = request.args.get("user_id") or request.args.get("student_id")
+        if not user_id:
+            return jsonify({"success": False, "message": "user_id required"}), 400
+        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        # شرط النجاح الشخصي
+        st = c.execute("SELECT personal_pass_score FROM students WHERE user_id=?", (user_id,)).fetchone()
+        personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
+        required = personal + 10
+
+        # عدد الأسئلة المطلوب
+        stg = c.execute("SELECT exam_questions_count, name_ar, name_en FROM stages WHERE id=?", (sid,)).fetchone()
+        if not stg:
+            return jsonify({"success": False, "message": "stage not found"}), 404
+        cnt = stg["exam_questions_count"] or 10
+
+        # كل الأسئلة من البنك
+        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?", (sid,)).fetchall()
+        if len(all_q) < cnt:
+            conn.close()
+            return jsonify({
+                "success": False,
+                "message": f"بنك الأسئلة غير كافٍ. يحتاج {cnt} سؤال، متوفر {len(all_q)}"
+            }), 400
+
+        # اختيار عشوائي
+        sample = random.sample([dict(r) for r in all_q], cnt)
+        # إخفاء الإجابة الصحيحة في الإرسال
+        clean = []
+        for q in sample:
+            clean.append({
+                "id": q["id"],
+                "question_text": q["question_text"],
+                "option_a": q["option_a"],
+                "option_b": q["option_b"],
+                "option_c": q["option_c"],
+                "option_d": q["option_d"]
+            })
+
+        conn.close()
+        return jsonify({
+            "success": True,
+            "stage_id": sid,
+            "stage_name": stg["name_ar"] or stg["name_en"] or f"المرحلة {sid}",
+            "personal_pass_score": personal,
+            "required_score": required,
+            "total_questions": cnt,
+            "questions": clean
+        })
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ─── Student: تسليم امتحان مرحلة ───
+@app.route("/api/student/stage/<int:sid>/exam-submit", methods=["POST"])
+def api_student_stage_exam_submit(sid):
+    import sqlite3, json
+    from datetime import datetime
+    try:
+        data = request.get_json() or {}
+        user_id = data.get("user_id") or data.get("student_id")
+        answers = data.get("answers") or {}  # {question_id: "A"/"B"/"C"/"D"}
+        if not user_id:
+            return jsonify({"success": False, "message": "user_id required"}), 400
+
+        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        # شرط النجاح
+        st = c.execute("SELECT personal_pass_score, stages_passed FROM students WHERE user_id=?", (user_id,)).fetchone()
+        personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
+        required = personal + 10
+
+        # جلب الأسئلة المُجابة + شرحها + الإجابات الصحيحة
+        q_ids = [int(k) for k in answers.keys()]
+        if not q_ids:
+            return jsonify({"success": False, "message": "no answers"}), 400
+        placeholders = ",".join(["?"] * len(q_ids))
+        questions = c.execute(
+            f"SELECT id, question_text, correct_answer, explanation FROM stage_exam_questions WHERE id IN ({placeholders})",
+            q_ids
+        ).fetchall()
+
+        total = len(questions)
+        correct_count = 0
+        feedback = []  # شرح فقط، بدون إجابة صحيحة
+        for q in questions:
+            ua = str(answers.get(str(q["id"])) or answers.get(q["id"]) or "").upper().strip()
+            ca = str(q["correct_answer"] or "").upper().strip()
+            is_correct = (ua == ca)
+            if is_correct:
+                correct_count += 1
+            feedback.append({
+                "question_id": q["id"],
+                "question_text": q["question_text"],
+                "is_correct": is_correct,
+                "explanation": q["explanation"] or "—"
+                # ❌ لا نُرسل correct_answer
+            })
+
+        score = round((correct_count / total) * 100, 1) if total else 0
+        passed = 1 if score >= required else 0
+
+        # سجل المحاولة
+        c.execute('''INSERT INTO stage_exam_attempts
+            (user_id, stage_id, questions_shown, answers, score, required_score, passed, created_at)
+            VALUES (?,?,?,?,?,?,?,?)''',
+            (str(user_id), sid, json.dumps(q_ids), json.dumps(answers), score, required, passed,
+             datetime.now().isoformat()))
+
+        # تحديث المراحل المُجتازة إن نجح
+        if passed:
+            try:
+                passed_list = json.loads(st["stages_passed"] or "[]") if st else []
+            except:
+                passed_list = []
+            if sid not in passed_list:
+                passed_list.append(sid)
+            c.execute("UPDATE students SET stages_passed=? WHERE user_id=?",
+                      (json.dumps(passed_list), str(user_id)))
+
+        conn.commit(); conn.close()
+        return jsonify({
+            "success": True,
+            "score": score,
+            "correct": correct_count,
+            "total": total,
+            "required_score": required,
+            "personal_pass_score": personal,
+            "passed": bool(passed),
+            "feedback": feedback,
+            "message": ("🎉 مبروك! اجتزت المرحلة" if passed else f"💪 حصلت على {score}% — تحتاج {required}% للانتقال. راجع الدروس وحاول مرة أخرى")
+        })
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ─── Student: حالة المراحل (للشريط السفلي) ───
+@app.route("/api/student/stages-progress", methods=["GET"])
+def api_student_stages_progress():
+    import sqlite3, json
+    try:
+        user_id = request.args.get("user_id") or request.args.get("student_id")
+        if not user_id:
+            return jsonify({"success": False, "message": "user_id required"}), 400
+        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        st = c.execute("SELECT personal_pass_score, stages_passed FROM students WHERE user_id=?", (user_id,)).fetchone()
+        try:
+            passed_list = json.loads(st["stages_passed"] or "[]") if st else []
+        except:
+            passed_list = []
+        personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
+
+        stages = c.execute("SELECT id, name_ar, name_en, order_index FROM stages ORDER BY order_index, id").fetchall()
+        result = []
+        for s in stages:
+            sid = s["id"]
+            # أفضل علامة للمحاولات
+            best = c.execute(
+                "SELECT MAX(score) FROM stage_exam_attempts WHERE user_id=? AND stage_id=?",
+                (user_id, sid)
+            ).fetchone()
+            best_score = best[0] if best and best[0] is not None else None
+            attempts = c.execute(
+                "SELECT COUNT(*) FROM stage_exam_attempts WHERE user_id=? AND stage_id=?",
+                (user_id, sid)
+            ).fetchone()[0]
+            result.append({
+                "stage_id": sid,
+                "name": s["name_ar"] or s["name_en"] or f"المرحلة {sid}",
+                "order_index": s["order_index"],
+                "passed": (sid in passed_list),
+                "best_score": best_score,
+                "attempts": attempts
+            })
+        conn.close()
+        return jsonify({
+            "success": True,
+            "personal_pass_score": personal,
+            "required_score": personal + 10,
+            "stages": result
+        })
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+# ═══════════════════════════════════════════════
+# /Phase 12E
+# ═══════════════════════════════════════════════
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
