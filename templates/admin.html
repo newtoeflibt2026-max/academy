@@ -1159,7 +1159,7 @@ async function addLessonToStage(sid){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({stage_id:sid,title:title,name:title,pass_score:ps})
     });
-    const d = await r.json();
+    const d = r;
     if(d.ok || d.success){
       await customAlert('تم بنجاح','تم إضافة الدرس ✅<br>الآن أضف أسئلة الدرس','success');
       loadLessonsHierarchy();
@@ -1184,7 +1184,7 @@ async function editLesson(lid){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({title:title,name:title,pass_score:parseInt(passScore)})
     });
-    const d = await r.json();
+    const d = r;
     if(d.success){ await customAlert('تم','تم التعديل','success'); loadLessonsHierarchy(); }
     else await customAlert('خطأ',d.message||'فشل','error');
   }catch(e){ await customAlert('خطأ',e.message,'error'); }
