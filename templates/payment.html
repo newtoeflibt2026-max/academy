@@ -150,7 +150,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:linear-gradient(1
     </div>
   </div>
 
-  <a href="javascript:history.back()" class="back-btn">← العودة</a>
+  <a id="backBtn" href="#" class="back-btn" onclick="goBack(event)">← العودة للوحة الطالب</a>
 </div>
 
 <!-- Modal -->
@@ -189,19 +189,75 @@ function showModal(opts){
 function closeModal(){ document.getElementById('modal').classList.remove('active'); }
 
 // Load plan
-async function loadPlan(){
+function goBack(e){
+  if(e) e.preventDefault();
+  // إن جاء الطالب من لوحة الطالب نعود إليها مباشرة
+  if(STUDENT_ID){
+    location.href = '/student?student_id=' + STUDENT_ID;
+  } else if(document.referrer && !document.referrer.includes('/payment/')){
+    location.href = document.referrer;
+  } else {
+    history.length > 1 ? history.back() : (location.href = '/');
+  }
+}
+
+async function checkActiveSubscription(){
   try{
-    const r = await fetch('/api/miniapp/plans?student_id=' + STUDENT_ID);
+    const r = await fetch('/api/student/subscription-status?student_id=' + STUDENT_ID);
+    if(!r.ok) return null;
+    return await r.json();
+  }catch(e){ return null; }
+}
+
+async function loadPlan(){
+  // 1) تحقق أولاً من الاشتراك الفعّال
+  if(STUDENT_ID){
+    const sub = await checkActiveSubscription();
+    if(sub && sub.has_active_subscription){
+      const planName = (sub.subscription && sub.subscription.plan_name) || 'باقة نشطة';
+      const endDate = (sub.subscription && sub.subscription.end_date) ? sub.subscription.end_date.split(' ')[0] : '';
+      document.getElementById('planCard').innerHTML = 
+        '<div style="text-align:center;padding:20px">' +
+        '<div style="font-size:54px;margin-bottom:12px">✅</div>' +
+        '<h2 style="color:#10b981;margin-bottom:10px;font-size:20px">لديك اشتراك نشط بالفعل</h2>' +
+        '<p style="color:#cbd5e1;font-size:14px;line-height:1.7;margin-bottom:14px">' + planName + '</p>' +
+        (endDate ? '<p style="color:#94a3b8;font-size:13px;margin-bottom:18px">صالح حتى: <strong style="color:#fbbf24">' + endDate + '</strong></p>' : '') +
+        '<button class="submit-btn" onclick="goBack()" style="max-width:280px;margin:0 auto;display:block">🎓 العودة للوحة التعلم</button>' +
+        '</div>';
+      // إخفاء أقسام الدفع والتفعيل
+      document.getElementById('freeSection').classList.add('hidden');
+      document.getElementById('paidSection').classList.add('hidden');
+      return;
+    }
+  }
+  
+  // 2) محاولة جلب الباقة
+  try{
+    const r = await fetch('/api/miniapp/plans?student_id=' + (STUDENT_ID||''));
+    if(!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
     const plans = data.plans || data || [];
     currentPlan = plans.find(p => p.id == PLAN_ID);
     if(!currentPlan){
-      document.getElementById('planCard').innerHTML = '<div style="text-align:center;color:#ef4444;padding:30px">❌ الباقة غير موجودة</div>';
+      document.getElementById('planCard').innerHTML = 
+        '<div style="text-align:center;padding:24px">' +
+        '<div style="font-size:48px;margin-bottom:10px">🔍</div>' +
+        '<h2 style="color:#fbbf24;margin-bottom:8px;font-size:18px">الباقة غير متاحة</h2>' +
+        '<p style="color:#cbd5e1;font-size:13px;line-height:1.7;margin-bottom:16px">قد تكون الباقة موقوفة مؤقتاً أو تم تغيير معرّفها.</p>' +
+        '<button class="submit-btn" onclick="goBack()" style="max-width:240px;margin:0 auto;display:block">← العودة</button>' +
+        '</div>';
       return;
     }
     renderPlan();
   }catch(e){
-    document.getElementById('planCard').innerHTML = '<div style="text-align:center;color:#ef4444;padding:30px">❌ خطأ في تحميل الباقة</div>';
+    document.getElementById('planCard').innerHTML = 
+      '<div style="text-align:center;padding:24px">' +
+      '<div style="font-size:48px;margin-bottom:10px">⚠️</div>' +
+      '<h2 style="color:#f59e0b;margin-bottom:8px;font-size:18px">تعذّر تحميل بيانات الباقة</h2>' +
+      '<p style="color:#cbd5e1;font-size:13px;line-height:1.7;margin-bottom:16px">يرجى التحقق من الاتصال بالإنترنت وإعادة المحاولة.</p>' +
+      '<button class="submit-btn" onclick="location.reload()" style="max-width:240px;margin:0 auto;display:block;margin-bottom:8px">🔄 إعادة المحاولة</button>' +
+      '<button class="copy-btn" onclick="goBack()" style="max-width:240px;margin:0 auto;display:block;background:#475569">← العودة</button>' +
+      '</div>';
   }
 }
 

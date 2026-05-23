@@ -2613,6 +2613,13 @@ def api_student_weekly_task_current():
         return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400]}), 500
 # ===================== End Phase 11C =====================
 
+
+
+@app.route('/weekly-task')
+def page_weekly_task():
+    """صفحة المهمة الأسبوعية للطالب"""
+    return render_template('weekly-task.html')
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
