@@ -2391,6 +2391,179 @@ def api_admin_stages():
         import traceback
         return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400], "stages": []}), 500
 
+# ===================== Phase 11C: Weekly Task Templates =====================
+def _ensure_weekly_templates_table():
+    """Ensure weekly_task_templates table exists."""
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("""CREATE TABLE IF NOT EXISTS weekly_task_templates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            week_number INTEGER UNIQUE NOT NULL,
+            title TEXT NOT NULL,
+            description TEXT,
+            action_url TEXT,
+            action_label TEXT DEFAULT 'اذهب للمهمة',
+            icon TEXT DEFAULT '⭐',
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now'))
+        )""")
+        # Seed defaults if empty
+        cur.execute("SELECT COUNT(*) FROM weekly_task_templates")
+        if cur.fetchone()[0] == 0:
+            defaults = [
+                (1, "⭐ ريفيو على صفحة فيسبوك", "اكتب تقييماً 5 نجوم على صفحة الأكاديمية على فيسبوك. ارفع صورة الريفيو بعد النشر.",
+                 "https://www.facebook.com/YamenToeflIelts/reviews", "🔗 افتح صفحة الريفيوات", "⭐"),
+                (2, "👥 ادعُ صديقاً", "ادعُ صديقاً للتسجيل في الأكاديمية وأرسل صورة محادثة الدعوة معه.",
+                 "https://t.me/YamenAcademyBot", "🔗 رابط البوت للدعوة", "👥"),
+                (3, "📱 مشاركة قصة على إنستا/سناب", "انشر قصة عن تجربتك مع الأكاديمية على إنستغرام أو سناب شات وارفع صورة القصة.",
+                 "", "📸 شارك الآن", "📱"),
+                (4, "📝 تقييم على Google", "اكتب مراجعة على Google Maps أو متجر التطبيقات وارفع صورة المراجعة.",
+                 "", "🔗 افتح صفحة التقييم", "📝")
+            ]
+            cur.executemany("""INSERT INTO weekly_task_templates
+                (week_number, title, description, action_url, action_label, icon)
+                VALUES (?, ?, ?, ?, ?, ?)""", defaults)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[Phase11C] template table error: {e}")
+
+try:
+    _ensure_weekly_templates_table()
+except Exception as _e:
+    print(f"[Phase11C] init error: {_e}")
+
+
+@app.route("/api/admin/weekly-templates")
+def api_admin_weekly_templates_list():
+    """List all weekly task templates."""
+    try:
+        _ensure_weekly_templates_table()
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM weekly_task_templates ORDER BY week_number")
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return _jsonify({"templates": rows, "count": len(rows)})
+    except Exception as e:
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400]}), 500
+
+
+@app.route("/api/admin/weekly-templates", methods=["POST"])
+def api_admin_weekly_templates_create():
+    """Create a new weekly task template."""
+    try:
+        _ensure_weekly_templates_table()
+        data = _request.get_json(force=True, silent=True) or {}
+        week = int(data.get("week_number", 0))
+        if not week or week < 1:
+            return _jsonify({"error": "week_number required (>=1)"}), 400
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("""INSERT INTO weekly_task_templates
+            (week_number, title, description, action_url, action_label, icon, is_active)
+            VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (week, data.get("title",""), data.get("description",""),
+             data.get("action_url",""), data.get("action_label","اذهب للمهمة"),
+             data.get("icon","⭐"), int(data.get("is_active", 1))))
+        conn.commit()
+        new_id = cur.lastrowid
+        conn.close()
+        return _jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        if "UNIQUE" in str(e):
+            return _jsonify({"error": "أسبوع رقم {} موجود مسبقاً".format(week)}), 400
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400]}), 500
+
+
+@app.route("/api/admin/weekly-templates/<int:tid>", methods=["PUT","POST"])
+def api_admin_weekly_templates_update(tid):
+    """Update a weekly task template."""
+    try:
+        data = _request.get_json(force=True, silent=True) or {}
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("""UPDATE weekly_task_templates SET
+            title=?, description=?, action_url=?, action_label=?, icon=?, is_active=?,
+            updated_at=datetime('now') WHERE id=?""",
+            (data.get("title",""), data.get("description",""), data.get("action_url",""),
+             data.get("action_label","اذهب للمهمة"), data.get("icon","⭐"),
+             int(data.get("is_active", 1)), tid))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400]}), 500
+
+
+@app.route("/api/admin/weekly-templates/<int:tid>", methods=["DELETE"])
+def api_admin_weekly_templates_delete(tid):
+    """Delete a weekly task template."""
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM weekly_task_templates WHERE id=?", (tid,))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/student/weekly-task/current")
+def api_student_weekly_task_current():
+    """Get current week's task template for a free plan student."""
+    try:
+        _ensure_weekly_templates_table()
+        sid = _request.args.get("student_id", "").strip()
+        if not sid:
+            return _jsonify({"error": "student_id required"}), 400
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        # Find active free subscription
+        cur.execute("""SELECT start_date FROM subscriptions
+            WHERE user_id=? AND is_active=1
+            AND (plan_name LIKE ? OR plan_name LIKE ? OR plan_name LIKE ?)
+            ORDER BY id DESC LIMIT 1""",
+            (sid, "%مجاني%", "%تجريب%", "%free%"))
+        sub = cur.fetchone()
+        if not sub:
+            conn.close()
+            return _jsonify({"has_free_plan": False})
+        import datetime as _dt
+        try:
+            start = _dt.datetime.strptime(sub["start_date"][:19], "%Y-%m-%d %H:%M:%S")
+        except:
+            start = _dt.datetime.now()
+        days_passed = (_dt.datetime.now() - start).days
+        current_week = (days_passed // 7) + 1
+        if current_week > 4:
+            conn.close()
+            return _jsonify({"has_free_plan": True, "expired": True})
+        # Get template for current week
+        cur.execute("SELECT * FROM weekly_task_templates WHERE week_number=? AND is_active=1", (current_week,))
+        tpl = cur.fetchone()
+        # Get student's submission for current week
+        cur.execute("SELECT * FROM free_plan_weekly_tasks WHERE user_id=? AND week_number=?", (sid, current_week))
+        sub_task = cur.fetchone()
+        conn.close()
+        return _jsonify({
+            "has_free_plan": True,
+            "current_week": current_week,
+            "days_passed": days_passed,
+            "template": dict(tpl) if tpl else None,
+            "submission": dict(sub_task) if sub_task else None,
+            "can_submit": sub_task is None or (sub_task and sub_task["status"] == "rejected")
+        })
+    except Exception as e:
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400]}), 500
+# ===================== End Phase 11C =====================
 
 if __name__ == "__main__":
     import os as _os
