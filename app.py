@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
 
 import os
@@ -3493,22 +3493,6 @@ def api_admin_stages_create_v2():
         add("min_score", min_score)
         
         placeholders = ",".join(["?"]*len(values))
-        
-    # ensure track default (Phase 12G)
-    try:
-        _c_chk = _db_safe()
-        _cols_chk = {r[1] for r in _c_chk.execute("PRAGMA table_info(stages)").fetchall()}
-        _c_chk.close()
-        if "track" in _cols_chk and "track" not in fields:
-            fields.append("track"); values.append("foundation"); placeholders = ",".join(["?"]*len(values))
-        if "section_name" in _cols_chk and "section_name" not in fields:
-            fields.append("section_name"); values.append(data.get("section_name") or data.get("section") or "general")
-            placeholders = ",".join(["?"]*len(values))
-        if "min_score" in _cols_chk and "min_score" not in fields:
-            fields.append("min_score"); values.append(int(data.get("min_score") or data.get("pass_score") or 0))
-            placeholders = ",".join(["?"]*len(values))
-    except Exception as _ee:
-        print(f"[v2 patch] {_ee}")
         c.execute(f"INSERT INTO stages({','.join(fields)}) VALUES({placeholders})", values)
         new_id = c.lastrowid
         conn.commit(); conn.close()
