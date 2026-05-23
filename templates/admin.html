@@ -2,549 +2,761 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>لوحة الإدارة | Yamen Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة - أكاديمية يامن</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
-body{background:#f3f4f6;color:#1f2937;min-height:100vh}
-.header{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:18px 24px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.header h1{font-size:22px}
-.header p{opacity:.9;font-size:13px;margin-top:4px}
-.container{max-width:1400px;margin:20px auto;padding:0 16px}
-.tabs{display:flex;gap:8px;margin-bottom:20px;background:white;padding:8px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow-x:auto}
-.tab-btn{padding:12px 20px;background:transparent;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;color:#6b7280;white-space:nowrap;transition:all .2s}
-.tab-btn:hover{background:#f3f4f6}
-.tab-btn.active{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;box-shadow:0 4px 12px rgba(79,70,229,.3)}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.card{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:16px}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
-.btn{padding:10px 18px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;transition:all .15s}
-.btn-primary{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white}
-.btn-success{background:#10b981;color:white}
-.btn-danger{background:#ef4444;color:white}
-.btn-warning{background:#f59e0b;color:white}
-.btn-secondary{background:#6b7280;color:white}
-.btn-sm{padding:6px 12px;font-size:12px}
-.btn:hover{transform:translateY(-1px)}
-.input,.select,.textarea{padding:10px 14px;border:2px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:14px;outline:none}
-.input:focus,.select:focus,.textarea:focus{border-color:#4f46e5}
-.input{min-width:200px}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;font-size:14px}
-th{background:#f9fafb;font-weight:700;color:#374151;position:sticky;top:0}
-tr:hover{background:#f9fafb}
-.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
-.badge-success{background:#d1fae5;color:#065f46}
-.badge-warning{background:#fef3c7;color:#92400e}
-.badge-danger{background:#fee2e2;color:#991b1b}
-.badge-info{background:#dbeafe;color:#1e40af}
-.badge-gray{background:#f3f4f6;color:#374151}
-.proof-thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid #e5e7eb}
-.proof-thumb:hover{border-color:#4f46e5}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
-.modal-bg.show{display:flex}
-.modal{background:white;border-radius:16px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto}
-.modal h3{margin-bottom:16px;color:#1f2937}
-.modal .field{margin-bottom:14px}
-.modal .field label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:#374151}
-.modal .field input,.modal .field select,.modal .field textarea{width:100%}
-.modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
-.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:2000;cursor:pointer;align-items:center;justify-content:center;padding:20px}
-.img-modal.show{display:flex}
-.img-modal img{max-width:100%;max-height:90vh;border-radius:8px}
-.toast{position:fixed;bottom:20px;right:20px;padding:14px 20px;background:#10b981;color:white;border-radius:10px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:3000;animation:slideUp .3s ease}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex}
+
+/* Sidebar */
+.sidebar{width:260px;background:#1e293b;border-left:1px solid #334155;padding:20px 0;position:fixed;height:100vh;overflow-y:auto;right:0;top:0;z-index:100}
+.sidebar-logo{text-align:center;padding:0 20px 20px;border-bottom:1px solid #334155;margin-bottom:14px}
+.sidebar-logo h1{color:#fbbf24;font-size:18px}
+.sidebar-logo p{color:#94a3b8;font-size:12px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:12px 20px;cursor:pointer;color:#cbd5e1;font-size:14px;border-right:3px solid transparent;transition:.2s}
+.nav-item:hover{background:#334155;color:#fff}
+.nav-item.active{background:#334155;color:#fbbf24;border-right-color:#fbbf24}
+.nav-item .icon{font-size:18px;width:24px;text-align:center}
+.nav-item .badge{background:#ef4444;color:#fff;font-size:11px;padding:2px 6px;border-radius:10px;margin-right:auto}
+
+/* Main content */
+.main{flex:1;margin-right:260px;padding:24px;min-height:100vh}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid #334155}
+.page-header h2{color:#fbbf24;font-size:22px}
+.page-header .sub{color:#94a3b8;font-size:13px;margin-top:4px}
+
+/* Cards & stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:#1e293b;border-radius:12px;padding:16px;border:1px solid #334155}
+.stat-card .label{color:#94a3b8;font-size:12px;margin-bottom:6px}
+.stat-card .value{color:#fbbf24;font-size:26px;font-weight:700}
+.stat-card .delta{font-size:11px;color:#10b981;margin-top:4px}
+
+/* Page sections */
+.page{display:none}
+.page.active{display:block}
+
+/* Tables */
+.table-wrap{background:#1e293b;border-radius:12px;border:1px solid #334155;overflow:hidden;margin-bottom:20px}
+.table-header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+.table-header h3{color:#fbbf24;font-size:16px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:#3b82f6;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}
+.btn:hover{opacity:0.9}
+.btn.success{background:#10b981}
+.btn.danger{background:#ef4444}
+.btn.warning{background:#f59e0b}
+.btn.secondary{background:#475569}
+.btn.sm{padding:5px 10px;font-size:11px}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#0f172a;color:#fbbf24;text-align:right;padding:11px 14px;font-weight:600;border-bottom:1px solid #334155;font-size:12px}
+td{padding:11px 14px;border-bottom:1px solid #2a3548;color:#cbd5e1}
+tr:hover td{background:#0f172a}
+.tag{display:inline-block;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600}
+.tag.green{background:rgba(16,185,129,0.2);color:#10b981}
+.tag.red{background:rgba(239,68,68,0.2);color:#ef4444}
+.tag.yellow{background:rgba(251,191,36,0.2);color:#fbbf24}
+.tag.blue{background:rgba(59,130,246,0.2);color:#3b82f6}
+.tag.gray{background:rgba(148,163,184,0.2);color:#94a3b8}
+
+.proof-thumb{width:60px;height:60px;border-radius:6px;object-fit:cover;cursor:pointer;border:2px solid #334155}
+.proof-thumb:hover{border-color:#fbbf24}
+.empty{text-align:center;padding:40px 20px;color:#64748b;font-size:14px}
+
+/* Filters */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px;background:#1e293b;border-radius:10px;border:1px solid #334155}
+.filter-bar select,.filter-bar input{background:#0f172a;border:1px solid #334155;color:#fff;padding:7px 12px;border-radius:6px;font-size:13px;font-family:inherit}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal-box{background:#1e293b;border-radius:14px;padding:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid #475569;animation:modalIn .3s}
+.modal-box.lg{max-width:700px}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.modal-box h3{color:#fbbf24;margin-bottom:16px;font-size:18px;display:flex;align-items:center;gap:8px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid #334155}
+
+/* Forms */
+.form-row{margin-bottom:12px}
+.form-row label{display:block;color:#cbd5e1;font-size:12px;margin-bottom:5px;font-weight:600}
+.form-row input,.form-row select,.form-row textarea{width:100%;background:#0f172a;border:1px solid #334155;color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;font-family:inherit}
+.form-row textarea{min-height:80px;resize:vertical}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:#3b82f6}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Toast */
+.toast{position:fixed;top:20px;left:20px;background:#10b981;color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:2000;box-shadow:0 8px 20px rgba(0,0,0,0.3);display:none;animation:slideIn .3s}
 .toast.error{background:#ef4444}
-@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-.stat{background:white;padding:14px;border-radius:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05)}
-.stat .num{font-size:24px;font-weight:900;color:#4f46e5}
-.stat .lbl{font-size:12px;color:#6b7280;margin-top:4px}
-.empty{text-align:center;padding:40px;color:#9ca3af}
-.featured{background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%);color:white !important}
+.toast.warn{background:#f59e0b}
+.toast.show{display:block}
+@keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.loader{display:inline-block;width:16px;height:16px;border:2px solid #475569;border-top-color:#fbbf24;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media (max-width:768px){
+  .sidebar{width:100%;height:auto;position:relative;padding:10px 0}
+  .main{margin-right:0}
+  .form-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>🎛 لوحة الإدارة — Yamen Academy</h1>
-  <p>إدارة الأسئلة، المدفوعات، والباقات</p>
-</div>
 
-<div class="container">
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('payments')">💰 المدفوعات <span id="badge-payments" class="badge badge-danger" style="display:none">0</span></button>
-    <button class="tab-btn" onclick="showTab('plans')">📦 الباقات</button>
-    <button class="tab-btn" onclick="showTab('questions')">📝 أسئلة المستوى</button>
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>⚙️ لوحة الإدارة</h1>
+    <p>أكاديمية يامن</p>
   </div>
+  <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span> الرئيسية</div>
+  <div class="nav-item" data-page="payments"><span class="icon">💰</span> المدفوعات <span class="badge" id="pendingPaymentsBadge" style="display:none">0</span></div>
+  <div class="nav-item" data-page="weekly-tasks"><span class="icon">📸</span> المهام الأسبوعية <span class="badge" id="pendingTasksBadge" style="display:none">0</span></div>
+  <div class="nav-item" data-page="plans"><span class="icon">📦</span> الباقات</div>
+  <div class="nav-item" data-page="placement"><span class="icon">📝</span> أسئلة تحديد المستوى</div>
+  <div class="nav-item" data-page="stages"><span class="icon">🎯</span> المستويات والمراحل</div>
+  <div class="nav-item" data-page="lessons"><span class="icon">📚</span> الدروس</div>
+  <div class="nav-item" data-page="students"><span class="icon">👥</span> الطلاب</div>
+  <div class="nav-item" data-page="settings"><span class="icon">⚙️</span> الإعدادات</div>
+</aside>
 
-  <!-- ════════════ TAB: PAYMENTS ════════════ -->
-  <div id="tab-payments" class="tab-content active">
-    <div class="card">
-      <div class="toolbar">
-        <select class="select" id="pay-filter" onchange="loadPayments()">
-          <option value="pending">⏳ معلقة</option>
-          <option value="approved">✅ مفعّلة</option>
-          <option value="rejected">❌ مرفوضة</option>
-          <option value="cancelled">🚫 ملغاة</option>
-          <option value="all">📋 الكل</option>
-        </select>
-        <button class="btn btn-secondary btn-sm" onclick="loadPayments()">🔄 تحديث</button>
-      </div>
-      <div id="payments-list"><div class="empty">جاري التحميل...</div></div>
-    </div>
+<!-- Main -->
+<main class="main">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header"><div><h2>📊 الرئيسية</h2><div class="sub">نظرة عامة على المنصة</div></div></div>
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="label">إجمالي الطلاب</div><div class="value" id="statStudents">-</div></div>
+    <div class="stat-card"><div class="label">اشتراكات نشطة</div><div class="value" id="statSubs">-</div></div>
+    <div class="stat-card"><div class="label">مدفوعات قيد المراجعة</div><div class="value" id="statPending">-</div></div>
+    <div class="stat-card"><div class="label">مهام أسبوعية معلّقة</div><div class="value" id="statWeekly">-</div></div>
+    <div class="stat-card"><div class="label">إجمالي الدروس</div><div class="value" id="statLessons">-</div></div>
+    <div class="stat-card"><div class="label">أسئلة تحديد المستوى</div><div class="value" id="statQuestions">-</div></div>
   </div>
-
-  <!-- ════════════ TAB: PLANS ════════════ -->
-  <div id="tab-plans" class="tab-content">
-    <div class="card">
-      <div class="toolbar">
-        <button class="btn btn-primary" onclick="openPlanModal()">➕ باقة جديدة</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadPlans()">🔄 تحديث</button>
-      </div>
-      <div id="plans-list"><div class="empty">جاري التحميل...</div></div>
-    </div>
-  </div>
-
-  <!-- ════════════ TAB: QUESTIONS ════════════ -->
-  <div id="tab-questions" class="tab-content">
-    <div class="card">
-      <div class="toolbar">
-        <button class="btn btn-primary" onclick="openQuestionModal()">➕ سؤال جديد</button>
-        <select class="select" id="q-skill-filter" onchange="renderQuestions()">
-          <option value="">كل المهارات</option>
-          <option value="grammar">القواعد</option>
-          <option value="vocabulary">المفردات</option>
-          <option value="reading">القراءة</option>
-          <option value="listening">الاستماع</option>
-        </select>
-        <select class="select" id="q-diff-filter" onchange="renderQuestions()">
-          <option value="">كل الصعوبات</option>
-          <option value="easy">سهل</option>
-          <option value="medium">متوسط</option>
-          <option value="hard">صعب</option>
-        </select>
-        <input class="input" id="q-search" placeholder="🔍 بحث..." oninput="renderQuestions()">
-        <button class="btn btn-secondary btn-sm" onclick="loadQuestions()">🔄 تحديث</button>
-      </div>
-      <div class="stats" id="q-stats"></div>
-      <div id="questions-list"><div class="empty">جاري التحميل...</div></div>
-    </div>
+  <div class="table-wrap">
+    <div class="table-header"><h3>🔥 آخر النشاطات</h3></div>
+    <div id="recentActivity" style="padding:20px"><div class="empty">جاري التحميل...</div></div>
   </div>
 </div>
 
-<!-- Plan Modal -->
-<div class="modal-bg" id="plan-modal" onclick="if(event.target===this)closePlanModal()">
-  <div class="modal">
-    <h3 id="plan-modal-title">➕ باقة جديدة</h3>
-    <input type="hidden" id="plan-id">
-    <div class="field"><label>الاسم بالعربي</label><input class="input" id="plan-name-ar" placeholder="مثال: 📚 الباقة الشهرية"></div>
-    <div class="field"><label>المعرف (إنجليزي)</label><input class="input" id="plan-name" placeholder="monthly"></div>
-    <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div><label>السعر</label><input class="input" type="number" step="0.01" id="plan-price"></div>
-      <div><label>العملة</label>
-        <select class="select" id="plan-currency"><option>JOD</option><option>USD</option><option>IQD</option></select>
-      </div>
-    </div>
-    <div class="field"><label>المدة (أيام)</label><input class="input" type="number" id="plan-duration"></div>
-    <div class="field"><label>الوصف القصير</label><input class="input" id="plan-description"></div>
-    <div class="field"><label>المزايا (سطر لكل ميزة، استخدم ✅ أو ⚠️ في البداية)</label>
-      <textarea class="textarea" id="plan-features" rows="5" style="width:100%"></textarea>
-    </div>
-    <div class="field" style="display:flex;gap:20px">
-      <label><input type="checkbox" id="plan-active"> مفعّلة</label>
-      <label><input type="checkbox" id="plan-featured"> ⭐ مميّزة</label>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closePlanModal()">إلغاء</button>
-      <button class="btn btn-success" onclick="savePlan()">💾 حفظ</button>
-    </div>
+<!-- PAYMENTS -->
+<div class="page" id="page-payments">
+  <div class="page-header"><div><h2>💰 إدارة المدفوعات</h2><div class="sub">مراجعة وتفعيل اشتراكات الطلاب</div></div></div>
+  <div class="filter-bar">
+    <select id="paymentStatusFilter" onchange="loadPayments()">
+      <option value="pending">⏳ قيد المراجعة</option>
+      <option value="approved">✅ موافَق عليها</option>
+      <option value="rejected">❌ مرفوضة</option>
+      <option value="all">📋 الكل</option>
+    </select>
+    <button class="btn" onclick="loadPayments()">🔄 تحديث</button>
+  </div>
+  <div class="table-wrap"><div id="paymentsTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- WEEKLY TASKS -->
+<div class="page" id="page-weekly-tasks">
+  <div class="page-header"><div><h2>📸 المهام الأسبوعية (الباقة المجانية)</h2><div class="sub">مراجعة إثباتات المهام التسويقية الأسبوعية</div></div></div>
+  <div class="filter-bar">
+    <select id="weeklyStatusFilter" onchange="loadWeeklyTasks()">
+      <option value="pending">⏳ قيد المراجعة</option>
+      <option value="approved">✅ موافَق عليها</option>
+      <option value="rejected">❌ مرفوضة</option>
+      <option value="all">📋 الكل</option>
+    </select>
+    <button class="btn" onclick="loadWeeklyTasks()">🔄 تحديث</button>
+  </div>
+  <div class="table-wrap"><div id="weeklyTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- PLANS -->
+<div class="page" id="page-plans">
+  <div class="page-header">
+    <div><h2>📦 إدارة الباقات</h2><div class="sub">إضافة وتعديل وحذف باقات الاشتراك</div></div>
+    <button class="btn success" onclick="openPlanModal()">➕ إضافة باقة</button>
+  </div>
+  <div class="table-wrap"><div id="plansTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- PLACEMENT QUESTIONS -->
+<div class="page" id="page-placement">
+  <div class="page-header">
+    <div><h2>📝 أسئلة تحديد المستوى</h2><div class="sub">إدارة بنك أسئلة الامتحان التشخيصي</div></div>
+    <button class="btn success" onclick="openQuestionModal()">➕ إضافة سؤال</button>
+  </div>
+  <div class="filter-bar">
+    <select id="qSkillFilter" onchange="loadQuestions()">
+      <option value="all">كل المهارات</option>
+      <option value="grammar">القواعد</option>
+      <option value="vocabulary">المفردات</option>
+      <option value="reading">القراءة</option>
+    </select>
+    <select id="qDiffFilter" onchange="loadQuestions()">
+      <option value="all">كل المستويات</option>
+      <option value="easy">سهل</option>
+      <option value="medium">متوسط</option>
+      <option value="hard">صعب</option>
+    </select>
+    <button class="btn" onclick="loadQuestions()">🔄 تحديث</button>
+  </div>
+  <div class="table-wrap"><div id="questionsTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- STAGES -->
+<div class="page" id="page-stages">
+  <div class="page-header"><div><h2>🎯 المستويات والمراحل</h2><div class="sub">22 مرحلة من F1 إلى C2</div></div></div>
+  <div class="table-wrap"><div id="stagesTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- LESSONS -->
+<div class="page" id="page-lessons">
+  <div class="page-header">
+    <div><h2>📚 إدارة الدروس</h2><div class="sub">32 درساً موزّعة على المراحل</div></div>
+    <select id="lessonStageFilter" onchange="loadLessons()" style="background:#0f172a;border:1px solid #334155;color:#fff;padding:8px 12px;border-radius:8px">
+      <option value="all">كل المراحل</option>
+    </select>
+  </div>
+  <div class="table-wrap"><div id="lessonsTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- STUDENTS -->
+<div class="page" id="page-students">
+  <div class="page-header"><div><h2>👥 الطلاب المسجّلون</h2><div class="sub">قائمة الطلاب وحالاتهم</div></div></div>
+  <div class="table-wrap"><div id="studentsTable"><div class="empty">جاري التحميل...</div></div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="page-header"><div><h2>⚙️ إعدادات النظام</h2><div class="sub">قريباً</div></div></div>
+  <div class="table-wrap"><div class="empty" style="padding:60px">قسم الإعدادات قيد التطوير</div></div>
+</div>
+
+</main>
+
+<!-- Generic Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box" id="modalBox">
+    <h3 id="modalTitle">عنوان</h3>
+    <div id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
   </div>
 </div>
 
-<!-- Question Modal -->
-<div class="modal-bg" id="q-modal" onclick="if(event.target===this)closeQuestionModal()">
-  <div class="modal">
-    <h3 id="q-modal-title">➕ سؤال جديد</h3>
-    <input type="hidden" id="q-id">
-    <div class="field"><label>نص السؤال</label><textarea class="textarea" id="q-text" rows="2" style="width:100%"></textarea></div>
-    <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div><label>A</label><input class="input" id="q-a"></div>
-      <div><label>B</label><input class="input" id="q-b"></div>
-      <div><label>C</label><input class="input" id="q-c"></div>
-      <div><label>D</label><input class="input" id="q-d"></div>
-    </div>
-    <div class="field" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div><label>الإجابة الصحيحة</label>
-        <select class="select" id="q-correct"><option>A</option><option>B</option><option>C</option><option>D</option></select>
-      </div>
-      <div><label>المهارة</label>
-        <select class="select" id="q-skill">
-          <option value="grammar">القواعد</option>
-          <option value="vocabulary">المفردات</option>
-          <option value="reading">القراءة</option>
-          <option value="listening">الاستماع</option>
-        </select>
-      </div>
-      <div><label>الصعوبة</label>
-        <select class="select" id="q-diff">
-          <option value="easy">سهل</option>
-          <option value="medium">متوسط</option>
-          <option value="hard">صعب</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeQuestionModal()">إلغاء</button>
-      <button class="btn btn-success" onclick="saveQuestion()">💾 حفظ</button>
-    </div>
-  </div>
-</div>
-
-<!-- Image Modal -->
-<div class="img-modal" id="img-modal" onclick="this.classList.remove('show')">
-  <img id="img-modal-src">
-</div>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-let _payments = [];
-let _plans = [];
-let _questions = [];
+// ============== GLOBAL STATE ==============
+let CURRENT_PAGE = 'dashboard';
+let STAGES_CACHE = [];
 
-function showTab(name){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  event.target.closest('.tab-btn').classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-  if(name==='payments') loadPayments();
-  if(name==='plans') loadPlans();
-  if(name==='questions') loadQuestions();
-}
-
-function toast(msg, isError){
-  const t = document.createElement('div');
-  t.className = 'toast' + (isError?' error':'');
+// ============== TOAST ==============
+function toast(msg, type){
+  const t = document.getElementById('toast');
+  t.className = 'toast show ' + (type || '');
   t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), 3000);
+  setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
-function showImage(src){
-  document.getElementById('img-modal-src').src = src;
-  document.getElementById('img-modal').classList.add('show');
+// ============== MODAL ==============
+function showModal(opts){
+  document.getElementById('modalTitle').textContent = opts.title || '';
+  document.getElementById('modalBody').innerHTML = opts.body || '';
+  document.getElementById('modalBox').className = 'modal-box' + (opts.large ? ' lg' : '');
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = '';
+  (opts.buttons || [{label:'إغلاق',cls:'secondary',onclick:closeModal}]).forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'btn ' + (b.cls || '');
+    btn.textContent = b.label;
+    btn.onclick = b.onclick || closeModal;
+    actions.appendChild(btn);
+  });
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+function confirmAction(title, msg, onYes){
+  showModal({
+    title: title, body: '<p style="color:#cbd5e1;line-height:1.7">' + msg + '</p>',
+    buttons: [
+      {label:'إلغاء',cls:'secondary',onclick:closeModal},
+      {label:'تأكيد',cls:'danger',onclick:()=>{closeModal();onYes();}}
+    ]
+  });
 }
 
-// ════════════ PAYMENTS ════════════
-async function loadPayments(){
-  const status = document.getElementById('pay-filter').value;
+// ============== NAVIGATION ==============
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.onclick = () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    const page = item.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    CURRENT_PAGE = page;
+    loadPage(page);
+  };
+});
+
+function loadPage(page){
+  if(page === 'dashboard') loadDashboard();
+  else if(page === 'payments') loadPayments();
+  else if(page === 'weekly-tasks') loadWeeklyTasks();
+  else if(page === 'plans') loadPlans();
+  else if(page === 'placement') loadQuestions();
+  else if(page === 'stages') loadStages();
+  else if(page === 'lessons') loadLessons();
+  else if(page === 'students') loadStudents();
+}
+
+// ============== API HELPER ==============
+async function api(url, opts){
   try{
-    const r = await fetch('/api/admin/payments/list?status='+status);
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    _payments = d.payments || [];
-    renderPayments();
-    // عدّاد المعلقة في tab
-    const pendCount = _payments.filter(p=>p.status==='pending').length;
-    const badge = document.getElementById('badge-payments');
-    if(status==='pending' && pendCount > 0){
-      badge.textContent = pendCount;
-      badge.style.display = 'inline-block';
-    } else {
-      badge.style.display = 'none';
-    }
+    const r = await fetch(url, opts);
+    return await r.json();
   }catch(e){
-    document.getElementById('payments-list').innerHTML = '<div class="empty">خطأ: '+e.message+'</div>';
+    toast('خطأ في الاتصال: '+e.message, 'error');
+    return null;
   }
 }
 
-function renderPayments(){
-  if(!_payments.length){
-    document.getElementById('payments-list').innerHTML = '<div class="empty">📭 لا توجد مدفوعات</div>';
+// ============== DASHBOARD ==============
+async function loadDashboard(){
+  const [pPay, pWk, plans] = await Promise.all([
+    api('/api/admin/payments/list?status=pending'),
+    api('/api/admin/weekly-tasks/list?status=pending'),
+    api('/api/admin/plans/list')
+  ]);
+  document.getElementById('statPending').textContent = pPay?.count ?? '-';
+  document.getElementById('statWeekly').textContent = pWk?.count ?? '-';
+  // Badge updates
+  if(pPay?.count > 0){ const b = document.getElementById('pendingPaymentsBadge'); b.textContent = pPay.count; b.style.display='inline-block'; }
+  if(pWk?.count > 0){ const b = document.getElementById('pendingTasksBadge'); b.textContent = pWk.count; b.style.display='inline-block'; }
+  // Other stats (best-effort)
+  try{
+    const stats = await api('/api/admin/stats');
+    if(stats){
+      document.getElementById('statStudents').textContent = stats.students || 0;
+      document.getElementById('statSubs').textContent = stats.active_subscriptions || 0;
+      document.getElementById('statLessons').textContent = stats.lessons || 0;
+      document.getElementById('statQuestions').textContent = stats.questions || 0;
+    }
+  }catch(e){}
+  document.getElementById('recentActivity').innerHTML = '<div style="color:#cbd5e1;line-height:1.9">'
+    + '<div>💰 مدفوعات قيد المراجعة: <strong style="color:#fbbf24">'+(pPay?.count||0)+'</strong></div>'
+    + '<div>📸 مهام أسبوعية معلّقة: <strong style="color:#fbbf24">'+(pWk?.count||0)+'</strong></div>'
+    + '<div>📦 إجمالي الباقات: <strong style="color:#fbbf24">'+(plans?.plans?.length||0)+'</strong></div>'
+    + '</div>';
+}
+
+// ============== PAYMENTS ==============
+async function loadPayments(){
+  const status = document.getElementById('paymentStatusFilter').value;
+  document.getElementById('paymentsTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const data = await api('/api/admin/payments/list?status=' + status);
+  if(!data || !data.payments || data.payments.length === 0){
+    document.getElementById('paymentsTable').innerHTML = '<div class="empty">📭 لا توجد مدفوعات في هذه الحالة</div>';
     return;
   }
-  const rows = _payments.map(p => {
-    const statusMap = {pending:['⏳ معلق','warning'],approved:['✅ مفعّل','success'],rejected:['❌ مرفوض','danger'],cancelled:['🚫 ملغى','gray']};
-    const [stTxt, stCls] = statusMap[p.status] || [p.status, 'gray'];
-    const proofUrl = p.proof_file ? `/static/uploads/payments/${p.proof_file}` : '';
-    const actions = (p.status === 'pending')
-      ? `<button class="btn btn-success btn-sm" onclick="actPayment(${p.id},'approve')">✅ تفعيل</button>
-         <button class="btn btn-danger btn-sm" onclick="actPayment(${p.id},'reject')">❌ رفض</button>`
-      : (p.status === 'approved')
-        ? `<button class="btn btn-warning btn-sm" onclick="actPayment(${p.id},'cancel')">🚫 إلغاء تفعيل</button>`
-        : `<span class="badge badge-gray">—</span>`;
-    return `<tr>
+  let html = '<table><thead><tr><th>#</th><th>الطالب</th><th>الباقة</th><th>المبلغ</th><th>الإيصال</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>';
+  data.payments.forEach(p => {
+    const statusTag = p.status === 'pending' ? '<span class="tag yellow">قيد المراجعة</span>'
+      : p.status === 'approved' ? '<span class="tag green">مفعّلة</span>'
+      : '<span class="tag red">مرفوضة</span>';
+    const proof = p.proof_file ? `<img src="${p.proof_file}" class="proof-thumb" onclick="viewImage('${p.proof_file}')">` : '<span style="color:#64748b">-</span>';
+    const actions = p.status === 'pending'
+      ? `<button class="btn success sm" onclick="actPayment(${p.id},'approve')">✅ تفعيل</button> <button class="btn danger sm" onclick="actPayment(${p.id},'reject')">❌ رفض</button>`
+      : `<button class="btn secondary sm" onclick="actPayment(${p.id},'cancel')">🚫 إلغاء</button>`;
+    html += `<tr>
       <td>${p.id}</td>
-      <td>${proofUrl ? `<img src="${proofUrl}" class="proof-thumb" onclick="showImage('${proofUrl}')">` : '—'}</td>
-      <td><strong>${p.full_name||'—'}</strong><br><small style="color:#6b7280">${(p.notes||'').replace('phone:','📱 ').split('\n')[0]}</small></td>
-      <td>${p.user_id}</td>
-      <td>${p.plan_name_ar || p.plan_name || '—'}</td>
-      <td><strong>${p.amount} ${p.currency||''}</strong></td>
-      <td><span class="badge badge-${stCls}">${stTxt}</span></td>
-      <td><small>${p.created_at||''}</small></td>
+      <td>${p.full_name || p.user_name || p.telegram_id}<br><small style="color:#64748b">${p.telegram_id}</small></td>
+      <td>${p.plan_name || '-'}</td>
+      <td><strong style="color:#10b981">${p.amount} ${p.currency||'JOD'}</strong></td>
+      <td>${proof}</td>
+      <td><small>${(p.created_at||'').slice(0,16)}</small></td>
+      <td>${statusTag}</td>
       <td>${actions}</td>
     </tr>`;
-  }).join('');
-  document.getElementById('payments-list').innerHTML = `<div style="overflow-x:auto"><table>
-    <thead><tr><th>#</th><th>إيصال</th><th>المُرسِل</th><th>طالب</th><th>الباقة</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('paymentsTable').innerHTML = html;
 }
 
 async function actPayment(pid, action){
-  const labels = {approve:'تفعيل', reject:'رفض', cancel:'إلغاء تفعيل'};
-  if(!confirm(`هل أنت متأكد من ${labels[action]} هذه العملية؟`)) return;
-  const note = prompt('ملاحظة (اختياري):', '') || '';
-  try{
-    const r = await fetch(`/api/admin/payments/${pid}/action`, {
+  const labels = {approve:'تفعيل',reject:'رفض',cancel:'إلغاء'};
+  confirmAction('تأكيد '+labels[action], 'هل أنت متأكد من '+labels[action]+' هذه الدفعة؟', async () => {
+    const r = await api('/api/admin/payments/'+pid+'/action', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({action, note})
+      body: JSON.stringify({action})
     });
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast('✅ تم '+labels[action]);
-    loadPayments();
-  }catch(e){ toast('خطأ: '+e.message, true); }
+    if(r && r.ok){ toast('✅ تم بنجاح'); loadPayments(); }
+    else toast(r?.error || 'فشل العملية', 'error');
+  });
 }
 
-// ════════════ PLANS ════════════
-async function loadPlans(){
-  try{
-    const r = await fetch('/api/admin/plans/list');
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    _plans = d.plans || [];
-    renderPlans();
-  }catch(e){
-    document.getElementById('plans-list').innerHTML = '<div class="empty">خطأ: '+e.message+'</div>';
-  }
+function viewImage(src){
+  showModal({
+    title:'🖼 معاينة الصورة', large:true,
+    body:`<img src="${src}" style="width:100%;border-radius:10px">`,
+    buttons:[{label:'إغلاق',cls:'secondary',onclick:closeModal}]
+  });
 }
 
-function renderPlans(){
-  if(!_plans.length){
-    document.getElementById('plans-list').innerHTML = '<div class="empty">📭 لا توجد باقات</div>';
+// ============== WEEKLY TASKS ==============
+async function loadWeeklyTasks(){
+  const status = document.getElementById('weeklyStatusFilter').value;
+  document.getElementById('weeklyTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const data = await api('/api/admin/weekly-tasks/list?status=' + status);
+  if(!data || !data.tasks || data.tasks.length === 0){
+    document.getElementById('weeklyTable').innerHTML = '<div class="empty">📭 لا توجد مهام في هذه الحالة</div>';
     return;
   }
-  const rows = _plans.map(p => `
-    <tr ${p.is_active?'':'style="opacity:.5"'}>
+  let html = '<table><thead><tr><th>#</th><th>الطالب</th><th>الأسبوع</th><th>نوع المهمة</th><th>الإثبات</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>';
+  data.tasks.forEach(t => {
+    const statusTag = t.status === 'pending' ? '<span class="tag yellow">قيد المراجعة</span>'
+      : t.status === 'approved' ? '<span class="tag green">موافَق</span>'
+      : '<span class="tag red">مرفوضة</span>';
+    const proof = t.proof_image ? `<img src="${t.proof_image}" class="proof-thumb" onclick="viewImage('${t.proof_image}')">` : '-';
+    const actions = t.status === 'pending'
+      ? `<button class="btn success sm" onclick="actWeeklyTask(${t.id},'approve')">✅</button> <button class="btn danger sm" onclick="actWeeklyTask(${t.id},'reject')">❌</button>`
+      : '-';
+    html += `<tr>
+      <td>${t.id}</td>
+      <td>${t.user_id}</td>
+      <td><span class="tag blue">أسبوع ${t.week_number}</span></td>
+      <td><small>${t.task_description || t.task_type}</small></td>
+      <td>${proof}</td>
+      <td><small>${(t.submitted_at||'').slice(0,16)}</small></td>
+      <td>${statusTag}</td>
+      <td>${actions}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('weeklyTable').innerHTML = html;
+}
+
+async function actWeeklyTask(tid, action){
+  const labels = {approve:'الموافقة',reject:'الرفض'};
+  confirmAction('تأكيد '+labels[action], 'هل أنت متأكد من '+labels[action]+' على هذه المهمة؟', async () => {
+    const r = await api('/api/admin/weekly-tasks/'+tid+'/action', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action})
+    });
+    if(r && r.ok){ toast('✅ تم'); loadWeeklyTasks(); }
+    else toast(r?.error || 'فشل', 'error');
+  });
+}
+
+// ============== PLANS ==============
+async function loadPlans(){
+  document.getElementById('plansTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const data = await api('/api/admin/plans/list');
+  if(!data || !data.plans){
+    document.getElementById('plansTable').innerHTML = '<div class="empty">📭 لا توجد باقات</div>';
+    return;
+  }
+  let html = '<table><thead><tr><th>#</th><th>الاسم</th><th>السعر</th><th>المدة</th><th>نشطة</th><th>مميزة</th><th>إجراءات</th></tr></thead><tbody>';
+  data.plans.forEach(p => {
+    html += `<tr>
       <td>${p.id}</td>
-      <td><strong>${p.name_ar || p.name}</strong>${p.is_featured?' ⭐':''}<br><small style="color:#6b7280">${p.name}</small></td>
-      <td><strong>${p.price}</strong> ${p.currency}</td>
+      <td><strong>${p.name_ar || p.name}</strong><br><small style="color:#64748b">${p.name}</small></td>
+      <td><strong style="color:#10b981">${p.price} ${p.currency||'JOD'}</strong></td>
       <td>${p.duration_days} يوم</td>
-      <td><span class="badge badge-${p.is_active?'success':'gray'}">${p.is_active?'مفعّلة':'معطّلة'}</span></td>
-      <td style="max-width:250px;font-size:12px">${(p.description||'').substring(0,80)}</td>
+      <td>${p.is_active ? '<span class="tag green">نشطة</span>' : '<span class="tag red">معطّلة</span>'}</td>
+      <td>${p.is_featured ? '<span class="tag yellow">⭐ مميزة</span>' : '<span class="tag gray">عادية</span>'}</td>
       <td>
-        <button class="btn btn-primary btn-sm" onclick='editPlan(${JSON.stringify(p)})'>✏️</button>
-        <button class="btn btn-warning btn-sm" onclick="togglePlan(${p.id})">${p.is_active?'🚫':'▶️'}</button>
-        <button class="btn btn-danger btn-sm" onclick="deletePlan(${p.id})">🗑</button>
+        <button class="btn warning sm" onclick='editPlan(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn secondary sm" onclick="togglePlan(${p.id})">${p.is_active ? '🚫' : '✅'}</button>
+        <button class="btn danger sm" onclick="deletePlan(${p.id})">🗑</button>
       </td>
-    </tr>`).join('');
-  document.getElementById('plans-list').innerHTML = `<div style="overflow-x:auto"><table>
-    <thead><tr><th>#</th><th>الاسم</th><th>السعر</th><th>المدة</th><th>الحالة</th><th>الوصف</th><th>إجراء</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('plansTable').innerHTML = html;
+}
+
+function planFormHTML(p){
+  p = p || {};
+  return `
+    <div class="form-grid">
+      <div class="form-row"><label>الاسم (إنجليزي)</label><input id="pName" value="${p.name||''}"></div>
+      <div class="form-row"><label>الاسم (عربي)</label><input id="pNameAr" value="${p.name_ar||''}"></div>
+      <div class="form-row"><label>السعر</label><input id="pPrice" type="number" step="0.01" value="${p.price||0}"></div>
+      <div class="form-row"><label>العملة</label><select id="pCurrency"><option value="JOD" ${p.currency==='JOD'?'selected':''}>JOD</option><option value="IQD" ${p.currency==='IQD'?'selected':''}>IQD</option><option value="USD" ${p.currency==='USD'?'selected':''}>USD</option></select></div>
+      <div class="form-row"><label>المدة (أيام)</label><input id="pDuration" type="number" value="${p.duration_days||30}"></div>
+      <div class="form-row"><label>نشطة؟</label><select id="pActive"><option value="1" ${p.is_active?'selected':''}>نعم</option><option value="0" ${!p.is_active?'selected':''}>لا</option></select></div>
+    </div>
+    <div class="form-row"><label>الوصف</label><textarea id="pDesc">${p.description||''}</textarea></div>
+    <div class="form-row"><label>المميزات (سطر لكل ميزة)</label><textarea id="pFeatures">${(Array.isArray(p.features)?p.features:JSON.parse(p.features||'[]')).join('\n')}</textarea></div>
+    <div class="form-row"><label>مميزة؟</label><select id="pFeatured"><option value="0" ${!p.is_featured?'selected':''}>لا</option><option value="1" ${p.is_featured?'selected':''}>نعم - ⭐</option></select></div>
+  `;
 }
 
 function openPlanModal(){
-  document.getElementById('plan-modal-title').textContent = '➕ باقة جديدة';
-  document.getElementById('plan-id').value = '';
-  ['plan-name-ar','plan-name','plan-price','plan-duration','plan-description','plan-features'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('plan-currency').value = 'JOD';
-  document.getElementById('plan-active').checked = true;
-  document.getElementById('plan-featured').checked = false;
-  document.getElementById('plan-modal').classList.add('show');
+  showModal({
+    title:'➕ إضافة باقة جديدة', large:true,
+    body: planFormHTML({}),
+    buttons:[
+      {label:'إلغاء',cls:'secondary',onclick:closeModal},
+      {label:'حفظ',cls:'success',onclick:()=>savePlan(null)}
+    ]
+  });
 }
-
-function closePlanModal(){ document.getElementById('plan-modal').classList.remove('show'); }
 
 function editPlan(p){
-  document.getElementById('plan-modal-title').textContent = '✏️ تعديل باقة #'+p.id;
-  document.getElementById('plan-id').value = p.id;
-  document.getElementById('plan-name-ar').value = p.name_ar || '';
-  document.getElementById('plan-name').value = p.name || '';
-  document.getElementById('plan-price').value = p.price;
-  document.getElementById('plan-currency').value = p.currency || 'JOD';
-  document.getElementById('plan-duration').value = p.duration_days;
-  document.getElementById('plan-description').value = p.description || '';
-  document.getElementById('plan-features').value = p.features || '';
-  document.getElementById('plan-active').checked = !!p.is_active;
-  document.getElementById('plan-featured').checked = !!p.is_featured;
-  document.getElementById('plan-modal').classList.add('show');
-}
-
-async function savePlan(){
-  const pid = document.getElementById('plan-id').value;
-  const payload = {
-    name_ar: document.getElementById('plan-name-ar').value.trim(),
-    name: document.getElementById('plan-name').value.trim() || 'custom',
-    price: parseFloat(document.getElementById('plan-price').value) || 0,
-    currency: document.getElementById('plan-currency').value,
-    duration_days: parseInt(document.getElementById('plan-duration').value) || 30,
-    description: document.getElementById('plan-description').value,
-    features: document.getElementById('plan-features').value,
-    is_active: document.getElementById('plan-active').checked ? 1 : 0,
-    is_featured: document.getElementById('plan-featured').checked ? 1 : 0
-  };
-  if(!payload.name_ar){ toast('الاسم بالعربي مطلوب', true); return; }
-  try{
-    const url = pid ? `/api/admin/plans/${pid}/update` : '/api/admin/plans/create';
-    const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast(pid?'✅ تم التعديل':'✅ تم الإنشاء');
-    closePlanModal();
-    loadPlans();
-  }catch(e){ toast('خطأ: '+e.message, true); }
-}
-
-async function togglePlan(pid){
-  try{
-    const r = await fetch(`/api/admin/plans/${pid}/toggle`, {method:'POST'});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast(d.is_active?'▶️ تم التفعيل':'🚫 تم التعطيل');
-    loadPlans();
-  }catch(e){ toast('خطأ: '+e.message, true); }
-}
-
-async function deletePlan(pid){
-  if(!confirm('هل أنت متأكد من حذف هذه الباقة نهائياً؟')) return;
-  try{
-    const r = await fetch(`/api/admin/plans/${pid}/delete`, {method:'POST'});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast('🗑 تم الحذف');
-    loadPlans();
-  }catch(e){ toast('خطأ: '+e.message, true); }
-}
-
-// ════════════ QUESTIONS ════════════
-async function loadQuestions(){
-  try{
-    const r = await fetch('/api/admin/placement-questions');
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    _questions = d.questions || [];
-    renderQuestions();
-  }catch(e){
-    document.getElementById('questions-list').innerHTML = '<div class="empty">خطأ: '+e.message+'</div>';
-  }
-}
-
-function renderQuestions(){
-  const sf = document.getElementById('q-skill-filter').value;
-  const df = document.getElementById('q-diff-filter').value;
-  const sq = document.getElementById('q-search').value.toLowerCase();
-  let items = _questions.filter(q => {
-    if(sf && (q.skill_type||q.skill) !== sf) return false;
-    if(df && q.difficulty !== df) return false;
-    if(sq && !(q.question_text||'').toLowerCase().includes(sq)) return false;
-    return true;
+  showModal({
+    title:'✏️ تعديل الباقة #'+p.id, large:true,
+    body: planFormHTML(p),
+    buttons:[
+      {label:'إلغاء',cls:'secondary',onclick:closeModal},
+      {label:'حفظ التعديلات',cls:'success',onclick:()=>savePlan(p.id)}
+    ]
   });
-  // stats
-  const total = _questions.length;
-  const active = _questions.filter(q=>q.is_active).length;
-  document.getElementById('q-stats').innerHTML = `
-    <div class="stat"><div class="num">${total}</div><div class="lbl">المجموع</div></div>
-    <div class="stat"><div class="num">${active}</div><div class="lbl">نشط</div></div>
-    <div class="stat"><div class="num">${items.length}</div><div class="lbl">معروض</div></div>`;
-  if(!items.length){
-    document.getElementById('questions-list').innerHTML = '<div class="empty">📭 لا توجد نتائج</div>';
+}
+
+async function savePlan(id){
+  const features = document.getElementById('pFeatures').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const payload = {
+    name: document.getElementById('pName').value.trim(),
+    name_ar: document.getElementById('pNameAr').value.trim(),
+    price: parseFloat(document.getElementById('pPrice').value) || 0,
+    currency: document.getElementById('pCurrency').value,
+    duration_days: parseInt(document.getElementById('pDuration').value) || 30,
+    description: document.getElementById('pDesc').value.trim(),
+    features: features,
+    is_active: parseInt(document.getElementById('pActive').value),
+    is_featured: parseInt(document.getElementById('pFeatured').value)
+  };
+  const url = id ? '/api/admin/plans/'+id+'/update' : '/api/admin/plans/create';
+  const r = await api(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  if(r && r.ok){ closeModal(); toast('✅ تم الحفظ'); loadPlans(); }
+  else toast(r?.error || 'فشل الحفظ', 'error');
+}
+
+async function togglePlan(id){
+  const r = await api('/api/admin/plans/'+id+'/toggle', {method:'POST'});
+  if(r && r.ok){ toast('✅ تم'); loadPlans(); }
+  else toast(r?.error || 'فشل', 'error');
+}
+
+function deletePlan(id){
+  confirmAction('حذف الباقة', 'هل تريد فعلاً حذف هذه الباقة؟ لا يمكن التراجع.', async () => {
+    const r = await api('/api/admin/plans/'+id+'/delete', {method:'POST'});
+    if(r && r.ok){ toast('✅ تم الحذف'); loadPlans(); }
+    else toast(r?.error || 'فشل', 'error');
+  });
+}
+
+// ============== PLACEMENT QUESTIONS ==============
+async function loadQuestions(){
+  document.getElementById('questionsTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const skill = document.getElementById('qSkillFilter').value;
+  const diff = document.getElementById('qDiffFilter').value;
+  let url = '/api/admin/questions';
+  const params = [];
+  if(skill !== 'all') params.push('skill='+skill);
+  if(diff !== 'all') params.push('difficulty='+diff);
+  if(params.length) url += '?' + params.join('&');
+  const data = await api(url);
+  const questions = data?.questions || data || [];
+  if(!questions.length){
+    document.getElementById('questionsTable').innerHTML = '<div class="empty">📭 لا توجد أسئلة</div>';
     return;
   }
-  const skillMap = {grammar:'القواعد',vocabulary:'المفردات',reading:'القراءة',listening:'الاستماع'};
-  const diffMap = {easy:'سهل',medium:'متوسط',hard:'صعب'};
-  const rows = items.map(q => `
-    <tr ${q.is_active?'':'style="opacity:.5"'}>
+  let html = '<table><thead><tr><th>#</th><th>السؤال</th><th>المهارة</th><th>الصعوبة</th><th>الإجابة</th><th>إجراءات</th></tr></thead><tbody>';
+  questions.forEach(q => {
+    const skillTag = {grammar:'green',vocabulary:'blue',reading:'yellow'}[q.skill] || 'gray';
+    const diffTag = {easy:'green',medium:'yellow',hard:'red'}[q.difficulty] || 'gray';
+    html += `<tr>
       <td>${q.id}</td>
-      <td style="max-width:340px"><strong>${(q.question_text||'').substring(0,90)}</strong><br>
-        <small style="color:#6b7280">A: ${q.option_a||''} | B: ${q.option_b||''}</small></td>
-      <td><span class="badge badge-success">${q.correct_option}</span></td>
-      <td><span class="badge badge-info">${skillMap[q.skill_type||q.skill]||q.skill_type||q.skill||'—'}</span></td>
-      <td><span class="badge badge-warning">${diffMap[q.difficulty]||q.difficulty||'—'}</span></td>
+      <td style="max-width:300px"><small>${(q.question_text||'').substring(0,80)}...</small></td>
+      <td><span class="tag ${skillTag}">${q.skill}</span></td>
+      <td><span class="tag ${diffTag}">${q.difficulty}</span></td>
+      <td><strong>${q.correct_option || q.correct_answer || '-'}</strong></td>
       <td>
-        <button class="btn btn-primary btn-sm" onclick='editQuestion(${JSON.stringify(q)})'>✏️</button>
-        <button class="btn btn-warning btn-sm" onclick="toggleQuestion(${q.id})">${q.is_active?'🚫':'▶️'}</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${q.id})">🗑</button>
+        <button class="btn warning sm" onclick='editQuestion(${JSON.stringify(q).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn danger sm" onclick="deleteQuestion(${q.id})">🗑</button>
       </td>
-    </tr>`).join('');
-  document.getElementById('questions-list').innerHTML = `<div style="overflow-x:auto"><table>
-    <thead><tr><th>#</th><th>السؤال</th><th>الصحيح</th><th>المهارة</th><th>الصعوبة</th><th>إجراء</th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('questionsTable').innerHTML = html;
+}
+
+function questionFormHTML(q){
+  q = q || {};
+  return `
+    <div class="form-row"><label>نص السؤال</label><textarea id="qText">${q.question_text||''}</textarea></div>
+    <div class="form-grid">
+      <div class="form-row"><label>الخيار A</label><input id="qA" value="${q.option_a||''}"></div>
+      <div class="form-row"><label>الخيار B</label><input id="qB" value="${q.option_b||''}"></div>
+      <div class="form-row"><label>الخيار C</label><input id="qC" value="${q.option_c||''}"></div>
+      <div class="form-row"><label>الخيار D</label><input id="qD" value="${q.option_d||''}"></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label>الإجابة الصحيحة</label><select id="qCorrect"><option value="A" ${q.correct_option==='A'?'selected':''}>A</option><option value="B" ${q.correct_option==='B'?'selected':''}>B</option><option value="C" ${q.correct_option==='C'?'selected':''}>C</option><option value="D" ${q.correct_option==='D'?'selected':''}>D</option></select></div>
+      <div class="form-row"><label>المهارة</label><select id="qSkill"><option value="grammar" ${q.skill==='grammar'?'selected':''}>القواعد</option><option value="vocabulary" ${q.skill==='vocabulary'?'selected':''}>المفردات</option><option value="reading" ${q.skill==='reading'?'selected':''}>القراءة</option></select></div>
+      <div class="form-row"><label>الصعوبة</label><select id="qDiff"><option value="easy" ${q.difficulty==='easy'?'selected':''}>سهل</option><option value="medium" ${q.difficulty==='medium'?'selected':''}>متوسط</option><option value="hard" ${q.difficulty==='hard'?'selected':''}>صعب</option></select></div>
+      <div class="form-row"><label>الوقت (ثانية)</label><input id="qTimer" type="number" value="${q.timer_seconds||30}"></div>
+    </div>
+    <div class="form-row"><label>الشرح</label><textarea id="qExpl">${q.explanation||''}</textarea></div>
+  `;
 }
 
 function openQuestionModal(){
-  document.getElementById('q-modal-title').textContent = '➕ سؤال جديد';
-  ['q-id','q-text','q-a','q-b','q-c','q-d'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('q-correct').value = 'A';
-  document.getElementById('q-skill').value = 'grammar';
-  document.getElementById('q-diff').value = 'medium';
-  document.getElementById('q-modal').classList.add('show');
+  showModal({
+    title:'➕ إضافة سؤال جديد', large:true,
+    body: questionFormHTML({}),
+    buttons:[
+      {label:'إلغاء',cls:'secondary',onclick:closeModal},
+      {label:'حفظ',cls:'success',onclick:()=>saveQuestion(null)}
+    ]
+  });
 }
-
-function closeQuestionModal(){ document.getElementById('q-modal').classList.remove('show'); }
 
 function editQuestion(q){
-  document.getElementById('q-modal-title').textContent = '✏️ تعديل سؤال #'+q.id;
-  document.getElementById('q-id').value = q.id;
-  document.getElementById('q-text').value = q.question_text || '';
-  document.getElementById('q-a').value = q.option_a || '';
-  document.getElementById('q-b').value = q.option_b || '';
-  document.getElementById('q-c').value = q.option_c || '';
-  document.getElementById('q-d').value = q.option_d || '';
-  document.getElementById('q-correct').value = q.correct_option || 'A';
-  document.getElementById('q-skill').value = q.skill_type || q.skill || 'grammar';
-  document.getElementById('q-diff').value = q.difficulty || 'medium';
-  document.getElementById('q-modal').classList.add('show');
+  showModal({
+    title:'✏️ تعديل السؤال #'+q.id, large:true,
+    body: questionFormHTML(q),
+    buttons:[
+      {label:'إلغاء',cls:'secondary',onclick:closeModal},
+      {label:'حفظ التعديلات',cls:'success',onclick:()=>saveQuestion(q.id)}
+    ]
+  });
 }
 
-async function saveQuestion(){
-  const qid = document.getElementById('q-id').value;
+async function saveQuestion(id){
   const payload = {
-    question_text: document.getElementById('q-text').value.trim(),
-    option_a: document.getElementById('q-a').value.trim(),
-    option_b: document.getElementById('q-b').value.trim(),
-    option_c: document.getElementById('q-c').value.trim(),
-    option_d: document.getElementById('q-d').value.trim(),
-    correct_option: document.getElementById('q-correct').value,
-    skill_type: document.getElementById('q-skill').value,
-    skill: document.getElementById('q-skill').value,
-    difficulty: document.getElementById('q-diff').value,
-    is_active: 1
+    question_text: document.getElementById('qText').value.trim(),
+    option_a: document.getElementById('qA').value.trim(),
+    option_b: document.getElementById('qB').value.trim(),
+    option_c: document.getElementById('qC').value.trim(),
+    option_d: document.getElementById('qD').value.trim(),
+    correct_option: document.getElementById('qCorrect').value,
+    skill: document.getElementById('qSkill').value,
+    difficulty: document.getElementById('qDiff').value,
+    timer_seconds: parseInt(document.getElementById('qTimer').value) || 30,
+    explanation: document.getElementById('qExpl').value.trim()
   };
-  if(!payload.question_text){ toast('نص السؤال مطلوب', true); return; }
-  try{
-    const url = qid ? `/api/admin/placement-questions/${qid}` : '/api/admin/placement-questions';
-    const method = qid ? 'PUT' : 'POST';
-    const r = await fetch(url, {method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast(qid?'✅ تم التعديل':'✅ تم الإضافة');
-    closeQuestionModal();
-    loadQuestions();
-  }catch(e){ toast('خطأ: '+e.message, true); }
+  const url = id ? '/api/admin/questions/'+id : '/api/admin/questions';
+  const method = id ? 'PUT' : 'POST';
+  const r = await api(url, {method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  if(r && (r.ok || r.id)){ closeModal(); toast('✅ تم الحفظ'); loadQuestions(); }
+  else toast(r?.error || 'فشل الحفظ', 'error');
 }
 
-async function toggleQuestion(qid){
-  try{
-    const r = await fetch(`/api/admin/placement-questions/${qid}/toggle`, {method:'POST'});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast('✅ تم');
-    loadQuestions();
-  }catch(e){ toast('خطأ: '+e.message, true); }
+function deleteQuestion(id){
+  confirmAction('حذف السؤال', 'هل تريد حذف هذا السؤال؟', async () => {
+    const r = await api('/api/admin/questions/'+id, {method:'DELETE'});
+    if(r && r.ok){ toast('✅ تم'); loadQuestions(); }
+    else toast(r?.error || 'فشل', 'error');
+  });
 }
 
-async function deleteQuestion(qid){
-  if(!confirm('حذف هذا السؤال نهائياً؟')) return;
-  try{
-    const r = await fetch(`/api/admin/placement-questions/${qid}`, {method:'DELETE'});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    toast('🗑 تم الحذف');
-    loadQuestions();
-  }catch(e){ toast('خطأ: '+e.message, true); }
+// ============== STAGES ==============
+async function loadStages(){
+  document.getElementById('stagesTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const data = await api('/api/admin/stages') || await api('/api/miniapp/stages');
+  const stages = data?.stages || data || [];
+  STAGES_CACHE = stages;
+  if(!stages.length){
+    document.getElementById('stagesTable').innerHTML = '<div class="empty">📭 لا توجد مراحل</div>';
+    return;
+  }
+  let html = '<table><thead><tr><th>#</th><th>الرمز</th><th>الاسم</th><th>المسار</th><th>القسم</th><th>الحد الأدنى</th><th>الترتيب</th></tr></thead><tbody>';
+  stages.forEach(s => {
+    html += `<tr>
+      <td>${s.id}</td>
+      <td><strong style="color:#fbbf24">${s.code||'-'}</strong></td>
+      <td>${s.name_ar || s.name_en || '-'}</td>
+      <td><span class="tag blue">${s.track||'-'}</span></td>
+      <td><small>${s.section_name||'-'}</small></td>
+      <td>${s.gatekeeper_threshold||70}%</td>
+      <td>${s.order_num||0}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('stagesTable').innerHTML = html;
 }
 
-// تحميل أولي
-loadPayments();
+// ============== LESSONS ==============
+async function loadLessons(){
+  document.getElementById('lessonsTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const data = await api('/api/admin/lessons');
+  const lessons = data?.lessons || data || [];
+  if(!lessons.length){
+    document.getElementById('lessonsTable').innerHTML = '<div class="empty">📭 لا توجد دروس</div>';
+    return;
+  }
+  // Populate stage filter
+  const filter = document.getElementById('lessonStageFilter');
+  if(filter.options.length <= 1 && STAGES_CACHE.length === 0){
+    await loadStages();
+    STAGES_CACHE.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = (s.code||'') + ' - ' + (s.name_ar||s.name_en||'');
+      filter.appendChild(opt);
+    });
+  }
+  const filterVal = filter.value;
+  const filtered = filterVal === 'all' ? lessons : lessons.filter(l => String(l.stage_id) === String(filterVal));
+  let html = '<table><thead><tr><th>#</th><th>الرمز</th><th>العنوان</th><th>المرحلة</th><th>المهارة</th><th>XP</th><th>الترتيب</th><th>نشط</th></tr></thead><tbody>';
+  filtered.forEach(l => {
+    html += `<tr>
+      <td>${l.id}</td>
+      <td><small>${l.lesson_code||'-'}</small></td>
+      <td>${l.title_ar || l.title || '-'}</td>
+      <td><span class="tag blue">المرحلة ${l.stage_id||l.stage||'-'}</span></td>
+      <td><span class="tag gray">${l.skill||l.skill_type||'-'}</span></td>
+      <td><strong style="color:#10b981">${l.xp_reward||0}</strong></td>
+      <td>${l.order_index||l.order_num||0}</td>
+      <td>${l.is_active ? '<span class="tag green">نشط</span>' : '<span class="tag red">معطّل</span>'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('lessonsTable').innerHTML = html;
+}
+
+// ============== STUDENTS ==============
+async function loadStudents(){
+  document.getElementById('studentsTable').innerHTML = '<div class="empty"><span class="loader"></span> جاري التحميل...</div>';
+  const data = await api('/api/admin/students');
+  const students = data?.students || data || [];
+  if(!students.length){
+    document.getElementById('studentsTable').innerHTML = '<div class="empty">📭 لا يوجد طلاب مسجّلون</div>';
+    return;
+  }
+  let html = '<table><thead><tr><th>#</th><th>المعرّف</th><th>المستوى</th><th>تحديد المستوى</th><th>استخدم المجاني؟</th></tr></thead><tbody>';
+  students.forEach(s => {
+    html += `<tr>
+      <td>${s.id||'-'}</td>
+      <td><strong>${s.user_id||s.telegram_id||'-'}</strong></td>
+      <td><span class="tag blue">${s.level||'-'}</span></td>
+      <td>${s.placement_done ? '<span class="tag green">تم</span>' : '<span class="tag yellow">معلّق</span>'}</td>
+      <td>${s.free_plan_used ? '<span class="tag red">نعم</span>' : '<span class="tag green">لا</span>'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('studentsTable').innerHTML = html;
+}
+
+// ============== INIT ==============
+loadDashboard();
+// Auto-refresh badges every 60s
+setInterval(() => {
+  Promise.all([
+    api('/api/admin/payments/list?status=pending'),
+    api('/api/admin/weekly-tasks/list?status=pending')
+  ]).then(([p, w]) => {
+    if(p?.count > 0){ const b = document.getElementById('pendingPaymentsBadge'); b.textContent = p.count; b.style.display='inline-block'; }
+    else document.getElementById('pendingPaymentsBadge').style.display = 'none';
+    if(w?.count > 0){ const b = document.getElementById('pendingTasksBadge'); b.textContent = w.count; b.style.display='inline-block'; }
+    else document.getElementById('pendingTasksBadge').style.display = 'none';
+  });
+}, 60000);
 </script>
 </body>
 </html>

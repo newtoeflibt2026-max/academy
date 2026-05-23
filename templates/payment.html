@@ -2,199 +2,332 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>إتمام الدفع | Yamen Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>الدفع - أكاديمية يامن</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
-body{background:linear-gradient(135deg,#f3f4f6 0%,#e5e7eb 100%);color:#1f2937;min-height:100vh;padding:16px}
-.wrap{max-width:560px;margin:0 auto}
-.header{text-align:center;margin-bottom:20px}
-.header h1{font-size:24px;color:#4f46e5;margin-bottom:6px}
-.header p{color:#6b7280;font-size:14px}
-.plan-card{background:white;border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:16px;border:2px solid #4f46e5}
-.plan-name{font-size:22px;font-weight:900;color:#1f2937;margin-bottom:8px}
-.plan-price{font-size:36px;font-weight:900;color:#4f46e5}
-.plan-price small{font-size:16px;color:#6b7280;font-weight:600}
-.plan-duration{color:#6b7280;margin:6px 0}
-.plan-desc{color:#374151;margin-top:10px;line-height:1.6;font-size:14px}
-.plan-features{margin-top:12px;color:#374151;font-size:13px;line-height:1.8;white-space:pre-line}
-.zain-card{background:linear-gradient(135deg,#7c3aed 0%,#4f46e5 100%);color:white;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center}
-.zain-card .label{font-size:14px;opacity:.9;margin-bottom:6px}
-.zain-num{font-size:32px;font-weight:900;letter-spacing:2px;direction:ltr;margin:6px 0}
-.copy-btn{background:white;color:#4f46e5;border:none;padding:10px 20px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;margin-top:8px}
-.copy-btn:active{transform:scale(.95)}
-.instructions{background:#fef3c7;border:1px solid #fbbf24;border-radius:12px;padding:14px;font-size:13px;line-height:1.8;color:#92400e;margin-bottom:16px}
-.instructions strong{color:#78350f}
-.form-card{background:white;border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.form-card h3{margin-bottom:14px;color:#1f2937;font-size:18px}
-.field{margin-bottom:14px}
-.field label{display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#374151}
-.field input[type=text],.field input[type=tel]{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:15px;outline:none;transition:border .2s}
-.field input:focus{border-color:#4f46e5}
-.file-upload{position:relative;border:2px dashed #4f46e5;border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:#f9fafb}
-.file-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.file-upload .icon{font-size:32px;margin-bottom:6px}
-.file-upload .txt{color:#4f46e5;font-weight:600}
-.file-upload .hint{color:#9ca3af;font-size:12px;margin-top:4px}
-#preview{max-width:100%;border-radius:10px;margin-top:10px;display:none;border:1px solid #e5e7eb}
-.submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:transform .1s}
-.submit-btn:hover{transform:translateY(-1px)}
-.submit-btn:disabled{opacity:.6;cursor:not-allowed}
-.alert{padding:14px;border-radius:10px;margin-top:14px;font-size:14px;font-weight:600;text-align:center;display:none}
-.alert.success{background:#d1fae5;color:#065f46;display:block}
-.alert.error{background:#fee2e2;color:#991b1b;display:block}
-.loading{display:inline-block;width:18px;height:18px;border:3px solid white;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);color:#e2e8f0;min-height:100vh;padding:16px;padding-bottom:40px}
+.container{max-width:520px;margin:0 auto}
+.header{text-align:center;padding:20px 0 24px}
+.header h1{font-size:22px;color:#fbbf24;margin-bottom:6px}
+.header p{font-size:13px;color:#94a3b8}
+.plan-card{background:linear-gradient(135deg,#1e293b,#334155);border-radius:18px;padding:22px;margin-bottom:20px;border:2px solid #475569;box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.plan-card.featured{border-color:#fbbf24;box-shadow:0 8px 32px rgba(251,191,36,0.25)}
+.plan-name{font-size:22px;font-weight:700;color:#fbbf24;margin-bottom:8px;text-align:center}
+.plan-price{font-size:36px;font-weight:800;color:#10b981;text-align:center;margin:10px 0}
+.plan-price .currency{font-size:18px;color:#94a3b8;margin-right:6px}
+.plan-duration{text-align:center;color:#94a3b8;font-size:14px;margin-bottom:14px}
+.plan-features{list-style:none;padding:0;margin-top:14px}
+.plan-features li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px;display:flex;align-items:center;gap:10px}
+.plan-features li:last-child{border-bottom:none}
+.plan-features li::before{content:"✓";color:#10b981;font-weight:bold;font-size:16px}
+
+/* Free plan special */
+.free-banner{background:linear-gradient(135deg,#059669,#10b981);padding:16px;border-radius:14px;margin-bottom:18px;text-align:center;color:#fff}
+.free-banner h3{font-size:18px;margin-bottom:6px}
+.free-banner p{font-size:13px;opacity:0.95}
+
+.zain-section{background:#1e293b;border-radius:16px;padding:20px;margin-bottom:18px;border:1px solid #334155}
+.zain-section h3{color:#fbbf24;margin-bottom:14px;font-size:17px;display:flex;align-items:center;gap:8px}
+.zain-number{background:#0f172a;padding:14px;border-radius:12px;font-size:22px;font-weight:700;color:#10b981;text-align:center;letter-spacing:2px;margin-bottom:10px;font-family:monospace;border:2px dashed #10b981}
+.copy-btn{width:100%;background:#3b82f6;color:#fff;border:none;padding:11px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.copy-btn:hover{background:#2563eb}
+.copy-btn:active{transform:scale(0.97)}
+.instructions{background:rgba(59,130,246,0.1);border-right:3px solid #3b82f6;padding:12px;border-radius:8px;margin-top:12px;font-size:13px;line-height:1.7}
+.instructions ol{padding-right:18px;color:#cbd5e1}
+
+.upload-section{background:#1e293b;border-radius:16px;padding:20px;border:1px solid #334155}
+.upload-section h3{color:#fbbf24;margin-bottom:14px;font-size:17px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;color:#cbd5e1;font-size:13px;margin-bottom:6px;font-weight:600}
+.form-group input{width:100%;background:#0f172a;border:1px solid #334155;color:#fff;padding:11px 14px;border-radius:10px;font-size:14px;font-family:inherit}
+.form-group input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
+
+.upload-area{background:#0f172a;border:2px dashed #475569;border-radius:14px;padding:24px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:14px}
+.upload-area:hover{border-color:#3b82f6;background:#0c1424}
+.upload-area.has-file{border-color:#10b981;border-style:solid}
+.upload-area .icon{font-size:42px;margin-bottom:8px}
+.upload-area .text{color:#94a3b8;font-size:13px}
+#proofPreview{max-width:100%;max-height:240px;border-radius:10px;margin-top:10px;display:none}
+
+.submit-btn{width:100%;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:15px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;margin-top:10px}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,0.4)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+.back-btn{display:block;text-align:center;margin-top:16px;color:#94a3b8;text-decoration:none;font-size:13px;padding:10px}
+.back-btn:hover{color:#fbbf24}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:linear-gradient(135deg,#1e293b,#334155);border-radius:18px;padding:28px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:1px solid #475569;animation:modalIn .3s}
+@keyframes modalIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.modal .modal-icon{font-size:54px;margin-bottom:12px}
+.modal h2{color:#fbbf24;margin-bottom:10px;font-size:20px}
+.modal p{color:#cbd5e1;font-size:14px;line-height:1.7;margin-bottom:18px}
+.modal-btn{background:#3b82f6;color:#fff;border:none;padding:11px 28px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin:4px}
+.modal-btn.success{background:#10b981}
+.modal-btn.danger{background:#ef4444}
+.modal-btn:hover{opacity:0.9}
+
+.spinner{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-left:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:sk 1.5s infinite;border-radius:8px;height:20px;margin:8px 0}
-@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.hidden{display:none !important}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="container">
   <div class="header">
-    <h1>💳 إتمام الدفع</h1>
-    <p>ادفع عبر زين كاش وارفع صورة إثبات الدفع</p>
+    <h1>💳 إتمام الاشتراك</h1>
+    <p>أكاديمية يامن - منصة تعليم اللغة الإنجليزية</p>
   </div>
 
-  <div id="plan-container">
-    <div class="plan-card">
-      <div class="skeleton" style="width:60%"></div>
-      <div class="skeleton" style="width:40%;height:40px;margin-top:12px"></div>
-      <div class="skeleton" style="width:80%"></div>
+  <div id="planCard" class="plan-card">
+    <div style="text-align:center;color:#94a3b8;padding:30px">جاري التحميل...</div>
+  </div>
+
+  <!-- Free Plan Section -->
+  <div id="freeSection" class="hidden">
+    <div class="free-banner">
+      <h3>🎁 الباقة المجانية</h3>
+      <p>تفعيل فوري! استمتع بأسبوع كامل مجاناً مع مهمة تسويقية أسبوعية</p>
+    </div>
+    <div class="instructions">
+      <strong style="color:#fbbf24;display:block;margin-bottom:8px">📋 شروط الباقة المجانية:</strong>
+      <ol>
+        <li>تُفعَّل مرة واحدة فقط في حياتك</li>
+        <li>المدة 4 أسابيع (شهر كامل)</li>
+        <li>كل أسبوع: ارفع صورة تثبت إنجاز المهمة التسويقية (مشاركة، دعوة صديق، أو تقييم)</li>
+        <li>إن لم ترفع الصورة في الأسبوع، يتم إيقاف الوصول حتى ترفعها</li>
+      </ol>
+    </div>
+    <button class="submit-btn" id="freeActivateBtn" onclick="activateFree()">
+      🚀 تفعيل الباقة المجانية فوراً
+    </button>
+  </div>
+
+  <!-- Paid Plan Section -->
+  <div id="paidSection" class="hidden">
+    <div class="zain-section">
+      <h3>📱 ادفع عبر زين كاش</h3>
+      <div class="zain-number" id="zainNumber">0798919150</div>
+      <button class="copy-btn" onclick="copyNumber()">📋 نسخ الرقم</button>
+      <div class="instructions">
+        <strong style="color:#fbbf24;display:block;margin-bottom:8px">📋 خطوات الدفع:</strong>
+        <ol>
+          <li>افتح تطبيق زين كاش</li>
+          <li>اختر "تحويل أموال"</li>
+          <li>أدخل الرقم: <strong style="color:#10b981">0798919150</strong></li>
+          <li>أدخل المبلغ بالضبط حسب الباقة</li>
+          <li>أكمل العملية واحتفظ بصورة الإيصال</li>
+          <li>ارفع صورة الإيصال أدناه</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="upload-section">
+      <h3>📸 رفع إثبات الدفع</h3>
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <input type="text" id="fullName" placeholder="مثال: أحمد محمد علي">
+      </div>
+      <div class="form-group">
+        <label>رقم الهاتف الذي حوّلت منه</label>
+        <input type="tel" id="senderPhone" placeholder="07XXXXXXXX" maxlength="15">
+      </div>
+      <div class="form-group">
+        <label>صورة الإيصال *</label>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('proofFile').click()">
+          <div class="icon">📷</div>
+          <div class="text" id="uploadText">اضغط لاختيار صورة الإيصال</div>
+          <img id="proofPreview" alt="معاينة">
+        </div>
+        <input type="file" id="proofFile" accept="image/jpeg,image/jpg,image/png,image/webp" hidden onchange="previewImage(event)">
+      </div>
+      <button class="submit-btn" id="submitBtn" onclick="submitPayment()">
+        ✅ إرسال إثبات الدفع
+      </button>
     </div>
   </div>
 
-  <div class="zain-card">
-    <div class="label">💰 رقم زين كاش</div>
-    <div class="zain-num" id="zain-num">{{ zain_cash }}</div>
-    <button class="copy-btn" onclick="copyZain()">📋 نسخ الرقم</button>
-  </div>
+  <a href="javascript:history.back()" class="back-btn">← العودة</a>
+</div>
 
-  <div class="instructions">
-    <strong>📝 خطوات الدفع:</strong><br>
-    1️⃣ افتح تطبيق زين كاش<br>
-    2️⃣ اختر "تحويل أموال"<br>
-    3️⃣ أدخل الرقم: <strong>{{ zain_cash }}</strong><br>
-    4️⃣ أدخل المبلغ المطلوب<br>
-    5️⃣ التقط صورة لإيصال الدفع<br>
-    6️⃣ ارفع الصورة في النموذج أدناه
-  </div>
-
-  <div class="form-card">
-    <h3>📤 إرسال إثبات الدفع</h3>
-    <form id="payForm" onsubmit="return submitPayment(event)">
-      <div class="field">
-        <label>الاسم الكامل</label>
-        <input type="text" id="sender_name" required placeholder="مثال: أحمد محمد">
-      </div>
-      <div class="field">
-        <label>رقم هاتفك (للتواصل)</label>
-        <input type="tel" id="sender_phone" required placeholder="مثال: 0790000000">
-      </div>
-      <div class="field">
-        <label>صورة إيصال الدفع</label>
-        <div class="file-upload">
-          <input type="file" id="proof" accept="image/*" required onchange="previewFile()">
-          <div class="icon">📷</div>
-          <div class="txt">اضغط لاختيار الصورة</div>
-          <div class="hint">JPG / PNG / WEBP — حد أقصى 5MB</div>
-        </div>
-        <img id="preview">
-      </div>
-      <button type="submit" class="submit-btn" id="submitBtn">📤 إرسال إثبات الدفع</button>
-      <div class="alert" id="alertBox"></div>
-    </form>
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">ℹ️</div>
+    <h2 id="modalTitle">تنبيه</h2>
+    <p id="modalText">رسالة</p>
+    <div id="modalButtons">
+      <button class="modal-btn success" onclick="closeModal()">حسناً</button>
+    </div>
   </div>
 </div>
 
 <script>
 const PLAN_ID = {{ plan_id }};
-const STUDENT_ID = "{{ student_id }}";
-const ZAIN = "{{ zain_cash }}";
+const STUDENT_ID = new URLSearchParams(location.search).get('student_id') || '';
+let currentPlan = null;
 
+// Modal helpers
+function showModal(opts){
+  document.getElementById('modalIcon').textContent = opts.icon || 'ℹ️';
+  document.getElementById('modalTitle').textContent = opts.title || 'تنبيه';
+  document.getElementById('modalText').textContent = opts.text || '';
+  const btns = document.getElementById('modalButtons');
+  btns.innerHTML = '';
+  (opts.buttons || [{label:'حسناً', cls:'success', onclick:closeModal}]).forEach(b=>{
+    const btn = document.createElement('button');
+    btn.className = 'modal-btn ' + (b.cls || '');
+    btn.textContent = b.label;
+    btn.onclick = b.onclick || closeModal;
+    btns.appendChild(btn);
+  });
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+
+// Load plan
 async function loadPlan(){
   try{
-    const r = await fetch("/api/miniapp/plans?student_id=" + STUDENT_ID);
-    const d = await r.json();
-    const plan = (d.plans||[]).find(p => p.id === PLAN_ID);
-    if(!plan){
-      document.getElementById("plan-container").innerHTML =
-        '<div class="plan-card" style="border-color:#ef4444"><div style="color:#ef4444;font-weight:700;text-align:center">⚠️ الباقة غير موجودة أو معطّلة</div></div>';
+    const r = await fetch('/api/miniapp/plans?student_id=' + STUDENT_ID);
+    const data = await r.json();
+    const plans = data.plans || data || [];
+    currentPlan = plans.find(p => p.id == PLAN_ID);
+    if(!currentPlan){
+      document.getElementById('planCard').innerHTML = '<div style="text-align:center;color:#ef4444;padding:30px">❌ الباقة غير موجودة</div>';
       return;
     }
-    const features = (plan.features||[]).join("\n");
-    document.getElementById("plan-container").innerHTML = `
-      <div class="plan-card">
-        <div class="plan-name">${plan.name}</div>
-        <div class="plan-price">${plan.price} <small>${plan.currency}</small></div>
-        <div class="plan-duration">⏱ المدة: ${plan.duration_days} يوم</div>
-        ${plan.description ? `<div class="plan-desc">${plan.description}</div>` : ''}
-        ${features ? `<div class="plan-features">${features}</div>` : ''}
-      </div>`;
+    renderPlan();
   }catch(e){
-    document.getElementById("plan-container").innerHTML =
-      '<div class="plan-card"><div style="color:#ef4444">خطأ في تحميل الباقة: '+e.message+'</div></div>';
+    document.getElementById('planCard').innerHTML = '<div style="text-align:center;color:#ef4444;padding:30px">❌ خطأ في تحميل الباقة</div>';
   }
 }
 
-function copyZain(){
-  navigator.clipboard.writeText(ZAIN).then(()=>{
-    const btn = event.target;
-    const orig = btn.textContent;
-    btn.textContent = "✅ تم النسخ!";
-    setTimeout(()=>{btn.textContent = orig}, 2000);
+function renderPlan(){
+  const p = currentPlan;
+  const features = Array.isArray(p.features) ? p.features : (typeof p.features === 'string' ? JSON.parse(p.features || '[]') : []);
+  document.getElementById('planCard').className = 'plan-card' + (p.is_featured ? ' featured' : '');
+  document.getElementById('planCard').innerHTML = `
+    <div class="plan-name">${p.name_ar || p.name}</div>
+    <div class="plan-price">${p.price === 0 ? 'مجاناً' : p.price}<span class="currency">${p.price === 0 ? '' : (p.currency || 'JOD')}</span></div>
+    <div class="plan-duration">⏱ ${p.duration_days} يوم</div>
+    <ul class="plan-features">${features.map(f => `<li>${f}</li>`).join('')}</ul>
+  `;
+  if(p.price === 0){
+    document.getElementById('freeSection').classList.remove('hidden');
+    document.getElementById('paidSection').classList.add('hidden');
+  } else {
+    document.getElementById('paidSection').classList.remove('hidden');
+    document.getElementById('freeSection').classList.add('hidden');
+  }
+}
+
+// Free plan activation
+async function activateFree(){
+  if(!STUDENT_ID){
+    showModal({icon:'⚠️', title:'خطأ', text:'معرّف الطالب مفقود. الرجاء فتح الصفحة من البوت.'});
+    return;
+  }
+  const btn = document.getElementById('freeActivateBtn');
+  btn.disabled = true;
+  btn.innerHTML = 'جاري التفعيل... <span class="spinner"></span>';
+  try{
+    const r = await fetch('/api/payment/free-activate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({student_id: STUDENT_ID, plan_id: PLAN_ID})
+    });
+    const data = await r.json();
+    if(data.ok){
+      showModal({
+        icon:'🎉', title:'تم التفعيل!',
+        text:'تم تفعيل الباقة المجانية. ابدأ التعلم الآن! تذكّر: لرفع المهمة الأسبوعية أول مرة، عُد بعد 7 أيام.',
+        buttons:[{label:'ابدأ التعلم', cls:'success', onclick:()=>location.href='/student?student_id='+STUDENT_ID}]
+      });
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '🚀 تفعيل الباقة المجانية فوراً';
+      showModal({icon:'⚠️', title:'تعذّر التفعيل', text: data.error || 'حدث خطأ غير معروف'});
+    }
+  }catch(e){
+    btn.disabled = false;
+    btn.innerHTML = '🚀 تفعيل الباقة المجانية فوراً';
+    showModal({icon:'❌', title:'خطأ في الاتصال', text: e.message});
+  }
+}
+
+// Paid - copy number
+function copyNumber(){
+  navigator.clipboard.writeText('0798919150').then(()=>{
+    showModal({icon:'✅', title:'تم النسخ', text:'تم نسخ رقم زين كاش: 0798919150'});
+  }).catch(()=>{
+    showModal({icon:'📋', title:'الرقم', text:'0798919150 - انسخه يدوياً'});
   });
 }
 
-function previewFile(){
-  const f = document.getElementById("proof").files[0];
-  if(!f) return;
-  if(f.size > 5*1024*1024){
-    showAlert("الصورة أكبر من 5MB", true);
-    document.getElementById("proof").value = "";
+// Paid - preview image
+function previewImage(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){
+    showModal({icon:'⚠️', title:'حجم كبير', text:'الصورة يجب أن تكون أقل من 5MB'});
+    ev.target.value = '';
     return;
   }
-  const r = new FileReader();
-  r.onload = e => {
-    const img = document.getElementById("preview");
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('proofPreview');
     img.src = e.target.result;
-    img.style.display = "block";
+    img.style.display = 'block';
+    document.getElementById('uploadText').textContent = '✅ ' + file.name;
+    document.getElementById('uploadArea').classList.add('has-file');
   };
-  r.readAsDataURL(f);
+  reader.readAsDataURL(file);
 }
 
-function showAlert(msg, isError){
-  const a = document.getElementById("alertBox");
-  a.textContent = msg;
-  a.className = "alert " + (isError ? "error" : "success");
-}
+// Paid - submit
+async function submitPayment(){
+  const name = document.getElementById('fullName').value.trim();
+  const phone = document.getElementById('senderPhone').value.trim();
+  const file = document.getElementById('proofFile').files[0];
+  if(!name){ showModal({icon:'⚠️', title:'بيانات ناقصة', text:'الرجاء إدخال الاسم الكامل'}); return; }
+  if(!phone){ showModal({icon:'⚠️', title:'بيانات ناقصة', text:'الرجاء إدخال رقم الهاتف'}); return; }
+  if(!file){ showModal({icon:'⚠️', title:'بيانات ناقصة', text:'الرجاء رفع صورة الإيصال'}); return; }
+  if(!STUDENT_ID){ showModal({icon:'⚠️', title:'خطأ', text:'معرّف الطالب مفقود'}); return; }
 
-async function submitPayment(e){
-  e.preventDefault();
-  const btn = document.getElementById("submitBtn");
+  const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="loading"></span> جاري الإرسال...';
+  btn.innerHTML = 'جاري الإرسال... <span class="spinner"></span>';
+
+  const fd = new FormData();
+  fd.append('student_id', STUDENT_ID);
+  fd.append('plan_id', PLAN_ID);
+  fd.append('full_name', name);
+  fd.append('sender_phone', phone);
+  fd.append('amount', currentPlan.price);
+  fd.append('proof', file);
+
   try{
-    const fd = new FormData();
-    fd.append("student_id", STUDENT_ID);
-    fd.append("plan_id", PLAN_ID);
-    fd.append("sender_name", document.getElementById("sender_name").value);
-    fd.append("sender_phone", document.getElementById("sender_phone").value);
-    fd.append("proof", document.getElementById("proof").files[0]);
-    const r = await fetch("/api/payment/submit", {method:"POST", body:fd});
-    const d = await r.json();
-    if(d.error) throw new Error(d.error);
-    showAlert("✅ " + (d.message || "تم الإرسال بنجاح! سيتم مراجعة طلبك خلال ساعات."), false);
-    document.getElementById("payForm").reset();
-    document.getElementById("preview").style.display = "none";
-    btn.textContent = "✅ تم الإرسال";
-  }catch(err){
-    showAlert("❌ " + err.message, true);
+    const r = await fetch('/api/payment/submit', {method:'POST', body: fd});
+    const data = await r.json();
+    if(data.ok){
+      showModal({
+        icon:'✅', title:'تم الإرسال بنجاح',
+        text:'تم إرسال إثبات الدفع. سيراجعه الأدمن خلال 24 ساعة وستصلك رسالة عند التفعيل.',
+        buttons:[{label:'العودة للقائمة', cls:'success', onclick:()=>location.href='/student?student_id='+STUDENT_ID}]
+      });
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '✅ إرسال إثبات الدفع';
+      showModal({icon:'❌', title:'فشل الإرسال', text: data.error || 'حدث خطأ'});
+    }
+  }catch(e){
     btn.disabled = false;
-    btn.textContent = "📤 إرسال إثبات الدفع";
+    btn.innerHTML = '✅ إرسال إثبات الدفع';
+    showModal({icon:'❌', title:'خطأ في الاتصال', text: e.message});
   }
-  return false;
 }
 
 loadPlan();

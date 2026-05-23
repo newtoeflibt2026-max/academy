@@ -2104,6 +2104,228 @@ def api_admin_plan_toggle(pid):
         return _jsonify({"error": str(e)}), 500
 # ===================== End of Phase 10 =====================
 
+# ===================== Phase 11B: Free Plan Activation =====================
+@app.route("/api/payment/free-activate", methods=["POST"])
+def api_payment_free_activate():
+    """Activate free plan for a student (one-time only, keeps progress)."""
+    try:
+        data = _request.get_json(force=True, silent=True) or {}
+        sid = str(data.get("student_id", "")).strip()
+        pid = data.get("plan_id")
+        if not sid or not pid:
+            return _jsonify({"error": "student_id and plan_id required"}), 400
+
+        conn = _miniapp_db()
+        cur = conn.cursor()
+
+        # Verify plan is actually free
+        cur.execute("SELECT name_ar, price, duration_days FROM subscription_plans WHERE id=?", (pid,))
+        plan = cur.fetchone()
+        if not plan:
+            conn.close()
+            return _jsonify({"error": "الباقة غير موجودة"}), 404
+        if float(plan["price"]) > 0:
+            conn.close()
+            return _jsonify({"error": "هذه الباقة ليست مجانية"}), 400
+
+        # Check if student already used free plan
+        cur.execute("SELECT free_plan_used FROM students WHERE user_id=?", (sid,))
+        student = cur.fetchone()
+        if student and student["free_plan_used"]:
+            conn.close()
+            return _jsonify({"error": "لقد استخدمت الباقة المجانية مسبقاً. يمكنك الاشتراك في إحدى الباقات المدفوعة."}), 400
+
+        # Mark free plan as used (keeps all student progress intact)
+        cur.execute("UPDATE students SET free_plan_used=1, free_plan_used_at=datetime('now') WHERE user_id=?", (sid,))
+
+        # Create payment record (auto-approved)
+        cur.execute("""INSERT INTO payments
+            (user_id, telegram_id, plan_id, plan_name, amount, currency, status, full_name, created_at, verified_at, notes)
+            VALUES (?, ?, ?, ?, 0, 'JOD', 'approved', '', datetime('now'), datetime('now'), 'تفعيل مجاني تلقائي')""",
+            (sid, sid, pid, plan["name_ar"]))
+        pay_id = cur.lastrowid
+
+        # Create active subscription
+        cur.execute("""INSERT INTO subscriptions
+            (user_id, telegram_id, plan_name, start_date, end_date, is_active)
+            VALUES (?, ?, ?, datetime('now'), datetime('now', '+' || ? || ' days'), 1)""",
+            (sid, sid, plan["name_ar"], plan["duration_days"]))
+
+        conn.commit()
+        conn.close()
+        return _jsonify({
+            "ok": True,
+            "payment_id": pay_id,
+            "message": "🎉 تم تفعيل الباقة المجانية! استمتع برحلتك التعليمية."
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/student/subscription-status")
+def api_student_subscription_status():
+    """Get current subscription status for a student."""
+    try:
+        sid = _request.args.get("student_id", "").strip()
+        if not sid:
+            return _jsonify({"error": "student_id required"}), 400
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT free_plan_used, placement_done, placement_score, level, placement_path FROM students WHERE user_id=?", (sid,))
+        student = cur.fetchone()
+        if not student:
+            conn.close()
+            return _jsonify({"error": "student not found"}), 404
+        # Active subscription
+        cur.execute("""SELECT plan_name, start_date, end_date, is_active
+            FROM subscriptions
+            WHERE user_id=? AND is_active=1
+            AND datetime(end_date) > datetime('now')
+            ORDER BY id DESC LIMIT 1""", (sid,))
+        sub = cur.fetchone()
+        conn.close()
+        return _jsonify({
+            "free_plan_used": bool(student["free_plan_used"]),
+            "placement_done": bool(student["placement_done"]),
+            "placement_score": student["placement_score"],
+            "level": student["level"],
+            "placement_path": student["placement_path"],
+            "has_active_subscription": sub is not None,
+            "subscription": dict(sub) if sub else None
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+# ===================== End Phase 11B Free Plan =====================
+
+# ===================== Phase 11B: Free Plan Weekly Tasks =====================
+WEEKLY_TASK_TYPES = {
+    "share": "شارك الأكاديمية على وسائل التواصل (سناب/إنستا/فيسبوك)",
+    "invite": "ادعُ صديقاً للتسجيل في الأكاديمية",
+    "review": "اكتب تقييماً للأكاديمية على متجر التطبيقات أو جوجل",
+    "story": "انشر قصة عن تجربتك مع الأكاديمية"
+}
+
+@app.route("/api/student/weekly-task/status")
+def api_weekly_task_status():
+    """Get current week's task status for a free plan student."""
+    try:
+        sid = _request.args.get("student_id", "").strip()
+        if not sid:
+            return _jsonify({"error": "student_id required"}), 400
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        # Get subscription start to calculate current week
+        cur.execute("""SELECT start_date FROM subscriptions
+            WHERE user_id=? AND is_active=1
+            AND plan_name LIKE '%مجاني%' OR plan_name LIKE '%تجريب%'
+            ORDER BY id DESC LIMIT 1""", (sid,))
+        sub = cur.fetchone()
+        if not sub:
+            conn.close()
+            return _jsonify({"has_free_plan": False})
+        import datetime as _dt
+        start = _dt.datetime.strptime(sub["start_date"][:19], "%Y-%m-%d %H:%M:%S")
+        days_passed = (_dt.datetime.now() - start).days
+        current_week = (days_passed // 7) + 1
+        if current_week > 4:
+            conn.close()
+            return _jsonify({"has_free_plan": True, "expired": True, "current_week": current_week})
+        # Get current week task
+        cur.execute("SELECT * FROM free_plan_weekly_tasks WHERE user_id=? AND week_number=?", (sid, current_week))
+        task = cur.fetchone()
+        # Get all weeks history
+        cur.execute("SELECT week_number, status, submitted_at FROM free_plan_weekly_tasks WHERE user_id=? ORDER BY week_number", (sid,))
+        history = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return _jsonify({
+            "has_free_plan": True,
+            "current_week": current_week,
+            "days_passed": days_passed,
+            "current_task": dict(task) if task else None,
+            "task_required": task is None or task["status"] == "rejected",
+            "is_blocked": task is None and days_passed >= 7,
+            "history": history,
+            "task_types": WEEKLY_TASK_TYPES
+        })
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/student/weekly-task/submit", methods=["POST"])
+def api_weekly_task_submit():
+    """Submit weekly task proof image."""
+    try:
+        sid = _request.form.get("student_id", "").strip()
+        week = int(_request.form.get("week_number", 0))
+        task_type = _request.form.get("task_type", "share")
+        if not sid or not week:
+            return _jsonify({"error": "student_id and week_number required"}), 400
+        if "proof" not in _request.files:
+            return _jsonify({"error": "proof image required"}), 400
+        f = _request.files["proof"]
+        if not f.filename:
+            return _jsonify({"error": "empty file"}), 400
+        ext = f.filename.rsplit(".", 1)[-1].lower()
+        if ext not in ("jpg", "jpeg", "png", "webp"):
+            return _jsonify({"error": "صيغة الصورة غير مدعومة"}), 400
+        import os, time
+        folder = os.path.join(app.root_path, "static", "uploads", "weekly_tasks")
+        os.makedirs(folder, exist_ok=True)
+        fname = f"week{week}_{sid}_{int(time.time())}.{ext}"
+        f.save(os.path.join(folder, fname))
+        rel = f"/static/uploads/weekly_tasks/{fname}"
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("""INSERT OR REPLACE INTO free_plan_weekly_tasks
+            (user_id, week_number, task_type, task_description, proof_image, status, submitted_at)
+            VALUES (?, ?, ?, ?, ?, 'pending', datetime('now'))""",
+            (sid, week, task_type, WEEKLY_TASK_TYPES.get(task_type, ""), rel))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True, "message": "✅ تم إرسال المهمة. سيراجعها الأدمن قريباً."})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/weekly-tasks/list")
+def api_admin_weekly_tasks_list():
+    """Admin: list weekly tasks."""
+    try:
+        status = _request.args.get("status", "pending")
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        if status == "all":
+            cur.execute("SELECT * FROM free_plan_weekly_tasks ORDER BY submitted_at DESC LIMIT 100")
+        else:
+            cur.execute("SELECT * FROM free_plan_weekly_tasks WHERE status=? ORDER BY submitted_at DESC", (status,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return _jsonify({"tasks": rows, "count": len(rows)})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/weekly-tasks/<int:tid>/action", methods=["POST"])
+def api_admin_weekly_task_action(tid):
+    """Admin: approve/reject weekly task."""
+    try:
+        data = _request.get_json(force=True, silent=True) or {}
+        action = data.get("action", "")
+        note = data.get("note", "")
+        if action not in ("approve", "reject"):
+            return _jsonify({"error": "invalid action"}), 400
+        new_status = "approved" if action == "approve" else "rejected"
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("UPDATE free_plan_weekly_tasks SET status=?, reviewed_at=datetime('now'), admin_note=? WHERE id=?",
+            (new_status, note, tid))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True, "status": new_status})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+# ===================== End Weekly Tasks =====================
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
