@@ -712,7 +712,7 @@ async function saveStage(id){
   if(ord) data.order_index = parseInt(ord);
   const url = id ? `/api/admin/stages/${id}/update` : '/api/admin/stages/create';
   const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  toast(r.ok?'تم':r.error||'فشل', r.ok?'success':'error');
+  toast((r.ok||r.success)?'تم':(r.error||r.message||'فشل'), r.ok?'success':'error');
   if(r.ok){ closeModal(); loadStages(); loadDashboard(); }
 }
 async function deleteStage(id){
@@ -742,7 +742,7 @@ async function saveLesson(id, stageId){
   if(ord) data.order_index = parseInt(ord);
   const url = id ? `/api/admin/lessons/${id}/update` : '/api/admin/lessons/create';
   const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  toast(r.ok?'تم':r.error||'فشل', r.ok?'success':'error');
+  toast((r.ok||r.success)?'تم':(r.error||r.message||'فشل'), r.ok?'success':'error');
   if(r.ok){ closeModal(); document.querySelector(`.stage-block[data-stage="${stageId}"]`).classList.remove('open'); toggleStage(stageId); loadDashboard(); }
 }
 async function deleteLesson(lid, sid){
@@ -799,7 +799,7 @@ async function saveQuestion(id, lid){
   };
   const url = id ? `/api/admin/lesson-questions/${id}/update` : '/api/admin/lesson-questions/create';
   const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-  toast(r.ok?'تم':r.error||'فشل', r.ok?'success':'error');
+  toast((r.ok||r.success)?'تم':(r.error||r.message||'فشل'), r.ok?'success':'error');
   if(r.ok) closeModal();
 }
 async function deleteQuestion(qid, lid, title){
@@ -1075,13 +1075,25 @@ async function addStage(){
   const name = await customPrompt('إضافة مرحلة جديدة','اكتب اسم المرحلة بالعربية:',{icon:'📚',default:'مرحلة جديدة'});
   if(!name) return;
   try{
+    const code = 'S' + Date.now().toString().slice(-5);
     const r = await fetch('/api/admin/stages/create',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name_ar:name,name_en:name})
+      body:JSON.stringify({
+        code: code,
+        name: name,
+        name_ar: name,
+        name_en: name,
+        track: 'foundation',
+        path: 'foundation',
+        section_name: 'grammar',
+        section: 'grammar',
+        min_score: 70,
+        gatekeeper_threshold: 70
+      })
     });
     const d = await r.json();
-    if(d.success){ await customAlert('تم بنجاح','تم إنشاء المرحلة 📚','success'); loadLessonsHierarchy(); }
-    else await customAlert('خطأ',d.message||'فشل','error');
+    if(d.ok || d.success){ await customAlert('تم بنجاح','تم إنشاء المرحلة 📚','success'); loadLessonsHierarchy(); if(typeof loadStages==='function') loadStages(); }
+    else await customAlert('خطأ', d.error || d.message || ('HTTP '+r.status),'error');
   }catch(e){ await customAlert('خطأ',e.message,'error'); }
 }
 
@@ -1126,11 +1138,11 @@ async function addLessonToStage(sid){
       body:JSON.stringify({stage_id:sid,title:title,name:title,pass_score:ps})
     });
     const d = await r.json();
-    if(d.success){
+    if(d.ok || d.success){
       await customAlert('تم بنجاح','تم إضافة الدرس ✅<br>الآن أضف أسئلة الدرس','success');
       loadLessonsHierarchy();
     }
-    else await customAlert('خطأ',d.message||'فشل','error');
+    else await customAlert('خطأ', d.error || d.message || ('HTTP '+r.status),'error');
   }catch(e){ await customAlert('خطأ',e.message,'error'); }
 }
 
