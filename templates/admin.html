@@ -1,387 +1,550 @@
-﻿<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة الإدارة | Yamen Academy</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
-body{background:#f3f4f6;color:#1f2937;min-height:100vh}
-.header{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
-.header h1{font-size:24px;font-weight:900}
-.header p{opacity:0.85;font-size:14px;margin-top:4px}
-.container{max-width:1200px;margin:0 auto;padding:24px 16px}
-.tabs{# ===== 5. كتابة admin.html جديد كامل =====
-$adminHtml = @'
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>لوحة الإدارة | Yamen Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
 body{background:#f3f4f6;color:#1f2937;min-height:100vh}
-.header{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
-.header h1{font-size:24px;font-weight:900}
-.header p{opacity:0.85;font-size:14px;margin-top:4px}
-.container{max-width:1200px;margin:0 auto;padding:24px 16px}
-.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;background:white;padding:8px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-.tab-btn{padding:10px 18px;border:none;background:transparent;color:#6b7280;font-weight:700;cursor:pointer;border-radius:10px;font-size:14px;transition:all 0.2s;font-family:inherit}
-.tab-btn:hover{background:#f5f3ff;color:#4f46e5}
-.tab-btn.active{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;box-shadow:0 4px 12px rgba(79,70,229,0.3)}
-.tab-content{display:none;animation:fadeIn 0.3s ease}
+.header{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:18px 24px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.header h1{font-size:22px}
+.header p{opacity:.9;font-size:13px;margin-top:4px}
+.container{max-width:1400px;margin:20px auto;padding:0 16px}
+.tabs{display:flex;gap:8px;margin-bottom:20px;background:white;padding:8px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow-x:auto}
+.tab-btn{padding:12px 20px;background:transparent;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;color:#6b7280;white-space:nowrap;transition:all .2s}
+.tab-btn:hover{background:#f3f4f6}
+.tab-btn.active{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.tab-content{display:none}
 .tab-content.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
-.stat-card{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-.stat-num{font-size:28px;font-weight:900;color:#4f46e5;line-height:1}
-.stat-lbl{font-size:13px;color:#6b7280;margin-top:6px;font-weight:600}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;background:white;padding:12px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-.toolbar input,.toolbar select{padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;flex:1;min-width:140px}
-.toolbar input:focus,.toolbar select:focus{border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
-.btn{padding:10px 18px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
-.btn-primary{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;box-shadow:0 4px 12px rgba(79,70,229,0.3)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(79,70,229,0.4)}
+.card{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:16px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.btn{padding:10px 18px;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:600;font-size:14px;transition:all .15s}
+.btn-primary{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white}
+.btn-success{background:#10b981;color:white}
 .btn-danger{background:#ef4444;color:white}
-.btn-danger:hover{background:#dc2626}
-.btn-secondary{background:#f3f4f6;color:#374151}
-.btn-secondary:hover{background:#e5e7eb}
-.btn-sm{padding:6px 10px;font-size:12px}
-table{width:100%;background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-collapse:collapse}
-th{background:#f9fafb;padding:14px 12px;text-align:right;font-size:13px;font-weight:800;color:#374151;border-bottom:2px solid #e5e7eb}
-td{padding:12px;border-bottom:1px solid #f3f4f6;font-size:14px;vertical-align:top}
-tr:last-child td{border-bottom:none}
-tr:hover{background:#fafafa}
-.q-cell{max-width:380px;line-height:1.6}
-.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
-.badge-grammar{background:#dbeafe;color:#1e40af}
-.badge-vocabulary{background:#fce7f3;color:#9d174d}
-.badge-reading{background:#d1fae5;color:#065f46}
-.badge-listening{background:#fef3c7;color:#92400e}
-.badge-easy{background:#d1fae5;color:#065f46}
-.badge-medium{background:#fef3c7;color:#92400e}
-.badge-hard{background:#fee2e2;color:#991b1b}
-.badge-active{background:#d1fae5;color:#065f46}
-.badge-inactive{background:#fee2e2;color:#991b1b}
-.actions{display:flex;gap:4px;flex-wrap:wrap}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
-.modal-overlay.show{display:flex}
-.modal{background:white;border-radius:18px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal h3{font-size:20px;font-weight:900;margin-bottom:16px;color:#1f2937}
-.form-row{margin-bottom:14px}
-.form-row label{display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:6px}
-.form-row input,.form-row textarea,.form-row select{width:100%;padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none}
-.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
-.form-row textarea{min-height:80px;resize:vertical}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;border-top:1px solid #e5e7eb;padding-top:16px}
-.empty{text-align:center;padding:40px;color:#9ca3af}
-.toast{position:fixed;bottom:24px;right:24px;background:#10b981;color:white;padding:14px 22px;border-radius:12px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,0.2);z-index:200;animation:slideUp 0.3s ease}
+.btn-warning{background:#f59e0b;color:white}
+.btn-secondary{background:#6b7280;color:white}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn:hover{transform:translateY(-1px)}
+.input,.select,.textarea{padding:10px 14px;border:2px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:14px;outline:none}
+.input:focus,.select:focus,.textarea:focus{border-color:#4f46e5}
+.input{min-width:200px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;font-size:14px}
+th{background:#f9fafb;font-weight:700;color:#374151;position:sticky;top:0}
+tr:hover{background:#f9fafb}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+.badge-success{background:#d1fae5;color:#065f46}
+.badge-warning{background:#fef3c7;color:#92400e}
+.badge-danger{background:#fee2e2;color:#991b1b}
+.badge-info{background:#dbeafe;color:#1e40af}
+.badge-gray{background:#f3f4f6;color:#374151}
+.proof-thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid #e5e7eb}
+.proof-thumb:hover{border-color:#4f46e5}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:white;border-radius:16px;padding:24px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h3{margin-bottom:16px;color:#1f2937}
+.modal .field{margin-bottom:14px}
+.modal .field label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:#374151}
+.modal .field input,.modal .field select,.modal .field textarea{width:100%}
+.modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:2000;cursor:pointer;align-items:center;justify-content:center;padding:20px}
+.img-modal.show{display:flex}
+.img-modal img{max-width:100%;max-height:90vh;border-radius:8px}
+.toast{position:fixed;bottom:20px;right:20px;padding:14px 20px;background:#10b981;color:white;border-radius:10px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:3000;animation:slideUp .3s ease}
 .toast.error{background:#ef4444}
-.loading-row{text-align:center;padding:40px;color:#6b7280}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:white;padding:14px;border-radius:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.stat .num{font-size:24px;font-weight:900;color:#4f46e5}
+.stat .lbl{font-size:12px;color:#6b7280;margin-top:4px}
+.empty{text-align:center;padding:40px;color:#9ca3af}
+.featured{background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%);color:white !important}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <h1>🎓 لوحة إدارة Yamen Academy</h1>
-  <p>إدارة الطلاب، الدروس، الباقات، وأسئلة تحديد المستوى</p>
+  <h1>🎛 لوحة الإدارة — Yamen Academy</h1>
+  <p>إدارة الأسئلة، المدفوعات، والباقات</p>
 </div>
 
 <div class="container">
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('placement')">📝 أسئلة تحديد المستوى</button>
-    <button class="tab-btn" onclick="showTab('students')">👥 الطلاب</button>
-    <button class="tab-btn" onclick="showTab('plans')">💎 الباقات</button>
-    <button class="tab-btn" onclick="showTab('stats')">📊 الإحصائيات</button>
+    <button class="tab-btn active" onclick="showTab('payments')">💰 المدفوعات <span id="badge-payments" class="badge badge-danger" style="display:none">0</span></button>
+    <button class="tab-btn" onclick="showTab('plans')">📦 الباقات</button>
+    <button class="tab-btn" onclick="showTab('questions')">📝 أسئلة المستوى</button>
   </div>
 
-  <!-- ===== Placement Tab ===== -->
-  <div id="tab-placement" class="tab-content active">
-    <div class="stats-row" id="placement-stats"></div>
-
-    <div class="toolbar">
-      <input type="text" id="search-q" placeholder="🔍 ابحث في نص السؤال..." oninput="renderQuestions()">
-      <select id="filter-skill" onchange="renderQuestions()">
-        <option value="">كل المهارات</option>
-        <option value="grammar">Grammar</option>
-        <option value="vocabulary">Vocabulary</option>
-        <option value="reading">Reading</option>
-        <option value="listening">Listening</option>
-      </select>
-      <select id="filter-diff" onchange="renderQuestions()">
-        <option value="">كل المستويات</option>
-        <option value="easy">سهل</option>
-        <option value="medium">متوسط</option>
-        <option value="hard">صعب</option>
-      </select>
-      <select id="filter-active" onchange="renderQuestions()">
-        <option value="">الكل</option>
-        <option value="1">نشط</option>
-        <option value="0">معطّل</option>
-      </select>
-      <button class="btn btn-primary" onclick="openQuestionModal(null)">➕ سؤال جديد</button>
+  <!-- ════════════ TAB: PAYMENTS ════════════ -->
+  <div id="tab-payments" class="tab-content active">
+    <div class="card">
+      <div class="toolbar">
+        <select class="select" id="pay-filter" onchange="loadPayments()">
+          <option value="pending">⏳ معلقة</option>
+          <option value="approved">✅ مفعّلة</option>
+          <option value="rejected">❌ مرفوضة</option>
+          <option value="cancelled">🚫 ملغاة</option>
+          <option value="all">📋 الكل</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="loadPayments()">🔄 تحديث</button>
+      </div>
+      <div id="payments-list"><div class="empty">جاري التحميل...</div></div>
     </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th style="width:50px">#</th>
-          <th>السؤال</th>
-          <th style="width:90px">المهارة</th>
-          <th style="width:80px">المستوى</th>
-          <th style="width:70px">الإجابة</th>
-          <th style="width:80px">الحالة</th>
-          <th style="width:160px">إجراءات</th>
-        </tr>
-      </thead>
-      <tbody id="q-tbody">
-        <tr><td colspan="7" class="loading-row">جاري التحميل...</td></tr>
-      </tbody>
-    </table>
   </div>
 
-  <!-- Placeholder tabs -->
-  <div id="tab-students" class="tab-content"><div class="empty">قسم الطلاب — قيد التطوير</div></div>
-  <div id="tab-plans" class="tab-content"><div class="empty">قسم الباقات — قيد التطوير<br><br><a href="/miniapp/plans" target="_blank" class="btn btn-primary">عرض صفحة الباقات</a></div></div>
-  <div id="tab-stats" class="tab-content"><div class="empty">الإحصائيات — قيد التطوير</div></div>
+  <!-- ════════════ TAB: PLANS ════════════ -->
+  <div id="tab-plans" class="tab-content">
+    <div class="card">
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="openPlanModal()">➕ باقة جديدة</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadPlans()">🔄 تحديث</button>
+      </div>
+      <div id="plans-list"><div class="empty">جاري التحميل...</div></div>
+    </div>
+  </div>
+
+  <!-- ════════════ TAB: QUESTIONS ════════════ -->
+  <div id="tab-questions" class="tab-content">
+    <div class="card">
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="openQuestionModal()">➕ سؤال جديد</button>
+        <select class="select" id="q-skill-filter" onchange="renderQuestions()">
+          <option value="">كل المهارات</option>
+          <option value="grammar">القواعد</option>
+          <option value="vocabulary">المفردات</option>
+          <option value="reading">القراءة</option>
+          <option value="listening">الاستماع</option>
+        </select>
+        <select class="select" id="q-diff-filter" onchange="renderQuestions()">
+          <option value="">كل الصعوبات</option>
+          <option value="easy">سهل</option>
+          <option value="medium">متوسط</option>
+          <option value="hard">صعب</option>
+        </select>
+        <input class="input" id="q-search" placeholder="🔍 بحث..." oninput="renderQuestions()">
+        <button class="btn btn-secondary btn-sm" onclick="loadQuestions()">🔄 تحديث</button>
+      </div>
+      <div class="stats" id="q-stats"></div>
+      <div id="questions-list"><div class="empty">جاري التحميل...</div></div>
+    </div>
+  </div>
 </div>
 
-<!-- ===== Modal ===== -->
-<div class="modal-overlay" id="q-modal">
+<!-- Plan Modal -->
+<div class="modal-bg" id="plan-modal" onclick="if(event.target===this)closePlanModal()">
   <div class="modal">
-    <h3 id="modal-title">➕ سؤال جديد</h3>
-    <input type="hidden" id="q-id">
-    <div class="form-row">
-      <label>نص السؤال</label>
-      <textarea id="q-text" placeholder="اكتب نص السؤال هنا..."></textarea>
-    </div>
-    <div class="form-grid">
-      <div class="form-row">
-        <label>الخيار A</label>
-        <input id="q-a" type="text">
-      </div>
-      <div class="form-row">
-        <label>الخيار B</label>
-        <input id="q-b" type="text">
-      </div>
-      <div class="form-row">
-        <label>الخيار C</label>
-        <input id="q-c" type="text">
-      </div>
-      <div class="form-row">
-        <label>الخيار D</label>
-        <input id="q-d" type="text">
+    <h3 id="plan-modal-title">➕ باقة جديدة</h3>
+    <input type="hidden" id="plan-id">
+    <div class="field"><label>الاسم بالعربي</label><input class="input" id="plan-name-ar" placeholder="مثال: 📚 الباقة الشهرية"></div>
+    <div class="field"><label>المعرف (إنجليزي)</label><input class="input" id="plan-name" placeholder="monthly"></div>
+    <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><label>السعر</label><input class="input" type="number" step="0.01" id="plan-price"></div>
+      <div><label>العملة</label>
+        <select class="select" id="plan-currency"><option>JOD</option><option>USD</option><option>IQD</option></select>
       </div>
     </div>
-    <div class="form-grid">
-      <div class="form-row">
-        <label>الإجابة الصحيحة</label>
-        <select id="q-correct">
-          <option value="A">A</option><option value="B">B</option>
-          <option value="C">C</option><option value="D">D</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>المهارة</label>
-        <select id="q-skill">
-          <option value="grammar">Grammar</option>
-          <option value="vocabulary">Vocabulary</option>
-          <option value="reading">Reading</option>
-          <option value="listening">Listening</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>المستوى</label>
-        <select id="q-diff">
-          <option value="easy">سهل (A1-A2)</option>
-          <option value="medium" selected>متوسط (B1-B2)</option>
-          <option value="hard">صعب (C1)</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>الحالة</label>
-        <select id="q-active">
-          <option value="1">نشط</option>
-          <option value="0">معطّل</option>
-        </select>
-      </div>
+    <div class="field"><label>المدة (أيام)</label><input class="input" type="number" id="plan-duration"></div>
+    <div class="field"><label>الوصف القصير</label><input class="input" id="plan-description"></div>
+    <div class="field"><label>المزايا (سطر لكل ميزة، استخدم ✅ أو ⚠️ في البداية)</label>
+      <textarea class="textarea" id="plan-features" rows="5" style="width:100%"></textarea>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
-      <button class="btn btn-primary" onclick="saveQuestion()">💾 حفظ</button>
+    <div class="field" style="display:flex;gap:20px">
+      <label><input type="checkbox" id="plan-active"> مفعّلة</label>
+      <label><input type="checkbox" id="plan-featured"> ⭐ مميّزة</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closePlanModal()">إلغاء</button>
+      <button class="btn btn-success" onclick="savePlan()">💾 حفظ</button>
     </div>
   </div>
+</div>
+
+<!-- Question Modal -->
+<div class="modal-bg" id="q-modal" onclick="if(event.target===this)closeQuestionModal()">
+  <div class="modal">
+    <h3 id="q-modal-title">➕ سؤال جديد</h3>
+    <input type="hidden" id="q-id">
+    <div class="field"><label>نص السؤال</label><textarea class="textarea" id="q-text" rows="2" style="width:100%"></textarea></div>
+    <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><label>A</label><input class="input" id="q-a"></div>
+      <div><label>B</label><input class="input" id="q-b"></div>
+      <div><label>C</label><input class="input" id="q-c"></div>
+      <div><label>D</label><input class="input" id="q-d"></div>
+    </div>
+    <div class="field" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div><label>الإجابة الصحيحة</label>
+        <select class="select" id="q-correct"><option>A</option><option>B</option><option>C</option><option>D</option></select>
+      </div>
+      <div><label>المهارة</label>
+        <select class="select" id="q-skill">
+          <option value="grammar">القواعد</option>
+          <option value="vocabulary">المفردات</option>
+          <option value="reading">القراءة</option>
+          <option value="listening">الاستماع</option>
+        </select>
+      </div>
+      <div><label>الصعوبة</label>
+        <select class="select" id="q-diff">
+          <option value="easy">سهل</option>
+          <option value="medium">متوسط</option>
+          <option value="hard">صعب</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeQuestionModal()">إلغاء</button>
+      <button class="btn btn-success" onclick="saveQuestion()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="img-modal" id="img-modal" onclick="this.classList.remove('show')">
+  <img id="img-modal-src">
 </div>
 
 <script>
-let allQuestions = [];
+let _payments = [];
+let _plans = [];
+let _questions = [];
 
 function showTab(name){
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  event.target.closest('.tab-btn').classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='payments') loadPayments();
+  if(name==='plans') loadPlans();
+  if(name==='questions') loadQuestions();
 }
 
 function toast(msg, isError){
   const t = document.createElement('div');
-  t.className = 'toast' + (isError ? ' error' : '');
+  t.className = 'toast' + (isError?' error':'');
   t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2800);
+  setTimeout(()=>t.remove(), 3000);
 }
 
-async function loadQuestions(){
-  try {
-    const r = await fetch('/api/admin/placement-questions');
+function showImage(src){
+  document.getElementById('img-modal-src').src = src;
+  document.getElementById('img-modal').classList.add('show');
+}
+
+// ════════════ PAYMENTS ════════════
+async function loadPayments(){
+  const status = document.getElementById('pay-filter').value;
+  try{
+    const r = await fetch('/api/admin/payments/list?status='+status);
     const d = await r.json();
-    allQuestions = d.questions || [];
-    renderStats();
-    renderQuestions();
-  } catch(err){
-    toast('فشل التحميل: ' + err.message, true);
+    if(d.error) throw new Error(d.error);
+    _payments = d.payments || [];
+    renderPayments();
+    // عدّاد المعلقة في tab
+    const pendCount = _payments.filter(p=>p.status==='pending').length;
+    const badge = document.getElementById('badge-payments');
+    if(status==='pending' && pendCount > 0){
+      badge.textContent = pendCount;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }catch(e){
+    document.getElementById('payments-list').innerHTML = '<div class="empty">خطأ: '+e.message+'</div>';
   }
 }
 
-function renderStats(){
-  const total = allQuestions.length;
-  const active = allQuestions.filter(q => q.is_active === 1).length;
-  const skills = {};
-  allQuestions.forEach(q => { skills[q.skill] = (skills[q.skill]||0) + 1; });
-  const html = `
-    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-lbl">إجمالي الأسئلة</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:#10b981">${active}</div><div class="stat-lbl">أسئلة نشطة</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:#f59e0b">${total-active}</div><div class="stat-lbl">معطّلة</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:#7c3aed">${Object.keys(skills).length}</div><div class="stat-lbl">مهارات مختلفة</div></div>
-  `;
-  document.getElementById('placement-stats').innerHTML = html;
+function renderPayments(){
+  if(!_payments.length){
+    document.getElementById('payments-list').innerHTML = '<div class="empty">📭 لا توجد مدفوعات</div>';
+    return;
+  }
+  const rows = _payments.map(p => {
+    const statusMap = {pending:['⏳ معلق','warning'],approved:['✅ مفعّل','success'],rejected:['❌ مرفوض','danger'],cancelled:['🚫 ملغى','gray']};
+    const [stTxt, stCls] = statusMap[p.status] || [p.status, 'gray'];
+    const proofUrl = p.proof_file ? `/static/uploads/payments/${p.proof_file}` : '';
+    const actions = (p.status === 'pending')
+      ? `<button class="btn btn-success btn-sm" onclick="actPayment(${p.id},'approve')">✅ تفعيل</button>
+         <button class="btn btn-danger btn-sm" onclick="actPayment(${p.id},'reject')">❌ رفض</button>`
+      : (p.status === 'approved')
+        ? `<button class="btn btn-warning btn-sm" onclick="actPayment(${p.id},'cancel')">🚫 إلغاء تفعيل</button>`
+        : `<span class="badge badge-gray">—</span>`;
+    return `<tr>
+      <td>${p.id}</td>
+      <td>${proofUrl ? `<img src="${proofUrl}" class="proof-thumb" onclick="showImage('${proofUrl}')">` : '—'}</td>
+      <td><strong>${p.full_name||'—'}</strong><br><small style="color:#6b7280">${(p.notes||'').replace('phone:','📱 ').split('\n')[0]}</small></td>
+      <td>${p.user_id}</td>
+      <td>${p.plan_name_ar || p.plan_name || '—'}</td>
+      <td><strong>${p.amount} ${p.currency||''}</strong></td>
+      <td><span class="badge badge-${stCls}">${stTxt}</span></td>
+      <td><small>${p.created_at||''}</small></td>
+      <td>${actions}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('payments-list').innerHTML = `<div style="overflow-x:auto"><table>
+    <thead><tr><th>#</th><th>إيصال</th><th>المُرسِل</th><th>طالب</th><th>الباقة</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th>إجراء</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+async function actPayment(pid, action){
+  const labels = {approve:'تفعيل', reject:'رفض', cancel:'إلغاء تفعيل'};
+  if(!confirm(`هل أنت متأكد من ${labels[action]} هذه العملية؟`)) return;
+  const note = prompt('ملاحظة (اختياري):', '') || '';
+  try{
+    const r = await fetch(`/api/admin/payments/${pid}/action`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({action, note})
+    });
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('✅ تم '+labels[action]);
+    loadPayments();
+  }catch(e){ toast('خطأ: '+e.message, true); }
+}
+
+// ════════════ PLANS ════════════
+async function loadPlans(){
+  try{
+    const r = await fetch('/api/admin/plans/list');
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    _plans = d.plans || [];
+    renderPlans();
+  }catch(e){
+    document.getElementById('plans-list').innerHTML = '<div class="empty">خطأ: '+e.message+'</div>';
+  }
+}
+
+function renderPlans(){
+  if(!_plans.length){
+    document.getElementById('plans-list').innerHTML = '<div class="empty">📭 لا توجد باقات</div>';
+    return;
+  }
+  const rows = _plans.map(p => `
+    <tr ${p.is_active?'':'style="opacity:.5"'}>
+      <td>${p.id}</td>
+      <td><strong>${p.name_ar || p.name}</strong>${p.is_featured?' ⭐':''}<br><small style="color:#6b7280">${p.name}</small></td>
+      <td><strong>${p.price}</strong> ${p.currency}</td>
+      <td>${p.duration_days} يوم</td>
+      <td><span class="badge badge-${p.is_active?'success':'gray'}">${p.is_active?'مفعّلة':'معطّلة'}</span></td>
+      <td style="max-width:250px;font-size:12px">${(p.description||'').substring(0,80)}</td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick='editPlan(${JSON.stringify(p)})'>✏️</button>
+        <button class="btn btn-warning btn-sm" onclick="togglePlan(${p.id})">${p.is_active?'🚫':'▶️'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePlan(${p.id})">🗑</button>
+      </td>
+    </tr>`).join('');
+  document.getElementById('plans-list').innerHTML = `<div style="overflow-x:auto"><table>
+    <thead><tr><th>#</th><th>الاسم</th><th>السعر</th><th>المدة</th><th>الحالة</th><th>الوصف</th><th>إجراء</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+function openPlanModal(){
+  document.getElementById('plan-modal-title').textContent = '➕ باقة جديدة';
+  document.getElementById('plan-id').value = '';
+  ['plan-name-ar','plan-name','plan-price','plan-duration','plan-description','plan-features'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('plan-currency').value = 'JOD';
+  document.getElementById('plan-active').checked = true;
+  document.getElementById('plan-featured').checked = false;
+  document.getElementById('plan-modal').classList.add('show');
+}
+
+function closePlanModal(){ document.getElementById('plan-modal').classList.remove('show'); }
+
+function editPlan(p){
+  document.getElementById('plan-modal-title').textContent = '✏️ تعديل باقة #'+p.id;
+  document.getElementById('plan-id').value = p.id;
+  document.getElementById('plan-name-ar').value = p.name_ar || '';
+  document.getElementById('plan-name').value = p.name || '';
+  document.getElementById('plan-price').value = p.price;
+  document.getElementById('plan-currency').value = p.currency || 'JOD';
+  document.getElementById('plan-duration').value = p.duration_days;
+  document.getElementById('plan-description').value = p.description || '';
+  document.getElementById('plan-features').value = p.features || '';
+  document.getElementById('plan-active').checked = !!p.is_active;
+  document.getElementById('plan-featured').checked = !!p.is_featured;
+  document.getElementById('plan-modal').classList.add('show');
+}
+
+async function savePlan(){
+  const pid = document.getElementById('plan-id').value;
+  const payload = {
+    name_ar: document.getElementById('plan-name-ar').value.trim(),
+    name: document.getElementById('plan-name').value.trim() || 'custom',
+    price: parseFloat(document.getElementById('plan-price').value) || 0,
+    currency: document.getElementById('plan-currency').value,
+    duration_days: parseInt(document.getElementById('plan-duration').value) || 30,
+    description: document.getElementById('plan-description').value,
+    features: document.getElementById('plan-features').value,
+    is_active: document.getElementById('plan-active').checked ? 1 : 0,
+    is_featured: document.getElementById('plan-featured').checked ? 1 : 0
+  };
+  if(!payload.name_ar){ toast('الاسم بالعربي مطلوب', true); return; }
+  try{
+    const url = pid ? `/api/admin/plans/${pid}/update` : '/api/admin/plans/create';
+    const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(pid?'✅ تم التعديل':'✅ تم الإنشاء');
+    closePlanModal();
+    loadPlans();
+  }catch(e){ toast('خطأ: '+e.message, true); }
+}
+
+async function togglePlan(pid){
+  try{
+    const r = await fetch(`/api/admin/plans/${pid}/toggle`, {method:'POST'});
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast(d.is_active?'▶️ تم التفعيل':'🚫 تم التعطيل');
+    loadPlans();
+  }catch(e){ toast('خطأ: '+e.message, true); }
+}
+
+async function deletePlan(pid){
+  if(!confirm('هل أنت متأكد من حذف هذه الباقة نهائياً؟')) return;
+  try{
+    const r = await fetch(`/api/admin/plans/${pid}/delete`, {method:'POST'});
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    toast('🗑 تم الحذف');
+    loadPlans();
+  }catch(e){ toast('خطأ: '+e.message, true); }
+}
+
+// ════════════ QUESTIONS ════════════
+async function loadQuestions(){
+  try{
+    const r = await fetch('/api/admin/placement-questions');
+    const d = await r.json();
+    if(d.error) throw new Error(d.error);
+    _questions = d.questions || [];
+    renderQuestions();
+  }catch(e){
+    document.getElementById('questions-list').innerHTML = '<div class="empty">خطأ: '+e.message+'</div>';
+  }
 }
 
 function renderQuestions(){
-  const search = (document.getElementById('search-q').value || '').toLowerCase();
-  const fSkill = document.getElementById('filter-skill').value;
-  const fDiff = document.getElementById('filter-diff').value;
-  const fAct = document.getElementById('filter-active').value;
-
-  let list = allQuestions.filter(q => {
-    if(search && !(q.question_text||'').toLowerCase().includes(search)) return false;
-    if(fSkill && q.skill !== fSkill) return false;
-    if(fDiff && q.difficulty !== fDiff) return false;
-    if(fAct !== '' && String(q.is_active) !== fAct) return false;
+  const sf = document.getElementById('q-skill-filter').value;
+  const df = document.getElementById('q-diff-filter').value;
+  const sq = document.getElementById('q-search').value.toLowerCase();
+  let items = _questions.filter(q => {
+    if(sf && (q.skill_type||q.skill) !== sf) return false;
+    if(df && q.difficulty !== df) return false;
+    if(sq && !(q.question_text||'').toLowerCase().includes(sq)) return false;
     return true;
   });
-
-  if(!list.length){
-    document.getElementById('q-tbody').innerHTML = '<tr><td colspan="7" class="empty">لا توجد أسئلة مطابقة</td></tr>';
+  // stats
+  const total = _questions.length;
+  const active = _questions.filter(q=>q.is_active).length;
+  document.getElementById('q-stats').innerHTML = `
+    <div class="stat"><div class="num">${total}</div><div class="lbl">المجموع</div></div>
+    <div class="stat"><div class="num">${active}</div><div class="lbl">نشط</div></div>
+    <div class="stat"><div class="num">${items.length}</div><div class="lbl">معروض</div></div>`;
+  if(!items.length){
+    document.getElementById('questions-list').innerHTML = '<div class="empty">📭 لا توجد نتائج</div>';
     return;
   }
-
-  const rows = list.map(q => `
-    <tr>
-      <td><strong>#${q.id}</strong></td>
-      <td class="q-cell">${escapeHtml(q.question_text||'')}</td>
-      <td><span class="badge badge-${q.skill||'grammar'}">${q.skill||'-'}</span></td>
-      <td><span class="badge badge-${q.difficulty||'medium'}">${diffLabel(q.difficulty)}</span></td>
-      <td><strong>${q.correct_option||'-'}</strong></td>
-      <td><span class="badge ${q.is_active==1?'badge-active':'badge-inactive'}">${q.is_active==1?'نشط':'معطّل'}</span></td>
-      <td class="actions">
-        <button class="btn btn-secondary btn-sm" onclick="openQuestionModal(${q.id})">✏️</button>
-        <button class="btn btn-secondary btn-sm" onclick="toggleQuestion(${q.id})">${q.is_active==1?'⏸':'▶️'}</button>
+  const skillMap = {grammar:'القواعد',vocabulary:'المفردات',reading:'القراءة',listening:'الاستماع'};
+  const diffMap = {easy:'سهل',medium:'متوسط',hard:'صعب'};
+  const rows = items.map(q => `
+    <tr ${q.is_active?'':'style="opacity:.5"'}>
+      <td>${q.id}</td>
+      <td style="max-width:340px"><strong>${(q.question_text||'').substring(0,90)}</strong><br>
+        <small style="color:#6b7280">A: ${q.option_a||''} | B: ${q.option_b||''}</small></td>
+      <td><span class="badge badge-success">${q.correct_option}</span></td>
+      <td><span class="badge badge-info">${skillMap[q.skill_type||q.skill]||q.skill_type||q.skill||'—'}</span></td>
+      <td><span class="badge badge-warning">${diffMap[q.difficulty]||q.difficulty||'—'}</span></td>
+      <td>
+        <button class="btn btn-primary btn-sm" onclick='editQuestion(${JSON.stringify(q)})'>✏️</button>
+        <button class="btn btn-warning btn-sm" onclick="toggleQuestion(${q.id})">${q.is_active?'🚫':'▶️'}</button>
         <button class="btn btn-danger btn-sm" onclick="deleteQuestion(${q.id})">🗑</button>
       </td>
-    </tr>
-  `).join('');
-  document.getElementById('q-tbody').innerHTML = rows;
+    </tr>`).join('');
+  document.getElementById('questions-list').innerHTML = `<div style="overflow-x:auto"><table>
+    <thead><tr><th>#</th><th>السؤال</th><th>الصحيح</th><th>المهارة</th><th>الصعوبة</th><th>إجراء</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
 }
 
-function diffLabel(d){ return {easy:'سهل', medium:'متوسط', hard:'صعب'}[d] || d || '-'; }
-function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function openQuestionModal(qid){
-  const modal = document.getElementById('q-modal');
-  if(qid){
-    const q = allQuestions.find(x => x.id === qid);
-    if(!q) return;
-    document.getElementById('modal-title').textContent = '✏️ تعديل السؤال #' + qid;
-    document.getElementById('q-id').value = qid;
-    document.getElementById('q-text').value = q.question_text || '';
-    document.getElementById('q-a').value = q.option_a || '';
-    document.getElementById('q-b').value = q.option_b || '';
-    document.getElementById('q-c').value = q.option_c || '';
-    document.getElementById('q-d').value = q.option_d || '';
-    document.getElementById('q-correct').value = q.correct_option || 'A';
-    document.getElementById('q-skill').value = q.skill || 'grammar';
-    document.getElementById('q-diff').value = q.difficulty || 'medium';
-    document.getElementById('q-active').value = String(q.is_active);
-  } else {
-    document.getElementById('modal-title').textContent = '➕ سؤال جديد';
-    document.getElementById('q-id').value = '';
-    ['q-text','q-a','q-b','q-c','q-d'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('q-correct').value = 'A';
-    document.getElementById('q-skill').value = 'grammar';
-    document.getElementById('q-diff').value = 'medium';
-    document.getElementById('q-active').value = '1';
-  }
-  modal.classList.add('show');
+function openQuestionModal(){
+  document.getElementById('q-modal-title').textContent = '➕ سؤال جديد';
+  ['q-id','q-text','q-a','q-b','q-c','q-d'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('q-correct').value = 'A';
+  document.getElementById('q-skill').value = 'grammar';
+  document.getElementById('q-diff').value = 'medium';
+  document.getElementById('q-modal').classList.add('show');
 }
 
-function closeModal(){ document.getElementById('q-modal').classList.remove('show'); }
+function closeQuestionModal(){ document.getElementById('q-modal').classList.remove('show'); }
+
+function editQuestion(q){
+  document.getElementById('q-modal-title').textContent = '✏️ تعديل سؤال #'+q.id;
+  document.getElementById('q-id').value = q.id;
+  document.getElementById('q-text').value = q.question_text || '';
+  document.getElementById('q-a').value = q.option_a || '';
+  document.getElementById('q-b').value = q.option_b || '';
+  document.getElementById('q-c').value = q.option_c || '';
+  document.getElementById('q-d').value = q.option_d || '';
+  document.getElementById('q-correct').value = q.correct_option || 'A';
+  document.getElementById('q-skill').value = q.skill_type || q.skill || 'grammar';
+  document.getElementById('q-diff').value = q.difficulty || 'medium';
+  document.getElementById('q-modal').classList.add('show');
+}
 
 async function saveQuestion(){
   const qid = document.getElementById('q-id').value;
-  const body = {
+  const payload = {
     question_text: document.getElementById('q-text').value.trim(),
     option_a: document.getElementById('q-a').value.trim(),
     option_b: document.getElementById('q-b').value.trim(),
     option_c: document.getElementById('q-c').value.trim(),
     option_d: document.getElementById('q-d').value.trim(),
     correct_option: document.getElementById('q-correct').value,
+    skill_type: document.getElementById('q-skill').value,
     skill: document.getElementById('q-skill').value,
     difficulty: document.getElementById('q-diff').value,
-    is_active: document.getElementById('q-active').value === '1'
+    is_active: 1
   };
-  if(!body.question_text || !body.option_a || !body.option_b){
-    toast('السؤال والخيارات A و B مطلوبة', true); return;
-  }
-  try {
+  if(!payload.question_text){ toast('نص السؤال مطلوب', true); return; }
+  try{
     const url = qid ? `/api/admin/placement-questions/${qid}` : '/api/admin/placement-questions';
     const method = qid ? 'PUT' : 'POST';
-    const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    const r = await fetch(url, {method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
     const d = await r.json();
     if(d.error) throw new Error(d.error);
-    toast(qid ? '✅ تم التعديل' : '✅ تم الإضافة');
-    closeModal();
+    toast(qid?'✅ تم التعديل':'✅ تم الإضافة');
+    closeQuestionModal();
     loadQuestions();
-  } catch(err){ toast('خطأ: ' + err.message, true); }
+  }catch(e){ toast('خطأ: '+e.message, true); }
 }
 
 async function toggleQuestion(qid){
-  try {
-    const r = await fetch(`/api/admin/placement-questions/${qid}/toggle`, { method: 'POST' });
+  try{
+    const r = await fetch(`/api/admin/placement-questions/${qid}/toggle`, {method:'POST'});
     const d = await r.json();
     if(d.error) throw new Error(d.error);
-    toast('✅ تم تغيير الحالة');
+    toast('✅ تم');
     loadQuestions();
-  } catch(err){ toast('خطأ: ' + err.message, true); }
+  }catch(e){ toast('خطأ: '+e.message, true); }
 }
 
 async function deleteQuestion(qid){
-  if(!confirm('هل أنت متأكد من حذف هذا السؤال؟ لا يمكن التراجع.')) return;
-  try {
-    const r = await fetch(`/api/admin/placement-questions/${qid}`, { method: 'DELETE' });
+  if(!confirm('حذف هذا السؤال نهائياً؟')) return;
+  try{
+    const r = await fetch(`/api/admin/placement-questions/${qid}`, {method:'DELETE'});
     const d = await r.json();
     if(d.error) throw new Error(d.error);
     toast('🗑 تم الحذف');
     loadQuestions();
-  } catch(err){ toast('خطأ: ' + err.message, true); }
+  }catch(e){ toast('خطأ: '+e.message, true); }
 }
 
-loadQuestions();
+// تحميل أولي
+loadPayments();
 </script>
 </body>
 </html>

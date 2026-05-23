@@ -190,7 +190,6 @@ body {
     <div class="progress-track"><div class="progress-fill" id="progress" style="width: 0%"></div></div>
 
     <div class="question-card">
-      <div class="skill-tag" id="skill-tag">المهارة</div>
       <div class="q-text" id="q-text">...</div>
     </div>
 
@@ -326,7 +325,6 @@ function renderQuestion(){
   const q = questions[currentIdx];
   document.getElementById('q-current').textContent = currentIdx + 1;
   document.getElementById('progress').style.width = ((currentIdx) / questions.length * 100) + '%';
-  document.getElementById('skill-tag').textContent = skillLabel(q.skill);
   document.getElementById('q-text').textContent = q.question_text || q.question;
 
   const opts = [

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
 import os, json
 from datetime import datetime
@@ -1922,6 +1922,187 @@ def miniapp_quiz_finish():
         return _jsonify({"error": str(e)}), 500
 # ============ END PHASE 4B ============
 
+# ===================== Phase 10: Payment + Plans CRUD =====================
+import os as _os10
+from flask import send_from_directory as _send_from_directory
+
+ZAIN_CASH_NUMBER = "0798919150"
+UPLOAD_FOLDER = _os10.path.join(_os10.path.dirname(_os10.path.abspath(__file__)), "static", "uploads", "payments")
+_os10.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route("/payment/<int:plan_id>")
+def payment_page(plan_id):
+    from flask import render_template
+    sid = _request.args.get("student_id", "")
+    return render_template("payment.html", plan_id=plan_id, student_id=sid, zain_cash=ZAIN_CASH_NUMBER)
+
+@app.route("/api/payment/submit", methods=["POST"])
+def api_payment_submit():
+    import time
+    try:
+        sid = _request.form.get("student_id", "").strip()
+        pid = _request.form.get("plan_id", "").strip()
+        sender_name = _request.form.get("sender_name", "").strip()
+        sender_phone = _request.form.get("sender_phone", "").strip()
+        if not sid or not pid:
+            return _jsonify({"error": "student_id and plan_id required"}), 400
+        if "proof" not in _request.files:
+            return _jsonify({"error": "proof image required"}), 400
+        f = _request.files["proof"]
+        if not f or f.filename == "":
+            return _jsonify({"error": "empty file"}), 400
+        ext = _os10.path.splitext(f.filename)[1].lower()
+        if ext not in [".jpg", ".jpeg", ".png", ".webp"]:
+            return _jsonify({"error": "only jpg/png/webp allowed"}), 400
+        fname = "p_" + str(sid) + "_" + str(pid) + "_" + str(int(time.time())) + ext
+        fpath = _os10.path.join(UPLOAD_FOLDER, fname)
+        f.save(fpath)
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT name_ar, price, currency FROM subscription_plans WHERE id=?", (pid,))
+        plan = cur.fetchone()
+        if not plan:
+            conn.close()
+            return _jsonify({"error": "plan not found"}), 404
+        cur.execute("INSERT INTO payments (user_id, telegram_id, plan_id, plan_name, amount, currency, status, proof_file, full_name, created_at, notes) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, datetime('now'), ?)",
+            (sid, sid, pid, plan["name_ar"], plan["price"], plan["currency"], fname, sender_name, "phone:" + sender_phone))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True, "payment_id": new_id, "message": "تم استلام إثبات الدفع، سيتم مراجعته قريباً"})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/static/uploads/payments/<path:fname>")
+def serve_payment_proof(fname):
+    return _send_from_directory(UPLOAD_FOLDER, fname)
+
+@app.route("/api/admin/payments/list")
+def api_admin_payments_list():
+    try:
+        status = _request.args.get("status", "all")
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        if status == "all":
+            cur.execute("SELECT p.*, sp.name_ar as plan_name_ar FROM payments p LEFT JOIN subscription_plans sp ON sp.id=p.plan_id ORDER BY p.id DESC LIMIT 200")
+        else:
+            cur.execute("SELECT p.*, sp.name_ar as plan_name_ar FROM payments p LEFT JOIN subscription_plans sp ON sp.id=p.plan_id WHERE p.status=? ORDER BY p.id DESC LIMIT 200", (status,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return _jsonify({"payments": rows})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/payments/<int:pid>/action", methods=["POST"])
+def api_admin_payment_action(pid):
+    try:
+        data = _request.get_json(force=True, silent=True) or {}
+        action = data.get("action", "")
+        note = data.get("note", "")
+        if action not in ("approve", "reject", "cancel"):
+            return _jsonify({"error": "invalid action"}), 400
+        status_map = {"approve": "approved", "reject": "rejected", "cancel": "cancelled"}
+        new_status = status_map[action]
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT user_id, plan_id, status FROM payments WHERE id=?", (pid,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            return _jsonify({"error": "payment not found"}), 404
+        note_line = "\n[" + action + "] " + note
+        cur.execute("UPDATE payments SET status=?, notes=COALESCE(notes,'')||?, verified_at=datetime('now') WHERE id=?", (new_status, note_line, pid))
+        if action == "approve":
+            cur.execute("SELECT name_ar, duration_days FROM subscription_plans WHERE id=?", (row["plan_id"],))
+            plan = cur.fetchone()
+            if plan:
+                cur.execute("INSERT INTO subscriptions (user_id, telegram_id, plan_name, start_date, end_date, is_active) VALUES (?, ?, ?, datetime('now'), datetime('now', '+' || ? || ' days'), 1)",
+                    (row["user_id"], row["user_id"], plan["name_ar"], plan["duration_days"]))
+        if action == "cancel":
+            cur.execute("UPDATE subscriptions SET is_active=0 WHERE user_id=? AND is_active=1", (row["user_id"],))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True, "status": new_status})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/list")
+def api_admin_plans_list():
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM subscription_plans ORDER BY is_active DESC, is_featured DESC, price ASC")
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return _jsonify({"plans": rows})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/create", methods=["POST"])
+def api_admin_plan_create():
+    try:
+        d = _request.get_json(force=True, silent=True) or {}
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("INSERT INTO subscription_plans (name, name_ar, price, currency, duration_days, description, features, is_active, is_featured, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))",
+            (d.get("name", "custom"), d.get("name_ar", ""), float(d.get("price", 0)),
+             d.get("currency", "JOD"), int(d.get("duration_days", 30)),
+             d.get("description", ""), d.get("features", ""),
+             int(d.get("is_active", 1)), int(d.get("is_featured", 0))))
+        new_id = cur.lastrowid
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/<int:pid>/update", methods=["POST"])
+def api_admin_plan_update(pid):
+    try:
+        d = _request.get_json(force=True, silent=True) or {}
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("UPDATE subscription_plans SET name=?, name_ar=?, price=?, currency=?, duration_days=?, description=?, features=?, is_active=?, is_featured=? WHERE id=?",
+            (d.get("name", "custom"), d.get("name_ar", ""), float(d.get("price", 0)),
+             d.get("currency", "JOD"), int(d.get("duration_days", 30)),
+             d.get("description", ""), d.get("features", ""),
+             int(d.get("is_active", 1)), int(d.get("is_featured", 0)), pid))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/<int:pid>/delete", methods=["POST"])
+def api_admin_plan_delete(pid):
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*) as c FROM payments WHERE plan_id=?", (pid,))
+        if cur.fetchone()["c"] > 0:
+            conn.close()
+            return _jsonify({"error": "لا يمكن حذف باقة لها مدفوعات. عطّلها بدلاً من ذلك."}), 400
+        cur.execute("DELETE FROM subscription_plans WHERE id=?", (pid,))
+        conn.commit()
+        conn.close()
+        return _jsonify({"ok": True})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+
+@app.route("/api/admin/plans/<int:pid>/toggle", methods=["POST"])
+def api_admin_plan_toggle(pid):
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        cur.execute("UPDATE subscription_plans SET is_active = CASE WHEN is_active=1 THEN 0 ELSE 1 END WHERE id=?", (pid,))
+        conn.commit()
+        cur.execute("SELECT is_active FROM subscription_plans WHERE id=?", (pid,))
+        row = cur.fetchone()
+        conn.close()
+        return _jsonify({"ok": True, "is_active": row["is_active"] if row else None})
+    except Exception as e:
+        return _jsonify({"error": str(e)}), 500
+# ===================== End of Phase 10 =====================
 
 if __name__ == "__main__":
     import os as _os
