@@ -1356,6 +1356,54 @@ def _miniapp_db():
     return _conn
 
 
+
+
+# ===================== Phase 11B: Auto-Migration =====================
+def _ensure_phase11b_schema():
+    """Ensure all Phase 11B columns/tables exist (idempotent, safe to call repeatedly)."""
+    try:
+        conn = _miniapp_db()
+        cur = conn.cursor()
+        # students table columns
+        try:
+            student_cols = [r[1] for r in cur.execute("PRAGMA table_info(students)").fetchall()]
+        except Exception:
+            student_cols = []
+        for col, ddl in [
+            ("free_plan_used", "ALTER TABLE students ADD COLUMN free_plan_used INTEGER DEFAULT 0"),
+            ("free_plan_used_at", "ALTER TABLE students ADD COLUMN free_plan_used_at TEXT"),
+            ("placement_score", "ALTER TABLE students ADD COLUMN placement_score INTEGER DEFAULT 0"),
+            ("placement_path", "ALTER TABLE students ADD COLUMN placement_path TEXT"),
+        ]:
+            if col not in student_cols:
+                try:
+                    cur.execute(ddl)
+                    print(f"[Phase11B] Added students.{col}")
+                except Exception as ex:
+                    print(f"[Phase11B] students.{col}: {ex}")
+        # free_plan_weekly_tasks table
+        cur.execute("""CREATE TABLE IF NOT EXISTS free_plan_weekly_tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL, week_number INTEGER NOT NULL,
+            task_type TEXT DEFAULT 'share', task_description TEXT,
+            proof_image TEXT, status TEXT DEFAULT 'pending',
+            submitted_at TEXT, reviewed_at TEXT, admin_note TEXT,
+            created_at TEXT DEFAULT (datetime('now')),
+            UNIQUE(user_id, week_number)
+        )""")
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[Phase11B] migration error: {e}")
+        try: conn.close()
+        except: pass
+
+# Run migration on import
+try:
+    _ensure_phase11b_schema()
+except Exception as _mig_e:
+    print(f"[Phase11B] startup migration failed: {_mig_e}")
+# ===================== End Phase 11B Auto-Migration =====================
 @app.route("/api/miniapp/lessons")
 def miniapp_lessons_list():
     """List lessons for student with status (locked/available/completed)."""
