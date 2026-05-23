@@ -22,6 +22,56 @@ except Exception as _e:
 app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Pages Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+
+# ===== Phase 12G: Unified DB connection with WAL + busy_timeout =====
+def _db_safe(path=None):
+    """Open SQLite with WAL mode and 30s busy_timeout to prevent locks."""
+    import sqlite3 as _sq
+    p = path or os.environ.get("DB_PATH", "/app/data/academy.db")
+    conn = _sq.connect(p, timeout=30.0, isolation_level=None, check_same_thread=False)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA busy_timeout=30000;")
+        conn.execute("PRAGMA synchronous=NORMAL;")
+        conn.execute("PRAGMA foreign_keys=ON;")
+    except Exception as _e:
+        print(f"[_db_safe] PRAGMA warn: {_e}")
+    return conn
+
+def _ensure_wal_once():
+    """Run once at startup to enable WAL persistently."""
+    try:
+        c = _db_safe()
+        mode = c.execute("PRAGMA journal_mode;").fetchone()
+        print(f"[Phase12G] journal_mode = {mode}")
+        c.close()
+    except Exception as e:
+        print(f"[Phase12G] WAL init error: {e}")
+
+# ===== Phase 12G: Fix stages.track NOT NULL =====
+def _ensure_stages_track_default():
+    """Make sure stages.track has a usable default to avoid NOT NULL errors."""
+    try:
+        c = _db_safe()
+        cur = c.cursor()
+        cols = {r[1]: r for r in cur.execute("PRAGMA table_info(stages)").fetchall()}
+        if "track" in cols:
+            # update any NULL track rows
+            cur.execute("UPDATE stages SET track='foundation' WHERE track IS NULL OR track=''")
+            c.commit()
+            print(f"[Phase12G] stages.track normalized rows: {cur.rowcount}")
+        c.close()
+    except Exception as e:
+        print(f"[Phase12G] track default error: {e}")
+
+try:
+    _ensure_wal_once()
+    _ensure_stages_track_default()
+except Exception as _e:
+    print(f"[Phase12G] startup hook error: {_e}")
+# ===== End Phase 12G =====
+
+
 @app.route("/")
 def index():
     from flask import render_template
@@ -3421,7 +3471,7 @@ def api_admin_stages_create_v2():
         section = (data.get("section") or data.get("section_name") or "grammar").strip()
         min_score = float(data.get("min_score") or data.get("pass_score") or 70)
         
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
         
         row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM stages").fetchone()
@@ -3443,6 +3493,22 @@ def api_admin_stages_create_v2():
         add("min_score", min_score)
         
         placeholders = ",".join(["?"]*len(values))
+        
+    # ensure track default (Phase 12G)
+    try:
+        _c_chk = _db_safe()
+        _cols_chk = {r[1] for r in _c_chk.execute("PRAGMA table_info(stages)").fetchall()}
+        _c_chk.close()
+        if "track" in _cols_chk and "track" not in fields:
+            fields.append("track"); values.append("foundation"); placeholders = ",".join(["?"]*len(values))
+        if "section_name" in _cols_chk and "section_name" not in fields:
+            fields.append("section_name"); values.append(data.get("section_name") or data.get("section") or "general")
+            placeholders = ",".join(["?"]*len(values))
+        if "min_score" in _cols_chk and "min_score" not in fields:
+            fields.append("min_score"); values.append(int(data.get("min_score") or data.get("pass_score") or 0))
+            placeholders = ",".join(["?"]*len(values))
+    except Exception as _ee:
+        print(f"[v2 patch] {_ee}")
         c.execute(f"INSERT INTO stages({','.join(fields)}) VALUES({placeholders})", values)
         new_id = c.lastrowid
         conn.commit(); conn.close()
@@ -3458,7 +3524,7 @@ def api_admin_stages_update_v2(sid):
     import sqlite3
     try:
         data = request.get_json(force=True) or {}
-        conn = sqlite3.connect(DB_PATH); c = conn.cursor()
+        conn = _db_safe(); c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
         
         # خريطة الحقول من JSON إلى أعمدة DB
