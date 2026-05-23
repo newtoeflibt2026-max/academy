@@ -2164,37 +2164,70 @@ def api_payment_free_activate():
 
 @app.route("/api/student/subscription-status")
 def api_student_subscription_status():
-    """Get current subscription status for a student."""
+    """Get current subscription status for a student (resilient to missing columns)."""
     try:
         sid = _request.args.get("student_id", "").strip()
         if not sid:
             return _jsonify({"error": "student_id required"}), 400
         conn = _miniapp_db()
         cur = conn.cursor()
-        cur.execute("SELECT free_plan_used, placement_done, placement_score, level, placement_path FROM students WHERE user_id=?", (sid,))
-        student = cur.fetchone()
-        if not student:
+        # Ensure new columns exist
+        try:
+            cur.execute("ALTER TABLE students ADD COLUMN free_plan_used INTEGER DEFAULT 0")
+        except: pass
+        try:
+            cur.execute("ALTER TABLE students ADD COLUMN free_plan_used_at TEXT")
+        except: pass
+        try:
+            cur.execute("ALTER TABLE students ADD COLUMN placement_score INTEGER DEFAULT 0")
+        except: pass
+        try:
+            cur.execute("ALTER TABLE students ADD COLUMN placement_path TEXT")
+        except: pass
+        conn.commit()
+        # Get available columns
+        cols = [r[1] for r in cur.execute("PRAGMA table_info(students)").fetchall()]
+        select_cols = []
+        for c in ("free_plan_used","placement_done","placement_score","level","placement_path"):
+            if c in cols:
+                select_cols.append(c)
+        if not select_cols:
             conn.close()
-            return _jsonify({"error": "student not found"}), 404
+            return _jsonify({"error":"students table empty schema"}), 500
+        q = "SELECT " + ",".join(select_cols) + " FROM students WHERE user_id=?"
+        cur.execute(q, (sid,))
+        row = cur.fetchone()
+        if not row:
+            conn.close()
+            return _jsonify({
+                "free_plan_used": False, "placement_done": False,
+                "placement_score": 0, "level": None, "placement_path": None,
+                "has_active_subscription": False, "subscription": None,
+                "student_exists": False
+            })
+        student = dict(row)
         # Active subscription
         cur.execute("""SELECT plan_name, start_date, end_date, is_active
-            FROM subscriptions
-            WHERE user_id=? AND is_active=1
+            FROM subscriptions WHERE user_id=? AND is_active=1
             AND datetime(end_date) > datetime('now')
             ORDER BY id DESC LIMIT 1""", (sid,))
         sub = cur.fetchone()
         conn.close()
         return _jsonify({
-            "free_plan_used": bool(student["free_plan_used"]),
-            "placement_done": bool(student["placement_done"]),
-            "placement_score": student["placement_score"],
-            "level": student["level"],
-            "placement_path": student["placement_path"],
+            "student_exists": True,
+            "free_plan_used": bool(student.get("free_plan_used", 0)),
+            "placement_done": bool(student.get("placement_done", 0)),
+            "placement_score": student.get("placement_score", 0),
+            "level": student.get("level"),
+            "placement_path": student.get("placement_path"),
             "has_active_subscription": sub is not None,
             "subscription": dict(sub) if sub else None
         })
     except Exception as e:
-        return _jsonify({"error": str(e)}), 500
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:500]}), 500
+
+
 # ===================== End Phase 11B Free Plan =====================
 
 # ===================== Phase 11B: Free Plan Weekly Tasks =====================
@@ -2207,48 +2240,52 @@ WEEKLY_TASK_TYPES = {
 
 @app.route("/api/student/weekly-task/status")
 def api_weekly_task_status():
-    """Get current week's task status for a free plan student."""
+    """Get current week's task status for a free plan student (fixed query)."""
     try:
         sid = _request.args.get("student_id", "").strip()
         if not sid:
             return _jsonify({"error": "student_id required"}), 400
         conn = _miniapp_db()
         cur = conn.cursor()
-        # Get subscription start to calculate current week
+        # Fixed query with proper parentheses
         cur.execute("""SELECT start_date FROM subscriptions
             WHERE user_id=? AND is_active=1
-            AND plan_name LIKE '%مجاني%' OR plan_name LIKE '%تجريب%'
-            ORDER BY id DESC LIMIT 1""", (sid,))
+            AND (plan_name LIKE ? OR plan_name LIKE ? OR plan_name LIKE ?)
+            ORDER BY id DESC LIMIT 1""",
+            (sid, "%مجاني%", "%تجريب%", "%free%"))
         sub = cur.fetchone()
         if not sub:
             conn.close()
             return _jsonify({"has_free_plan": False})
         import datetime as _dt
-        start = _dt.datetime.strptime(sub["start_date"][:19], "%Y-%m-%d %H:%M:%S")
+        try:
+            start = _dt.datetime.strptime(sub["start_date"][:19], "%Y-%m-%d %H:%M:%S")
+        except:
+            start = _dt.datetime.now()
         days_passed = (_dt.datetime.now() - start).days
         current_week = (days_passed // 7) + 1
         if current_week > 4:
             conn.close()
             return _jsonify({"has_free_plan": True, "expired": True, "current_week": current_week})
-        # Get current week task
         cur.execute("SELECT * FROM free_plan_weekly_tasks WHERE user_id=? AND week_number=?", (sid, current_week))
         task = cur.fetchone()
-        # Get all weeks history
         cur.execute("SELECT week_number, status, submitted_at FROM free_plan_weekly_tasks WHERE user_id=? ORDER BY week_number", (sid,))
         history = [dict(r) for r in cur.fetchall()]
         conn.close()
+        task_dict = dict(task) if task else None
         return _jsonify({
             "has_free_plan": True,
             "current_week": current_week,
             "days_passed": days_passed,
-            "current_task": dict(task) if task else None,
-            "task_required": task is None or task["status"] == "rejected",
-            "is_blocked": task is None and days_passed >= 7,
+            "current_task": task_dict,
+            "task_required": task_dict is None or task_dict.get("status") == "rejected",
+            "is_blocked": task_dict is None and days_passed >= 7,
             "history": history,
             "task_types": WEEKLY_TASK_TYPES
         })
     except Exception as e:
-        return _jsonify({"error": str(e)}), 500
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:500]}), 500
 
 
 @app.route("/api/student/weekly-task/submit", methods=["POST"])
@@ -2289,11 +2326,22 @@ def api_weekly_task_submit():
 
 @app.route("/api/admin/weekly-tasks/list")
 def api_admin_weekly_tasks_list():
-    """Admin: list weekly tasks."""
+    """Admin: list weekly tasks (resilient)."""
     try:
         status = _request.args.get("status", "pending")
         conn = _miniapp_db()
         cur = conn.cursor()
+        # Ensure table exists
+        cur.execute("""CREATE TABLE IF NOT EXISTS free_plan_weekly_tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL, week_number INTEGER NOT NULL,
+            task_type TEXT DEFAULT 'share', task_description TEXT,
+            proof_image TEXT, status TEXT DEFAULT 'pending',
+            submitted_at TEXT, reviewed_at TEXT, admin_note TEXT,
+            created_at TEXT DEFAULT (datetime('now')),
+            UNIQUE(user_id, week_number)
+        )""")
+        conn.commit()
         if status == "all":
             cur.execute("SELECT * FROM free_plan_weekly_tasks ORDER BY submitted_at DESC LIMIT 100")
         else:
@@ -2302,7 +2350,8 @@ def api_admin_weekly_tasks_list():
         conn.close()
         return _jsonify({"tasks": rows, "count": len(rows)})
     except Exception as e:
-        return _jsonify({"error": str(e)}), 500
+        import traceback
+        return _jsonify({"error": str(e), "trace": traceback.format_exc()[:500], "tasks": [], "count": 0}), 500
 
 
 @app.route("/api/admin/weekly-tasks/<int:tid>/action", methods=["POST"])
