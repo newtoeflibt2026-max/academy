@@ -49,20 +49,23 @@ def _ensure_wal_once():
         print(f"[Phase12G] WAL init error: {e}")
 
 # ===== Phase 12G: Fix stages.track NOT NULL =====
+
 def _ensure_stages_track_default():
-    """Make sure stages.track has a usable default to avoid NOT NULL errors."""
+    """Ensure track column and default value - Final Fix"""
     try:
-        c = _db_safe()
-        cur = c.cursor()
-        cols = {r[1]: r for r in cur.execute("PRAGMA table_info(stages)").fetchall()}
-        if "track" in cols:
-            # update any NULL track rows
-            cur.execute("UPDATE stages SET track='foundation' WHERE track IS NULL OR track=''")
-            c.commit()
-            print(f"[Phase12G] stages.track normalized rows: {cur.rowcount}")
-        c.close()
+        with _db_safe() as (conn, c):
+            c.execute("PRAGMA table_info(stages)")
+            cols = [row[1] for row in c.fetchall()]
+            if "track" not in cols:
+                c.execute("""ALTER TABLE stages ADD COLUMN track TEXT DEFAULT 'foundation' NOT NULL""")
+                print("[Phase12G] Added missing `track` column with DEFAULT")
+
+            c.execute("UPDATE stages SET track = 'foundation' WHERE track IS NULL OR track = ''")
+            conn.commit()
+            print(f"[Phase12G] Normalized stages.track rows: {c.rowcount}")
     except Exception as e:
-        print(f"[Phase12G] track default error: {e}")
+        if "duplicate column name" not in str(e).lower():
+            print(f"[Phase12G] Ensure error: {e}")
 
 try:
     _ensure_wal_once()
@@ -3460,46 +3463,38 @@ def api_admin_question_delete_v2(qid):
 
 @app.route("/api/admin/stages/create", methods=["POST"])
 def api_admin_stages_create_v2():
-    """Create a new stage with all possible fields (tolerant)."""
-    import sqlite3
+    """Create new stage - FINAL robust version (v5)"""
     try:
         data = request.get_json(force=True) or {}
-        name = (data.get("name_ar") or data.get("name") or "مرحلة جديدة").strip()
-        name_en = (data.get("name_en") or name).strip()
-        code = (data.get("code") or f"S{int(__import__('time').time())%100000}").strip()
-        path = (data.get("path") or data.get("track") or "foundation").strip()
-        section = (data.get("section") or data.get("section_name") or "grammar").strip()
-        min_score = float(data.get("min_score") or data.get("pass_score") or 70)
+        track = data.get("track") or data.get("path") or data.get("track_id") or "foundation"
         
-        conn = _db_safe(); c = conn.cursor()
-        cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
-        
-        row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM stages").fetchone()
-        new_order = int(data.get("order_index") or (row[0] or 0) + 1)
-        
-        fields, values = [], []
-        def add(col, val):
-            if col in cols:
-                fields.append(col); values.append(val)
-        
-        add("order_index", new_order)
-        add("name", name)
-        add("name_ar", name)
-        add("name_en", name_en)
-        add("code", code)
-        add("path", path)
-        add("section", section)
-        add("section_name", section)
-        add("min_score", min_score)
-        
-        placeholders = ",".join(["?"]*len(values))
-        c.execute(f"INSERT INTO stages({','.join(fields)}) VALUES({placeholders})", values)
-        new_id = c.lastrowid
-        conn.commit(); conn.close()
-        return jsonify({"success":True,"ok":True,"id":new_id,"order_index":new_order})
+        fields = ["name_ar", "name_en", "code", "track", "section_name", "min_score", "order_index"]
+        values = [
+            data.get("name_ar") or data.get("name") or "مرحلة جديدة",
+            data.get("name_en") or data.get("name") or "New Stage",
+            data.get("code", "NEW"),
+            track,
+            data.get("section_name") or data.get("section") or "general",
+            int(data.get("min_score") or data.get("pass_score") or 60),
+            float(data.get("order_index") or 999.0)
+        ]
+
+        placeholders = ",".join(["?"] * len(fields))
+
+        with _db_safe() as (conn, c):
+            c.execute(f"INSERT INTO stages ({','.join(fields)}) VALUES ({placeholders})", values)
+            stage_id = c.lastrowid
+            conn.commit()
+
+        if "stages_cache" in globals():
+            globals()["stages_cache"] = None
+
+        return jsonify({"ok": True, "id": stage_id, "track": track})
+
     except Exception as e:
-        import traceback; traceback.print_exc()
-        return jsonify({"success":False,"ok":False,"error":str(e),"message":str(e)}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 @app.route("/api/admin/stages/<int:sid>/update", methods=["POST","PUT"])
