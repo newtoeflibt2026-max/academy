@@ -2428,6 +2428,11 @@ def api_admin_weekly_task_action(tid):
 # ===================== End Weekly Tasks =====================
 
 
+
+@app.route("/api/admin/stages/list")
+def api_admin_stages_list_alias():
+    """Alias: /api/admin/stages/list -> api_admin_stages (used by admin.html)."""
+    return api_admin_stages()
 @app.route("/api/admin/stages")
 def api_admin_stages():
     """List all stages for admin panel."""
