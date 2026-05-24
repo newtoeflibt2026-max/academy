@@ -4425,6 +4425,12 @@ def api_student_stage_exam_start(sid):
                 "time_limit_seconds": (q["time_limit_seconds"] if "time_limit_seconds" in q.keys() else None),
                 "difficulty":   (q["difficulty"]   if "difficulty"   in q.keys() else None),
                 "skill_section":(q["skill_section"]if "skill_section"in q.keys() else None),
+                "blanks_json":  (q["blanks_json"]  if "blanks_json"  in q.keys() else None),
+                "strategy_ar":  (q["strategy_ar"]  if "strategy_ar"  in q.keys() else None),
+                "elimination_ar":(q["elimination_ar"]if "elimination_ar"in q.keys() else None),
+                "trap_ar":      (q["trap_ar"]      if "trap_ar"      in q.keys() else None),
+                "concept_ar":   (q["concept_ar"]   if "concept_ar"   in q.keys() else None),
+                "explanation_ar":(q["explanation_ar"]if "explanation_ar"in q.keys() else None),
             })
 
         conn.close()
