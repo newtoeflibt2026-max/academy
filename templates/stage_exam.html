@@ -502,10 +502,22 @@ function renderPassage(){
 }
 
 function renderQuestion(){
-  const _q = (typeof questions !== 'undefined' && questions[currentQ]) ? questions[currentQ] : null;
+  const _q = (typeof questions !== 'undefined' && questions[currentIdx]) ? questions[currentIdx] : null;
   if(_q && _q.q_type === 'reading_complete_words'){
-    const cont = document.getElementById('questionContent') || document.getElementById('qbox') || document.querySelector('.question-content');
-    if(cont){ window.renderCTW(_q, cont); return; }
+    const cont = document.getElementById('questionContainer');
+    if(cont){
+      window.renderCTW(_q, cont);
+      // update progress + dots like normal flow
+      try {
+        const ans = (typeof answers !== 'undefined') ? Object.keys(answers).length : 0;
+        const ac = document.getElementById('answeredCount'); if(ac) ac.textContent = ans;
+        const pf = document.getElementById('progressFill'); if(pf) pf.style.width = (ans/questions.length*100)+'%';
+        if(typeof updateDots === 'function') updateDots(false);
+        // hide passage pane (CTW passage is inline)
+        const pp = document.getElementById('passagePane'); if(pp) pp.style.display = 'none';
+      } catch(e){ console.warn('CTW progress err', e); }
+      return;
+    }
   }
 
   const q=questions[currentIdx];
@@ -805,6 +817,60 @@ function goToQuestion(idx){
 }
 // ===== End unanswered modal =====
 
+
+window._ctwAnswers = window._ctwAnswers || {};
+window.ctwCollectCurrent = function(){
+  const inputs = document.querySelectorAll('.ctw-letter');
+  const byBlank = {};
+  inputs.forEach(inp => {
+    const n = inp.getAttribute('data-blank');
+    if(!byBlank[n]) byBlank[n] = [];
+    byBlank[n].push(inp.value || '');
+  });
+  if(!window._currentCTW) return;
+  const qid = window._currentCTW.qid;
+  if(!window._ctwAnswers[qid]) window._ctwAnswers[qid] = {};
+  window._currentCTW.blanks.forEach(b => {
+    const suffix = (byBlank[b.n] || []).join('');
+    window._ctwAnswers[qid][b.n] = (b.prefix || '') + suffix;
+  });
+  // mark as answered for dot navigation
+  if(typeof answers !== 'undefined'){
+    const anyFilled = Object.values(window._ctwAnswers[qid] || {}).some(v => v && v.length > (window._currentCTW.blanks[0].prefix||'').length);
+    if(anyFilled) answers[qid] = 'CTW';
+  }
+};
+window.ctwSaveAndNext = function(){
+  window.ctwCollectCurrent();
+  if(currentIdx < questions.length - 1){ currentIdx++; renderQuestion(); }
+};
+window.ctwSaveAndPrev = function(){
+  window.ctwCollectCurrent();
+  if(currentIdx > 0){ currentIdx--; renderQuestion(); }
+};
+// attach auto-advance + hint handlers after DOM update
+const _ctwOldRender = window.renderCTW;
+window.renderCTW = function(q, container){
+  _ctwOldRender(q, container);
+  const inputs = container.querySelectorAll('.ctw-letter');
+  inputs.forEach((inp, idx) => {
+    inp.addEventListener('input', function(){
+      this.value = this.value.toLowerCase();
+      if(this.value.length === 1 && idx + 1 < inputs.length){ inputs[idx+1].focus(); }
+    });
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'Backspace' && !this.value && idx > 0){ inputs[idx-1].focus(); }
+    });
+  });
+  container.querySelectorAll('.ctw-hint').forEach(h => {
+    h.addEventListener('click', function(){
+      const hint = this.getAttribute('data-hint') || this.getAttribute('title') || '';
+      alert('💡 ' + hint);
+    });
+  });
+  window._currentCTW = { blanks: (typeof q.blanks_json === 'string' ? JSON.parse(q.blanks_json) : q.blanks_json), qid: q.id };
+};
+
 </script>
 
 <script>
@@ -812,19 +878,40 @@ function goToQuestion(idx){
 window.renderCTW = function(q, container){
   let blanks = [];
   try { blanks = (typeof q.blanks_json === 'string') ? JSON.parse(q.blanks_json) : (q.blanks_json || []); } catch(e){ blanks = []; }
-  if(!blanks.length){ container.innerHTML = '<div style="color:red">No blanks data</div>'; return; }
+  if(!blanks.length){ container.innerHTML = '<div style="color:red;padding:20px">⚠️ لا توجد بيانات للفراغات في هذا السؤال</div>'; return; }
   let passage = q.passage_text || '';
+  // restore saved answers if any
+  const savedAns = (window._ctwAnswers && window._ctwAnswers[q.id]) || {};
   blanks.forEach(b => {
     const missing = (b.full || '').length - (b.prefix || '').length;
+    const savedSuffix = savedAns[b.n] ? (savedAns[b.n].substring((b.prefix||'').length) || '') : '';
     let inputs = '';
     for(let i=0;i<missing;i++){
-      inputs += `<input class="ctw-letter" data-blank="${b.n}" data-idx="${i}" maxlength="1" autocomplete="off" />`;
+      const val = savedSuffix[i] ? `value="${savedSuffix[i]}"` : '';
+      inputs += `<input class="ctw-letter" data-blank="${b.n}" data-idx="${i}" maxlength="1" autocomplete="off" ${val} />`;
     }
-    const html = `<span class="ctw-blank" data-blank="${b.n}"><span class="ctw-prefix">${b.prefix||''}</span>${inputs}<span class="ctw-hint" title="${(b.hint||'').replace(/"/g,'&quot;')}">?</span></span>`;
-    passage = passage.replace(`[B${b.n}]`, html);
+    const blankHtml = `<span class="ctw-blank" data-blank="${b.n}"><span class="ctw-prefix">${b.prefix||''}</span>${inputs}<span class="ctw-hint" data-hint="${(b.hint||'').replace(/"/g,'&quot;')}">?</span></span>`;
+    passage = passage.replace(`[B${b.n}]`, blankHtml);
   });
-  container.innerHTML = `<div class="ctw-passage">${passage}</div>
-    <div class="ctw-help">💡 اضغط ? لرؤية تلميح لكل كلمة. المؤشر ينتقل تلقائياً بعد كل حرف.</div>`;
+  const isLast = (typeof currentIdx !== 'undefined') && currentIdx === questions.length - 1;
+  const prevDisabled = (typeof currentIdx !== 'undefined') && currentIdx === 0 ? 'disabled' : '';
+  const navBtn = isLast
+    ? '<button class="btn btn-success" onclick="trySubmit()">✓ تسليم الامتحان</button>'
+    : '<button class="btn btn-primary" onclick="ctwSaveAndNext()">التالي ←</button>';
+  container.innerHTML = `
+    <div class="question-card-wrap">
+      <div class="q-meta">
+        <div class="q-number-badge">قطعة ${currentIdx+1} من ${questions.length} — ${blanks.length} كلمة ناقصة</div>
+      </div>
+      <div class="ctw-instructions">📝 أكمل الحروف الناقصة في كل كلمة. اضغط <b>؟</b> لرؤية تلميح. التصحيح: كلمة كاملة = نقطة، خطأ = صفر (مثل TOEFL الدولي).</div>
+      <div class="ctw-passage">${passage}</div>
+      ${q.strategy_ar ? `<details class="ctw-strategy"><summary>💡 استراتيجية الحل</summary><div>${q.strategy_ar}</div></details>` : ''}
+      ${q.trap_ar ? `<details class="ctw-trap"><summary>⚠️ مصائد إملائية شائعة</summary><div>${q.trap_ar}</div></details>` : ''}
+      <div class="q-actions">
+        <button class="btn btn-secondary" ${prevDisabled} onclick="ctwSaveAndPrev()">→ السابق</button>
+        ${navBtn}
+      </div>
+    </div>`;
   // auto-advance
   const inputs = container.querySelectorAll('.ctw-letter');
   inputs.forEach((inp, idx) => {
@@ -849,9 +936,7 @@ window.renderCTW = function(q, container){
   window._currentCTW = { blanks: blanks, qid: q.id };
 };
 
-window.collectCTWAnswers = function(){
-  const out = {};
-  if(!window._currentCTW) return out;
+if(!window._currentCTW) return out;
   window._currentCTW.blanks.forEach(b => {
     const inputs = document.querySelectorAll(`.ctw-letter[data-blank="${b.n}"]`);
     let suffix = '';
@@ -869,6 +954,18 @@ window.collectCTWAnswers = function(){
 .ctw-letter:focus{background:#E3F2FD;border-bottom-color:#0D47A1}
 .ctw-hint{display:inline-block;width:18px;height:18px;border-radius:50%;background:#FFC107;color:#333;font-size:12px;text-align:center;line-height:18px;cursor:pointer;margin-left:4px;font-weight:bold}
 .ctw-help{margin-top:10px;color:#666;font-size:13px;text-align:center}
+</style>
+
+
+<style>
+.ctw-instructions{background:#E3F2FD;border-right:4px solid #2196F3;padding:12px 16px;border-radius:8px;margin-bottom:14px;font-size:14px;color:#0D47A1;line-height:1.7;direction:rtl;text-align:right}
+.ctw-strategy,.ctw-trap{margin-top:14px;background:#FFF8E1;border-radius:8px;padding:10px 14px;direction:rtl;text-align:right;font-size:14px}
+.ctw-trap{background:#FFEBEE}
+.ctw-strategy summary,.ctw-trap summary{cursor:pointer;font-weight:bold;color:#E65100;padding:4px 0}
+.ctw-trap summary{color:#C62828}
+.ctw-strategy div,.ctw-trap div{margin-top:8px;line-height:1.8;color:#333}
+.q-actions{display:flex;gap:10px;margin-top:20px;justify-content:space-between}
+.q-actions .btn{flex:1;padding:12px 20px;font-size:15px;font-weight:bold}
 </style>
 
 </body>
