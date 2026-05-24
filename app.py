@@ -4455,15 +4455,28 @@ def api_student_stage_exam_submit_v2(sid):
     conn = _db_safe()
     c = conn.cursor()
     try:
-        # Fetch all questions for this stage
-        c.execute("""SELECT id, question_text, option_a, option_b, option_c, option_d,
-                            correct_answer, explanation, concept_ar, explanation_ar,
-                            trap_ar, review_lesson_id, review_lesson_title,
-                            passage_text, strategy_ar, elimination_ar
-                     FROM stage_exam_questions WHERE stage_id=?""", (sid,))
+        # Fetch ONLY questions the student actually received (by IDs in answers dict)
+        submitted_ids = []
+        for k in answers.keys():
+            try: submitted_ids.append(int(k))
+            except: pass
+        if submitted_ids:
+            placeholders = ",".join("?" * len(submitted_ids))
+            c.execute(f"""SELECT id, question_text, option_a, option_b, option_c, option_d,
+                                correct_answer, explanation, concept_ar, explanation_ar,
+                                trap_ar, review_lesson_id, review_lesson_title,
+                                passage_text, strategy_ar, elimination_ar
+                         FROM stage_exam_questions
+                         WHERE stage_id=? AND id IN ({placeholders})""", (sid, *submitted_ids))
+        else:
+            c.execute("""SELECT id, question_text, option_a, option_b, option_c, option_d,
+                                correct_answer, explanation, concept_ar, explanation_ar,
+                                trap_ar, review_lesson_id, review_lesson_title,
+                                passage_text, strategy_ar, elimination_ar
+                         FROM stage_exam_questions WHERE stage_id=?""", (sid,))
         rows = c.fetchall()
         if not rows:
-            return jsonify({"success": False, "error": "no questions in this stage"}), 404
+            return jsonify({"success": False, "error": "no questions matched"}), 404
 
         total = len(rows)
         correct_count = 0

@@ -387,14 +387,47 @@ async function loadExam(){
 }
 
 function startTimer(){
-  timerInterval=setInterval(()=>{
-    const sec=Math.floor((Date.now()-startTime)/1000);
-    const m=String(Math.floor(sec/60)).padStart(2,'0');
-    const s=String(sec%60).padStart(2,'0');
+  // Smart Countdown: 90s per question, with warnings, no lockout (overtime allowed)
+  const qCount = (window.questions && window.questions.length) || (window.totalQ || 10);
+  window._remaining = qCount * 90;
+  window._overtime = 0;
+  window._warnedYellow = false;
+  window._warnedRed = false;
+  if(window.timerInterval) clearInterval(window.timerInterval);
+  if(window._timerInterval) clearInterval(window._timerInterval);
+  function _showToast(msg, isOver){
+    const t=document.createElement('div');
+    t.className='toast-warn'+(isOver?' overtime-toast':'');
+    t.innerHTML=msg;
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(), isOver?6000:4000);
+  }
+  window.timerInterval=setInterval(()=>{
     const el=document.getElementById('timer');
-    el.textContent=`${m}:${s}`;
-    if(sec>1500)el.classList.add('danger');
-    else if(sec>900)el.classList.add('warning');
+    if(!el) return;
+    if(window._remaining>0){
+      window._remaining--;
+      const m=String(Math.floor(window._remaining/60)).padStart(2,'0');
+      const s=String(window._remaining%60).padStart(2,'0');
+      el.textContent=`${m}:${s}`;
+      el.classList.remove('danger','warning','overtime');
+      if(window._remaining<=60){
+        el.classList.add('danger');
+        if(!window._warnedRed){window._warnedRed=true;_showToast('⏰ بقيت دقيقة واحدة!',false);}
+      } else if(window._remaining<=300){
+        el.classList.add('warning');
+        if(!window._warnedYellow){window._warnedYellow=true;_showToast('⚠️ بقي 5 دقائق',false);}
+      }
+    } else {
+      window._overtime++;
+      const m=String(Math.floor(window._overtime/60)).padStart(2,'0');
+      const s=String(window._overtime%60).padStart(2,'0');
+      el.textContent=`+${m}:${s}`;
+      el.classList.add('overtime');
+      if(window._overtime===1){
+        _showToast('⏱ انتهى الوقت — يمكنك الإكمال<br><small>في TOEFL الحقيقي ستُغلق الشاشة. حاول الإسراع 💪</small>',true);
+      }
+    }
   },1000);
 }
 
@@ -754,53 +787,5 @@ function goToQuestion(idx){
 // ===== End unanswered modal =====
 
 </script>
-<script>
-// === Smart Countdown Timer (Block A2) ===
-window._totalSeconds = (window.totalQ || 10) * 90;  // 90s per question
-window._remaining = window._totalSeconds;
-window._overtime = 0;
-window._warnedYellow = false;
-window._warnedRed = false;
-function smartTick() {
-    var el = document.getElementById('timer');
-    if (!el) return;
-    if (window._remaining > 0) {
-        window._remaining--;
-        var m = Math.floor(window._remaining / 60);
-        var s = window._remaining % 60;
-        el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
-        el.classList.remove('danger','warning','overtime');
-        if (window._remaining <= 60) {
-            el.classList.add('danger');
-            if (!window._warnedRed) { window._warnedRed = true;
-                var t = document.createElement('div'); t.className='toast-warn';
-                t.innerHTML = '⏰ بقيت دقيقة واحدة!'; document.body.appendChild(t);
-                setTimeout(function(){ t.remove(); }, 4000);
-            }
-        } else if (window._remaining <= 300) {
-            el.classList.add('warning');
-            if (!window._warnedYellow) { window._warnedYellow = true;
-                var t = document.createElement('div'); t.className='toast-warn';
-                t.innerHTML = '⚠️ بقي 5 دقائق'; document.body.appendChild(t);
-                setTimeout(function(){ t.remove(); }, 4000);
-            }
-        }
-    } else {
-        window._overtime++;
-        var m = Math.floor(window._overtime / 60);
-        var s = window._overtime % 60;
-        el.textContent = '+' + m + ':' + (s < 10 ? '0' : '') + s;
-        el.classList.add('overtime');
-        if (window._overtime === 1) {
-            var t = document.createElement('div'); t.className='toast-warn overtime-toast';
-            t.innerHTML = '⏱ انتهى الوقت — يمكنك الإكمال<br><small>في TOEFL الحقيقي ستُغلق الشاشة. حاول الإسراع 💪</small>';
-            document.body.appendChild(t);
-            setTimeout(function(){ t.remove(); }, 6000);
-        }
-    }
-}
-// Replace any existing timer interval
-if (window._timerInterval) clearInterval(window._timerInterval);
-window._timerInterval = setInterval(smartTick, 1000);
-</script></body>
+</body>
 </html>
