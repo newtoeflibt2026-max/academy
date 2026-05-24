@@ -992,9 +992,11 @@ async function loadLessonsHierarchy(){
     const stages = sd.stages || sd.data || [];
     _lessonsData.stages = stages;
 
-    // Phase 12H: dynamic track filter with counters
-    const trackVal = document.getElementById('lessonsTrackFilter') ? document.getElementById('lessonsTrackFilter').value : '';
-    const filteredStages = trackVal ? stages.filter(s => (s.track||s.path||'') === trackVal) : stages;
+    // Phase 12H v2: persist filter value via window storage
+    const _existing = document.getElementById('lessonsTrackFilter');
+    const trackVal = _existing ? _existing.value : (window._lessonsTrackFilter || '');
+    window._lessonsTrackFilter = trackVal;
+    const filteredStages = trackVal ? stages.filter(s => ((s.track||s.path||'').toLowerCase()) === trackVal.toLowerCase()) : stages;
     // Build track counts for dynamic dropdown
     const _trackCounts = {};
     stages.forEach(s => {
@@ -1008,7 +1010,7 @@ async function loadLessonsHierarchy(){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap">
         <h2 style="margin:0">📚 إدارة الدروس</h2>
         <div style="display:flex;gap:10px;align-items:center">
-          <select id="lessonsTrackFilter" onchange="loadLessonsHierarchy()" style="padding:8px 12px;border-radius:8px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(148,163,184,.2)">
+          <select id="lessonsTrackFilter" onchange="window._lessonsTrackFilter=this.value;loadLessonsHierarchy()" style="padding:8px 12px;border-radius:8px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(148,163,184,.2)">
             <option value="" ${!trackVal?'selected':''}>جميع المسارات (${stages.length})</option>
             ${_availTracks.map(t => `<option value="${t}" ${trackVal===t?'selected':''}>${_trackLabels[t]||t} (${_trackCounts[t]})</option>`).join('')}
           </select>
