@@ -65,6 +65,8 @@ def _ensure_all_exam_columns():
             ("trap_ar", "TEXT"),
             ("review_lesson_id", "INTEGER"),
             ("review_lesson_title", "TEXT"),
+            ("strategy_ar", "TEXT"),
+            ("elimination_ar", "TEXT"),
         ]
         added = []
         for col, typ in needed:
@@ -400,8 +402,9 @@ def api_content_import():
                      review_lesson_id, review_lesson_title,
                      passage_text, audio_source, blanks_json,
                      time_limit_seconds, word_count_min, word_count_max,
-                     rubric_json, set_id, order_in_set, difficulty)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                     rubric_json, set_id, order_in_set, difficulty,
+                     strategy_ar, elimination_ar)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (
                         stage_id,
                         q.get("q_type") or bank.get("q_type", "mcq"),
@@ -4453,7 +4456,8 @@ def api_student_stage_exam_submit_v2(sid):
         # Fetch all questions for this stage
         c.execute("""SELECT id, question_text, option_a, option_b, option_c, option_d,
                             correct_answer, explanation, concept_ar, explanation_ar,
-                            trap_ar, review_lesson_id, review_lesson_title
+                            trap_ar, review_lesson_id, review_lesson_title,
+                            passage_text, strategy_ar, elimination_ar
                      FROM stage_exam_questions WHERE stage_id=?""", (sid,))
         rows = c.fetchall()
         if not rows:
