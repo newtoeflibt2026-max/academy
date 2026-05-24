@@ -4499,7 +4499,10 @@ def api_student_stage_exam_submit_v2(sid):
                 "explanation_ar": row[9] or "",
                 "trap_ar": row[10] or "",
                 "review_lesson_id": row[11],
-                "review_lesson_title": row[12] or ""
+                "review_lesson_title": row[12] or "",
+                "passage_text":  (row[13] if len(row) > 13 else "") or "",
+                "strategy_ar":   (row[14] if len(row) > 14 else "") or "",
+                "elimination_ar":(row[15] if len(row) > 15 else "") or ""
             })
 
         score = round((correct_count / total) * 100, 1) if total > 0 else 0
@@ -4703,6 +4706,120 @@ def _ensure_stages_columns():
 _ensure_stages_columns()
 
 
+
+
+# ============================================================
+# Admin Questions CRUD (Block A2)
+# ============================================================
+@app.route("/api/admin/questions/list", methods=["GET"])
+def api_admin_questions_list():
+    try:
+        stage_id = request.args.get("stage_id", type=int)
+        conn = _db_safe()
+        c = conn.cursor()
+        if stage_id:
+            c.execute("""SELECT id, stage_id, question_text, option_a, option_b, option_c, option_d,
+                                correct_answer, q_type, set_id, difficulty, passage_text,
+                                concept_ar, explanation_ar, trap_ar, strategy_ar, elimination_ar,
+                                review_lesson_title
+                         FROM stage_exam_questions WHERE stage_id=? ORDER BY set_id, order_in_set, id""", (stage_id,))
+        else:
+            c.execute("""SELECT id, stage_id, question_text, option_a, option_b, option_c, option_d,
+                                correct_answer, q_type, set_id, difficulty, passage_text,
+                                concept_ar, explanation_ar, trap_ar, strategy_ar, elimination_ar,
+                                review_lesson_title
+                         FROM stage_exam_questions ORDER BY stage_id, set_id, order_in_set, id""")
+        rows = c.fetchall()
+        cols = [d[0] for d in c.description]
+        items = [dict(zip(cols, r)) for r in rows]
+        # Group counts by stage
+        c.execute("SELECT stage_id, COUNT(*) FROM stage_exam_questions GROUP BY stage_id ORDER BY stage_id")
+        counts = {r[0]: r[1] for r in c.fetchall()}
+        conn.close()
+        return jsonify({"ok": True, "items": items, "total": len(items), "by_stage": counts})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/api/admin/questions/create", methods=["POST"])
+def api_admin_questions_create():
+    try:
+        d = request.get_json(force=True) or {}
+        required = ["stage_id", "question_text", "option_a", "option_b", "option_c", "option_d", "correct_answer"]
+        for k in required:
+            if not d.get(k):
+                return jsonify({"ok": False, "error": f"missing field: {k}"}), 400
+        conn = _db_safe()
+        c = conn.cursor()
+        c.execute("""INSERT INTO stage_exam_questions
+            (stage_id, q_type, skill_section, question_text, option_a, option_b, option_c, option_d,
+             correct_answer, explanation, concept_ar, explanation_ar, trap_ar, review_lesson_id,
+             review_lesson_title, passage_text, audio_source, blanks_json, time_limit_seconds,
+             word_count_min, word_count_max, rubric_json, set_id, order_in_set, difficulty,
+             strategy_ar, elimination_ar, is_active)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,1)""", (
+                d.get("stage_id"), d.get("q_type", "reading_detail"), d.get("skill_section", "reading"),
+                d.get("question_text"), d.get("option_a"), d.get("option_b"), d.get("option_c"), d.get("option_d"),
+                (d.get("correct_answer") or "").strip().upper(), d.get("explanation", ""),
+                d.get("concept_ar", ""), d.get("explanation_ar", ""), d.get("trap_ar", ""),
+                d.get("review_lesson_id"), d.get("review_lesson_title", ""), d.get("passage_text", ""),
+                d.get("audio_source"), d.get("blanks_json"), d.get("time_limit_seconds", 90),
+                d.get("word_count_min"), d.get("word_count_max"), d.get("rubric_json"),
+                d.get("set_id"), d.get("order_in_set", 1), d.get("difficulty", "medium"),
+                d.get("strategy_ar", ""), d.get("elimination_ar", "")
+            ))
+        new_id = c.lastrowid
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/api/admin/questions/<int:qid>", methods=["PUT"])
+def api_admin_questions_update(qid):
+    try:
+        d = request.get_json(force=True) or {}
+        fields = ["stage_id","q_type","question_text","option_a","option_b","option_c","option_d",
+                  "correct_answer","explanation","concept_ar","explanation_ar","trap_ar",
+                  "review_lesson_title","passage_text","set_id","difficulty","strategy_ar","elimination_ar"]
+        sets = []
+        vals = []
+        for k in fields:
+            if k in d:
+                sets.append(f"{k}=?")
+                v = d[k]
+                if k == "correct_answer" and v:
+                    v = str(v).strip().upper()
+                vals.append(v)
+        if not sets:
+            return jsonify({"ok": False, "error": "no fields to update"}), 400
+        vals.append(qid)
+        conn = _db_safe()
+        c = conn.cursor()
+        c.execute(f"UPDATE stage_exam_questions SET {', '.join(sets)} WHERE id=?", vals)
+        affected = c.rowcount
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "affected": affected})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/api/admin/questions/<int:qid>", methods=["DELETE"])
+def api_admin_questions_delete(qid):
+    try:
+        conn = _db_safe()
+        c = conn.cursor()
+        c.execute("DELETE FROM stage_exam_questions WHERE id=?", (qid,))
+        affected = c.rowcount
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "affected": affected})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.route("/admin/questions")
+def admin_questions_page():
+    return render_template("admin_questions.html")
+# End Admin Questions CRUD
 
 @app.route("/admin")
 def admin_page():

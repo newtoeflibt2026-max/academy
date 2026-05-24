@@ -263,6 +263,14 @@ body{background:#f0f2f7;min-height:100vh;color:#222;overflow-x:hidden}
 .uq-btn:hover{background:#fee2e2;transform:scale(1.05)}
 .unanswered-title{color:#991b1b;font-weight:700;margin-bottom:8px;font-size:15px}
 .unanswered-hint{font-size:13px;color:#6b7280;margin-bottom:12px}
+
+.timer.warning { color:#f59e0b !important; background:rgba(245,158,11,0.1); animation:pulse 1.5s infinite; }
+.timer.danger  { color:#ef4444 !important; background:rgba(239,68,68,0.15); animation:pulse 0.8s infinite; }
+.timer.overtime{ color:#dc2626 !important; background:rgba(220,38,38,0.2); border:2px solid #dc2626; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
+.toast-warn { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#1f2937; color:#fff; padding:14px 22px; border-radius:10px; font-weight:bold; z-index:9999; box-shadow:0 8px 24px rgba(0,0,0,.3); animation:slideDown .3s ease; }
+.toast-warn.overtime-toast { background:#dc2626; }
+@keyframes slideDown { from{top:-50px;opacity:0} to{top:20px;opacity:1} }
 </style>
 </head>
 <body>
@@ -746,5 +754,53 @@ function goToQuestion(idx){
 // ===== End unanswered modal =====
 
 </script>
-</body>
+<script>
+// === Smart Countdown Timer (Block A2) ===
+window._totalSeconds = (window.totalQ || 10) * 90;  // 90s per question
+window._remaining = window._totalSeconds;
+window._overtime = 0;
+window._warnedYellow = false;
+window._warnedRed = false;
+function smartTick() {
+    var el = document.getElementById('timer');
+    if (!el) return;
+    if (window._remaining > 0) {
+        window._remaining--;
+        var m = Math.floor(window._remaining / 60);
+        var s = window._remaining % 60;
+        el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+        el.classList.remove('danger','warning','overtime');
+        if (window._remaining <= 60) {
+            el.classList.add('danger');
+            if (!window._warnedRed) { window._warnedRed = true;
+                var t = document.createElement('div'); t.className='toast-warn';
+                t.innerHTML = '⏰ بقيت دقيقة واحدة!'; document.body.appendChild(t);
+                setTimeout(function(){ t.remove(); }, 4000);
+            }
+        } else if (window._remaining <= 300) {
+            el.classList.add('warning');
+            if (!window._warnedYellow) { window._warnedYellow = true;
+                var t = document.createElement('div'); t.className='toast-warn';
+                t.innerHTML = '⚠️ بقي 5 دقائق'; document.body.appendChild(t);
+                setTimeout(function(){ t.remove(); }, 4000);
+            }
+        }
+    } else {
+        window._overtime++;
+        var m = Math.floor(window._overtime / 60);
+        var s = window._overtime % 60;
+        el.textContent = '+' + m + ':' + (s < 10 ? '0' : '') + s;
+        el.classList.add('overtime');
+        if (window._overtime === 1) {
+            var t = document.createElement('div'); t.className='toast-warn overtime-toast';
+            t.innerHTML = '⏱ انتهى الوقت — يمكنك الإكمال<br><small>في TOEFL الحقيقي ستُغلق الشاشة. حاول الإسراع 💪</small>';
+            document.body.appendChild(t);
+            setTimeout(function(){ t.remove(); }, 6000);
+        }
+    }
+}
+// Replace any existing timer interval
+if (window._timerInterval) clearInterval(window._timerInterval);
+window._timerInterval = setInterval(smartTick, 1000);
+</script></body>
 </html>

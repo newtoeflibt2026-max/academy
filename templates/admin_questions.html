@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إدارة الأسئلة - أكاديمية يامن</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',Tahoma,sans-serif; }
+  body { background:#0f172a; color:#e2e8f0; padding:24px; min-height:100vh; }
+  h1 { margin-bottom:20px; color:#7c3aed; }
+  .toolbar { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; align-items:center; background:#1e293b; padding:16px; border-radius:12px; }
+  select, input { background:#334155; color:#fff; border:1px solid #475569; padding:8px 12px; border-radius:8px; font-size:14px; }
+  .btn { background:#7c3aed; color:#fff; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px; transition:all .2s; }
+  .btn:hover { background:#6d28d9; transform:translateY(-1px); }
+  .btn-success { background:#16a34a; } .btn-success:hover { background:#15803d; }
+  .btn-danger  { background:#dc2626; } .btn-danger:hover  { background:#b91c1c; }
+  .btn-sm { padding:6px 10px; font-size:12px; }
+  .stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+  .stat { background:#1e293b; padding:10px 16px; border-radius:8px; font-size:13px; border-right:3px solid #7c3aed; }
+  table { width:100%; border-collapse:collapse; background:#1e293b; border-radius:12px; overflow:hidden; }
+  th, td { padding:12px; text-align:right; border-bottom:1px solid #334155; font-size:13px; }
+  th { background:#334155; color:#a78bfa; font-weight:bold; position:sticky; top:0; }
+  tr:hover { background:#334155; }
+  .qtext { max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .badge { background:#475569; padding:3px 8px; border-radius:6px; font-size:11px; }
+  .badge.easy { background:#16a34a; } .badge.medium { background:#f59e0b; } .badge.hard { background:#dc2626; }
+  .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:1000; align-items:center; justify-content:center; }
+  .modal.show { display:flex; }
+  .modal-content { background:#1e293b; border-radius:12px; padding:24px; max-width:800px; width:90%; max-height:90vh; overflow-y:auto; }
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .form-grid .full { grid-column:1/-1; }
+  .form-grid label { display:block; font-size:12px; color:#94a3b8; margin-bottom:4px; }
+  .form-grid input, .form-grid textarea, .form-grid select { width:100%; }
+  textarea { min-height:80px; resize:vertical; font-family:inherit; }
+  .modal-footer { display:flex; gap:10px; justify-content:flex-start; margin-top:20px; }
+  .back-link { display:inline-block; margin-bottom:16px; color:#a78bfa; text-decoration:none; }
+</style>
+</head>
+<body>
+  <a href="/admin" class="back-link">← العودة للوحة الإدارة</a>
+  <h1>❓ إدارة بنك الأسئلة</h1>
+
+  <div class="toolbar">
+    <label>المرحلة:
+      <select id="stageFilter" onchange="loadQuestions()">
+        <option value="">كل المراحل</option>
+      </select>
+    </label>
+    <input type="text" id="searchBox" placeholder="بحث في نص السؤال..." oninput="filterTable()">
+    <button class="btn btn-success" onclick="openCreateModal()">➕ إضافة سؤال</button>
+    <button class="btn" onclick="loadQuestions()">🔄 تحديث</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <table id="qtable">
+    <thead>
+      <tr>
+        <th>#</th><th>المرحلة</th><th>النوع</th><th>السؤال</th><th>الإجابة</th>
+        <th>الصعوبة</th><th>المجموعة</th><th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody id="qbody"><tr><td colspan="8" style="text-align:center;padding:30px">جارٍ التحميل...</td></tr></tbody>
+  </table>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle" style="margin-bottom:16px;color:#a78bfa">إضافة سؤال</h2>
+      <input type="hidden" id="qid">
+      <div class="form-grid">
+        <div><label>المرحلة (stage_id) *</label><input type="number" id="f_stage_id" required></div>
+        <div><label>نوع السؤال</label>
+          <select id="f_q_type">
+            <option value="reading_detail">Reading - Detail</option>
+            <option value="reading_vocabulary">Reading - Vocabulary</option>
+            <option value="reading_inference">Reading - Inference</option>
+            <option value="reading_negative_fact">Reading - Negative Fact</option>
+            <option value="reading_reference">Reading - Reference</option>
+            <option value="reading_purpose">Reading - Purpose</option>
+            <option value="reading_simplify">Reading - Sentence Simplify</option>
+            <option value="reading_summary">Reading - Prose Summary</option>
+            <option value="read_email">Read Daily Life - Email</option>
+          </select>
+        </div>
+        <div class="full"><label>نص السؤال (English) *</label><textarea id="f_question_text" required></textarea></div>
+        <div><label>A *</label><input type="text" id="f_option_a" required></div>
+        <div><label>B *</label><input type="text" id="f_option_b" required></div>
+        <div><label>C *</label><input type="text" id="f_option_c" required></div>
+        <div><label>D *</label><input type="text" id="f_option_d" required></div>
+        <div><label>الإجابة الصحيحة *</label>
+          <select id="f_correct_answer" required>
+            <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+          </select>
+        </div>
+        <div><label>الصعوبة</label>
+          <select id="f_difficulty"><option value="easy">سهل</option><option value="medium" selected>متوسط</option><option value="hard">صعب</option></select>
+        </div>
+        <div><label>معرف المجموعة (set_id)</label><input type="text" id="f_set_id" placeholder="مثال: daily_text1_library"></div>
+        <div><label>عنوان الدرس المرجعي</label><input type="text" id="f_review_lesson_title"></div>
+        <div class="full"><label>نص القطعة (passage_text)</label><textarea id="f_passage_text"></textarea></div>
+        <div class="full"><label>المفهوم بالعربي (concept_ar)</label><textarea id="f_concept_ar"></textarea></div>
+        <div class="full"><label>الشرح بالعربي (explanation_ar)</label><textarea id="f_explanation_ar"></textarea></div>
+        <div class="full"><label>الفخ بالعربي (trap_ar)</label><textarea id="f_trap_ar"></textarea></div>
+        <div class="full"><label>الاستراتيجية (strategy_ar) - كيف يحلها الطالب</label><textarea id="f_strategy_ar" placeholder="مثال: ابحث في القطعة عن الكلمة المفتاحية ثم اقرأ السطر السابق واللاحق..."></textarea></div>
+        <div class="full"><label>الشطب (elimination_ar) - كيف يستبعد الإجابات الخاطئة</label><textarea id="f_elimination_ar" placeholder="مثال: A خاطئة لأنها تذكر معلومة غير موجودة. B بعيدة عن السياق..."></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" onclick="saveQuestion()">💾 حفظ</button>
+        <button class="btn" onclick="closeModal()">إلغاء</button>
+        <button class="btn btn-danger" id="deleteBtn" style="display:none" onclick="deleteQuestion()">🗑️ حذف</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+let allQuestions = [];
+async function loadQuestions() {
+  const sid = document.getElementById('stageFilter').value;
+  const url = sid ? '/api/admin/questions/list?stage_id=' + sid : '/api/admin/questions/list';
+  document.getElementById('qbody').innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px">جارٍ التحميل...</td></tr>';
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'failed');
+    allQuestions = d.items;
+    renderStats(d.by_stage, d.total);
+    renderTable(allQuestions);
+    fillStageFilter(d.by_stage);
+  } catch (e) {
+    document.getElementById('qbody').innerHTML = '<tr><td colspan="8" style="text-align:center;color:#ef4444">خطأ: ' + e.message + '</td></tr>';
+  }
+}
+function renderStats(byStage, total) {
+  const el = document.getElementById('stats');
+  let html = '<div class="stat">📊 الإجمالي: <b>' + total + '</b></div>';
+  for (const [sid, cnt] of Object.entries(byStage)) html += '<div class="stat">المرحلة ' + sid + ': <b>' + cnt + '</b></div>';
+  el.innerHTML = html;
+}
+function fillStageFilter(byStage) {
+  const sel = document.getElementById('stageFilter');
+  const cur = sel.value;
+  if (sel.options.length > 1) return;
+  for (const sid of Object.keys(byStage)) {
+    const opt = document.createElement('option'); opt.value = sid; opt.textContent = 'المرحلة ' + sid; sel.appendChild(opt);
+  }
+  sel.value = cur;
+}
+function renderTable(items) {
+  const tbody = document.getElementById('qbody');
+  if (!items.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:30px">لا توجد أسئلة</td></tr>'; return; }
+  tbody.innerHTML = items.map(q => `
+    <tr>
+      <td>${q.id}</td>
+      <td>${q.stage_id}</td>
+      <td><span class="badge">${q.q_type || '-'}</span></td>
+      <td class="qtext" title="${(q.question_text||'').replace(/"/g,'&quot;')}">${(q.question_text||'').slice(0,80)}</td>
+      <td><b>${q.correct_answer || '-'}</b></td>
+      <td><span class="badge ${q.difficulty||'medium'}">${q.difficulty||'-'}</span></td>
+      <td>${q.set_id || '-'}</td>
+      <td>
+        <button class="btn btn-sm" onclick='openEditModal(${JSON.stringify(q).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteById(${q.id})">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+function filterTable() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const filtered = allQuestions.filter(x => (x.question_text||'').toLowerCase().includes(q));
+  renderTable(filtered);
+}
+function openCreateModal() {
+  document.getElementById('modalTitle').textContent = 'إضافة سؤال جديد';
+  document.getElementById('qid').value = '';
+  document.getElementById('deleteBtn').style.display = 'none';
+  ['stage_id','question_text','option_a','option_b','option_c','option_d','set_id','review_lesson_title',
+   'passage_text','concept_ar','explanation_ar','trap_ar','strategy_ar','elimination_ar'].forEach(k => document.getElementById('f_'+k).value = '');
+  document.getElementById('f_correct_answer').value = 'A';
+  document.getElementById('f_difficulty').value = 'medium';
+  document.getElementById('f_q_type').value = 'reading_detail';
+  document.getElementById('modal').classList.add('show');
+}
+function openEditModal(q) {
+  document.getElementById('modalTitle').textContent = 'تعديل السؤال #' + q.id;
+  document.getElementById('qid').value = q.id;
+  document.getElementById('deleteBtn').style.display = 'inline-block';
+  for (const k of ['stage_id','q_type','question_text','option_a','option_b','option_c','option_d',
+                   'correct_answer','difficulty','set_id','review_lesson_title','passage_text',
+                   'concept_ar','explanation_ar','trap_ar','strategy_ar','elimination_ar']) {
+    const el = document.getElementById('f_'+k);
+    if (el) el.value = q[k] || '';
+  }
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+async function saveQuestion() {
+  const qid = document.getElementById('qid').value;
+  const data = {};
+  for (const k of ['stage_id','q_type','question_text','option_a','option_b','option_c','option_d',
+                   'correct_answer','difficulty','set_id','review_lesson_title','passage_text',
+                   'concept_ar','explanation_ar','trap_ar','strategy_ar','elimination_ar']) {
+    data[k] = document.getElementById('f_'+k).value;
+  }
+  data.stage_id = parseInt(data.stage_id);
+  try {
+    const url = qid ? '/api/admin/questions/' + qid : '/api/admin/questions/create';
+    const method = qid ? 'PUT' : 'POST';
+    const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'failed');
+    closeModal(); loadQuestions();
+    alert(qid ? '✅ تم التعديل' : '✅ تمت الإضافة (ID: ' + d.id + ')');
+  } catch (e) { alert('❌ ' + e.message); }
+}
+async function deleteById(id) {
+  if (!confirm('حذف السؤال #' + id + '؟')) return;
+  try {
+    const r = await fetch('/api/admin/questions/' + id, { method: 'DELETE' });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'failed');
+    loadQuestions();
+  } catch (e) { alert('❌ ' + e.message); }
+}
+async function deleteQuestion() {
+  const qid = document.getElementById('qid').value;
+  if (!qid) return;
+  if (!confirm('حذف السؤال #' + qid + '؟')) return;
+  await deleteById(qid); closeModal();
+}
+loadQuestions();
+</script>
+</body>
+</html>
