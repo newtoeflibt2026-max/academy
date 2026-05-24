@@ -144,6 +144,18 @@ body{background:#f0f2f7;min-height:100vh;color:#222;overflow-x:hidden}
 .spinner{display:inline-block;width:36px;height:36px;border:4px solid rgba(102,126,234,0.2);border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin-left:10px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hidden{display:none!important}
+
+/* === Results page colors (override for AFTER submit only) === */
+.result-correct, .answer-correct, .option-correct {
+    background: #dcfce7 !important;
+    border-color: #16a34a !important;
+    color: #166534 !important;
+}
+.result-wrong, .answer-wrong, .option-wrong {
+    background: #fee2e2 !important;
+    border-color: #dc2626 !important;
+    color: #991b1b !important;
+}
 </style>
 </head>
 <body>
