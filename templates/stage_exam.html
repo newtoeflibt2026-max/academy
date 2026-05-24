@@ -848,28 +848,7 @@ window.ctwSaveAndPrev = function(){
   window.ctwCollectCurrent();
   if(currentIdx > 0){ currentIdx--; renderQuestion(); }
 };
-// attach auto-advance + hint handlers after DOM update
-const _ctwOldRender = window.renderCTW;
-window.renderCTW = function(q, container){
-  _ctwOldRender(q, container);
-  const inputs = container.querySelectorAll('.ctw-letter');
-  inputs.forEach((inp, idx) => {
-    inp.addEventListener('input', function(){
-      this.value = this.value.toLowerCase();
-      if(this.value.length === 1 && idx + 1 < inputs.length){ inputs[idx+1].focus(); }
-    });
-    inp.addEventListener('keydown', function(e){
-      if(e.key === 'Backspace' && !this.value && idx > 0){ inputs[idx-1].focus(); }
-    });
-  });
-  container.querySelectorAll('.ctw-hint').forEach(h => {
-    h.addEventListener('click', function(){
-      const hint = this.getAttribute('data-hint') || this.getAttribute('title') || '';
-      alert('💡 ' + hint);
-    });
-  });
-  window._currentCTW = { blanks: (typeof q.blanks_json === 'string' ? JSON.parse(q.blanks_json) : q.blanks_json), qid: q.id };
-};
+// (CTW wrapper removed - merged below)
 
 </script>
 
@@ -912,6 +891,24 @@ window.renderCTW = function(q, container){
         ${navBtn}
       </div>
     </div>`;
+  // ===== auto-advance + hint handlers =====
+  const _inputs = container.querySelectorAll('.ctw-letter');
+  _inputs.forEach((inp, idx) => {
+    inp.addEventListener('input', function(){
+      this.value = this.value.toLowerCase();
+      if(this.value.length === 1 && idx + 1 < _inputs.length){ _inputs[idx+1].focus(); }
+    });
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'Backspace' && !this.value && idx > 0){ _inputs[idx-1].focus(); }
+    });
+  });
+  container.querySelectorAll('.ctw-hint').forEach(h => {
+    h.addEventListener('click', function(){
+      const hint = this.getAttribute('data-hint') || '';
+      alert('Hint: ' + hint);
+    });
+  });
+  window._currentCTW = { blanks: blanks, qid: q.id };
   // auto-advance
   const inputs = container.querySelectorAll('.ctw-letter');
   inputs.forEach((inp, idx) => {
