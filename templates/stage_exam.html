@@ -387,48 +387,61 @@ async function loadExam(){
 }
 
 function startTimer(){
-  // Smart Countdown: 90s per question, with warnings, no lockout (overtime allowed)
-  const qCount = (window.questions && window.questions.length) || (window.totalQ || 10);
-  window._remaining = qCount * 90;
-  window._overtime = 0;
+  // Bullet-proof countdown: based on Date.now() snapshot, immune to race conditions
+  const qCount = (typeof questions !== 'undefined' && questions.length) ? questions.length : 10;
+  const TOTAL_MS = qCount * 90 * 1000;       // total exam time in ms
+  const END_TS = Date.now() + TOTAL_MS;      // absolute end timestamp
+  window._examEndTs = END_TS;
   window._warnedYellow = false;
   window._warnedRed = false;
+  window._warnedOver = false;
   if(window.timerInterval) clearInterval(window.timerInterval);
-  if(window._timerInterval) clearInterval(window._timerInterval);
+
   function _showToast(msg, isOver){
-    const t=document.createElement('div');
-    t.className='toast-warn'+(isOver?' overtime-toast':'');
-    t.innerHTML=msg;
+    const t = document.createElement('div');
+    t.className = 'toast-warn' + (isOver ? ' overtime-toast' : '');
+    t.innerHTML = msg;
     document.body.appendChild(t);
-    setTimeout(()=>t.remove(), isOver?6000:4000);
+    setTimeout(() => { try { t.remove(); } catch(e){} }, isOver ? 6000 : 4000);
   }
-  window.timerInterval=setInterval(()=>{
-    const el=document.getElementById('timer');
+
+  function _tick(){
+    const el = document.getElementById('timer');
     if(!el) return;
-    if(window._remaining>0){
-      window._remaining--;
-      const m=String(Math.floor(window._remaining/60)).padStart(2,'0');
-      const s=String(window._remaining%60).padStart(2,'0');
-      el.textContent=`${m}:${s}`;
+    const remainingMs = window._examEndTs - Date.now();
+    if(remainingMs > 0){
+      const remainingSec = Math.ceil(remainingMs / 1000);
+      const m = String(Math.floor(remainingSec/60)).padStart(2,'0');
+      const s = String(remainingSec%60).padStart(2,'0');
+      el.textContent = m + ':' + s;
       el.classList.remove('danger','warning','overtime');
-      if(window._remaining<=60){
+      if(remainingSec <= 60){
         el.classList.add('danger');
-        if(!window._warnedRed){window._warnedRed=true;_showToast('⏰ بقيت دقيقة واحدة!',false);}
-      } else if(window._remaining<=300){
+        if(!window._warnedRed){
+          window._warnedRed = true;
+          _showToast('⏰ بقيت دقيقة واحدة!', false);
+        }
+      } else if(remainingSec <= 300){
         el.classList.add('warning');
-        if(!window._warnedYellow){window._warnedYellow=true;_showToast('⚠️ بقي 5 دقائق',false);}
+        if(!window._warnedYellow){
+          window._warnedYellow = true;
+          _showToast('⚠️ بقي 5 دقائق', false);
+        }
       }
     } else {
-      window._overtime++;
-      const m=String(Math.floor(window._overtime/60)).padStart(2,'0');
-      const s=String(window._overtime%60).padStart(2,'0');
-      el.textContent=`+${m}:${s}`;
+      const overSec = Math.floor(-remainingMs / 1000);
+      const m = String(Math.floor(overSec/60)).padStart(2,'0');
+      const s = String(overSec%60).padStart(2,'0');
+      el.textContent = '+' + m + ':' + s;
       el.classList.add('overtime');
-      if(window._overtime===1){
-        _showToast('⏱ انتهى الوقت — يمكنك الإكمال<br><small>في TOEFL الحقيقي ستُغلق الشاشة. حاول الإسراع 💪</small>',true);
+      if(!window._warnedOver){
+        window._warnedOver = true;
+        _showToast('⏱ انتهى الوقت — يمكنك الإكمال', true);
       }
     }
-  },1000);
+  }
+  _tick();                                    // immediate paint (shows 15:00 instantly)
+  window.timerInterval = setInterval(_tick, 500);  // every 500ms for smoothness
 }
 
 function buildDotNav(){
