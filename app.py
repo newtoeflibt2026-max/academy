@@ -38,6 +38,59 @@ def _db_safe(path=None):
         print(f"[_db_safe] PRAGMA warn: {_e}")
     return conn
 
+
+# ===== Phase 13.2e HOTFIX: ensure ALL exam columns at module load =====
+def _ensure_all_exam_columns():
+    try:
+        import sqlite3 as _sq3
+        conn = _db_safe(); c = conn.cursor()
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        existing = {r[1] for r in c.fetchall()}
+        needed = [
+            ("difficulty", "TEXT"),
+            ("set_id", "TEXT"),
+            ("order_in_set", "INTEGER"),
+            ("is_active", "INTEGER DEFAULT 1"),
+            ("q_type", "TEXT"),
+            ("passage_text", "TEXT"),
+            ("audio_source", "TEXT"),
+            ("blanks_json", "TEXT"),
+            ("time_limit_seconds", "INTEGER"),
+            ("word_count_min", "INTEGER"),
+            ("word_count_max", "INTEGER"),
+            ("rubric_json", "TEXT"),
+            ("skill_section", "TEXT"),
+            ("concept_ar", "TEXT"),
+            ("explanation_ar", "TEXT"),
+            ("trap_ar", "TEXT"),
+            ("review_lesson_id", "INTEGER"),
+            ("review_lesson_title", "TEXT"),
+        ]
+        added = []
+        for col, typ in needed:
+            if col not in existing:
+                try:
+                    c.execute(f"ALTER TABLE stage_exam_questions ADD COLUMN {col} {typ}")
+                    added.append(col)
+                except Exception as e:
+                    print(f"[ALL-COLS] skip {col}: {e}")
+        # ensure all rows have is_active=1
+        try:
+            c.execute("UPDATE stage_exam_questions SET is_active=1 WHERE is_active IS NULL")
+        except Exception as e:
+            print(f"[ALL-COLS] update is_active err: {e}")
+        conn.commit(); conn.close()
+        print(f"[ALL-COLS] Added: {added if added else 'none (all present)'}")
+    except Exception as e:
+        print(f"[ALL-COLS] ERROR: {e}")
+
+# يُنفّذ فوراً عند load (Gunicorn/Flask/WSGI)
+try:
+    _ensure_all_exam_columns()
+except Exception as _e:
+    print(f"[ALL-COLS] startup error: {_e}")
+# ===== End Phase 13.2e HOTFIX =====
+
 def _ensure_wal_once():
     """Run once at startup to enable WAL persistently."""
     try:
@@ -4528,6 +4581,40 @@ def page_stage_exam(sid):
     return render_template("stage_exam.html", stage_id=sid, user_id=user_id)
 # ===== End Phase 12E-3 v2 route =====
 
+
+
+# ===== Phase 13.2d HOTFIX: ensure difficulty column =====
+def _ensure_difficulty_column():
+    try:
+        conn = _db_safe(); c = conn.cursor()
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        cols = [r[1] for r in c.fetchall()]
+        added = []
+        for col, typ in [
+            ("difficulty", "TEXT"),
+            ("set_id", "TEXT"),
+            ("order_in_set", "INTEGER"),
+            ("is_active", "INTEGER DEFAULT 1"),
+        ]:
+            if col not in cols:
+                try:
+                    c.execute(f"ALTER TABLE stage_exam_questions ADD COLUMN {col} {typ}")
+                    added.append(col)
+                except Exception as e:
+                    print(f"[migration] skip {col}: {e}")
+        conn.commit(); conn.close()
+        if added:
+            print(f"[migration] Added columns: {added}")
+        else:
+            print("[migration] All columns present")
+    except Exception as e:
+        print(f"[migration] _ensure_difficulty_column ERROR: {e}")
+
+try:
+    _ensure_difficulty_column()
+except Exception as _e:
+    print(f"[startup] difficulty migration error: {_e}")
+# ===== End Phase 13.2d HOTFIX =====
 
 if __name__ == "__main__":
     import os as _os
