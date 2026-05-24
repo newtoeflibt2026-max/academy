@@ -175,6 +175,16 @@ body{background:#f0f2f7;min-height:100vh;color:#222;overflow-x:hidden}
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.08); }
 }
+
+/* === Align English question text to the right (RTL container) === */
+.q-text, .question-text, .question-body {
+    text-align: right !important;
+    direction: ltr;
+    unicode-bidi: plaintext;
+}
+.option-text {
+    text-align: right !important;
+}
 </style>
 </head>
 <body>
