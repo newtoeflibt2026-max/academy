@@ -4616,6 +4616,72 @@ except Exception as _e:
     print(f"[startup] difficulty migration error: {_e}")
 # ===== End Phase 13.2d HOTFIX =====
 
+
+# ===== Phase 13.2f DEBUG ENDPOINT =====
+@app.route("/api/admin/debug/schema")
+def api_debug_schema():
+    try:
+        conn = _db_safe(); c = conn.cursor()
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        cols = [{"name": r[1], "type": r[2]} for r in c.fetchall()]
+        c.execute("SELECT COUNT(*) FROM stage_exam_questions WHERE stage_id=5")
+        cnt5 = c.fetchone()[0]
+        c.execute("SELECT id, stage_id, is_active, q_type FROM stage_exam_questions WHERE stage_id=5 LIMIT 5")
+        sample = [{"id":r[0],"stage_id":r[1],"is_active":r[2],"q_type":r[3]} for r in c.fetchall()]
+        import os as _o
+        try:
+            dbpath = conn.execute("PRAGMA database_list").fetchone()[2]
+        except Exception:
+            dbpath = "unknown"
+        conn.close()
+        return jsonify({
+            "ok": True,
+            "db_path": dbpath,
+            "stage_exam_questions_columns": cols,
+            "column_count": len(cols),
+            "stage5_row_count": cnt5,
+            "stage5_sample": sample,
+            "has_difficulty": any(c["name"]=="difficulty" for c in cols),
+            "has_q_type": any(c["name"]=="q_type" for c in cols),
+            "has_is_active": any(c["name"]=="is_active" for c in cols),
+        })
+    except Exception as e:
+        import traceback
+        return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
+
+@app.route("/api/admin/debug/force-migrate", methods=["POST"])
+def api_debug_force_migrate():
+    try:
+        conn = _db_safe(); c = conn.cursor()
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        existing = {r[1] for r in c.fetchall()}
+        needed = [
+            ("difficulty","TEXT"),("set_id","TEXT"),("order_in_set","INTEGER"),
+            ("is_active","INTEGER DEFAULT 1"),("q_type","TEXT"),("passage_text","TEXT"),
+            ("audio_source","TEXT"),("blanks_json","TEXT"),("time_limit_seconds","INTEGER"),
+            ("word_count_min","INTEGER"),("word_count_max","INTEGER"),("rubric_json","TEXT"),
+            ("skill_section","TEXT"),("concept_ar","TEXT"),("explanation_ar","TEXT"),
+            ("trap_ar","TEXT"),("review_lesson_id","INTEGER"),("review_lesson_title","TEXT"),
+        ]
+        added=[]; failed=[]
+        for col,typ in needed:
+            if col not in existing:
+                try:
+                    c.execute(f"ALTER TABLE stage_exam_questions ADD COLUMN {col} {typ}")
+                    added.append(col)
+                except Exception as e:
+                    failed.append({"col":col,"err":str(e)})
+        try:
+            c.execute("UPDATE stage_exam_questions SET is_active=1 WHERE is_active IS NULL")
+        except Exception as e:
+            failed.append({"col":"is_active update","err":str(e)})
+        conn.commit(); conn.close()
+        return jsonify({"ok":True,"added":added,"failed":failed,"already_had":sorted(list(existing))})
+    except Exception as e:
+        import traceback
+        return jsonify({"ok":False,"error":str(e),"trace":traceback.format_exc()}),500
+# ===== End Phase 13.2f =====
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
