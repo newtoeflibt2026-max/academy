@@ -502,18 +502,20 @@ function renderPassage(){
 }
 
 function renderQuestion(){
-  const _q = (typeof questions !== 'undefined' && questions[currentIdx]) ? questions[currentIdx] : null;
+  // expose globals for CTW component
+  window.questions = questions;
+  window.currentIdx = currentIdx;
+  window.answers = answers;
+  const _q = questions && questions[currentIdx];
   if(_q && _q.q_type === 'reading_complete_words'){
     const cont = document.getElementById('questionContainer');
-    if(cont){
-      window.renderCTW(_q, cont);
-      // update progress + dots like normal flow
+    if(cont && window.CTW){
+      window.CTW.render(_q, cont);
       try {
-        const ans = (typeof answers !== 'undefined') ? Object.keys(answers).length : 0;
+        const ans = Object.keys(answers || {}).length;
         const ac = document.getElementById('answeredCount'); if(ac) ac.textContent = ans;
         const pf = document.getElementById('progressFill'); if(pf) pf.style.width = (ans/questions.length*100)+'%';
         if(typeof updateDots === 'function') updateDots(false);
-        // hide passage pane (CTW passage is inline)
         const pp = document.getElementById('passagePane'); if(pp) pp.style.display = 'none';
       } catch(e){ console.warn('CTW progress err', e); }
       return;
@@ -964,6 +966,142 @@ if(!window._currentCTW) return out;
 .q-actions{display:flex;gap:10px;margin-top:20px;justify-content:space-between}
 .q-actions .btn{flex:1;padding:12px 20px;font-size:15px;font-weight:bold}
 </style>
+
+
+<style>
+.ctw-passage{font-size:18px;line-height:2.6;padding:22px;background:#fafbfc;border-radius:12px;direction:ltr;text-align:left;border:1px solid #e0e4eb;color:#222}
+.ctw-blank{display:inline-flex;align-items:center;gap:2px;background:#fff;padding:4px 8px;border-radius:6px;border:1px solid #c8d0db;margin:0 4px;vertical-align:middle}
+.ctw-prefix{font-weight:600;color:#1976D2}
+.ctw-letter{width:26px;height:32px;text-align:center;border:none;border-bottom:2px solid #2196F3;background:transparent;font-size:17px;font-weight:bold;color:#0D47A1;outline:none;padding:0;margin:0}
+.ctw-letter:focus{background:#E3F2FD;border-bottom-color:#0D47A1}
+.ctw-hint{display:inline-block;width:20px;height:20px;border-radius:50%;background:#FFC107;color:#333;font-size:12px;line-height:20px;cursor:pointer;margin-left:4px;font-weight:bold;border:none;padding:0;text-align:center}
+.ctw-hint:hover{background:#FFA000}
+.ctw-instructions{background:#E3F2FD;border-right:4px solid #2196F3;padding:14px 18px;border-radius:8px;margin-bottom:16px;font-size:14px;color:#0D47A1;line-height:1.8;direction:rtl;text-align:right}
+.ctw-strategy,.ctw-trap{margin-top:14px;background:#FFF8E1;border-radius:8px;padding:12px 16px;direction:rtl;text-align:right;font-size:14px}
+.ctw-trap{background:#FFEBEE}
+.ctw-strategy summary{cursor:pointer;font-weight:bold;color:#E65100}
+.ctw-trap summary{cursor:pointer;font-weight:bold;color:#C62828}
+.ctw-meta{background:#fff;padding:12px 16px;border-radius:10px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;direction:rtl}
+.ctw-meta-badge{background:#667eea;color:#fff;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:bold}
+.ctw-meta-count{color:#666;font-size:13px}
+.ctw-nav{display:flex;gap:10px;margin-top:22px;justify-content:space-between;direction:rtl}
+.ctw-nav button{flex:1;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:bold;cursor:pointer;font-family:inherit}
+.ctw-nav .btn-prev{background:#e8edf5;color:#3c4858}
+.ctw-nav .btn-prev:disabled{opacity:0.4;cursor:not-allowed}
+.ctw-nav .btn-next{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.ctw-nav .btn-submit{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff}
+</style>
+<script>
+(function(){
+  window.CTW = {
+    answers: {},
+    render: function(q, container){
+      var blanks = [];
+      try {
+        blanks = (typeof q.blanks_json === 'string') ? JSON.parse(q.blanks_json) : (q.blanks_json || []);
+      } catch(e){
+        container.innerHTML = '<div style="color:red;padding:20px">Parse error: ' + e.message + '</div>';
+        return;
+      }
+      if(!blanks.length){
+        container.innerHTML = '<div style="color:red;padding:20px">لا توجد فراغات</div>';
+        return;
+      }
+      var qid = q.id;
+      var saved = this.answers[qid] || {};
+      var passage = q.passage_text || '';
+      blanks.forEach(function(b){
+        var prefix = b.prefix || '';
+        var full = b.full || '';
+        var missing = full.length - prefix.length;
+        var savedFull = saved[b.n] || '';
+        var savedSuffix = savedFull.length > prefix.length ? savedFull.substring(prefix.length) : '';
+        var inputs = '';
+        for(var i=0; i<missing; i++){
+          var v = savedSuffix[i] ? ('value="' + savedSuffix[i] + '"') : '';
+          inputs += '<input class="ctw-letter" data-blank="' + b.n + '" data-idx="' + i + '" maxlength="1" autocomplete="off" ' + v + ' />';
+        }
+        var hintEsc = (b.hint || '').replace(/"/g, '&quot;');
+        var blankHtml = '<span class="ctw-blank"><span class="ctw-prefix">' + prefix + '</span>' + inputs + '<button class="ctw-hint" data-hint="' + hintEsc + '" type="button">?</button></span>';
+        passage = passage.replace('[B' + b.n + ']', blankHtml);
+      });
+      var totalQ = (window.questions && window.questions.length) || 1;
+      var idx = (typeof window.currentIdx === 'number') ? window.currentIdx : 0;
+      var isLast = idx >= totalQ - 1;
+      var isFirst = idx === 0;
+      var strategyHtml = q.strategy_ar ? '<details class="ctw-strategy"><summary>💡 استراتيجية الحل</summary><div>' + q.strategy_ar + '</div></details>' : '';
+      var trapHtml = q.trap_ar ? '<details class="ctw-trap"><summary>⚠️ مصائد إملائية</summary><div>' + q.trap_ar + '</div></details>' : '';
+      var navHtml = '<div class="ctw-nav">' +
+        '<button class="btn-prev" type="button" ' + (isFirst ? 'disabled' : '') + ' onclick="CTW.prev()">→ السابق</button>' +
+        (isLast
+          ? '<button class="btn-submit" type="button" onclick="CTW.submitAll()">✓ تسليم الامتحان</button>'
+          : '<button class="btn-next" type="button" onclick="CTW.next()">التالي ←</button>') +
+        '</div>';
+      container.innerHTML =
+        '<div class="ctw-meta">' +
+          '<div class="ctw-meta-badge">قطعة ' + (idx+1) + ' من ' + totalQ + '</div>' +
+          '<div class="ctw-meta-count">' + blanks.length + ' كلمة ناقصة</div>' +
+        '</div>' +
+        '<div class="ctw-instructions">📝 أكمل الحروف الناقصة. اضغط <b>؟</b> للتلميح. التصحيح: كلمة كاملة = نقطة، أي خطأ = صفر.</div>' +
+        '<div class="ctw-passage">' + passage + '</div>' +
+        strategyHtml + trapHtml + navHtml;
+      var inputs = container.querySelectorAll('.ctw-letter');
+      inputs.forEach(function(inp, i){
+        inp.addEventListener('input', function(){
+          this.value = this.value.toLowerCase();
+          if(this.value.length === 1 && i+1 < inputs.length){ inputs[i+1].focus(); }
+        });
+        inp.addEventListener('keydown', function(e){
+          if(e.key === 'Backspace' && !this.value && i > 0){ inputs[i-1].focus(); }
+        });
+      });
+      container.querySelectorAll('.ctw-hint').forEach(function(h){
+        h.addEventListener('click', function(){
+          alert('💡 ' + (this.getAttribute('data-hint') || ''));
+        });
+      });
+      window._currentCTW = { blanks: blanks, qid: qid };
+    },
+    collect: function(){
+      if(!window._currentCTW) return;
+      var qid = window._currentCTW.qid;
+      var blanks = window._currentCTW.blanks;
+      if(!this.answers[qid]) this.answers[qid] = {};
+      var self = this;
+      blanks.forEach(function(b){
+        var inps = document.querySelectorAll('.ctw-letter[data-blank="' + b.n + '"]');
+        var suffix = '';
+        inps.forEach(function(i){ suffix += (i.value || ''); });
+        self.answers[qid][b.n] = (b.prefix || '') + suffix;
+      });
+      if(window.answers){
+        var anyFilled = Object.values(this.answers[qid]).some(function(v){ return v && v.length > 0; });
+        if(anyFilled) window.answers[qid] = 'CTW';
+      }
+    },
+    next: function(){
+      this.collect();
+      if(typeof window.currentIdx === 'number' && window.questions && window.currentIdx < window.questions.length - 1){
+        if(typeof window.nextQ === 'function'){ window.nextQ(); }
+        else { window.currentIdx++; if(typeof renderQuestion === 'function') renderQuestion(); }
+      }
+    },
+    prev: function(){
+      this.collect();
+      if(typeof window.currentIdx === 'number' && window.currentIdx > 0){
+        if(typeof window.prevQ === 'function'){ window.prevQ(); }
+        else { window.currentIdx--; if(typeof renderQuestion === 'function') renderQuestion(); }
+      }
+    },
+    submitAll: function(){
+      this.collect();
+      window._ctw_payload = this.answers;
+      if(typeof window.trySubmit === 'function'){ window.trySubmit(); }
+      else { alert('تم جمع الإجابات.'); }
+    }
+  };
+})();
+</script>
 
 </body>
 </html>
