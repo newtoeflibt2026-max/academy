@@ -156,6 +156,25 @@ body{background:#f0f2f7;min-height:100vh;color:#222;overflow-x:hidden}
     border-color: #dc2626 !important;
     color: #991b1b !important;
 }
+
+/* === Auto-highlight target phrase in passage === */
+.passage-pane mark.q-highlight {
+    background: linear-gradient(180deg, transparent 50%, #fde68a 50%);
+    color: #78350f;
+    font-weight: 700;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+.passage-pane mark.q-highlight-active {
+    background: #fbbf24 !important;
+    color: #422006 !important;
+    box-shadow: 0 0 0 2px #f59e0b;
+    animation: pulseHL 1.2s ease-in-out;
+}
+@keyframes pulseHL {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.08); }
+}
 </style>
 </head>
 <body>
@@ -397,6 +416,13 @@ function renderQuestion(){
   document.getElementById('answeredCount').textContent=ans;
   document.getElementById('progressFill').style.width=(ans/questions.length*100)+'%';
   updateDots(false);
+
+    // ===== Auto-highlight target phrase =====
+    try {
+        const pp = document.querySelector('.passage-pane .passage-body, .passage-pane');
+        if(pp && q && q.question_text){ highlightInPassage(pp, q.question_text); }
+    } catch(e){ console.warn('highlight err', e); }
+    // =====
 }
 
 function selectOption(L){
@@ -556,6 +582,53 @@ function renderResults(d){
 }
 
 loadExam();
+
+// ===== Auto-highlight phrases mentioned in question =====
+function extractTargets(qText){
+    if(!qText) return [];
+    const targets = [];
+    // 1) Anything in single 'quotes' or double "quotes"
+    const re1 = /['"‘’“”]([^'"‘’“”]{2,60})['"‘’“”]/g;
+    let m;
+    while((m = re1.exec(qText)) !== null){
+        const t = m[1].trim();
+        if(t && t.length >= 2) targets.push(t);
+    }
+    // 2) "the word X" or "the phrase Y" patterns
+    const re2 = /(?:the\s+(?:word|phrase|term|expression)\s+)([A-Za-z][\w\s\-']{1,40})/gi;
+    while((m = re2.exec(qText)) !== null){
+        const t = m[1].trim().replace(/[.,;:?!]$/, '');
+        if(t && t.length >= 2) targets.push(t);
+    }
+    return targets;
+}
+function highlightInPassage(passageEl, qText){
+    if(!passageEl || !qText) return;
+    const targets = extractTargets(qText);
+    if(targets.length === 0) return;
+    // Get current HTML (preserve <br>) then wrap matches with <mark>
+    let txt = passageEl.innerHTML;
+    // Reset any old highlights first
+    txt = txt.replace(/<mark class="q-highlight[^"]*">([^<]*)<\/mark>/gi, '$1');
+    targets.forEach(t => {
+        // Escape regex chars
+        const esc = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const re = new RegExp('(' + esc + ')', 'gi');
+        txt = txt.replace(re, '<mark class="q-highlight">$1</mark>');
+    });
+    passageEl.innerHTML = txt;
+    // Briefly pulse the first match
+    setTimeout(()=>{
+        const first = passageEl.querySelector('mark.q-highlight');
+        if(first){
+            first.classList.add('q-highlight-active');
+            first.scrollIntoView({behavior:'smooth', block:'center'});
+            setTimeout(()=>first.classList.remove('q-highlight-active'), 1500);
+        }
+    }, 100);
+}
+// ===== End auto-highlight =====
+
 </script>
 </body>
 </html>
