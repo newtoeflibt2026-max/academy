@@ -3686,6 +3686,12 @@ _ensure_stage_exam_schema()
 
 
 # ─── Admin: قائمة بنك الأسئلة لمرحلة ───
+
+@app.route("/stage-exam/<int:sid>")
+def stage_exam_page(sid):
+    """Phase 12E-3a: Student stage exam page (TOEFL-style)"""
+    return render_template("stage_exam.html", stage_id=sid)
+
 @app.route("/api/admin/stages/<int:sid>/exam-questions", methods=["GET"])
 def api_admin_stage_exam_list(sid):
     import sqlite3
