@@ -4390,7 +4390,7 @@ def api_student_stage_exam_start(sid):
         cnt = stg["exam_questions_count"] or 10
 
         # كل الأسئلة من البنك
-        all_q = c.execute("SELECT *, q_type, blanks_json FROM stage_exam_questions WHERE stage_id=?, q_type, blanks_json", (sid,)).fetchall()
+        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?", (sid,)).fetchall()
         if len(all_q) < cnt:
             conn.close()
             return jsonify({
