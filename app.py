@@ -426,7 +426,9 @@ def api_content_import():
                         _json_imp.dumps(q["rubric"]) if q.get("rubric") else None,
                         q.get("set_id") or set_id_default,
                         q.get("order_in_set", idx),
-                        q.get("difficulty", "medium")
+                        q.get("difficulty", "medium"),
+                        q.get("strategy_ar"),
+                        q.get("elimination_ar")
                     ))
                 inserted += 1
             except Exception as ie:
