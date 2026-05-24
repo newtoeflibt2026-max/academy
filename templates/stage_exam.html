@@ -1158,5 +1158,155 @@ if(!window._currentCTW) return out;
 })();
 </script>
 
+
+<style>
+.ctw-result-card{background:#fff;border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,0.06);direction:rtl;text-align:right}
+.ctw-result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid #f0f2f7}
+.ctw-result-title{font-size:17px;font-weight:bold;color:#2c3e50}
+.ctw-result-score{padding:6px 14px;border-radius:20px;font-weight:bold;font-size:14px}
+.ctw-result-score.pass{background:#d4f5e0;color:#1b7a3a}
+.ctw-result-score.fail{background:#ffe0e3;color:#b8203a}
+.ctw-blanks-table{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.ctw-blank-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:#f8f9fb;border-right:4px solid #cbd2dc;font-size:14px}
+.ctw-blank-row.correct{background:#eaf8ee;border-right-color:#2ecc71}
+.ctw-blank-row.wrong{background:#fdeced;border-right-color:#e74c3c}
+.ctw-blank-icon{font-size:18px;width:24px;text-align:center}
+.ctw-blank-num{font-weight:bold;color:#667eea;min-width:32px}
+.ctw-blank-words{flex:1;display:flex;flex-direction:column;gap:3px}
+.ctw-blank-line{display:flex;gap:8px;align-items:center;direction:ltr;justify-content:flex-end}
+.ctw-blank-label{font-size:12px;color:#7a8696;min-width:90px;direction:rtl;text-align:right}
+.ctw-blank-given{font-family:monospace;color:#c0392b;text-decoration:line-through;font-weight:bold}
+.ctw-blank-correct{font-family:monospace;color:#16a085;font-weight:bold}
+.ctw-blank-hint{font-size:12px;color:#8a7600;background:#fff8db;padding:6px 10px;border-radius:6px;margin-top:6px}
+.ctw-tips{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.ctw-tip{padding:12px 16px;border-radius:10px;font-size:13.5px;line-height:1.8}
+.ctw-tip-strategy{background:#fff8e1;border-right:4px solid #ff9800;color:#5a3d00}
+.ctw-tip-trap{background:#ffebee;border-right:4px solid #e53935;color:#7a1a1a}
+.ctw-tip-elim{background:#e3f2fd;border-right:4px solid #1976d2;color:#0d3a66}
+.ctw-tip-title{font-weight:bold;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.ctw-summary-line{margin-top:10px;padding:10px 14px;background:#f0f4ff;border-radius:8px;font-size:13px;color:#3c4858;direction:rtl;text-align:right}
+</style>
+<script>
+window.renderCTWResults = function(feedback){
+  // feedback is array of items; CTW items have q_type === 'reading_complete_words'
+  var ctwItems = feedback.filter(function(f){ return f.q_type === 'reading_complete_words'; });
+  if(!ctwItems.length) return '';
+  var html = '<div class="ctw-results-section"><h2 style="text-align:right;direction:rtl;margin:18px 0 12px;color:#2c3e50;font-size:18px">📚 مراجعة Complete the Words</h2>';
+  ctwItems.forEach(function(item, idx){
+    var details = item.blanks_detail || [];
+    var correctN = item.correct_blanks || 0;
+    var totalN = item.total_blanks || details.length;
+    var passed = item.is_correct;
+    var scorePct = totalN > 0 ? Math.round((correctN/totalN)*100) : 0;
+    var rowsHtml = details.map(function(d){
+      var cls = d.is_correct ? 'correct' : 'wrong';
+      var icon = d.is_correct ? '✅' : '❌';
+      var given = d.given || '(فارغ)';
+      var givenHtml = d.is_correct
+        ? '<span class="ctw-blank-correct">' + given + '</span>'
+        : '<span class="ctw-blank-given">' + given + '</span> → <span class="ctw-blank-correct">' + (d.expected || '') + '</span>';
+      var hintHtml = (!d.is_correct && d.hint)
+        ? '<div class="ctw-blank-hint">💡 ' + d.hint + '</div>'
+        : '';
+      return '<div class="ctw-blank-row ' + cls + '">' +
+        '<div class="ctw-blank-icon">' + icon + '</div>' +
+        '<div class="ctw-blank-num">#' + (d.n || '') + '</div>' +
+        '<div class="ctw-blank-words">' +
+          '<div class="ctw-blank-line"><span class="ctw-blank-label">إجابتك / الصحيح:</span>' + givenHtml + '</div>' +
+          hintHtml +
+        '</div>' +
+      '</div>';
+    }).join('');
+    var tipsHtml = '<div class="ctw-tips">';
+    if(item.strategy_ar){
+      tipsHtml += '<div class="ctw-tip ctw-tip-strategy"><div class="ctw-tip-title">💡 استراتيجية الحل</div><div>' + item.strategy_ar + '</div></div>';
+    }
+    if(item.trap_ar){
+      tipsHtml += '<div class="ctw-tip ctw-tip-trap"><div class="ctw-tip-title">⚠️ مصائد إملائية شائعة</div><div>' + item.trap_ar + '</div></div>';
+    }
+    if(item.elimination_ar){
+      tipsHtml += '<div class="ctw-tip ctw-tip-elim"><div class="ctw-tip-title">🎯 طريقة الاستبعاد</div><div>' + item.elimination_ar + '</div></div>';
+    }
+    tipsHtml += '</div>';
+    html += '<div class="ctw-result-card">' +
+      '<div class="ctw-result-header">' +
+        '<div class="ctw-result-title">📖 قطعة ' + (idx+1) + ' — ' + correctN + ' / ' + totalN + ' كلمات صحيحة</div>' +
+        '<div class="ctw-result-score ' + (passed ? 'pass' : 'fail') + '">' + scorePct + '%</div>' +
+      '</div>' +
+      '<div class="ctw-summary-line">' + (passed
+          ? '🎉 ممتاز! أكملت هذه القطعة بنجاح.'
+          : 'راجع الكلمات الخاطئة أدناه وادرس الاستراتيجية لتحسّن نتيجتك في المرة القادمة.') +
+      '</div>' +
+      '<div class="ctw-blanks-table">' + rowsHtml + '</div>' +
+      tipsHtml +
+    '</div>';
+  });
+  html += '</div>';
+  return html;
+};
+
+// Hook into the existing results renderer
+(function(){
+  var attempts = 0;
+  function attach(){
+    attempts++;
+    if(attempts > 40) return; // give up after ~10s
+    var resultsUI = document.getElementById('resultsUI');
+    if(!resultsUI){ setTimeout(attach, 250); return; }
+    // Observe when resultsUI becomes visible
+    var observer = new MutationObserver(function(){
+      if(!resultsUI.classList.contains('hidden') && window._lastFeedback && !document.querySelector('.ctw-results-section')){
+        var ctwHtml = window.renderCTWResults(window._lastFeedback);
+        if(ctwHtml){
+          var anchor = resultsUI.querySelector('.results-actions') || resultsUI.lastElementChild;
+          var wrap = document.createElement('div');
+          wrap.innerHTML = ctwHtml;
+          if(anchor){ resultsUI.insertBefore(wrap, anchor); }
+          else { resultsUI.appendChild(wrap); }
+        }
+      }
+    });
+    observer.observe(resultsUI, {attributes:true, attributeFilter:['class']});
+  }
+  attach();
+})();
+
+// Capture feedback when exam-submit responds (patch fetch)
+(function(){
+  var _origFetch = window.fetch;
+  window.fetch = function(){
+    var p = _origFetch.apply(this, arguments);
+    try {
+      var url = arguments[0];
+      if(typeof url === 'string' && url.indexOf('exam-submit') >= 0){
+        p.then(function(resp){
+          var clone = resp.clone();
+          clone.json().then(function(data){
+            if(data && data.feedback){
+              window._lastFeedback = data.feedback;
+              // Trigger render if results already visible
+              setTimeout(function(){
+                var resultsUI = document.getElementById('resultsUI');
+                if(resultsUI && !resultsUI.classList.contains('hidden') && !document.querySelector('.ctw-results-section')){
+                  var ctwHtml = window.renderCTWResults(data.feedback);
+                  if(ctwHtml){
+                    var anchor = resultsUI.querySelector('.results-actions') || resultsUI.lastElementChild;
+                    var wrap = document.createElement('div');
+                    wrap.innerHTML = ctwHtml;
+                    if(anchor){ resultsUI.insertBefore(wrap, anchor); }
+                    else { resultsUI.appendChild(wrap); }
+                  }
+                }
+              }, 400);
+            }
+          }).catch(function(){});
+        }).catch(function(){});
+      }
+    } catch(e){}
+    return p;
+  };
+})();
+</script>
+
 </body>
 </html>

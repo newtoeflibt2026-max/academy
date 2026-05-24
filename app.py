@@ -4529,6 +4529,26 @@ def api_student_stage_exam_submit_v2(sid):
                 else:
                     if row[11]:
                         wrong_lessons.add(row[11])
+                    # Record EACH wrong blank to error_bank as a separate mistake
+                    try:
+                        import quiz_engine as _qe_ctw
+                        for bd in blank_details:
+                            if not bd.get("is_correct"):
+                                expected_word = bd.get("expected") or ""
+                                given_word = bd.get("given") or "-"
+                                # Build readable question text for error bank
+                                q_text = f"Complete the word: {expected_word[:2]}{'_' * max(0, len(expected_word)-2)} (hint: {bd.get('hint','')})"
+                                _qe_ctw.record_mistake(telegram_id, qid, given_word, expected_word, q_text=q_text)
+                    except TypeError:
+                        # Fallback if record_mistake signature differs
+                        try:
+                            for bd in blank_details:
+                                if not bd.get("is_correct"):
+                                    _qe_ctw.record_mistake(telegram_id, qid, bd.get("given") or "-", bd.get("expected") or "")
+                        except Exception as _me2:
+                            print(f"[exam-submit CTW] mistake skip: {_me2}")
+                    except Exception as _me:
+                        print(f"[exam-submit CTW] mistake skip: {_me}")
                 feedback.append({
                     "question_id": qid,
                     "q_type": "reading_complete_words",
