@@ -502,6 +502,12 @@ function renderPassage(){
 }
 
 function renderQuestion(){
+  const _q = (typeof questions !== 'undefined' && questions[currentQ]) ? questions[currentQ] : null;
+  if(_q && _q.q_type === 'reading_complete_words'){
+    const cont = document.getElementById('questionContent') || document.getElementById('qbox') || document.querySelector('.question-content');
+    if(cont){ window.renderCTW(_q, cont); return; }
+  }
+
   const q=questions[currentIdx];
   const qid=q.id;
   const sel=answers[qid]||'';
@@ -800,5 +806,70 @@ function goToQuestion(idx){
 // ===== End unanswered modal =====
 
 </script>
+
+<script>
+// ===== Complete-the-Words (TOEFL 2026) component =====
+window.renderCTW = function(q, container){
+  let blanks = [];
+  try { blanks = (typeof q.blanks_json === 'string') ? JSON.parse(q.blanks_json) : (q.blanks_json || []); } catch(e){ blanks = []; }
+  if(!blanks.length){ container.innerHTML = '<div style="color:red">No blanks data</div>'; return; }
+  let passage = q.passage_text || '';
+  blanks.forEach(b => {
+    const missing = (b.full || '').length - (b.prefix || '').length;
+    let inputs = '';
+    for(let i=0;i<missing;i++){
+      inputs += `<input class="ctw-letter" data-blank="${b.n}" data-idx="${i}" maxlength="1" autocomplete="off" />`;
+    }
+    const html = `<span class="ctw-blank" data-blank="${b.n}"><span class="ctw-prefix">${b.prefix||''}</span>${inputs}<span class="ctw-hint" title="${(b.hint||'').replace(/"/g,'&quot;')}">?</span></span>`;
+    passage = passage.replace(`[B${b.n}]`, html);
+  });
+  container.innerHTML = `<div class="ctw-passage">${passage}</div>
+    <div class="ctw-help">💡 اضغط ? لرؤية تلميح لكل كلمة. المؤشر ينتقل تلقائياً بعد كل حرف.</div>`;
+  // auto-advance
+  const inputs = container.querySelectorAll('.ctw-letter');
+  inputs.forEach((inp, idx) => {
+    inp.addEventListener('input', function(e){
+      this.value = this.value.toLowerCase();
+      if(this.value.length === 1 && idx + 1 < inputs.length){
+        inputs[idx+1].focus();
+      }
+    });
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'Backspace' && !this.value && idx > 0){
+        inputs[idx-1].focus();
+      }
+    });
+  });
+  // tooltip toggle
+  container.querySelectorAll('.ctw-hint').forEach(h => {
+    h.addEventListener('click', function(){
+      alert(this.getAttribute('title'));
+    });
+  });
+  window._currentCTW = { blanks: blanks, qid: q.id };
+};
+
+window.collectCTWAnswers = function(){
+  const out = {};
+  if(!window._currentCTW) return out;
+  window._currentCTW.blanks.forEach(b => {
+    const inputs = document.querySelectorAll(`.ctw-letter[data-blank="${b.n}"]`);
+    let suffix = '';
+    inputs.forEach(i => suffix += (i.value || ''));
+    out[String(b.n)] = (b.prefix || '') + suffix;
+  });
+  return out;
+};
+</script>
+<style>
+.ctw-passage{font-size:17px;line-height:2.3;padding:18px;background:#fafafa;border-radius:10px;direction:ltr;text-align:left}
+.ctw-blank{display:inline-flex;align-items:center;gap:2px;background:#fff;padding:3px 6px;border-radius:6px;border:1px solid #ddd;margin:0 3px}
+.ctw-prefix{font-weight:600;color:#333}
+.ctw-letter{width:24px;height:30px;text-align:center;border:none;border-bottom:2px solid #2196F3;background:transparent;font-size:16px;font-weight:bold;color:#1976D2;outline:none}
+.ctw-letter:focus{background:#E3F2FD;border-bottom-color:#0D47A1}
+.ctw-hint{display:inline-block;width:18px;height:18px;border-radius:50%;background:#FFC107;color:#333;font-size:12px;text-align:center;line-height:18px;cursor:pointer;margin-left:4px;font-weight:bold}
+.ctw-help{margin-top:10px;color:#666;font-size:13px;text-align:center}
+</style>
+
 </body>
 </html>

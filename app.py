@@ -4390,7 +4390,7 @@ def api_student_stage_exam_start(sid):
         cnt = stg["exam_questions_count"] or 10
 
         # كل الأسئلة من البنك
-        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?", (sid,)).fetchall()
+        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?, q_type, blanks_json", (sid,)).fetchall()
         if len(all_q) < cnt:
             conn.close()
             return jsonify({
@@ -4653,6 +4653,30 @@ except Exception as _e:
     print(f"[startup] difficulty migration error: {_e}")
 # ===== End Phase 13.2d HOTFIX =====
 
+
+
+def _migrate_ctw_columns():
+    try:
+        import sqlite3
+        conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
+        cur = conn.cursor()
+        cur.execute("PRAGMA table_info(stage_exam_questions)")
+        cols = [r[1] for r in cur.fetchall()]
+        if "blanks_json" not in cols:
+            cur.execute("ALTER TABLE stage_exam_questions ADD COLUMN blanks_json TEXT")
+        if "q_type" not in cols:
+            cur.execute("ALTER TABLE stage_exam_questions ADD COLUMN q_type TEXT DEFAULT 'mcq'")
+        conn.commit()
+        try: conn.close()
+        except: pass
+        print("OK: CTW columns ensured")
+    except Exception as e:
+        print(f"WARN migration: {e}")
+
+try:
+    _migrate_ctw_columns()
+except Exception as _e:
+    print(f"WARN: {_e}")
 
 if __name__ == "__main__":
     import os as _os
@@ -4917,4 +4941,65 @@ def api_admin_placement_toggle(qid):
         return _jsonify({"ok": True, "is_active": new_val})
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/admin/content/import_ctw", methods=["POST"])
+def admin_import_ctw():
+    try:
+        from flask import request, jsonify
+        import sqlite3, json as _json
+        data = request.get_json(force=True)
+        stage_id = int(data.get("stage_id", 6))
+        passages = data.get("passages", [])
+        conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM stage_exam_questions WHERE stage_id=? AND q_type='reading_complete_words'", (stage_id,))
+        deleted = cur.rowcount
+        imported = 0
+        for p in passages:
+            cur.execute("""INSERT INTO stage_exam_questions
+                (stage_id, question_text, option_a, option_b, option_c, option_d,
+                 correct_answer, explanation, lesson_id, difficulty,
+                 strategy_ar, elimination_ar, passage_text, q_type, blanks_json)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (stage_id, p.get("topic","CTW"), "", "", "", "",
+                 "CTW", p.get("trap_ar",""), None, "medium",
+                 p.get("strategy_ar",""), p.get("trap_ar",""),
+                 p.get("passage_text",""), "reading_complete_words",
+                 _json.dumps(p.get("blanks", []), ensure_ascii=False)))
+            imported += 1
+        conn.commit()
+        try: conn.close()
+        except: pass
+        return jsonify({"ok": True, "imported": imported, "deleted": deleted})
+    except Exception as e:
+        import traceback
+        return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
+
+
+def _score_ctw(student_answers, blanks_json_str):
+    import json as _j
+    try:
+        blanks = _j.loads(blanks_json_str) if blanks_json_str else []
+    except Exception:
+        blanks = []
+    total = len(blanks)
+    correct = 0
+    details = []
+    for b in blanks:
+        n = b.get("n")
+        full = (b.get("full") or "").strip().lower()
+        student = (student_answers.get(str(n), "") or "").strip().lower()
+        is_ok = (student == full and full != "")
+        if is_ok:
+            correct += 1
+        details.append({
+            "n": n,
+            "expected": b.get("full"),
+            "student": student,
+            "is_correct": is_ok,
+            "explain": b.get("explain",""),
+            "hint": b.get("hint","")
+        })
+    return correct, total, details
 

@@ -1,0 +1,67 @@
+﻿{
+  "stage_id": 6,
+  "stage_title": "Complete the Words - TOEFL 2026",
+  "q_type": "reading_complete_words",
+  "passages": [
+    {
+      "passage_id": "ctw_env_01",
+      "topic": "Environment",
+      "passage_text": "Environmental [B1] is one of the most serious problems today. Many factories release harmful gases, which cause air [B2]. Scientists have been [B3] this issue for decades. [B4], governments must take action quickly. Recycling is a simple but [B5] way to reduce waste. [B6], citizens should use public transportation more often. The [B7] of clean energy sources like solar power is [B8] every year. [B9], plastic waste continues to harm ocean life. We need to act [B10] before the damage becomes [B11].",
+      "blanks": [
+        {"n":1,"prefix":"protect","suffix":"ion","full":"protection","hint":"اسم من فعل protect","explain":"نضيف -ion للأفعال لتكوين أسماء"},
+        {"n":2,"prefix":"pollut","suffix":"ion","full":"pollution","hint":"اسم من pollute","explain":"pollute + ion = pollution (نحذف e)"},
+        {"n":3,"prefix":"study","suffix":"ing","full":"studying","hint":"فعل مستمر","explain":"study + ing مع been دلالة استمرار"},
+        {"n":4,"prefix":"There","suffix":"fore","full":"Therefore","hint":"أداة ربط = لذلك","explain":"رابط نتيجة TOEFL شائع"},
+        {"n":5,"prefix":"effect","suffix":"ive","full":"effective","hint":"صفة من effect","explain":"-ive لتكوين صفات"},
+        {"n":6,"prefix":"More","suffix":"over","full":"Moreover","hint":"أداة ربط = علاوة على","explain":"رابط إضافة"},
+        {"n":7,"prefix":"develop","suffix":"ment","full":"development","hint":"اسم من develop","explain":"develop + ment (احذر: ليس developement)"},
+        {"n":8,"prefix":"increas","suffix":"ing","full":"increasing","hint":"فعل مستمر","explain":"increase + ing (نحذف e)"},
+        {"n":9,"prefix":"How","suffix":"ever","full":"However","hint":"أداة ربط = لكن","explain":"رابط تناقض"},
+        {"n":10,"prefix":"quick","suffix":"ly","full":"quickly","hint":"ظرف من quick","explain":"-ly لتكوين الظروف"},
+        {"n":11,"prefix":"permanent","suffix":"","full":"permanent","hint":"صفة = دائم","explain":"كلمة كاملة بدون لاحقة"}
+      ],
+      "strategy_ar": "اقرأ السياق لتحديد نوع الكلمة. اللواحق الشائعة: -tion/-ment للأسماء، -ive/-ous للصفات، -ly للظروف، -ing/-ed للأفعال. أدوات الربط (However/Therefore/Moreover) تكون في بداية الجمل.",
+      "trap_ar": "احذر تكرار الحرف (occurred). y تتحول إلى i (happy→happiness). e تُحذف قبل -ing (increase→increasing)."
+    },
+    {
+      "passage_id": "ctw_tech_02",
+      "topic": "Technology",
+      "passage_text": "Modern technology has [B1] our daily lives. Smartphones make communication [B2] and faster. [B3], they also create new problems. Many people feel [B4] without their devices. [B5], excessive screen time can harm our health. The [B6] of artificial intelligence is growing [B7]. Companies are [B8] huge amounts of data every second. [B9], privacy concerns are becoming serious. We must use technology [B10] to avoid [B11] consequences.",
+      "blanks": [
+        {"n":1,"prefix":"chang","suffix":"ed","full":"changed","hint":"فعل ماضي","explain":"change + ed (نحذف e)"},
+        {"n":2,"prefix":"easi","suffix":"er","full":"easier","hint":"مقارن من easy","explain":"y تتحول إلى i قبل -er"},
+        {"n":3,"prefix":"How","suffix":"ever","full":"However","hint":"أداة ربط = لكن","explain":"رابط تناقض"},
+        {"n":4,"prefix":"anxi","suffix":"ous","full":"anxious","hint":"صفة = قلق","explain":"-ous لتكوين الصفات"},
+        {"n":5,"prefix":"Further","suffix":"more","full":"Furthermore","hint":"أداة ربط = إضافة","explain":"رابط إضافة قوي"},
+        {"n":6,"prefix":"use","suffix":"fulness","full":"usefulness","hint":"اسم من useful","explain":"useful + ness"},
+        {"n":7,"prefix":"rapid","suffix":"ly","full":"rapidly","hint":"ظرف من rapid","explain":"-ly تُكوّن الظرف"},
+        {"n":8,"prefix":"collect","suffix":"ing","full":"collecting","hint":"فعل مستمر","explain":"collect + ing"},
+        {"n":9,"prefix":"Conse","suffix":"quently","full":"Consequently","hint":"أداة ربط = نتيجة لذلك","explain":"رابط نتيجة رسمي"},
+        {"n":10,"prefix":"responsib","suffix":"ly","full":"responsibly","hint":"ظرف = بمسؤولية","explain":"responsible→responsibly (e→y)"},
+        {"n":11,"prefix":"negat","suffix":"ive","full":"negative","hint":"صفة = سلبي","explain":"-ive للصفات"}
+      ],
+      "strategy_ar": "حدد جذر الكلمة من السياق ثم أضف اللاحقة المناسبة. للمقارنة استخدم -er، للظروف -ly، للصفات -ous/-ive، للأسماء -ness/-ment/-tion.",
+      "trap_ar": "y→i قبل -er و-ness (easy→easier, happy→happiness). e تُحذف قبل -ed/-ing/-er (change→changed). -ous وليس -us (anxious not anxius)."
+    },
+    {
+      "passage_id": "ctw_health_03",
+      "topic": "Health & Lifestyle",
+      "passage_text": "Good health depends on several [B1]. Regular exercise improves physical [B2] and mental [B3]. [B4], a balanced diet is essential. Many people underestimate the [B5] of sleep. [B6], adults need 7-9 hours nightly. Stress can be [B7] harmful to the body. [B8], meditation helps reduce anxiety [B9]. Smoking is [B10] dangerous and should be avoided [B11].",
+      "blanks": [
+        {"n":1,"prefix":"factor","suffix":"s","full":"factors","hint":"جمع factor","explain":"-s للجمع البسيط"},
+        {"n":2,"prefix":"strength","suffix":"","full":"strength","hint":"اسم = قوة","explain":"كلمة كاملة"},
+        {"n":3,"prefix":"well","suffix":"ness","full":"wellness","hint":"اسم من well","explain":"-ness لتكوين أسماء مجردة"},
+        {"n":4,"prefix":"Addition","suffix":"ally","full":"Additionally","hint":"أداة ربط = إضافة","explain":"-ally للظروف من -al"},
+        {"n":5,"prefix":"importan","suffix":"ce","full":"importance","hint":"اسم من important","explain":"important→importance (-ce)"},
+        {"n":6,"prefix":"General","suffix":"ly","full":"Generally","hint":"ظرف = عموماً","explain":"general + ly"},
+        {"n":7,"prefix":"extreme","suffix":"ly","full":"extremely","hint":"ظرف = للغاية","explain":"extreme + ly (نحتفظ بـ e)"},
+        {"n":8,"prefix":"Never","suffix":"theless","full":"Nevertheless","hint":"أداة ربط = مع ذلك","explain":"رابط تناقض رسمي"},
+        {"n":9,"prefix":"effect","suffix":"ively","full":"effectively","hint":"ظرف من effective","explain":"effective + ly"},
+        {"n":10,"prefix":"particular","suffix":"ly","full":"particularly","hint":"ظرف = خصوصاً","explain":"particular + ly"},
+        {"n":11,"prefix":"complete","suffix":"ly","full":"completely","hint":"ظرف = تماماً","explain":"complete + ly (نحتفظ بـ e)"}
+      ],
+      "strategy_ar": "للأسماء المجردة استخدم -ness/-ce/-ity. للظروف استخدم -ly (وللصفات المنتهية بـ -al استخدم -ally). كلمات الربط الرسمية: Nevertheless, Additionally, Furthermore.",
+      "trap_ar": "extreme→extremely وcomplete→completely (نحتفظ بـ e قبل -ly). important→importance (-t→-ce). general→generally (مضاعفة l)."
+    }
+  ]
+}
