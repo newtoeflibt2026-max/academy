@@ -5002,3 +5002,42 @@ def admin_import_ctw():
     except Exception as e:
         import traceback
         return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
+
+@app.route("/api/admin/stages/<int:sid>/set_count", methods=["POST", "GET"])
+def admin_set_stage_count(sid):
+    try:
+        from flask import request, jsonify
+        import sqlite3
+        cnt = int(request.args.get("count", 3))
+        conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
+        cur = conn.cursor()
+        # Check if stage exists
+        cur.execute("SELECT id, exam_questions_count FROM stages WHERE id=?", (sid,))
+        row = cur.fetchone()
+        if row:
+            cur.execute("UPDATE stages SET exam_questions_count=? WHERE id=?", (cnt, sid))
+            action = "updated"
+        else:
+            # Insert minimal stage row
+            scols = [r[1] for r in cur.execute("PRAGMA table_info(stages)").fetchall()]
+            base_cols = ["id", "exam_questions_count"]
+            base_vals = [sid, cnt]
+            if "name_ar" in scols:
+                base_cols.append("name_ar"); base_vals.append(f"Stage {sid} CTW")
+            if "name_en" in scols:
+                base_cols.append("name_en"); base_vals.append(f"Stage {sid} - Complete the Words")
+            if "name" in scols:
+                base_cols.append("name"); base_vals.append(f"Stage {sid}")
+            placeholders = ",".join(["?"]*len(base_cols))
+            cur.execute(f"INSERT INTO stages ({','.join(base_cols)}) VALUES ({placeholders})", base_vals)
+            action = "inserted"
+        conn.commit()
+        cur.execute("SELECT id, exam_questions_count FROM stages WHERE id=?", (sid,))
+        result = cur.fetchone()
+        try: conn.close()
+        except: pass
+        return jsonify({"ok": True, "action": action, "stage_id": result[0], "count": result[1]})
+    except Exception as e:
+        import traceback
+        return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
+
