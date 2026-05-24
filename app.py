@@ -78,6 +78,167 @@ except Exception as _e:
     print(f"[Phase12G] startup hook error: {_e}")
 # ===== End Phase 12G =====
 
+# ===== Phase 13.1: TOEFL Question Type Engine =====
+TOEFL_QUESTION_TYPES = {
+    "mcq": {"section": "general", "label": "Multiple Choice (legacy)"},
+    "complete_words": {"section": "reading", "label": "Complete the Words"},
+    "read_daily_life": {"section": "reading", "label": "Read in Daily Life"},
+    "read_academic": {"section": "reading", "label": "Read an Academic Passage"},
+    "listen_response": {"section": "listening", "label": "Listen and Choose a Response"},
+    "listen_conversation": {"section": "listening", "label": "Listen to a Conversation"},
+    "listen_announcement": {"section": "listening", "label": "Listen to an Announcement"},
+    "listen_academic": {"section": "listening", "label": "Listen to an Academic Talk"},
+    "build_sentence": {"section": "writing", "label": "Build a Sentence"},
+    "write_email": {"section": "writing", "label": "Write an Email (7 min)"},
+    "write_discussion": {"section": "writing", "label": "Write for an Academic Discussion (10 min)"},
+    "speak_repeat": {"section": "speaking", "label": "Listen and Repeat"},
+    "speak_interview": {"section": "speaking", "label": "Take an Interview"},
+}
+
+def _ensure_toefl_v13_schema():
+    """Add columns for TOEFL question types (idempotent)."""
+    try:
+        conn = _db_safe()
+        c = conn.cursor()
+        new_cols = [
+            ("q_type", "TEXT DEFAULT 'mcq'"),
+            ("skill_section", "TEXT"),
+            ("passage_text", "TEXT"),
+            ("audio_source", "TEXT"),
+            ("audio_cached_url", "TEXT"),
+            ("blanks_json", "TEXT"),
+            ("time_limit_seconds", "INTEGER"),
+            ("word_count_min", "INTEGER"),
+            ("word_count_max", "INTEGER"),
+            ("rubric_json", "TEXT"),
+            ("order_in_set", "INTEGER DEFAULT 0"),
+            ("set_id", "TEXT"),
+        ]
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        existing = [r[1] for r in c.fetchall()]
+        added = 0
+        for col, typ in new_cols:
+            if col not in existing:
+                try:
+                    c.execute(f"ALTER TABLE stage_exam_questions ADD COLUMN {col} {typ}")
+                    added += 1
+                except Exception as ce:
+                    print(f"[Phase13.1] col {col} skip: {ce}")
+        # Writing/Speaking responses table
+        c.execute("""CREATE TABLE IF NOT EXISTS toefl_free_responses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            telegram_id TEXT,
+            question_id INTEGER,
+            attempt_id INTEGER,
+            response_text TEXT,
+            response_audio_url TEXT,
+            ai_score REAL,
+            ai_band REAL,
+            ai_feedback TEXT,
+            teacher_score REAL,
+            teacher_feedback TEXT,
+            final_band REAL,
+            status TEXT DEFAULT 'pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )""")
+        conn.commit()
+        print(f"[Phase13.1] Added {added} columns + toefl_free_responses table")
+        conn.close()
+    except Exception as e:
+        print(f"[Phase13.1] schema error: {e}")
+
+# ===== CEFR / Band Score Mapper (ETS 2026 official) =====
+def raw_to_band(raw, section):
+    """Map raw section score to Band 1-6 per ETS 2026 concordance."""
+    section = (section or "").lower()
+    if section in ("reading", "listening"):
+        table = [(29,6),(27,5.5),(24,5),(22,4.5),(18,4),(12,3.5),(6,3),(4,2.5),(3,2),(2,1.5),(0,1)] if section=="reading"             else [(28,6),(26,5.5),(22,5),(20,4.5),(17,4),(13,3.5),(9,3),(6,2.5),(4,2),(2,1.5),(0,1)]
+    elif section == "writing":
+        table = [(29,6),(27,5.5),(24,5),(21,4.5),(17,4),(15,3.5),(13,3),(10,2.5),(5,2),(3,1.5),(0,1)]
+    elif section == "speaking":
+        table = [(28,6),(27,5.5),(25,5),(23,4.5),(20,4),(18,3.5),(16,3),(13,2.5),(11,2),(5,1.5),(0,1)]
+    else:
+        # percentage 0-100 → band
+        pct = float(raw)
+        if pct >= 95: return 6
+        if pct >= 88: return 5.5
+        if pct >= 80: return 5
+        if pct >= 72: return 4.5
+        if pct >= 60: return 4
+        if pct >= 48: return 3.5
+        if pct >= 36: return 3
+        if pct >= 24: return 2.5
+        if pct >= 12: return 2
+        if pct >= 5: return 1.5
+        return 1
+    r = float(raw)
+    for threshold, band in table:
+        if r >= threshold: return band
+    return 1
+
+def band_to_cefr(band):
+    """Map Band 1-6 to CEFR level."""
+    b = float(band)
+    if b >= 6: return "C2"
+    if b >= 5: return "C1"
+    if b >= 4: return "B2"
+    if b >= 3: return "B1"
+    if b >= 2: return "A2"
+    return "A1"
+
+# ===== Telegram Audio Resolver =====
+import urllib.request as _ureq, urllib.parse as _uparse, json as _json_mod
+def resolve_telegram_audio(source):
+    """Convert any audio source format to a playable URL.
+    Supports:
+      - "tg_file_id:BAACAg..." -> resolved via Bot API getFile
+      - "https://t.me/..." -> returned as-is (opens Telegram)
+      - any https:// URL -> returned as-is
+    """
+    if not source: return None
+    source = str(source).strip()
+    if source.startswith("tg_file_id:"):
+        fid = source.replace("tg_file_id:", "").strip()
+        token = os.environ.get("BOT_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN")
+        if not token:
+            return None
+        try:
+            url = f"https://api.telegram.org/bot{token}/getFile?file_id={_uparse.quote(fid)}"
+            with _ureq.urlopen(url, timeout=10) as r:
+                data = _json_mod.loads(r.read().decode("utf-8"))
+            if data.get("ok") and data.get("result", {}).get("file_path"):
+                fp = data["result"]["file_path"]
+                return f"https://api.telegram.org/file/bot{token}/{fp}"
+        except Exception as e:
+            print(f"[resolve_telegram_audio] error: {e}")
+            return None
+    if source.startswith("http"):
+        return source
+    return None
+
+@app.route("/api/audio/resolve")
+def api_audio_resolve():
+    """Resolve audio source to playable URL (for student exam pages)."""
+    from flask import request, jsonify
+    src = request.args.get("src", "")
+    url = resolve_telegram_audio(src)
+    if url:
+        return jsonify({"ok": True, "url": url})
+    return jsonify({"ok": False, "error": "could not resolve"}), 404
+
+@app.route("/api/admin/question-types")
+def api_question_types():
+    from flask import jsonify
+    return jsonify({"types": TOEFL_QUESTION_TYPES})
+
+try:
+    _ensure_toefl_v13_schema()
+except Exception as _e:
+    print(f"[Phase13.1] hook error: {_e}")
+# ===== End Phase 13.1 =====
+
+
+
 # ===== Phase 12E-3 v2: Stage Exam enhancements =====
 def _ensure_stage_exam_v2_columns():
     """Add concept_ar, explanation_ar, trap_ar, review_lesson_id, review_lesson_title columns."""
