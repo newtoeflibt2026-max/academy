@@ -293,13 +293,6 @@ tr:last-child td{border-bottom:none}
     <div class="page" id="page-lessons">
       <h2 class="page-title">📚 الدروس</h2>
       <p class="page-subtitle">عرض هرمي بـ Drag&Drop — اضغط على مرحلة لعرض دروسها</p>
-      <div class="toolbar">
-        <select id="lessonsTrackFilter" onchange="loadLessonsHierarchy()">
-          <option value="">جميع المسارات</option>
-          <option value="foundation">Foundation</option>
-          <option value="toefl">TOEFL</option>
-        </select>
-      </div>
       <div id="lessonsHierarchy"></div>
     </div>
 
@@ -999,19 +992,25 @@ async function loadLessonsHierarchy(){
     const stages = sd.stages || sd.data || [];
     _lessonsData.stages = stages;
 
-    // Phase 12H: filter by track
+    // Phase 12H: dynamic track filter with counters
     const trackVal = document.getElementById('lessonsTrackFilter') ? document.getElementById('lessonsTrackFilter').value : '';
     const filteredStages = trackVal ? stages.filter(s => (s.track||s.path||'') === trackVal) : stages;
+    // Build track counts for dynamic dropdown
+    const _trackCounts = {};
+    stages.forEach(s => {
+      const t = (s.track || s.path || 'other').toLowerCase();
+      _trackCounts[t] = (_trackCounts[t] || 0) + 1;
+    });
+    const _trackLabels = { foundation:'Foundation', intermediate:'Intermediate', toefl:'TOEFL', advanced:'Advanced', master:'Master', other:'أخرى' };
+    const _availTracks = Object.keys(_trackCounts).sort();
 
     let html = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap">
         <h2 style="margin:0">📚 إدارة الدروس</h2>
         <div style="display:flex;gap:10px;align-items:center">
           <select id="lessonsTrackFilter" onchange="loadLessonsHierarchy()" style="padding:8px 12px;border-radius:8px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(148,163,184,.2)">
-            <option value="" ${!trackVal?'selected':''}>جميع المسارات</option>
-            <option value="foundation" ${trackVal==='foundation'?'selected':''}>Foundation</option>
-            <option value="intermediate" ${trackVal==='intermediate'?'selected':''}>Intermediate</option>
-            <option value="toefl" ${trackVal==='toefl'?'selected':''}>TOEFL</option>
+            <option value="" ${!trackVal?'selected':''}>جميع المسارات (${stages.length})</option>
+            ${_availTracks.map(t => `<option value="${t}" ${trackVal===t?'selected':''}>${_trackLabels[t]||t} (${_trackCounts[t]})</option>`).join('')}
           </select>
           <button class="btn-primary" onclick="addStage()">➕ إضافة مرحلة جديدة</button>
           <button class="btn-secondary" onclick="loadLessonsHierarchy()">🔄 تحديث</button>
