@@ -4390,7 +4390,7 @@ def api_student_stage_exam_start(sid):
         cnt = stg["exam_questions_count"] or 10
 
         # كل الأسئلة من البنك
-        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?, q_type, blanks_json", (sid,)).fetchall()
+        all_q = c.execute("SELECT *, q_type, blanks_json FROM stage_exam_questions WHERE stage_id=?, q_type, blanks_json", (sid,)).fetchall()
         if len(all_q) < cnt:
             conn.close()
             return jsonify({
@@ -4662,14 +4662,27 @@ def _migrate_ctw_columns():
         cur = conn.cursor()
         cur.execute("PRAGMA table_info(stage_exam_questions)")
         cols = [r[1] for r in cur.fetchall()]
-        if "blanks_json" not in cols:
-            cur.execute("ALTER TABLE stage_exam_questions ADD COLUMN blanks_json TEXT")
-        if "q_type" not in cols:
-            cur.execute("ALTER TABLE stage_exam_questions ADD COLUMN q_type TEXT DEFAULT 'mcq'")
+        needed = {
+            "lesson_id": "INTEGER",
+            "strategy_ar": "TEXT",
+            "elimination_ar": "TEXT",
+            "passage_text": "TEXT",
+            "q_type": "TEXT DEFAULT 'mcq'",
+            "blanks_json": "TEXT",
+            "difficulty": "TEXT DEFAULT 'medium'",
+            "explanation": "TEXT"
+        }
+        for col, typ in needed.items():
+            if col not in cols:
+                try:
+                    cur.execute(f"ALTER TABLE stage_exam_questions ADD COLUMN {col} {typ}")
+                    print(f"  + added column: {col}")
+                except Exception as ce:
+                    print(f"  ! could not add {col}: {ce}")
         conn.commit()
         try: conn.close()
         except: pass
-        print("OK: CTW columns ensured")
+        print("OK: CTW columns ensured (full)")
     except Exception as e:
         print(f"WARN migration: {e}")
 
@@ -4953,53 +4966,39 @@ def admin_import_ctw():
         passages = data.get("passages", [])
         conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
         cur = conn.cursor()
+        # discover which columns actually exist
+        cur.execute("PRAGMA table_info(stage_exam_questions)")
+        existing = {r[1] for r in cur.fetchall()}
         cur.execute("DELETE FROM stage_exam_questions WHERE stage_id=? AND q_type='reading_complete_words'", (stage_id,))
         deleted = cur.rowcount
         imported = 0
         for p in passages:
-            cur.execute("""INSERT INTO stage_exam_questions
-                (stage_id, question_text, option_a, option_b, option_c, option_d,
-                 correct_answer, explanation, lesson_id, difficulty,
-                 strategy_ar, elimination_ar, passage_text, q_type, blanks_json)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                (stage_id, p.get("topic","CTW"), "", "", "", "",
-                 "CTW", p.get("trap_ar",""), None, "medium",
-                 p.get("strategy_ar",""), p.get("trap_ar",""),
-                 p.get("passage_text",""), "reading_complete_words",
-                 _json.dumps(p.get("blanks", []), ensure_ascii=False)))
+            row = {
+                "stage_id": stage_id,
+                "question_text": p.get("topic","CTW"),
+                "option_a": "",
+                "option_b": "",
+                "option_c": "",
+                "option_d": "",
+                "correct_answer": "CTW",
+                "explanation": p.get("trap_ar",""),
+                "difficulty": "medium",
+                "strategy_ar": p.get("strategy_ar",""),
+                "elimination_ar": p.get("trap_ar",""),
+                "passage_text": p.get("passage_text",""),
+                "q_type": "reading_complete_words",
+                "blanks_json": _json.dumps(p.get("blanks", []), ensure_ascii=False)
+            }
+            cols = [c for c in row.keys() if c in existing]
+            placeholders = ",".join(["?"]*len(cols))
+            colnames = ",".join(cols)
+            values = [row[c] for c in cols]
+            cur.execute(f"INSERT INTO stage_exam_questions ({colnames}) VALUES ({placeholders})", values)
             imported += 1
         conn.commit()
         try: conn.close()
         except: pass
-        return jsonify({"ok": True, "imported": imported, "deleted": deleted})
+        return jsonify({"ok": True, "imported": imported, "deleted": deleted, "used_cols": list(cols)})
     except Exception as e:
         import traceback
         return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
-
-
-def _score_ctw(student_answers, blanks_json_str):
-    import json as _j
-    try:
-        blanks = _j.loads(blanks_json_str) if blanks_json_str else []
-    except Exception:
-        blanks = []
-    total = len(blanks)
-    correct = 0
-    details = []
-    for b in blanks:
-        n = b.get("n")
-        full = (b.get("full") or "").strip().lower()
-        student = (student_answers.get(str(n), "") or "").strip().lower()
-        is_ok = (student == full and full != "")
-        if is_ok:
-            correct += 1
-        details.append({
-            "n": n,
-            "expected": b.get("full"),
-            "student": student,
-            "is_correct": is_ok,
-            "explain": b.get("explain",""),
-            "hint": b.get("hint","")
-        })
-    return correct, total, details
-
