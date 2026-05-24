@@ -6,150 +6,192 @@
 <title>امتحان المرحلة - أكاديمية يامن</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
-body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;padding:20px}
-.container{max-width:900px;margin:0 auto}
-.header{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-.header h1{font-size:24px;color:#667eea}
-.header-info{display:flex;gap:24px;flex-wrap:wrap}
-.info-item{text-align:center}
-.info-label{font-size:12px;color:#888;margin-bottom:4px}
-.info-value{font-size:20px;font-weight:bold;color:#333}
-.timer{color:#e74c3c}
-.progress-bar-wrap{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
-.progress-bar{background:#e0e0e0;height:12px;border-radius:6px;overflow:hidden}
-.progress-fill{background:linear-gradient(90deg,#43e97b,#38f9d7);height:100%;transition:width 0.3s;border-radius:6px}
-.progress-text{text-align:center;margin-top:8px;font-size:14px;color:#666}
-.question-card{background:#fff;border-radius:16px;padding:28px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
-.question-card.unanswered{border:2px solid #e74c3c;animation:shake 0.5s}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.q-number{display:inline-block;background:#667eea;color:#fff;padding:6px 14px;border-radius:20px;font-size:14px;margin-bottom:12px}
-.q-text{font-size:18px;line-height:1.7;margin-bottom:20px;color:#222;text-align:right;direction:rtl}
-.q-text.ltr{direction:ltr;text-align:left;font-family:Georgia,serif}
-.options{display:flex;flex-direction:column;gap:12px}
-.option{background:#f5f7fa;border:2px solid transparent;border-radius:12px;padding:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px}
-.option:hover{background:#e8edf5;border-color:#667eea}
-.option.selected{background:#e8f5e9;border-color:#43e97b}
-.option-letter{background:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#667eea;border:2px solid #e0e0e0;flex-shrink:0}
+body{background:#f0f2f7;min-height:100vh;color:#222;overflow-x:hidden}
+
+/* ===== Top Bar ===== */
+.topbar{background:#fff;border-bottom:1px solid #e0e4eb;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-title{font-size:18px;font-weight:bold;color:#2c3e50}
+.topbar-center{display:flex;gap:24px;align-items:center}
+.topbar-stat{text-align:center}
+.topbar-stat-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+.topbar-stat-value{font-size:18px;font-weight:bold;color:#2c3e50}
+.timer-display{color:#e74c3c}
+.timer-display.warning{color:#f39c12;animation:pulse-warn 1s infinite}
+.timer-display.danger{color:#c0392b;animation:pulse-warn 0.5s infinite}
+@keyframes pulse-warn{0%,100%{opacity:1}50%{opacity:0.5}}
+.btn-submit-top{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px;transition:transform 0.2s}
+.btn-submit-top:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(67,233,123,0.4)}
+
+/* ===== Progress Bar ===== */
+.progress-strip{background:#fff;padding:8px 24px;border-bottom:1px solid #e0e4eb}
+.progress-bar{background:#e8edf5;height:6px;border-radius:3px;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,#667eea,#43e97b);height:100%;transition:width 0.4s ease;border-radius:3px}
+
+/* ===== Main Layout - SPLIT SCREEN ===== */
+.exam-layout{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 90px);max-width:1400px;margin:0 auto}
+
+/* RIGHT (RTL: visually right): PASSAGE — STICKY */
+.passage-pane{background:#fff;border-left:2px solid #e8edf5;padding:24px 28px;overflow-y:auto;max-height:calc(100vh - 90px);position:sticky;top:90px;direction:ltr;text-align:left}
+.passage-pane.no-passage{background:#f9fafc;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:15px;font-style:italic}
+.passage-header{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:14px;font-weight:bold;border-bottom:2px solid #f0f2f7;padding-bottom:10px;font-family:Georgia,serif}
+.passage-content{font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.85;color:#2c3e50;white-space:pre-wrap;user-select:text}
+.passage-content::selection{background:#fff59d}
+.passage-fade-in{animation:fadeInPassage 0.5s ease}
+@keyframes fadeInPassage{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* LEFT (RTL: visually left): QUESTION — DYNAMIC */
+.question-pane{padding:24px 28px;overflow-y:auto;direction:rtl;text-align:right}
+.question-card-wrap{background:#fff;border-radius:14px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,0.06);animation:slideIn 0.35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.q-number-badge{background:#667eea;color:#fff;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:bold}
+.q-time-limit{background:#fff3e0;color:#e67e22;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:bold}
+.q-time-limit.urgent{background:#ffebee;color:#c62828}
+.q-text{font-size:17px;line-height:1.7;margin-bottom:22px;color:#222;font-weight:500}
+
+.options{display:flex;flex-direction:column;gap:11px;margin-bottom:24px}
+.option{background:#f7f9fc;border:2px solid transparent;border-radius:11px;padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px}
+.option:hover{background:#eef2f8;border-color:#cbd6ea}
+.option.selected{background:linear-gradient(135deg,#e8f5e9,#d4f1d4);border-color:#43e97b;box-shadow:0 2px 8px rgba(67,233,123,0.2)}
+.option-letter{background:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#667eea;border:2px solid #e0e4eb;flex-shrink:0;font-size:14px}
 .option.selected .option-letter{background:#43e97b;color:#fff;border-color:#43e97b}
-.option-text{flex:1;font-size:16px}
-.nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:20px;flex-wrap:wrap}
-.btn{padding:14px 28px;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.option-text{flex:1;font-size:15px;line-height:1.5;direction:ltr;text-align:left}
+
+.q-actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{padding:11px 22px;border:none;border-radius:9px;font-size:14px;font-weight:bold;cursor:pointer;transition:all 0.2s;font-family:inherit}
 .btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(102,126,234,0.4)}
-.btn-secondary{background:#f0f0f0;color:#333}
-.btn-secondary:hover{background:#e0e0e0}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(102,126,234,0.35)}
+.btn-secondary{background:#e8edf5;color:#3c4858}
+.btn-secondary:hover{background:#d8dfeb}
 .btn-success{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff}
-.btn-success:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(67,233,123,0.4)}
-.btn-danger{background:#e74c3c;color:#fff}
-.btn:disabled{opacity:0.5;cursor:not-allowed}
-.dot-nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
-.dot{width:36px;height:36px;border-radius:8px;background:#e0e0e0;color:#666;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;font-weight:bold;transition:all 0.2s}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+
+/* Dot Navigation */
+.dot-nav-wrap{margin-top:18px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.dot-nav-label{font-size:12px;color:#888;margin-bottom:10px;text-align:center;text-transform:uppercase;letter-spacing:0.5px}
+.dot-nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.dot{width:34px;height:34px;border-radius:8px;background:#e8edf5;color:#7a8499;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;font-weight:bold;transition:all 0.2s}
+.dot:hover{transform:translateY(-2px)}
 .dot.answered{background:#43e97b;color:#fff}
-.dot.current{background:#667eea;color:#fff;transform:scale(1.15)}
-.dot.unanswered-warn{background:#e74c3c;color:#fff;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.dot.current{background:#667eea;color:#fff;transform:scale(1.18);box-shadow:0 3px 10px rgba(102,126,234,0.4)}
+.dot.warn{background:#e74c3c;color:#fff;animation:pulse-warn 1s infinite}
+.dot.same-passage{border:2px solid #ffb74d}
 
-/* Modal */
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px)}
+/* Set Indicator (group of questions on same passage) */
+.set-indicator{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border-right:5px solid #ff9800;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;color:#e65100;font-weight:bold}
+
+/* Mobile: stack vertically */
+@media (max-width: 968px) {
+  .exam-layout{grid-template-columns:1fr}
+  .passage-pane{position:relative;max-height:40vh;top:0;border-left:none;border-bottom:2px solid #e8edf5}
+  .question-pane{padding:18px}
+  .topbar-center{gap:12px}
+  .topbar-stat-value{font-size:15px}
+}
+
+/* ===== Modal ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.65);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{background:#fff;border-radius:20px;max-width:500px;width:100%;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.3);animation:slideUp 0.3s}
-@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-icon{font-size:64px;text-align:center;margin-bottom:16px}
-.modal-title{font-size:22px;font-weight:bold;text-align:center;margin-bottom:12px;color:#333}
-.modal-body{text-align:center;color:#666;margin-bottom:24px;line-height:1.7;font-size:16px}
-.modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.modal{background:#fff;border-radius:18px;max-width:480px;width:100%;padding:30px;box-shadow:0 24px 64px rgba(0,0,0,0.25);animation:slideUp 0.3s}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-icon{font-size:56px;text-align:center;margin-bottom:14px}
+.modal-title{font-size:20px;font-weight:bold;text-align:center;margin-bottom:10px;color:#2c3e50}
+.modal-body{text-align:center;color:#666;margin-bottom:22px;line-height:1.7;font-size:15px}
+.modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
-/* Toast */
-.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:14px 24px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:2000;font-size:15px;opacity:0;transition:opacity 0.3s;pointer-events:none}
+/* ===== Toast ===== */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#2c3e50;color:#fff;padding:12px 22px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:2000;font-size:14px;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .toast.show{opacity:1}
 .toast.success{background:#43e97b}
 .toast.error{background:#e74c3c}
 .toast.warning{background:#f39c12}
 
-/* Results Page */
-.results-hero{background:#fff;border-radius:20px;padding:40px;text-align:center;margin-bottom:24px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
-.score-ring{width:180px;height:180px;margin:0 auto 20px;position:relative}
+/* ===== Results Page ===== */
+.results-wrap{max-width:900px;margin:30px auto;padding:0 20px}
+.results-hero{background:#fff;border-radius:18px;padding:36px;text-align:center;margin-bottom:22px;box-shadow:0 6px 24px rgba(0,0,0,0.08)}
+.score-ring{width:170px;height:170px;margin:0 auto 18px;position:relative}
 .score-ring svg{transform:rotate(-90deg)}
-.score-ring-bg{fill:none;stroke:#e0e0e0;stroke-width:14}
-.score-ring-fill{fill:none;stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease-out}
-.score-ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;font-weight:bold}
-.result-status{font-size:32px;font-weight:bold;margin-bottom:8px}
+.score-ring-bg{fill:none;stroke:#e8edf5;stroke-width:12}
+.score-ring-fill{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease-out}
+.score-ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:38px;font-weight:bold}
+.result-status{font-size:28px;font-weight:bold;margin-bottom:6px}
 .result-status.pass{color:#43e97b}
 .result-status.fail{color:#e74c3c}
-.result-meta{color:#888;font-size:16px}
-.review-section{margin-bottom:24px}
-.review-section-title{font-size:20px;font-weight:bold;margin-bottom:16px;color:#fff;text-align:center}
-.review-card{background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);border-right:6px solid #e74c3c}
-.review-card.correct{border-right-color:#43e97b;opacity:0.85}
-.review-q{font-size:16px;font-weight:bold;margin-bottom:14px;color:#222;line-height:1.6}
-.review-answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.result-meta{color:#777;font-size:15px;margin-bottom:8px}
+.band-badge{display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:8px 20px;border-radius:20px;font-weight:bold;font-size:14px;margin-top:10px}
+.review-section{margin-bottom:22px}
+.review-section-title{font-size:18px;font-weight:bold;margin-bottom:14px;color:#2c3e50;text-align:center}
+.review-card{background:#fff;border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.06);border-right:5px solid #e74c3c}
+.review-q{font-size:15px;font-weight:bold;margin-bottom:12px;color:#222;line-height:1.6}
+.review-answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 @media(max-width:600px){.review-answers{grid-template-columns:1fr}}
-.answer-box{padding:12px;border-radius:10px;font-size:14px}
+.answer-box{padding:11px;border-radius:9px;font-size:13px}
 .answer-box.wrong{background:#ffebee;border:1px solid #ffcdd2;color:#c62828}
 .answer-box.correct{background:#e8f5e9;border:1px solid #c8e6c9;color:#2e7d32}
-.answer-box .label{font-size:12px;opacity:0.8;margin-bottom:4px}
-.answer-box .value{font-weight:bold;font-size:16px}
-.review-block{background:#f9f9f9;border-radius:10px;padding:14px;margin-bottom:10px;border-right:4px solid #667eea}
-.review-block-label{font-size:13px;font-weight:bold;color:#667eea;margin-bottom:6px}
-.review-block-text{font-size:15px;color:#444;line-height:1.7}
+.answer-box .label{font-size:11px;opacity:0.8;margin-bottom:3px}
+.answer-box .value{font-weight:bold;font-size:14px}
+.review-block{background:#f7f9fc;border-radius:9px;padding:12px;margin-bottom:9px;border-right:4px solid #667eea}
+.review-block-label{font-size:12px;font-weight:bold;color:#667eea;margin-bottom:5px}
+.review-block-text{font-size:14px;color:#444;line-height:1.7}
 .review-block.trap{border-right-color:#f39c12}
 .review-block.trap .review-block-label{color:#f39c12}
-.review-lesson-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:bold;margin-top:10px;transition:transform 0.2s}
+.review-lesson-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:9px 18px;border-radius:9px;text-decoration:none;font-weight:bold;margin-top:9px;font-size:13px;transition:transform 0.2s}
 .review-lesson-btn:hover{transform:translateY(-2px)}
-.results-actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.results-actions{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
 
-.loading{text-align:center;padding:60px;color:#fff;font-size:20px}
-.spinner{display:inline-block;width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin-left:12px;vertical-align:middle}
+.loading{text-align:center;padding:80px 20px;color:#667eea;font-size:18px}
+.spinner{display:inline-block;width:36px;height:36px;border:4px solid rgba(102,126,234,0.2);border-top-color:#667eea;border-radius:50%;animation:spin 1s linear infinite;margin-left:10px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hidden{display:none!important}
 </style>
 </head>
 <body>
-<div class="container">
-  <!-- Loading -->
-  <div id="loading" class="loading">
-    <span class="spinner"></span> جاري تحميل الأسئلة...
-  </div>
 
-  <!-- Exam UI -->
-  <div id="examUI" class="hidden">
-    <div class="header">
-      <h1>📝 امتحان المرحلة <span id="stageNum"></span></h1>
-      <div class="header-info">
-        <div class="info-item">
-          <div class="info-label">الأسئلة</div>
-          <div class="info-value" id="totalQ">0</div>
-        </div>
-        <div class="info-item">
-          <div class="info-label">تم الإجابة</div>
-          <div class="info-value" id="answeredCount">0</div>
-        </div>
-        <div class="info-item">
-          <div class="info-label">الوقت</div>
-          <div class="info-value timer" id="timer">--:--</div>
-        </div>
+<!-- Loading -->
+<div id="loading" class="loading">
+  <span class="spinner"></span> جاري تحميل الامتحان...
+</div>
+
+<!-- Exam UI -->
+<div id="examUI" class="hidden">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">📝 امتحان المرحلة <span id="stageNum"></span></div>
+    </div>
+    <div class="topbar-center">
+      <div class="topbar-stat">
+        <div class="topbar-stat-label">الأسئلة</div>
+        <div class="topbar-stat-value"><span id="answeredCount">0</span>/<span id="totalQ">0</span></div>
+      </div>
+      <div class="topbar-stat">
+        <div class="topbar-stat-label">الوقت</div>
+        <div class="topbar-stat-value timer-display" id="timer">00:00</div>
       </div>
     </div>
-
-    <div class="progress-bar-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-text" id="progressText">0 / 0</div>
-    </div>
-
-    <div id="questionContainer"></div>
-
-    <div class="nav-buttons">
-      <button class="btn btn-secondary" id="prevBtn" onclick="prevQ()">← السابق</button>
-      <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">التالي →</button>
-      <button class="btn btn-success hidden" id="submitBtn" onclick="trySubmit()">✓ تسليم الامتحان</button>
-    </div>
-
-    <div class="dot-nav" id="dotNav"></div>
+    <button class="btn-submit-top" onclick="trySubmit()">✓ تسليم</button>
   </div>
 
-  <!-- Results UI -->
-  <div id="resultsUI" class="hidden"></div>
+  <div class="progress-strip">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="exam-layout">
+    <!-- LEFT (visually): QUESTION -->
+    <div class="question-pane">
+      <div id="questionContainer"></div>
+      <div class="dot-nav-wrap">
+        <div class="dot-nav-label">التنقل بين الأسئلة</div>
+        <div class="dot-nav" id="dotNav"></div>
+      </div>
+    </div>
+    <!-- RIGHT (visually): PASSAGE STICKY -->
+    <div class="passage-pane" id="passagePane"></div>
+  </div>
 </div>
+
+<!-- Results UI -->
+<div id="resultsUI" class="hidden"></div>
 
 <!-- Modal -->
 <div class="modal-overlay" id="modal">
@@ -172,307 +214,335 @@ let answers = {};
 let currentIdx = 0;
 let startTime = Date.now();
 let timerInterval = null;
+let lastPassageKey = null;
 
-// ===== Toast =====
-function toast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + (type || '');
-  setTimeout(() => t.className = 'toast', 2800);
+function escapeHtml(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function toast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  setTimeout(()=>t.className='toast',2800);
 }
 
-// ===== Modal =====
-function showModal(icon, title, body, actions) {
-  document.getElementById('modalIcon').textContent = icon;
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalBody').innerHTML = body;
-  const actDiv = document.getElementById('modalActions');
-  actDiv.innerHTML = '';
-  actions.forEach(a => {
-    const b = document.createElement('button');
-    b.className = 'btn ' + (a.cls || 'btn-primary');
-    b.textContent = a.text;
-    b.onclick = () => { hideModal(); if (a.onClick) a.onClick(); };
-    actDiv.appendChild(b);
+function showModal(icon,title,body,actions){
+  document.getElementById('modalIcon').textContent=icon;
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  const ad=document.getElementById('modalActions');ad.innerHTML='';
+  actions.forEach(a=>{
+    const b=document.createElement('button');
+    b.className='btn '+(a.cls||'btn-primary');b.textContent=a.text;
+    b.onclick=()=>{hideModal();if(a.onClick)a.onClick()};
+    ad.appendChild(b);
   });
   document.getElementById('modal').classList.add('show');
 }
-function hideModal() { document.getElementById('modal').classList.remove('show'); }
+function hideModal(){document.getElementById('modal').classList.remove('show')}
 
-// ===== Load Questions =====
-async function loadExam() {
-  try {
-    const r = await fetch(`/api/student/stage/${STAGE_ID}/exam-start?user_id=${encodeURIComponent(USER_ID)}`);
-    const data = await r.json();
-    if (!r.ok || !data.questions || data.questions.length === 0) {
-      document.getElementById('loading').innerHTML = '⚠️ لا توجد أسئلة لهذه المرحلة. ' + (data.error || data.message || '');
-      return;
+async function loadExam(){
+  try{
+    const r=await fetch(`/api/student/stage/${STAGE_ID}/exam-start?user_id=${encodeURIComponent(USER_ID)}`);
+    const d=await r.json();
+    if(!r.ok||!d.questions||!d.questions.length){
+      document.getElementById('loading').innerHTML='⚠️ لا توجد أسئلة. '+(d.error||d.message||'');return;
     }
-    questions = data.questions;
-    document.getElementById('stageNum').textContent = '#' + STAGE_ID;
-    document.getElementById('totalQ').textContent = questions.length;
+    questions=d.questions;
+    document.getElementById('stageNum').textContent='#'+STAGE_ID;
+    document.getElementById('totalQ').textContent=questions.length;
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('examUI').classList.remove('hidden');
     buildDotNav();
     renderQuestion();
     startTimer();
-  } catch (e) {
-    document.getElementById('loading').innerHTML = '❌ فشل التحميل: ' + e.message;
+  }catch(e){
+    document.getElementById('loading').innerHTML='❌ '+e.message;
   }
 }
 
-function startTimer() {
-  timerInterval = setInterval(() => {
-    const sec = Math.floor((Date.now() - startTime) / 1000);
-    const m = String(Math.floor(sec / 60)).padStart(2, '0');
-    const s = String(sec % 60).padStart(2, '0');
-    document.getElementById('timer').textContent = `${m}:${s}`;
-  }, 1000);
+function startTimer(){
+  timerInterval=setInterval(()=>{
+    const sec=Math.floor((Date.now()-startTime)/1000);
+    const m=String(Math.floor(sec/60)).padStart(2,'0');
+    const s=String(sec%60).padStart(2,'0');
+    const el=document.getElementById('timer');
+    el.textContent=`${m}:${s}`;
+    if(sec>1500)el.classList.add('danger');
+    else if(sec>900)el.classList.add('warning');
+  },1000);
 }
 
-function buildDotNav() {
-  const nav = document.getElementById('dotNav');
-  nav.innerHTML = '';
-  questions.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    d.textContent = i + 1;
-    d.onclick = () => { currentIdx = i; renderQuestion(); };
+function buildDotNav(){
+  const nav=document.getElementById('dotNav');nav.innerHTML='';
+  questions.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='dot';d.textContent=i+1;
+    d.title=q.set_id||'';
+    d.onclick=()=>{currentIdx=i;renderQuestion()};
     nav.appendChild(d);
   });
 }
 
-function updateDots(highlightUnanswered) {
-  const dots = document.querySelectorAll('.dot');
-  dots.forEach((d, i) => {
-    d.className = 'dot';
-    const qid = questions[i].id;
-    if (answers[qid]) d.classList.add('answered');
-    else if (highlightUnanswered) d.classList.add('unanswered-warn');
-    if (i === currentIdx) d.classList.add('current');
+function updateDots(warn){
+  const dots=document.querySelectorAll('.dot');
+  const curSet=questions[currentIdx].set_id||'';
+  dots.forEach((d,i)=>{
+    d.className='dot';
+    const q=questions[i];
+    if(answers[q.id])d.classList.add('answered');
+    else if(warn)d.classList.add('warn');
+    if(i===currentIdx)d.classList.add('current');
+    // Highlight questions sharing the same passage
+    if(curSet&&q.set_id===curSet&&i!==currentIdx)d.classList.add('same-passage');
   });
 }
 
-function renderQuestion() {
-  const q = questions[currentIdx];
-  const qid = q.id;
-  const sel = answers[qid] || '';
-  const isLong = (q.question_text || '').length > 200;
-  const cls = isLong ? 'q-text ltr' : 'q-text';
+function getPassageKey(q){
+  // Group questions by passage_text (or set_id if no passage)
+  if(q.passage_text)return 'p:'+q.passage_text.substring(0,50);
+  if(q.set_id)return 's:'+q.set_id;
+  return null;
+}
 
-  const html = `
-    <div class="question-card" id="qCard">
-      <div class="q-number">سؤال ${currentIdx + 1} من ${questions.length}</div>
-      <div class="${cls}">${escapeHtml(q.question_text)}</div>
-      <div class="options">
-        ${['A','B','C','D'].map(letter => {
-          const opt = q['option_' + letter.toLowerCase()];
-          if (!opt) return '';
-          const isSel = sel === letter ? 'selected' : '';
-          return `<div class="option ${isSel}" onclick="selectOption('${letter}')">
-            <div class="option-letter">${letter}</div>
-            <div class="option-text">${escapeHtml(opt)}</div>
-          </div>`;
-        }).join('')}
+function renderPassage(){
+  const q=questions[currentIdx];
+  const pane=document.getElementById('passagePane');
+  const key=getPassageKey(q);
+  if(!q.passage_text){
+    pane.className='passage-pane no-passage';
+    pane.innerHTML='<div>📖 لا يوجد نص لهذا السؤال</div>';
+    lastPassageKey=null;
+    return;
+  }
+  // Only re-render passage if it changed
+  if(key!==lastPassageKey){
+    pane.className='passage-pane passage-fade-in';
+    setTimeout(()=>pane.classList.remove('passage-fade-in'),500);
+    // Find how many questions share this passage
+    const sameCount=questions.filter(x=>getPassageKey(x)===key).length;
+    pane.innerHTML=`
+      <div class="passage-header">📄 PASSAGE${sameCount>1?` &nbsp;·&nbsp; ${sameCount} questions`:''}</div>
+      <div class="passage-content">${escapeHtml(q.passage_text)}</div>
+    `;
+    lastPassageKey=key;
+    pane.scrollTop=0;
+  }
+}
+
+function renderQuestion(){
+  const q=questions[currentIdx];
+  const qid=q.id;
+  const sel=answers[qid]||'';
+
+  // Render passage on the right
+  renderPassage();
+
+  // Set indicator (if part of a group)
+  const sameSet=questions.filter(x=>x.set_id&&x.set_id===q.set_id);
+  let setHtml='';
+  if(q.set_id&&sameSet.length>1){
+    const posInSet=sameSet.findIndex(x=>x.id===qid)+1;
+    setHtml=`<div class="set-indicator">📚 السؤال ${posInSet} من ${sameSet.length} على نفس النص</div>`;
+  }
+
+  // Time limit display
+  let timeHtml='';
+  if(q.time_limit_seconds){
+    timeHtml=`<div class="q-time-limit">⏱️ ${q.time_limit_seconds}s مقترح</div>`;
+  }
+
+  const optsHtml=['A','B','C','D'].map(L=>{
+    const opt=q['option_'+L.toLowerCase()];
+    if(!opt)return '';
+    const cls=sel===L?'selected':'';
+    return `<div class="option ${cls}" onclick="selectOption('${L}')">
+      <div class="option-letter">${L}</div>
+      <div class="option-text">${escapeHtml(opt)}</div>
+    </div>`;
+  }).join('');
+
+  const isLast=currentIdx===questions.length-1;
+  const html=`
+    <div class="question-card-wrap">
+      ${setHtml}
+      <div class="q-meta">
+        <div class="q-number-badge">سؤال ${currentIdx+1} من ${questions.length}</div>
+        ${timeHtml}
+      </div>
+      <div class="q-text">${escapeHtml(q.question_text)}</div>
+      <div class="options">${optsHtml}</div>
+      <div class="q-actions">
+        <button class="btn btn-secondary" ${currentIdx===0?'disabled':''} onclick="prevQ()">← السابق</button>
+        ${isLast
+          ? '<button class="btn btn-success" onclick="trySubmit()">✓ تسليم الامتحان</button>'
+          : '<button class="btn btn-primary" onclick="nextQ()">التالي →</button>'}
       </div>
     </div>
   `;
-  document.getElementById('questionContainer').innerHTML = html;
+  document.getElementById('questionContainer').innerHTML=html;
 
-  // Update buttons
-  document.getElementById('prevBtn').disabled = (currentIdx === 0);
-  const isLast = (currentIdx === questions.length - 1);
-  document.getElementById('nextBtn').classList.toggle('hidden', isLast);
-  document.getElementById('submitBtn').classList.toggle('hidden', !isLast);
-
-  // Update progress
-  const answered = Object.keys(answers).length;
-  document.getElementById('answeredCount').textContent = answered;
-  const pct = (answered / questions.length) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressText').textContent = `${answered} / ${questions.length}`;
-
+  // Progress
+  const ans=Object.keys(answers).length;
+  document.getElementById('answeredCount').textContent=ans;
+  document.getElementById('progressFill').style.width=(ans/questions.length*100)+'%';
   updateDots(false);
 }
 
-function escapeHtml(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function selectOption(letter) {
-  const qid = questions[currentIdx].id;
-  answers[qid] = letter;
+function selectOption(L){
+  const qid=questions[currentIdx].id;
+  answers[qid]=L;
   renderQuestion();
 }
 
-function nextQ() {
-  if (currentIdx < questions.length - 1) {
-    currentIdx++;
-    renderQuestion();
-    window.scrollTo({top: 0, behavior: 'smooth'});
+function nextQ(){
+  if(currentIdx<questions.length-1){
+    currentIdx++;renderQuestion();
+    document.querySelector('.question-pane').scrollTo({top:0,behavior:'smooth'});
+  }
+}
+function prevQ(){
+  if(currentIdx>0){
+    currentIdx--;renderQuestion();
+    document.querySelector('.question-pane').scrollTo({top:0,behavior:'smooth'});
   }
 }
 
-function prevQ() {
-  if (currentIdx > 0) {
-    currentIdx--;
-    renderQuestion();
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
-}
-
-// ===== Submit with strict validation =====
-function trySubmit() {
-  const unanswered = questions.filter(q => !answers[q.id]);
-  if (unanswered.length > 0) {
+function trySubmit(){
+  const unanswered=questions.filter(q=>!answers[q.id]);
+  if(unanswered.length>0){
     updateDots(true);
-    // jump to first unanswered
-    const firstIdx = questions.findIndex(q => !answers[q.id]);
-    if (firstIdx >= 0) {
-      currentIdx = firstIdx;
-      renderQuestion();
-      document.getElementById('qCard').classList.add('unanswered');
-      setTimeout(() => {
-        const c = document.getElementById('qCard');
-        if (c) c.classList.remove('unanswered');
-      }, 600);
-    }
-    showModal('⚠️', 'لا يمكن التسليم',
+    const idx=questions.findIndex(q=>!answers[q.id]);
+    if(idx>=0){currentIdx=idx;renderQuestion()}
+    showModal('⚠️','لا يمكن التسليم',
       `يجب الإجابة على <b>جميع الأسئلة</b> قبل التسليم.<br><br>الأسئلة المتبقية: <b>${unanswered.length}</b>`,
-      [{text: 'حسناً، أكمل', cls: 'btn-primary'}]
-    );
+      [{text:'حسناً، أكمل',cls:'btn-primary'}]);
     return;
   }
-
-  showModal('✅', 'تأكيد التسليم',
+  showModal('✅','تأكيد التسليم',
     'هل أنت متأكد من تسليم الامتحان؟<br>لن تستطيع تعديل إجاباتك بعد ذلك.',
     [
-      {text: 'إلغاء', cls: 'btn-secondary'},
-      {text: 'نعم، سلّم الامتحان', cls: 'btn-success', onClick: doSubmit}
-    ]
-  );
+      {text:'إلغاء',cls:'btn-secondary'},
+      {text:'نعم، سلّم الامتحان',cls:'btn-success',onClick:doSubmit}
+    ]);
 }
 
-async function doSubmit() {
-  if (timerInterval) clearInterval(timerInterval);
-  toast('جاري التسليم...', '');
-  try {
-    const r = await fetch(`/api/student/stage/${STAGE_ID}/exam-submit`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({user_id: USER_ID, telegram_id: USER_ID, answers: answers})
+async function doSubmit(){
+  if(timerInterval)clearInterval(timerInterval);
+  toast('جاري التسليم...','');
+  try{
+    const r=await fetch(`/api/student/stage/${STAGE_ID}/exam-submit`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:USER_ID,telegram_id:USER_ID,answers:answers})
     });
-    const data = await r.json();
-    if (!data.success) {
-      toast('❌ ' + (data.error || 'فشل التسليم'), 'error');
-      return;
-    }
-    renderResults(data);
-  } catch (e) {
-    toast('❌ خطأ شبكة: ' + e.message, 'error');
-  }
+    const d=await r.json();
+    if(!d.success){toast('❌ '+(d.error||'فشل'),'error');return}
+    renderResults(d);
+  }catch(e){toast('❌ '+e.message,'error')}
 }
 
-// ===== Results Page =====
-function renderResults(data) {
+function renderResults(d){
   document.getElementById('examUI').classList.add('hidden');
-  const ui = document.getElementById('resultsUI');
+  const ui=document.getElementById('resultsUI');
   ui.classList.remove('hidden');
+  const score=d.score,passed=d.passed;
+  const color=passed?'#43e97b':'#e74c3c';
+  const circ=2*Math.PI*80;
+  const offset=circ-(score/100)*circ;
+  const wrong=(d.feedback||[]).filter(f=>!f.is_correct);
 
-  const score = data.score;
-  const passed = data.passed;
-  const color = passed ? '#43e97b' : '#e74c3c';
-  const circ = 2 * Math.PI * 80;
-  const offset = circ - (score / 100) * circ;
+  // Calculate Band approximation (Reading scale)
+  let band='—';
+  if(score>=95)band='6';
+  else if(score>=88)band='5.5';
+  else if(score>=80)band='5';
+  else if(score>=72)band='4.5';
+  else if(score>=60)band='4';
+  else if(score>=48)band='3.5';
+  else if(score>=36)band='3';
+  else if(score>=24)band='2.5';
+  else if(score>=12)band='2';
+  else band='1.5';
 
-  const wrongFeedback = (data.feedback || []).filter(f => !f.is_correct);
-
-  let html = `
-    <div class="results-hero">
-      <div class="score-ring">
-        <svg width="180" height="180">
-          <circle class="score-ring-bg" cx="90" cy="90" r="80"></circle>
-          <circle class="score-ring-fill" cx="90" cy="90" r="80"
-            stroke="${color}"
-            stroke-dasharray="${circ}"
-            stroke-dashoffset="${circ}"
-            id="scoreCircle"></circle>
-        </svg>
-        <div class="score-ring-text" style="color:${color}">${score}%</div>
+  let html=`
+    <div class="results-wrap">
+      <div class="results-hero">
+        <div class="score-ring">
+          <svg width="170" height="170">
+            <circle class="score-ring-bg" cx="85" cy="85" r="75"></circle>
+            <circle class="score-ring-fill" cx="85" cy="85" r="75"
+              stroke="${color}"
+              stroke-dasharray="${circ}"
+              stroke-dashoffset="${circ}" id="scoreCircle"></circle>
+          </svg>
+          <div class="score-ring-text" style="color:${color}">${score}%</div>
+        </div>
+        <div class="result-status ${passed?'pass':'fail'}">
+          ${passed?'🎉 مبروك! نجحت':'😔 لم تنجح، حاول مجدداً'}
+        </div>
+        <div class="result-meta">
+          أجبت بشكل صحيح على <b>${d.correct}</b> من <b>${d.total}</b> أسئلة
+          ${passed?'':'<br>درجة النجاح: <b>'+d.min_score+'%</b>'}
+        </div>
+        <div class="band-badge">Band Score ≈ ${band}</div>
       </div>
-      <div class="result-status ${passed ? 'pass' : 'fail'}">
-        ${passed ? '🎉 مبروك! نجحت' : '😔 لم تنجح، حاول مجدداً'}
-      </div>
-      <div class="result-meta">
-        أجبت بشكل صحيح على <b>${data.correct}</b> من <b>${data.total}</b> أسئلة
-        ${passed ? '' : `<br>درجة النجاح المطلوبة: <b>${data.min_score}%</b>`}
-      </div>
-    </div>
   `;
 
-  if (wrongFeedback.length > 0) {
-    html += `<div class="review-section">
-      <div class="review-section-title">📚 مراجعة الأخطاء (${wrongFeedback.length})</div>`;
-    wrongFeedback.forEach((f, i) => {
-      const studAns = f.student_answer || '—';
-      const studText = f.student_answer ? (f.options[f.student_answer] || '') : 'لم تجب';
-      const corrText = f.options[f.correct_answer] || '';
-      html += `
+  if(wrong.length>0){
+    html+=`<div class="review-section">
+      <div class="review-section-title">📚 مراجعة الأخطاء (${wrong.length})</div>`;
+    wrong.forEach((f,i)=>{
+      const sa=f.student_answer||'—';
+      const st=f.student_answer?(f.options[f.student_answer]||''):'لم تجب';
+      const ct=f.options[f.correct_answer]||'';
+      html+=`
         <div class="review-card">
-          <div class="q-number">سؤال ${i + 1}</div>
-          <div class="review-q">${escapeHtml(f.question_text)}</div>
+          <div class="q-number-badge">سؤال ${i+1}</div>
+          <div class="review-q" style="margin-top:10px">${escapeHtml(f.question_text)}</div>
           <div class="review-answers">
             <div class="answer-box wrong">
               <div class="label">❌ إجابتك</div>
-              <div class="value">${studAns}. ${escapeHtml(studText)}</div>
+              <div class="value">${sa}. ${escapeHtml(st)}</div>
             </div>
             <div class="answer-box correct">
-              <div class="label">✅ الإجابة الصحيحة</div>
-              <div class="value">${f.correct_answer}. ${escapeHtml(corrText)}</div>
+              <div class="label">✅ الصحيحة</div>
+              <div class="value">${f.correct_answer}. ${escapeHtml(ct)}</div>
             </div>
           </div>
-          ${f.concept_ar ? `<div class="review-block">
+          ${f.concept_ar?`<div class="review-block">
             <div class="review-block-label">💡 المفهوم</div>
-            <div class="review-block-text">${escapeHtml(f.concept_ar)}</div>
-          </div>` : ''}
-          ${f.explanation_ar ? `<div class="review-block">
+            <div class="review-block-text">${escapeHtml(f.concept_ar)}</div></div>`:''}
+          ${f.explanation_ar?`<div class="review-block">
             <div class="review-block-label">📝 كيف نحلّها</div>
-            <div class="review-block-text">${escapeHtml(f.explanation_ar)}</div>
-          </div>` : (f.explanation ? `<div class="review-block">
+            <div class="review-block-text">${escapeHtml(f.explanation_ar)}</div></div>`:
+            (f.explanation?`<div class="review-block">
             <div class="review-block-label">📝 الشرح</div>
-            <div class="review-block-text">${escapeHtml(f.explanation)}</div>
-          </div>` : '')}
-          ${f.trap_ar ? `<div class="review-block trap">
+            <div class="review-block-text">${escapeHtml(f.explanation)}</div></div>`:'')}
+          ${f.trap_ar?`<div class="review-block trap">
             <div class="review-block-label">⚠️ الفخ</div>
-            <div class="review-block-text">${escapeHtml(f.trap_ar)}</div>
-          </div>` : ''}
-          ${f.review_lesson_id ? `<a href="/lesson/${f.review_lesson_id}?user_id=${encodeURIComponent(USER_ID)}" class="review-lesson-btn">
-            📚 راجع الدرس${f.review_lesson_title ? ': ' + escapeHtml(f.review_lesson_title) : ''}
-          </a>` : (f.review_lesson_title ? `<div style="margin-top:10px;color:#888;font-size:14px">📚 راجع: ${escapeHtml(f.review_lesson_title)}</div>` : '')}
-        </div>
-      `;
+            <div class="review-block-text">${escapeHtml(f.trap_ar)}</div></div>`:''}
+          ${f.review_lesson_id?`<a href="/lesson/${f.review_lesson_id}?user_id=${encodeURIComponent(USER_ID)}" class="review-lesson-btn">
+            📚 راجع الدرس${f.review_lesson_title?': '+escapeHtml(f.review_lesson_title):''}</a>`:
+            (f.review_lesson_title?`<div style="margin-top:9px;color:#888;font-size:13px">📚 راجع: ${escapeHtml(f.review_lesson_title)}</div>`:'')}
+        </div>`;
     });
-    html += `</div>`;
+    html+=`</div>`;
   }
 
-  html += `
-    <div class="results-actions">
-      <button class="btn btn-primary" onclick="location.reload()">🔄 إعادة الامتحان</button>
-      <button class="btn btn-secondary" onclick="location.href='/student?user_id=${encodeURIComponent(USER_ID)}'">🏠 لوحة الطالب</button>
-    </div>
-  `;
+  html+=`
+      <div class="results-actions">
+        <button class="btn btn-primary" onclick="location.reload()">🔄 إعادة الامتحان</button>
+        <button class="btn btn-secondary" onclick="location.href='/student?user_id=${encodeURIComponent(USER_ID)}'">🏠 لوحة الطالب</button>
+      </div>
+    </div>`;
 
-  ui.innerHTML = html;
-  // Animate ring
-  setTimeout(() => {
-    const c = document.getElementById('scoreCircle');
-    if (c) c.style.strokeDashoffset = offset;
-  }, 100);
-  window.scrollTo({top: 0, behavior: 'smooth'});
+  ui.innerHTML=html;
+  setTimeout(()=>{
+    const c=document.getElementById('scoreCircle');
+    if(c)c.style.strokeDashoffset=offset;
+  },100);
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// Init
 loadExam();
 </script>
 </body>
