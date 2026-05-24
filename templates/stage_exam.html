@@ -185,6 +185,67 @@ body{background:#f0f2f7;min-height:100vh;color:#222;overflow-x:hidden}
 .option-text {
     text-align: right !important;
 }
+
+/* === Passage in results review cards === */
+.review-passage {
+    background: #fef3c7;
+    border-right: 4px solid #f59e0b;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+}
+.review-passage summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #78350f;
+    font-size: 14px;
+    user-select: none;
+}
+.review-passage-body {
+    margin-top: 10px;
+    direction: ltr;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #422006;
+    white-space: pre-wrap;
+    background: #fffbeb;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* === Unanswered modal === */
+.unanswered-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 14px 0;
+}
+.unanswered-grid .uq-btn {
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    color: #b91c1c;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.unanswered-grid .uq-btn:hover {
+    background: #fee2e2;
+    transform: scale(1.05);
+}
+.unanswered-title {
+    color: #991b1b;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+.unanswered-hint {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
 </style>
 </head>
 <body>
@@ -545,6 +606,7 @@ function renderResults(d){
       html+=`
         <div class="review-card">
           <div class="q-number-badge">سؤال ${i+1}</div>
+          ${f.passage_text ? `<details class="review-passage" open><summary>📄 النص المرجعي</summary><div class="review-passage-body">${escapeHtml(f.passage_text).replace(/\n/g,'<br>')}</div></details>` : ''}
           <div class="review-q" style="margin-top:10px">${escapeHtml(f.question_text)}</div>
           <div class="review-answers">
             <div class="answer-box wrong">
@@ -638,6 +700,33 @@ function highlightInPassage(passageEl, qText){
     }, 100);
 }
 // ===== End auto-highlight =====
+
+
+// ===== Unanswered Questions Modal (Block A) =====
+function showUnansweredModal(unansweredIndices){
+    const titleEl = document.querySelector('#modal .modal-title') || document.querySelector('#modal h3');
+    const bodyEl = document.querySelector('#modal .modal-body') || document.querySelector('#modal .modal-content');
+    if(!bodyEl){ alert('لديك ' + unansweredIndices.length + ' أسئلة غير مُجابة'); return; }
+    const gridHtml = unansweredIndices.map(idx => 
+        `<button class="uq-btn" onclick="goToQuestion(${idx}); hideModal();">سؤال ${idx+1}</button>`
+    ).join('');
+    bodyEl.innerHTML = `
+        <div class="unanswered-title">⚠️ لديك ${unansweredIndices.length} سؤال بدون إجابة</div>
+        <div class="unanswered-hint">اضغط على رقم السؤال للانتقال إليه، أو "تسليم رغم ذلك" للإكمال:</div>
+        <div class="unanswered-grid">${gridHtml}</div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+            <button class="btn btn-secondary" onclick="hideModal()">العودة للامتحان</button>
+            <button class="btn btn-primary" onclick="hideModal(); doSubmitExam(true);">تسليم رغم ذلك</button>
+        </div>
+    `;
+    document.getElementById('modal').classList.add('show');
+}
+function goToQuestion(idx){
+    currentIdx = idx;
+    renderQuestion();
+    buildDotNav();
+}
+// ===== End unanswered modal =====
 
 </script>
 </body>
