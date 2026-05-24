@@ -1,248 +1,479 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>امتحان المرحلة — أكاديمية يامن</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>امتحان المرحلة - أكاديمية يامن</title>
 <style>
-:root{--bg:#0f172a;--bg-soft:#1e293b;--card:#1e293b;--border:rgba(148,163,184,.15);--text:#e2e8f0;--muted:#94a3b8;--primary:#3b82f6;--success:#10b981;--danger:#ef4444;--warning:#f59e0b}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;padding:20px}
 .container{max-width:900px;margin:0 auto}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
-.header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
-.stage-title{font-size:22px;font-weight:800;color:#fff}
-.timer{background:rgba(245,158,11,.15);color:var(--warning);padding:8px 16px;border-radius:8px;font-weight:700;font-size:16px;border:1px solid rgba(245,158,11,.3)}
-.progress-bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:18px}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#8b5cf6);transition:width .3s}
-.info-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
-.info-pill{background:var(--bg);padding:10px 16px;border-radius:8px;border:1px solid var(--border);font-size:13px}
-.info-pill strong{color:#fff;font-size:15px;display:block;margin-top:4px}
-.question-card{background:var(--bg-soft);border:2px solid var(--border);border-radius:12px;padding:24px;margin-bottom:18px}
-.q-num{display:inline-block;background:var(--primary);color:#fff;padding:4px 12px;border-radius:6px;font-size:13px;font-weight:700;margin-bottom:12px}
-.q-text{font-size:18px;line-height:1.8;margin-bottom:20px;color:#fff;white-space:pre-wrap}
-.passage-box{background:rgba(59,130,246,.08);border-right:4px solid var(--primary);padding:16px 20px;margin-bottom:16px;border-radius:8px;line-height:1.9;font-size:15px;color:#cbd5e1;white-space:pre-wrap}
-.options{display:flex;flex-direction:column;gap:10px}
-.option{background:var(--bg);padding:14px 18px;border-radius:10px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:.2s;font-size:15px;line-height:1.6}
-.option:hover{border-color:var(--primary);background:rgba(59,130,246,.08)}
-.option.selected{border-color:var(--primary);background:rgba(59,130,246,.15);color:#fff}
-.option .letter{background:var(--card);min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:700;color:var(--muted);flex-shrink:0}
-.option.selected .letter{background:var(--primary);color:#fff}
-.controls{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
-.btn{padding:12px 24px;border-radius:10px;border:none;cursor:pointer;font-size:15px;font-weight:700;transition:.2s;font-family:inherit}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
-.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-.btn-ghost:hover{background:var(--bg)}
-.btn-success{background:var(--success);color:#fff}
-.btn-success:hover{background:#059669}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.q-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
-.q-nav-btn{width:36px;height:36px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-weight:700;font-size:13px}
-.q-nav-btn.answered{background:rgba(16,185,129,.2);color:var(--success);border-color:var(--success)}
-.q-nav-btn.current{background:var(--primary);color:#fff;border-color:var(--primary)}
-.result-banner{text-align:center;padding:32px 24px;border-radius:14px;margin-bottom:20px}
-.result-banner.passed{background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(5,150,105,.1));border:2px solid var(--success)}
-.result-banner.failed{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(220,38,38,.1));border:2px solid var(--danger)}
-.result-score{font-size:64px;font-weight:900;margin:12px 0;color:#fff}
-.result-label{font-size:20px;font-weight:700}
-.passed .result-label{color:var(--success)}
-.failed .result-label{color:var(--danger)}
-.review-item{background:var(--bg-soft);border-radius:10px;padding:16px;margin-bottom:12px;border-right:4px solid var(--border)}
-.review-item.correct{border-right-color:var(--success)}
-.review-item.wrong{border-right-color:var(--danger)}
-.review-q{font-size:15px;color:#fff;margin-bottom:10px;line-height:1.6}
-.review-status{font-size:14px;font-weight:700;margin-bottom:8px}
-.review-status.correct{color:var(--success)}
-.review-status.wrong{color:var(--danger)}
-.review-explanation{background:rgba(59,130,246,.08);padding:10px 14px;border-radius:8px;color:#cbd5e1;font-size:14px;line-height:1.7}
-.spinner{display:inline-block;width:40px;height:40px;border:4px solid rgba(255,255,255,.1);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+.header{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.header h1{font-size:24px;color:#667eea}
+.header-info{display:flex;gap:24px;flex-wrap:wrap}
+.info-item{text-align:center}
+.info-label{font-size:12px;color:#888;margin-bottom:4px}
+.info-value{font-size:20px;font-weight:bold;color:#333}
+.timer{color:#e74c3c}
+.progress-bar-wrap{background:#fff;border-radius:16px;padding:16px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.progress-bar{background:#e0e0e0;height:12px;border-radius:6px;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,#43e97b,#38f9d7);height:100%;transition:width 0.3s;border-radius:6px}
+.progress-text{text-align:center;margin-top:8px;font-size:14px;color:#666}
+.question-card{background:#fff;border-radius:16px;padding:28px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.question-card.unanswered{border:2px solid #e74c3c;animation:shake 0.5s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.q-number{display:inline-block;background:#667eea;color:#fff;padding:6px 14px;border-radius:20px;font-size:14px;margin-bottom:12px}
+.q-text{font-size:18px;line-height:1.7;margin-bottom:20px;color:#222;text-align:right;direction:rtl}
+.q-text.ltr{direction:ltr;text-align:left;font-family:Georgia,serif}
+.options{display:flex;flex-direction:column;gap:12px}
+.option{background:#f5f7fa;border:2px solid transparent;border-radius:12px;padding:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px}
+.option:hover{background:#e8edf5;border-color:#667eea}
+.option.selected{background:#e8f5e9;border-color:#43e97b}
+.option-letter{background:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#667eea;border:2px solid #e0e0e0;flex-shrink:0}
+.option.selected .option-letter{background:#43e97b;color:#fff;border-color:#43e97b}
+.option-text{flex:1;font-size:16px}
+.nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:20px;flex-wrap:wrap}
+.btn{padding:14px 28px;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(102,126,234,0.4)}
+.btn-secondary{background:#f0f0f0;color:#333}
+.btn-secondary:hover{background:#e0e0e0}
+.btn-success{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff}
+.btn-success:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(67,233,123,0.4)}
+.btn-danger{background:#e74c3c;color:#fff}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.dot-nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
+.dot{width:36px;height:36px;border-radius:8px;background:#e0e0e0;color:#666;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;font-weight:bold;transition:all 0.2s}
+.dot.answered{background:#43e97b;color:#fff}
+.dot.current{background:#667eea;color:#fff;transform:scale(1.15)}
+.dot.unanswered-warn{background:#e74c3c;color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;max-width:500px;width:100%;padding:32px;box-shadow:0 24px 64px rgba(0,0,0,0.3);animation:slideUp 0.3s}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-icon{font-size:64px;text-align:center;margin-bottom:16px}
+.modal-title{font-size:22px;font-weight:bold;text-align:center;margin-bottom:12px;color:#333}
+.modal-body{text-align:center;color:#666;margin-bottom:24px;line-height:1.7;font-size:16px}
+.modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* Toast */
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:14px 24px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:2000;font-size:15px;opacity:0;transition:opacity 0.3s;pointer-events:none}
+.toast.show{opacity:1}
+.toast.success{background:#43e97b}
+.toast.error{background:#e74c3c}
+.toast.warning{background:#f39c12}
+
+/* Results Page */
+.results-hero{background:#fff;border-radius:20px;padding:40px;text-align:center;margin-bottom:24px;box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+.score-ring{width:180px;height:180px;margin:0 auto 20px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:#e0e0e0;stroke-width:14}
+.score-ring-fill{fill:none;stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease-out}
+.score-ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;font-weight:bold}
+.result-status{font-size:32px;font-weight:bold;margin-bottom:8px}
+.result-status.pass{color:#43e97b}
+.result-status.fail{color:#e74c3c}
+.result-meta{color:#888;font-size:16px}
+.review-section{margin-bottom:24px}
+.review-section-title{font-size:20px;font-weight:bold;margin-bottom:16px;color:#fff;text-align:center}
+.review-card{background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);border-right:6px solid #e74c3c}
+.review-card.correct{border-right-color:#43e97b;opacity:0.85}
+.review-q{font-size:16px;font-weight:bold;margin-bottom:14px;color:#222;line-height:1.6}
+.review-answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:600px){.review-answers{grid-template-columns:1fr}}
+.answer-box{padding:12px;border-radius:10px;font-size:14px}
+.answer-box.wrong{background:#ffebee;border:1px solid #ffcdd2;color:#c62828}
+.answer-box.correct{background:#e8f5e9;border:1px solid #c8e6c9;color:#2e7d32}
+.answer-box .label{font-size:12px;opacity:0.8;margin-bottom:4px}
+.answer-box .value{font-weight:bold;font-size:16px}
+.review-block{background:#f9f9f9;border-radius:10px;padding:14px;margin-bottom:10px;border-right:4px solid #667eea}
+.review-block-label{font-size:13px;font-weight:bold;color:#667eea;margin-bottom:6px}
+.review-block-text{font-size:15px;color:#444;line-height:1.7}
+.review-block.trap{border-right-color:#f39c12}
+.review-block.trap .review-block-label{color:#f39c12}
+.review-lesson-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:bold;margin-top:10px;transition:transform 0.2s}
+.review-lesson-btn:hover{transform:translateY(-2px)}
+.results-actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+
+.loading{text-align:center;padding:60px;color:#fff;font-size:20px}
+.spinner{display:inline-block;width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;margin-left:12px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
-.center{text-align:center;padding:40px}
-.error-msg{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid var(--danger);padding:14px 18px;border-radius:10px;margin:12px 0}
-@media(max-width:768px){body{padding:12px}.stage-title{font-size:18px}.q-text{font-size:16px}.result-score{font-size:48px}}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
-<div class="container" id="app">
-  <div class="card center"><div class="spinner"></div><p style="margin-top:16px;color:var(--muted)">جاري التحميل...</p></div>
+<div class="container">
+  <!-- Loading -->
+  <div id="loading" class="loading">
+    <span class="spinner"></span> جاري تحميل الأسئلة...
+  </div>
+
+  <!-- Exam UI -->
+  <div id="examUI" class="hidden">
+    <div class="header">
+      <h1>📝 امتحان المرحلة <span id="stageNum"></span></h1>
+      <div class="header-info">
+        <div class="info-item">
+          <div class="info-label">الأسئلة</div>
+          <div class="info-value" id="totalQ">0</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">تم الإجابة</div>
+          <div class="info-value" id="answeredCount">0</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">الوقت</div>
+          <div class="info-value timer" id="timer">--:--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">0 / 0</div>
+    </div>
+
+    <div id="questionContainer"></div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevQ()">← السابق</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">التالي →</button>
+      <button class="btn btn-success hidden" id="submitBtn" onclick="trySubmit()">✓ تسليم الامتحان</button>
+    </div>
+
+    <div class="dot-nav" id="dotNav"></div>
+  </div>
+
+  <!-- Results UI -->
+  <div id="resultsUI" class="hidden"></div>
 </div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">⚠️</div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 const STAGE_ID = {{ stage_id }};
-const params = new URLSearchParams(location.search);
-const USER_ID = params.get('user_id') || params.get('student_id') || localStorage.getItem('yamen_uid') || '';
-
-let examData = null;
-let currentIdx = 0;
+const USER_ID = "{{ user_id }}";
+let questions = [];
 let answers = {};
-let startTime = null;
+let currentIdx = 0;
+let startTime = Date.now();
+let timerInterval = null;
 
-const app = document.getElementById('app');
+// ===== Toast =====
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(() => t.className = 'toast', 2800);
+}
 
-function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+// ===== Modal =====
+function showModal(icon, title, body, actions) {
+  document.getElementById('modalIcon').textContent = icon;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  const actDiv = document.getElementById('modalActions');
+  actDiv.innerHTML = '';
+  actions.forEach(a => {
+    const b = document.createElement('button');
+    b.className = 'btn ' + (a.cls || 'btn-primary');
+    b.textContent = a.text;
+    b.onclick = () => { hideModal(); if (a.onClick) a.onClick(); };
+    actDiv.appendChild(b);
+  });
+  document.getElementById('modal').classList.add('show');
+}
+function hideModal() { document.getElementById('modal').classList.remove('show'); }
 
-async function init(){
-  if(!USER_ID){
-    app.innerHTML = `<div class="card"><div class="error-msg">⚠️ مطلوب معرّف المستخدم. أضف <code>?user_id=YOUR_ID</code> في الرابط.</div></div>`;
-    return;
-  }
-  try{
+// ===== Load Questions =====
+async function loadExam() {
+  try {
     const r = await fetch(`/api/student/stage/${STAGE_ID}/exam-start?user_id=${encodeURIComponent(USER_ID)}`);
-    const d = await r.json();
-    if(!d.success){
-      app.innerHTML = `<div class="card"><div class="error-msg">❌ ${escapeHtml(d.message||'فشل التحميل')}</div></div>`;
+    const data = await r.json();
+    if (!r.ok || !data.questions || data.questions.length === 0) {
+      document.getElementById('loading').innerHTML = '⚠️ لا توجد أسئلة لهذه المرحلة. ' + (data.error || data.message || '');
       return;
     }
-    examData = d;
-    startTime = Date.now();
-    renderStart();
-  }catch(e){
-    app.innerHTML = `<div class="card"><div class="error-msg">❌ خطأ شبكي: ${escapeHtml(e.message)}</div></div>`;
+    questions = data.questions;
+    document.getElementById('stageNum').textContent = '#' + STAGE_ID;
+    document.getElementById('totalQ').textContent = questions.length;
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('examUI').classList.remove('hidden');
+    buildDotNav();
+    renderQuestion();
+    startTimer();
+  } catch (e) {
+    document.getElementById('loading').innerHTML = '❌ فشل التحميل: ' + e.message;
   }
 }
 
-function renderStart(){
-  app.innerHTML = `
-    <div class="card">
-      <div class="header">
-        <h1 class="stage-title">📝 ${escapeHtml(examData.stage_name)}</h1>
-      </div>
-      <div class="info-row">
-        <div class="info-pill">عدد الأسئلة<strong>${examData.total_questions}</strong></div>
-        <div class="info-pill">شرط النجاح<strong>${examData.required_score}%</strong></div>
-        <div class="info-pill">نسبتك الشخصية<strong>${examData.personal_pass_score}%</strong></div>
-      </div>
-      <div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);padding:16px;border-radius:10px;margin-bottom:18px;font-size:14px;line-height:1.8;color:#fbbf24">
-        ⚠️ تنبيهات قبل البدء:
-        <ul style="margin:8px 18px 0">
-          <li>لا تُغلق الصفحة أثناء الامتحان.</li>
-          <li>كل سؤال له إجابة واحدة صحيحة.</li>
-          <li>يمكنك التنقّل بين الأسئلة قبل التسليم.</li>
-          <li>بعد التسليم لا يمكن التعديل.</li>
-        </ul>
-      </div>
-      <div style="text-align:center"><button class="btn btn-primary" onclick="renderQuestion()" style="padding:16px 40px;font-size:17px">🚀 ابدأ الامتحان</button></div>
-    </div>`;
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const sec = Math.floor((Date.now() - startTime) / 1000);
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
 }
 
-function renderQuestion(){
-  const qs = examData.questions;
-  const q = qs[currentIdx];
-  const sel = answers[q.id] || '';
-  const navHtml = qs.map((qq,i)=>{
-    let cls = 'q-nav-btn';
-    if(answers[qq.id]) cls += ' answered';
-    if(i===currentIdx) cls += ' current';
-    return `<button class="${cls}" onclick="jumpTo(${i})">${i+1}</button>`;
-  }).join('');
-  const progress = ((currentIdx+1)/qs.length)*100;
-  app.innerHTML = `
-    <div class="card">
-      <div class="header">
-        <h1 class="stage-title">${escapeHtml(examData.stage_name)}</h1>
-        <div class="timer" id="timer">⏱ <span id="elapsed">0:00</span></div>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
-      <div class="q-nav">${navHtml}</div>
-      <div class="question-card">
-        <div class="q-num">سؤال ${currentIdx+1} / ${qs.length}</div>
-        ${q.passage ? `<div class="passage-box">${escapeHtml(q.passage)}</div>` : ''}
-        <div class="q-text">${escapeHtml(q.question_text)}</div>
-        <div class="options">
-          ${['A','B','C','D'].map(L=>{
-            const txt = q['option_'+L.toLowerCase()] || '';
-            if(!txt) return '';
-            const isSel = sel===L;
-            return `<div class="option ${isSel?'selected':''}" onclick="selectAnswer('${q.id}','${L}')">
-              <div class="letter">${L}</div>
-              <div>${escapeHtml(txt)}</div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-      <div class="controls">
-        <button class="btn btn-ghost" onclick="prevQ()" ${currentIdx===0?'disabled':''}>← السابق</button>
-        ${currentIdx===qs.length-1
-          ? `<button class="btn btn-success" onclick="submitExam()">✅ تسليم الامتحان</button>`
-          : `<button class="btn btn-primary" onclick="nextQ()">التالي →</button>`}
-      </div>
-    </div>`;
-  startTimer();
+function buildDotNav() {
+  const nav = document.getElementById('dotNav');
+  nav.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.textContent = i + 1;
+    d.onclick = () => { currentIdx = i; renderQuestion(); };
+    nav.appendChild(d);
+  });
 }
 
-let timerInterval = null;
-function startTimer(){
-  if(timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(()=>{
-    const el = document.getElementById('elapsed');
-    if(!el) return;
-    const sec = Math.floor((Date.now()-startTime)/1000);
-    const m = Math.floor(sec/60), s = sec%60;
-    el.textContent = `${m}:${String(s).padStart(2,'0')}`;
-  },1000);
+function updateDots(highlightUnanswered) {
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((d, i) => {
+    d.className = 'dot';
+    const qid = questions[i].id;
+    if (answers[qid]) d.classList.add('answered');
+    else if (highlightUnanswered) d.classList.add('unanswered-warn');
+    if (i === currentIdx) d.classList.add('current');
+  });
 }
 
-function selectAnswer(qid, letter){
+function renderQuestion() {
+  const q = questions[currentIdx];
+  const qid = q.id;
+  const sel = answers[qid] || '';
+  const isLong = (q.question_text || '').length > 200;
+  const cls = isLong ? 'q-text ltr' : 'q-text';
+
+  const html = `
+    <div class="question-card" id="qCard">
+      <div class="q-number">سؤال ${currentIdx + 1} من ${questions.length}</div>
+      <div class="${cls}">${escapeHtml(q.question_text)}</div>
+      <div class="options">
+        ${['A','B','C','D'].map(letter => {
+          const opt = q['option_' + letter.toLowerCase()];
+          if (!opt) return '';
+          const isSel = sel === letter ? 'selected' : '';
+          return `<div class="option ${isSel}" onclick="selectOption('${letter}')">
+            <div class="option-letter">${letter}</div>
+            <div class="option-text">${escapeHtml(opt)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('questionContainer').innerHTML = html;
+
+  // Update buttons
+  document.getElementById('prevBtn').disabled = (currentIdx === 0);
+  const isLast = (currentIdx === questions.length - 1);
+  document.getElementById('nextBtn').classList.toggle('hidden', isLast);
+  document.getElementById('submitBtn').classList.toggle('hidden', !isLast);
+
+  // Update progress
+  const answered = Object.keys(answers).length;
+  document.getElementById('answeredCount').textContent = answered;
+  const pct = (answered / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${answered} / ${questions.length}`;
+
+  updateDots(false);
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function selectOption(letter) {
+  const qid = questions[currentIdx].id;
   answers[qid] = letter;
   renderQuestion();
 }
-function nextQ(){ if(currentIdx<examData.questions.length-1){ currentIdx++; renderQuestion(); } }
-function prevQ(){ if(currentIdx>0){ currentIdx--; renderQuestion(); } }
-function jumpTo(i){ currentIdx=i; renderQuestion(); }
 
-async function submitExam(){
-  const unanswered = examData.questions.filter(q=>!answers[q.id]).length;
-  if(unanswered>0){
-    if(!confirm(`لديك ${unanswered} سؤال بدون إجابة. هل تريد التسليم؟`)) return;
-  }else{
-    if(!confirm('هل أنت متأكد من تسليم الامتحان؟')) return;
+function nextQ() {
+  if (currentIdx < questions.length - 1) {
+    currentIdx++;
+    renderQuestion();
+    window.scrollTo({top: 0, behavior: 'smooth'});
   }
-  if(timerInterval) clearInterval(timerInterval);
-  app.innerHTML = `<div class="card center"><div class="spinner"></div><p style="margin-top:16px;color:var(--muted)">جاري تصحيح الامتحان...</p></div>`;
-  try{
-    const r = await fetch(`/api/student/stage/${STAGE_ID}/exam-submit`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({user_id:USER_ID, answers:answers})
+}
+
+function prevQ() {
+  if (currentIdx > 0) {
+    currentIdx--;
+    renderQuestion();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+}
+
+// ===== Submit with strict validation =====
+function trySubmit() {
+  const unanswered = questions.filter(q => !answers[q.id]);
+  if (unanswered.length > 0) {
+    updateDots(true);
+    // jump to first unanswered
+    const firstIdx = questions.findIndex(q => !answers[q.id]);
+    if (firstIdx >= 0) {
+      currentIdx = firstIdx;
+      renderQuestion();
+      document.getElementById('qCard').classList.add('unanswered');
+      setTimeout(() => {
+        const c = document.getElementById('qCard');
+        if (c) c.classList.remove('unanswered');
+      }, 600);
+    }
+    showModal('⚠️', 'لا يمكن التسليم',
+      `يجب الإجابة على <b>جميع الأسئلة</b> قبل التسليم.<br><br>الأسئلة المتبقية: <b>${unanswered.length}</b>`,
+      [{text: 'حسناً، أكمل', cls: 'btn-primary'}]
+    );
+    return;
+  }
+
+  showModal('✅', 'تأكيد التسليم',
+    'هل أنت متأكد من تسليم الامتحان؟<br>لن تستطيع تعديل إجاباتك بعد ذلك.',
+    [
+      {text: 'إلغاء', cls: 'btn-secondary'},
+      {text: 'نعم، سلّم الامتحان', cls: 'btn-success', onClick: doSubmit}
+    ]
+  );
+}
+
+async function doSubmit() {
+  if (timerInterval) clearInterval(timerInterval);
+  toast('جاري التسليم...', '');
+  try {
+    const r = await fetch(`/api/student/stage/${STAGE_ID}/exam-submit`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({user_id: USER_ID, telegram_id: USER_ID, answers: answers})
     });
-    const d = await r.json();
-    if(!d.success){
-      app.innerHTML = `<div class="card"><div class="error-msg">❌ ${escapeHtml(d.message||'فشل التسليم')}</div></div>`;
+    const data = await r.json();
+    if (!data.success) {
+      toast('❌ ' + (data.error || 'فشل التسليم'), 'error');
       return;
     }
-    renderResult(d);
-  }catch(e){
-    app.innerHTML = `<div class="card"><div class="error-msg">❌ خطأ شبكي: ${escapeHtml(e.message)}</div></div>`;
+    renderResults(data);
+  } catch (e) {
+    toast('❌ خطأ شبكة: ' + e.message, 'error');
   }
 }
 
-function renderResult(d){
-  const passed = d.passed || (d.score >= examData.required_score);
-  const reviewHtml = (d.feedback||[]).map((f,i)=>`
-    <div class="review-item ${f.is_correct?'correct':'wrong'}">
-      <div class="review-q"><strong>${i+1}.</strong> ${escapeHtml(f.question_text)}</div>
-      <div class="review-status ${f.is_correct?'correct':'wrong'}">${f.is_correct?'✅ إجابة صحيحة':'❌ إجابة خاطئة'}</div>
-      ${f.explanation && f.explanation!=='—' ? `<div class="review-explanation">💡 ${escapeHtml(f.explanation)}</div>` : ''}
-    </div>`).join('');
-  app.innerHTML = `
-    <div class="card">
-      <div class="result-banner ${passed?'passed':'failed'}">
-        <div class="result-label">${passed?'🎉 مبروك! اجتزت المرحلة':'😔 لم تجتز هذه المرة'}</div>
-        <div class="result-score">${d.score}%</div>
-        <div style="color:var(--muted);font-size:15px">${d.correct} من ${d.total} إجابة صحيحة</div>
-        <div style="color:var(--muted);font-size:13px;margin-top:8px">شرط النجاح: ${examData.required_score}%</div>
+// ===== Results Page =====
+function renderResults(data) {
+  document.getElementById('examUI').classList.add('hidden');
+  const ui = document.getElementById('resultsUI');
+  ui.classList.remove('hidden');
+
+  const score = data.score;
+  const passed = data.passed;
+  const color = passed ? '#43e97b' : '#e74c3c';
+  const circ = 2 * Math.PI * 80;
+  const offset = circ - (score / 100) * circ;
+
+  const wrongFeedback = (data.feedback || []).filter(f => !f.is_correct);
+
+  let html = `
+    <div class="results-hero">
+      <div class="score-ring">
+        <svg width="180" height="180">
+          <circle class="score-ring-bg" cx="90" cy="90" r="80"></circle>
+          <circle class="score-ring-fill" cx="90" cy="90" r="80"
+            stroke="${color}"
+            stroke-dasharray="${circ}"
+            stroke-dashoffset="${circ}"
+            id="scoreCircle"></circle>
+        </svg>
+        <div class="score-ring-text" style="color:${color}">${score}%</div>
       </div>
-      <h2 style="margin-bottom:16px;color:#fff;font-size:18px">📋 شريط المراجعة</h2>
-      ${reviewHtml}
-      <div class="controls" style="margin-top:24px">
-        <button class="btn btn-ghost" onclick="location.reload()">🔄 إعادة المحاولة</button>
-        <a href="/student" class="btn btn-primary" style="text-decoration:none;display:inline-block">🏠 العودة للوحة الطالب</a>
+      <div class="result-status ${passed ? 'pass' : 'fail'}">
+        ${passed ? '🎉 مبروك! نجحت' : '😔 لم تنجح، حاول مجدداً'}
       </div>
-    </div>`;
+      <div class="result-meta">
+        أجبت بشكل صحيح على <b>${data.correct}</b> من <b>${data.total}</b> أسئلة
+        ${passed ? '' : `<br>درجة النجاح المطلوبة: <b>${data.min_score}%</b>`}
+      </div>
+    </div>
+  `;
+
+  if (wrongFeedback.length > 0) {
+    html += `<div class="review-section">
+      <div class="review-section-title">📚 مراجعة الأخطاء (${wrongFeedback.length})</div>`;
+    wrongFeedback.forEach((f, i) => {
+      const studAns = f.student_answer || '—';
+      const studText = f.student_answer ? (f.options[f.student_answer] || '') : 'لم تجب';
+      const corrText = f.options[f.correct_answer] || '';
+      html += `
+        <div class="review-card">
+          <div class="q-number">سؤال ${i + 1}</div>
+          <div class="review-q">${escapeHtml(f.question_text)}</div>
+          <div class="review-answers">
+            <div class="answer-box wrong">
+              <div class="label">❌ إجابتك</div>
+              <div class="value">${studAns}. ${escapeHtml(studText)}</div>
+            </div>
+            <div class="answer-box correct">
+              <div class="label">✅ الإجابة الصحيحة</div>
+              <div class="value">${f.correct_answer}. ${escapeHtml(corrText)}</div>
+            </div>
+          </div>
+          ${f.concept_ar ? `<div class="review-block">
+            <div class="review-block-label">💡 المفهوم</div>
+            <div class="review-block-text">${escapeHtml(f.concept_ar)}</div>
+          </div>` : ''}
+          ${f.explanation_ar ? `<div class="review-block">
+            <div class="review-block-label">📝 كيف نحلّها</div>
+            <div class="review-block-text">${escapeHtml(f.explanation_ar)}</div>
+          </div>` : (f.explanation ? `<div class="review-block">
+            <div class="review-block-label">📝 الشرح</div>
+            <div class="review-block-text">${escapeHtml(f.explanation)}</div>
+          </div>` : '')}
+          ${f.trap_ar ? `<div class="review-block trap">
+            <div class="review-block-label">⚠️ الفخ</div>
+            <div class="review-block-text">${escapeHtml(f.trap_ar)}</div>
+          </div>` : ''}
+          ${f.review_lesson_id ? `<a href="/lesson/${f.review_lesson_id}?user_id=${encodeURIComponent(USER_ID)}" class="review-lesson-btn">
+            📚 راجع الدرس${f.review_lesson_title ? ': ' + escapeHtml(f.review_lesson_title) : ''}
+          </a>` : (f.review_lesson_title ? `<div style="margin-top:10px;color:#888;font-size:14px">📚 راجع: ${escapeHtml(f.review_lesson_title)}</div>` : '')}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
+
+  html += `
+    <div class="results-actions">
+      <button class="btn btn-primary" onclick="location.reload()">🔄 إعادة الامتحان</button>
+      <button class="btn btn-secondary" onclick="location.href='/student?user_id=${encodeURIComponent(USER_ID)}'">🏠 لوحة الطالب</button>
+    </div>
+  `;
+
+  ui.innerHTML = html;
+  // Animate ring
+  setTimeout(() => {
+    const c = document.getElementById('scoreCircle');
+    if (c) c.style.strokeDashoffset = offset;
+  }, 100);
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-init();
+// Init
+loadExam();
 </script>
 </body>
 </html>

@@ -78,6 +78,66 @@ except Exception as _e:
     print(f"[Phase12G] startup hook error: {_e}")
 # ===== End Phase 12G =====
 
+# ===== Phase 12E-3 v2: Stage Exam enhancements =====
+def _ensure_stage_exam_v2_columns():
+    """Add concept_ar, explanation_ar, trap_ar, review_lesson_id, review_lesson_title columns."""
+    try:
+        conn = _db_safe()
+        c = conn.cursor()
+        # Ensure base tables exist first
+        c.execute("""CREATE TABLE IF NOT EXISTS stage_exam_questions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            stage_id INTEGER NOT NULL,
+            question_text TEXT NOT NULL,
+            option_a TEXT, option_b TEXT, option_c TEXT, option_d TEXT,
+            correct_answer TEXT NOT NULL,
+            explanation TEXT,
+            difficulty TEXT DEFAULT 'medium',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )""")
+        c.execute("""CREATE TABLE IF NOT EXISTS stage_exam_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            telegram_id TEXT,
+            stage_id INTEGER,
+            score REAL,
+            total_questions INTEGER,
+            correct_count INTEGER,
+            passed INTEGER DEFAULT 0,
+            answers_json TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )""")
+        # Add new columns (idempotent)
+        new_cols = [
+            ("concept_ar", "TEXT"),
+            ("explanation_ar", "TEXT"),
+            ("trap_ar", "TEXT"),
+            ("review_lesson_id", "INTEGER"),
+            ("review_lesson_title", "TEXT"),
+        ]
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        existing = [row[1] for row in c.fetchall()]
+        added = 0
+        for col_name, col_type in new_cols:
+            if col_name not in existing:
+                try:
+                    c.execute(f"ALTER TABLE stage_exam_questions ADD COLUMN {col_name} {col_type}")
+                    added += 1
+                except Exception as ce:
+                    print(f"[Phase12E3v2] col {col_name} skip: {ce}")
+        conn.commit()
+        print(f"[Phase12E3v2] Added {added} new columns to stage_exam_questions")
+        conn.close()
+    except Exception as e:
+        print(f"[Phase12E3v2] migration error: {e}")
+
+try:
+    _ensure_stage_exam_v2_columns()
+except Exception as _e:
+    print(f"[Phase12E3v2] startup hook error: {_e}")
+# ===== End Phase 12E-3 v2 =====
+
+
+
 
 
 @app.route("/")
@@ -3872,89 +3932,97 @@ def api_student_stage_exam_start(sid):
 
 # ─── Student: تسليم امتحان مرحلة ───
 @app.route("/api/student/stage/<int:sid>/exam-submit", methods=["POST"])
-def api_student_stage_exam_submit(sid):
-    import sqlite3, json
-    from datetime import datetime
+def api_student_stage_exam_submit_v2(sid):
+    """Phase 12E-3 v2: Submit answers, record mistakes, return rich feedback."""
+    from flask import request, jsonify
+    d = request.json or {}
+    telegram_id = str(d.get("user_id") or d.get("telegram_id") or "anonymous")
+    answers = d.get("answers", {})  # {question_id: "A"/"B"/"C"/"D"}
+    if not isinstance(answers, dict):
+        return jsonify({"success": False, "error": "answers must be dict"}), 400
+
+    conn = _db_safe()
+    c = conn.cursor()
     try:
-        data = request.get_json() or {}
-        user_id = data.get("user_id") or data.get("student_id")
-        answers = data.get("answers") or {}  # {question_id: "A"/"B"/"C"/"D"}
-        if not user_id:
-            return jsonify({"success": False, "message": "user_id required"}), 400
+        # Fetch all questions for this stage
+        c.execute("""SELECT id, question_text, option_a, option_b, option_c, option_d,
+                            correct_answer, explanation, concept_ar, explanation_ar,
+                            trap_ar, review_lesson_id, review_lesson_title
+                     FROM stage_exam_questions WHERE stage_id=?""", (sid,))
+        rows = c.fetchall()
+        if not rows:
+            return jsonify({"success": False, "error": "no questions in this stage"}), 404
 
-        conn = _db_safe(); conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-
-        # شرط النجاح
-        st = c.execute("SELECT personal_pass_score, stages_passed FROM students WHERE user_id=?", (user_id,)).fetchone()
-        personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
-        required = personal + 10
-
-        # جلب الأسئلة المُجابة + شرحها + الإجابات الصحيحة
-        q_ids = [int(k) for k in answers.keys()]
-        if not q_ids:
-            return jsonify({"success": False, "message": "no answers"}), 400
-        placeholders = ",".join(["?"] * len(q_ids))
-        questions = c.execute(
-            f"SELECT id, question_text, correct_answer, explanation FROM stage_exam_questions WHERE id IN ({placeholders})",
-            q_ids
-        ).fetchall()
-
-        total = len(questions)
+        total = len(rows)
         correct_count = 0
-        feedback = []  # شرح فقط، بدون إجابة صحيحة
-        for q in questions:
-            ua = str(answers.get(str(q["id"])) or answers.get(q["id"]) or "").upper().strip()
-            ca = str(q["correct_answer"] or "").upper().strip()
-            is_correct = (ua == ca)
+        feedback = []
+        wrong_lessons = set()
+
+        for row in rows:
+            qid = row[0]
+            correct_ans = (row[6] or "").strip().upper()
+            student_ans = str(answers.get(str(qid)) or answers.get(qid) or "").strip().upper()
+            is_correct = (student_ans == correct_ans)
             if is_correct:
                 correct_count += 1
+            else:
+                # Record mistake in error_bank
+                try:
+                    import quiz_engine as _qe
+                    _qe.record_mistake(telegram_id, qid, student_ans or "-", correct_ans)
+                except Exception as _me:
+                    print(f"[exam-submit] record_mistake skip: {_me}")
+                if row[11]:  # review_lesson_id
+                    wrong_lessons.add(row[11])
+
             feedback.append({
-                "question_id": q["id"],
-                "question_text": q["question_text"],
+                "question_id": qid,
+                "question_text": row[1],
+                "options": {"A": row[2], "B": row[3], "C": row[4], "D": row[5]},
+                "student_answer": student_ans or None,
+                "correct_answer": correct_ans,
                 "is_correct": is_correct,
-                "explanation": q["explanation"] or "—"
-                # ❌ لا نُرسل correct_answer
+                "explanation": row[7] or "",
+                "concept_ar": row[8] or "",
+                "explanation_ar": row[9] or "",
+                "trap_ar": row[10] or "",
+                "review_lesson_id": row[11],
+                "review_lesson_title": row[12] or ""
             })
 
-        score = round((correct_count / total) * 100, 1) if total else 0
-        passed = 1 if score >= required else 0
+        score = round((correct_count / total) * 100, 1) if total > 0 else 0
+        # Get min_score from stage
+        c.execute("SELECT min_score FROM stages WHERE id=?", (sid,))
+        ms_row = c.fetchone()
+        min_score = float(ms_row[0]) if ms_row and ms_row[0] is not None else 70.0
+        passed = 1 if score >= min_score else 0
 
-        # سجل المحاولة
-        c.execute('''INSERT INTO stage_exam_attempts
-            (user_id, stage_id, questions_shown, answers, score, required_score, passed, created_at)
-            VALUES (?,?,?,?,?,?,?,?)''',
-            (str(user_id), sid, json.dumps(q_ids), json.dumps(answers), score, required, passed,
-             datetime.now().isoformat()))
+        # Save attempt
+        import json as _json
+        try:
+            c.execute("""INSERT INTO stage_exam_attempts
+                         (telegram_id, stage_id, score, total_questions, correct_count, passed, answers_json)
+                         VALUES (?,?,?,?,?,?,?)""",
+                      (telegram_id, sid, score, total, correct_count, passed, _json.dumps(answers)))
+            conn.commit()
+        except Exception as _se:
+            print(f"[exam-submit] attempt save skip: {_se}")
 
-        # تحديث المراحل المُجتازة إن نجح
-        if passed:
-            try:
-                passed_list = json.loads(st["stages_passed"] or "[]") if st else []
-            except:
-                passed_list = []
-            if sid not in passed_list:
-                passed_list.append(sid)
-            c.execute("UPDATE students SET stages_passed=? WHERE user_id=?",
-                      (json.dumps(passed_list), str(user_id)))
-
-        conn.commit(); conn.close()
         return jsonify({
             "success": True,
             "score": score,
+            "min_score": min_score,
+            "passed": bool(passed),
             "correct": correct_count,
             "total": total,
-            "required_score": required,
-            "personal_pass_score": personal,
-            "passed": bool(passed),
             "feedback": feedback,
-            "message": ("🎉 مبروك! اجتزت المرحلة" if passed else f"💪 حصلت على {score}% — تحتاج {required}% للانتقال. راجع الدروس وحاول مرة أخرى")
+            "wrong_lessons_count": len(wrong_lessons)
         })
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+    finally:
+        conn.close()
+# ===== End Phase 12E-3 v2 submit =====
 
 
-# ─── Student: حالة المراحل (للشريط السفلي) ───
 @app.route("/api/student/stages-progress", methods=["GET"])
 def api_student_stages_progress():
     import sqlite3, json
@@ -4012,6 +4080,16 @@ def api_student_stages_progress():
 # ═══════════════════════════════════════════════
 # /Phase 12E
 # ═══════════════════════════════════════════════
+
+
+# ===== Phase 12E-3 v2: Student stage exam page =====
+@app.route("/stage-exam/<int:sid>")
+def page_stage_exam(sid):
+    from flask import render_template, request
+    user_id = request.args.get("user_id", "")
+    return render_template("stage_exam.html", stage_id=sid, user_id=user_id)
+# ===== End Phase 12E-3 v2 route =====
+
 
 if __name__ == "__main__":
     import os as _os
