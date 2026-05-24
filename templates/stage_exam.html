@@ -1089,10 +1089,14 @@ if(!window._currentCTW) return out;
         inps.forEach(function(i){ suffix += (i.value || ''); });
         self.answers[qid][b.n] = (b.prefix || '') + suffix;
       });
-      if(window.answers){
-        var anyFilled = Object.values(this.answers[qid]).some(function(v){ return v && v.length > 0; });
-        if(anyFilled) window.answers[qid] = 'CTW';
-      }
+      // Mark answered if any blank has a value (uses dict so backend can score)
+      try {
+        if(typeof answers !== 'undefined' && answers !== null){
+          var anyFilled = Object.values(this.answers[qid] || {}).some(function(v){ return v && v.length > (this.answers[qid] && Object.keys(this.answers[qid]).length ? 0 : 0); });
+          // Simpler: mark answered as full dict for the count, real merge happens in submitAll
+          answers[qid] = this.answers[qid];
+        }
+      } catch(e){}
     },
     next: function(){
       this.collect();
@@ -1110,7 +1114,17 @@ if(!window._currentCTW) return out;
     },
     submitAll: function(){
       this.collect();
+      // Merge CTW answers into global `answers` so trySubmit sends them
       window._ctw_payload = this.answers;
+      try {
+        if(typeof answers !== 'undefined' && answers !== null){
+          for(var qid in this.answers){
+            if(this.answers.hasOwnProperty(qid)){
+              answers[qid] = this.answers[qid]; // dict of {blank_n: fullword}
+            }
+          }
+        }
+      } catch(e){ console.warn('CTW merge err', e); }
       if(typeof window.trySubmit === 'function'){ window.trySubmit(); }
       else { CTW.showHint('تم جمع الإجابات.'); }
     },

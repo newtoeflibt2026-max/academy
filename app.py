@@ -4471,14 +4471,16 @@ def api_student_stage_exam_submit_v2(sid):
             c.execute(f"""SELECT id, question_text, option_a, option_b, option_c, option_d,
                                 correct_answer, explanation, concept_ar, explanation_ar,
                                 trap_ar, review_lesson_id, review_lesson_title,
-                                passage_text, strategy_ar, elimination_ar
+                                passage_text, strategy_ar, elimination_ar,
+                                q_type, blanks_json
                          FROM stage_exam_questions
                          WHERE stage_id=? AND id IN ({placeholders})""", (sid, *submitted_ids))
         else:
             c.execute("""SELECT id, question_text, option_a, option_b, option_c, option_d,
                                 correct_answer, explanation, concept_ar, explanation_ar,
                                 trap_ar, review_lesson_id, review_lesson_title,
-                                passage_text, strategy_ar, elimination_ar
+                                passage_text, strategy_ar, elimination_ar,
+                                q_type, blanks_json
                          FROM stage_exam_questions WHERE stage_id=?""", (sid,))
         rows = c.fetchall()
         if not rows:
@@ -4489,21 +4491,75 @@ def api_student_stage_exam_submit_v2(sid):
         feedback = []
         wrong_lessons = set()
 
+        import json as _json_score
         for row in rows:
             qid = row[0]
+            q_type = (row[16] if len(row) > 16 else "") or ""
+            blanks_json_raw = (row[17] if len(row) > 17 else "") or ""
+
+            # ===== CTW scoring branch =====
+            if q_type == "reading_complete_words":
+                try:
+                    blanks = _json_score.loads(blanks_json_raw) if blanks_json_raw else []
+                except Exception:
+                    blanks = []
+                student_obj = answers.get(str(qid)) or answers.get(qid) or {}
+                if not isinstance(student_obj, dict):
+                    student_obj = {}
+                total_blanks = len(blanks)
+                correct_blanks = 0
+                blank_details = []
+                for b in blanks:
+                    bn = str(b.get("n", ""))
+                    expected = (b.get("full", "") or "").strip().lower()
+                    given = (student_obj.get(bn) or student_obj.get(int(bn) if bn.isdigit() else bn) or "").strip().lower()
+                    ok = (expected != "" and given == expected)
+                    if ok:
+                        correct_blanks += 1
+                    blank_details.append({
+                        "n": b.get("n"),
+                        "expected": b.get("full", ""),
+                        "given": given,
+                        "is_correct": ok,
+                        "hint": b.get("hint", "")
+                    })
+                is_correct = (total_blanks > 0 and correct_blanks == total_blanks)
+                if is_correct:
+                    correct_count += 1
+                else:
+                    if row[11]:
+                        wrong_lessons.add(row[11])
+                feedback.append({
+                    "question_id": qid,
+                    "q_type": "reading_complete_words",
+                    "passage_text": row[13] or "",
+                    "blanks_detail": blank_details,
+                    "total_blanks": total_blanks,
+                    "correct_blanks": correct_blanks,
+                    "is_correct": is_correct,
+                    "strategy_ar": row[14] or "",
+                    "elimination_ar": row[15] or "",
+                    "trap_ar": row[10] or "",
+                    "concept_ar": row[8] or "",
+                    "explanation_ar": row[9] or "",
+                    "review_lesson_id": row[11],
+                    "review_lesson_title": row[12] or ""
+                })
+                continue
+            # ===== End CTW branch =====
+
             correct_ans = (row[6] or "").strip().upper()
             student_ans = str(answers.get(str(qid)) or answers.get(qid) or "").strip().upper()
-            is_correct = (student_ans == correct_ans)
+            is_correct = (student_ans == correct_ans and correct_ans != "")
             if is_correct:
                 correct_count += 1
             else:
-                # Record mistake in error_bank
                 try:
                     import quiz_engine as _qe
                     _qe.record_mistake(telegram_id, qid, student_ans or "-", correct_ans)
                 except Exception as _me:
                     print(f"[exam-submit] record_mistake skip: {_me}")
-                if row[11]:  # review_lesson_id
+                if row[11]:
                     wrong_lessons.add(row[11])
 
             feedback.append({
