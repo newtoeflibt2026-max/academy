@@ -4398,13 +4398,28 @@ def api_student_stage_exam_start(sid):
         # إخفاء الإجابة الصحيحة في الإرسال
         clean = []
         for q in sample:
+            # دعم كل من format القديم (option_a/b/c/d) والجديد (options dict)
             clean.append({
                 "id": q["id"],
                 "question_text": q["question_text"],
                 "option_a": q["option_a"],
                 "option_b": q["option_b"],
                 "option_c": q["option_c"],
-                "option_d": q["option_d"]
+                "option_d": q["option_d"],
+                "options": {
+                    "A": q["option_a"],
+                    "B": q["option_b"],
+                    "C": q["option_c"],
+                    "D": q["option_d"],
+                },
+                # حقول Phase 13.1 لدعم Split-Screen UI + TOEFL types
+                "passage_text": (q["passage_text"] if "passage_text" in q.keys() else None),
+                "set_id":       (q["set_id"]       if "set_id"       in q.keys() else None),
+                "q_type":       (q["q_type"]       if "q_type"       in q.keys() else None),
+                "audio_source": (q["audio_source"] if "audio_source" in q.keys() else None),
+                "time_limit_seconds": (q["time_limit_seconds"] if "time_limit_seconds" in q.keys() else None),
+                "difficulty":   (q["difficulty"]   if "difficulty"   in q.keys() else None),
+                "skill_section":(q["skill_section"]if "skill_section"in q.keys() else None),
             })
 
         conn.close()
