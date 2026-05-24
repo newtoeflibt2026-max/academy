@@ -237,6 +237,160 @@ except Exception as _e:
     print(f"[Phase13.1] hook error: {_e}")
 # ===== End Phase 13.1 =====
 
+# ===== Phase 13.2: Content Importer Engine =====
+import json as _json_imp, os as _os_imp
+from flask import request as _req_imp, jsonify as _jsonify_imp
+
+CONTENT_DIR = _os_imp.environ.get("CONTENT_DIR", "content/toefl_bank")
+
+def _ensure_content_dir():
+    try:
+        _os_imp.makedirs(CONTENT_DIR, exist_ok=True)
+    except Exception as e:
+        print(f"[Content] mkdir err: {e}")
+
+_ensure_content_dir()
+
+@app.route("/api/admin/content/list")
+def api_content_list():
+    """List all available content JSON files."""
+    _ensure_content_dir()
+    try:
+        files = []
+        if _os_imp.isdir(CONTENT_DIR):
+            for fn in sorted(_os_imp.listdir(CONTENT_DIR)):
+                if fn.endswith(".json"):
+                    fp = _os_imp.path.join(CONTENT_DIR, fn)
+                    size = _os_imp.path.getsize(fp)
+                    try:
+                        with open(fp, "r", encoding="utf-8") as f:
+                            meta = _json_imp.load(f)
+                        files.append({
+                            "filename": fn,
+                            "size_bytes": size,
+                            "title": meta.get("title", fn),
+                            "stage_id": meta.get("stage_id"),
+                            "q_type": meta.get("q_type"),
+                            "skill_section": meta.get("skill_section"),
+                            "questions_count": len(meta.get("questions", [])),
+                            "description": meta.get("description", "")
+                        })
+                    except Exception as me:
+                        files.append({"filename": fn, "size_bytes": size, "error": str(me)})
+        return _jsonify_imp({"ok": True, "files": files, "dir": CONTENT_DIR})
+    except Exception as e:
+        return _jsonify_imp({"ok": False, "error": str(e)}), 500
+
+@app.route("/api/admin/content/preview")
+def api_content_preview():
+    """Preview a content file before importing."""
+    fn = _req_imp.args.get("file", "")
+    if not fn or "/" in fn or ".." in fn:
+        return _jsonify_imp({"ok": False, "error": "invalid filename"}), 400
+    fp = _os_imp.path.join(CONTENT_DIR, fn)
+    if not _os_imp.isfile(fp):
+        return _jsonify_imp({"ok": False, "error": "not found"}), 404
+    try:
+        with open(fp, "r", encoding="utf-8") as f:
+            data = _json_imp.load(f)
+        # Return first 3 questions as preview
+        preview = dict(data)
+        preview["questions"] = data.get("questions", [])[:3]
+        preview["total_questions"] = len(data.get("questions", []))
+        return _jsonify_imp({"ok": True, "preview": preview})
+    except Exception as e:
+        return _jsonify_imp({"ok": False, "error": str(e)}), 500
+
+@app.route("/api/admin/content/import", methods=["POST"])
+def api_content_import():
+    """Import a JSON content file into stage_exam_questions."""
+    data = _req_imp.get_json() or {}
+    fn = data.get("file", "") or _req_imp.args.get("file", "")
+    replace_existing = bool(data.get("replace_existing", False))
+    if not fn or "/" in fn or ".." in fn:
+        return _jsonify_imp({"ok": False, "error": "invalid filename"}), 400
+    fp = _os_imp.path.join(CONTENT_DIR, fn)
+    if not _os_imp.isfile(fp):
+        return _jsonify_imp({"ok": False, "error": "file not found"}), 404
+    try:
+        with open(fp, "r", encoding="utf-8") as f:
+            bank = _json_imp.load(f)
+        stage_id = bank.get("stage_id")
+        if not stage_id:
+            return _jsonify_imp({"ok": False, "error": "stage_id required in JSON"}), 400
+        questions = bank.get("questions", [])
+        if not questions:
+            return _jsonify_imp({"ok": False, "error": "no questions"}), 400
+
+        conn = _db_safe()
+        c = conn.cursor()
+
+        # Optional: delete existing for this stage+q_type
+        deleted = 0
+        if replace_existing:
+            q_type_filter = bank.get("q_type")
+            if q_type_filter:
+                c.execute("DELETE FROM stage_exam_questions WHERE stage_id=? AND q_type=?", (stage_id, q_type_filter))
+            else:
+                c.execute("DELETE FROM stage_exam_questions WHERE stage_id=?", (stage_id,))
+            deleted = c.rowcount
+
+        inserted = 0
+        errors = []
+        set_id_default = bank.get("set_id") or fn.replace(".json", "")
+        for idx, q in enumerate(questions, start=1):
+            try:
+                c.execute("""INSERT INTO stage_exam_questions
+                    (stage_id, q_type, skill_section, question_text,
+                     option_a, option_b, option_c, option_d, correct_answer,
+                     explanation, concept_ar, explanation_ar, trap_ar,
+                     review_lesson_id, review_lesson_title,
+                     passage_text, audio_source, blanks_json,
+                     time_limit_seconds, word_count_min, word_count_max,
+                     rubric_json, set_id, order_in_set, difficulty)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                    (
+                        stage_id,
+                        q.get("q_type") or bank.get("q_type", "mcq"),
+                        q.get("skill_section") or bank.get("skill_section"),
+                        q.get("question_text", ""),
+                        q.get("option_a"), q.get("option_b"),
+                        q.get("option_c"), q.get("option_d"),
+                        (q.get("correct_answer") or "").upper(),
+                        q.get("explanation"),
+                        q.get("concept_ar"), q.get("explanation_ar"),
+                        q.get("trap_ar"),
+                        q.get("review_lesson_id"),
+                        q.get("review_lesson_title"),
+                        q.get("passage_text") or bank.get("passage_text"),
+                        q.get("audio_source") or bank.get("audio_source"),
+                        _json_imp.dumps(q["blanks"]) if q.get("blanks") else None,
+                        q.get("time_limit_seconds"),
+                        q.get("word_count_min"), q.get("word_count_max"),
+                        _json_imp.dumps(q["rubric"]) if q.get("rubric") else None,
+                        q.get("set_id") or set_id_default,
+                        q.get("order_in_set", idx),
+                        q.get("difficulty", "medium")
+                    ))
+                inserted += 1
+            except Exception as ie:
+                errors.append(f"Q{idx}: {ie}")
+        conn.commit()
+        conn.close()
+        return _jsonify_imp({
+            "ok": True,
+            "imported": inserted,
+            "deleted": deleted,
+            "errors": errors,
+            "stage_id": stage_id,
+            "file": fn
+        })
+    except Exception as e:
+        return _jsonify_imp({"ok": False, "error": str(e)}), 500
+# ===== End Phase 13.2 Importer =====
+
+
+
 
 
 # ===== Phase 12E-3 v2: Stage Exam enhancements =====
