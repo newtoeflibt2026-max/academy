@@ -257,7 +257,7 @@ def api_content_list():
     _ensure_content_dir()
     try:
         files = []
-        if _os_imp.isdir(CONTENT_DIR):
+        if _os_imp.path.isdir(CONTENT_DIR):
             for fn in sorted(_os_imp.listdir(CONTENT_DIR)):
                 if fn.endswith(".json"):
                     fp = _os_imp.path.join(CONTENT_DIR, fn)
