@@ -288,7 +288,7 @@ def api_content_preview():
     if not fn or "/" in fn or ".." in fn:
         return _jsonify_imp({"ok": False, "error": "invalid filename"}), 400
     fp = _os_imp.path.join(CONTENT_DIR, fn)
-    if not _os_imp.isfile(fp):
+    if not _os_imp.path.isfile(fp):
         return _jsonify_imp({"ok": False, "error": "not found"}), 404
     try:
         with open(fp, "r", encoding="utf-8") as f:
@@ -310,7 +310,7 @@ def api_content_import():
     if not fn or "/" in fn or ".." in fn:
         return _jsonify_imp({"ok": False, "error": "invalid filename"}), 400
     fp = _os_imp.path.join(CONTENT_DIR, fn)
-    if not _os_imp.isfile(fp):
+    if not _os_imp.path.isfile(fp):
         return _jsonify_imp({"ok": False, "error": "file not found"}), 404
     try:
         with open(fp, "r", encoding="utf-8") as f:
@@ -388,6 +388,133 @@ def api_content_import():
     except Exception as e:
         return _jsonify_imp({"ok": False, "error": str(e)}), 500
 # ===== End Phase 13.2 Importer =====
+
+# ===== Phase 13.3: Performance Indexes + Cache + Share =====
+def _ensure_performance_indexes():
+    """Create critical indexes on hot tables (idempotent)."""
+    indexes = [
+        # students
+        ("idx_students_paid", "students", "is_paid, is_active"),
+        # lesson_questions (174+ rows, no index!)
+        ("idx_lq_lesson", "lesson_questions", "lesson_id"),
+        ("idx_lq_lesson_order", "lesson_questions", "lesson_id, order_num"),
+        # error_bank
+        ("idx_eb_user", "error_bank", "user_id"),
+        ("idx_eb_user_q", "error_bank", "user_id, question_id"),
+        # student_error_bank
+        ("idx_seb_tg", "student_error_bank", "telegram_id"),
+        # stage_exam_questions (hot table now)
+        ("idx_seq_stage", "stage_exam_questions", "stage_id"),
+        ("idx_seq_stage_type", "stage_exam_questions", "stage_id, q_type"),
+        ("idx_seq_set", "stage_exam_questions", "set_id, order_in_set"),
+        # stage_exam_attempts
+        ("idx_sea_tg", "stage_exam_attempts", "telegram_id"),
+        ("idx_sea_tg_stage", "stage_exam_attempts", "telegram_id, stage_id"),
+        # lessons
+        ("idx_lessons_stage", "lessons", "stage_id, order_index"),
+        ("idx_lessons_active", "lessons", "is_active, stage_id"),
+        # payments
+        ("idx_pay_student", "payments", "user_id, status"),
+        # student_progress (if exists)
+        ("idx_sp_student", "student_progress", "student_id"),
+    ]
+    try:
+        conn = _db_safe()
+        c = conn.cursor()
+        created = 0
+        for name, table, cols in indexes:
+            try:
+                # Check if table exists
+                exists = c.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)
+                ).fetchone()
+                if not exists:
+                    continue
+                c.execute(f"CREATE INDEX IF NOT EXISTS {name} ON {table}({cols})")
+                created += 1
+            except Exception as ie:
+                print(f"[Phase13.3 idx] skip {name}: {ie}")
+        conn.commit()
+        # Run ANALYZE to update statistics
+        try:
+            c.execute("ANALYZE")
+            conn.commit()
+        except Exception:
+            pass
+        print(f"[Phase13.3] Indexes ensured: {created}")
+        conn.close()
+    except Exception as e:
+        print(f"[Phase13.3] index error: {e}")
+
+# ===== In-memory micro-cache (per-worker, TTL based) =====
+import time as _time_cache
+_CACHE_STORE = {}
+_CACHE_TTL = 30  # seconds
+
+def _cache_get(key):
+    rec = _CACHE_STORE.get(key)
+    if not rec: return None
+    if _time_cache.time() - rec[0] > _CACHE_TTL:
+        _CACHE_STORE.pop(key, None)
+        return None
+    return rec[1]
+
+def _cache_set(key, value):
+    _CACHE_STORE[key] = (_time_cache.time(), value)
+    # Prevent unbounded growth
+    if len(_CACHE_STORE) > 200:
+        # Drop oldest 50
+        oldest = sorted(_CACHE_STORE.items(), key=lambda x: x[1][0])[:50]
+        for k, _ in oldest:
+            _CACHE_STORE.pop(k, None)
+
+def cached_response(key_prefix, ttl=30):
+    """Decorator for caching JSON GET responses."""
+    def deco(fn):
+        from functools import wraps
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            from flask import request as _rq
+            if _rq.method != "GET":
+                return fn(*args, **kwargs)
+            key = f"{key_prefix}:{_rq.full_path}"
+            hit = _cache_get(key)
+            if hit is not None:
+                return hit
+            result = fn(*args, **kwargs)
+            _cache_set(key, result)
+            return result
+        return wrapper
+    return deco
+
+# ===== Share-progress endpoint =====
+@app.route("/api/student/share-text")
+def api_share_text():
+    """Generate a sharable text for a student's achievement."""
+    from flask import request as _rq, jsonify as _jf
+    user_id = _rq.args.get("user_id", "")
+    xp = _rq.args.get("xp", "0")
+    streak = _rq.args.get("streak", "0")
+    score = _rq.args.get("score", "")
+    stage = _rq.args.get("stage", "")
+    lines = ["🎯 إنجازي اليوم في Yamen Academy:"]
+    if score: lines.append(f"📊 درجتي: {score}%")
+    if stage: lines.append(f"📚 المرحلة: {stage}")
+    if xp and xp != "0": lines.append(f"⚡ XP المكتسبة: {xp}")
+    if streak and streak != "0": lines.append(f"🔥 سلسلة متواصلة: {streak} يوم")
+    lines.append("")
+    lines.append("انضم لي وتعلّم TOEFL معاً! 🚀")
+    lines.append("https://t.me/YamenAcademy_Bot")
+    text = "\n".join(lines)
+    return _jf({"ok": True, "text": text})
+
+try:
+    _ensure_performance_indexes()
+except Exception as _e:
+    print(f"[Phase13.3] hook error: {_e}")
+# ===== End Phase 13.3 =====
+
+
 
 
 
