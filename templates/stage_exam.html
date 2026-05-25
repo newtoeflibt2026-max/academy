@@ -637,13 +637,16 @@ async function doSubmit(){
     const d=await r.json();
     if(!d.success){toast('❌ '+(d.error||'فشل'),'error');return}
     renderResults(d);
-  }catch(e){toast('❌ '+e.message,'error')}
+  }catch(e){console.error('submit err:',e); if(e && e.message){toast('❌ '+e.message,'error')}}
 }
 
 function renderResults(d){
   document.getElementById('examUI').classList.add('hidden');
   const ui=document.getElementById('resultsUI');
   ui.classList.remove('hidden');
+  // Mark CTW-only result so the buggy wrong-renderer is skipped
+  window._isCTWOnly = (d.feedback || []).every(function(f){ return f.q_type === 'reading_complete_words'; });
+  window._lastFeedback = d.feedback || [];
   const score=d.score,passed=d.passed;
   const color=passed?'#43e97b':'#e74c3c';
   const circ=2*Math.PI*80;
@@ -687,10 +690,12 @@ function renderResults(d){
       </div>
   `;
 
-  if(wrong.length>0){
+  // Filter out CTW items - they're rendered separately
+  const wrongMCQ = wrong.filter(function(f){ return f.q_type !== 'reading_complete_words'; });
+  if(wrongMCQ.length>0){
     html+=`<div class="review-section">
-      <div class="review-section-title">📚 مراجعة الأخطاء (${wrong.length})</div>`;
-    wrong.forEach((f,i)=>{
+      <div class="review-section-title">📚 مراجعة الأخطاء (${wrongMCQ.length})</div>`;
+    wrongMCQ.forEach((f,i)=>{
       const sa=f.student_answer||'—';
       const st=f.student_answer?(f.options[f.student_answer]||''):'لم تجب';
       const ct=f.options[f.correct_answer]||'';
@@ -737,6 +742,19 @@ function renderResults(d){
     </div>`;
 
   ui.innerHTML=html;
+  // Inject CTW results AFTER the hero/score card so user sees score first then review
+  try {
+    if(window._lastFeedback && typeof window.renderCTWResults === 'function'){
+      var ctwHtml = window.renderCTWResults(window._lastFeedback);
+      if(ctwHtml){
+        var ctwWrap = document.createElement('div');
+        ctwWrap.innerHTML = ctwHtml;
+        var actions = ui.querySelector('.results-actions');
+        if(actions && actions.parentNode === ui){ ui.insertBefore(ctwWrap, actions); }
+        else { ui.appendChild(ctwWrap); }
+      }
+    }
+  } catch(e){ console.warn('CTW inject err', e); }
   setTimeout(()=>{
     const c=document.getElementById('scoreCircle');
     if(c)c.style.strokeDashoffset=offset;
@@ -1191,6 +1209,7 @@ if(!window._currentCTW) return out;
 </style>
 <script>
 window.renderCTWResults = function(feedback){
+  // If CTW-only, the original hero already shows score; we just add review cards
   // feedback is array of items; CTW items have q_type === 'reading_complete_words'
   var ctwItems = feedback.filter(function(f){ return f.q_type === 'reading_complete_words'; });
   if(!ctwItems.length) return '';
@@ -1279,52 +1298,7 @@ window.renderCTWResults = function(feedback){
   attach();
 })();
 
-// Capture feedback when exam-submit responds (patch fetch, fully isolated)
-(function(){
-  var _origFetch = window.fetch;
-  window.fetch = function(){
-    var p = _origFetch.apply(this, arguments);
-    try {
-      var url = arguments[0];
-      var urlStr = (typeof url === 'string') ? url : (url && url.url) || '';
-      if(urlStr && urlStr.indexOf('exam-submit') >= 0){
-        // Use .then with isolated try/catch to NEVER affect original promise chain
-        p.then(function(resp){
-          try {
-            var clone = resp.clone();
-            clone.json().then(function(data){
-              try {
-                if(data && data.feedback && Array.isArray(data.feedback)){
-                  window._lastFeedback = data.feedback;
-                  var doRender = function(){
-                    try {
-                      var resultsUI = document.getElementById('resultsUI');
-                      if(!resultsUI) return;
-                      if(resultsUI.classList.contains('hidden')) return;
-                      if(document.querySelector('.ctw-results-section')) return;
-                      if(typeof window.renderCTWResults !== 'function') return;
-                      var ctwHtml = window.renderCTWResults(data.feedback);
-                      if(!ctwHtml) return;
-                      var anchor = resultsUI.querySelector('.results-actions') || resultsUI.lastElementChild;
-                      var wrap = document.createElement('div');
-                      wrap.innerHTML = ctwHtml;
-                      if(anchor && anchor.parentNode === resultsUI){ resultsUI.insertBefore(wrap, anchor); }
-                      else { resultsUI.appendChild(wrap); }
-                    } catch(e){ console.warn('CTW render err', e); }
-                  };
-                  setTimeout(doRender, 300);
-                  setTimeout(doRender, 1000);
-                  setTimeout(doRender, 2500);
-                }
-              } catch(e){ console.warn('CTW capture inner err', e); }
-            }).catch(function(){});
-          } catch(e){ console.warn('CTW clone err', e); }
-        }).catch(function(){});
-      }
-    } catch(e){ console.warn('CTW fetch hook err', e); }
-    return p;
-  };
-})();
+// (Removed) fetch hook - CTW now rendered directly in renderResults
 </script>
 
 </body>
