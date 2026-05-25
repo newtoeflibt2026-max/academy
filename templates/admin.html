@@ -209,6 +209,8 @@ tr:last-child td{border-bottom:none}
     <div class="sb-item" data-page="stages" onclick="nav('stages')"><span class="icon">🏗️</span><span>المستويات</span></div>
     <div class="sb-item" data-page="lessons" onclick="nav('lessons')"><span class="icon">📚</span><span>الدروس</span></div>
     <div class="sb-item" data-page="students" onclick="nav('students')"><span class="icon">👨‍🎓</span><span>الطلاب</span></div>
+    <div class="sb-item" data-page="ctw" onclick="nav('ctw')"><span class="icon">📝</span><span>Complete the Words</span></div>
+    <div class="sb-item" data-page="exam-questions" onclick="nav('exam-questions')"><span class="icon">❓</span><span>أسئلة الامتحانات</span></div>
   </aside>
 
   <main class="main">
@@ -310,6 +312,24 @@ tr:last-child td{border-bottom:none}
         </select>
       </div>
       <div class="table-wrap" id="studentsTable"></div>
+    </div>
+  
+    <!-- CTW (Complete the Words) -->
+    <div class="page" id="page-ctw">
+      <h2 class="page-title">📝 Complete the Words</h2>
+      <p class="page-subtitle">إدارة قطع وكلمات Complete the Words لكل المراحل</p>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;height:calc(100vh - 180px);min-height:600px">
+        <iframe id="ctwFrame" src="about:blank" style="width:100%;height:100%;border:0;background:#f0f2f5"></iframe>
+      </div>
+    </div>
+
+    <!-- EXAM QUESTIONS -->
+    <div class="page" id="page-exam-questions">
+      <h2 class="page-title">❓ أسئلة الامتحانات (نهاية كل مرحلة)</h2>
+      <p class="page-subtitle">إدارة بنك أسئلة امتحانات نهاية المراحل</p>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;height:calc(100vh - 180px);min-height:600px">
+        <iframe id="examQFrame" src="about:blank" style="width:100%;height:100%;border:0;background:#f0f2f5"></iframe>
+      </div>
     </div>
   </main>
 </div>
@@ -425,6 +445,21 @@ const debouncedLoadStudents = () => { clearTimeout(DEBOUNCE_TIMER); DEBOUNCE_TIM
 
 // ========== NAV ==========
 function nav(page){
+  // Lazy-load iframes for CTW and Exam Questions
+  try {
+    if(page === 'ctw'){
+      var f = document.getElementById('ctwFrame');
+      if(f && (!f.src || f.src === 'about:blank' || f.src.indexOf('about:') === 0)){
+        f.src = '/admin/ctw';
+      }
+    } else if(page === 'exam-questions'){
+      var f2 = document.getElementById('examQFrame');
+      if(f2 && (!f2.src || f2.src === 'about:blank' || f2.src.indexOf('about:') === 0)){
+        f2.src = '/admin/questions';
+      }
+    }
+  } catch(e){ console.warn('iframe load err', e); }
+
   document.querySelectorAll('.sb-item').forEach(el => el.classList.toggle('active', el.dataset.page === page));
   document.querySelectorAll('.page').forEach(el => el.classList.toggle('active', el.id === 'page-' + page));
   const loaders = {dashboard:loadDashboard, payments:loadPayments, 'weekly-tasks':loadWeeklyTasks,
