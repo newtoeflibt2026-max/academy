@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOEFL Writing - مسار الكتابة</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo','Segoe UI',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#1a202c;padding:20px}
+.container{max-width:900px;margin:0 auto}
+.header{background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-radius:20px;padding:30px;text-align:center;margin-bottom:25px;box-shadow:0 20px 40px rgba(0,0,0,0.1)}
+.header .icon{font-size:60px;margin-bottom:10px}
+.header h1{font-size:28px;color:#2d3748;margin-bottom:8px}
+.header p{color:#718096;font-size:15px}
+.stages{display:grid;gap:18px}
+.stage{background:white;border-radius:16px;padding:24px;display:flex;align-items:center;gap:18px;box-shadow:0 8px 24px rgba(0,0,0,0.08);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;color:inherit;border:2px solid transparent}
+.stage:not(.locked):hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.15);border-color:#667eea}
+.stage.locked{opacity:0.55;cursor:not-allowed}
+.stage-num{background:linear-gradient(135deg,#667eea,#764ba2);color:white;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;flex-shrink:0}
+.stage.completed .stage-num{background:linear-gradient(135deg,#43e97b,#38f9d7)}
+.stage.locked .stage-num{background:#cbd5e0}
+.stage-body{flex:1}
+.stage-title{font-size:18px;font-weight:bold;color:#2d3748;margin-bottom:5px}
+.stage-desc{font-size:13px;color:#718096;margin-bottom:8px}
+.progress-bar{height:6px;background:#edf2f7;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#43e97b,#38f9d7);transition:width 0.4s}
+.stage-meta{display:flex;gap:10px;margin-top:6px;font-size:12px;color:#a0aec0}
+.lock-icon{font-size:24px;color:#a0aec0}
+.back-btn{display:inline-block;background:white;padding:10px 20px;border-radius:10px;text-decoration:none;color:#667eea;font-weight:bold;margin-bottom:20px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/" class="back-btn">← الرئيسية</a>
+  <div class="header">
+    <div class="icon">{{ track.icon or '✍️' }}</div>
+    <h1>{{ track.title_ar }}</h1>
+    <p>{{ track.description_ar }}</p>
+  </div>
+  <div class="stages">
+    {% for s in stages %}
+      {% set is_locked = s.is_locked == 1 and s.done_count == 0 and s.order_index > 1 %}
+      {% set is_done = s.lesson_count > 0 and s.done_count == s.lesson_count %}
+      {% if is_locked %}
+      <div class="stage locked">
+        <div class="stage-num">🔒</div>
+        <div class="stage-body">
+          <div class="stage-title">{{ s.title_ar }}</div>
+          <div class="stage-desc">{{ s.description_ar }}</div>
+          <div class="stage-meta">أكمل المرحلة السابقة لفتح هذه المرحلة</div>
+        </div>
+      </div>
+      {% else %}
+      <a class="stage {% if is_done %}completed{% endif %}" href="/writing/stage/{{ s.id }}?user_id={{ user_id }}">
+        <div class="stage-num">{% if is_done %}✓{% else %}{{ s.order_index }}{% endif %}</div>
+        <div class="stage-body">
+          <div class="stage-title">{{ s.title_ar }}</div>
+          <div class="stage-desc">{{ s.description_ar }}</div>
+          {% if s.lesson_count > 0 %}
+          <div class="progress-bar"><div class="progress-fill" style="width:{{ s.progress_pct }}%"></div></div>
+          <div class="stage-meta">
+            <span>📚 {{ s.lesson_count }} دروس</span>
+            <span>✓ {{ s.done_count }} مكتمل</span>
+            <span>{{ s.progress_pct }}%</span>
+          </div>
+          {% else %}
+          <div class="stage-meta">🚧 المحتوى قيد الإعداد</div>
+          {% endif %}
+        </div>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+</body>
+</html>

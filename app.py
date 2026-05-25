@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
 
 import os
@@ -11,6 +11,15 @@ from db import (get_db, get_all_students_db, get_student,
 
 app = Flask(__name__)
 
+
+# === TOEFL Writing Blueprint (Phase 2) ===
+try:
+    from routes.writing_toefl import writing_bp
+    app.register_blueprint(writing_bp)
+    print("[Writing] Blueprint registered: /writing, /api/writing/*")
+except Exception as _e:
+    print(f"[Writing] Blueprint registration failed: {_e}")
+
 # Phase 7: Placement test blueprint
 try:
     from modules.placement_web import placement_bp
@@ -21,7 +30,7 @@ except Exception as _e:
 
 app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Pages Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 # ===== Phase 12G: Unified DB connection with WAL + busy_timeout =====
 def _db_safe(path=None):
@@ -86,7 +95,7 @@ def _ensure_all_exam_columns():
     except Exception as e:
         print(f"[ALL-COLS] ERROR: {e}")
 
-# يُنفّذ فوراً عند load (Gunicorn/Flask/WSGI)
+# ?????? ????? ??? load (Gunicorn/Flask/WSGI)
 try:
     _ensure_all_exam_columns()
 except Exception as _e:
@@ -213,7 +222,7 @@ def raw_to_band(raw, section):
     elif section == "speaking":
         table = [(28,6),(27,5.5),(25,5),(23,4.5),(20,4),(18,3.5),(16,3),(13,2.5),(11,2),(5,1.5),(0,1)]
     else:
-        # percentage 0-100 → band
+        # percentage 0-100 ? band
         pct = float(raw)
         if pct >= 95: return 6
         if pct >= 88: return 5.5
@@ -555,13 +564,13 @@ def api_share_text():
     streak = _rq.args.get("streak", "0")
     score = _rq.args.get("score", "")
     stage = _rq.args.get("stage", "")
-    lines = ["🎯 إنجازي اليوم في Yamen Academy:"]
-    if score: lines.append(f"📊 درجتي: {score}%")
-    if stage: lines.append(f"📚 المرحلة: {stage}")
-    if xp and xp != "0": lines.append(f"⚡ XP المكتسبة: {xp}")
-    if streak and streak != "0": lines.append(f"🔥 سلسلة متواصلة: {streak} يوم")
+    lines = ["?? ?????? ????? ?? Yamen Academy:"]
+    if score: lines.append(f"?? ?????: {score}%")
+    if stage: lines.append(f"?? ???????: {stage}")
+    if xp and xp != "0": lines.append(f"? XP ????????: {xp}")
+    if streak and streak != "0": lines.append(f"?? ????? ???????: {streak} ???")
     lines.append("")
-    lines.append("انضم لي وتعلّم TOEFL معاً! 🚀")
+    lines.append("???? ?? ?????? TOEFL ????! ??")
     lines.append("https://t.me/YamenAcademy_Bot")
     text = "\n".join(lines)
     return _jf({"ok": True, "text": text})
@@ -665,7 +674,7 @@ def api_stats():
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Students Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Students â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/students")
 def api_students():
     q = request.args.get("q","").strip()
@@ -714,7 +723,7 @@ def api_toggle_active(uid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Questions Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Questions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/questions", methods=["GET"])
 def api_get_questions():
     skill = request.args.get("skill","")
@@ -755,7 +764,7 @@ def api_delete_question(qid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Lessons Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Lessons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/lessons", methods=["GET"])
 def api_get_lessons():
     conn = get_db()
@@ -809,7 +818,7 @@ def api_delete_lesson(lid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Missions Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Missions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/missions", methods=["GET"])
 def api_get_missions():
     conn = get_db()
@@ -843,7 +852,7 @@ def api_delete_mission(mid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Plans Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Plans â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/plans", methods=["GET"])
 def api_get_plans():
     conn = get_db()
@@ -910,7 +919,7 @@ def api_toggle_plan(pid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Payments Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Payments â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/payments", methods=["GET"])
 def api_get_payments():
     conn = get_db()
@@ -935,7 +944,7 @@ def api_verify_payment(pid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Settings Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/settings", methods=["GET"])
 def api_get_settings():
     conn = get_db()
@@ -952,7 +961,7 @@ def api_update_settings():
         set_setting(key, str(value))
     return jsonify({"ok": True})
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Phase settings Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Phase settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/phases", methods=["GET"])
 def api_get_phases():
     conn = get_db()
@@ -978,7 +987,7 @@ def api_update_phase(phase_num):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Broadcast Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Broadcast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/broadcast", methods=["POST"])
 def api_broadcast():
     d = request.json or {}
@@ -1002,7 +1011,7 @@ def api_broadcast_history():
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Student messages Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Student messages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/messages", methods=["GET"])
 def api_get_messages():
     conn = get_db()
@@ -1036,7 +1045,7 @@ def api_student_message():
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Public endpoints Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Public endpoints â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/public/plans", methods=["GET"])
 def api_public_plans():
     conn = get_db()
@@ -1073,7 +1082,7 @@ def api_grad_status():
         conn.close()
 
 
-# Ã¢â€â‚¬Ã¢â€â‚¬ Phase Settings Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€ Phase Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/phase-settings", methods=["GET"])
 def api_phase_settings_get():
     conn = get_db()
@@ -1098,7 +1107,7 @@ def api_phase_settings_put(pid):
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬ Grading Rules Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€ Grading Rules â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/grading-rules", methods=["GET"])
 def api_grading_rules_get():
     conn = get_db()
@@ -1131,7 +1140,7 @@ def api_grading_rules_delete(rid):
         conn.close()
 
 
-# Ã¢â€â‚¬Ã¢â€â‚¬ Quiz Result from Student Portal Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€ Quiz Result from Student Portal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/student/quiz-result", methods=["POST"])
 def api_quiz_result():
     d = request.json or {}
@@ -1152,7 +1161,7 @@ def api_quiz_result():
     return jsonify({"ok": True})
 
 
-# Ã¢â€â‚¬Ã¢â€â‚¬ Add Student Manually Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€ Add Student Manually â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/admin/students/add", methods=["POST"])
 def api_add_student():
     d = request.json or {}
@@ -1161,7 +1170,7 @@ def api_add_student():
     user = d.get("username", "").strip()
     paid = int(d.get("is_paid", 0))
     if not tid:
-        return jsonify({"error": "telegram_id Ã™â€¦Ã˜Â·Ã™â€žÃ™Ë†Ã˜Â¨"}), 400
+        return jsonify({"error": "telegram_id Ù…Ø·Ù„ÙˆØ¨"}), 400
     conn = get_db()
     try:
         conn.execute("""INSERT OR IGNORE INTO students
@@ -1176,9 +1185,9 @@ def api_add_student():
     finally:
         conn.close()
 
-# Ã¢â€â‚¬Ã¢â€â‚¬ Phase Settings Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€ Phase Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Entry point Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Entry point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @app.route("/api/student/profile", methods=["GET"])
 def api_student_profile():
@@ -1187,7 +1196,7 @@ def api_student_profile():
         return jsonify({"error": "user_id required"}), 400
     conn = get_db()
     try:
-        # Ã˜Â§Ã˜Â¨Ã˜Â­Ã˜Â« Ã˜Â¨Ã™Æ’Ã™â€žÃ˜Â§ Ã˜Â§Ã™â€žÃ˜Â¹Ã™â€¦Ã™Ë†Ã˜Â¯Ã™Å Ã™â€ 
+        # Ø§Ø¨Ø­Ø« Ø¨ÙƒÙ„Ø§ Ø§Ù„Ø¹Ù…ÙˆØ¯ÙŠÙ†
         s = conn.execute(
             "SELECT * FROM students WHERE user_id=? OR telegram_id=?",
             (uid, uid)
@@ -1214,9 +1223,9 @@ def api_student_profile():
         conn.close()
 
 
-# Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # Payment Approval / Rejection endpoints
-# Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 @app.route("/api/admin/payments/<int:pid>/approve", methods=["POST"])
 def api_approve_payment(pid):
@@ -1230,7 +1239,7 @@ def api_approve_payment(pid):
         uid = pay.get("user_id") or pay.get("telegram_id")
         plan_id = pay.get("plan_id", 1)
 
-        # Ã˜ÂªÃ™ÂÃ˜Â¹Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨
+        # ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø·Ø§Ù„Ø¨
         conn.execute("""
             UPDATE students SET is_paid=1, is_active=1,
             subscription_type='paid',
@@ -1238,7 +1247,7 @@ def api_approve_payment(pid):
             WHERE user_id=? OR telegram_id=?
         """, (datetime.now().isoformat(), uid, str(uid)))
 
-        # Ã˜ÂªÃ˜Â­Ã˜Â¯Ã™Å Ã˜Â« Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â© Ã˜Â§Ã™â€žÃ˜Â¯Ã™ÂÃ˜Â¹
+        # ØªØ­Ø¯ÙŠØ« Ø­Ø§Ù„Ø© Ø§Ù„Ø¯ÙØ¹
         conn.execute("""
             UPDATE payments SET status='approved', verified_at=?
             WHERE id=?
@@ -1246,7 +1255,7 @@ def api_approve_payment(pid):
 
         conn.commit()
 
-        # Ã˜Â¥Ã˜Â´Ã˜Â¹Ã˜Â§Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨ Ã˜Â¹Ã˜Â¨Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â¨Ã™Ë†Ã˜Âª
+        # Ø¥Ø´Ø¹Ø§Ø± Ø§Ù„Ø·Ø§Ù„Ø¨ Ø¹Ø¨Ø± Ø§Ù„Ø¨ÙˆØª
         try:
             import asyncio, os
             from aiogram import Bot
@@ -1258,14 +1267,14 @@ def api_approve_payment(pid):
                     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
                     await bot.send_message(
                         chat_id=int(uid),
-                        text="Ã¢Å“â€¦ <b>Ã˜ÂªÃ™â€¦ Ã˜ÂªÃ™ÂÃ˜Â¹Ã™Å Ã™â€ž Ã˜Â§Ã˜Â´Ã˜ÂªÃ˜Â±Ã˜Â§Ã™Æ’Ã™Æ’!</b>\n\nÃ™â€¦Ã˜Â±Ã˜Â­Ã˜Â¨Ã˜Â§Ã™â€¹ Ã˜Â¨Ã™Æ’ Ã™ÂÃ™Å  Ã˜Â£Ã™Æ’Ã˜Â§Ã˜Â¯Ã™Å Ã™â€¦Ã™Å Ã˜Â© Ã™Å Ã˜Â§Ã™â€¦Ã™â€  Ã™â€žÃ™â€žÃ˜ÂªÃ™Ë†Ã™ÂÃ™â€ž Ã°Å¸Å½â€œ\nÃ˜Â§Ã˜Â¨Ã˜Â¯Ã˜Â£ Ã˜Â±Ã˜Â­Ã™â€žÃ˜ÂªÃ™Æ’ Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â¹Ã™â€žÃ™Å Ã™â€¦Ã™Å Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¢Ã™â€ !"
+                        text="âœ… <b>ØªÙ… ØªÙØ¹ÙŠÙ„ Ø§Ø´ØªØ±Ø§ÙƒÙƒ!</b>\n\nÙ…Ø±Ø­Ø¨Ø§Ù‹ Ø¨Ùƒ ÙÙŠ Ø£ÙƒØ§Ø¯ÙŠÙ…ÙŠØ© ÙŠØ§Ù…Ù† Ù„Ù„ØªÙˆÙÙ„ ðŸŽ“\nØ§Ø¨Ø¯Ø£ Ø±Ø­Ù„ØªÙƒ Ø§Ù„ØªØ¹Ù„ÙŠÙ…ÙŠØ© Ø§Ù„Ø¢Ù†!"
                     )
                     await bot.session.close()
                 asyncio.run(notify())
         except Exception as e:
             print(f"Bot notify error: {e}")
 
-        return jsonify({"ok": True, "message": "Ã˜ÂªÃ™â€¦ Ã˜ÂªÃ™ÂÃ˜Â¹Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨"})
+        return jsonify({"ok": True, "message": "ØªÙ… ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø·Ø§Ù„Ø¨"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -1285,7 +1294,7 @@ def api_reject_payment(pid):
         conn.execute("UPDATE payments SET status='rejected' WHERE id=?", (pid,))
         conn.commit()
 
-        # Ã˜Â¥Ã˜Â´Ã˜Â¹Ã˜Â§Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨
+        # Ø¥Ø´Ø¹Ø§Ø± Ø§Ù„Ø·Ø§Ù„Ø¨
         try:
             import asyncio, os
             from aiogram import Bot
@@ -1297,14 +1306,14 @@ def api_reject_payment(pid):
                     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
                     await bot.send_message(
                         chat_id=int(uid),
-                        text="Ã¢ÂÅ’ <b>Ã˜ÂªÃ™â€¦ Ã˜Â±Ã™ÂÃ˜Â¶ Ã˜Â·Ã™â€žÃ˜Â¨ Ã˜Â§Ã™â€žÃ˜Â§Ã˜Â´Ã˜ÂªÃ˜Â±Ã˜Â§Ã™Æ’</b>\n\nÃ™Å Ã˜Â±Ã˜Â¬Ã™â€° Ã˜Â§Ã™â€žÃ˜ÂªÃ™Ë†Ã˜Â§Ã˜ÂµÃ™â€ž Ã™â€¦Ã˜Â¹ Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â¯Ã™â€¦Ã™â€  Ã™â€žÃ™â€žÃ™â€¦Ã˜Â²Ã™Å Ã˜Â¯ Ã™â€¦Ã™â€  Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â¹Ã™â€žÃ™Ë†Ã™â€¦Ã˜Â§Ã˜Âª."
+                        text="âŒ <b>ØªÙ… Ø±ÙØ¶ Ø·Ù„Ø¨ Ø§Ù„Ø§Ø´ØªØ±Ø§Ùƒ</b>\n\nÙŠØ±Ø¬Ù‰ Ø§Ù„ØªÙˆØ§ØµÙ„ Ù…Ø¹ Ø§Ù„Ø£Ø¯Ù…Ù† Ù„Ù„Ù…Ø²ÙŠØ¯ Ù…Ù† Ø§Ù„Ù…Ø¹Ù„ÙˆÙ…Ø§Øª."
                     )
                     await bot.session.close()
                 asyncio.run(notify())
         except Exception as e:
             print(f"Bot notify error: {e}")
 
-        return jsonify({"ok": True, "message": "Ã˜ÂªÃ™â€¦ Ã˜Â±Ã™ÂÃ˜Â¶ Ã˜Â§Ã™â€žÃ˜Â·Ã™â€žÃ˜Â¨"})
+        return jsonify({"ok": True, "message": "ØªÙ… Ø±ÙØ¶ Ø§Ù„Ø·Ù„Ø¨"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:
@@ -1330,7 +1339,7 @@ def api_send_message_to_student(uid):
     d = request.json or {}
     text = d.get("text", "").strip()
     if not text:
-        return jsonify({"error": "Ã˜Â§Ã™â€žÃ™â€ Ã˜Âµ Ã™â€¦Ã˜Â·Ã™â€žÃ™Ë†Ã˜Â¨"}), 400
+        return jsonify({"error": "Ø§Ù„Ù†Øµ Ù…Ø·Ù„ÙˆØ¨"}), 400
     try:
         import asyncio, os
         from aiogram import Bot
@@ -1338,7 +1347,7 @@ def api_send_message_to_student(uid):
         from aiogram.enums import ParseMode
         token = os.environ.get("BOT_TOKEN", "")
         if not token:
-            return jsonify({"error": "BOT_TOKEN Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â¶Ã˜Â¨Ã™Ë†Ã˜Â·"}), 500
+            return jsonify({"error": "BOT_TOKEN ØºÙŠØ± Ù…Ø¶Ø¨ÙˆØ·"}), 500
         async def send():
             bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
             await bot.send_message(chat_id=uid, text=text)
@@ -1350,9 +1359,9 @@ def api_send_message_to_student(uid):
 
 
 
-# Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
-# Ã°Å¸â€œÅ¡ LESSON CONTENT MANAGEMENT Ã¢â‚¬â€ Phase 2A
-# Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ðŸ“š LESSON CONTENT MANAGEMENT â€” Phase 2A
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 ALLOWED_ITEM_TABLES = {
     "words":     "lesson_letter_fill",
@@ -1761,7 +1770,7 @@ def api_update_lesson_item(table, item_id):
         return jsonify({"error": str(e)}), 500
 
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Student Lessons API Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Student Lessons API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/lessons", methods=["GET"])
 def api_student_lessons():
     """Returns active lessons for students."""
@@ -1868,7 +1877,7 @@ def api_student_complete_lesson(lid):
 
 
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Student Profile by ID (for student_dashboard) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Student Profile by ID (for student_dashboard) â”€â”€â”€â”€â”€â”€â”€
 @app.route("/api/student/<int:uid>", methods=["GET"])
 def api_student_by_id(uid):
     """Returns full student profile by telegram_id for student dashboard."""
@@ -1886,7 +1895,7 @@ def api_student_by_id(uid):
         d.setdefault("streak", d.get("streak_days", 0) or 0)
         d.setdefault("missions_completed", d.get("missions_completed", 0) or 0)
         d.setdefault("placement_score", d.get("placement_score", 0) or 0)
-        d.setdefault("full_name", d.get("name") or d.get("username") or "Ã˜Â·Ã˜Â§Ã™â€žÃ˜Â¨")
+        d.setdefault("full_name", d.get("name") or d.get("username") or "Ø·Ø§Ù„Ø¨")
         return jsonify(d)
     finally:
         conn.close()
@@ -1939,7 +1948,7 @@ def api_graduation_status():
 
 
 
-# Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Lesson detail page Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+# â”€â”€â”€ Lesson detail page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @app.route("/lesson/<int:lid>")
 def lesson_page(lid):
     """Serves the full lesson page for students."""
@@ -1947,9 +1956,9 @@ def lesson_page(lid):
 
 
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ═══════════════════════════════════════════════════════════════════════
 
-# â”€â”€â”€ Mini App lesson page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ─── Mini App lesson page ──────────────────────────────────────────
 @app.route("/miniapp/plans")
 def miniapp_plans_page():
     """Render pricing page (reads plans dynamically from /api/miniapp/plans)."""
@@ -1961,8 +1970,8 @@ def miniapp_lesson_page(lid):
     from flask import render_template
     return render_template("miniapp_lesson.html", lesson_id=lid)
 
-#  Mini App APIs â€” Phase 2 (added by automated script)
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+#  Mini App APIs — Phase 2 (added by automated script)
+# ═══════════════════════════════════════════════════════════════════════
 import json as _json
 import sqlite3 as _sqlite3
 from datetime import datetime as _datetime, timedelta as _timedelta
@@ -2351,9 +2360,9 @@ def miniapp_plans():
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
 
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ═══════════════════════════════════════════════════════════════════════
 #  End of Mini App APIs
-# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# ═══════════════════════════════════════════════════════════════════════
 
 
 
@@ -2637,7 +2646,7 @@ def api_payment_submit():
         new_id = cur.lastrowid
         conn.commit()
         conn.close()
-        return _jsonify({"ok": True, "payment_id": new_id, "message": "تم استلام إثبات الدفع، سيتم مراجعته قريباً"})
+        return _jsonify({"ok": True, "payment_id": new_id, "message": "?? ?????? ????? ?????? ???? ??????? ??????"})
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
 
@@ -2749,7 +2758,7 @@ def api_admin_plan_delete(pid):
         cur.execute("SELECT COUNT(*) as c FROM payments WHERE plan_id=?", (pid,))
         if cur.fetchone()["c"] > 0:
             conn.close()
-            return _jsonify({"error": "لا يمكن حذف باقة لها مدفوعات. عطّلها بدلاً من ذلك."}), 400
+            return _jsonify({"error": "?? ???? ??? ???? ??? ???????. ?????? ????? ?? ???."}), 400
         cur.execute("DELETE FROM subscription_plans WHERE id=?", (pid,))
         conn.commit()
         conn.close()
@@ -2792,17 +2801,17 @@ def api_payment_free_activate():
         plan = cur.fetchone()
         if not plan:
             conn.close()
-            return _jsonify({"error": "الباقة غير موجودة"}), 404
+            return _jsonify({"error": "?????? ??? ??????"}), 404
         if float(plan["price"]) > 0:
             conn.close()
-            return _jsonify({"error": "هذه الباقة ليست مجانية"}), 400
+            return _jsonify({"error": "??? ?????? ???? ??????"}), 400
 
         # Check if student already used free plan
         cur.execute("SELECT free_plan_used FROM students WHERE user_id=?", (sid,))
         student = cur.fetchone()
         if student and student["free_plan_used"]:
             conn.close()
-            return _jsonify({"error": "لقد استخدمت الباقة المجانية مسبقاً. يمكنك الاشتراك في إحدى الباقات المدفوعة."}), 400
+            return _jsonify({"error": "??? ??????? ?????? ???????? ??????. ????? ???????? ?? ???? ??????? ????????."}), 400
 
         # Mark free plan as used (keeps all student progress intact)
         cur.execute("UPDATE students SET free_plan_used=1, free_plan_used_at=datetime('now') WHERE user_id=?", (sid,))
@@ -2810,7 +2819,7 @@ def api_payment_free_activate():
         # Create payment record (auto-approved)
         cur.execute("""INSERT INTO payments
             (user_id, telegram_id, plan_id, plan_name, amount, currency, status, full_name, created_at, verified_at, notes)
-            VALUES (?, ?, ?, ?, 0, 'JOD', 'approved', '', datetime('now'), datetime('now'), 'تفعيل مجاني تلقائي')""",
+            VALUES (?, ?, ?, ?, 0, 'JOD', 'approved', '', datetime('now'), datetime('now'), '????? ????? ??????')""",
             (sid, sid, pid, plan["name_ar"]))
         pay_id = cur.lastrowid
 
@@ -2825,7 +2834,7 @@ def api_payment_free_activate():
         return _jsonify({
             "ok": True,
             "payment_id": pay_id,
-            "message": "🎉 تم تفعيل الباقة المجانية! استمتع برحلتك التعليمية."
+            "message": "?? ?? ????? ?????? ????????! ?????? ?????? ?????????."
         })
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
@@ -2901,10 +2910,10 @@ def api_student_subscription_status():
 
 # ===================== Phase 11B: Free Plan Weekly Tasks =====================
 WEEKLY_TASK_TYPES = {
-    "share": "شارك الأكاديمية على وسائل التواصل (سناب/إنستا/فيسبوك)",
-    "invite": "ادعُ صديقاً للتسجيل في الأكاديمية",
-    "review": "اكتب تقييماً للأكاديمية على متجر التطبيقات أو جوجل",
-    "story": "انشر قصة عن تجربتك مع الأكاديمية"
+    "share": "???? ?????????? ??? ????? ??????? (????/?????/??????)",
+    "invite": "???? ?????? ??????? ?? ??????????",
+    "review": "???? ??????? ?????????? ??? ???? ????????? ?? ????",
+    "story": "???? ??? ?? ?????? ?? ??????????"
 }
 
 @app.route("/api/student/weekly-task/status")
@@ -2921,7 +2930,7 @@ def api_weekly_task_status():
             WHERE user_id=? AND is_active=1
             AND (plan_name LIKE ? OR plan_name LIKE ? OR plan_name LIKE ?)
             ORDER BY id DESC LIMIT 1""",
-            (sid, "%مجاني%", "%تجريب%", "%free%"))
+            (sid, "%?????%", "%?????%", "%free%"))
         sub = cur.fetchone()
         if not sub:
             conn.close()
@@ -2973,7 +2982,7 @@ def api_weekly_task_submit():
             return _jsonify({"error": "empty file"}), 400
         ext = f.filename.rsplit(".", 1)[-1].lower()
         if ext not in ("jpg", "jpeg", "png", "webp"):
-            return _jsonify({"error": "صيغة الصورة غير مدعومة"}), 400
+            return _jsonify({"error": "???? ?????? ??? ??????"}), 400
         import os, time
         folder = os.path.join(app.root_path, "static", "uploads", "weekly_tasks")
         os.makedirs(folder, exist_ok=True)
@@ -2988,7 +2997,7 @@ def api_weekly_task_submit():
             (sid, week, task_type, WEEKLY_TASK_TYPES.get(task_type, ""), rel))
         conn.commit()
         conn.close()
-        return _jsonify({"ok": True, "message": "✅ تم إرسال المهمة. سيراجعها الأدمن قريباً."})
+        return _jsonify({"ok": True, "message": "? ?? ????? ??????. ???????? ?????? ??????."})
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
 
@@ -3076,8 +3085,8 @@ def _ensure_weekly_templates_table():
             title TEXT NOT NULL,
             description TEXT,
             action_url TEXT,
-            action_label TEXT DEFAULT 'اذهب للمهمة',
-            icon TEXT DEFAULT '⭐',
+            action_label TEXT DEFAULT '???? ??????',
+            icon TEXT DEFAULT '?',
             is_active INTEGER DEFAULT 1,
             created_at TEXT DEFAULT (datetime('now')),
             updated_at TEXT DEFAULT (datetime('now'))
@@ -3086,14 +3095,14 @@ def _ensure_weekly_templates_table():
         cur.execute("SELECT COUNT(*) FROM weekly_task_templates")
         if cur.fetchone()[0] == 0:
             defaults = [
-                (1, "⭐ ريفيو على صفحة فيسبوك", "اكتب تقييماً 5 نجوم على صفحة الأكاديمية على فيسبوك. ارفع صورة الريفيو بعد النشر.",
-                 "https://www.facebook.com/YamenToeflIelts/reviews", "🔗 افتح صفحة الريفيوات", "⭐"),
-                (2, "👥 ادعُ صديقاً", "ادعُ صديقاً للتسجيل في الأكاديمية وأرسل صورة محادثة الدعوة معه.",
-                 "https://t.me/YamenAcademyBot", "🔗 رابط البوت للدعوة", "👥"),
-                (3, "📱 مشاركة قصة على إنستا/سناب", "انشر قصة عن تجربتك مع الأكاديمية على إنستغرام أو سناب شات وارفع صورة القصة.",
-                 "", "📸 شارك الآن", "📱"),
-                (4, "📝 تقييم على Google", "اكتب مراجعة على Google Maps أو متجر التطبيقات وارفع صورة المراجعة.",
-                 "", "🔗 افتح صفحة التقييم", "📝")
+                (1, "? ????? ??? ???? ??????", "???? ??????? 5 ???? ??? ???? ?????????? ??? ??????. ???? ???? ??????? ??? ?????.",
+                 "https://www.facebook.com/YamenToeflIelts/reviews", "?? ???? ???? ?????????", "?"),
+                (2, "?? ???? ??????", "???? ?????? ??????? ?? ?????????? ????? ???? ?????? ?????? ???.",
+                 "https://t.me/YamenAcademyBot", "?? ???? ????? ??????", "??"),
+                (3, "?? ?????? ??? ??? ?????/????", "???? ??? ?? ?????? ?? ?????????? ??? ???????? ?? ???? ??? ????? ???? ?????.",
+                 "", "?? ???? ????", "??"),
+                (4, "?? ????? ??? Google", "???? ?????? ??? Google Maps ?? ???? ????????? ????? ???? ????????.",
+                 "", "?? ???? ???? ???????", "??")
             ]
             cur.executemany("""INSERT INTO weekly_task_templates
                 (week_number, title, description, action_url, action_label, icon)
@@ -3140,15 +3149,15 @@ def api_admin_weekly_templates_create():
             (week_number, title, description, action_url, action_label, icon, is_active)
             VALUES (?, ?, ?, ?, ?, ?, ?)""",
             (week, data.get("title",""), data.get("description",""),
-             data.get("action_url",""), data.get("action_label","اذهب للمهمة"),
-             data.get("icon","⭐"), int(data.get("is_active", 1))))
+             data.get("action_url",""), data.get("action_label","???? ??????"),
+             data.get("icon","?"), int(data.get("is_active", 1))))
         conn.commit()
         new_id = cur.lastrowid
         conn.close()
         return _jsonify({"ok": True, "id": new_id})
     except Exception as e:
         if "UNIQUE" in str(e):
-            return _jsonify({"error": "أسبوع رقم {} موجود مسبقاً".format(week)}), 400
+            return _jsonify({"error": "????? ??? {} ????? ??????".format(week)}), 400
         import traceback
         return _jsonify({"error": str(e), "trace": traceback.format_exc()[:400]}), 500
 
@@ -3164,7 +3173,7 @@ def api_admin_weekly_templates_update(tid):
             title=?, description=?, action_url=?, action_label=?, icon=?, is_active=?,
             updated_at=datetime('now') WHERE id=?""",
             (data.get("title",""), data.get("description",""), data.get("action_url",""),
-             data.get("action_label","اذهب للمهمة"), data.get("icon","⭐"),
+             data.get("action_label","???? ??????"), data.get("icon","?"),
              int(data.get("is_active", 1)), tid))
         conn.commit()
         conn.close()
@@ -3203,7 +3212,7 @@ def api_student_weekly_task_current():
             WHERE user_id=? AND is_active=1
             AND (plan_name LIKE ? OR plan_name LIKE ? OR plan_name LIKE ?)
             ORDER BY id DESC LIMIT 1""",
-            (sid, "%مجاني%", "%تجريب%", "%free%"))
+            (sid, "%?????%", "%?????%", "%free%"))
         sub = cur.fetchone()
         if not sub:
             conn.close()
@@ -3242,7 +3251,7 @@ def api_student_weekly_task_current():
 
 @app.route('/weekly-task')
 def page_weekly_task():
-    """صفحة المهمة الأسبوعية للطالب"""
+    """???? ?????? ????????? ??????"""
     return render_template('weekly-task.html')
 
 
@@ -3930,9 +3939,9 @@ def api_admin_student_journey(user_id):
 
 
 
-# ═══════════════════════════════════════════════
-# Phase 12D — Admin Lessons/Questions Management
-# ═══════════════════════════════════════════════
+# -----------------------------------------------
+# Phase 12D � Admin Lessons/Questions Management
+# -----------------------------------------------
 def _ensure_lesson_columns():
     import sqlite3
     try:
@@ -3956,16 +3965,16 @@ def api_admin_lessons_create_v2():
     try:
         data = request.get_json() or {}
         stage_id = data.get("stage_id")
-        title = data.get("title") or data.get("name") or "درس جديد"
+        title = data.get("title") or data.get("name") or "??? ????"
         pass_score = int(data.get("pass_score", 70))
         if not stage_id:
             return jsonify({"success":False,"message":"stage_id required"}), 400
         conn = _db_safe(); c = conn.cursor()
-        # أعلى order_index في المرحلة
+        # ???? order_index ?? ???????
         row = c.execute("SELECT COALESCE(MAX(order_index),0) FROM lessons WHERE stage_id=?",(stage_id,)).fetchone()
         new_order = (row[0] or 0) + 1
         cols = [r[1] for r in c.execute("PRAGMA table_info(lessons)").fetchall()]
-        # محاولة insert ذكي
+        # ?????? insert ???
         fields = ["stage_id","order_index","pass_score"]
         values = [stage_id, new_order, pass_score]
         if "title" in cols: fields.append("title"); values.append(title)
@@ -4008,7 +4017,7 @@ def api_admin_lessons_delete_v2(lid):
     import sqlite3
     try:
         conn = _db_safe(); c = conn.cursor()
-        # احذف الأسئلة أولاً
+        # ???? ??????? ?????
         try: c.execute("DELETE FROM lesson_questions WHERE lesson_id=?",(lid,))
         except: pass
         c.execute("DELETE FROM lessons WHERE id=?",(lid,))
@@ -4094,7 +4103,7 @@ def api_admin_stages_create_v2():
         
         fields = ["name_ar", "name_en", "code", "track", "section_name", "min_score", "order_index"]
         values = [
-            data.get("name_ar") or data.get("name") or "مرحلة جديدة",
+            data.get("name_ar") or data.get("name") or "????? ?????",
             data.get("name_en") or data.get("name") or "New Stage",
             data.get("code", "NEW"),
             track,
@@ -4133,7 +4142,7 @@ def api_admin_stages_update_v2(sid):
         conn = _db_safe(); c = conn.cursor()
         cols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
         
-        # خريطة الحقول من JSON إلى أعمدة DB
+        # ????? ?????? ?? JSON ??? ????? DB
         field_map = {
             "name_ar": "name_ar", "name_en": "name_en", "name": "name",
             "code": "code", "path": "path", "track": "path",
@@ -4148,7 +4157,7 @@ def api_admin_stages_update_v2(sid):
             if json_key in data and db_col in cols and not any(u.startswith(db_col+"=") for u in updates):
                 updates.append(f"{db_col}=?"); vals.append(data[json_key])
         
-        # إذا أُرسلت name_ar فقط، انسخها لـ name أيضاً للتوافق
+        # ??? ?????? name_ar ???? ?????? ?? name ????? ???????
         if "name_ar" in data and "name" in cols and not any(u.startswith("name=") for u in updates):
             updates.append("name=?"); vals.append(data["name_ar"])
         
@@ -4172,7 +4181,7 @@ def api_admin_stages_delete_v2(sid):
     import sqlite3
     try:
         conn = _db_safe(); c = conn.cursor()
-        # حذف الأسئلة والدروس أولاً
+        # ??? ??????? ??????? ?????
         try:
             lesson_ids = [r[0] for r in c.execute("SELECT id FROM lessons WHERE stage_id=?",(sid,)).fetchall()]
             for lid in lesson_ids:
@@ -4188,9 +4197,9 @@ def api_admin_stages_delete_v2(sid):
 
 
 
-# ═══════════════════════════════════════════════
-# Phase 12E — Stage Exam System (bank + attempts)
-# ═══════════════════════════════════════════════
+# -----------------------------------------------
+# Phase 12E � Stage Exam System (bank + attempts)
+# -----------------------------------------------
 def _ensure_stage_exam_schema():
     import sqlite3
     try:
@@ -4245,7 +4254,7 @@ def _ensure_stage_exam_schema():
 _ensure_stage_exam_schema()
 
 
-# ─── Admin: قائمة بنك الأسئلة لمرحلة ───
+# --- Admin: ????? ??? ??????? ?????? ---
 
 
 @app.route("/api/admin/stages/<int:sid>/exam-questions", methods=["GET"])
@@ -4346,7 +4355,7 @@ def api_admin_stage_exam_settings(sid):
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# ─── Admin: تعديل شرط النجاح الشخصي للطالب ───
+# --- Admin: ????? ??? ?????? ?????? ?????? ---
 @app.route("/api/admin/students/<student_id>/pass-score", methods=["POST"])
 def api_admin_student_pass_score(student_id):
     import sqlite3
@@ -4363,7 +4372,7 @@ def api_admin_student_pass_score(student_id):
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# ─── Student: بدء امتحان مرحلة ───
+# --- Student: ??? ?????? ????? ---
 @app.route("/api/student/stage/<int:sid>/exam-start", methods=["GET"])
 def api_student_stage_exam_start(sid):
     import sqlite3, random, json
@@ -4374,12 +4383,12 @@ def api_student_stage_exam_start(sid):
         conn = _db_safe(); conn.row_factory = sqlite3.Row
         c = conn.cursor()
 
-        # شرط النجاح الشخصي
+        # ??? ?????? ??????
         st = c.execute("SELECT personal_pass_score FROM students WHERE user_id=?", (user_id,)).fetchone()
         personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
         required = personal + 10
 
-        # عدد الأسئلة المطلوب
+        # ??? ??????? ???????
         scols2 = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
         sel2 = ["exam_questions_count"]
         for col in ["name_ar","name_en","name"]:
@@ -4389,21 +4398,21 @@ def api_student_stage_exam_start(sid):
             return jsonify({"success": False, "message": "stage not found"}), 404
         cnt = stg["exam_questions_count"] or 10
 
-        # كل الأسئلة من البنك
+        # ?? ??????? ?? ?????
         all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?", (sid,)).fetchall()
         if len(all_q) < cnt:
             conn.close()
             return jsonify({
                 "success": False,
-                "message": f"بنك الأسئلة غير كافٍ. يحتاج {cnt} سؤال، متوفر {len(all_q)}"
+                "message": f"??? ??????? ??? ????. ????? {cnt} ????? ????? {len(all_q)}"
             }), 400
 
-        # اختيار عشوائي
+        # ?????? ??????
         sample = random.sample([dict(r) for r in all_q], cnt)
-        # إخفاء الإجابة الصحيحة في الإرسال
+        # ????? ??????? ??????? ?? ???????
         clean = []
         for q in sample:
-            # دعم كل من format القديم (option_a/b/c/d) والجديد (options dict)
+            # ??? ?? ?? format ?????? (option_a/b/c/d) ??????? (options dict)
             clean.append({
                 "id": q["id"],
                 "question_text": q["question_text"],
@@ -4417,7 +4426,7 @@ def api_student_stage_exam_start(sid):
                     "C": q["option_c"],
                     "D": q["option_d"],
                 },
-                # حقول Phase 13.1 لدعم Split-Screen UI + TOEFL types
+                # ???? Phase 13.1 ???? Split-Screen UI + TOEFL types
                 "passage_text": (q["passage_text"] if "passage_text" in q.keys() else None),
                 "set_id":       (q["set_id"]       if "set_id"       in q.keys() else None),
                 "q_type":       (q["q_type"]       if "q_type"       in q.keys() else None),
@@ -4437,7 +4446,7 @@ def api_student_stage_exam_start(sid):
         return jsonify({
             "success": True,
             "stage_id": sid,
-            "stage_name": (stg["name_ar"] if "name_ar" in stg.keys() and stg["name_ar"] else None) or (stg["name_en"] if "name_en" in stg.keys() and stg["name_en"] else None) or (stg["name"] if "name" in stg.keys() and stg["name"] else None) or f"المرحلة {sid}",
+            "stage_name": (stg["name_ar"] if "name_ar" in stg.keys() and stg["name_ar"] else None) or (stg["name_en"] if "name_en" in stg.keys() and stg["name_en"] else None) or (stg["name"] if "name" in stg.keys() and stg["name"] else None) or f"??????? {sid}",
             "personal_pass_score": personal,
             "required_score": required,
             "total_questions": cnt,
@@ -4447,7 +4456,7 @@ def api_student_stage_exam_start(sid):
         return jsonify({"success": False, "message": str(e)}), 500
 
 
-# ─── Student: تسليم امتحان مرحلة ───
+# --- Student: ????? ?????? ????? ---
 @app.route("/api/student/stage/<int:sid>/exam-submit", methods=["POST"])
 def api_student_stage_exam_submit_v2(sid):
     """Phase 12E-3 v2: Submit answers, record mistakes, return rich feedback."""
@@ -4658,7 +4667,7 @@ def api_student_stages_progress():
             passed_list = []
         personal = (st["personal_pass_score"] if st and st["personal_pass_score"] else 70)
 
-        # اكتشاف الأعمدة المتاحة
+        # ?????? ??????? ???????
         scols = [r[1] for r in c.execute("PRAGMA table_info(stages)").fetchall()]
         order_col = "order_index" if "order_index" in scols else "id"
         sel_fields = ["id"]
@@ -4668,7 +4677,7 @@ def api_student_stages_progress():
         result = []
         for s in stages:
             sid = s["id"]
-            # أفضل علامة للمحاولات
+            # ???? ????? ?????????
             best = c.execute(
                 "SELECT MAX(score) FROM stage_exam_attempts WHERE user_id=? AND stage_id=?",
                 (user_id, sid)
@@ -4680,7 +4689,7 @@ def api_student_stages_progress():
             ).fetchone()[0]
             result.append({
                 "stage_id": sid,
-                "name": (s["name_ar"] if "name_ar" in s.keys() and s["name_ar"] else None) or (s["name_en"] if "name_en" in s.keys() and s["name_en"] else None) or (s["name"] if "name" in s.keys() and s["name"] else None) or f"المرحلة {sid}",
+                "name": (s["name_ar"] if "name_ar" in s.keys() and s["name_ar"] else None) or (s["name_en"] if "name_en" in s.keys() and s["name_en"] else None) or (s["name"] if "name" in s.keys() and s["name"] else None) or f"??????? {sid}",
                 "order_index": (s["order_index"] if "order_index" in s.keys() else s["id"]),
                 "passed": (sid in passed_list),
                 "best_score": best_score,
@@ -4696,9 +4705,9 @@ def api_student_stages_progress():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
 
-# ═══════════════════════════════════════════════
+# -----------------------------------------------
 # /Phase 12E
-# ═══════════════════════════════════════════════
+# -----------------------------------------------
 
 
 # ===== Phase 12E-3 v2: Student stage exam page =====
@@ -4822,7 +4831,7 @@ def _ensure_stages_columns():
         if "code" not in cols:
             cur.execute("ALTER TABLE stages ADD COLUMN code TEXT")
             added.append("code")
-        # تأكد lessons فيها order_index و pass_score
+        # ???? lessons ???? order_index ? pass_score
         cur.execute("PRAGMA table_info(lessons)")
         lcols = {r[1] for r in cur.fetchall()}
         if "order_index" not in lcols:

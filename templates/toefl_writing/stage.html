@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{{ stage.title_ar }}</title>
+<style>body{font-family:'Cairo',sans-serif;background:#f7fafc;padding:30px;direction:rtl}
+.c{max-width:800px;margin:0 auto;background:white;padding:30px;border-radius:16px}
+h1{color:#2d3748}.lesson{padding:15px;border:2px solid #e2e8f0;border-radius:10px;margin:10px 0}
+.lesson:hover{border-color:#667eea;background:#f7faff}a{color:#667eea;text-decoration:none}
+.back{display:inline-block;margin-bottom:20px;color:#667eea}</style></head>
+<body><div class="c">
+<a class="back" href="/writing?user_id={{ user_id }}">← العودة للمسار</a>
+<h1>{{ stage.title_ar }}</h1><p style="color:#718096">{{ stage.description_ar }}</p>
+<hr style="margin:20px 0"/>
+{% if lessons %}
+<h3>الدروس ({{ lessons|length }})</h3>
+{% for l in lessons %}
+<a class="lesson" href="/writing/lesson/{{ l.id }}?user_id={{ user_id }}" style="display:block">
+<strong>{{ loop.index }}. {{ l.title_ar }}</strong>
+{% if l.status == 'completed' %} <span style="color:#43e97b">✓ مكتمل</span>{% endif %}
+<div style="font-size:12px;color:#a0aec0">⏱ {{ l.duration_min }} دقائق</div>
+</a>
+{% endfor %}
+{% else %}
+<p style="text-align:center;padding:40px;color:#a0aec0">🚧 المحتوى قيد الإعداد - سيتم إضافته قريباً</p>
+{% endif %}
+{% if exam_count > 0 %}
+<hr style="margin:25px 0"/>
+<a class="lesson" href="/writing/exam/{{ stage.id }}?user_id={{ user_id }}" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:block">
+🏁 <strong>اختبار المرحلة</strong> ({{ exam_count }} أسئلة)</a>
+{% endif %}
+</div></body></html>
