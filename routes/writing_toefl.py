@@ -298,3 +298,12 @@ def api_health():
     }
     conn.close()
     return jsonify({"ok": True, "stats": stats})
+# Jinja filter for parsing JSON strings in templates
+@writing_bp.app_template_filter('fromjson')
+def fromjson_filter(s):
+    import json
+    if not s: return []
+    try:
+        return json.loads(s) if isinstance(s, str) else s
+    except:
+        return []

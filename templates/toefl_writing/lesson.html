@@ -1,12 +1,225 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{{ lesson.title_ar }}</title>
-<style>body{font-family:'Cairo',sans-serif;background:#f7fafc;padding:30px;direction:rtl}
-.c{max-width:800px;margin:0 auto;background:white;padding:30px;border-radius:16px}
-h1{color:#2d3748}a{color:#667eea}.back{display:inline-block;margin-bottom:20px}</style></head>
-<body><div class="c">
-<a class="back" href="/writing/stage/{{ lesson.stage_id }}?user_id={{ user_id }}">← العودة للمرحلة</a>
-<h1>{{ lesson.title_ar }}</h1>
-<div style="margin:20px 0;line-height:1.8">{{ lesson.content_html|safe }}</div>
-{% if questions %}<hr/><h3>اختبر فهمك ({{ questions|length }} أسئلة)</h3>
-<p style="color:#a0aec0">🚧 الواجهة التفاعلية ستُضاف في Phase 2B</p>{% endif %}
-</div></body></html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ lesson.title_ar }}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo','Segoe UI',sans-serif;background:#f7fafc;padding:20px;direction:rtl;color:#1a202c;line-height:1.6}
+.container{max-width:850px;margin:0 auto}
+.back-btn{display:inline-block;background:white;padding:10px 18px;border-radius:10px;text-decoration:none;color:#667eea;font-weight:bold;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.lesson-card{background:white;border-radius:16px;padding:30px;box-shadow:0 8px 24px rgba(0,0,0,0.08);margin-bottom:20px}
+.lesson-title{font-size:24px;color:#2d3748;margin-bottom:6px}
+.lesson-meta{color:#a0aec0;font-size:13px;margin-bottom:20px}
+.lesson-content h2{color:#667eea;margin:18px 0 10px;font-size:20px}
+.lesson-content h3{color:#2d3748;margin:15px 0 8px;font-size:17px}
+.lesson-content p{margin:10px 0}
+.lesson-content ul,.lesson-content ol{margin:10px 25px 10px 0;padding-right:15px}
+.lesson-content li{margin:5px 0}
+.lesson-content table{font-size:14px}
+.quiz-section{background:white;border-radius:16px;padding:30px;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.quiz-header{font-size:22px;color:#2d3748;margin-bottom:20px;text-align:center}
+.question{background:#f7fafc;border-radius:12px;padding:20px;margin-bottom:15px;border-right:4px solid #667eea}
+.q-num{display:inline-block;background:#667eea;color:white;width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-weight:bold;margin-left:8px}
+.q-text{font-size:16px;font-weight:bold;margin-bottom:12px;color:#2d3748}
+.options{display:grid;gap:8px}
+.option{background:white;border:2px solid #e2e8f0;border-radius:10px;padding:12px 15px;cursor:pointer;transition:all 0.15s;font-size:15px}
+.option:hover{border-color:#667eea;background:#f7faff}
+.option.selected{border-color:#667eea;background:#e0e7ff;font-weight:bold}
+.option.correct{border-color:#43e97b;background:#d4f7e7}
+.option.wrong{border-color:#ef4444;background:#fee}
+.sentence-builder{background:white;border:2px solid #e2e8f0;border-radius:10px;padding:15px;min-height:60px;margin-bottom:10px}
+.builder-slot{display:inline-block;background:#e0e7ff;color:#1a202c;padding:6px 12px;margin:4px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:14px}
+.builder-slot:hover{background:#c7d2fe}
+.word-bank{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.word-chip{background:white;border:2px solid #cbd5e0;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:bold;transition:all 0.15s;font-size:14px}
+.word-chip:hover{border-color:#667eea;background:#f7faff;transform:translateY(-2px)}
+.word-chip.used{opacity:0.3;pointer-events:none}
+.builder-controls{margin-top:8px;display:flex;gap:8px}
+.btn-reset{background:#f7fafc;border:1px solid #cbd5e0;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+.btn-undo{background:#fff5d6;border:1px solid #f59e0b;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:#92400e}
+.submit-bar{position:sticky;bottom:0;background:white;padding:15px;border-radius:14px;box-shadow:0 -4px 16px rgba(0,0,0,0.08);text-align:center;margin-top:20px}
+.btn-submit{background:linear-gradient(135deg,#43e97b,#38f9d7);color:white;border:none;padding:14px 35px;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(67,233,123,0.4)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(67,233,123,0.5)}
+.btn-submit:disabled{background:#cbd5e0;cursor:not-allowed;box-shadow:none;transform:none}
+.result-box{background:white;border-radius:14px;padding:25px;margin-top:20px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
+.result-circle{width:100px;height:100px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;color:white;margin-bottom:15px}
+.r-pass{background:linear-gradient(135deg,#43e97b,#38f9d7)}
+.r-fail{background:linear-gradient(135deg,#ef4444,#f59e0b)}
+.result-msg{font-size:18px;margin-bottom:15px}
+.feedback-item{text-align:right;background:#f7fafc;padding:12px;border-radius:8px;margin:8px 0;font-size:14px}
+.feedback-item.fb-correct{border-right:4px solid #43e97b}
+.feedback-item.fb-wrong{border-right:4px solid #ef4444}
+.next-btn{display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:12px 30px;border-radius:10px;text-decoration:none;font-weight:bold;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="back-btn" href="/writing/stage/{{ lesson.stage_id }}?user_id={{ user_id }}">← العودة للمرحلة</a>
+
+  <div class="lesson-card">
+    <h1 class="lesson-title">{{ lesson.title_ar }}</h1>
+    <div class="lesson-meta">⏱ {{ lesson.duration_min }} دقائق</div>
+    <div class="lesson-content">{{ lesson.content_html|safe }}</div>
+  </div>
+
+  {% if questions %}
+  <div class="quiz-section">
+    <div class="quiz-header">🧠 اختبر فهمك ({{ questions|length }} أسئلة)</div>
+    <div id="quizContainer">
+      {% for q in questions %}
+      <div class="question" data-qid="{{ q.id }}" data-qtype="{{ q.q_type }}" data-correct="{{ q.correct_answer }}">
+        <div class="q-text"><span class="q-num">{{ loop.index }}</span>{{ q.question_ar }}</div>
+
+        {% if q.q_type == 'mcq' %}
+        <div class="options">
+          {% for opt in q.options %}
+          <div class="option" data-value="{{ opt }}">{{ opt }}</div>
+          {% endfor %}
+        </div>
+
+        {% elif q.q_type == 'sentence_order' %}
+        <div class="sentence-builder" id="builder-{{ q.id }}"><span style="color:#a0aec0">انقر على الكلمات بالترتيب الصحيح...</span></div>
+        <div class="word-bank" id="bank-{{ q.id }}">
+          {% set words = q.scrambled_words|fromjson if q.scrambled_words else [] %}
+          {% for w in words %}
+          <span class="word-chip" data-word="{{ w }}">{{ w }}</span>
+          {% endfor %}
+        </div>
+        <div class="builder-controls">
+          <button type="button" class="btn-undo" onclick="undoWord({{ q.id }})">↶ تراجع</button>
+          <button type="button" class="btn-reset" onclick="resetBuilder({{ q.id }})">🔄 إعادة</button>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="submit-bar">
+      <button id="submitBtn" class="btn-submit" onclick="submitQuiz()">تسليم الإجابات</button>
+    </div>
+    <div id="resultBox"></div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+const LESSON_ID = {{ lesson.id }};
+const USER_ID = {{ user_id|tojson }};
+const STAGE_ID = {{ lesson.stage_id }};
+const answers = {};
+const builderState = {};
+
+// MCQ click
+document.querySelectorAll('.option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const q = opt.closest('.question');
+    q.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    answers[q.dataset.qid] = opt.dataset.value;
+  });
+});
+
+// Word chip click (sentence order)
+document.querySelectorAll('.word-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if(chip.classList.contains('used')) return;
+    const q = chip.closest('.question');
+    const qid = q.dataset.qid;
+    if(!builderState[qid]) builderState[qid] = [];
+    builderState[qid].push(chip.dataset.word);
+    chip.classList.add('used');
+    renderBuilder(qid);
+  });
+});
+
+function renderBuilder(qid){
+  const builder = document.getElementById('builder-'+qid);
+  if(!builderState[qid] || builderState[qid].length === 0){
+    builder.innerHTML = '<span style="color:#a0aec0">انقر على الكلمات بالترتيب الصحيح...</span>';
+  } else {
+    builder.innerHTML = builderState[qid].map(w => '<span class="builder-slot">'+w+'</span>').join(' ');
+  }
+  answers[qid] = JSON.stringify(builderState[qid] || []);
+}
+
+function undoWord(qid){
+  if(!builderState[qid] || builderState[qid].length === 0) return;
+  const last = builderState[qid].pop();
+  // restore chip
+  const bank = document.getElementById('bank-'+qid);
+  const chips = bank.querySelectorAll('.word-chip');
+  for(let i = chips.length-1; i >= 0; i--){
+    if(chips[i].dataset.word === last && chips[i].classList.contains('used')){
+      chips[i].classList.remove('used');
+      break;
+    }
+  }
+  renderBuilder(qid);
+}
+
+function resetBuilder(qid){
+  builderState[qid] = [];
+  document.querySelectorAll('#bank-'+qid+' .word-chip').forEach(c => c.classList.remove('used'));
+  renderBuilder(qid);
+}
+
+async function submitQuiz(){
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'جاري التصحيح...';
+
+  try {
+    const r = await fetch('/api/writing/lesson/'+LESSON_ID+'/submit', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: USER_ID, answers: answers})
+    });
+    const data = await r.json();
+    showResult(data);
+  } catch(e){
+    alert('خطأ: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'تسليم الإجابات';
+  }
+}
+
+function showResult(data){
+  // Mark feedback on each question
+  data.feedback.forEach(fb => {
+    const qEl = document.querySelector('[data-qid="'+fb.question_id+'"]');
+    if(!qEl) return;
+    if(qEl.dataset.qtype === 'mcq'){
+      qEl.querySelectorAll('.option').forEach(opt => {
+        if(opt.dataset.value === fb.correct_answer) opt.classList.add('correct');
+        else if(opt.dataset.value === fb.your_answer && !fb.is_correct) opt.classList.add('wrong');
+      });
+    }
+  });
+
+  const box = document.getElementById('resultBox');
+  const cls = data.passed ? 'r-pass' : 'r-fail';
+  const emoji = data.passed ? '🎉' : '💪';
+  const msg = data.passed ? 'أحسنت! لقد اجتزت الدرس' : 'لم تنجح، حاول مرة أخرى';
+  let html = '<div class="result-box"><div class="result-circle '+cls+'">'+data.score_pct+'%</div>';
+  html += '<div class="result-msg">'+emoji+' '+msg+' ('+data.score+'/'+data.total+')</div>';
+  data.feedback.forEach((fb, i) => {
+    const c = fb.is_correct ? 'fb-correct' : 'fb-wrong';
+    const icon = fb.is_correct ? '✅' : '❌';
+    html += '<div class="feedback-item '+c+'">'+icon+' <b>سؤال '+(i+1)+':</b> ';
+    if(!fb.is_correct) html += '<br/>الإجابة الصحيحة: <b>'+fb.correct_answer+'</b>';
+    if(fb.explanation) html += '<br/><span style="color:#667eea">💡 '+fb.explanation+'</span>';
+    html += '</div>';
+  });
+  if(data.passed){
+    html += '<a class="next-btn" href="/writing/stage/'+STAGE_ID+'?user_id='+encodeURIComponent(USER_ID)+'">→ التالي</a>';
+  } else {
+    html += '<button class="next-btn" style="border:none;cursor:pointer" onclick="location.reload()">🔄 إعادة المحاولة</button>';
+  }
+  html += '</div>';
+  box.innerHTML = html;
+  box.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
