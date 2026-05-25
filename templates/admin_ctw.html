@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة Complete the Words — أكاديمية يامن</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f0f2f5;color:#1f2937;padding:20px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto}
+.header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:24px;border-radius:14px;margin-bottom:20px;box-shadow:0 4px 14px rgba(0,0,0,0.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.header h1{font-size:22px}
+.header .stats{display:flex;gap:14px;font-size:13px}
+.header .stat{background:rgba(255,255,255,0.18);padding:6px 12px;border-radius:20px}
+.toolbar{background:#fff;padding:16px;border-radius:12px;margin-bottom:20px;box-shadow:0 2px 6px rgba(0,0,0,0.05);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.toolbar label{font-size:14px;font-weight:600;color:#4b5563}
+.toolbar select,.toolbar input{padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-size:14px;font-weight:bold;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-success{background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff}
+.btn-danger{background:#ef4444;color:#fff}
+.btn-secondary{background:#e5e7eb;color:#374151}
+.btn-sm{padding:6px 12px;font-size:12px}
+.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:14px;box-shadow:0 2px 6px rgba(0,0,0,0.05);border-right:4px solid #667eea}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f3f4f6}
+.card-title{font-size:15px;font-weight:bold;color:#1f2937}
+.card-meta{font-size:12px;color:#6b7280;display:flex;gap:10px}
+.card-meta span{background:#f3f4f6;padding:3px 10px;border-radius:12px}
+.card-passage{font-size:13px;color:#4b5563;direction:ltr;text-align:left;background:#f9fafb;padding:10px;border-radius:6px;margin:8px 0;max-height:60px;overflow:hidden}
+.card-actions{display:flex;gap:8px;justify-content:flex-end}
+.empty{text-align:center;padding:60px;color:#9ca3af;font-size:15px}
+.loader{text-align:center;padding:40px;color:#6b7280}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;z-index:9999;padding:20px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:780px;width:100%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.4);margin:20px 0}
+.modal-head{padding:18px 22px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{font-size:18px}
+.modal-close{background:rgba(255,255,255,0.22);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:20px;cursor:pointer}
+.modal-body{padding:22px;max-height:70vh;overflow-y:auto}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:13px;font-weight:bold;color:#374151;margin-bottom:6px}
+.form-row input,.form-row textarea,.form-row select{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-family:inherit;direction:ltr;text-align:left}
+.form-row textarea{min-height:120px;resize:vertical}
+.form-row textarea.ar,.form-row input.ar{direction:rtl;text-align:right;font-family:inherit}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.blanks-section{border:2px dashed #d1d5db;border-radius:10px;padding:14px;background:#f9fafb;margin-top:14px}
+.blanks-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.blanks-head h3{font-size:14px;color:#374151}
+.blank-row{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px;margin-bottom:8px}
+.blank-row-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:#6b7280;font-weight:bold}
+.blank-grid{display:grid;grid-template-columns:60px 1fr 1fr;gap:8px;margin-bottom:6px}
+.blank-grid input{padding:6px 8px;font-size:13px;border:1px solid #d1d5db;border-radius:6px;direction:ltr;text-align:left}
+.blank-row .hint-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.blank-row .hint-row input{padding:6px 8px;font-size:12px;direction:rtl;text-align:right;border:1px solid #d1d5db;border-radius:6px}
+.modal-foot{padding:14px 22px;background:#f9fafb;border-radius:0 0 16px 16px;display:flex;justify-content:flex-end;gap:10px}
+.hint-text{font-size:12px;color:#6b7280;margin-top:4px;line-height:1.5}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:14px 24px;border-radius:10px;color:#fff;font-weight:bold;z-index:99999;box-shadow:0 8px 20px rgba(0,0,0,0.2);animation:slideDown 0.3s}
+.toast.success{background:#10b981}
+.toast.error{background:#ef4444}
+@keyframes slideDown{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>📝 إدارة Complete the Words</h1>
+    <div class="stats">
+      <div class="stat">القطع: <b id="totalCount">0</b></div>
+      <div class="stat">الفراغات: <b id="totalBlanks">0</b></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <label>المرحلة:</label>
+    <select id="stageFilter">
+      <option value="">الكل</option>
+    </select>
+    <button class="btn btn-primary" onclick="openCreateModal()">➕ قطعة جديدة</button>
+    <button class="btn btn-secondary" onclick="loadList()">🔄 تحديث</button>
+    <a href="/admin" class="btn btn-secondary">← لوحة الإدارة</a>
+  </div>
+
+  <div id="listArea">
+    <div class="loader">جارٍ التحميل…</div>
+  </div>
+</div>
+
+<!-- Edit/Create Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">قطعة جديدة</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="fItemId">
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label>المرحلة (Stage ID)</label>
+          <input type="number" id="fStageId" placeholder="6" min="1">
+        </div>
+        <div class="form-row">
+          <label>الصعوبة</label>
+          <select id="fDifficulty">
+            <option value="easy">سهل</option>
+            <option value="medium" selected>متوسط</option>
+            <option value="hard">صعب</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>نص القطعة (Passage)</label>
+        <textarea id="fPassage" placeholder="Use [B1], [B2], ... as placeholders for blanks"></textarea>
+        <div class="hint-text">استخدم <code>[B1]</code>, <code>[B2]</code>, ... كعلامات للفراغات. مثال: <code>The [B1] of pollution is harmful.</code></div>
+      </div>
+
+      <div class="blanks-section">
+        <div class="blanks-head">
+          <h3>الفراغات (Blanks)</h3>
+          <button class="btn btn-success btn-sm" onclick="addBlank()">➕ إضافة فراغ</button>
+        </div>
+        <div id="blanksList"></div>
+        <div class="hint-text" style="margin-top:8px">prefix = الحروف الظاهرة | full = الكلمة الكاملة | hint = تلميح عربي | explain = شرح القاعدة</div>
+      </div>
+
+      <div class="form-row" style="margin-top:14px">
+        <label>💡 استراتيجية الحل (Strategy AR)</label>
+        <textarea id="fStrategy" class="ar" placeholder="اشرح كيف يحل الطالب هذا النوع..." style="min-height:60px"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>⚠️ المصائد الإملائية (Trap AR)</label>
+        <textarea id="fTrap" class="ar" placeholder="أخطاء شائعة يقع فيها الطلاب..." style="min-height:60px"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>🎯 طريقة الاستبعاد (Elimination AR)</label>
+        <textarea id="fElim" class="ar" placeholder="كيف يستبعد الإجابات الخاطئة..." style="min-height:60px"></textarea>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label>المفهوم (Concept AR)</label>
+          <input type="text" id="fConcept" class="ar" placeholder="مثال: تكوين الأسماء بـ -ion">
+        </div>
+        <div class="form-row">
+          <label>الشرح العام (Explanation AR)</label>
+          <input type="text" id="fExplanation" class="ar" placeholder="شرح موجز">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveItem()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let items = [];
+
+function toast(msg, type){
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type || 'success');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+async function loadList(){
+  const sf = document.getElementById('stageFilter').value;
+  const url = '/api/admin/ctw/list' + (sf ? '?stage_id=' + sf : '');
+  document.getElementById('listArea').innerHTML = '<div class="loader">جارٍ التحميل…</div>';
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if(!d.success) throw new Error(d.error || 'failed');
+    items = d.items;
+    renderList();
+    updateStats();
+    populateStageFilter();
+  } catch(e){
+    document.getElementById('listArea').innerHTML = '<div class="empty">خطأ: ' + e.message + '</div>';
+  }
+}
+
+function populateStageFilter(){
+  const stages = [...new Set(items.map(i => i.stage_id))].sort((a,b) => a-b);
+  const sel = document.getElementById('stageFilter');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">الكل</option>' + stages.map(s => `<option value="${s}">المرحلة ${s}</option>`).join('');
+  sel.value = cur;
+}
+
+function updateStats(){
+  document.getElementById('totalCount').textContent = items.length;
+  document.getElementById('totalBlanks').textContent = items.reduce((s, i) => s + i.blanks_count, 0);
+}
+
+function renderList(){
+  if(!items.length){
+    document.getElementById('listArea').innerHTML = '<div class="empty">لا توجد قطع. اضغط "قطعة جديدة" لإضافة أول قطعة.</div>';
+    return;
+  }
+  const html = items.map(it => `
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">قطعة #${it.id}</div>
+          <div class="card-meta">
+            <span>📚 المرحلة ${it.stage_id}</span>
+            <span>🔤 ${it.blanks_count} فراغ</span>
+            <span>⚡ ${it.difficulty}</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary btn-sm" onclick="openEditModal(${it.id})">✏️ تعديل</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteItem(${it.id})">🗑️ حذف</button>
+        </div>
+      </div>
+      <div class="card-passage">${escapeHtml(it.passage_preview)}…</div>
+    </div>
+  `).join('');
+  document.getElementById('listArea').innerHTML = html;
+}
+
+function escapeHtml(s){
+  return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function openCreateModal(){
+  document.getElementById('modalTitle').textContent = 'قطعة جديدة';
+  document.getElementById('fItemId').value = '';
+  document.getElementById('fStageId').value = document.getElementById('stageFilter').value || 6;
+  document.getElementById('fDifficulty').value = 'medium';
+  document.getElementById('fPassage').value = '';
+  document.getElementById('fStrategy').value = '';
+  document.getElementById('fTrap').value = '';
+  document.getElementById('fElim').value = '';
+  document.getElementById('fConcept').value = '';
+  document.getElementById('fExplanation').value = '';
+  document.getElementById('blanksList').innerHTML = '';
+  addBlank();
+  document.getElementById('modal').classList.add('open');
+}
+
+async function openEditModal(id){
+  try {
+    const r = await fetch('/api/admin/ctw/' + id);
+    const d = await r.json();
+    if(!d.success) throw new Error(d.error);
+    const it = d.item;
+    document.getElementById('modalTitle').textContent = 'تعديل قطعة #' + id;
+    document.getElementById('fItemId').value = id;
+    document.getElementById('fStageId').value = it.stage_id;
+    document.getElementById('fDifficulty').value = it.difficulty || 'medium';
+    document.getElementById('fPassage').value = it.passage_text;
+    document.getElementById('fStrategy').value = it.strategy_ar;
+    document.getElementById('fTrap').value = it.trap_ar;
+    document.getElementById('fElim').value = it.elimination_ar;
+    document.getElementById('fConcept').value = it.concept_ar;
+    document.getElementById('fExplanation').value = it.explanation_ar;
+    document.getElementById('blanksList').innerHTML = '';
+    (it.blanks || []).forEach(b => addBlank(b));
+    if(!it.blanks || !it.blanks.length) addBlank();
+    document.getElementById('modal').classList.add('open');
+  } catch(e){
+    toast('خطأ: ' + e.message, 'error');
+  }
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+}
+
+function addBlank(data){
+  const list = document.getElementById('blanksList');
+  const idx = list.children.length;
+  const n = data?.n || (idx + 1);
+  const row = document.createElement('div');
+  row.className = 'blank-row';
+  row.dataset.blank = '1';
+  row.innerHTML = `
+    <div class="blank-row-head">
+      <span>فراغ #<input type="number" class="b-n" value="${n}" style="width:50px;padding:2px 6px;font-weight:bold;color:#667eea" min="1"></span>
+      <button class="btn btn-danger btn-sm" onclick="this.closest('.blank-row').remove()">حذف</button>
+    </div>
+    <div class="blank-grid">
+      <input type="text" class="b-prefix" placeholder="prefix" value="${escapeHtml(data?.prefix || '')}" title="الحروف الظاهرة">
+      <input type="text" class="b-full" placeholder="full word" value="${escapeHtml(data?.full || '')}" title="الكلمة الكاملة">
+      <input type="text" class="b-suffix" placeholder="suffix (auto)" value="${escapeHtml(data?.suffix || '')}" title="اختياري - يحسب تلقائياً">
+    </div>
+    <div class="hint-row">
+      <input type="text" class="b-hint" placeholder="تلميح عربي" value="${escapeHtml(data?.hint || '')}">
+      <input type="text" class="b-explain" placeholder="شرح القاعدة (اختياري)" value="${escapeHtml(data?.explain || '')}">
+    </div>
+  `;
+  list.appendChild(row);
+}
+
+function collectBlanks(){
+  const rows = document.querySelectorAll('#blanksList .blank-row');
+  const blanks = [];
+  rows.forEach(r => {
+    const n = parseInt(r.querySelector('.b-n').value) || (blanks.length + 1);
+    const prefix = r.querySelector('.b-prefix').value.trim();
+    const full = r.querySelector('.b-full').value.trim();
+    let suffix = r.querySelector('.b-suffix').value.trim();
+    if(!suffix && full && prefix && full.startsWith(prefix)) suffix = full.substring(prefix.length);
+    const hint = r.querySelector('.b-hint').value.trim();
+    const explain = r.querySelector('.b-explain').value.trim();
+    if(full){
+      blanks.push({n, prefix, suffix, full, hint, explain});
+    }
+  });
+  return blanks;
+}
+
+async function saveItem(){
+  const id = document.getElementById('fItemId').value;
+  const blanks = collectBlanks();
+  const passage = document.getElementById('fPassage').value.trim();
+  const stageId = parseInt(document.getElementById('fStageId').value);
+  if(!stageId || stageId < 1){ return toast('أدخل رقم المرحلة', 'error'); }
+  if(!passage){ return toast('نص القطعة فارغ', 'error'); }
+  if(!blanks.length){ return toast('أضف فراغ واحد على الأقل بـ full word', 'error'); }
+  // Validate each blank references in passage
+  const missing = blanks.filter(b => !passage.includes('[B' + b.n + ']'));
+  if(missing.length){
+    if(!confirm(`⚠️ هذه الفراغات غير موجودة في النص: ${missing.map(b => '[B'+b.n+']').join(', ')}\nهل تريد المتابعة؟`)) return;
+  }
+  const payload = {
+    stage_id: stageId,
+    passage_text: passage,
+    blanks: blanks,
+    strategy_ar: document.getElementById('fStrategy').value.trim(),
+    elimination_ar: document.getElementById('fElim').value.trim(),
+    trap_ar: document.getElementById('fTrap').value.trim(),
+    concept_ar: document.getElementById('fConcept').value.trim(),
+    explanation_ar: document.getElementById('fExplanation').value.trim(),
+    difficulty: document.getElementById('fDifficulty').value
+  };
+  const url = id ? `/api/admin/ctw/${id}/update` : '/api/admin/ctw/create';
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if(!d.success) throw new Error(d.error || 'failed');
+    toast(id ? '✅ تم التحديث' : '✅ تم الإنشاء');
+    closeModal();
+    loadList();
+  } catch(e){
+    toast('خطأ: ' + e.message, 'error');
+  }
+}
+
+async function deleteItem(id){
+  if(!confirm(`هل أنت متأكد من حذف القطعة #${id}؟`)) return;
+  try {
+    const r = await fetch(`/api/admin/ctw/${id}/delete`, {method: 'POST'});
+    const d = await r.json();
+    if(!d.success) throw new Error(d.error);
+    toast('✅ تم الحذف');
+    loadList();
+  } catch(e){
+    toast('خطأ: ' + e.message, 'error');
+  }
+}
+
+document.getElementById('stageFilter').addEventListener('change', renderList);
+document.getElementById('modal').addEventListener('click', e => {
+  if(e.target.id === 'modal') closeModal();
+});
+
+loadList();
+</script>
+</body>
+</html>

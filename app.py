@@ -5132,3 +5132,171 @@ def admin_set_stage_count(sid):
         import traceback
         return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
 
+
+
+# ===================== CTW Admin CRUD =====================
+@app.route("/admin/ctw")
+def admin_ctw_page():
+    """Admin page for managing Complete-the-Words questions."""
+    from flask import render_template
+    return render_template("admin_ctw.html")
+
+@app.route("/api/admin/ctw/list", methods=["GET"])
+def api_admin_ctw_list():
+    """List all CTW questions, optionally filtered by stage_id."""
+    from flask import request, jsonify
+    sid = request.args.get("stage_id", type=int)
+    conn = _db_safe(); c = conn.cursor()
+    try:
+        if sid:
+            c.execute("""SELECT id, stage_id, passage_text, blanks_json, strategy_ar,
+                                elimination_ar, trap_ar, concept_ar, explanation_ar, difficulty
+                         FROM stage_exam_questions
+                         WHERE q_type='reading_complete_words' AND stage_id=?
+                         ORDER BY id""", (sid,))
+        else:
+            c.execute("""SELECT id, stage_id, passage_text, blanks_json, strategy_ar,
+                                elimination_ar, trap_ar, concept_ar, explanation_ar, difficulty
+                         FROM stage_exam_questions
+                         WHERE q_type='reading_complete_words'
+                         ORDER BY stage_id, id""")
+        rows = c.fetchall()
+        items = []
+        import json as _j
+        for r in rows:
+            try: blanks = _j.loads(r[3] or "[]")
+            except: blanks = []
+            items.append({
+                "id": r[0],
+                "stage_id": r[1],
+                "passage_text": r[2] or "",
+                "passage_preview": (r[2] or "")[:120],
+                "blanks": blanks,
+                "blanks_count": len(blanks),
+                "strategy_ar": r[4] or "",
+                "elimination_ar": r[5] or "",
+                "trap_ar": r[6] or "",
+                "concept_ar": r[7] or "",
+                "explanation_ar": r[8] or "",
+                "difficulty": r[9] or "medium"
+            })
+        return jsonify({"success": True, "items": items, "count": len(items)})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/ctw/<int:qid>", methods=["GET"])
+def api_admin_ctw_get(qid):
+    """Get single CTW question for editing."""
+    from flask import jsonify
+    conn = _db_safe(); c = conn.cursor()
+    try:
+        c.execute("""SELECT id, stage_id, passage_text, blanks_json, strategy_ar,
+                            elimination_ar, trap_ar, concept_ar, explanation_ar, difficulty
+                     FROM stage_exam_questions
+                     WHERE id=? AND q_type='reading_complete_words'""", (qid,))
+        r = c.fetchone()
+        if not r: return jsonify({"success": False, "error": "not found"}), 404
+        import json as _j
+        try: blanks = _j.loads(r[3] or "[]")
+        except: blanks = []
+        return jsonify({
+            "success": True,
+            "item": {
+                "id": r[0], "stage_id": r[1], "passage_text": r[2] or "",
+                "blanks": blanks,
+                "strategy_ar": r[4] or "", "elimination_ar": r[5] or "",
+                "trap_ar": r[6] or "", "concept_ar": r[7] or "",
+                "explanation_ar": r[8] or "", "difficulty": r[9] or "medium"
+            }
+        })
+    finally:
+        conn.close()
+
+@app.route("/api/admin/ctw/create", methods=["POST"])
+def api_admin_ctw_create():
+    """Create a new CTW passage."""
+    from flask import request, jsonify
+    import json as _j
+    d = request.json or {}
+    stage_id = int(d.get("stage_id") or 0)
+    passage = (d.get("passage_text") or "").strip()
+    blanks = d.get("blanks") or []
+    if not stage_id or not passage:
+        return jsonify({"success": False, "error": "stage_id and passage_text required"}), 400
+    if not isinstance(blanks, list) or not blanks:
+        return jsonify({"success": False, "error": "at least one blank required"}), 400
+    conn = _db_safe(); c = conn.cursor()
+    try:
+        # Discover available columns dynamically
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        cols = {r[1] for r in c.fetchall()}
+        data = {
+            "stage_id": stage_id,
+            "q_type": "reading_complete_words",
+            "passage_text": passage,
+            "blanks_json": _j.dumps(blanks, ensure_ascii=False),
+            "strategy_ar": (d.get("strategy_ar") or "").strip(),
+            "elimination_ar": (d.get("elimination_ar") or "").strip(),
+            "trap_ar": (d.get("trap_ar") or "").strip(),
+            "concept_ar": (d.get("concept_ar") or "").strip(),
+            "explanation_ar": (d.get("explanation_ar") or "").strip(),
+            "difficulty": (d.get("difficulty") or "medium"),
+            "question_text": "Complete the missing letters",
+            "correct_answer": "",
+            "option_a": "", "option_b": "", "option_c": "", "option_d": ""
+        }
+        use_cols = [k for k in data.keys() if k in cols]
+        placeholders = ",".join("?" * len(use_cols))
+        col_list = ",".join(use_cols)
+        vals = [data[k] for k in use_cols]
+        c.execute(f"INSERT INTO stage_exam_questions ({col_list}) VALUES ({placeholders})", vals)
+        new_id = c.lastrowid
+        conn.commit()
+        return jsonify({"success": True, "id": new_id})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        conn.close()
+
+@app.route("/api/admin/ctw/<int:qid>/update", methods=["POST"])
+def api_admin_ctw_update(qid):
+    """Update an existing CTW passage."""
+    from flask import request, jsonify
+    import json as _j
+    d = request.json or {}
+    conn = _db_safe(); c = conn.cursor()
+    try:
+        c.execute("PRAGMA table_info(stage_exam_questions)")
+        cols = {r[1] for r in c.fetchall()}
+        updates = {}
+        if "stage_id" in d: updates["stage_id"] = int(d["stage_id"])
+        if "passage_text" in d: updates["passage_text"] = (d["passage_text"] or "").strip()
+        if "blanks" in d: updates["blanks_json"] = _j.dumps(d["blanks"] or [], ensure_ascii=False)
+        for k in ("strategy_ar","elimination_ar","trap_ar","concept_ar","explanation_ar","difficulty"):
+            if k in d: updates[k] = (d[k] or "").strip() if k != "difficulty" else (d[k] or "medium")
+        use_cols = [k for k in updates.keys() if k in cols]
+        if not use_cols:
+            return jsonify({"success": False, "error": "no fields to update"}), 400
+        set_clause = ",".join(f"{k}=?" for k in use_cols)
+        vals = [updates[k] for k in use_cols] + [qid]
+        c.execute(f"UPDATE stage_exam_questions SET {set_clause} WHERE id=? AND q_type='reading_complete_words'", vals)
+        conn.commit()
+        return jsonify({"success": True, "updated": c.rowcount})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        conn.close()
+
+@app.route("/api/admin/ctw/<int:qid>/delete", methods=["POST", "DELETE"])
+def api_admin_ctw_delete(qid):
+    """Delete a CTW passage."""
+    from flask import jsonify
+    conn = _db_safe(); c = conn.cursor()
+    try:
+        c.execute("DELETE FROM stage_exam_questions WHERE id=? AND q_type='reading_complete_words'", (qid,))
+        conn.commit()
+        return jsonify({"success": True, "deleted": c.rowcount})
+    finally:
+        conn.close()
+# ===================== End CTW Admin CRUD =====================
+
