@@ -179,6 +179,37 @@ def _fallback_grade(student_text, task_type="email"):
         "ai_available": False
     }
 
+
+def _call_gemini_safe(prompt, max_retries=2):
+    """يعيد (response_text, ai_available). إذا quota مستنفذة أو خطأ، يعيد (None, False)."""
+    import urllib.request, json as _json, urllib.error
+    for attempt in range(max_retries):
+        key = _next_key()
+        if not key:
+            return (None, False)
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={key}"
+        payload = _json.dumps({
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.3, "maxOutputTokens": 1024}
+        }).encode("utf-8")
+        req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                body = resp.read().decode("utf-8")
+                data = _json.loads(body)
+                text = data.get("candidates",[{}])[0].get("content",{}).get("parts",[{}])[0].get("text","")
+                if text.strip():
+                    return (text, True)
+        except urllib.error.HTTPError as e:
+            if e.code == 429:
+                continue  # جرب مفتاحاً آخر
+            if e.code in (400, 403):
+                continue
+        except Exception:
+            continue
+    return (None, False)
+
+
 def grade_email(scenario, requirements, student_email):
     """Grade a TOEFL Writing Task 2 (Email). Returns dict."""
     if not student_email or len(student_email.strip()) < 20:

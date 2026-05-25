@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تصحيحاتي</title>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#f5f7fb; margin:0; padding:20px; }
+  .container { max-width:900px; margin:0 auto; }
+  h1 { color:#1e293b; }
+  .item { background:#fff; border-radius:12px; padding:18px; margin:15px 0; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+  .status-pending { border-right:5px solid #ea580c; }
+  .status-reviewed { border-right:5px solid #16a34a; }
+  .meta { display:flex; gap:10px; flex-wrap:wrap; font-size:13px; color:#64748b; margin-bottom:10px; }
+  .meta span { background:#f1f5f9; padding:3px 10px; border-radius:6px; }
+  .text { background:#f8fafc; padding:12px; border-radius:8px; direction:ltr; text-align:left; white-space:pre-wrap; font-size:14px; }
+  .feedback { background:#dcfce7; padding:12px; border-radius:8px; margin-top:10px; }
+  .empty { text-align:center; background:#fff; padding:40px; border-radius:12px; color:#64748b; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📋 تصحيحاتي السابقة</h1>
+  {% if items %}
+    {% for it in items %}
+    <div class="item status-{{ it.status }}">
+      <div class="meta">
+        <span>#{{ it.id }}</span>
+        <span>{{ it.scenario_title or it.task_type }}</span>
+        <span>{{ it.word_count }} كلمة</span>
+        <span>{{ it.created_at }}</span>
+        {% if it.status == 'reviewed' %}
+          <span style="background:#dcfce7;color:#16a34a;">✅ تمت المراجعة</span>
+        {% else %}
+          <span style="background:#fef3c7;color:#ea580c;">⏳ بانتظار المراجعة</span>
+        {% endif %}
+      </div>
+      <details>
+        <summary style="cursor:pointer; font-weight:bold;">عرض إجابتك</summary>
+        <div class="text">{{ it.student_text }}</div>
+      </details>
+      {% if it.ai_score is not none %}
+      <div style="margin-top:10px;">🤖 تقييم AI: <strong>{{ it.ai_score }}/5</strong></div>
+      {% endif %}
+      {% if it.status == 'reviewed' %}
+      <div class="feedback">
+        <strong>👨‍🏫 تقييم المدرّس: {{ it.admin_score }}/5</strong>
+        {% if it.admin_feedback %}<div style="margin-top:8px;">{{ it.admin_feedback }}</div>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">لا توجد تصحيحات بعد. ابدأ الكتابة الآن!</div>
+  {% endif %}
+  <div style="text-align:center;margin-top:20px;">
+    <a href="/writing/email?user_id={{ user_id }}" style="color:#4f46e5;text-decoration:none;font-weight:bold;">← العودة لكتابة الإيميلات</a>
+  </div>
+</div>
+</body>
+</html>

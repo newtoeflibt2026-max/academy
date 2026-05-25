@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>{{ scenario.title_ar }} - كتابة إيميل</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#f5f7fb; margin:0; padding:0; color:#1e293b; }
+  .container { max-width: 900px; margin: 0 auto; padding: 15px; }
+  .timer-bar { position:sticky; top:0; z-index:100; background:#1e293b; color:#fff; padding:12px 20px; border-radius:0 0 14px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+  .timer-display { font-size:28px; font-weight:bold; font-family: 'Courier New', monospace; }
+  .timer-display.warning { color:#fbbf24; }
+  .timer-display.danger { color:#ef4444; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  .word-counter { background:rgba(255,255,255,0.15); padding:6px 14px; border-radius:8px; font-size:14px; }
+  .word-counter.met { background:#16a34a; }
+  .scenario-card { background:#fff; border-radius:14px; padding:20px; margin:20px 0; box-shadow:0 2px 8px rgba(0,0,0,0.05); border-right:5px solid #4f46e5; }
+  .scenario-card h2 { margin:0 0 10px 0; font-size:20px; }
+  .scenario-text { background:#f1f5f9; padding:15px; border-radius:8px; line-height:1.7; direction:ltr; text-align:left; font-size:15px; }
+  .requirements { margin-top:15px; }
+  .requirements h4 { margin:0 0 8px 0; color:#4f46e5; }
+  .req-item { background:#fef3c7; padding:8px 12px; border-radius:6px; margin:6px 0; direction:ltr; text-align:left; font-size:14px; }
+  .editor-area { background:#fff; border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+  .editor-area textarea { width:100%; min-height:300px; padding:15px; border:2px solid #e2e8f0; border-radius:10px; font-size:15px; line-height:1.6; direction:ltr; text-align:left; font-family:'Segoe UI', sans-serif; resize:vertical; }
+  .editor-area textarea:focus { border-color:#4f46e5; outline:none; }
+  .editor-area textarea:disabled { background:#f8fafc; cursor:not-allowed; }
+  .action-row { display:flex; gap:10px; margin-top:15px; flex-wrap:wrap; }
+  .btn { padding:12px 24px; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; }
+  .btn-primary { background:#4f46e5; color:#fff; }
+  .btn-primary:hover { background:#4338ca; }
+  .btn-primary:disabled { background:#94a3b8; cursor:not-allowed; }
+  .btn-secondary { background:#e2e8f0; color:#1e293b; }
+  .checkbox-row { background:#fef9c3; padding:10px 15px; border-radius:8px; margin-top:10px; font-size:14px; }
+  .result-card { background:#fff; border-radius:14px; padding:25px; margin-top:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05); display:none; }
+  .result-card.show { display:block; }
+  .score-circle { width:120px; height:120px; border-radius:50%; background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; margin:0 auto; }
+  .score-circle .num { font-size:32px; font-weight:bold; }
+  .score-circle .lbl { font-size:12px; opacity:0.9; }
+  .feedback-section { margin-top:20px; padding:15px; border-radius:10px; }
+  .feedback-section.strengths { background:#dcfce7; }
+  .feedback-section.improvements { background:#fef3c7; }
+  .feedback-section.errors { background:#fee2e2; }
+  .feedback-section h4 { margin:0 0 10px 0; }
+  .feedback-section ul { margin:0; padding-right:20px; }
+  .feedback-section li { margin:5px 0; direction:ltr; text-align:left; }
+  .admin-msg { background:#dbeafe; padding:20px; border-radius:10px; text-align:center; }
+  .admin-msg h3 { margin:0 0 10px 0; color:#1d4ed8; }
+</style>
+</head>
+<body>
+
+<div class="timer-bar">
+  <div class="timer-display" id="timer">07:00</div>
+  <div>
+    <div class="word-counter" id="word-counter">0 / {{ scenario.min_words }} كلمة</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="scenario-card">
+    <h2>{{ scenario.title_ar }} - {{ scenario.title_en }}</h2>
+    <div style="font-size:13px;color:#64748b;margin-bottom:10px;">
+      👤 المُرسَل إليه: <strong>{{ scenario.recipient_role }}</strong> |
+      ⏱️ المدة: 7 دقائق |
+      📝 الحد الأدنى: {{ scenario.min_words }} كلمة
+    </div>
+    <div class="scenario-text">{{ scenario.scenario_text }}</div>
+    <div class="requirements">
+      <h4>📌 يجب أن يتضمن الإيميل:</h4>
+      {% for req in scenario.requirements %}
+      <div class="req-item">✓ {{ req }}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="editor-area">
+    <h3 style="margin:0 0 10px 0;">✍️ اكتب إيميلك هنا (بالإنجليزية):</h3>
+    <textarea id="email-text" placeholder="Dear Professor..." dir="ltr"></textarea>
+
+    {% if student_tier == 'tier90' %}
+    <div class="checkbox-row">
+      <label>
+        <input type="checkbox" id="request-admin"> أطلب مراجعة المدرّس بعد التصحيح الآلي (Tier 90)
+      </label>
+    </div>
+    {% endif %}
+
+    <div class="action-row">
+      <button class="btn btn-primary" id="submit-btn" onclick="submitEmail()">📤 إرسال الإيميل</button>
+      <button class="btn btn-secondary" onclick="if(confirm('هل تريد المغادرة؟')) location.href='/writing/email?user_id={{ user_id }}'">رجوع</button>
+    </div>
+  </div>
+
+  <div class="result-card" id="result-card">
+    <div id="result-content"></div>
+  </div>
+</div>
+
+<script>
+const SCENARIO_ID = {{ scenario.id }};
+const USER_ID = "{{ user_id }}";
+const MIN_WORDS = {{ scenario.min_words }};
+const TIMER_TOTAL = {{ timer_seconds }};
+let timeLeft = TIMER_TOTAL;
+let startTime = Date.now();
+let submitted = false;
+let timerInterval;
+
+const timerEl = document.getElementById('timer');
+const wordEl = document.getElementById('word-counter');
+const textarea = document.getElementById('email-text');
+const submitBtn = document.getElementById('submit-btn');
+
+function updateTimer() {
+  if (submitted) return;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  if (timeLeft <= 60) timerEl.classList.add('danger');
+  else if (timeLeft <= 120) timerEl.classList.add('warning');
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+    autoSubmit();
+    return;
+  }
+  timeLeft--;
+}
+
+function countWords() {
+  const txt = textarea.value.trim();
+  const words = txt ? txt.split(/\s+/).filter(w => w.length > 0).length : 0;
+  wordEl.textContent = `${words} / ${MIN_WORDS} كلمة`;
+  if (words >= MIN_WORDS) wordEl.classList.add('met');
+  else wordEl.classList.remove('met');
+}
+
+textarea.addEventListener('input', countWords);
+
+async function submitEmail() {
+  if (submitted) return;
+  const text = textarea.value.trim();
+  if (text.length < 20) {
+    alert("الإيميل قصير جداً. اكتب المزيد قبل الإرسال.");
+    return;
+  }
+  submitted = true;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "⏳ جاري التصحيح...";
+  textarea.disabled = true;
+  clearInterval(timerInterval);
+  const timeSpent = TIMER_TOTAL - timeLeft;
+  const requestAdmin = document.getElementById('request-admin')?.checked || false;
+
+  try {
+    const resp = await fetch('/api/writing/email/submit', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        user_id: USER_ID,
+        scenario_id: SCENARIO_ID,
+        email_text: text,
+        time_spent_sec: timeSpent,
+        request_admin_review: requestAdmin
+      })
+    });
+    const data = await resp.json();
+    showResult(data);
+  } catch (e) {
+    alert("خطأ في الاتصال: " + e.message);
+    submitBtn.disabled = false;
+    submitted = false;
+    submitBtn.textContent = "📤 إرسال الإيميل";
+  }
+}
+
+function autoSubmit() {
+  alert("⏰ انتهى الوقت! سيتم إرسال إجابتك تلقائياً.");
+  submitEmail();
+}
+
+function showResult(data) {
+  const card = document.getElementById('result-card');
+  const content = document.getElementById('result-content');
+  let html = '';
+  if (data.ai_available) {
+    const pct = data.score_pct;
+    const passed = data.passed;
+    html += `
+      <div style="text-align:center;">
+        <div class="score-circle">
+          <div class="num">${data.score}/5</div>
+          <div class="lbl">${data.band_label || ''}</div>
+        </div>
+        <h2 style="margin-top:15px;">${passed ? '✅ نتيجة جيدة' : '⚠️ يحتاج تحسين'}</h2>
+        <p style="color:#64748b;">عدد الكلمات: ${data.word_count} / ${data.min_words_required}</p>
+      </div>`;
+    if (data.feedback_ar) {
+      html += `<div style="background:#f1f5f9; padding:15px; border-radius:10px; margin-top:15px;">${data.feedback_ar}</div>`;
+    }
+    if (data.strengths && data.strengths.length) {
+      html += '<div class="feedback-section strengths"><h4>✅ نقاط القوة:</h4><ul>';
+      data.strengths.forEach(s => html += `<li>${s}</li>`);
+      html += '</ul></div>';
+    }
+    if (data.improvements && data.improvements.length) {
+      html += '<div class="feedback-section improvements"><h4>💡 اقتراحات للتحسين:</h4><ul>';
+      data.improvements.forEach(s => html += `<li>${s}</li>`);
+      html += '</ul></div>';
+    }
+    if (data.errors && data.errors.length) {
+      html += '<div class="feedback-section errors"><h4>❌ أخطاء:</h4><ul>';
+      data.errors.forEach(s => html += `<li>${typeof s === 'string' ? s : (s.error || JSON.stringify(s))}</li>`);
+      html += '</ul></div>';
+    }
+    if (data.queued_for_admin) {
+      html += `<div class="admin-msg" style="margin-top:15px;"><h3>📋 تم إرسال إجابتك للمراجعة اليدوية</h3><p>سيراجعها المدرّس خلال 24 ساعة وتصلك إشعار.</p></div>`;
+    }
+  } else {
+    html += `
+      <div class="admin-msg">
+        <h3>✅ تم استلام إجابتك بنجاح</h3>
+        <p style="font-size:16px;">${data.message_ar || 'سيقوم المدرّس بمراجعة إيميلك خلال 24 ساعة.'}</p>
+        <p style="color:#64748b; margin-top:10px;">عدد الكلمات: ${data.word_count} / ${data.min_words_required}</p>
+        <p style="font-size:13px; color:#64748b;">رقم الطلب: #${data.queue_id || '-'}</p>
+      </div>`;
+  }
+  html += `
+    <div style="text-align:center; margin-top:20px;">
+      <a href="/writing/email?user_id=${USER_ID}" class="btn btn-primary" style="text-decoration:none; display:inline-block;">سيناريو جديد</a>
+      <a href="/writing/my-corrections?user_id=${USER_ID}" class="btn btn-secondary" style="text-decoration:none; display:inline-block; margin-right:10px;">تصحيحاتي</a>
+    </div>`;
+  content.innerHTML = html;
+  card.classList.add('show');
+  card.scrollIntoView({behavior:'smooth'});
+}
+
+// تشغيل التايمر
+timerInterval = setInterval(updateTimer, 1000);
+countWords();
+
+// تحذير عند مغادرة الصفحة
+window.addEventListener('beforeunload', (e) => {
+  if (!submitted && textarea.value.trim().length > 20) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+</script>
+
+</body>
+</html>

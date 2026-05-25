@@ -520,3 +520,276 @@ def api_writing_progress(user_id):
     conn.close()
     return jsonify({"success": True, "progress": [dict(r) for r in rows]})
 
+
+# ============================================================
+# Phase 3: Email Task Routes
+# ============================================================
+@writing_bp.route("/writing/email", methods=["GET"])
+def view_email_list():
+    """قائمة سيناريوهات الإيميل المتاحة حسب tier الطالب."""
+    tg_id = _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    # احصل على tier الطالب
+    tier_row = c.execute(
+        "SELECT target_tier FROM student_writing_target WHERE telegram_id=?",
+        (tg_id,)
+    ).fetchone()
+    tier = tier_row[0] if tier_row else "tier59"
+    # جلب السيناريوهات المناسبة
+    scenarios = c.execute("""
+        SELECT id, code, title_ar, title_en, scenario_text, recipient_role,
+               requirements_json, target_tier, min_words, difficulty, order_index
+        FROM writing_email_scenarios
+        WHERE is_active=1 AND (target_tier=? OR target_tier='all')
+        ORDER BY order_index
+    """, (tier,)).fetchall()
+    # تحويل لقواميس
+    scenarios_list = []
+    for s in scenarios:
+        scenarios_list.append({
+            "id": s[0], "code": s[1], "title_ar": s[2], "title_en": s[3],
+            "scenario_text": s[4], "recipient_role": s[5],
+            "requirements": json.loads(s[6]) if s[6] else [],
+            "target_tier": s[7], "min_words": s[8],
+            "difficulty": s[9], "order_index": s[10]
+        })
+    return render_template("toefl_writing/email_list.html",
+                           scenarios=scenarios_list, tier=tier, user_id=tg_id)
+
+
+@writing_bp.route("/writing/email/<int:scenario_id>", methods=["GET"])
+def view_email_task(scenario_id):
+    """صفحة كتابة إيميل واحد مع تايمر 7 دقائق."""
+    tg_id = _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    row = c.execute("""
+        SELECT id, code, title_ar, title_en, scenario_text, recipient_role,
+               requirements_json, target_tier, min_words, difficulty
+        FROM writing_email_scenarios WHERE id=?
+    """, (scenario_id,)).fetchone()
+    if not row:
+        return "Scenario not found", 404
+    scenario = {
+        "id": row[0], "code": row[1], "title_ar": row[2], "title_en": row[3],
+        "scenario_text": row[4], "recipient_role": row[5],
+        "requirements": json.loads(row[6]) if row[6] else [],
+        "target_tier": row[7], "min_words": row[8], "difficulty": row[9]
+    }
+    # تايمر بحسب tier
+    timer_map = {"tier59": 420, "tier69": 420, "tier90": 420}  # 7 دقائق ثابت
+    tier_row = c.execute(
+        "SELECT target_tier FROM student_writing_target WHERE telegram_id=?",
+        (tg_id,)
+    ).fetchone()
+    student_tier = tier_row[0] if tier_row else "tier59"
+    return render_template("toefl_writing/email_task.html",
+                           scenario=scenario,
+                           timer_seconds=timer_map.get(student_tier, 420),
+                           student_tier=student_tier,
+                           user_id=tg_id)
+
+
+@writing_bp.route("/api/writing/email/submit", methods=["POST"])
+def api_email_submit():
+    """استلام إيميل الطالب، محاولة تصحيح AI، حفظ النتيجة."""
+    data = request.get_json(force=True, silent=True) or {}
+    tg_id = data.get("user_id") or _get_tg_id()
+    scenario_id = data.get("scenario_id")
+    email_text = (data.get("email_text") or "").strip()
+    time_spent = int(data.get("time_spent_sec") or 0)
+    request_admin = bool(data.get("request_admin_review"))
+
+    if not scenario_id or not email_text:
+        return jsonify({"success": False, "error": "Missing data"}), 400
+
+    conn = _db(); c = conn.cursor()
+    row = c.execute("""
+        SELECT scenario_text, requirements_json, min_words, target_tier
+        FROM writing_email_scenarios WHERE id=?
+    """, (scenario_id,)).fetchone()
+    if not row:
+        return jsonify({"success": False, "error": "Scenario not found"}), 404
+
+    scenario_text, req_json, min_words, target_tier = row
+    requirements = json.loads(req_json) if req_json else []
+    word_count = len([w for w in email_text.split() if w.strip()])
+
+    # tier الطالب
+    tier_row = c.execute(
+        "SELECT target_tier FROM student_writing_target WHERE telegram_id=?",
+        (tg_id,)
+    ).fetchone()
+    student_tier = tier_row[0] if tier_row else "tier59"
+
+    # محاولة تصحيح AI
+    ai_result = None
+    ai_available = False
+    try:
+        from ai.toefl_grader import grade_email
+        ai_result = grade_email(scenario_text, requirements, email_text)
+        ai_available = bool(ai_result.get("ai_available"))
+    except Exception as e:
+        ai_result = {"ai_available": False, "error": str(e)}
+        ai_available = False
+
+    # حدد إذا نحتاج مراجعة يدوية
+    needs_admin = (not ai_available) or request_admin or (student_tier == "tier90" and request_admin)
+
+    # إذا كان AI متاح: نعرض النتيجة فوراً
+    if ai_available:
+        score = ai_result.get("score", 0)
+        max_score = 5
+        score_pct = round((score / max_score) * 100, 1)
+        c.execute("""
+            INSERT INTO writing_attempts
+            (telegram_id, question_id, stage_id, lesson_id, answer_text,
+             answer_json, is_correct, ai_score, ai_band, ai_feedback_json, time_spent_sec)
+            VALUES (?, NULL, 3, NULL, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            tg_id, email_text, json.dumps({"scenario_id": scenario_id}, ensure_ascii=False),
+            1 if score >= 3 else 0, score, ai_result.get("band_label",""),
+            json.dumps(ai_result, ensure_ascii=False), time_spent
+        ))
+
+    # إذا needs_admin: أضف في قائمة الانتظار
+    queue_id = None
+    if needs_admin:
+        c.execute("""
+            INSERT INTO writing_admin_queue
+            (telegram_id, task_type, scenario_id, student_text, word_count,
+             ai_score, ai_feedback_json, ai_available, target_tier)
+            VALUES (?, 'email', ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            tg_id, scenario_id, email_text, word_count,
+            ai_result.get("score") if ai_result else None,
+            json.dumps(ai_result, ensure_ascii=False) if ai_result else None,
+            1 if ai_available else 0, student_tier
+        ))
+        queue_id = c.lastrowid
+
+    # تحديث cooldown
+    c.execute("""
+        INSERT OR REPLACE INTO writing_cooldown (telegram_id, scenario_id, last_attempt)
+        VALUES (?, ?, CURRENT_TIMESTAMP)
+    """, (tg_id, scenario_id))
+
+    conn.commit()
+
+    response = {
+        "success": True,
+        "ai_available": ai_available,
+        "word_count": word_count,
+        "min_words_required": min_words,
+        "queued_for_admin": needs_admin,
+        "queue_id": queue_id,
+        "cooldown_minutes": 30
+    }
+    if ai_available:
+        response["score"] = ai_result.get("score", 0)
+        response["max_score"] = 5
+        response["score_pct"] = round((ai_result.get("score",0)/5)*100, 1)
+        response["band_label"] = ai_result.get("band_label", "")
+        response["strengths"] = ai_result.get("strengths", [])
+        response["improvements"] = ai_result.get("improvements", [])
+        response["errors"] = ai_result.get("errors", [])
+        response["feedback_ar"] = ai_result.get("feedback_ar", "")
+        response["passed"] = ai_result.get("score", 0) >= 3
+    else:
+        response["message_ar"] = "تم استلام إجابتك ✅ سيقوم المدرّس بمراجعتها خلال 24 ساعة."
+        response["passed"] = None  # غير محدد بعد
+
+    return jsonify(response)
+
+
+@writing_bp.route("/api/writing/email/cooldown/<int:scenario_id>", methods=["GET"])
+def api_email_cooldown(scenario_id):
+    """فحص cooldown قبل إعادة محاولة سيناريو."""
+    tg_id = _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    row = c.execute("""
+        SELECT CAST((julianday('now') - julianday(last_attempt)) * 1440 AS INTEGER)
+        FROM writing_cooldown WHERE telegram_id=? AND scenario_id=?
+    """, (tg_id, scenario_id)).fetchone()
+    if not row:
+        return jsonify({"can_retry": True, "minutes_left": 0})
+    minutes_passed = row[0] or 0
+    minutes_left = max(0, 30 - minutes_passed)
+    return jsonify({"can_retry": minutes_left == 0, "minutes_left": minutes_left})
+
+
+@writing_bp.route("/admin/writing/queue", methods=["GET"])
+def admin_writing_queue():
+    """لوحة الأدمن لمراجعة الإيميلات المُرسلة."""
+    conn = _db(); c = conn.cursor()
+    items = c.execute("""
+        SELECT q.id, q.telegram_id, q.task_type, q.scenario_id, q.student_text,
+               q.word_count, q.ai_score, q.ai_available, q.status, q.target_tier,
+               q.created_at, s.title_ar, s.scenario_text
+        FROM writing_admin_queue q
+        LEFT JOIN writing_email_scenarios s ON q.scenario_id = s.id
+        WHERE q.status='pending'
+        ORDER BY q.created_at ASC
+    """).fetchall()
+    items_list = []
+    for it in items:
+        items_list.append({
+            "id": it[0], "telegram_id": it[1], "task_type": it[2],
+            "scenario_id": it[3], "student_text": it[4], "word_count": it[5],
+            "ai_score": it[6], "ai_available": bool(it[7]), "status": it[8],
+            "target_tier": it[9], "created_at": it[10],
+            "scenario_title": it[11], "scenario_text": it[12]
+        })
+    return render_template("toefl_writing/admin_queue.html", items=items_list)
+
+
+@writing_bp.route("/api/writing/admin/review", methods=["POST"])
+def api_admin_review():
+    """حفظ تقييم الأدمن لإيميل في قائمة الانتظار."""
+    data = request.get_json(force=True, silent=True) or {}
+    queue_id = data.get("queue_id")
+    admin_score = data.get("admin_score")
+    admin_feedback = (data.get("admin_feedback") or "").strip()
+    admin_tg = data.get("admin_telegram_id") or _get_tg_id()
+    if not queue_id or admin_score is None:
+        return jsonify({"success": False, "error": "Missing fields"}), 400
+    conn = _db(); c = conn.cursor()
+    c.execute("""
+        UPDATE writing_admin_queue
+        SET status='reviewed', admin_score=?, admin_feedback=?,
+            admin_telegram_id=?, reviewed_at=CURRENT_TIMESTAMP
+        WHERE id=?
+    """, (float(admin_score), admin_feedback, admin_tg, queue_id))
+    conn.commit()
+    return jsonify({"success": True})
+
+
+@writing_bp.route("/writing/my-corrections", methods=["GET"])
+def view_my_corrections():
+    """صفحة الطالب لعرض تصحيحاته السابقة."""
+    tg_id = _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    items = c.execute("""
+        SELECT q.id, q.task_type, q.student_text, q.word_count, q.ai_score,
+               q.ai_feedback_json, q.status, q.admin_score, q.admin_feedback,
+               q.created_at, q.reviewed_at, s.title_ar
+        FROM writing_admin_queue q
+        LEFT JOIN writing_email_scenarios s ON q.scenario_id = s.id
+        WHERE q.telegram_id=?
+        ORDER BY q.created_at DESC LIMIT 20
+    """, (tg_id,)).fetchall()
+    items_list = []
+    for it in items:
+        ai_fb = {}
+        try:
+            ai_fb = json.loads(it[5]) if it[5] else {}
+        except Exception:
+            pass
+        items_list.append({
+            "id": it[0], "task_type": it[1], "student_text": it[2],
+            "word_count": it[3], "ai_score": it[4], "ai_feedback": ai_fb,
+            "status": it[6], "admin_score": it[7], "admin_feedback": it[8],
+            "created_at": it[9], "reviewed_at": it[10], "scenario_title": it[11]
+        })
+    return render_template("toefl_writing/my_corrections.html",
+                           items=items_list, user_id=tg_id)
+

@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>قائمة انتظار المراجعة</title>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#f5f7fb; margin:0; padding:20px; }
+  .container { max-width:1100px; margin:0 auto; }
+  h1 { color:#1e293b; }
+  .item { background:#fff; border-radius:12px; padding:20px; margin:15px 0; box-shadow:0 2px 8px rgba(0,0,0,0.06); border-right:5px solid #ea580c; }
+  .meta { display:flex; gap:15px; flex-wrap:wrap; font-size:13px; color:#64748b; margin-bottom:10px; }
+  .meta span { background:#f1f5f9; padding:3px 10px; border-radius:6px; }
+  .student-text { background:#f8fafc; padding:15px; border-radius:8px; direction:ltr; text-align:left; white-space:pre-wrap; margin:10px 0; font-size:14px; line-height:1.6; }
+  .scenario-info { background:#e0e7ff; padding:10px; border-radius:6px; font-size:13px; margin-bottom:10px; direction:ltr; text-align:left; }
+  .review-form { background:#fef9c3; padding:15px; border-radius:8px; margin-top:10px; }
+  .review-form input, .review-form textarea { width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; margin:5px 0; box-sizing:border-box; }
+  .review-form textarea { min-height:80px; }
+  .review-form button { background:#16a34a; color:#fff; border:none; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
+  .review-form button:hover { background:#15803d; }
+  .empty { text-align:center; background:#fff; padding:40px; border-radius:12px; color:#64748b; }
+  .ai-info { background:#dbeafe; padding:10px; border-radius:6px; margin:10px 0; font-size:13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📋 قائمة انتظار المراجعة - {{ items|length }} عنصر</h1>
+  {% if items %}
+    {% for it in items %}
+    <div class="item" id="item-{{ it.id }}">
+      <div class="meta">
+        <span>#{{ it.id }}</span>
+        <span>👤 {{ it.telegram_id }}</span>
+        <span>📝 {{ it.task_type }}</span>
+        <span>🎯 {{ it.target_tier }}</span>
+        <span>📊 {{ it.word_count }} كلمة</span>
+        <span>🕒 {{ it.created_at }}</span>
+        {% if it.ai_available %}<span style="background:#dcfce7;color:#16a34a;">AI: {{ it.ai_score }}/5</span>{% else %}<span style="background:#fee2e2;color:#dc2626;">AI غير متاح</span>{% endif %}
+      </div>
+      {% if it.scenario_title %}
+      <div class="scenario-info">
+        <strong>{{ it.scenario_title }}</strong><br>
+        <span style="font-size:12px;">{{ it.scenario_text }}</span>
+      </div>
+      {% endif %}
+      <div><strong>📨 إجابة الطالب:</strong></div>
+      <div class="student-text">{{ it.student_text }}</div>
+      <form class="review-form" onsubmit="submitReview(event, {{ it.id }})">
+        <label>الدرجة (0-5):</label>
+        <input type="number" name="admin_score" min="0" max="5" step="0.5" required>
+        <label>تعليق المدرّس:</label>
+        <textarea name="admin_feedback" placeholder="نقاط القوة، أخطاء شائعة، اقتراحات..."></textarea>
+        <button type="submit">✅ حفظ المراجعة</button>
+      </form>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">🎉 لا توجد عناصر بانتظار المراجعة</div>
+  {% endif %}
+</div>
+<script>
+async function submitReview(e, queueId) {
+  e.preventDefault();
+  const form = e.target;
+  const score = form.admin_score.value;
+  const feedback = form.admin_feedback.value;
+  const resp = await fetch('/api/writing/admin/review', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({queue_id: queueId, admin_score: score, admin_feedback: feedback})
+  });
+  const data = await resp.json();
+  if (data.success) {
+    document.getElementById('item-' + queueId).style.opacity = '0.4';
+    document.getElementById('item-' + queueId).innerHTML += '<div style="background:#dcfce7;padding:10px;border-radius:6px;margin-top:10px;">✅ تم الحفظ</div>';
+  } else {
+    alert('خطأ: ' + (data.error || 'unknown'));
+  }
+}
+</script>
+</body>
+</html>
