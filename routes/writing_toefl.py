@@ -1,3 +1,4 @@
+import json
 # -*- coding: utf-8 -*-
 """
 TOEFL Writing Track - Flask Blueprint
@@ -70,22 +71,19 @@ def view_stage(stage_id):
     lessons = c.execute("""SELECT * FROM writing_lessons
         WHERE stage_id=? ORDER BY order_index""", (stage_id,)).fetchall()
 
-    # Build progress map
     prog_rows = c.execute("""SELECT lesson_id, status, best_score
         FROM writing_progress WHERE telegram_id=?""", (tg_id,)).fetchall()
     progress_map = {r["lesson_id"]: dict(r) for r in prog_rows}
     conn.close()
 
-    # Compute lock state: a lesson is locked if previous (non-exam) lesson not completed
     lessons_list = [dict(l) for l in lessons]
-    prev_completed = True  # first lesson always unlocked
+    prev_completed = True
     for L in lessons_list:
-        if L["is_exam"]:
-            # Exam unlocks only when ALL normal lessons in stage completed
+        if L.get("is_exam"):
             all_done = all(
                 progress_map.get(x["id"], {}).get("status") == "completed"
-                for x in lessons_list if not x["is_exam"]
-            )
+                for x in lessons_list if not x.get("is_exam")
+            ) and len([x for x in lessons_list if not x.get("is_exam")]) > 0
             L["locked"] = not all_done
         else:
             L["locked"] = not prev_completed
@@ -136,18 +134,23 @@ def api_lesson_submit(lesson_id):
     tg_id = data.get("user_id") or _get_tg_id()
     answers = data.get("answers", {})
 
-    conn = _db()
-    c = conn.cursor()
-
+    conn = _db(); c = conn.cursor()
     lesson = c.execute("SELECT * FROM writing_lessons WHERE id=?", (lesson_id,)).fetchone()
     if not lesson:
         conn.close()
         return jsonify({"success": False, "error": "Lesson not found"}), 404
 
-    questions = c.execute(
-        "SELECT * FROM writing_questions WHERE lesson_id=? AND is_exam=0",
-        (lesson_id,)
-    ).fetchall()
+    # Get student tier (default tier69)
+    tier_row = c.execute("SELECT tier FROM student_writing_target WHERE telegram_id=?", (tg_id,)).fetchone()
+    student_tier = tier_row["tier"] if tier_row else "tier69"
+
+    is_exam_lesson = bool(lesson["is_exam"])
+    threshold = 80 if is_exam_lesson else (65 if student_tier=="tier59" else (75 if student_tier=="tier69" else 85))
+
+    # Get questions (filter by tier if applicable; "all" always included)
+    questions = c.execute("""SELECT * FROM writing_questions
+        WHERE lesson_id=? AND (target_tier='all' OR target_tier=?)
+        ORDER BY order_index""", (lesson_id, student_tier)).fetchall()
 
     correct = 0
     total = len(questions)
@@ -161,15 +164,22 @@ def api_lesson_submit(lesson_id):
         if q["q_type"] == "mcq":
             is_correct = student_ans.lower() == (q["correct_answer"] or "").strip().lower()
         elif q["q_type"] == "sentence_order":
-            from ai.toefl_grader import grade_sentence_order
             try:
-                student_words = json.loads(student_ans) if student_ans.startswith("[") else student_ans.split()
-            except:
-                student_words = student_ans.split()
-            res = grade_sentence_order(q["correct_answer"] or "", student_words)
-            is_correct = res["correct"]
+                from ai.toefl_grader import grade_sentence_order
+                try:
+                    student_words = json.loads(student_ans) if student_ans.startswith("[") else student_ans.split()
+                except Exception:
+                    student_words = student_ans.split()
+                res = grade_sentence_order(q["correct_answer"] or "", student_words)
+                is_correct = res.get("correct", False) if isinstance(res, dict) else bool(res)
+            except Exception:
+                # Fallback: exact match ignoring case and extra spaces
+                norm_correct = " ".join((q["correct_answer"] or "").lower().split())
+                norm_student = " ".join(student_ans.lower().split())
+                is_correct = norm_correct == norm_student
 
-        if is_correct: correct += 1
+        if is_correct:
+            correct += 1
 
         feedback.append({
             "question_id": q["id"],
@@ -179,23 +189,20 @@ def api_lesson_submit(lesson_id):
             "explanation": q["explanation_ar"]
         })
 
-        # log attempt
         c.execute("""INSERT INTO writing_attempts
             (telegram_id, question_id, stage_id, lesson_id, answer_text, is_correct, created_at)
             VALUES (?,?,?,?,?,?,CURRENT_TIMESTAMP)""",
             (tg_id, q["id"], lesson["stage_id"], lesson_id, student_ans, 1 if is_correct else 0))
 
-    score_pct = (correct / total * 100) if total else 0
-    passed = score_pct >= 70
+    score_pct = (correct/total*100) if total else 0
+    passed = score_pct >= threshold
 
-
-    # Update progress (record attempt always; mark completed only if passed)
-    existing = c.execute("""SELECT id, best_score, attempts_count FROM writing_progress
+    # Update progress
+    existing = c.execute("""SELECT id, best_score FROM writing_progress
         WHERE telegram_id=? AND lesson_id=?""", (tg_id, lesson_id)).fetchone()
-
     if existing:
         new_best = max(existing["best_score"] or 0, score_pct)
-        new_status = "completed" if (passed or existing["best_score"] >= 70) else "in_progress"
+        new_status = "completed" if (passed or (existing["best_score"] or 0) >= threshold) else "in_progress"
         c.execute("""UPDATE writing_progress
             SET best_score=?, attempts_count=attempts_count+1, status=?,
                 completed_at=CASE WHEN ?='completed' AND completed_at IS NULL THEN CURRENT_TIMESTAMP ELSE completed_at END
@@ -209,16 +216,26 @@ def api_lesson_submit(lesson_id):
              "completed" if passed else "in_progress",
              score_pct, 1 if passed else 0))
 
-    # Find next lesson in same stage
-    next_row = c.execute("""SELECT id FROM writing_lessons
-        WHERE stage_id=? AND order_index > ? AND is_exam=0
-        ORDER BY order_index ASC LIMIT 1""",
-        (lesson["stage_id"], lesson["order_index"])).fetchone()
-    next_lesson_id = next_row["id"] if next_row else None
+    # Next lesson / stage exam / next stage
+    next_lesson_id = None
+    stage_exam_id = None
+    next_stage_id = None
 
-    exam_row = c.execute("""SELECT id FROM writing_lessons
-        WHERE stage_id=? AND is_exam=1 LIMIT 1""", (lesson["stage_id"],)).fetchone()
-    stage_exam_id = exam_row["id"] if exam_row else None
+    if is_exam_lesson:
+        ns = c.execute("""SELECT id FROM writing_stages
+            WHERE order_index > (SELECT order_index FROM writing_stages WHERE id=?)
+            ORDER BY order_index ASC LIMIT 1""", (lesson["stage_id"],)).fetchone()
+        next_stage_id = ns["id"] if (ns and passed) else None
+    else:
+        nl = c.execute("""SELECT id FROM writing_lessons
+            WHERE stage_id=? AND order_index>? AND is_exam=0
+            ORDER BY order_index ASC LIMIT 1""",
+            (lesson["stage_id"], lesson["order_index"])).fetchone()
+        next_lesson_id = nl["id"] if nl else None
+        if not next_lesson_id:
+            ex = c.execute("""SELECT id FROM writing_lessons
+                WHERE stage_id=? AND is_exam=1 LIMIT 1""", (lesson["stage_id"],)).fetchone()
+            stage_exam_id = ex["id"] if ex else None
 
     conn.commit()
     conn.close()
@@ -229,11 +246,13 @@ def api_lesson_submit(lesson_id):
         "correct": correct,
         "total": total,
         "passed": passed,
-        "threshold": 70,
+        "threshold": threshold,
+        "tier": student_tier,
+        "is_exam": is_exam_lesson,
         "feedback": feedback,
         "next_lesson_id": next_lesson_id,
         "stage_exam_id": stage_exam_id,
-        "is_last_lesson": next_lesson_id is None
+        "next_stage_id": next_stage_id
     })
 
 
@@ -457,3 +476,47 @@ def api_progress(user_id):
         "success": True,
         "progress": [dict(r) for r in rows]
     })
+
+
+@writing_bp.route("/api/writing/tier", methods=["GET", "POST"])
+def api_writing_tier():
+    """Get or set student's target tier."""
+    tg_id = (request.args.get("user_id") or
+             (request.get_json(silent=True) or {}).get("user_id") or
+             _get_tg_id())
+    conn = _db(); c = conn.cursor()
+
+    if request.method == "POST":
+        data = request.get_json(force=True, silent=True) or {}
+        target = int(data.get("target_score", 69))
+        if target <= 65:
+            tier = "tier59"
+        elif target <= 79:
+            tier = "tier69"
+        else:
+            tier = "tier90"
+        c.execute("""INSERT INTO student_writing_target (telegram_id, target_score, tier, set_at)
+            VALUES (?,?,?,CURRENT_TIMESTAMP)
+            ON CONFLICT(telegram_id) DO UPDATE SET
+                target_score=excluded.target_score,
+                tier=excluded.tier,
+                set_at=CURRENT_TIMESTAMP""", (tg_id, target, tier))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "tier": tier, "target_score": target})
+
+    row = c.execute("SELECT tier, target_score FROM student_writing_target WHERE telegram_id=?", (tg_id,)).fetchone()
+    conn.close()
+    if row:
+        return jsonify({"success": True, "tier": row["tier"], "target_score": row["target_score"]})
+    return jsonify({"success": True, "tier": "tier69", "target_score": 69, "default": True})
+
+
+@writing_bp.route("/api/writing/progress/<user_id>")
+def api_writing_progress(user_id):
+    conn = _db(); c = conn.cursor()
+    rows = c.execute("""SELECT lesson_id, stage_id, status, best_score
+        FROM writing_progress WHERE telegram_id=?""", (user_id,)).fetchall()
+    conn.close()
+    return jsonify({"success": True, "progress": [dict(r) for r in rows]})
+

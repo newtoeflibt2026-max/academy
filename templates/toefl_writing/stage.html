@@ -9,16 +9,15 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 .header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:30px;border-radius:16px;margin-bottom:25px}
 .header h1{margin:0 0 10px}
 .back{color:#fff;text-decoration:none;opacity:.85;font-size:14px}
-.lesson-card{background:#fff;border-radius:12px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:all .2s}
-.lesson-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+.lesson-card{background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:all .2s}
+.lesson-card:hover:not(.locked){transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
 .lesson-card.locked{opacity:.55;background:#f1f5f9}
 .lesson-card.completed{border-right:4px solid #10b981}
 .lesson-card.exam{background:linear-gradient(135deg,#fef3c7,#fde68a);border-right:4px solid #f59e0b}
 .lesson-info h3{margin:0 0 5px;font-size:17px}
 .lesson-info .meta{color:#64748b;font-size:13px}
-.btn{padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;transition:all .2s;border:none;cursor:pointer}
+.btn{padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;border:none;cursor:pointer;display:inline-block}
 .btn-start{background:#667eea;color:#fff}
-.btn-start:hover{background:#5a67d8}
 .btn-done{background:#10b981;color:#fff}
 .btn-locked{background:#cbd5e0;color:#64748b;cursor:not-allowed}
 .btn-exam{background:#f59e0b;color:#fff}
@@ -33,21 +32,19 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 <p style="margin:0;opacity:.9">{{ stage.description_ar or "" }}</p>
 </div>
 
-<div id="lessons-list">
 {% for lesson in lessons %}
 {% set prog = progress_map.get(lesson.id) %}
 {% set is_completed = prog and prog.status == 'completed' %}
-{% set is_locked = lesson.locked %}
-<div class="lesson-card {% if is_locked %}locked{% endif %} {% if is_completed %}completed{% endif %} {% if lesson.is_exam %}exam{% endif %}">
+<div class="lesson-card{% if lesson.locked %} locked{% endif %}{% if is_completed %} completed{% endif %}{% if lesson.is_exam %} exam{% endif %}">
 <div class="lesson-info">
 <h3>
-{% if lesson.is_exam %}🎯{% elif is_completed %}✅{% elif is_locked %}🔒{% else %}📖{% endif %}
+{% if lesson.is_exam %}🎯{% elif is_completed %}✅{% elif lesson.locked %}🔒{% else %}📖{% endif %}
 {{ lesson.title_ar }}
 {% if is_completed %}<span class="score-badge">{{ prog.best_score|int }}%</span>{% endif %}
 </h3>
 <div class="meta">⏱ {{ lesson.duration_min }} دقائق{% if lesson.is_exam %} • امتحان المرحلة (يتطلب 80%){% endif %}</div>
 </div>
-{% if is_locked %}
+{% if lesson.locked %}
 <button class="btn btn-locked" disabled>🔒 مقفل</button>
 {% elif is_completed %}
 <a class="btn btn-done" href="/writing/lesson/{{ lesson.id }}?user_id={{ user_id }}">مراجعة</a>
@@ -58,7 +55,6 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 {% endif %}
 </div>
 {% endfor %}
-</div>
 </div>
 </body>
 </html>
