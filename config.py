@@ -17,6 +17,9 @@ _load_env()
 class Settings:
     BOT_TOKEN    = os.environ.get("BOT_TOKEN", "")
     GEMINI_KEY   = os.environ.get("GEMINI_API_KEY", "")
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+    GEMINI_WRITING_KEYS = os.environ.get("GEMINI_WRITING_KEYS", "")
+    GEMINI_SPEAKING_KEYS = os.environ.get("GEMINI_SPEAKING_KEYS", "")
     # مسار قاعدة البيانات: يمكن تجاوزه بـ DB_PATH في .env
     _db_override = os.environ.get("DB_PATH", "")
     DB_PATH      = _db_override if _db_override else os.path.join(
