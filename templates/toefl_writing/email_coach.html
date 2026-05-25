@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>ðŸ“š Coach - {{ scenario.title_ar }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background:#f5f7fb; margin:0; padding:0; color:#1e293b; line-height:1.7; }
+  .container { max-width:900px; margin:0 auto; padding:15px; }
+  .header { background:linear-gradient(135deg,#10b981,#059669); color:#fff; padding:20px; border-radius:14px; margin:15px 0; }
+  .header h1 { margin:0 0 5px 0; font-size:22px; }
+  .header p { margin:0; opacity:0.95; font-size:14px; }
+  .progress-bar { background:#fff; border-radius:14px; padding:15px; margin-bottom:15px; box-shadow:0 2px 8px rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+  .step-circle { width:38px; height:38px; border-radius:50%; background:#e2e8f0; color:#64748b; display:flex; align-items:center; justify-content:center; font-weight:bold; cursor:pointer; text-decoration:none; transition:0.2s; }
+  .step-circle.done { background:#10b981; color:#fff; }
+  .step-circle.current { background:#4f46e5; color:#fff; transform:scale(1.15); box-shadow:0 4px 12px rgba(79,70,229,0.4); }
+  .step-circle:hover { transform:scale(1.1); }
+  .step-line { flex:1; height:2px; background:#e2e8f0; margin:0 -5px; min-width:10px; }
+  .step-line.done { background:#10b981; }
+  .card { background:#fff; border-radius:14px; padding:25px; margin-bottom:15px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+  .card h2 { margin:0 0 15px 0; color:#1e293b; font-size:22px; border-bottom:3px solid #10b981; padding-bottom:10px; display:inline-block; }
+  .info-box { background:#f0fdf4; border-right:4px solid #10b981; padding:15px; border-radius:8px; margin:12px 0; }
+  .info-box.blue { background:#eff6ff; border-right-color:#3b82f6; }
+  .info-box.yellow { background:#fef9c3; border-right-color:#eab308; }
+  .info-box.red { background:#fee2e2; border-right-color:#dc2626; }
+  .info-box.purple { background:#f3e8ff; border-right-color:#a855f7; }
+  .goal-card { background:#fff; border:2px solid #10b981; padding:12px 15px; border-radius:10px; margin:8px 0; display:flex; gap:12px; align-items:center; }
+  .goal-num { background:#10b981; color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0; }
+  .structure-row { background:#f8fafc; padding:15px; border-radius:10px; margin:10px 0; border-right:4px solid #4f46e5; }
+  .structure-row .part-title { font-weight:bold; color:#4f46e5; margin-bottom:5px; }
+  .structure-row .example { background:#1e293b; color:#a7f3d0; padding:8px 12px; border-radius:6px; font-family:'Courier New', monospace; direction:ltr; text-align:left; margin:8px 0; }
+  .structure-row .tip { font-size:13px; color:#64748b; font-style:italic; }
+  .phrase-group { background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:12px; margin:10px 0; }
+  .phrase-group h4 { margin:0 0 10px 0; color:#4f46e5; }
+  .phrase-item { background:#f8fafc; padding:10px; border-radius:6px; margin:5px 0; cursor:pointer; transition:0.2s; }
+  .phrase-item:hover { background:#e0e7ff; }
+  .phrase-item .en { font-weight:bold; direction:ltr; text-align:left; display:block; }
+  .phrase-item .ar { font-size:13px; color:#64748b; }
+  .phrase-item .copy-hint { font-size:11px; color:#10b981; }
+  .model-email { background:#1e293b; color:#e2e8f0; padding:20px; border-radius:10px; direction:ltr; text-align:left; white-space:pre-wrap; font-family:'Georgia', serif; line-height:1.8; margin:15px 0; font-size:15px; }
+  .annotation-item { background:#fef9c3; padding:12px; border-radius:8px; margin:8px 0; }
+  .annotation-item .line { background:#1e293b; color:#fbbf24; padding:6px 10px; border-radius:5px; direction:ltr; text-align:left; font-family:'Courier New', monospace; font-size:13px; margin-bottom:6px; }
+  .annotation-item .comment { color:#92400e; }
+  .fill-area { background:#fff; border:2px dashed #4f46e5; padding:20px; border-radius:10px; direction:ltr; text-align:left; font-family:'Georgia', serif; line-height:2.2; font-size:15px; white-space:pre-wrap; }
+  .fill-area input { border:none; border-bottom:2px solid #4f46e5; padding:4px 8px; min-width:150px; font-size:14px; background:transparent; text-align:left; direction:ltr; font-family:inherit; }
+  .fill-area input:focus { outline:none; border-bottom-color:#10b981; background:#f0fdf4; }
+  .hints-panel { background:#eff6ff; padding:15px; border-radius:10px; margin:15px 0; }
+  .hints-panel h4 { margin:0 0 10px 0; color:#1d4ed8; }
+  .hint-item { padding:6px 0; font-size:14px; }
+  .checklist-item { background:#fff; padding:12px 15px; border-radius:8px; margin:6px 0; display:flex; align-items:center; gap:10px; border:1px solid #e2e8f0; }
+  .checklist-item input[type="checkbox"] { width:20px; height:20px; cursor:pointer; }
+  .mistake-card { background:#fee2e2; padding:15px; border-radius:10px; margin:10px 0; }
+  .mistake-card .wrong { color:#dc2626; text-decoration:line-through; font-family:'Courier New', monospace; direction:ltr; text-align:left; display:block; padding:6px 10px; background:#fff; border-radius:5px; margin:5px 0; }
+  .mistake-card .right { color:#16a34a; font-family:'Courier New', monospace; direction:ltr; text-align:left; display:block; padding:6px 10px; background:#fff; border-radius:5px; margin:5px 0; }
+  .nav-buttons { display:flex; justify-content:space-between; gap:10px; margin:20px 0; flex-wrap:wrap; }
+  .btn { padding:12px 24px; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; text-decoration:none; display:inline-block; }
+  .btn-primary { background:#4f46e5; color:#fff; }
+  .btn-primary:hover { background:#4338ca; }
+  .btn-success { background:#10b981; color:#fff; font-size:18px; padding:15px 30px; }
+  .btn-success:hover { background:#059669; }
+  .btn-secondary { background:#e2e8f0; color:#1e293b; }
+  .recipient-tone { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:15px 0; }
+  @media (max-width:600px) { .recipient-tone { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>ðŸ“š Ù…Ø¯Ø±Ù‘Ø¨ Ø§Ù„Ø¥ÙŠÙ…ÙŠÙ„ - {{ scenario.title_ar }}</h1>
+    <p>{{ scenario.title_en }} | Ø§Ù„Ù…Ø³ØªÙˆÙ‰: {{ scenario.target_tier }} | Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰: {{ scenario.min_words }} ÙƒÙ„Ù…Ø©</p>
+  </div>
+
+  <!-- Ø´Ø±ÙŠØ· Ø§Ù„ØªÙ‚Ø¯Ù… -->
+  <div class="progress-bar">
+    {% for i in range(1, 7) %}
+      <a href="/writing/email/{{ scenario.id }}/coach/{{ i }}?user_id={{ user_id }}"
+         class="step-circle {% if i < current_step %}done{% elif i == current_step %}current{% endif %}">
+        {% if i < current_step %}âœ“{% else %}{{ i }}{% endif %}
+      </a>
+      {% if i < 6 %}<div class="step-line {% if i < current_step %}done{% endif %}"></div>{% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- ========================== Ø§Ù„Ø®Ø·ÙˆØ© 1: ÙÙ‡Ù… Ø§Ù„Ù…ÙˆÙ‚Ù ========================== -->
+  {% if current_step == 1 %}
+  <div class="card">
+    <h2>ðŸŽ¬ Ø§Ù„Ø®Ø·ÙˆØ© 1: Ø§ÙÙ‡Ù… Ø§Ù„Ù…ÙˆÙ‚Ù</h2>
+
+    <div class="info-box">
+      <strong>ðŸ“– Ø§Ù„Ù…ÙˆÙ‚Ù Ø¨Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©:</strong><br>
+      {{ coach.step1_situation_ar }}
+    </div>
+
+    <div class="info-box blue">
+      <strong style="direction:ltr;display:block;text-align:left;">ðŸ“– The Situation (English):</strong>
+      <div style="direction:ltr;text-align:left;margin-top:5px;">{{ coach.step1_situation_en }}</div>
+    </div>
+
+    <div class="recipient-tone">
+      <div class="info-box yellow">
+        <strong>ðŸ‘¤ Ù…Ù† Ø§Ù„Ù…ÙØ±Ø³ÙŽÙ„ Ø¥Ù„ÙŠÙ‡ØŸ</strong><br>
+        {{ coach.step1_recipient_ar }}
+      </div>
+      <div class="info-box purple">
+        <strong>ðŸŽ­ Ù…Ø§ Ø§Ù„Ù†Ø¨Ø±Ø© Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø©ØŸ</strong><br>
+        {{ coach.step1_tone_ar }}
+      </div>
+    </div>
+
+    <h3 style="color:#10b981; margin-top:25px;">ðŸŽ¯ Ø§Ù„Ø£Ù‡Ø¯Ø§Ù Ø§Ù„Ù€ 3 Ø§Ù„ØªÙŠ ÙŠØ¬Ø¨ ØªØ­Ù‚ÙŠÙ‚Ù‡Ø§:</h3>
+    {% for g in coach.step1_goals %}
+    <div class="goal-card">
+      <div class="goal-num">{{ g.num }}</div>
+      <div>
+        <strong>{{ g.ar }}</strong><br>
+        <span style="color:#64748b; direction:ltr; display:block; text-align:left; font-size:13px;">{{ g.en }}</span>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="info-box red" style="margin-top:20px;">
+      âš ï¸ <strong>Ù‚Ø¨Ù„ Ø£Ù† ØªÙ†ØªÙ‚Ù„ Ù„Ù„Ø®Ø·ÙˆØ© Ø§Ù„ØªØ§Ù„ÙŠØ©ØŒ Ø§Ø³Ø£Ù„ Ù†ÙØ³Ùƒ:</strong>
+      <ul style="margin:8px 0 0 0;">
+        <li>Ù‡Ù„ ÙÙ‡Ù…Øª Ù…Ù† Ø§Ù„Ù…ÙØ±Ø³ÙŽÙ„ Ø¥Ù„ÙŠÙ‡ØŸ</li>
+        <li>Ù‡Ù„ Ø£Ø¹Ø±Ù Ø§Ù„Ø£Ù‡Ø¯Ø§Ù Ø§Ù„Ø«Ù„Ø§Ø«Ø© Ø¨Ø¯Ù‚Ø©ØŸ</li>
+        <li>Ù‡Ù„ Ø£ØªØ°ÙƒØ± Ø§Ù„Ù†Ø¨Ø±Ø© Ø§Ù„Ù…Ø·Ù„ÙˆØ¨Ø© (Ø±Ø³Ù…ÙŠØ©/ÙˆØ¯ÙŠØ©)ØŸ</li>
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ========================== Ø§Ù„Ø®Ø·ÙˆØ© 2: Ø§Ù„Ø¨Ù†ÙŠØ© ========================== -->
+  {% if current_step == 2 %}
+  <div class="card">
+    <h2>ðŸ—ï¸ Ø§Ù„Ø®Ø·ÙˆØ© 2: Ø¨Ù†ÙŠØ© Ø§Ù„Ø¥ÙŠÙ…ÙŠÙ„ (5-6 Ø£Ø¬Ø²Ø§Ø¡)</h2>
+    <div class="info-box blue">
+      ÙƒÙ„ Ø¥ÙŠÙ…ÙŠÙ„ Ø§Ø­ØªØ±Ø§ÙÙŠ ÙŠØªÙƒÙˆÙ‘Ù† Ù…Ù† <strong>5-6 Ø£Ø¬Ø²Ø§Ø¡ Ø£Ø³Ø§Ø³ÙŠØ©</strong>. ØªØ¹Ù„Ù‘Ù… Ø§Ù„Ø¨Ù†ÙŠØ© Ø«Ù… Ø§Ù…Ù„Ø£Ù‡Ø§ Ø¨Ø§Ù„Ù…Ø­ØªÙˆÙ‰. Ù‡Ø°Ù‡ Ø§Ù„Ø¨Ù†ÙŠØ© ØªØ¹Ù…Ù„ ÙÙŠ 99% Ù…Ù† Ø§Ù„Ø¥ÙŠÙ…ÙŠÙ„Ø§Øª.
+    </div>
+
+    {% for s in coach.step2_structure %}
+    <div class="structure-row">
+      <div class="part-title">{{ s.part }}</div>
+      <div style="margin:6px 0;">ðŸŽ¯ <strong>Ø§Ù„ØºØ±Ø¶:</strong> {{ s.purpose_ar }}</div>
+      <div class="example">{{ s.example_en }}</div>
+      <div class="tip">ðŸ’¡ {{ s.tip_ar }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ========================== Ø§Ù„Ø®Ø·ÙˆØ© 3: Ø¨Ù†Ùƒ Ø§Ù„Ø¹Ø¨Ø§Ø±Ø§Øª ========================== -->
+  {% if current_step == 3 %}
+  <div class="card">
+    <h2>ðŸ’Ž Ø§Ù„Ø®Ø·ÙˆØ© 3: Ø¨Ù†Ùƒ Ø§Ù„Ø¹Ø¨Ø§Ø±Ø§Øª Ø§Ù„Ø°Ù‡Ø¨ÙŠØ©</h2>
+    <div class="info-box">
+      Ù‡Ø°Ù‡ Ø¹Ø¨Ø§Ø±Ø§Øª Ø§Ø­ØªØ±Ø§ÙÙŠØ© Ù…Ø®ØµØµØ© Ù„Ù…Ø³ØªÙˆØ§Ùƒ ({{ scenario.target_tier }}). <strong>Ø§Ø­ÙØ¸ 1-2 Ù…Ù† ÙƒÙ„ Ù‚Ø³Ù…</strong> ÙˆØ³ØªØµØ¨Ø­ ÙƒØªØ§Ø¨ØªÙƒ Ø£Ù‚ÙˆÙ‰ ÙÙˆØ±Ø§Ù‹.
+      <br><small>ðŸ’¡ Ø§Ø¶ØºØ· Ø¹Ù„Ù‰ Ø£ÙŠ Ø¹Ø¨Ø§Ø±Ø© Ù„Ù†Ø³Ø®Ù‡Ø§.</small>
+    </div>
+
+    {% for category, items in coach.step3_phrases.items() %}
+    <div class="phrase-group">
+      <h4>ðŸ“Œ {{ category|title }}</h4>
+      {% for p in items %}
+      <div class="phrase-item" onclick="copyText('{{ p.en|e }}', this)">
+        <span class="en">{{ p.en }}</span>
+        <span class="ar">{{ p.ar }}</span>
+        <span class="copy-hint">ðŸ“‹ Ø§Ø¶ØºØ· Ù„Ù„Ù†Ø³Ø®</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ========================== Ø§Ù„Ø®Ø·ÙˆØ© 4: Ù†Ù…ÙˆØ°Ø¬ Ù…ÙØ­Ù„ÙŽÙ‘Ù„ ========================== -->
+  {% if current_step == 4 %}
+  <div class="card">
+    <h2>ðŸ“– Ø§Ù„Ø®Ø·ÙˆØ© 4: Ù†Ù…ÙˆØ°Ø¬ Ù…Ø«Ø§Ù„ÙŠ Ù…ÙØ­Ù„ÙŽÙ‘Ù„</h2>
+    <div class="info-box">
+      Ù‡Ø°Ø§ Ù†Ù…ÙˆØ°Ø¬ ÙƒØ§Ù…Ù„ Ù„Ø¥ÙŠÙ…ÙŠÙ„ Ù…Ø³ØªÙˆÙ‰ <strong>{{ scenario.target_tier }}</strong>. Ø§Ù‚Ø±Ø£Ù‡ Ø£ÙˆÙ„Ø§Ù‹ØŒ Ø«Ù… Ø§Ù‚Ø±Ø£ Ø§Ù„Ø´Ø±Ø­ Ø£Ø³ÙÙ„Ù‡ Ù„ØªÙÙ‡Ù… Ù„Ù…Ø§Ø°Ø§ ÙƒÙ„ Ø³Ø·Ø± Ù‚ÙˆÙŠ.
+    </div>
+
+    <h3 style="color:#4f46e5;">ðŸ“§ Ø§Ù„Ø¥ÙŠÙ…ÙŠÙ„ Ø§Ù„ÙƒØ§Ù…Ù„:</h3>
+    <div class="model-email">{{ coach.step4_model_email }}</div>
+
+    <h3 style="color:#4f46e5; margin-top:25px;">ðŸ” ØªØ­Ù„ÙŠÙ„ Ø³Ø·Ø± Ø¨Ø³Ø·Ø±:</h3>
+    {% for a in coach.step4_annotations %}
+    <div class="annotation-item">
+      <div class="line">{{ a.line }}</div>
+      <div class="comment">{{ a.comment_ar }}</div>
+    </div>
+    {% endfor %}
+
+    <h3 style="color:#dc2626; margin-top:25px;">âŒ Ø£Ø®Ø·Ø§Ø¡ Ø´Ø§Ø¦Ø¹Ø© Ù„ØªØªØ¬Ù†Ù‘Ø¨Ù‡Ø§:</h3>
+    {% for m in coach.common_mistakes %}
+    <div class="mistake-card">
+      <span class="wrong">âŒ {{ m.wrong }}</span>
+      <span class="right">âœ… {{ m.right }}</span>
+      <div style="margin-top:8px; font-size:14px;"><strong>Ù„Ù…Ø§Ø°Ø§ØŸ</strong> {{ m.why_ar }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ========================== Ø§Ù„Ø®Ø·ÙˆØ© 5: Ù‚Ø§Ù„Ø¨ ÙØ±Ø§ØºØ§Øª ========================== -->
+  {% if current_step == 5 %}
+  <div class="card">
+    <h2>âœï¸ Ø§Ù„Ø®Ø·ÙˆØ© 5: ØªØ¯Ø±Ù‘Ø¨ Ø¨Ù…Ù„Ø¡ Ø§Ù„ÙØ±Ø§ØºØ§Øª</h2>
+    <div class="info-box yellow">
+      Ø§Ù„Ø¢Ù† Ø³ØªØ¬Ø±Ù‘Ø¨ Ø¨Ù†ÙØ³Ùƒ! Ù‡Ø°Ø§ Ù‚Ø§Ù„Ø¨ Ø§Ù„Ø¥ÙŠÙ…ÙŠÙ„ Ù…Ø¹ ÙØ±Ø§ØºØ§Øª. Ø§Ù…Ù„Ø£ ÙƒÙ„ ÙØ±Ø§Øº Ø¨Ù…Ø­ØªÙˆØ§Ùƒ Ø§Ù„Ø®Ø§Øµ (Ø§Ø³ØªØ®Ø¯Ù… Ø§Ù„Ø¥Ø±Ø´Ø§Ø¯Ø§Øª ÙŠÙ…ÙŠÙ† Ø§Ù„ØµÙØ­Ø©).
+    </div>
+
+    <div class="fill-area" id="fill-area">
+      {{ coach.step5_fill_template|safe }}
+    </div>
+
+    <div class="hints-panel">
+      <h4>ðŸ’¡ Ø¥Ø±Ø´Ø§Ø¯Ø§Øª Ù„ÙƒÙ„ ÙØ±Ø§Øº:</h4>
+      {% for h in coach.step5_blanks_hints %}
+      <div class="hint-item">
+        <strong>Ø§Ù„ÙØ±Ø§Øº {{ h.blank }}:</strong> {{ h.hint_ar }}
+        <span style="color:#10b981; direction:ltr; display:inline-block; font-family:Courier New, monospace; font-size:13px;">Ù…Ø«Ø§Ù„: "{{ h.example }}"</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="info-box">
+      ðŸ’ª <strong>ØªØ­Ø¯Ù‘ÙŠ:</strong> Ø§Ù‚Ø±Ø£ Ø§Ù„Ù‚Ø§Ù„Ø¨ Ø£Ø¹Ù„Ø§Ù‡ ÙˆØ§Ù…Ù„Ø£Ù‡ Ø°Ù‡Ù†ÙŠØ§Ù‹ Ù‚Ø¨Ù„ Ø§Ù„Ø§Ù†ØªÙ‚Ø§Ù„ Ù„Ù„Ø®Ø·ÙˆØ© Ø§Ù„ØªØ§Ù„ÙŠØ©. Ù„Ø§ Ø­Ø§Ø¬Ø© Ù„Ù„Ø­ÙØ¸ØŒ ÙÙ‚Ø· Ø§ÙÙ‡Ù… ÙƒÙŠÙ ØªØªØ¯ÙÙ‚ Ø§Ù„Ø¬Ù…Ù„.
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ========================== Ø§Ù„Ø®Ø·ÙˆØ© 6: Checklist ========================== -->
+  {% if current_step == 6 %}
+  <div class="card">
+    <h2>âœ… Ø§Ù„Ø®Ø·ÙˆØ© 6: Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„ØªØ­Ù‚Ù‚ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠØ©</h2>
+    <div class="info-box">
+      Ø£Ù†Øª Ø¬Ø§Ù‡Ø² Ù„Ù„ÙƒØªØ§Ø¨Ø©! Ù‚Ø¨Ù„ Ø£Ù† ØªØ¶ØºØ· "Ø§Ø¨Ø¯Ø£ Ø§Ù„ÙƒØªØ§Ø¨Ø©"ØŒ ØªØ£ÙƒØ¯ Ù…Ù† Ø£Ù†Ùƒ ØªØ¹Ø±Ù Ù‡Ø°Ù‡ Ø§Ù„Ù€ <strong>{{ coach.step6_checklist|length }} Ù†Ù‚Ø§Ø·</strong>.
+      Ø³ØªØ­ØªØ§Ø¬ Ù„Ù„Ø±Ø¬ÙˆØ¹ Ù„Ù‡Ø§ Ø¨Ø¹Ø¯ ÙƒØªØ§Ø¨Ø© Ø¥ÙŠÙ…ÙŠÙ„Ùƒ Ù„Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©.
+    </div>
+
+    {% for item in coach.step6_checklist %}
+    <label class="checklist-item">
+      <input type="checkbox">
+      <span>{{ item }}</span>
+    </label>
+    {% endfor %}
+
+    <div style="text-align:center; margin:30px 0 10px 0;">
+      <a href="/writing/email/{{ scenario.id }}?user_id={{ user_id }}" class="btn btn-success">
+        ðŸš€ Ø£Ù†Ø§ Ø¬Ø§Ù‡Ø² - Ø§Ø¨Ø¯Ø£ Ø§Ù„ÙƒØªØ§Ø¨Ø© Ø§Ù„Ø¢Ù† (7 Ø¯Ù‚Ø§Ø¦Ù‚)
+      </a>
+    </div>
+    <div style="text-align:center; color:#64748b; font-size:13px;">
+      â±ï¸ Ø§Ù„ØªØ§ÙŠÙ…Ø± Ø³ÙŠØ¨Ø¯Ø£ Ø¨Ù…Ø¬Ø±Ø¯ ÙØªØ­ ØµÙØ­Ø© Ø§Ù„ÙƒØªØ§Ø¨Ø©. Ø£Ù…Ø§Ù…Ùƒ 7 Ø¯Ù‚Ø§Ø¦Ù‚ ÙÙ‚Ø· - Ø§Ø³ØªØºÙ„Ù‘Ù‡Ø§ Ø¨Ø­ÙƒÙ…Ø©.
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Ø£Ø²Ø±Ø§Ø± Ø§Ù„ØªÙ†Ù‚Ù„ Ø¨ÙŠÙ† Ø§Ù„Ø®Ø·ÙˆØ§Øª -->
+  <div class="nav-buttons">
+    {% if current_step > 1 %}
+      <a href="/writing/email/{{ scenario.id }}/coach/{{ current_step - 1 }}?user_id={{ user_id }}" class="btn btn-secondary">â†’ Ø§Ù„Ø®Ø·ÙˆØ© Ø§Ù„Ø³Ø§Ø¨Ù‚Ø©</a>
+    {% else %}
+      <a href="/writing/email?user_id={{ user_id }}" class="btn btn-secondary">â†’ Ø±Ø¬ÙˆØ¹ Ù„Ù„Ù‚Ø§Ø¦Ù…Ø©</a>
+    {% endif %}
+
+    {% if current_step < 6 %}
+      <a href="/writing/email/{{ scenario.id }}/coach/{{ current_step + 1 }}?user_id={{ user_id }}" class="btn btn-primary">ÙÙ‡Ù…Øª âœ“ Ø§Ù„Ø®Ø·ÙˆØ© Ø§Ù„ØªØ§Ù„ÙŠØ© â†</a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function copyText(text, el) {
+  navigator.clipboard.writeText(text).then(() => {
+    const original = el.querySelector('.copy-hint').textContent;
+    el.querySelector('.copy-hint').textContent = 'âœ… ØªÙ… Ø§Ù„Ù†Ø³Ø®!';
+    el.style.background = '#dcfce7';
+    setTimeout(() => {
+      el.querySelector('.copy-hint').textContent = original;
+      el.style.background = '';
+    }, 1500);
+  });
+}
+
+// ØªØ­ÙˆÙŠÙ„ _______ Ø¥Ù„Ù‰ input Ø¹Ù†Ø¯ Ø§Ù„Ø¶ØºØ· ÙÙŠ Ù‚Ø³Ù… Ø§Ù„ÙØ±Ø§ØºØ§Øª
+document.addEventListener('DOMContentLoaded', () => {
+  const fillArea = document.getElementById('fill-area');
+  if (fillArea) {
+    fillArea.innerHTML = fillArea.innerHTML.replace(/_{5,}/g, '<input type="text" placeholder="...">');
+  }
+});
+</script>
+</body>
+</html>

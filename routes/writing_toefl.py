@@ -531,7 +531,7 @@ def view_email_list():
     conn = _db(); c = conn.cursor()
     # احصل على tier الطالب
     tier_row = c.execute(
-        "SELECT target_tier FROM student_writing_target WHERE telegram_id=?",
+        "SELECT tier FROM student_writing_target WHERE telegram_id=?",
         (tg_id,)
     ).fetchone()
     tier = tier_row[0] if tier_row else "tier59"
@@ -578,7 +578,7 @@ def view_email_task(scenario_id):
     # تايمر بحسب tier
     timer_map = {"tier59": 420, "tier69": 420, "tier90": 420}  # 7 دقائق ثابت
     tier_row = c.execute(
-        "SELECT target_tier FROM student_writing_target WHERE telegram_id=?",
+        "SELECT tier FROM student_writing_target WHERE telegram_id=?",
         (tg_id,)
     ).fetchone()
     student_tier = tier_row[0] if tier_row else "tier59"
@@ -616,7 +616,7 @@ def api_email_submit():
 
     # tier الطالب
     tier_row = c.execute(
-        "SELECT target_tier FROM student_writing_target WHERE telegram_id=?",
+        "SELECT tier FROM student_writing_target WHERE telegram_id=?",
         (tg_id,)
     ).fetchone()
     student_tier = tier_row[0] if tier_row else "tier59"
@@ -792,4 +792,66 @@ def view_my_corrections():
         })
     return render_template("toefl_writing/my_corrections.html",
                            items=items_list, user_id=tg_id)
+
+
+# ============================================================
+# Phase 3.5: Email Coach (6-step learning)
+# ============================================================
+@writing_bp.route("/writing/email/<int:scenario_id>/coach", methods=["GET"])
+@writing_bp.route("/writing/email/<int:scenario_id>/coach/<int:step>", methods=["GET"])
+def view_email_coach(scenario_id, step=1):
+    """ØµÙØ­Ø© Ø§Ù„ØªØ¹Ù„Ù… Ø®Ø·ÙˆØ© Ø¨Ø®Ø·ÙˆØ© Ù‚Ø¨Ù„ ÙƒØªØ§Ø¨Ø© Ø§Ù„Ø¥ÙŠÙ…ÙŠÙ„."""
+    import json as _json
+    tg_id = _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    # Ø§Ù„Ø³ÙŠÙ†Ø§Ø±ÙŠÙˆ Ø§Ù„Ø£Ø³Ø§Ø³ÙŠ
+    s_row = c.execute("""
+        SELECT id, code, title_ar, title_en, scenario_text, recipient_role,
+               requirements_json, min_words, target_tier
+        FROM writing_email_scenarios WHERE id=?
+    """, (scenario_id,)).fetchone()
+    if not s_row:
+        return "Scenario not found", 404
+    scenario = {
+        "id": s_row[0], "code": s_row[1], "title_ar": s_row[2], "title_en": s_row[3],
+        "scenario_text": s_row[4], "recipient_role": s_row[5],
+        "requirements": _json.loads(s_row[6]) if s_row[6] else [],
+        "min_words": s_row[7], "target_tier": s_row[8]
+    }
+    # Ø§Ù„Ù…Ø­ØªÙˆÙ‰ Ø§Ù„ØªØ¹Ù„ÙŠÙ…ÙŠ
+    cc_row = c.execute("""
+        SELECT step1_situation_ar, step1_situation_en, step1_recipient_ar,
+               step1_tone_ar, step1_goals_json,
+               step2_structure_json, step3_phrases_json,
+               step4_model_email, step4_annotations_json,
+               step5_fill_template, step5_blanks_hints_json,
+               step6_checklist_json, common_mistakes_json
+        FROM email_coach_content WHERE scenario_id=?
+    """, (scenario_id,)).fetchone()
+    if not cc_row:
+        return f"No coach content for scenario {scenario_id}", 404
+    coach = {
+        "step1_situation_ar": cc_row[0], "step1_situation_en": cc_row[1],
+        "step1_recipient_ar": cc_row[2], "step1_tone_ar": cc_row[3],
+        "step1_goals": _json.loads(cc_row[4]) if cc_row[4] else [],
+        "step2_structure": _json.loads(cc_row[5]) if cc_row[5] else [],
+        "step3_phrases": _json.loads(cc_row[6]) if cc_row[6] else {},
+        "step4_model_email": cc_row[7],
+        "step4_annotations": _json.loads(cc_row[8]) if cc_row[8] else [],
+        "step5_fill_template": cc_row[9],
+        "step5_blanks_hints": _json.loads(cc_row[10]) if cc_row[10] else [],
+        "step6_checklist": _json.loads(cc_row[11]) if cc_row[11] else [],
+        "common_mistakes": _json.loads(cc_row[12]) if cc_row[12] else []
+    }
+    # ØªØ­Ø¯ÙŠØ« Ø§Ù„ØªÙ‚Ø¯Ù…
+    c.execute("""
+        INSERT OR REPLACE INTO email_coach_progress
+        (telegram_id, scenario_id, step_completed, last_seen_at)
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+    """, (tg_id, scenario_id, step))
+    conn.commit()
+    step = max(1, min(6, int(step)))
+    return render_template("toefl_writing/email_coach.html",
+                           scenario=scenario, coach=coach,
+                           current_step=step, user_id=tg_id)
 
