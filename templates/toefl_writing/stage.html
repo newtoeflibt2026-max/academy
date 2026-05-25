@@ -1,29 +1,64 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{{ stage.title_ar }}</title>
-<style>body{font-family:'Cairo',sans-serif;background:#f7fafc;padding:30px;direction:rtl}
-.c{max-width:800px;margin:0 auto;background:white;padding:30px;border-radius:16px}
-h1{color:#2d3748}.lesson{padding:15px;border:2px solid #e2e8f0;border-radius:10px;margin:10px 0}
-.lesson:hover{border-color:#667eea;background:#f7faff}a{color:#667eea;text-decoration:none}
-.back{display:inline-block;margin-bottom:20px;color:#667eea}</style></head>
-<body><div class="c">
-<a class="back" href="/writing?user_id={{ user_id }}">← العودة للمسار</a>
-<h1>{{ stage.title_ar }}</h1><p style="color:#718096">{{ stage.description_ar }}</p>
-<hr style="margin:20px 0"/>
-{% if lessons %}
-<h3>الدروس ({{ lessons|length }})</h3>
-{% for l in lessons %}
-<a class="lesson" href="/writing/lesson/{{ l.id }}?user_id={{ user_id }}" style="display:block">
-<strong>{{ loop.index }}. {{ l.title_ar }}</strong>
-{% if l.status == 'completed' %} <span style="color:#43e97b">✓ مكتمل</span>{% endif %}
-<div style="font-size:12px;color:#a0aec0">⏱ {{ l.duration_min }} دقائق</div>
-</a>
-{% endfor %}
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>{{ stage.title_ar }}</title>
+<style>
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;padding:20px;color:#1a202c}
+.container{max-width:900px;margin:0 auto}
+.header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:30px;border-radius:16px;margin-bottom:25px}
+.header h1{margin:0 0 10px}
+.back{color:#fff;text-decoration:none;opacity:.85;font-size:14px}
+.lesson-card{background:#fff;border-radius:12px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:all .2s}
+.lesson-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+.lesson-card.locked{opacity:.55;background:#f1f5f9}
+.lesson-card.completed{border-right:4px solid #10b981}
+.lesson-card.exam{background:linear-gradient(135deg,#fef3c7,#fde68a);border-right:4px solid #f59e0b}
+.lesson-info h3{margin:0 0 5px;font-size:17px}
+.lesson-info .meta{color:#64748b;font-size:13px}
+.btn{padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;transition:all .2s;border:none;cursor:pointer}
+.btn-start{background:#667eea;color:#fff}
+.btn-start:hover{background:#5a67d8}
+.btn-done{background:#10b981;color:#fff}
+.btn-locked{background:#cbd5e0;color:#64748b;cursor:not-allowed}
+.btn-exam{background:#f59e0b;color:#fff}
+.score-badge{background:#10b981;color:#fff;padding:3px 10px;border-radius:12px;font-size:12px;margin-right:8px}
+</style>
+</head>
+<body>
+<div class="container">
+<a href="/writing?user_id={{ user_id }}" class="back">← العودة للمسار</a>
+<div class="header">
+<h1>{{ stage.title_ar }}</h1>
+<p style="margin:0;opacity:.9">{{ stage.description_ar or "" }}</p>
+</div>
+
+<div id="lessons-list">
+{% for lesson in lessons %}
+{% set prog = progress_map.get(lesson.id) %}
+{% set is_completed = prog and prog.status == 'completed' %}
+{% set is_locked = lesson.locked %}
+<div class="lesson-card {% if is_locked %}locked{% endif %} {% if is_completed %}completed{% endif %} {% if lesson.is_exam %}exam{% endif %}">
+<div class="lesson-info">
+<h3>
+{% if lesson.is_exam %}🎯{% elif is_completed %}✅{% elif is_locked %}🔒{% else %}📖{% endif %}
+{{ lesson.title_ar }}
+{% if is_completed %}<span class="score-badge">{{ prog.best_score|int }}%</span>{% endif %}
+</h3>
+<div class="meta">⏱ {{ lesson.duration_min }} دقائق{% if lesson.is_exam %} • امتحان المرحلة (يتطلب 80%){% endif %}</div>
+</div>
+{% if is_locked %}
+<button class="btn btn-locked" disabled>🔒 مقفل</button>
+{% elif is_completed %}
+<a class="btn btn-done" href="/writing/lesson/{{ lesson.id }}?user_id={{ user_id }}">مراجعة</a>
+{% elif lesson.is_exam %}
+<a class="btn btn-exam" href="/writing/lesson/{{ lesson.id }}?user_id={{ user_id }}">ابدأ الامتحان</a>
 {% else %}
-<p style="text-align:center;padding:40px;color:#a0aec0">🚧 المحتوى قيد الإعداد - سيتم إضافته قريباً</p>
+<a class="btn btn-start" href="/writing/lesson/{{ lesson.id }}?user_id={{ user_id }}">ابدأ الدرس</a>
 {% endif %}
-{% if exam_count > 0 %}
-<hr style="margin:25px 0"/>
-<a class="lesson" href="/writing/exam/{{ stage.id }}?user_id={{ user_id }}" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;display:block">
-🏁 <strong>اختبار المرحلة</strong> ({{ exam_count }} أسئلة)</a>
-{% endif %}
-</div></body></html>
+</div>
+{% endfor %}
+</div>
+</div>
+</body>
+</html>

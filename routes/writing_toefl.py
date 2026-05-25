@@ -59,37 +59,43 @@ def writing_track_page():
 # PAGE: Stage detail (الدروس داخل المرحلة)
 # ═══════════════════════════════════════════════════════════
 @writing_bp.route("/writing/stage/<int:stage_id>")
-def writing_stage_page(stage_id):
-    tg_id = _get_tg_id()
-    conn = _db()
-    c = conn.cursor()
-
+def view_stage(stage_id):
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db(); c = conn.cursor()
     stage = c.execute("SELECT * FROM writing_stages WHERE id=?", (stage_id,)).fetchone()
     if not stage:
+        conn.close()
         return "Stage not found", 404
 
-    lessons = c.execute("""
-        SELECT l.*,
-            (SELECT status FROM writing_progress WHERE lesson_id=l.id AND telegram_id=?) AS status,
-            (SELECT best_score FROM writing_progress WHERE lesson_id=l.id AND telegram_id=?) AS best_score
-        FROM writing_lessons l
-        WHERE l.stage_id=?
-        ORDER BY l.order_index
-    """, (tg_id, tg_id, stage_id)).fetchall()
+    lessons = c.execute("""SELECT * FROM writing_lessons
+        WHERE stage_id=? ORDER BY order_index""", (stage_id,)).fetchall()
 
-    # Has exam questions?
-    exam_count = c.execute(
-        "SELECT COUNT(*) FROM writing_questions WHERE stage_id=? AND is_exam=1", (stage_id,)
-    ).fetchone()[0]
-
+    # Build progress map
+    prog_rows = c.execute("""SELECT lesson_id, status, best_score
+        FROM writing_progress WHERE telegram_id=?""", (tg_id,)).fetchall()
+    progress_map = {r["lesson_id"]: dict(r) for r in prog_rows}
     conn.close()
-    return render_template("toefl_writing/stage.html",
-        stage=dict(stage), lessons=[dict(l) for l in lessons],
-        exam_count=exam_count, user_id=tg_id)
 
-# ═══════════════════════════════════════════════════════════
-# PAGE: Lesson detail (محتوى الدرس + اختبار قصير)
-# ═══════════════════════════════════════════════════════════
+    # Compute lock state: a lesson is locked if previous (non-exam) lesson not completed
+    lessons_list = [dict(l) for l in lessons]
+    prev_completed = True  # first lesson always unlocked
+    for L in lessons_list:
+        if L["is_exam"]:
+            # Exam unlocks only when ALL normal lessons in stage completed
+            all_done = all(
+                progress_map.get(x["id"], {}).get("status") == "completed"
+                for x in lessons_list if not x["is_exam"]
+            )
+            L["locked"] = not all_done
+        else:
+            L["locked"] = not prev_completed
+            prev_completed = progress_map.get(L["id"], {}).get("status") == "completed"
+
+    return render_template("toefl_writing/stage.html",
+        stage=stage, lessons=lessons_list,
+        progress_map=progress_map, user_id=tg_id)
+
+
 @writing_bp.route("/writing/lesson/<int:lesson_id>")
 def writing_lesson_page(lesson_id):
     tg_id = _get_tg_id()
@@ -182,38 +188,55 @@ def api_lesson_submit(lesson_id):
     score_pct = (correct / total * 100) if total else 0
     passed = score_pct >= 70
 
-    # Update progress
-    if passed:
-        c.execute("""INSERT INTO writing_progress
-            (telegram_id, stage_id, lesson_id, status, best_score, attempts_count, completed_at)
-            VALUES (?,?,?,'completed',?,1,CURRENT_TIMESTAMP)
-            ON CONFLICT(telegram_id, lesson_id) DO UPDATE SET
-                status='completed',
-                best_score=MAX(best_score, ?),
-                attempts_count=attempts_count+1,
-                completed_at=CURRENT_TIMESTAMP""",
-            (tg_id, lesson["stage_id"], lesson_id, score_pct, score_pct))
+
+    # Update progress (record attempt always; mark completed only if passed)
+    existing = c.execute("""SELECT id, best_score, attempts_count FROM writing_progress
+        WHERE telegram_id=? AND lesson_id=?""", (tg_id, lesson_id)).fetchone()
+
+    if existing:
+        new_best = max(existing["best_score"] or 0, score_pct)
+        new_status = "completed" if (passed or existing["best_score"] >= 70) else "in_progress"
+        c.execute("""UPDATE writing_progress
+            SET best_score=?, attempts_count=attempts_count+1, status=?,
+                completed_at=CASE WHEN ?='completed' AND completed_at IS NULL THEN CURRENT_TIMESTAMP ELSE completed_at END
+            WHERE id=?""",
+            (new_best, new_status, new_status, existing["id"]))
     else:
         c.execute("""INSERT INTO writing_progress
-            (telegram_id, stage_id, lesson_id, status, best_score, attempts_count)
-            VALUES (?,?,?,'in_progress',?,1)
-            ON CONFLICT(telegram_id, lesson_id) DO UPDATE SET
-                best_score=MAX(best_score, ?),
-                attempts_count=attempts_count+1""",
-            (tg_id, lesson["stage_id"], lesson_id, score_pct, score_pct))
+            (telegram_id, track_id, stage_id, lesson_id, status, best_score, attempts_count, completed_at)
+            VALUES (?, 1, ?, ?, ?, ?, 1, CASE WHEN ?=1 THEN CURRENT_TIMESTAMP ELSE NULL END)""",
+            (tg_id, lesson["stage_id"], lesson_id,
+             "completed" if passed else "in_progress",
+             score_pct, 1 if passed else 0))
+
+    # Find next lesson in same stage
+    next_row = c.execute("""SELECT id FROM writing_lessons
+        WHERE stage_id=? AND order_index > ? AND is_exam=0
+        ORDER BY order_index ASC LIMIT 1""",
+        (lesson["stage_id"], lesson["order_index"])).fetchone()
+    next_lesson_id = next_row["id"] if next_row else None
+
+    exam_row = c.execute("""SELECT id FROM writing_lessons
+        WHERE stage_id=? AND is_exam=1 LIMIT 1""", (lesson["stage_id"],)).fetchone()
+    stage_exam_id = exam_row["id"] if exam_row else None
 
     conn.commit()
     conn.close()
 
     return jsonify({
         "success": True,
-        "score": correct, "total": total, "score_pct": round(score_pct, 1),
-        "passed": passed, "feedback": feedback
+        "score": round(score_pct, 1),
+        "correct": correct,
+        "total": total,
+        "passed": passed,
+        "threshold": 70,
+        "feedback": feedback,
+        "next_lesson_id": next_lesson_id,
+        "stage_exam_id": stage_exam_id,
+        "is_last_lesson": next_lesson_id is None
     })
 
-# ═══════════════════════════════════════════════════════════
-# API: Grade Email (Task 2)
-# ═══════════════════════════════════════════════════════════
+
 @writing_bp.route("/api/writing/grade-email", methods=["POST"])
 def api_grade_email():
     data = request.get_json(force=True, silent=True) or {}
@@ -307,3 +330,130 @@ def fromjson_filter(s):
         return json.loads(s) if isinstance(s, str) else s
     except:
         return []
+
+
+@writing_bp.route("/writing/stage/<int:stage_id>/exam")
+def view_stage_exam(stage_id):
+    """Render stage exam page (reuses lesson template)."""
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    exam = c.execute("""SELECT * FROM writing_lessons
+        WHERE stage_id=? AND is_exam=1 LIMIT 1""", (stage_id,)).fetchone()
+    if not exam:
+        conn.close()
+        return "Stage exam not found", 404
+    stage = c.execute("SELECT * FROM writing_stages WHERE id=?", (stage_id,)).fetchone()
+    questions = c.execute("""SELECT * FROM writing_questions
+        WHERE lesson_id=? ORDER BY order_index""", (exam["id"],)).fetchall()
+    conn.close()
+    return render_template("toefl_writing/lesson.html",
+        lesson=exam, stage=stage, questions=questions,
+        user_id=tg_id, is_exam=True)
+
+
+@writing_bp.route("/api/writing/stage/<int:stage_id>/exam/submit", methods=["POST"])
+def api_stage_exam_submit(stage_id):
+    """Submit stage exam - threshold 80% to unlock next stage."""
+    data = request.get_json(force=True, silent=True) or {}
+    tg_id = data.get("user_id") or _get_tg_id()
+    answers = data.get("answers", {})
+
+    conn = _db(); c = conn.cursor()
+    exam = c.execute("""SELECT * FROM writing_lessons
+        WHERE stage_id=? AND is_exam=1 LIMIT 1""", (stage_id,)).fetchone()
+    if not exam:
+        conn.close()
+        return jsonify({"success": False, "error": "Exam not found"}), 404
+
+    questions = c.execute("""SELECT * FROM writing_questions
+        WHERE lesson_id=? ORDER BY order_index""", (exam["id"],)).fetchall()
+
+    correct = 0
+    total = len(questions)
+    feedback = []
+
+    for q in questions:
+        qid = str(q["id"])
+        student_ans = (answers.get(qid) or "").strip()
+        is_correct = False
+
+        if q["q_type"] == "mcq":
+            is_correct = student_ans.lower() == (q["correct_answer"] or "").strip().lower()
+        elif q["q_type"] == "sentence_order":
+            from ai.toefl_grader import grade_sentence_order
+            try:
+                student_words = json.loads(student_ans) if student_ans.startswith("[") else student_ans.split()
+            except Exception:
+                student_words = student_ans.split()
+            res = grade_sentence_order(q["correct_answer"] or "", student_words)
+            is_correct = res.get("correct", False)
+
+        if is_correct: correct += 1
+        feedback.append({
+            "question_id": q["id"],
+            "is_correct": is_correct,
+            "your_answer": student_ans,
+            "correct_answer": q["correct_answer"],
+            "explanation": q["explanation_ar"]
+        })
+
+        c.execute("""INSERT INTO writing_attempts
+            (telegram_id, question_id, stage_id, lesson_id, answer_text, is_correct, created_at)
+            VALUES (?,?,?,?,?,?,CURRENT_TIMESTAMP)""",
+            (tg_id, q["id"], stage_id, exam["id"], student_ans, 1 if is_correct else 0))
+
+    score_pct = (correct / total * 100) if total else 0
+    passed = score_pct >= 80  # higher threshold for stage exam
+
+    # Save progress on exam lesson row
+    existing = c.execute("""SELECT id, best_score FROM writing_progress
+        WHERE telegram_id=? AND lesson_id=?""", (tg_id, exam["id"])).fetchone()
+    if existing:
+        new_best = max(existing["best_score"] or 0, score_pct)
+        new_status = "completed" if (passed or (existing["best_score"] or 0) >= 80) else "in_progress"
+        c.execute("""UPDATE writing_progress
+            SET best_score=?, attempts_count=attempts_count+1, status=?,
+                completed_at=CASE WHEN ?='completed' AND completed_at IS NULL THEN CURRENT_TIMESTAMP ELSE completed_at END
+            WHERE id=?""",
+            (new_best, new_status, new_status, existing["id"]))
+    else:
+        c.execute("""INSERT INTO writing_progress
+            (telegram_id, track_id, stage_id, lesson_id, status, best_score, attempts_count, completed_at)
+            VALUES (?, 1, ?, ?, ?, ?, 1, CASE WHEN ?=1 THEN CURRENT_TIMESTAMP ELSE NULL END)""",
+            (tg_id, stage_id, exam["id"],
+             "completed" if passed else "in_progress",
+             score_pct, 1 if passed else 0))
+
+    # Find next stage
+    next_stage = c.execute("""SELECT id FROM writing_stages
+        WHERE order_index > (SELECT order_index FROM writing_stages WHERE id=?)
+        ORDER BY order_index ASC LIMIT 1""", (stage_id,)).fetchone()
+    next_stage_id = next_stage["id"] if next_stage else None
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "score": round(score_pct, 1),
+        "correct": correct,
+        "total": total,
+        "passed": passed,
+        "threshold": 80,
+        "feedback": feedback,
+        "next_stage_id": next_stage_id if passed else None,
+        "is_exam": True
+    })
+
+
+@writing_bp.route("/api/writing/progress/<user_id>")
+def api_progress(user_id):
+    """Get user's progress across all lessons for lock logic."""
+    conn = _db(); c = conn.cursor()
+    rows = c.execute("""SELECT lesson_id, stage_id, status, best_score
+        FROM writing_progress WHERE telegram_id=?""", (user_id,)).fetchall()
+    conn.close()
+    return jsonify({
+        "success": True,
+        "progress": [dict(r) for r in rows]
+    })
