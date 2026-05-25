@@ -1114,19 +1114,22 @@ if(!window._currentCTW) return out;
     },
     submitAll: function(){
       this.collect();
-      // Merge CTW answers into global `answers` so trySubmit sends them
       window._ctw_payload = this.answers;
+      // Ensure global `answers` object exists, then merge
       try {
-        if(typeof answers !== 'undefined' && answers !== null){
-          for(var qid in this.answers){
-            if(this.answers.hasOwnProperty(qid)){
-              answers[qid] = this.answers[qid]; // dict of {blank_n: fullword}
-            }
+        if(typeof window.answers === 'undefined' || window.answers === null){ window.answers = {}; }
+        for(var qid in this.answers){
+          if(Object.prototype.hasOwnProperty.call(this.answers, qid)){
+            window.answers[qid] = this.answers[qid];
           }
         }
       } catch(e){ console.warn('CTW merge err', e); }
-      if(typeof window.trySubmit === 'function'){ window.trySubmit(); }
-      else { CTW.showHint('تم جمع الإجابات.'); }
+      if(typeof window.trySubmit === 'function'){
+        try { window.trySubmit(); }
+        catch(e){ console.error('trySubmit error:', e); CTW.showHint('حدث خطأ أثناء التسليم: ' + (e.message || e)); }
+      } else {
+        CTW.showHint('تم جمع الإجابات.');
+      }
     },
     showHint: function(text){
       var existing = document.getElementById('ctwHintModal');
@@ -1202,9 +1205,14 @@ window.renderCTWResults = function(feedback){
       var cls = d.is_correct ? 'correct' : 'wrong';
       var icon = d.is_correct ? '✅' : '❌';
       var given = d.given || '(فارغ)';
+      var prefix = d.prefix || '';
+      var expected = d.expected || '';
+      var missingPart = expected.length > prefix.length ? expected.substring(prefix.length) : '';
+      var displayCorrect = '<span style="color:#7f8c8d">' + prefix + '</span><span style="color:#16a085">' + missingPart + '</span>';
+      var displayGiven = given && given.length ? given : '(لم تُجِب)';
       var givenHtml = d.is_correct
-        ? '<span class="ctw-blank-correct">' + given + '</span>'
-        : '<span class="ctw-blank-given">' + given + '</span> → <span class="ctw-blank-correct">' + (d.expected || '') + '</span>';
+        ? '<span class="ctw-blank-correct">' + expected + '</span>'
+        : '<span class="ctw-blank-given">' + displayGiven + '</span> → <span class="ctw-blank-correct">' + displayCorrect + '</span>';
       var hintHtml = (!d.is_correct && d.hint)
         ? '<div class="ctw-blank-hint">💡 ' + d.hint + '</div>'
         : '';
@@ -1271,38 +1279,49 @@ window.renderCTWResults = function(feedback){
   attach();
 })();
 
-// Capture feedback when exam-submit responds (patch fetch)
+// Capture feedback when exam-submit responds (patch fetch, fully isolated)
 (function(){
   var _origFetch = window.fetch;
   window.fetch = function(){
     var p = _origFetch.apply(this, arguments);
     try {
       var url = arguments[0];
-      if(typeof url === 'string' && url.indexOf('exam-submit') >= 0){
+      var urlStr = (typeof url === 'string') ? url : (url && url.url) || '';
+      if(urlStr && urlStr.indexOf('exam-submit') >= 0){
+        // Use .then with isolated try/catch to NEVER affect original promise chain
         p.then(function(resp){
-          var clone = resp.clone();
-          clone.json().then(function(data){
-            if(data && data.feedback){
-              window._lastFeedback = data.feedback;
-              // Trigger render if results already visible
-              setTimeout(function(){
-                var resultsUI = document.getElementById('resultsUI');
-                if(resultsUI && !resultsUI.classList.contains('hidden') && !document.querySelector('.ctw-results-section')){
-                  var ctwHtml = window.renderCTWResults(data.feedback);
-                  if(ctwHtml){
-                    var anchor = resultsUI.querySelector('.results-actions') || resultsUI.lastElementChild;
-                    var wrap = document.createElement('div');
-                    wrap.innerHTML = ctwHtml;
-                    if(anchor){ resultsUI.insertBefore(wrap, anchor); }
-                    else { resultsUI.appendChild(wrap); }
-                  }
+          try {
+            var clone = resp.clone();
+            clone.json().then(function(data){
+              try {
+                if(data && data.feedback && Array.isArray(data.feedback)){
+                  window._lastFeedback = data.feedback;
+                  var doRender = function(){
+                    try {
+                      var resultsUI = document.getElementById('resultsUI');
+                      if(!resultsUI) return;
+                      if(resultsUI.classList.contains('hidden')) return;
+                      if(document.querySelector('.ctw-results-section')) return;
+                      if(typeof window.renderCTWResults !== 'function') return;
+                      var ctwHtml = window.renderCTWResults(data.feedback);
+                      if(!ctwHtml) return;
+                      var anchor = resultsUI.querySelector('.results-actions') || resultsUI.lastElementChild;
+                      var wrap = document.createElement('div');
+                      wrap.innerHTML = ctwHtml;
+                      if(anchor && anchor.parentNode === resultsUI){ resultsUI.insertBefore(wrap, anchor); }
+                      else { resultsUI.appendChild(wrap); }
+                    } catch(e){ console.warn('CTW render err', e); }
+                  };
+                  setTimeout(doRender, 300);
+                  setTimeout(doRender, 1000);
+                  setTimeout(doRender, 2500);
                 }
-              }, 400);
-            }
-          }).catch(function(){});
+              } catch(e){ console.warn('CTW capture inner err', e); }
+            }).catch(function(){});
+          } catch(e){ console.warn('CTW clone err', e); }
         }).catch(function(){});
       }
-    } catch(e){}
+    } catch(e){ console.warn('CTW fetch hook err', e); }
     return p;
   };
 })();

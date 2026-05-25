@@ -4506,10 +4506,18 @@ def api_student_stage_exam_submit_v2(sid):
                 student_obj = answers.get(str(qid)) or answers.get(qid) or {}
                 if not isinstance(student_obj, dict):
                     student_obj = {}
-                total_blanks = len(blanks)
+                # Filter out non-blanks (where there are no missing letters)
+                real_blanks = []
+                for b in blanks:
+                    full_w = (b.get("full", "") or "").strip()
+                    prefix_w = (b.get("prefix", "") or "").strip()
+                    # A real blank must have missing letters (full longer than prefix)
+                    if full_w and len(full_w) > len(prefix_w):
+                        real_blanks.append(b)
+                total_blanks = len(real_blanks)
                 correct_blanks = 0
                 blank_details = []
-                for b in blanks:
+                for b in real_blanks:
                     bn = str(b.get("n", ""))
                     expected = (b.get("full", "") or "").strip().lower()
                     given = (student_obj.get(bn) or student_obj.get(int(bn) if bn.isdigit() else bn) or "").strip().lower()
@@ -4518,6 +4526,7 @@ def api_student_stage_exam_submit_v2(sid):
                         correct_blanks += 1
                     blank_details.append({
                         "n": b.get("n"),
+                        "prefix": b.get("prefix", ""),
                         "expected": b.get("full", ""),
                         "given": given,
                         "is_correct": ok,
