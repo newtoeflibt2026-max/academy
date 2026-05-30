@@ -1,0 +1,109 @@
+{
+  "id": "cw_medium_04",
+  "type": "complete_words",
+  "tier": "medium",
+  "title_ar": "النص 4 — العولمة الاقتصادية",
+  "title_en": "Text 4 — Economic Globalization",
+  "duration_seconds": 360,
+  "intro": "Economic globalization is a complex phenomenon.",
+  "segments": [
+    {
+      "text": "It is a "
+    },
+    {
+      "blank": {
+        "prefix": "multifac",
+        "missing": "eted",
+        "full_word": "multifaceted"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "phenom",
+        "missing": "enon",
+        "full_word": "phenomenon"
+      }
+    },
+    {
+      "text": ". It involves the "
+    },
+    {
+      "blank": {
+        "prefix": "increase",
+        "missing": "d",
+        "full_word": "increased"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "interdepe",
+        "missing": "ndence",
+        "full_word": "interdependence"
+      }
+    },
+    {
+      "text": " of the world's "
+    },
+    {
+      "blank": {
+        "prefix": "econom",
+        "missing": "ies",
+        "full_word": "economies"
+      }
+    },
+    {
+      "text": ", "
+    },
+    {
+      "blank": {
+        "prefix": "primar",
+        "missing": "ily",
+        "full_word": "primarily"
+      }
+    },
+    {
+      "text": " driven by "
+    },
+    {
+      "blank": {
+        "prefix": "internat",
+        "missing": "ional",
+        "full_word": "international"
+      }
+    },
+    {
+      "text": " trade and "
+    },
+    {
+      "blank": {
+        "prefix": "invest",
+        "missing": "ment",
+        "full_word": "investment"
+      }
+    },
+    {
+      "text": ". This process has "
+    },
+    {
+      "blank": {
+        "prefix": "signif",
+        "missing": "icantly",
+        "full_word": "significantly"
+      }
+    },
+    {
+      "text": " altered global market dynamics."
+    }
+  ],
+  "metadata": {
+    "topic": "economics",
+    "level": "medium",
+    "blanks_count": 9
+  }
+}

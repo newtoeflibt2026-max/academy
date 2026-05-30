@@ -1,0 +1,69 @@
+{
+  "id": "cw_hard_11",
+  "type": "complete_words",
+  "tier": "hard",
+  "title_ar": "النص 11 — السياسة الاقتصادية الكلية",
+  "title_en": "Text 11 — Macroeconomic Policy",
+  "duration_seconds": 420,
+  "intro": "Macroeconomic policy shapes a nation's economic performance.",
+  "segments": [
+    {
+      "text": "It is often used by "
+    },
+    {
+      "blank": {
+        "prefix": "govern",
+        "missing": "ments",
+        "full_word": "governments"
+      }
+    },
+    {
+      "text": " to influence a nation's economic "
+    },
+    {
+      "blank": {
+        "prefix": "perform",
+        "missing": "ance",
+        "full_word": "performance"
+      }
+    },
+    {
+      "text": ". This includes fiscal policy, which involves "
+    },
+    {
+      "blank": {
+        "prefix": "tax",
+        "missing": "ation",
+        "full_word": "taxation"
+      }
+    },
+    {
+      "text": " and public "
+    },
+    {
+      "blank": {
+        "prefix": "expend",
+        "missing": "iture",
+        "full_word": "expenditure"
+      }
+    },
+    {
+      "text": ", and monetary policy, which manages the money supply and interest rates to control "
+    },
+    {
+      "blank": {
+        "prefix": "infl",
+        "missing": "ation",
+        "full_word": "inflation"
+      }
+    },
+    {
+      "text": " and stabilize the currency."
+    }
+  ],
+  "metadata": {
+    "topic": "economics",
+    "level": "hard",
+    "blanks_count": 5
+  }
+}

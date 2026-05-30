@@ -1,0 +1,89 @@
+{
+  "id": "cw_hard_09",
+  "type": "complete_words",
+  "tier": "hard",
+  "title_ar": "النص 9 — ميكانيكا الكم",
+  "title_en": "Text 9 — Quantum Mechanics",
+  "duration_seconds": 420,
+  "intro": "Quantum mechanics describes nature at atomic scales.",
+  "segments": [
+    {
+      "text": "It is a "
+    },
+    {
+      "blank": {
+        "prefix": "funda",
+        "missing": "mental",
+        "full_word": "fundamental"
+      }
+    },
+    {
+      "text": " theory in physics that provides a "
+    },
+    {
+      "blank": {
+        "prefix": "descript",
+        "missing": "ion",
+        "full_word": "description"
+      }
+    },
+    {
+      "text": " of the physical "
+    },
+    {
+      "blank": {
+        "prefix": "proper",
+        "missing": "ties",
+        "full_word": "properties"
+      }
+    },
+    {
+      "text": " of nature at the scale of atoms and subatomic "
+    },
+    {
+      "blank": {
+        "prefix": "part",
+        "missing": "icles",
+        "full_word": "particles"
+      }
+    },
+    {
+      "text": ". Its concepts are often counter-"
+    },
+    {
+      "blank": {
+        "prefix": "intui",
+        "missing": "tive",
+        "full_word": "intuitive"
+      }
+    },
+    {
+      "text": " and challenge "
+    },
+    {
+      "blank": {
+        "prefix": "class",
+        "missing": "ical",
+        "full_word": "classical"
+      }
+    },
+    {
+      "text": " notions of "
+    },
+    {
+      "blank": {
+        "prefix": "real",
+        "missing": "ity",
+        "full_word": "reality"
+      }
+    },
+    {
+      "text": "."
+    }
+  ],
+  "metadata": {
+    "topic": "physics",
+    "level": "hard",
+    "blanks_count": 7
+  }
+}

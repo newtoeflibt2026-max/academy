@@ -1,0 +1,79 @@
+{
+  "id": "cw_hard_08",
+  "type": "complete_words",
+  "tier": "hard",
+  "title_ar": "النص 8 — علم النفس المعرفي",
+  "title_en": "Text 8 — Cognitive Psychology",
+  "duration_seconds": 420,
+  "intro": "Cognitive psychologists study internal mental processes.",
+  "segments": [
+    {
+      "text": "They examine how people encode, store, and retrieve "
+    },
+    {
+      "blank": {
+        "prefix": "informa",
+        "missing": "tion",
+        "full_word": "information"
+      }
+    },
+    {
+      "text": ", often using complex "
+    },
+    {
+      "blank": {
+        "prefix": "experi",
+        "missing": "mental",
+        "full_word": "experimental"
+      }
+    },
+    {
+      "text": " paradigms. Their research has "
+    },
+    {
+      "blank": {
+        "prefix": "signif",
+        "missing": "icantly",
+        "full_word": "significantly"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "contrib",
+        "missing": "uted",
+        "full_word": "contributed"
+      }
+    },
+    {
+      "text": " to our "
+    },
+    {
+      "blank": {
+        "prefix": "underst",
+        "missing": "anding",
+        "full_word": "understanding"
+      }
+    },
+    {
+      "text": " of human "
+    },
+    {
+      "blank": {
+        "prefix": "cogni",
+        "missing": "tion",
+        "full_word": "cognition"
+      }
+    },
+    {
+      "text": "."
+    }
+  ],
+  "metadata": {
+    "topic": "psychology",
+    "level": "hard",
+    "blanks_count": 6
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "id": "cw_easy_01",
+  "type": "complete_words",
+  "tier": "easy",
+  "title_ar": "النص 1 — الدماغ البشري",
+  "title_en": "Text 1 — The Human Brain",
+  "duration_seconds": 300,
+  "intro": "The human brain is a remarkable organ.",
+  "segments": [
+    {
+      "text": "It "
+    },
+    {
+      "blank": {
+        "prefix": "proc",
+        "missing": "esses",
+        "full_word": "processes"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "informa",
+        "missing": "tion",
+        "full_word": "information"
+      }
+    },
+    {
+      "text": " from our "
+    },
+    {
+      "blank": {
+        "prefix": "sens",
+        "missing": "es",
+        "full_word": "senses"
+      }
+    },
+    {
+      "text": ", "
+    },
+    {
+      "blank": {
+        "prefix": "contr",
+        "missing": "ols",
+        "full_word": "controls"
+      }
+    },
+    {
+      "text": " our "
+    },
+    {
+      "blank": {
+        "prefix": "mov",
+        "missing": "ements",
+        "full_word": "movements"
+      }
+    },
+    {
+      "text": ", and "
+    },
+    {
+      "blank": {
+        "prefix": "enab",
+        "missing": "les",
+        "full_word": "enables"
+      }
+    },
+    {
+      "text": " us to think and feel. "
+    },
+    {
+      "blank": {
+        "prefix": "Scien",
+        "missing": "tists",
+        "full_word": "Scientists"
+      }
+    },
+    {
+      "text": " are "
+    },
+    {
+      "blank": {
+        "prefix": "const",
+        "missing": "antly",
+        "full_word": "constantly"
+      }
+    },
+    {
+      "text": " trying to learn more about its "
+    },
+    {
+      "blank": {
+        "prefix": "myste",
+        "missing": "ries",
+        "full_word": "mysteries"
+      }
+    },
+    {
+      "text": "."
+    }
+  ],
+  "metadata": {
+    "topic": "biology",
+    "level": "easy",
+    "blanks_count": 9
+  }
+}

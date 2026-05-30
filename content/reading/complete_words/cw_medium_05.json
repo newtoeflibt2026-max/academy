@@ -1,0 +1,69 @@
+{
+  "id": "cw_medium_05",
+  "type": "complete_words",
+  "tier": "medium",
+  "title_ar": "النص 5 — الزراعة المستدامة",
+  "title_en": "Text 5 — Sustainable Agriculture",
+  "duration_seconds": 360,
+  "intro": "Sustainable agriculture meets present needs without compromising the future.",
+  "segments": [
+    {
+      "text": "It aims to meet society's needs without "
+    },
+    {
+      "blank": {
+        "prefix": "compro",
+        "missing": "mising",
+        "full_word": "compromising"
+      }
+    },
+    {
+      "text": " the ability of future "
+    },
+    {
+      "blank": {
+        "prefix": "gener",
+        "missing": "ations",
+        "full_word": "generations"
+      }
+    },
+    {
+      "text": " to meet their own needs. It is based on an "
+    },
+    {
+      "blank": {
+        "prefix": "underst",
+        "missing": "anding",
+        "full_word": "understanding"
+      }
+    },
+    {
+      "text": " of ecosystem services and the need to preserve critical "
+    },
+    {
+      "blank": {
+        "prefix": "resour",
+        "missing": "ces",
+        "full_word": "resources"
+      }
+    },
+    {
+      "text": " like water and soil "
+    },
+    {
+      "blank": {
+        "prefix": "fertile",
+        "missing": "ness",
+        "full_word": "fertileness"
+      }
+    },
+    {
+      "text": "."
+    }
+  ],
+  "metadata": {
+    "topic": "environment",
+    "level": "medium",
+    "blanks_count": 5
+  }
+}

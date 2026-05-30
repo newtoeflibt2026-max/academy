@@ -1,0 +1,69 @@
+{
+  "id": "cw_hard_10",
+  "type": "complete_words",
+  "tier": "hard",
+  "title_ar": "النص 10 — الحتمية الفلسفية",
+  "title_en": "Text 10 — Philosophical Determinism",
+  "duration_seconds": 420,
+  "intro": "Determinism is a philosophical doctrine about causality.",
+  "segments": [
+    {
+      "text": "The doctrine of "
+    },
+    {
+      "blank": {
+        "prefix": "determin",
+        "missing": "ism",
+        "full_word": "determinism"
+      }
+    },
+    {
+      "text": " posits that every event, including every human decision, is the "
+    },
+    {
+      "blank": {
+        "prefix": "inevit",
+        "missing": "able",
+        "full_word": "inevitable"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "conseq",
+        "missing": "uence",
+        "full_word": "consequence"
+      }
+    },
+    {
+      "text": " of preceding events. This raises profound "
+    },
+    {
+      "blank": {
+        "prefix": "ques",
+        "missing": "tions",
+        "full_word": "questions"
+      }
+    },
+    {
+      "text": " about the existence of free will and moral "
+    },
+    {
+      "blank": {
+        "prefix": "responsib",
+        "missing": "ility",
+        "full_word": "responsibility"
+      }
+    },
+    {
+      "text": "."
+    }
+  ],
+  "metadata": {
+    "topic": "philosophy",
+    "level": "hard",
+    "blanks_count": 5
+  }
+}

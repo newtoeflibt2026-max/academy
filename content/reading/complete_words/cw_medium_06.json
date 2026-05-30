@@ -1,0 +1,99 @@
+{
+  "id": "cw_medium_06",
+  "type": "complete_words",
+  "tier": "medium",
+  "title_ar": "النص 6 — عصر النهضة",
+  "title_en": "Text 6 — The Renaissance",
+  "duration_seconds": 360,
+  "intro": "The Renaissance was a transformative era.",
+  "segments": [
+    {
+      "text": "It was a period of immense cultural and "
+    },
+    {
+      "blank": {
+        "prefix": "intellect",
+        "missing": "ual",
+        "full_word": "intellectual"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "achieve",
+        "missing": "ments",
+        "full_word": "achievements"
+      }
+    },
+    {
+      "text": " in Europe. It was "
+    },
+    {
+      "blank": {
+        "prefix": "charac",
+        "missing": "terized",
+        "full_word": "characterized"
+      }
+    },
+    {
+      "text": " by a renewed interest in "
+    },
+    {
+      "blank": {
+        "prefix": "class",
+        "missing": "ical",
+        "full_word": "classical"
+      }
+    },
+    {
+      "text": " art, "
+    },
+    {
+      "blank": {
+        "prefix": "litera",
+        "missing": "ture",
+        "full_word": "literature"
+      }
+    },
+    {
+      "text": ", and "
+    },
+    {
+      "blank": {
+        "prefix": "learn",
+        "missing": "ing",
+        "full_word": "learning"
+      }
+    },
+    {
+      "text": ". This era "
+    },
+    {
+      "blank": {
+        "prefix": "witness",
+        "missing": "ed",
+        "full_word": "witnessed"
+      }
+    },
+    {
+      "text": " a profound "
+    },
+    {
+      "blank": {
+        "prefix": "trans",
+        "missing": "formation",
+        "full_word": "transformation"
+      }
+    },
+    {
+      "text": " in human thought."
+    }
+  ],
+  "metadata": {
+    "topic": "history",
+    "level": "medium",
+    "blanks_count": 8
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "id": "cw_medium_07",
+  "type": "complete_words",
+  "tier": "medium",
+  "title_ar": "النص 7 — القيادة الفعّالة",
+  "title_en": "Text 7 — Effective Leadership",
+  "duration_seconds": 360,
+  "intro": "Effective leadership requires diverse skills.",
+  "segments": [
+    {
+      "text": "It requires a "
+    },
+    {
+      "blank": {
+        "prefix": "diver",
+        "missing": "se",
+        "full_word": "diverse"
+      }
+    },
+    {
+      "text": " set of skills, "
+    },
+    {
+      "blank": {
+        "prefix": "include",
+        "missing": "ing",
+        "full_word": "includeing"
+      }
+    },
+    {
+      "text": " strategic thinking, clear "
+    },
+    {
+      "blank": {
+        "prefix": "communica",
+        "missing": "tion",
+        "full_word": "communication"
+      }
+    },
+    {
+      "text": ", and emotional "
+    },
+    {
+      "blank": {
+        "prefix": "intel",
+        "missing": "ligence",
+        "full_word": "intelligence"
+      }
+    },
+    {
+      "text": ". Leaders must be "
+    },
+    {
+      "blank": {
+        "prefix": "adapt",
+        "missing": "able",
+        "full_word": "adaptable"
+      }
+    },
+    {
+      "text": " and "
+    },
+    {
+      "blank": {
+        "prefix": "resili",
+        "missing": "ent",
+        "full_word": "resilient"
+      }
+    },
+    {
+      "text": " in the face of "
+    },
+    {
+      "blank": {
+        "prefix": "chall",
+        "missing": "enges",
+        "full_word": "challenges"
+      }
+    },
+    {
+      "text": ", inspiring their teams to achieve shared "
+    },
+    {
+      "blank": {
+        "prefix": "object",
+        "missing": "ives",
+        "full_word": "objectives"
+      }
+    },
+    {
+      "text": "."
+    }
+  ],
+  "metadata": {
+    "topic": "leadership",
+    "level": "medium",
+    "blanks_count": 8
+  }
+}

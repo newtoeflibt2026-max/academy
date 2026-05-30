@@ -1,0 +1,89 @@
+{
+  "id": "cw_easy_02",
+  "type": "complete_words",
+  "tier": "easy",
+  "title_ar": "النص 2 — الغذاء الصحي",
+  "title_en": "Text 2 — A Healthy Diet",
+  "duration_seconds": 300,
+  "intro": "A healthy diet is essential for a long life.",
+  "segments": [
+    {
+      "text": "Eating fruits and "
+    },
+    {
+      "blank": {
+        "prefix": "veget",
+        "missing": "ables",
+        "full_word": "vegetables"
+      }
+    },
+    {
+      "text": " provides the body with "
+    },
+    {
+      "blank": {
+        "prefix": "impor",
+        "missing": "tant",
+        "full_word": "important"
+      }
+    },
+    {
+      "text": " "
+    },
+    {
+      "blank": {
+        "prefix": "vitam",
+        "missing": "ins",
+        "full_word": "vitamins"
+      }
+    },
+    {
+      "text": " and "
+    },
+    {
+      "blank": {
+        "prefix": "miner",
+        "missing": "als",
+        "full_word": "minerals"
+      }
+    },
+    {
+      "text": ". These "
+    },
+    {
+      "blank": {
+        "prefix": "nutri",
+        "missing": "ents",
+        "full_word": "nutrients"
+      }
+    },
+    {
+      "text": " help to protect the body from "
+    },
+    {
+      "blank": {
+        "prefix": "vari",
+        "missing": "ous",
+        "full_word": "various"
+      }
+    },
+    {
+      "text": " diseases and keep it "
+    },
+    {
+      "blank": {
+        "prefix": "funct",
+        "missing": "ioning",
+        "full_word": "functioning"
+      }
+    },
+    {
+      "text": " properly."
+    }
+  ],
+  "metadata": {
+    "topic": "health",
+    "level": "easy",
+    "blanks_count": 7
+  }
+}

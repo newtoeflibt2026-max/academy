@@ -1,0 +1,89 @@
+{
+  "id": "cw_easy_03",
+  "type": "complete_words",
+  "tier": "easy",
+  "title_ar": "النص 3 — الإنترنت",
+  "title_en": "Text 3 — The Internet",
+  "duration_seconds": 300,
+  "intro": "The Internet has changed our world.",
+  "segments": [
+    {
+      "text": "It has "
+    },
+    {
+      "blank": {
+        "prefix": "revolu",
+        "missing": "tionized",
+        "full_word": "revolutionized"
+      }
+    },
+    {
+      "text": " the way we "
+    },
+    {
+      "blank": {
+        "prefix": "commun",
+        "missing": "icate",
+        "full_word": "communicate"
+      }
+    },
+    {
+      "text": ". People can now "
+    },
+    {
+      "blank": {
+        "prefix": "instan",
+        "missing": "tly",
+        "full_word": "instantly"
+      }
+    },
+    {
+      "text": " share "
+    },
+    {
+      "blank": {
+        "prefix": "mess",
+        "missing": "ages",
+        "full_word": "messages"
+      }
+    },
+    {
+      "text": " and photos with friends and "
+    },
+    {
+      "blank": {
+        "prefix": "fam",
+        "missing": "ily",
+        "full_word": "family"
+      }
+    },
+    {
+      "text": " all over the world. This digital "
+    },
+    {
+      "blank": {
+        "prefix": "connec",
+        "missing": "tion",
+        "full_word": "connection"
+      }
+    },
+    {
+      "text": " has made geographical "
+    },
+    {
+      "blank": {
+        "prefix": "dist",
+        "missing": "ances",
+        "full_word": "distances"
+      }
+    },
+    {
+      "text": " seem much smaller."
+    }
+  ],
+  "metadata": {
+    "topic": "technology",
+    "level": "easy",
+    "blanks_count": 7
+  }
+}
