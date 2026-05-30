@@ -1,46 +1,58 @@
-﻿# === Backups (auto-generated) ===
-*.bak_*
-*.broken_bak
-*.broken_*
-*.OLD_DISABLED
-_backups/
-_SAFE_BACKUP_*/
-_archive/
+# Yamen Academy — gitignore
 
-# === Diagnostic files ===
-diag_*.txt
-diag*.txt
-err_*.txt
-err*.txt
-out_*.txt
-out*.txt
-root_diag.txt
-smoke_*.json
-smoke_test_*.json
-
-# === Python ===
+# Python
 __pycache__/
 *.pyc
 *.pyo
-.venv/
-venv/
 
-# === SQLite ===
+# Secrets
+.env
+.env.*
+
+# Backups (all variants)
+*.bak
+*.bak_*
+*.backup
+*.backup2
+*.broken_*
+*.before_*
+*.old_backup
+*.OLD
+*.final_backup
+_backups/
+_archive/
+_archive_*/
+_SAFE_BACKUP*/
+
+# Throwaway scripts at root
+/_*.py
+/_*.html
+/_*.txt
+/_*.md
+/_scripts/
+/notepad*
+
+# Databases
+*.db
 *.db-shm
 *.db-wal
-academy.db.bak_*
 academy_seeded_*.db
+yamen_academy*.db
 
-# === Editor/OS ===
+# Diagnostic outputs
+diag*.txt
+err*.txt
+out*.txt
+root_diag.txt
+smoke_*_*.json
+_tmp_*.py
+
+# IDE
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
 
-# === Temporary work files ===
-_check.py
-_count.py
-_json.py
-_audit.py
-notepad _fix_route.py
-force_fix.py
+# Force-keep (override the above)
+!PROJECT_LOG.md
+!README.md
+!LAUNCH_README.md
+!PROJECT_MAP.md
