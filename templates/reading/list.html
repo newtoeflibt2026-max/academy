@@ -237,15 +237,15 @@ body {
   </section>
 
   <div class="tabs">
-    <button class="tab active" data-type="academic_reading">
-      🎓 أكاديمية <span class="tab-count">{{ items_by_type.academic_reading|length }}</span>
-    </button>
-    <button class="tab" data-type="daily_reading">
-      📰 يومية <span class="tab-count">{{ items_by_type.daily_reading|length }}</span>
-    </button>
-    <button class="tab" data-type="complete_words">
-      📝 إكمال الكلمات <span class="tab-count">{{ items_by_type.complete_words|length }}</span>
-    </button>
+    <button class="tab active" data-type="complete_words">
+                📝 إكمال الكلمات <span class="tab-count">{{ items_by_type.complete_words|length }}</span>
+            </button>
+            <button class="tab" data-type="daily_reading">
+                📰 يومية <span class="tab-count">{{ items_by_type.daily_reading|length }}</span>
+            </button>
+            <button class="tab" data-type="academic_reading">
+                🎓 أكاديمية <span class="tab-count">{{ items_by_type.academic_reading|length }}</span>
+            </button>
   </div>
 
   {% set cover_class = {"academic_reading": "academic", "daily_reading": "daily", "complete_words": "words"} %}
