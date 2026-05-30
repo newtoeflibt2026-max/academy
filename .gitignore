@@ -1,43 +1,46 @@
-﻿# Python
+﻿# === Backups (auto-generated) ===
+*.bak_*
+*.broken_bak
+*.broken_*
+*.OLD_DISABLED
+_backups/
+_SAFE_BACKUP_*/
+_archive/
+
+# === Diagnostic files ===
+diag_*.txt
+diag*.txt
+err_*.txt
+err*.txt
+out_*.txt
+out*.txt
+root_diag.txt
+smoke_*.json
+smoke_test_*.json
+
+# === Python ===
 __pycache__/
 *.pyc
 *.pyo
-
-# Environment
-.env
 .venv/
 venv/
 
-# Logs
-*.log
+# === SQLite ===
+*.db-shm
+*.db-wal
+academy.db.bak_*
+academy_seeded_*.db
 
-# Tools
-ngrok.exe
-
-# Backups & Archives (don't track)
-_backups/
-_archive_cleanup_*/
-_scripts/
-*.bak
-*.OLD
-*.before_merge
-
-# Old DB copies (keep academy.db tracked as seed!)
-academy.db.backup*
-academy.db.final_backup
-yamen_academy.db*
-data/academy.db
-data/*.db-*
-
-# IDE
+# === Editor/OS ===
 .vscode/
 .idea/
-*.swp
-# Temp / generated files (added by automation scripts)
-_plans_current.json
-_backups/
-_*.py
-_*.html
-_*.txt
-__pycache__/
-*.pyc
+.DS_Store
+Thumbs.db
+
+# === Temporary work files ===
+_check.py
+_count.py
+_json.py
+_audit.py
+notepad _fix_route.py
+force_fix.py

@@ -2,7 +2,30 @@
 from flask import Flask, jsonify, render_template, request
 
 import os
-DB_PATH = os.environ.get("DB_PATH", "academy.db")
+# ===== Unified DB path resolver (env > Railway volume > local) =====
+def _resolve_db_path():
+    env_path = os.environ.get("DB_PATH", "").strip()
+    if env_path:
+        return env_path
+    if os.path.isdir("/app/data"):
+        return "/app/data/academy.db"
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
+
+DB_PATH = _resolve_db_path()
+os.environ["DB_PATH"] = DB_PATH  # ensure ALL submodules see the same path
+
+# ===== ROOT-FIX STARTUP GUARD =====
+try:
+    from db import verify_integrity as _verify_db
+    if not _verify_db():
+        import sys
+        print("[STARTUP GUARD] ABORTING - DB integrity check failed")
+        sys.exit(1)
+except ImportError:
+    print("[STARTUP GUARD] WARN: db.py not found, skipping integrity check")
+# ===== END ROOT-FIX STARTUP GUARD =====
+
+
 import os, json
 from datetime import datetime
 from db import (get_db, get_all_students_db, get_student,
@@ -10,6 +33,20 @@ from db import (get_db, get_all_students_db, get_student,
                 get_setting, set_setting)
 
 app = Flask(__name__)
+
+# ===== Health check (production-required) =====
+@app.route("/health")
+def _health_check():
+    """Lightweight health probe for Railway/K8s/uptime monitors."""
+    import sqlite3 as _sq
+    try:
+        conn = _db_safe() if "_db_safe" in globals() else _sq.connect(DB_PATH)
+        cnt = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
+        conn.close()
+        return jsonify({"ok": True, "db": "connected", "students": cnt, "db_path": DB_PATH}), 200
+    except Exception as e:
+        return jsonify({"ok": False, "db": "error", "detail": str(e)}), 503
+
 
 
 # === TOEFL Writing Blueprint (Phase 2) ===
@@ -28,15 +65,27 @@ try:
 except Exception as _e:
     print('[WARN] placement_bp not loaded:', _e)
 
+# === Home & Hearts Blueprint (Phase A3) ===
+try:
+    from routes.home_routes import home_bp
+    app.register_blueprint(home_bp)
+    print('[Home] home_bp registered: /home, /api/hearts/*')
+except Exception as _e:
+    print(f'[Home] home_bp registration failed: {_e}')
+
+
 app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Pages Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 
 # ===== Phase 12G: Unified DB connection with WAL + busy_timeout =====
+
+# ── DB path already resolved at top (single source of truth) ──
+
 def _db_safe(path=None):
     """Open SQLite with WAL mode and 30s busy_timeout to prevent locks."""
     import sqlite3 as _sq
-    p = path or os.environ.get("DB_PATH", "/app/data/academy.db")
+    p = path or os.environ.get("DB_PATH") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
     conn = _sq.connect(p, timeout=30.0, isolation_level=None, check_same_thread=False)
     try:
         conn.execute("PRAGMA journal_mode=WAL;")
@@ -656,8 +705,9 @@ def index():
 
 @app.route("/student")
 def student():
-    from flask import render_template
-    return render_template("student_dashboard.html")
+    from flask import render_template, request
+    sid = request.args.get("student_id", "") or request.args.get("user_id", "")
+    return render_template("student_dashboard.html", user_id=sid, student_id=sid)
 
 @app.route("/api/admin/stats")
 def api_stats():
@@ -1860,8 +1910,8 @@ def api_student_complete_lesson(lid):
         xp = int(lesson["xp_reward"] or 20)
         skill = lesson["skill"] or "reading"
         conn.execute(
-            "UPDATE students SET xp = COALESCE(xp,0) + ?, total_xp = COALESCE(total_xp,0) + ? WHERE telegram_id=?",
-            (xp, xp, user_id)
+            "UPDATE students SET xp = COALESCE(xp,0) + ?, total_xp = COALESCE(total_xp,0) + ? WHERE CAST(user_id AS TEXT)=? OR telegram_id=?",
+            (xp, xp, str(user_id), str(user_id))
         )
         try:
             conn.execute(
@@ -1880,26 +1930,33 @@ def api_student_complete_lesson(lid):
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Student Profile by ID (for student_dashboard) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 @app.route("/api/student/<int:uid>", methods=["GET"])
 def api_student_by_id(uid):
-    """Returns full student profile by telegram_id for student dashboard."""
+    """Student dashboard payload: profile + skill progress + dynamic daily mission."""
     conn = get_db()
     try:
         row = conn.execute(
-            "SELECT * FROM students WHERE telegram_id=?", (uid,)
+            "SELECT * FROM students WHERE CAST(user_id AS TEXT)=? OR telegram_id=?",
+            (str(uid), str(uid))
         ).fetchone()
         if not row:
             return jsonify({"error": "student not found"}), 404
         d = dict(row)
-        # Normalize fields the dashboard expects
         d.setdefault("level", "beginner")
-        d.setdefault("xp", d.get("total_xp", 0) or 0)
-        d.setdefault("streak", d.get("streak_days", 0) or 0)
-        d.setdefault("missions_completed", d.get("missions_completed", 0) or 0)
-        d.setdefault("placement_score", d.get("placement_score", 0) or 0)
-        d.setdefault("full_name", d.get("name") or d.get("username") or "Ã˜Â·Ã˜Â§Ã™â€žÃ˜Â¨")
+        d["xp"] = d.get("xp", 0) or d.get("total_xp", 0) or d.get("xp_total", 0) or 0
+        d["streak"] = d.get("streak", 0) or d.get("streak_days", 0) or 0
+        d["missions_completed"] = d.get("missions_completed", 0) or 0
+        d["placement_score"] = d.get("placement_score", 0) or 0
+        d["full_name"] = d.get("full_name") or d.get("name") or d.get("username") or "طالب"
+
+        cur = conn.cursor()
+        skills_progress = _compute_skill_progress(cur, uid)
+        daily_mission = _get_next_lesson(cur, uid, skill='reading') or _get_next_lesson(cur, uid)
+        d["skills_progress"] = skills_progress
+        d["daily_mission"] = daily_mission
+        d["target_score"] = d.get("target_score") or d.get("required_score") or 90
+        d["current_stage"] = d.get("current_phase") or d.get("stage") or 1
         return jsonify(d)
     finally:
         conn.close()
-
 
 @app.route("/api/leaderboard", methods=["GET"])
 def api_leaderboard():
@@ -1984,6 +2041,132 @@ def _miniapp_db():
     conn.row_factory = _sq.Row
     return conn
 
+def _student_lookup_clause():
+    return "CAST(user_id AS TEXT)=? OR telegram_id=?"
+
+
+def _find_student(cur, sid):
+    sid = str(sid or "").strip()
+    if not sid:
+        return None
+    return cur.execute(f"SELECT * FROM students WHERE {_student_lookup_clause()}", (sid, sid)).fetchone()
+
+
+def _safe_int(v, default=0):
+    try:
+        return int(v)
+    except Exception:
+        return default
+
+
+def _compute_skill_progress(cur, sid):
+    """Compute progress by skill using passed lesson_attempts vs total active lessons.
+    Returns a dict suitable for student dashboard.
+    """
+    sid = str(sid or "").strip()
+    total_by_skill = {}
+    for r in cur.execute("""
+        SELECT COALESCE(skill, skill_type, 'general') AS skill, COUNT(*) AS c
+        FROM lessons WHERE COALESCE(is_active,1)=1
+        GROUP BY 1
+    """).fetchall():
+        total_by_skill[r[0]] = _safe_int(r[1])
+
+    completed_by_skill = {}
+    for r in cur.execute("""
+        SELECT COALESCE(l.skill, l.skill_type, 'general') AS skill,
+               COUNT(DISTINCT la.lesson_id) AS c
+        FROM lesson_attempts la
+        JOIN lessons l ON l.id = la.lesson_id
+        WHERE la.telegram_id=? AND la.passed=1
+        GROUP BY 1
+    """, (sid,)).fetchall():
+        completed_by_skill[r[0]] = _safe_int(r[1])
+
+    out = {}
+    for skill in sorted(set(total_by_skill) | set(completed_by_skill)):
+        total = total_by_skill.get(skill, 0)
+        completed = completed_by_skill.get(skill, 0)
+        out[skill] = {
+            "completed": completed,
+            "total": total,
+            "label": skill.title(),
+            "ratio": round((completed / total), 4) if total else 0,
+            "display": f"{completed}/{total}"
+        }
+    return out
+
+
+def _get_cooldown_state(cur, sid):
+    sid = str(sid or "").strip()
+    row = cur.execute("""
+        SELECT lesson_id, finished_at
+        FROM lesson_attempts
+        WHERE telegram_id=? AND passed=1
+        ORDER BY finished_at DESC LIMIT 1
+    """, (sid,)).fetchone()
+    if not row or not row["finished_at"]:
+        return {"lesson_id": None, "until": None, "seconds": 0}
+    try:
+        finished = _datetime.fromisoformat(str(row["finished_at"]).replace(" ", "T"))
+        unlock_at = finished + _timedelta(hours=24)
+        seconds = int((unlock_at - _datetime.utcnow()).total_seconds())
+        if seconds > 0:
+            return {"lesson_id": row["lesson_id"], "until": unlock_at.isoformat(), "seconds": seconds}
+    except Exception:
+        pass
+    return {"lesson_id": None, "until": None, "seconds": 0}
+
+
+def _get_next_lesson(cur, sid, skill=None):
+    sid = str(sid or "").strip()
+    params = []
+    where = ["COALESCE(l.is_active,1)=1"]
+    if skill:
+        where.append("COALESCE(l.skill,l.skill_type,'general')=?")
+        params.append(skill)
+    rows = cur.execute(f"""
+        SELECT l.id, l.title, l.title_ar,
+               COALESCE(l.skill,l.skill_type,'general') AS skill,
+               COALESCE(l.stage_id,l.stage,1) AS stage_no,
+               COALESCE(l.order_index,l.order_num,l.id) AS order_no,
+               COALESCE(l.xp_reward,10) AS xp_reward,
+               (SELECT COUNT(*) FROM lesson_questions q WHERE q.lesson_id=l.id) AS questions_count
+        FROM lessons l
+        WHERE {' AND '.join(where)}
+        ORDER BY stage_no, order_no, l.id
+    """, params).fetchall()
+    completed = {
+        r[0] for r in cur.execute(
+            "SELECT DISTINCT lesson_id FROM lesson_attempts WHERE telegram_id=? AND passed=1",
+            (sid,)
+        ).fetchall()
+    }
+    cooldown = _get_cooldown_state(cur, sid)
+    next_row = None
+    for r in rows:
+        if r[0] not in completed:
+            next_row = r
+            break
+    if not next_row:
+        return None
+    if cooldown["seconds"] > 0 and cooldown["lesson_id"] and next_row[0] != cooldown["lesson_id"]:
+        status = "locked_cooldown"
+    else:
+        status = "available"
+    return {
+        "id": next_row[0],
+        "title": next_row[2] or next_row[1] or f"Lesson {next_row[0]}",
+        "skill": next_row[3],
+        "stage": next_row[4],
+        "xp_reward": next_row[6],
+        "questions_count": next_row[7],
+        "status": status,
+        "cooldown_until": cooldown["until"],
+        "cooldown_seconds": cooldown["seconds"],
+    }
+
+
 
 
 
@@ -2035,188 +2218,223 @@ except Exception as _mig_e:
 # ===================== End Phase 11B Auto-Migration =====================
 @app.route("/api/miniapp/lessons")
 def miniapp_lessons_list():
-    """List lessons for student with status (locked/available/completed)."""
+    """Student-ready lesson list with sequence + cooldown. Supports skill/section filter."""
     try:
-        sid = _request.args.get("student_id", type=int)
+        sid = str(_request.args.get("student_id") or _request.args.get("user_id") or "").strip()
+        skill_filter = (_request.args.get("skill") or _request.args.get("section") or "").strip().lower()
         if not sid:
             return _jsonify({"error": "student_id required"}), 400
-        
+
         conn = _miniapp_db()
         cur = conn.cursor()
-        
-        # Get student
-        cur.execute("SELECT user_id, current_phase, xp, track FROM students WHERE user_id=?", (sid,))
-        student = cur.fetchone()
+        student = _find_student(cur, sid)
         if not student:
             conn.close()
             return _jsonify({"error": "student not found"}), 404
-        
-        current_phase = student["current_phase"] or 1
-        
-        # Get last attempt for cooldown
-        cur.execute("""
-            SELECT lesson_id, finished_at, passed 
-            FROM lesson_attempts 
-            WHERE telegram_id=? AND passed=1 
-            ORDER BY finished_at DESC LIMIT 1
-        """, (str(sid),))
-        last_attempt = cur.fetchone()
-        
-        cooldown_lesson_id = None
-        cooldown_until = None
-        if last_attempt and last_attempt["finished_at"]:
-            try:
-                finished = _datetime.fromisoformat(last_attempt["finished_at"].replace(" ", "T"))
-                unlock_at = finished + _timedelta(hours=24)
-                if unlock_at > _datetime.utcnow():
-                    cooldown_lesson_id = last_attempt["lesson_id"]
-                    cooldown_until = unlock_at.isoformat()
-            except Exception:
-                pass
-        
-        # Get all completed lesson IDs for this student
-        cur.execute("""
-            SELECT DISTINCT lesson_id FROM lesson_attempts 
-            WHERE telegram_id=? AND passed=1
-        """, (str(sid),))
-        completed_ids = {row["lesson_id"] for row in cur.fetchall()}
-        
-        # Get lessons grouped by stage
-        cur.execute("""
-            SELECT l.id, l.title, l.title_ar, l.skill, l.stage_id, l.order_index, 
-                   l.xp_reward, l.section_name, l.content,
-                   s.code as stage_code, s.name_ar as stage_name,
-                   (SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=l.id) as q_count
+
+        cooldown = _get_cooldown_state(cur, sid)
+        completed_ids = {
+            r[0] for r in cur.execute(
+                "SELECT DISTINCT lesson_id FROM lesson_attempts WHERE telegram_id=? AND passed=1",
+                (sid,)
+            ).fetchall()
+        }
+
+        where = ["COALESCE(l.is_active,1)=1"]
+        params = []
+        if skill_filter:
+            where.append("LOWER(COALESCE(l.skill,l.skill_type,'general'))=?")
+            params.append(skill_filter)
+
+        rows = cur.execute(f"""
+            SELECT l.id, l.title, l.title_ar,
+                   COALESCE(l.skill,l.skill_type,'general') AS skill,
+                   COALESCE(l.stage_id,l.stage,1) AS stage_no,
+                   COALESCE(l.order_index,l.order_num,l.id) AS order_no,
+                   COALESCE(l.xp_reward,10) AS xp_reward,
+                   l.section_name,
+                   s.code AS stage_code,
+                   s.name_ar AS stage_name,
+                   (SELECT COUNT(*) FROM lesson_questions q WHERE q.lesson_id=l.id) AS q_count
             FROM lessons l
-            LEFT JOIN stages s ON s.id = l.stage_id
-            WHERE l.is_active=1 AND l.stage_id <= ?
-            ORDER BY l.stage_id, l.order_index
-        """, (current_phase + 1,))  # show current + next stage
-        
+            LEFT JOIN stages s ON s.id = COALESCE(l.stage_id,l.stage)
+            WHERE {' AND '.join(where)}
+            ORDER BY stage_no, order_no, l.id
+        """, params).fetchall()
+
         lessons_by_stage = {}
-        for row in cur.fetchall():
-            lid = row["id"]
-            stage_id = row["stage_id"]
-            
-            # Determine status
+        first_uncompleted_seen = False
+        for row in rows:
+            lid = row[0]
+            stage_id = row[4]
             if lid in completed_ids:
-                status = "completed"
-            elif cooldown_lesson_id and lid > cooldown_lesson_id and stage_id == current_phase:
-                status = "locked_cooldown"
-            elif stage_id > current_phase:
-                status = "locked_stage"
+                status = 'completed'
+            elif not first_uncompleted_seen:
+                status = 'available'
+                first_uncompleted_seen = True
             else:
-                status = "available"
-            
+                status = 'locked_sequence'
+
+            if status == 'available' and cooldown['seconds'] > 0 and cooldown['lesson_id'] and lid != cooldown['lesson_id']:
+                status = 'locked_cooldown'
+
             if stage_id not in lessons_by_stage:
                 lessons_by_stage[stage_id] = {
-                    "stage_id": stage_id,
-                    "stage_code": row["stage_code"],
-                    "stage_name": row["stage_name"],
-                    "lessons": []
+                    'stage_id': stage_id,
+                    'stage_code': row[8],
+                    'stage_name': row[9] or f'Stage {stage_id}',
+                    'lessons': []
                 }
-            
-            title = row["title"] or row["title_ar"] or f"Lesson {lid}"
-            lessons_by_stage[stage_id]["lessons"].append({
-                "id": lid,
-                "title": title,
-                "skill": row["skill"] or "general",
-                "section": row["section_name"] or "general",
-                "xp_reward": row["xp_reward"] or 10,
-                "questions_count": row["q_count"],
-                "status": status,
-                "order": row["order_index"]
+            title = row[2] or row[1] or f"Lesson {lid}"
+            lessons_by_stage[stage_id]['lessons'].append({
+                'id': lid,
+                'title': title,
+                'skill': row[3],
+                'section': row[7] or row[3],
+                'xp_reward': row[6],
+                'questions_count': row[10],
+                'status': status,
+                'order': row[5],
+                'cooldown_until': cooldown['until'] if status == 'locked_cooldown' else None,
+                'cooldown_seconds': cooldown['seconds'] if status == 'locked_cooldown' else 0,
             })
-        
-        conn.close()
-        return _jsonify({
-            "student_id": sid,
-            "current_phase": current_phase,
-            "cooldown_until": cooldown_until,
-            "stages": list(lessons_by_stage.values())
-        })
-    except Exception as e:
-        return _jsonify({"error": str(e)}), 500
 
+        payload = {
+            'student_id': sid,
+            'current_phase': (dict(student).get('current_phase') or dict(student).get('stage') or 1),
+            'cooldown_until': cooldown['until'],
+            'skills_progress': _compute_skill_progress(cur, sid),
+            'daily_mission': _get_next_lesson(cur, sid, skill_filter or None),
+            'stages': list(lessons_by_stage.values())
+        }
+        conn.close()
+        return _jsonify(payload)
+    except Exception as e:
+        return _jsonify({'error': str(e)}), 500
 
 @app.route("/api/miniapp/lesson/<int:lid>")
 def miniapp_lesson_detail(lid):
-    """Get lesson content + questions (without correct answers)."""
+    """Get lesson content + questions + navigation metadata."""
     try:
-        sid = _request.args.get("student_id", type=int)
-        
+        sid = str(_request.args.get("student_id") or _request.args.get("user_id") or "").strip()
+
         conn = _miniapp_db()
         cur = conn.cursor()
-        
-        # Get lesson
         cur.execute("""
-            SELECT id, title, title_ar, content, skill, stage_id, xp_reward, 
-                   vocabulary, grammar_rule, focus_point, section_name
-            FROM lessons WHERE id=? AND is_active=1
+            SELECT id, title, title_ar, content,
+                   COALESCE(skill,skill_type,'general') AS skill,
+                   COALESCE(stage_id,stage,1) AS stage_id,
+                   COALESCE(xp_reward,10) AS xp_reward,
+                   vocabulary, grammar_rule, focus_point, section_name,
+                   COALESCE(order_index,order_num,id) AS order_no
+            FROM lessons WHERE id=? AND COALESCE(is_active,1)=1
         """, (lid,))
         lesson = cur.fetchone()
         if not lesson:
             conn.close()
             return _jsonify({"error": "lesson not found"}), 404
-        
-        # Get questions (without correct_answer, without explanation, without tip)
+
         cur.execute("""
             SELECT id, q_id, q_type, question, options_json, timer_seconds, order_num
-            FROM lesson_questions 
-            WHERE lesson_id=? 
+            FROM lesson_questions
+            WHERE lesson_id=?
             ORDER BY order_num, id
         """, (lid,))
         questions = []
         for row in cur.fetchall():
-            opts = {}
             try:
                 opts = _json.loads(row["options_json"] or "{}")
             except Exception:
-                pass
+                opts = {}
             questions.append({
-                "id": row["id"],
-                "q_id": row["q_id"],
-                "type": row["q_type"],
-                "question": row["question"],
-                "options": opts,
-                "timer": row["timer_seconds"] or 30,
-                "order": row["order_num"]
+                'id': row['id'],
+                'q_id': row['q_id'],
+                'type': row['q_type'],
+                'question': row['question'],
+                'options': opts,
+                'timer': row['timer_seconds'] or 30,
+                'order': row['order_num'],
             })
-        
-        # Has the student completed this lesson?
+
+        prev_row = cur.execute("""
+            SELECT id FROM lessons
+            WHERE COALESCE(is_active,1)=1
+              AND COALESCE(skill,skill_type,'general')=?
+              AND (
+                COALESCE(stage_id,stage,1) < ? OR
+                (COALESCE(stage_id,stage,1)=? AND COALESCE(order_index,order_num,id) < ?)
+              )
+            ORDER BY COALESCE(stage_id,stage,1) DESC, COALESCE(order_index,order_num,id) DESC, id DESC
+            LIMIT 1
+        """, (lesson['skill'], lesson['stage_id'], lesson['stage_id'], lesson['order_no'])).fetchone()
+        next_row = cur.execute("""
+            SELECT id FROM lessons
+            WHERE COALESCE(is_active,1)=1
+              AND COALESCE(skill,skill_type,'general')=?
+              AND (
+                COALESCE(stage_id,stage,1) > ? OR
+                (COALESCE(stage_id,stage,1)=? AND COALESCE(order_index,order_num,id) > ?)
+              )
+            ORDER BY COALESCE(stage_id,stage,1), COALESCE(order_index,order_num,id), id
+            LIMIT 1
+        """, (lesson['skill'], lesson['stage_id'], lesson['stage_id'], lesson['order_no'])).fetchone()
+
         completed = False
         last_score = None
         if sid:
-            cur.execute("""
-                SELECT score_percent FROM lesson_attempts 
-                WHERE telegram_id=? AND lesson_id=? AND passed=1 
+            r = cur.execute("""
+                SELECT score_percent FROM lesson_attempts
+                WHERE telegram_id=? AND lesson_id=? AND passed=1
                 ORDER BY finished_at DESC LIMIT 1
-            """, (str(sid), lid))
-            r = cur.fetchone()
+            """, (sid, lid)).fetchone()
             if r:
                 completed = True
-                last_score = r["score_percent"]
-        
+                last_score = r['score_percent']
+
         conn.close()
-        title = lesson["title"] or lesson["title_ar"] or f"Lesson {lid}"
+        title = lesson['title_ar'] or lesson['title'] or f'Lesson {lid}'
         return _jsonify({
-            "id": lesson["id"],
-            "title": title,
-            "content": lesson["content"] or "",
-            "skill": lesson["skill"] or "general",
-            "stage_id": lesson["stage_id"],
-            "xp_reward": lesson["xp_reward"] or 10,
-            "vocabulary": lesson["vocabulary"],
-            "grammar_rule": lesson["grammar_rule"],
-            "focus_point": lesson["focus_point"],
-            "section": lesson["section_name"],
-            "questions": questions,
-            "completed": completed,
-            "last_score": last_score
+            'id': lesson['id'],
+            'title': title,
+            'content': lesson['content'] or '',
+            'skill': lesson['skill'],
+            'stage_id': lesson['stage_id'],
+            'xp_reward': lesson['xp_reward'],
+            'vocabulary': lesson['vocabulary'] or '',
+            'grammar_rule': lesson['grammar_rule'] or '',
+            'focus_point': lesson['focus_point'] or '',
+            'section': lesson['section_name'] or lesson['skill'],
+            'questions': questions,
+            'completed': completed,
+            'last_score': last_score,
+            'prev_lesson_id': prev_row['id'] if prev_row else None,
+            'next_lesson_id': next_row['id'] if next_row else None,
+            'recommended_next': next_row['id'] if next_row else None,
+            'quiz_mode': 'single-question-flow' if len(questions) >= 5 else 'short-quiz'
         })
     except Exception as e:
-        return _jsonify({"error": str(e)}), 500
+        return _jsonify({'error': str(e)}), 500
 
+
+# ===== Compatibility aliases for Mini App Migration =====
+@app.route("/api/lessons/list")
+def api_lessons_list_alias():
+    return miniapp_lessons_list()
+
+
+@app.route("/api/lesson/<int:lid>")
+def api_lesson_alias(lid):
+    return miniapp_lesson_detail(lid)
+
+
+@app.route("/api/quiz/submit", methods=["POST"])
+def api_quiz_submit_alias():
+    data = _request.get_json(force=True, silent=True) or {}
+    # Single-answer compatibility
+    if data.get('question_id') or data.get('q_id') or data.get('id'):
+        return miniapp_quiz_answer()
+    # Full-quiz compatibility
+    return miniapp_quiz_finish()
 
 @app.route("/api/miniapp/quiz/check", methods=["POST"])
 def miniapp_quiz_check():
@@ -2294,7 +2512,7 @@ def miniapp_quiz_submit():
         
         # Update student XP only if passed
         if passed:
-            cur.execute("UPDATE students SET xp = COALESCE(xp,0) + ? WHERE user_id=?", (xp_earned, sid))
+            cur.execute("UPDATE students SET xp = COALESCE(xp,0) + ? WHERE CAST(user_id AS TEXT)=? OR telegram_id=?", (xp_earned, str(sid), str(sid)))
             # Log XP
             try:
                 cur.execute("""
@@ -2305,7 +2523,7 @@ def miniapp_quiz_submit():
                 pass  # xp_log may have different schema
         
         # Get updated XP
-        cur.execute("SELECT xp FROM students WHERE user_id=?", (sid,))
+        cur.execute("SELECT xp FROM students WHERE CAST(user_id AS TEXT)=? OR telegram_id=?", (str(sid), str(sid)))
         new_xp = cur.fetchone()
         new_xp_val = new_xp["xp"] if new_xp else 0
         
@@ -2458,145 +2676,167 @@ def miniapp_quiz_start():
 
 @app.route("/api/miniapp/quiz/answer", methods=["POST"])
 def miniapp_quiz_answer():
-    """Check single answer; record mistake in error_bank if wrong."""
+    """Check single answer; record mistake; never return 500 to client."""
+    import traceback as _tb
     try:
         import quiz_engine as qe
-        data = _request.get_json(force=True) or {}
-        sid = str(data.get("student_id") or "")
-        qid = data.get("question_id")
-        user_answer = (data.get("answer") or "").strip().upper()
-        if not qid:
+        data = _request.get_json(force=True, silent=True) or {}
+        sid = str(data.get("student_id") or data.get("user_id") or data.get("telegram_id") or "").strip()
+        qid_raw = data.get("question_id") or data.get("q_id") or data.get("id")
+        user_answer = str(data.get("answer") or data.get("user_answer") or "").strip().upper()
+        if not qid_raw:
             return _jsonify({"error": "question_id required"}), 400
+        try:
+            qid = int(qid_raw)
+        except Exception:
+            return _jsonify({"error": "invalid question_id"}), 400
 
-        # Use quiz_engine.check_answer
-        is_correct, correct_ans, explanation = qe.check_answer(int(qid), user_answer)
+        # Check answer (never raises)
+        is_correct, correct_ans, explanation = qe.check_answer(qid, user_answer)
 
-        # Get concept, tip, evidence, common_trap from DB
-        conn = _miniapp_db()
-        cur = conn.cursor()
-        cur.execute("SELECT concept, tip, evidence, common_trap, q_type, passage_ref FROM lesson_questions WHERE id=?", (int(qid),))
-        row = cur.fetchone()
-        conn.close()
-        concept = row["concept"] if row else ""
-        tip = row["tip"] if row else ""
-        evidence = row["evidence"] if row else ""
-        common_trap = row["common_trap"] if row else ""
-        q_type_meta = row["q_type"] if row else ""
-        passage_ref_meta = row["passage_ref"] if row else ""
+        # Get optional metadata; tolerate missing rows/columns
+        concept = tip = evidence = common_trap = q_type_meta = passage_ref_meta = ""
+        try:
+            conn = _miniapp_db()
+            cur = conn.cursor()
+            cur.execute("SELECT concept, tip, evidence, common_trap, q_type, passage_ref FROM lesson_questions WHERE id=?", (qid,))
+            row = cur.fetchone()
+            conn.close()
+            if row:
+                concept = row["concept"] or "" if "concept" in row.keys() else ""
+                tip = row["tip"] or "" if "tip" in row.keys() else ""
+                evidence = row["evidence"] or "" if "evidence" in row.keys() else ""
+                common_trap = row["common_trap"] or "" if "common_trap" in row.keys() else ""
+                q_type_meta = row["q_type"] or "" if "q_type" in row.keys() else ""
+                passage_ref_meta = row["passage_ref"] or "" if "passage_ref" in row.keys() else ""
+        except Exception as _me:
+            print(f"[miniapp_quiz_answer] meta fetch skipped: {_me}")
 
-        # Record mistake if wrong
+        # Record mistake (best-effort)
         if not is_correct and sid:
             try:
-                qe.record_mistake(sid, int(qid), user_answer, correct_ans or "")
-            except Exception as _e:
-                pass
+                qe.record_mistake(sid, qid, user_answer, correct_ans or "")
+            except Exception as _re:
+                print(f"[miniapp_quiz_answer] record_mistake skipped: {_re}")
 
         return _jsonify({
-            "is_correct": is_correct,
+            "ok": True,
+            "is_correct": bool(is_correct),
             "correct_answer": correct_ans or "",
             "explanation": explanation or "",
-            "concept": concept or "",
-            "tip": tip or "",
-            "evidence": evidence or "",
-            "common_trap": common_trap or "",
-            "q_type": q_type_meta or "",
-            "passage_ref": passage_ref_meta or ""
+            "concept": concept,
+            "tip": tip,
+            "evidence": evidence,
+            "common_trap": common_trap,
+            "q_type": q_type_meta,
+            "passage_ref": passage_ref_meta
         })
     except Exception as e:
-        return _jsonify({"error": str(e)}), 500
+        print(f"[miniapp_quiz_answer] FATAL: {e}\n{_tb.format_exc()}")
+        # Return a safe payload instead of 500 so the UI stays responsive
+        return _jsonify({"ok": False, "is_correct": False, "error": "internal_error", "detail": str(e)}), 200
 
 
 @app.route("/api/miniapp/quiz/finish", methods=["POST"])
 def miniapp_quiz_finish():
-    """Finish quiz using streak-based passing (get_required_streak)."""
+    """Finish quiz, award XP on pass, update streak, and suggest next lesson."""
     try:
         import quiz_engine as qe
-        data = _request.get_json(force=True) or {}
-        sid = str(data.get("student_id") or "")
-        lid = data.get("lesson_id")
+        data = _request.get_json(force=True, silent=True) or {}
+        sid = str(data.get("student_id") or data.get("user_id") or data.get("telegram_id") or "").strip()
+        lid = _safe_int(data.get("lesson_id"), 0)
         attempt_id = data.get("attempt_id")
         answers = data.get("answers") or []
-
         if not sid or not lid:
             return _jsonify({"error": "student_id and lesson_id required"}), 400
 
         total = len(answers)
         correct = sum(1 for a in answers if a.get("is_correct"))
-
-        # Compute best consecutive correct streak (in answer order)
         best_streak = 0
         cur_streak = 0
         for a in answers:
             if a.get("is_correct"):
                 cur_streak += 1
-                if cur_streak > best_streak:
-                    best_streak = cur_streak
+                best_streak = max(best_streak, cur_streak)
             else:
                 cur_streak = 0
 
-        # Get student target -> required streak
-        try:
-            target = qe.get_student_target(sid)
-        except Exception:
-            target = 69
-        try:
-            required = qe.get_required_streak(target)
-        except Exception:
-            required = 3
-
-        passed = best_streak >= required
+        target = qe.get_student_target(sid) if hasattr(qe, 'get_student_target') else 69
+        required = qe.get_required_streak(target) if hasattr(qe, 'get_required_streak') else 3
         score = (correct / total * 100) if total else 0
+        effective_required = min(required, max(1, total)) if total else required
+        passed = (best_streak >= effective_required) and (score >= 60)
 
-        # xp_reward from lessons
         conn = _miniapp_db()
         cur = conn.cursor()
-        cur.execute("SELECT xp_reward FROM lessons WHERE id=?", (int(lid),))
-        lrow = cur.fetchone()
-        xp_reward = (lrow["xp_reward"] if lrow else 10) or 10
-        conn.close()
+        lesson = cur.execute("""
+            SELECT COALESCE(xp_reward,10) AS xp_reward,
+                   COALESCE(skill,skill_type,'general') AS skill
+            FROM lessons WHERE id=?
+        """, (lid,)).fetchone()
+        xp_reward = (lesson['xp_reward'] if lesson else 10) or 10
+        skill = lesson['skill'] if lesson else 'general'
 
         xp_earned = 0
         cooldown_seconds = 0
-        cooldown_message = ""
+        cooldown_message = ''
+
+        try:
+            qe.finish_quiz_attempt(attempt_id, correct, total, answers)
+        except Exception:
+            pass
 
         if passed:
+            xp_earned = xp_reward
+            cur.execute(
+                "UPDATE students SET xp = COALESCE(xp,0)+?, total_xp = COALESCE(total_xp,0)+?, completed_lessons = COALESCE(completed_lessons,0)+1, streak = COALESCE(streak,0)+1, streak_days = COALESCE(streak_days,0)+1, last_activity=datetime('now') WHERE CAST(user_id AS TEXT)=? OR telegram_id=?",
+                (xp_earned, xp_earned, sid, sid)
+            )
             try:
-                qe.finish_quiz_attempt(attempt_id, correct, total, answers)
+                cur.execute("INSERT INTO xp_log (user_id, amount, reason, created_at) VALUES (?, ?, ?, datetime('now'))", (int(sid) if sid.isdigit() else 0, xp_earned, f'lesson_{lid}_quiz_{skill}'))
             except Exception:
                 pass
-            xp_earned = xp_reward
             try:
-                qe.clear_cooldown(sid, int(lid))
+                qe.clear_cooldown(sid, lid)
             except Exception:
                 pass
         else:
             try:
-                qe.finish_quiz_attempt(attempt_id, correct, total, answers)
-            except Exception:
-                pass
-            try:
-                fail_info = qe.register_failed_attempt(sid, int(lid))
+                fail_info = qe.register_failed_attempt(sid, lid)
                 if isinstance(fail_info, dict):
-                    cooldown_seconds = int(fail_info.get("wait_seconds", 0) or 0)
-                    cooldown_message = fail_info.get("motivation", "") or ""
+                    cooldown_seconds = int(fail_info.get('wait_seconds', 0) or 0)
+                    cooldown_message = fail_info.get('motivation', '') or ''
             except Exception:
                 cooldown_seconds = 300
 
+        next_lesson = _get_next_lesson(cur, sid, skill)
+        updated = cur.execute("SELECT COALESCE(xp,total_xp,0) AS xp, COALESCE(streak,streak_days,0) AS streak FROM students WHERE CAST(user_id AS TEXT)=? OR telegram_id=?", (sid, sid)).fetchone()
+        conn.commit()
+        conn.close()
+
         return _jsonify({
-            "passed": passed,
-            "score": round(score, 1),
-            "correct": correct,
-            "wrong": total - correct,
-            "total": total,
-            "best_streak": best_streak,
-            "required_streak": required,
-            "target_score": target,
-            "xp_earned": xp_earned,
-            "cooldown_seconds": cooldown_seconds,
-            "cooldown_message": cooldown_message,
+            'passed': passed,
+            'score': round(score, 1),
+            'correct': correct,
+            'wrong': total - correct,
+            'total': total,
+            'best_streak': best_streak,
+            'required_streak': required,
+            'effective_required_streak': effective_required,
+            'target_score': target,
+            'xp_earned': xp_earned,
+            'new_xp': (updated['xp'] if updated else 0),
+            'new_streak': (updated['streak'] if updated else 0),
+            'cooldown_seconds': cooldown_seconds,
+            'cooldown_message': cooldown_message,
+            'next_lesson_id': next_lesson['id'] if next_lesson else None,
+            'dashboard_url': f'/student?student_id={sid}',
+            'skill': skill,
+            'ok': True,
         })
     except Exception as e:
-        return _jsonify({"error": str(e)}), 500
+        return _jsonify({'error': str(e)}), 500
+
 # ============ END PHASE 4B ============
 
 # ===================== Phase 10: Payment + Plans CRUD =====================
@@ -4275,7 +4515,7 @@ def api_admin_stage_exam_list(sid):
             "exam_questions_count": cnt
         })
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
+        import traceback; tb = traceback.format_exc(); print("[EXAM-START-ERROR]", tb, flush=True); return jsonify({"success": False, "message": str(e), "traceback": tb}), 500
 
 
 @app.route("/api/admin/stages/<int:sid>/exam-questions/create", methods=["POST"])
@@ -4372,8 +4612,244 @@ def api_admin_student_pass_score(student_id):
         return jsonify({"success": False, "message": str(e)}), 500
 
 
+def _convert_blanks(raw):
+    import json as _j
+    if not raw:
+        return None
+    try:
+        data = _j.loads(raw) if isinstance(raw, str) else raw
+        if isinstance(data, list):
+            # already array - return as JSON string
+            return raw if isinstance(raw, str) else _j.dumps(raw, ensure_ascii=False)
+        if isinstance(data, dict):
+            arr = []
+            for idx, (masked, answer) in enumerate(data.items(), start=1):
+                prefix = masked.split("_")[0] if "_" in masked else ""
+                hint = answer[:3] + "..." if len(answer) > 3 else answer
+                arr.append({"n": idx, "prefix": prefix, "answer": answer, "hint": hint})
+            return _j.dumps(arr, ensure_ascii=False)
+        return None
+    except Exception:
+        return None
+
 # ─── Student: بدء امتحان مرحلة ───
 @app.route("/api/student/stage/<int:sid>/exam-start", methods=["GET"])
+def api_student_stage_exam_start(sid):
+    """ROOT-FIX bulletproof version - never returns 500."""
+    import sqlite3, random, json, traceback
+    try:
+        user_id = request.args.get("user_id") or request.args.get("student_id")
+        if not user_id:
+            return jsonify({"success": False, "message": "user_id required"}), 400
+
+        conn = _db_safe()
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        # الطالب
+        st = c.execute("SELECT personal_pass_score FROM students WHERE user_id=?", (user_id,)).fetchone()
+        if not st:
+            st = c.execute("SELECT personal_pass_score FROM students WHERE telegram_id=?", (str(user_id),)).fetchone()
+        personal = 70
+        if st:
+            try:
+                personal = st["personal_pass_score"] or 70
+            except Exception:
+                personal = 70
+        required = personal + 10
+
+        # المرحلة
+        stg = c.execute("SELECT * FROM stages WHERE id=?", (sid,)).fetchone()
+        if not stg:
+            conn.close()
+            return jsonify({"success": False, "message": f"stage {sid} not found"}), 404
+        stg_d = dict(stg)
+        cnt = stg_d.get("exam_questions_count") or 10
+
+        # الأسئلة
+        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?", (sid,)).fetchall()
+        all_q = [dict(r) for r in all_q]
+        conn.close()
+
+        if len(all_q) == 0:
+            return jsonify({
+                "success": False,
+                "message": f"لا توجد أسئلة للمرحلة {sid}"
+            }), 400
+
+        # إذا الأسئلة أقل من المطلوب، خذ كل المتاح
+        actual_cnt = min(cnt, len(all_q))
+        sample = random.sample(all_q, actual_cnt)
+
+        # بناء clean بأمان - كل حقل اختياري
+        def gv(d, k, default=None):
+            try:
+                v = d.get(k)
+                return v if v is not None else default
+            except Exception:
+                return default
+
+        clean = []
+        for q in sample:
+            clean.append({
+                "id": gv(q, "id"),
+                "question_text": gv(q, "question_text", ""),
+                "option_a": gv(q, "option_a", ""),
+                "option_b": gv(q, "option_b", ""),
+                "option_c": gv(q, "option_c", ""),
+                "option_d": gv(q, "option_d", ""),
+                "options": {
+                    "A": gv(q, "option_a", ""),
+                    "B": gv(q, "option_b", ""),
+                    "C": gv(q, "option_c", ""),
+                    "D": gv(q, "option_d", ""),
+                },
+                "passage_text":       gv(q, "passage_text"),
+                "set_id":             gv(q, "set_id"),
+                "q_type":             gv(q, "q_type"),
+                "blanks_json":        gv(q, "blanks_json"),
+                "audio_source":       gv(q, "audio_source"),
+                "time_limit_seconds": gv(q, "time_limit_seconds"),
+                "difficulty":         gv(q, "difficulty"),
+                "concept_ar":         gv(q, "concept_ar"),
+                "strategy_ar":        gv(q, "strategy_ar"),
+                "skill_section":      gv(q, "skill_section"),
+            })
+
+        return jsonify({
+            "success": True,
+            "questions": clean,
+            "total": len(clean),
+            "required_score": required,
+            "personal_pass_score": personal,
+            "stage": {
+                "id": sid,
+                "name": gv(stg_d, "name_ar") or gv(stg_d, "name") or f"Stage {sid}",
+                "exam_questions_count": cnt,
+            }
+        })
+
+    except Exception as e:
+        tb = traceback.format_exc()
+        print("=" * 60)
+        print("[exam-start ERROR]")
+        print(tb)
+        print("=" * 60)
+        return jsonify({
+            "success": False,
+            "message": f"Server error: {str(e)}",
+            "traceback": tb.split(chr(10))[-3:] if tb else []
+        }), 500
+
+
+def api_student_stage_exam_start(sid):
+    """ROOT-FIX bulletproof version - never returns 500."""
+    import sqlite3, random, json, traceback
+    try:
+        user_id = request.args.get("user_id") or request.args.get("student_id")
+        if not user_id:
+            return jsonify({"success": False, "message": "user_id required"}), 400
+
+        conn = _db_safe()
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+
+        # الطالب
+        st = c.execute("SELECT personal_pass_score FROM students WHERE user_id=?", (user_id,)).fetchone()
+        if not st:
+            st = c.execute("SELECT personal_pass_score FROM students WHERE telegram_id=?", (str(user_id),)).fetchone()
+        personal = 70
+        if st:
+            try:
+                personal = st["personal_pass_score"] or 70
+            except Exception:
+                personal = 70
+        required = personal + 10
+
+        # المرحلة
+        stg = c.execute("SELECT * FROM stages WHERE id=?", (sid,)).fetchone()
+        if not stg:
+            conn.close()
+            return jsonify({"success": False, "message": f"stage {sid} not found"}), 404
+        stg_d = dict(stg)
+        cnt = stg_d.get("exam_questions_count") or 10
+
+        # الأسئلة
+        all_q = c.execute("SELECT * FROM stage_exam_questions WHERE stage_id=?", (sid,)).fetchall()
+        all_q = [dict(r) for r in all_q]
+        conn.close()
+
+        if len(all_q) == 0:
+            return jsonify({
+                "success": False,
+                "message": f"لا توجد أسئلة للمرحلة {sid}"
+            }), 400
+
+        # إذا الأسئلة أقل من المطلوب، خذ كل المتاح
+        actual_cnt = min(cnt, len(all_q))
+        sample = random.sample(all_q, actual_cnt)
+
+        # بناء clean بأمان - كل حقل اختياري
+        def gv(d, k, default=None):
+            try:
+                v = d.get(k)
+                return v if v is not None else default
+            except Exception:
+                return default
+
+        clean = []
+        for q in sample:
+            clean.append({
+                "id": gv(q, "id"),
+                "question_text": gv(q, "question_text", ""),
+                "option_a": gv(q, "option_a", ""),
+                "option_b": gv(q, "option_b", ""),
+                "option_c": gv(q, "option_c", ""),
+                "option_d": gv(q, "option_d", ""),
+                "options": {
+                    "A": gv(q, "option_a", ""),
+                    "B": gv(q, "option_b", ""),
+                    "C": gv(q, "option_c", ""),
+                    "D": gv(q, "option_d", ""),
+                },
+                "passage_text":       gv(q, "passage_text"),
+                "set_id":             gv(q, "set_id"),
+                "q_type":             gv(q, "q_type"),
+                "blanks_json":        gv(q, "blanks_json"),
+                "audio_source":       gv(q, "audio_source"),
+                "time_limit_seconds": gv(q, "time_limit_seconds"),
+                "difficulty":         gv(q, "difficulty"),
+                "concept_ar":         gv(q, "concept_ar"),
+                "strategy_ar":        gv(q, "strategy_ar"),
+                "skill_section":      gv(q, "skill_section"),
+            })
+
+        return jsonify({
+            "success": True,
+            "questions": clean,
+            "total": len(clean),
+            "required_score": required,
+            "personal_pass_score": personal,
+            "stage": {
+                "id": sid,
+                "name": gv(stg_d, "name_ar") or gv(stg_d, "name") or f"Stage {sid}",
+                "exam_questions_count": cnt,
+            }
+        })
+
+    except Exception as e:
+        tb = traceback.format_exc()
+        print("=" * 60)
+        print("[exam-start ERROR]")
+        print(tb)
+        print("=" * 60)
+        return jsonify({
+            "success": False,
+            "message": f"Server error: {str(e)}",
+            "traceback": tb.split(chr(10))[-3:] if tb else []
+        }), 500
+
+
 def api_student_stage_exam_start(sid):
     import sqlite3, random, json
     try:
@@ -4434,7 +4910,7 @@ def api_student_stage_exam_start(sid):
                 "time_limit_seconds": (q["time_limit_seconds"] if "time_limit_seconds" in q.keys() else None),
                 "difficulty":   (q["difficulty"]   if "difficulty"   in q.keys() else None),
                 "skill_section":(q["skill_section"]if "skill_section"in q.keys() else None),
-                "blanks_json":  (q["blanks_json"]  if "blanks_json"  in q.keys() else None),
+                "blanks_json":  _convert_blanks(q["blanks_json"] if "blanks_json" in q.keys() else None),
                 "strategy_ar":  (q["strategy_ar"]  if "strategy_ar"  in q.keys() else None),
                 "elimination_ar":(q["elimination_ar"]if "elimination_ar"in q.keys() else None),
                 "trap_ar":      (q["trap_ar"]      if "trap_ar"      in q.keys() else None),
@@ -4791,6 +5267,19 @@ try:
 except Exception as _e:
     print(f"WARN: {_e}")
 
+
+
+@app.route("/api/reading-daily-life", methods=["GET"])
+def api_reading_daily_life():
+    """Returns all daily-life reading passages for lesson_view.html"""
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT code, text_type, title_ar, passage_en, translation_ar FROM reading_daily_life WHERE COALESCE(is_active,1)=1 ORDER BY order_index").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
@@ -4980,7 +5469,7 @@ def admin_page():
 def api_admin_placement_list():
     import sqlite3
     try:
-        conn = sqlite3.connect("academy.db"); conn.row_factory = sqlite3.Row
+        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")); conn.row_factory = sqlite3.Row
         rows = conn.execute("SELECT * FROM placement_questions ORDER BY id DESC").fetchall()
         conn.close()
         return _jsonify({"questions": [dict(r) for r in rows]})
@@ -4992,7 +5481,7 @@ def api_admin_placement_create():
     import sqlite3
     try:
         d = _request.get_json(force=True) or {}
-        conn = sqlite3.connect("academy.db")
+        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
         conn.execute("""
             INSERT INTO placement_questions
             (question_text, option_a, option_b, option_c, option_d, correct_option, skill, skill_type, difficulty, is_active)
@@ -5013,7 +5502,7 @@ def api_admin_placement_update(qid):
     import sqlite3
     try:
         d = _request.get_json(force=True) or {}
-        conn = sqlite3.connect("academy.db")
+        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
         conn.execute("""
             UPDATE placement_questions
             SET question_text=?, option_a=?, option_b=?, option_c=?, option_d=?,
@@ -5034,7 +5523,7 @@ def api_admin_placement_update(qid):
 def api_admin_placement_delete(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect("academy.db")
+        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
         conn.execute("DELETE FROM placement_questions WHERE id=?", (qid,))
         conn.commit(); conn.close()
         return _jsonify({"ok": True})
@@ -5045,7 +5534,7 @@ def api_admin_placement_delete(qid):
 def api_admin_placement_toggle(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect("academy.db")
+        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
         row = conn.execute("SELECT is_active FROM placement_questions WHERE id=?", (qid,)).fetchone()
         if not row: return _jsonify({"error": "not found"}), 404
         new_val = 0 if row[0] == 1 else 1

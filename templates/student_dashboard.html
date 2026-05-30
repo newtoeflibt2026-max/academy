@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1182,7 +1182,14 @@ function switchView(btn) {
   window.scrollTo(0, 0);
 }
 
+window.STUDENT_ID = "{{ user_id|default('', true) }}";
+window.STUDENT_QUERY = window.STUDENT_ID ? ('?student_id=' + window.STUDENT_ID) : '';
+
 function openSkill(skill) {
+  if (skill === 'writing') {
+    window.location.href = '/writing' + window.STUDENT_QUERY;
+    return;
+  }
   haptic('medium');
   // Switch to lessons tab + filter
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
