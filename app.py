@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, request
 
 import os
@@ -72,6 +72,14 @@ try:
     print('[Home] home_bp registered: /home, /api/hearts/*')
 except Exception as _e:
     print(f'[Home] home_bp registration failed: {_e}')
+
+# === TOEFL Reading Blueprint (Phase 5.4) ===
+try:
+    from routes.reading_exam import reading_bp
+    app.register_blueprint(reading_bp)
+    print('[Reading] reading_bp registered: /reading/*')
+except Exception as _e:
+    print(f'[Reading] reading_bp registration failed: {_e}')
 
 
 app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")

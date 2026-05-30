@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading — اختر قراءة</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+       background: #f5f6fa; color: #2c3e50; padding: 20px; }
+h1 { color: #1a2540; margin-bottom: 20px; }
+.section { margin-bottom: 32px; }
+.section-title { font-size: 18px; font-weight: 700; color: #1a2540;
+                 margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #3498db; }
+.empty { color: #95a5a6; font-style: italic; padding: 12px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.card { background: #fff; border-radius: 10px; padding: 18px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06); transition: all 0.15s; cursor: pointer; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+.card-title { font-size: 16px; font-weight: 700; color: #1a2540; margin-bottom: 8px; }
+.card-en { font-size: 13px; color: #7f8c8d; margin-bottom: 12px; }
+.card-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;
+         background: #ecf0f1; color: #2c3e50; }
+.badge.tier { background: #e3f0fa; color: #1f5d8c; }
+.badge.dur { background: #fef3d0; color: #8a5a00; }
+.badge.q { background: #d4f5e1; color: #1a7a3e; }
+.btn-start { display: inline-block; margin-top: 12px; padding: 8px 18px;
+             background: #3498db; color: #fff; text-decoration: none;
+             border-radius: 6px; font-weight: 600; font-size: 14px; }
+.btn-start:hover { background: #2980b9; }
+.back { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; }
+</style>
+</head>
+<body>
+<a href="/student?user_id={{ user_id }}" class="back">← العودة للوحة الطالب</a>
+<h1>📖 Reading — اختر قراءة</h1>
+
+{% for type_key, type_label in [("academic_reading", "🎓 قراءة أكاديمية"), ("daily_reading", "📰 قراءة يومية"), ("complete_words", "📝 إكمال الكلمات")] %}
+<div class="section">
+  <div class="section-title">{{ type_label }}</div>
+  {% if items_by_type[type_key] %}
+  <div class="grid">
+    {% for it in items_by_type[type_key] %}
+    <div class="card">
+      <div class="card-title">{{ it.title_ar }}</div>
+      <div class="card-en">{{ it.title_en }}</div>
+      <div class="card-meta">
+        <span class="badge tier">{{ it.tier }}</span>
+        <span class="badge dur">⏱ {{ it.duration_min }} د</span>
+        <span class="badge q">{{ it.num_questions }} سؤال</span>
+      </div>
+      <a class="btn-start" href="/reading/start/{{ it.id }}?user_id={{ user_id }}">ابدأ ▶</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">لا يوجد محتوى من هذا النوع بعد.</div>
+  {% endif %}
+</div>
+{% endfor %}
+</body>
+</html>

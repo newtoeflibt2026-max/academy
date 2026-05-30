@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتيجة الامتحان</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+       background: #f5f6fa; color: #2c3e50; padding: 20px; }
+.container { max-width: 800px; margin: 0 auto; }
+.score-card { background: #fff; border-radius: 12px; padding: 30px;
+              text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+              margin-bottom: 24px; }
+.score-big { font-size: 64px; font-weight: 700; color: #27ae60; line-height: 1; }
+.score-big.low { color: #e67e22; }
+.score-big.bad { color: #c0392b; }
+.score-label { font-size: 14px; color: #7f8c8d; margin-top: 6px; }
+.score-detail { margin-top: 16px; font-size: 16px; color: #34495e; }
+h2 { margin: 20px 0 12px; color: #1a2540; }
+.q-item { background: #fff; border-radius: 10px; padding: 16px;
+          margin-bottom: 12px; border-right: 4px solid #ecf0f1; }
+.q-item.correct { border-right-color: #27ae60; }
+.q-item.wrong { border-right-color: #c0392b; }
+.q-num { font-size: 13px; color: #7f8c8d; font-weight: 600; }
+.q-text { font-size: 15px; font-weight: 600; margin: 6px 0 10px; color: #1a2540; }
+.q-ans { font-size: 14px; margin: 4px 0; }
+.q-ans.ok { color: #27ae60; }
+.q-ans.fail { color: #c0392b; }
+.q-explain { font-size: 13px; color: #7f8c8d; margin-top: 8px;
+             padding-top: 8px; border-top: 1px dashed #ecf0f1; }
+.actions { text-align: center; margin: 24px 0; }
+.btn { display: inline-block; padding: 12px 24px; border-radius: 6px;
+       font-weight: 600; text-decoration: none; margin: 4px; }
+.btn-primary { background: #3498db; color: #fff; }
+.btn-secondary { background: #ecf0f1; color: #2c3e50; }
+</style>
+</head>
+<body>
+<div class="container">
+  {% set sc = attempt.score or 0 %}
+  <div class="score-card">
+    <div class="score-big {% if sc < 50 %}bad{% elif sc < 75 %}low{% endif %}">{{ sc }}%</div>
+    <div class="score-label">نتيجتك</div>
+    <div class="score-detail">
+      {{ details | selectattr("is_correct") | list | length }} صحيحة من أصل {{ attempt.total }}
+    </div>
+    <div class="score-detail" style="font-size:13px;color:#95a5a6;">
+      {{ content.title_ar }} · {{ content.title_en }}
+    </div>
+  </div>
+
+  <h2>📝 مراجعة الأسئلة</h2>
+  {% for d in details %}
+  <div class="q-item {% if d.is_correct %}correct{% else %}wrong{% endif %}">
+    <div class="q-num">السؤال {{ d.index }} {% if d.is_correct %}✓{% else %}✗{% endif %}</div>
+    <div class="q-text">{{ d.question }}</div>
+    <div class="q-ans {% if d.is_correct %}ok{% else %}fail{% endif %}">
+      إجابتك: {{ d.selected_text or "— (لم تُجِب)" }}
+    </div>
+    {% if not d.is_correct %}
+    <div class="q-ans ok">الصحيحة: {{ d.correct_text }}</div>
+    {% endif %}
+    {% if d.explanation %}
+    <div class="q-explain">💡 {{ d.explanation }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="actions">
+    <a class="btn btn-primary" href="/reading/?user_id={{ user_id }}">قراءة أخرى</a>
+    <a class="btn btn-secondary" href="/student?user_id={{ user_id }}">العودة للوحة</a>
+  </div>
+</div>
+</body>
+</html>
