@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -1190,6 +1190,7 @@ function openSkill(skill) {
     window.location.href = '/writing' + window.STUDENT_QUERY;
     return;
   }
+      if (skill === 'reading') { window.location.href = '/reading/?user_id=' + (window.STUDENT_ID || ''); return; }
   haptic('medium');
   // Switch to lessons tab + filter
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));

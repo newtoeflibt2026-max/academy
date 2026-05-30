@@ -11,9 +11,8 @@ import services.content_loader as cl
 
 reading_bp = Blueprint("reading_exam", __name__, url_prefix="/reading")
 
-DB_PATH = os.environ.get("DB_PATH", "academy.db")
-if not os.path.exists(DB_PATH) and os.path.exists("data/academy.db"):
-    DB_PATH = "data/academy.db"
+# Import DB_PATH from single source of truth (db.py)
+from db import DB_PATH
 
 
 def _db():
