@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تعلّم: إكمال الكلمات — أكاديمية يامن</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Cairo', sans-serif; background: linear-gradient(135deg, #f5f7ff 0%, #eef2ff 100%); min-height: 100vh; }
+  .en { font-family: 'Inter', sans-serif; direction: ltr; }
+  .step-card { transition: all .25s ease; }
+  .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(79,70,229,.15); }
+  .hero-grad { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%); }
+  .blank-demo {
+    display: inline-block; width: 1.4rem; height: 1.8rem; margin: 0 1px;
+    border-bottom: 2px solid #6366f1; text-align: center; font-family: 'Inter', monospace;
+    font-weight: 700; color: #4f46e5; vertical-align: middle;
+  }
+  .blank-demo.filled { background: #ddd6fe; border-radius: 4px 4px 0 0; }
+  @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+  .pulse { animation: pulse-soft 1.5s ease-in-out infinite; }
+</style>
+</head>
+<body class="text-slate-800">
+
+<!-- Header -->
+<header class="bg-white shadow-sm border-b border-slate-200">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/reading/?user_id={{ user_id }}" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold">
+      <span class="text-xl">→</span> رجوع لقسم القراءة
+    </a>
+    <div class="flex items-center gap-3">
+      <div class="text-right">
+        <div class="font-bold text-slate-800">أكاديمية يامن</div>
+        <div class="text-xs text-slate-500 en">TOEFL Mastery Platform</div>
+      </div>
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold">Y</div>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero-grad text-white py-12 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-4xl">📝</span>
+      <h1 class="text-4xl font-extrabold">إكمال الكلمات</h1>
+    </div>
+    <p class="text-lg text-indigo-100 mb-2">Complete the Words — تعلّم القاعدة قبل البدء</p>
+    <p class="text-indigo-200 text-sm">⏱ مدة الشرح: 3-4 دقائق · اقرأ بتركيز ثم ابدأ التدريب</p>
+  </div>
+</section>
+
+<!-- Body -->
+<main class="max-w-5xl mx-auto px-6 py-10">
+
+  <!-- ما هذا السؤال -->
+  <div class="bg-white rounded-2xl shadow-md p-8 mb-8 border border-slate-100">
+    <h2 class="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
+      <span class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center">💡</span>
+      ما هو سؤال إكمال الكلمات؟
+    </h2>
+    <p class="text-slate-700 leading-relaxed mb-3">
+      يقيس هذا السؤال قدرتك على معالجة النصوص المكتوبة من حيث المعنى والبنية اللغوية. يُقدَّم لك نص أكاديمي
+      (بين <span class="font-bold text-indigo-700">70 إلى 100 كلمة</span>)، وبعد الجملة الأولى الكاملة،
+      يتم حذف <span class="font-bold text-indigo-700">النصف الثاني من كل كلمة ثانية</span>.
+    </p>
+    <p class="text-slate-700 leading-relaxed">
+      مهمتك: إكمال الحروف الناقصة. كل نص يحتوي على نحو <span class="font-bold">10 فراغات</span>.
+    </p>
+  </div>
+
+  <!-- الخطوات الخمس -->
+  <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+    <span class="text-indigo-600">🎯</span> خمس خطوات للإجابة الصحيحة
+  </h2>
+  <div class="grid md:grid-cols-2 gap-5 mb-10">
+
+    <div class="step-card bg-white rounded-xl p-6 border-r-4 border-indigo-500 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-full bg-indigo-500 text-white font-bold flex items-center justify-center">1</div>
+        <h3 class="font-bold text-lg text-slate-800">افهم معنى الجملة</h3>
+      </div>
+      <p class="text-slate-600 text-sm leading-relaxed">اقرأ الجملة الكاملة بتركيز لفهم الموضوع العام قبل ملء أي فراغ.</p>
+    </div>
+
+    <div class="step-card bg-white rounded-xl p-6 border-r-4 border-purple-500 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-full bg-purple-500 text-white font-bold flex items-center justify-center">2</div>
+        <h3 class="font-bold text-lg text-slate-800">حدّد نوع الكلمة</h3>
+      </div>
+      <p class="text-slate-600 text-sm leading-relaxed">فعل؟ اسم؟ صفة؟ حرف جر؟ — نوع الكلمة يحدّد الإجابة الصحيحة.</p>
+    </div>
+
+    <div class="step-card bg-white rounded-xl p-6 border-r-4 border-blue-500 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center">3</div>
+        <h3 class="font-bold text-lg text-slate-800">اختر الأنسب للسياق</h3>
+      </div>
+      <p class="text-slate-600 text-sm leading-relaxed">استخدم الحروف الموجودة والمعنى العام لتخمين الكلمة الصحيحة.</p>
+    </div>
+
+    <div class="step-card bg-white rounded-xl p-6 border-r-4 border-emerald-500 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center">4</div>
+        <h3 class="font-bold text-lg text-slate-800">تحقق من الصحة اللغوية</h3>
+      </div>
+      <p class="text-slate-600 text-sm leading-relaxed">تأكد أن الكلمة صحيحة قواعدياً (مفرد/جمع، زمن الفعل، تطابق الفاعل).</p>
+    </div>
+
+    <div class="step-card bg-white rounded-xl p-6 border-r-4 border-amber-500 shadow-sm md:col-span-2">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-9 h-9 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center">5</div>
+        <h3 class="font-bold text-lg text-slate-800">المراجعة النهائية</h3>
+      </div>
+      <p class="text-slate-600 text-sm leading-relaxed">اقرأ النص كاملاً بعد إكماله للتأكد من تناسق المعنى وصحة الكلمات.</p>
+    </div>
+  </div>
+
+  <!-- المثال المحلول -->
+  <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border-2 border-indigo-200 mb-10">
+    <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center gap-2">
+      <span>📖</span> مثال محلول
+    </h2>
+
+    <div class="bg-white rounded-xl p-6 mb-5 en text-slate-800 leading-loose text-lg" dir="ltr">
+      Psychology is the scientific study of behavior and mental processes.
+      Researchers <span class="text-indigo-700 font-bold">invest<span class="bg-yellow-200 px-1 rounded">igate</span></span>
+      how <span class="text-indigo-700 font-bold">peo<span class="bg-yellow-200 px-1 rounded">ple</span></span>
+      think and <span class="text-indigo-700 font-bold">fe<span class="bg-yellow-200 px-1 rounded">el</span></span>
+      in <span class="text-indigo-700 font-bold">var<span class="bg-yellow-200 px-1 rounded">ious</span></span> situations.
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-3 text-sm">
+      <div class="bg-white rounded-lg p-3 border border-indigo-200">
+        <span class="en font-bold text-indigo-700">investigate</span>
+        <span class="text-slate-600">→ فعل: يحقّق/يدرس (الباحثون يدرسون)</span>
+      </div>
+      <div class="bg-white rounded-lg p-3 border border-indigo-200">
+        <span class="en font-bold text-indigo-700">people</span>
+        <span class="text-slate-600">→ اسم: الناس (موضوع الدراسة)</span>
+      </div>
+      <div class="bg-white rounded-lg p-3 border border-indigo-200">
+        <span class="en font-bold text-indigo-700">feel</span>
+        <span class="text-slate-600">→ فعل: يشعر (يعبّر عن العواطف)</span>
+      </div>
+      <div class="bg-white rounded-lg p-3 border border-indigo-200">
+        <span class="en font-bold text-indigo-700">various</span>
+        <span class="text-slate-600">→ صفة: مختلفة (تنوع المواقف)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- نصيحة احترافية -->
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-10 flex items-start gap-3">
+    <span class="text-2xl">💎</span>
+    <div>
+      <p class="font-bold text-amber-900 mb-1">نصيحة احترافية</p>
+      <p class="text-amber-800 text-sm">في الواجهة، كل فراغ هو حرف واحد. عند الكتابة سينتقل المؤشر تلقائياً للحرف التالي. اضغط Backspace للرجوع.</p>
+    </div>
+  </div>
+
+  <!-- زر البدء -->
+  <div class="text-center">
+    <a href="/reading/?user_id={{ user_id }}#complete_words"
+       class="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-lg px-10 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+      ابدأ التدريب الآن <span class="text-2xl">←</span>
+    </a>
+    <p class="text-slate-500 text-sm mt-3">11 نصاً تدريبياً · 3 مستويات · من Easy إلى Difficult</p>
+  </div>
+
+</main>
+
+<footer class="text-center py-6 text-slate-400 text-sm border-t border-slate-200 mt-10">
+  © 2026 أكاديمية يامن — TOEFL Mastery Platform
+</footer>
+
+</body>
+</html>

@@ -1,3 +1,4 @@
+import sqlite3
 # -*- coding: utf-8 -*-
 """
 TOEFL Reading - Flask Blueprint
@@ -252,3 +253,179 @@ def result(attempt_id):
                            content=content,
                            details=details,
                            user_id=_get_tg_id())
+
+
+# ============================================================
+# Phase 5.6: Complete Words routes (separate from MCQ)
+# ============================================================
+
+@reading_bp.route("/cw/learn")
+def cw_learn():
+    """Learning page for Complete Words skill (read once)."""
+    tg_id = _get_tg_id()
+    return render_template("reading/cw_learn.html", user_id=tg_id)
+
+
+@reading_bp.route("/cw/exam/<content_id>")
+def cw_exam(content_id):
+    """Exam screen for complete_words items."""
+    tg_id = _get_tg_id()
+    items = cl.load_all()
+    item = items.get(content_id)
+    if not item or item.get("type") != "complete_words":
+        return f"Content not found: {content_id}", 404
+
+    # Compute total blanks + grouped structure for JS
+    total_blanks = 0
+    blanks_grouped = []
+    for seg in item.get("segments", []):
+        if "blank" in seg:
+            b = seg["blank"]
+            missing_len = len(b.get("missing", ""))
+            total_blanks += missing_len
+            blanks_grouped.append({
+                "prefix": b["prefix"],
+                "missing_len": missing_len,
+                "full_word": b["full_word"]
+            })
+
+    return render_template(
+        "reading/cw_exam.html",
+        item=item,
+        user_id=tg_id,
+        total_blanks=total_blanks,
+        blanks_grouped=blanks_grouped
+    )
+
+
+@reading_bp.route("/cw/submit", methods=["POST"])
+def cw_submit():
+    """Grade complete_words answers + save errors to error_bank."""
+    tg_id = _get_tg_id()
+    data = request.get_json(silent=True) or {}
+    content_id = data.get("content_id")
+    answers = data.get("answers", [])
+    time_spent = int(data.get("time_spent", 0))
+
+    items = cl.load_all()
+    item = items.get(content_id)
+    if not item:
+        return jsonify({"error": "content not found"}), 404
+
+    # Grade
+    correct = 0
+    total = len(answers)
+    detailed = []
+    errors_saved = 0
+
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.row_factory = sqlite3.Row
+            cur = conn.cursor()
+
+            # Create attempt
+            cur.execute("""
+                INSERT INTO reading_attempts (student_id, content_id, content_type, started_at, finished_at, score, total, status)
+                VALUES (?, ?, ?, datetime('now', '-' || ? || ' seconds'), datetime('now'), 0, ?, 'submitted')
+            """, (tg_id, content_id, "complete_words", time_spent, total))
+            attempt_id = cur.lastrowid
+
+            for i, ans in enumerate(answers):
+                given = (ans.get("full_word") or "").strip().lower()
+                expected = (ans.get("expected") or "").strip().lower()
+                is_correct = (given == expected) and len(given) > 0
+                if is_correct:
+                    correct += 1
+                else:
+                    # Save to error_bank
+                    try:
+                        cur.execute("""
+                            INSERT INTO error_bank (user_id, question_id, error_type, wrong_answer, correct_answer, created_at)
+                            VALUES (?, ?, ?, ?, ?, datetime('now'))
+                        """, (
+                            tg_id,
+                            0,  # question_id is INTEGER; we use 0 + encode context in error_type
+                            f"complete_words:{content_id}:blank_{i}",
+                            given or "(empty)",
+                            expected
+                        ))
+                        errors_saved += 1
+                    except Exception as ex:
+                        print(f"[cw_submit] error_bank insert failed: {ex}")
+
+                detailed.append({
+                    "given": given,
+                    "expected": expected,
+                    "correct": is_correct
+                })
+
+            # Update score
+            percentage = round((correct / total) * 100) if total > 0 else 0
+            cur.execute("UPDATE reading_attempts SET score=? WHERE attempt_id=?", (percentage, attempt_id))
+            conn.commit()
+
+        # Stash detailed in a tiny in-memory cache keyed by attempt_id for the result page
+        _CW_RESULT_CACHE[attempt_id] = {
+            "detailed": detailed,
+            "errors_saved": errors_saved,
+            "time_spent": time_spent
+        }
+
+        return jsonify({
+            "redirect": f"/reading/cw/result/{attempt_id}?user_id={tg_id}",
+            "score": percentage,
+            "correct": correct,
+            "total": total
+        })
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+# In-memory cache for result details (lightweight, no schema change needed)
+_CW_RESULT_CACHE = {}
+
+
+@reading_bp.route("/cw/result/<int:attempt_id>")
+def cw_result(attempt_id):
+    """Result page for complete_words."""
+    tg_id = _get_tg_id()
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.row_factory = sqlite3.Row
+            row = conn.execute("SELECT * FROM reading_attempts WHERE attempt_id=?", (attempt_id,)).fetchone()
+        if not row:
+            return "Attempt not found", 404
+
+        content_id = row["content_id"]
+        items = cl.load_all()
+        item = items.get(content_id, {"title_en": "Unknown", "title_ar": "غير معروف"})
+
+        cached = _CW_RESULT_CACHE.get(attempt_id, {})
+        detailed = cached.get("detailed", [])
+        errors_saved = cached.get("errors_saved", 0)
+        time_spent = cached.get("time_spent", 0)
+
+        percentage = row["score"]
+        correct = sum(1 for a in detailed if a["correct"])
+        total = len(detailed) or row["total"]
+
+        time_spent_fmt = f"{time_spent // 60:02d}:{time_spent % 60:02d}"
+        finished_at = row["finished_at"] or ""
+
+        return render_template(
+            "reading/cw_result.html",
+            item=item,
+            user_id=tg_id,
+            percentage=percentage,
+            correct=correct,
+            total=total,
+            detailed_answers=detailed,
+            errors_saved=errors_saved,
+            time_spent_fmt=time_spent_fmt,
+            finished_at=finished_at
+        )
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return f"Error: {e}", 500
+
