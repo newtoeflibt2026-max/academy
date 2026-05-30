@@ -43,21 +43,55 @@ def _student_id():
 @reading_bp.route("/")
 def list_content():
     all_items = cl.load_all()
+    sid = _student_id()
+
+    # Fetch best score per content_id for this student
+    best_scores = {}
+    completed_count = 0
+    total_score = 0
+    if sid:
+        conn = _db()
+        rows = conn.execute("""
+            SELECT content_id, MAX(score) as best, COUNT(*) as attempts
+            FROM reading_attempts
+            WHERE student_id=? AND status='submitted'
+            GROUP BY content_id
+        """, (sid,)).fetchall()
+        conn.close()
+        for r in rows:
+            best_scores[r["content_id"]] = {"best": r["best"], "attempts": r["attempts"]}
+            completed_count += 1
+            total_score += r["best"] or 0
+
+    avg_score = (total_score // completed_count) if completed_count else 0
+
     items_by_type = {"academic_reading": [], "daily_reading": [], "complete_words": []}
     for cid, item in all_items.items():
         t = item.get("type", "")
         if t in items_by_type:
+            tier = item.get("tier", "")
+            difficulty = {"tier59": 1, "tier69": 2, "tier90": 3}.get(tier, 2)
+            stats = best_scores.get(item["id"], {})
             items_by_type[t].append({
                 "id": item["id"],
                 "title_ar": item.get("title_ar", ""),
                 "title_en": item.get("title_en", ""),
-                "tier": item.get("tier", ""),
+                "tier": tier,
+                "difficulty": difficulty,
                 "duration_min": int(item.get("duration_seconds", 0)) // 60,
                 "num_questions": len(item.get("questions", [])),
+                "best_score": stats.get("best"),
+                "attempts": stats.get("attempts", 0),
+                "topic": item.get("metadata", {}).get("topic", "General"),
             })
+
     return render_template("reading/list.html",
                            items_by_type=items_by_type,
-                           user_id=_get_tg_id())
+                           user_id=_get_tg_id(),
+                           stats={"completed": completed_count,
+                                  "total_content": len(all_items),
+                                  "avg_score": avg_score,
+                                  "target": 90})
 
 
 # ============================================================
