@@ -58,3 +58,21 @@ Foundation → Reading → Listening → Speaking → Writing → Mock Exam → 
 - Personal Error Log: `student_errors(type, frequency, last_seen)`.
 - Two modes: Practice (with feedback) + Exam (strict simulation).
 - Streak + Daily Goal (Duolingo pattern).
+---
+## 5.2-verify (run on 2026-05-30 16:17)
+- Python detected: `py`
+- Loader smoke test: PASSED (TOTAL_LOADED >= 1)
+- .gitignore installed: hides _*.py, *.bak*, .env, *.db-shm/wal, etc.
+- Commit `5706ea7` (5.1+5.2+BOM fix) confirmed working.
+
+---
+## 5.2-final (run on 2026-05-30 16:22)
+### Evidence of working loader:
+### Actions:
+- Reverted bloated commit `8a38f95` (302 files, 363K lines) via soft reset.
+- Re-committed only `.gitignore` cleanly.
+- Loader API confirmed: module-level functions (`load_all`, `get_by_id`, `list_by_type`, `list_all_types`, `reload`). NO class.
+- Required JSON fields: id, type, title_ar, title_en, tier, duration_seconds, passage, questions.
+- ALLOWED_TYPES: academic_reading, daily_reading, complete_words.
+- ALLOWED_TIERS: tier59, tier69, tier90.
+### Next: Phase 5.3 — exam_screen.html
