@@ -5740,6 +5740,166 @@ try:
 except Exception as _e:
     print(f"[Speaking] Blueprint registration failed: {_e}")
 
+
+
+# ============================================================
+# WELCOME PAGE DATA — صفحة الترحيب والخطة الدراسية الديناميكية
+# ============================================================
+@app.route("/api/student/welcome-data", methods=["GET"])
+def api_student_welcome_data():
+    """يرجع بيانات شاملة وديناميكية لصفحة الترحيب/خطتي الدراسية."""
+    try:
+        student_id = request.args.get("student_id", "").strip()
+        if not student_id:
+            return jsonify({"error": "student_id required"}), 400
+
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+
+        # 1) بيانات الطالب
+        cur.execute("SELECT * FROM students WHERE user_id=? OR telegram_id=?", (student_id, student_id))
+        s = cur.fetchone()
+        if not s:
+            conn.close()
+            return jsonify({"error": "student not found"}), 404
+        student = dict(s)
+
+        # 2) الباقة والأيام المتبقية
+        plan = {"name_ar": "غير مفعّلة", "days_left": 0, "is_active": 0, "end_date": None, "total_days": 0, "days_used": 0}
+        try:
+            cur.execute("""SELECT p.*, pl.name_ar, pl.duration_days
+                           FROM payments p LEFT JOIN plans pl ON p.plan_id=pl.id
+                           WHERE p.student_id=? AND p.status='approved'
+                           ORDER BY p.id DESC LIMIT 1""", (student["user_id"],))
+            row = cur.fetchone()
+            if row:
+                r = dict(row)
+                from datetime import datetime as _dt
+                end_str = r.get("subscription_end") or r.get("end_date")
+                if end_str:
+                    try:
+                        end_dt = _dt.strptime(str(end_str)[:19], "%Y-%m-%d %H:%M:%S")
+                    except Exception:
+                        end_dt = _dt.strptime(str(end_str)[:10], "%Y-%m-%d")
+                    now = _dt.now()
+                    diff = (end_dt - now).days
+                    total = int(r.get("duration_days") or 30)
+                    plan = {
+                        "name_ar": r.get("name_ar") or "اشتراك",
+                        "days_left": max(0, diff),
+                        "is_active": 1 if diff > 0 else 0,
+                        "end_date": str(end_str)[:10],
+                        "total_days": total,
+                        "days_used": max(0, total - diff)
+                    }
+        except Exception as e:
+            print(f"[welcome] plan error: {e}")
+
+        # 3) إحصاءات المحتوى (ديناميكية من قاعدة البيانات)
+        def safe_count(query, params=()):
+            try:
+                cur.execute(query, params)
+                return cur.fetchone()[0] or 0
+            except Exception:
+                return 0
+
+        content = {
+            "reading": {
+                "lessons": safe_count("SELECT COUNT(*) FROM lessons WHERE skill='reading' AND is_active=1"),
+                "daily_life": safe_count("SELECT COUNT(*) FROM reading_daily_life"),
+                "letter_fill": safe_count("SELECT COUNT(*) FROM lesson_letter_fill"),
+                "practice_texts": safe_count("SELECT COUNT(*) FROM lesson_practice_texts"),
+            },
+            "writing": {
+                "lessons": safe_count("SELECT COUNT(*) FROM writing_lessons"),
+                "questions": safe_count("SELECT COUNT(*) FROM writing_questions"),
+                "email_scenarios": safe_count("SELECT COUNT(*) FROM writing_email_scenarios"),
+                "discussion_scenarios": safe_count("SELECT COUNT(*) FROM writing_discussion_scenarios"),
+            },
+            "speaking": {
+                "lessons": safe_count("SELECT COUNT(*) FROM speaking_v2_lessons"),
+                "items": safe_count("SELECT COUNT(*) FROM speaking_v2_items"),
+                "stages": safe_count("SELECT COUNT(*) FROM speaking_v2_stages"),
+            },
+            "foundation": {
+                "mini_lessons": safe_count("SELECT COUNT(*) FROM mini_lessons"),
+                "sentence_lessons": safe_count("SELECT COUNT(*) FROM sentence_foundation_lessons"),
+            },
+            "stages_total": safe_count("SELECT COUNT(*) FROM stages"),
+        }
+
+        # 4) تقدم الطالب
+        uid = student["user_id"]
+        progress = {
+            "reading_attempts": safe_count("SELECT COUNT(*) FROM reading_attempts WHERE user_id=?", (uid,)),
+            "writing_attempts": safe_count("SELECT COUNT(*) FROM writing_attempts WHERE user_id=?", (uid,)),
+            "lesson_attempts": safe_count("SELECT COUNT(*) FROM lesson_attempts WHERE user_id=?", (uid,)),
+            "stage_exams_passed": safe_count("SELECT COUNT(*) FROM stage_exam_attempts WHERE user_id=? AND passed=1", (uid,)),
+            "xp_total": int(student.get("xp_total") or 0),
+            "streak_days": int(student.get("streak_days") or 0),
+        }
+
+        # 5) الحساب الذكي: إيقاع يومي مقترح
+        total_lessons_all = (
+            content["reading"]["lessons"]
+            + content["writing"]["lessons"]
+            + content["speaking"]["lessons"]
+            + content["foundation"]["mini_lessons"]
+        )
+        days_left = plan["days_left"] or 30
+        lessons_per_day = max(1, round(total_lessons_all / max(1, days_left), 1)) if total_lessons_all > 0 else 0
+
+        # 6) معلومات TOEFL iBT 2026 الثابتة
+        toefl_info = {
+            "sections": [
+                {"name_ar": "القراءة", "name_en": "Reading", "minutes": 27, "tasks": ["Complete the Words", "Read in Daily Life", "Read an Academic Passage"]},
+                {"name_ar": "الاستماع", "name_en": "Listening", "minutes": 27, "tasks": ["Listen and Choose a Response", "Listen to a Conversation", "Listen to an Announcement", "Listen to an Academic Talk"]},
+                {"name_ar": "الكتابة", "name_en": "Writing", "minutes": 23, "tasks": ["Build a Sentence", "Write an Email", "Write for an Academic Discussion"]},
+                {"name_ar": "المحادثة", "name_en": "Speaking", "minutes": 8, "tasks": ["Listen and Repeat", "Take an Interview"]},
+            ],
+            "scoring": "Band 1-6 (يعادل CEFR من A1 إلى C2)",
+            "total_time_min": 85,
+        }
+
+        # 7) المسار والهدف
+        path = student.get("placement_path") or "foundation"
+        level = student.get("level") or "beginner"
+        target_score = 79  # هدف TOEFL القياسي
+
+        conn.close()
+        return jsonify({
+            "ok": True,
+            "student": {
+                "user_id": student["user_id"],
+                "name": student.get("full_name") or student.get("first_name") or "طالب",
+                "level": level,
+                "path": path,
+                "placement_score": float(student.get("placement_score") or 0),
+                "target_score": target_score,
+            },
+            "plan": plan,
+            "content": content,
+            "progress": progress,
+            "suggestion": {
+                "lessons_per_day": lessons_per_day,
+                "total_lessons": total_lessons_all,
+                "days_left": days_left,
+            },
+            "toefl_info": toefl_info,
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/welcome", methods=["GET"])
+def page_welcome():
+    """صفحة الترحيب/خطتي الدراسية."""
+    return render_template("welcome.html")
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))

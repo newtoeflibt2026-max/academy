@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>خطتي الدراسية | Yamen Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e27;--bg2:#151b3d;--card:#1a2150;--card2:#222a5e;--accent:#00d4ff;--accent2:#7c3aed;--gold:#fbbf24;--green:#10b981;--red:#ef4444;--txt:#e5e7eb;--muted:#94a3b8;--border:#2d3561}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
+body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%);color:var(--txt);min-height:100vh;padding:20px;line-height:1.6}
+.container{max-width:1200px;margin:0 auto}
+.loading{text-align:center;padding:60px 20px}
+.spinner{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero{background:linear-gradient(135deg,var(--card) 0%,var(--card2) 100%);border-radius:24px;padding:40px;margin-bottom:24px;border:1px solid var(--border);position:relative;overflow:hidden}
+.hero-content{position:relative;z-index:1}
+.greeting{font-size:14px;color:var(--accent);font-weight:500;margin-bottom:8px;letter-spacing:1px}
+.student-name{font-size:36px;font-weight:900;margin-bottom:16px;color:#fff}
+.badges{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.badge{background:rgba(0,212,255,.1);border:1px solid var(--accent);padding:8px 16px;border-radius:50px;font-size:13px;font-weight:600;color:var(--accent)}
+.badge.gold{background:rgba(251,191,36,.1);border-color:var(--gold);color:var(--gold)}
+.badge.green{background:rgba(16,185,129,.1);border-color:var(--green);color:var(--green)}
+.badge.purple{background:rgba(124,58,237,.15);border-color:var(--accent2);color:#a78bfa}
+.badge.red{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)}
+.countdown-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.countdown-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center}
+.countdown-num{font-size:42px;font-weight:900;color:var(--gold);line-height:1}
+.countdown-label{font-size:13px;color:var(--muted);margin-top:6px}
+.section{margin-bottom:32px}
+.section-title{font-size:22px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-title .icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.toefl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.toefl-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;transition:transform .2s,border-color .2s}
+.toefl-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.toefl-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.toefl-card .name{font-size:18px;font-weight:700}
+.toefl-card .time{background:rgba(0,212,255,.1);color:var(--accent);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.toefl-card .tasks{list-style:none;padding:0}
+.toefl-card .tasks li{padding:8px 0;font-size:14px;color:var(--muted);border-bottom:1px dashed var(--border)}
+.toefl-card .tasks li:last-child{border-bottom:0}
+.toefl-card .tasks li::before{content:"▸ ";color:var(--accent);font-weight:700}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px}
+.skill-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.skill-name{font-size:18px;font-weight:700}
+.skill-count{font-size:24px;font-weight:900;color:var(--accent)}
+.skill-count small{font-size:14px;color:var(--muted);font-weight:500}
+.progress-bar{height:10px;background:var(--bg);border-radius:10px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:10px;transition:width .8s ease}
+.skill-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
+.skill-tag{display:inline-block;padding:3px 10px;background:rgba(124,58,237,.15);color:#a78bfa;border-radius:10px;font-size:11px;font-weight:600;margin-top:6px}
+.coming-soon{opacity:.65}
+.coming-soon .skill-count{color:var(--muted)}
+.journey{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px}
+.journey-bar{display:flex;align-items:center;justify-content:space-between;position:relative;margin:30px 0 20px}
+.journey-bar::before{content:"";position:absolute;top:50%;left:5%;right:5%;height:3px;background:var(--border);transform:translateY(-50%);z-index:0}
+.j-step{position:relative;z-index:1;text-align:center;flex:1}
+.j-circle{width:56px;height:56px;background:var(--bg);border:3px solid var(--border);border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:var(--muted)}
+.j-circle.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent);color:#fff}
+.j-circle.done{background:var(--green);border-color:var(--green);color:#fff}
+.j-label{font-size:12px;color:var(--muted);font-weight:600}
+.j-step.active .j-label{color:var(--accent)}
+.reminder{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(124,58,237,.1));border:1px solid var(--accent);border-radius:18px;padding:24px;text-align:center}
+.reminder-num{font-size:48px;font-weight:900;color:var(--accent);margin:8px 0}
+.reminder-text{font-size:15px;color:var(--txt);line-height:1.7}
+.reminder-text strong{color:var(--gold)}
+.scoring{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px}
+.band-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:16px}
+.band{text-align:center;padding:12px 4px;border-radius:10px;background:var(--bg);border:1px solid var(--border)}
+.band-num{font-size:18px;font-weight:900;color:var(--accent)}
+.band-cefr{font-size:11px;color:var(--muted);margin-top:4px}
+.cta-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.btn{padding:16px 24px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;cursor:pointer;border:none;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-secondary{background:rgba(255,255,255,.06);color:var(--txt);border:1px solid var(--border)}
+@media(max-width:640px){.student-name{font-size:26px}.countdown-num{font-size:32px}.cta-row{grid-template-columns:1fr}.band-row{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="container">
+<div id="loading" class="loading"><div class="spinner"></div><p style="color:var(--muted)">جاري تحميل خطتك...</p></div>
+<div id="content" style="display:none"></div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const STUDENT_ID = params.get('student_id') || params.get('user_id') || '';
+
+async function loadWelcome(){
+  if(!STUDENT_ID){
+    document.getElementById('loading').innerHTML = '<p style="color:#ef4444">معرف الطالب مفقود</p>';
+    return;
+  }
+  try{
+    const r = await fetch('/api/student/welcome-data?student_id=' + STUDENT_ID);
+    const d = await r.json();
+    if(!d.ok){ throw new Error(d.error || 'فشل تحميل البيانات'); }
+    render(d);
+  }catch(e){
+    document.getElementById('loading').innerHTML = '<p style="color:#ef4444">خطأ: ' + e.message + '</p>';
+  }
+}
+
+function levelArabic(level){
+  const m = {beginner:'مبتدئ',foundation:'تأسيسي',intermediate:'متوسط',advanced:'متقدم',expert:'خبير'};
+  return m[level] || level;
+}
+function pathArabic(p){
+  const m = {foundation:'المسار التأسيسي',intermediate:'المسار المتوسط',advanced:'المسار المتقدم',academic:'المسار الأكاديمي'};
+  return m[p] || p;
+}
+function cefrFromScore(s){
+  if(s>=95) return {band:'C1+'};
+  if(s>=72) return {band:'B2'};
+  if(s>=46) return {band:'B1'};
+  if(s>=20) return {band:'A2'};
+  return {band:'A1'};
+}
+function userBandIndex(s){
+  if(s>=95) return 5;
+  if(s>=72) return 3;
+  if(s>=46) return 2;
+  if(s>=20) return 1;
+  return 0;
+}
+
+function skillCard(name, icon, total, attempts, available){
+  const pct = total > 0 ? Math.min(100, Math.round((attempts/total)*100)) : 0;
+  const soon = !available;
+  return '<div class="skill-card ' + (soon?'coming-soon':'') + '">' +
+    '<div class="top"><div><div class="skill-name">' + icon + ' ' + name + '</div>' +
+    (soon?'<span class="skill-tag">قريباً - قيد التحضير</span>':'') + '</div>' +
+    '<div class="skill-count">' + total + '<small> درس</small></div></div>' +
+    '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+    '<div class="skill-meta"><span>أنجزت: ' + attempts + '</span><span>' + pct + '%</span></div></div>';
+}
+</script>
+<script>
+function render(d){
+  const s = d.student, plan = d.plan, c = d.content, prog = d.progress, sug = d.suggestion;
+  const cefr = cefrFromScore(s.placement_score);
+  const userBand = userBandIndex(s.placement_score);
+
+  const totalReading = c.reading.lessons + c.reading.daily_life + c.reading.letter_fill;
+  const totalWriting = c.writing.lessons;
+  const totalSpeaking = c.speaking.lessons;
+  const totalListening = 0;
+
+  let html = '';
+
+  // HERO
+  html += '<div class="hero"><div class="hero-content">';
+  html += '<div class="greeting">مرحباً بك في رحلتك نحو TOEFL iBT</div>';
+  html += '<h1 class="student-name">' + s.name + '</h1>';
+  html += '<div class="badges">';
+  html += '<span class="badge">المستوى: ' + levelArabic(s.level) + ' (' + cefr.band + ')</span>';
+  html += '<span class="badge purple">' + pathArabic(s.path) + '</span>';
+  html += '<span class="badge gold">الهدف: ' + s.target_score + '/120</span>';
+  if(plan.is_active){
+    html += '<span class="badge green">' + plan.name_ar + '</span>';
+  }else{
+    html += '<span class="badge red">اشتراك منتهي</span>';
+  }
+  html += '</div>';
+  html += '<div class="countdown-row">';
+  html += '<div class="countdown-card"><div class="countdown-num">' + plan.days_left + '</div><div class="countdown-label">يوم متبقي من اشتراكك</div></div>';
+  html += '<div class="countdown-card"><div class="countdown-num">' + prog.xp_total + '</div><div class="countdown-label">نقطة خبرة (' + prog.streak_days + ' يوم متتالي)</div></div>';
+  html += '</div></div></div>';
+
+  // TOEFL
+  html += '<div class="section"><h2 class="section-title"><span class="icon">T</span> هيكل امتحان TOEFL iBT 2026</h2><div class="toefl-grid">';
+  d.toefl_info.sections.forEach(function(sec){
+    html += '<div class="toefl-card"><div class="head">';
+    html += '<div class="name">' + sec.name_ar + '<br><small style="color:var(--muted);font-weight:400">' + sec.name_en + '</small></div>';
+    html += '<div class="time">' + sec.minutes + ' د</div></div><ul class="tasks">';
+    sec.tasks.forEach(function(t){ html += '<li>' + t + '</li>'; });
+    html += '</ul></div>';
+  });
+  html += '</div><div style="text-align:center;margin-top:14px;color:var(--muted);font-size:13px">المدة الإجمالية: <strong style="color:var(--accent)">' + d.toefl_info.total_time_min + ' دقيقة</strong> | التقييم: ' + d.toefl_info.scoring + '</div></div>';
+
+  // SKILLS
+  html += '<div class="section"><h2 class="section-title"><span class="icon">B</span> خطتك الدراسية الحالية</h2><div class="skills-grid">';
+  html += skillCard('القراءة Reading', '[R]', totalReading, prog.reading_attempts, totalReading>0);
+  html += skillCard('الاستماع Listening', '[L]', totalListening, 0, totalListening>0);
+  html += skillCard('الكتابة Writing', '[W]', totalWriting, prog.writing_attempts, totalWriting>0);
+  html += skillCard('المحادثة Speaking', '[S]', totalSpeaking, 0, totalSpeaking>0);
+  html += '</div></div>';
+
+  // JOURNEY
+  html += '<div class="section"><h2 class="section-title"><span class="icon">M</span> خريطة رحلتك</h2><div class="journey"><div class="journey-bar">';
+  html += '<div class="j-step"><div class="j-circle done">v</div><div class="j-label">تحديد المستوى</div></div>';
+  html += '<div class="j-step"><div class="j-circle ' + (plan.is_active?'done':'') + '">' + (plan.is_active?'v':'2') + '</div><div class="j-label">اختيار الباقة</div></div>';
+  html += '<div class="j-step active"><div class="j-circle active">3</div><div class="j-label">الدراسة الآن</div></div>';
+  html += '<div class="j-step"><div class="j-circle">4</div><div class="j-label">امتحانات المراحل</div></div>';
+  html += '<div class="j-step"><div class="j-circle">5</div><div class="j-label">بوابة التخرج</div></div>';
+  html += '</div><p style="text-align:center;color:var(--muted);font-size:14px;margin-top:14px">أنت الآن في <strong style="color:var(--accent)">المرحلة 3</strong> — استمر بالدراسة اليومية للوصول إلى هدفك ' + s.target_score + '/120</p></div></div>';
+
+  // REMINDER
+  html += '<div class="section"><h2 class="section-title"><span class="icon">!</span> إيقاعك المثالي</h2>';
+  html += '<div class="reminder"><div style="font-size:14px;color:var(--muted)">لإكمال خطتك قبل انتهاء الاشتراك</div>';
+  html += '<div class="reminder-num">' + sug.lessons_per_day + '</div>';
+  html += '<div class="reminder-text">درس يومياً تقريباً | <strong>' + sug.total_lessons + '</strong> درس إجمالي | <strong>' + sug.days_left + '</strong> يوم متبقي</div></div></div>';
+
+  // SCORING
+  html += '<div class="section"><h2 class="section-title"><span class="icon">#</span> نظام التقييم الجديد</h2><div class="scoring">';
+  html += '<p style="color:var(--muted);font-size:14px">TOEFL iBT يستخدم الآن نظام الدرجات من <strong style="color:var(--accent)">1 إلى 6</strong> (Band Score) المتوافق مع المعيار الأوروبي CEFR:</p>';
+  html += '<div class="band-row">';
+  const cefrs = ['A1','A2','B1','B2','C1','C2'];
+  for(let i=0;i<6;i++){
+    const here = (i===userBand);
+    html += '<div class="band" style="' + (here?'border-color:var(--accent)':'') + '"><div class="band-num">' + (i+1) + '</div><div class="band-cefr">' + cefrs[i] + (here?' (أنت)':'') + '</div></div>';
+  }
+  html += '</div></div></div>';
+
+  // CTA
+  html += '<div class="cta-row">';
+  html += '<a href="/student?student_id=' + s.user_id + '" class="btn btn-primary">ابدأ الدراسة الآن</a>';
+  html += '<a href="/student?student_id=' + s.user_id + '#progress" class="btn btn-secondary">عرض تقدمي التفصيلي</a>';
+  html += '</div>';
+
+  html += '<p style="text-align:center;color:var(--muted);font-size:12px;margin-top:30px">يمكنك العودة إلى هذه الصفحة في أي وقت عبر زر "خطتي" في لوحتك</p>';
+
+  document.getElementById('loading').style.display = 'none';
+  const ct = document.getElementById('content');
+  ct.style.display = 'block';
+  ct.innerHTML = html;
+}
+
+loadWelcome();
+</script>
+</body>
+</html>
