@@ -4376,15 +4376,18 @@ def api_admin_student_deep_analysis(user_id):
             return jsonify({"ok": False, "error": "student not found"}), 404
         student = dict(s)
 
-        # === lesson_attempts aggregate ===
-        cur.execute("""SELECT COUNT(*) AS attempts,
-                              COALESCE(SUM(total_questions),0) AS total_q,
-                              COALESCE(SUM(correct_count),0)   AS correct_q,
-                              COALESCE(AVG(score_percent),0)   AS avg_score,
-                              COALESCE(SUM(CASE WHEN passed=1 THEN 1 ELSE 0 END),0) AS passed_cnt,
-                              MAX(finished_at) AS last_at
-                       FROM lesson_attempts WHERE telegram_id=?""", (user_id,))
-        la = dict(cur.fetchone())
+        # === lesson_attempts aggregate (SAFE) ===
+        try:
+            cur.execute("""SELECT COUNT(*) AS attempts,
+                                  COALESCE(SUM(total_questions),0) AS total_q,
+                                  COALESCE(SUM(correct_count),0)   AS correct_q,
+                                  COALESCE(AVG(score_percent),0)   AS avg_score,
+                                  COALESCE(SUM(CASE WHEN passed=1 THEN 1 ELSE 0 END),0) AS passed_cnt,
+                                  MAX(finished_at) AS last_at
+                           FROM lesson_attempts WHERE telegram_id=?""", (user_id,))
+            la = dict(cur.fetchone())
+        except sqlite3.OperationalError:
+            la = {"attempts": 0, "total_q": 0, "correct_q": 0, "avg_score": 0, "passed_cnt": 0, "last_at": None}
 
         # Estimate time from started/finished
         cur.execute("""SELECT started_at, finished_at FROM lesson_attempts
@@ -4400,32 +4403,41 @@ def api_admin_student_deep_analysis(user_id):
             except Exception:
                 pass
 
-        # === writing_attempts aggregate ===
-        cur.execute("""SELECT COUNT(*) AS attempts,
-                              COALESCE(AVG(ai_score),0) AS avg_ai,
-                              COALESCE(SUM(time_spent_sec),0) AS total_time,
-                              COALESCE(SUM(CASE WHEN is_correct=1 THEN 1 ELSE 0 END),0) AS correct
-                       FROM writing_attempts WHERE telegram_id=?""", (user_id,))
-        wa = dict(cur.fetchone())
+        # === writing_attempts aggregate (SAFE) ===
+        try:
+            cur.execute("""SELECT COUNT(*) AS attempts,
+                                  COALESCE(AVG(ai_score),0) AS avg_ai,
+                                  COALESCE(SUM(time_spent_sec),0) AS total_time,
+                                  COALESCE(SUM(CASE WHEN is_correct=1 THEN 1 ELSE 0 END),0) AS correct
+                           FROM writing_attempts WHERE telegram_id=?""", (user_id,))
+            wa = dict(cur.fetchone())
+        except sqlite3.OperationalError:
+            wa = {"attempts": 0, "avg_ai": 0, "total_time": 0, "correct": 0}
 
-        # === reading_attempts aggregate ===
-        cur.execute("""SELECT COUNT(*) AS attempts,
-                              COALESCE(SUM(score),0) AS correct_total,
-                              COALESCE(SUM(total),0) AS q_total
-                       FROM reading_attempts WHERE student_id=?""", (user_id,))
-        ra = dict(cur.fetchone())
+        # === reading_attempts aggregate (SAFE) ===
+        try:
+            cur.execute("""SELECT COUNT(*) AS attempts,
+                                  COALESCE(SUM(score),0) AS correct_total,
+                                  COALESCE(SUM(total),0) AS q_total
+                           FROM reading_attempts WHERE student_id=?""", (user_id,))
+            ra = dict(cur.fetchone())
+        except sqlite3.OperationalError:
+            ra = {"attempts": 0, "correct_total": 0, "q_total": 0}
 
-        # === stage exams ===
-        cur.execute("""SELECT stage_id,
-                              MAX(score) AS best_score,
-                              COUNT(*)   AS attempts_count,
-                              MAX(CASE WHEN passed=1 THEN 1 ELSE 0 END) AS ever_passed,
-                              MAX(created_at) AS last_at,
-                              MAX(total_questions) AS total_q,
-                              MAX(correct_count) AS correct_q
-                       FROM stage_exam_attempts WHERE telegram_id=?
-                       GROUP BY stage_id ORDER BY stage_id""", (user_id,))
-        stage_exams = [dict(r) for r in cur.fetchall()]
+        # === stage exams (SAFE) ===
+        try:
+            cur.execute("""SELECT stage_id,
+                                  MAX(score) AS best_score,
+                                  COUNT(*)   AS attempts_count,
+                                  MAX(CASE WHEN passed=1 THEN 1 ELSE 0 END) AS ever_passed,
+                                  MAX(created_at) AS last_at,
+                                  MAX(total_questions) AS total_q,
+                                  MAX(correct_count) AS correct_q
+                           FROM stage_exam_attempts WHERE telegram_id=?
+                           GROUP BY stage_id ORDER BY stage_id""", (user_id,))
+            stage_exams = [dict(r) for r in cur.fetchall()]
+        except sqlite3.OperationalError:
+            stage_exams = []
 
         # === Frequent errors (from lesson_attempts answers_json) ===
         cur.execute("SELECT answers_json FROM lesson_attempts WHERE telegram_id=? AND answers_json IS NOT NULL", (user_id,))
