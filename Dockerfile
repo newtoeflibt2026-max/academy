@@ -15,4 +15,3 @@ COPY . .
 EXPOSE 8080
 
 CMD ["python", "main.py"]
-# Force rebuild: 20260605_004259
