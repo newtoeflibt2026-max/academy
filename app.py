@@ -4284,7 +4284,7 @@ def api_admin_lock_graduation(user_id):
 def api_admin_change_student_path(user_id):
     try:
         data = request.get_json(silent=True) or {}
-        new_path = (data.get("path") or "").strip()
+        new_path = (data.get("new_path") or data.get("path") or "").strip()
         if not new_path: return jsonify({"error": "path required"}), 400
         conn = _miniapp_db(); cur = conn.cursor()
         cur.execute("UPDATE students SET current_path=? WHERE user_id=?", (new_path, user_id))
