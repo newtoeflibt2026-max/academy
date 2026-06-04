@@ -1,0 +1,112 @@
+{
+  "stage_id": 5,
+  "stage_code": "academic_talk",
+  "title_ar": "المرحلة 5: المحاضرات الأكاديمية",
+  "title_en": "Stage 5: Academic Talks",
+  "description_ar": "محاضرات أكاديمية (100-250 كلمة) من تخصصات متنوعة. 4 أسئلة لكل محاضرة تغطي: الفكرة الرئيسية، التفاصيل، المفردات، الاستنتاج، الغرض.",
+  "intro_lesson": {
+    "title_ar": "استراتيجيات المحاضرات الأكاديمية",
+    "coach_notes_ar": [
+      "المحاضرة طويلة - استمع بنشاط ودوّن نقاطاً، لا جملاً كاملة.",
+      "من أول 15 ثانية: حدد الموضوع الرئيسي والعنوان المحتمل.",
+      "انتبه لكلمات الربط: First, however, therefore, in contrast, for example - تكشف بنية المحاضرة.",
+      "رموز سريعة: arrow (يؤدي إلى)، up (يزداد)، down (ينقص)، vs (مقابل)، eg (مثال).",
+      "الأسئلة تتبع الترتيب الزمني للمحاضرة - استخدم ملاحظاتك بالتسلسل.",
+      "للمفردات: المعنى من السياق، ليس من الترجمة الحرفية.",
+      "لأسئلة الاستنتاج: ما لم يُقَل صراحةً لكنه واضح من المنطق.",
+      "خطأ شائع: حفظ التفاصيل ونسيان الفكرة الكبرى. ابدأ بالخريطة، ثم التفاصيل."
+    ]
+  },
+  "talks": [
+    {
+      "id": "talk_01",
+      "level": "easy",
+      "subject_ar": "علم الأحياء",
+      "title_ar": "هجرة الفراشات الملكية",
+      "audio_url": "TELEGRAM_URL_TALK_01",
+      "transcript_en": "Today we will discuss one of the most remarkable journeys in the animal kingdom: the migration of the monarch butterfly. Every autumn, millions of monarchs travel from Canada and the northern United States to the forests of central Mexico, a distance of up to four thousand kilometers. What makes this journey extraordinary is that no single butterfly completes the round trip. Instead, the migration spans four generations. The butterflies that arrive in Mexico have never been there before, yet they find the exact same forests their great-grandparents left months earlier. Scientists still debate how they navigate. Current theories suggest a combination of the sun's position, the Earth's magnetic field, and an internal genetic clock. However, the monarchs face serious threats today. Deforestation in Mexico, pesticide use in farmland, and climate change have caused their population to drop by over eighty percent in the past two decades. Conservation efforts now focus on protecting milkweed, the only plant where monarchs lay their eggs, and creating safe corridors along their migration route.",
+      "transcript_ar": "محاضرة عن هجرة الفراشات الملكية من كندا إلى المكسيك عبر أربعة أجيال، والتهديدات التي تواجهها.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the main topic of the lecture?", "options": ["The diet of monarch butterflies", "The migration of monarch butterflies and threats to it", "How to raise butterflies at home", "Differences between butterflies and moths"], "correct_index": 1, "explanation_ar": "المحاضرة تركز على الهجرة والتهديدات."},
+        {"q_type": "detail", "question_en": "How many generations does the migration span?", "options": ["Two", "Three", "Four", "Five"], "correct_index": 2, "explanation_ar": "ذُكر بوضوح the migration spans four generations."},
+        {"q_type": "detail", "question_en": "By approximately how much has the monarch population dropped?", "options": ["Twenty percent", "Fifty percent", "Eighty percent", "Ninety-five percent"], "correct_index": 2, "explanation_ar": "ذُكر drop by over eighty percent in the past two decades."},
+        {"q_type": "purpose", "question_en": "Why does the professor mention milkweed?", "options": ["It is harmful to butterflies", "It is the only plant where monarchs lay their eggs", "It causes deforestation", "It is used as a pesticide"], "correct_index": 1, "explanation_ar": "ذُكر صراحةً milkweed, the only plant where monarchs lay their eggs."}
+      ]
+    },
+    {
+      "id": "talk_02",
+      "level": "easy",
+      "subject_ar": "علم الفلك",
+      "title_ar": "الثقوب السوداء",
+      "audio_url": "TELEGRAM_URL_TALK_02",
+      "transcript_en": "Let us continue our discussion of stellar evolution by exploring one of the universe's most mysterious objects: black holes. A black hole forms when a massive star, at least twenty times the mass of our Sun, exhausts its nuclear fuel and collapses under its own gravity. The result is a region of space where gravity is so strong that nothing, not even light, can escape. The boundary around a black hole is called the event horizon. Anything that crosses this boundary is lost to the outside universe forever. For decades, black holes existed only in theory, predicted by Einstein's equations. The first image of a black hole was captured in 2019, showing the supermassive black hole at the center of the M87 galaxy. This image was constructed from data collected by eight radio telescopes around the world, working together as a single Earth-sized telescope. Interestingly, most large galaxies, including our own Milky Way, have supermassive black holes at their centers. These objects play a major role in how galaxies form and evolve over billions of years.",
+      "transcript_ar": "محاضرة تعرّف بالثقوب السوداء، تكوينها، أفق الحدث، أول صورة عام 2019، ودورها في تطور المجرات.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the lecture primarily about?", "options": ["How stars are born", "The formation, nature, and significance of black holes", "The history of telescopes", "Einstein's life"], "correct_index": 1, "explanation_ar": "المحاضرة تركز على الثقوب السوداء: التكوين والطبيعة والأهمية."},
+        {"q_type": "vocabulary", "question_en": "What does event horizon refer to in the talk?", "options": ["A space telescope", "The boundary around a black hole", "A type of galaxy", "An astronomical event"], "correct_index": 1, "explanation_ar": "ذُكر مباشرة The boundary around a black hole is called the event horizon."},
+        {"q_type": "detail", "question_en": "When was the first image of a black hole captured?", "options": ["2009", "2015", "2019", "2021"], "correct_index": 2, "explanation_ar": "ذُكر first image of a black hole was captured in 2019."},
+        {"q_type": "inference", "question_en": "What can be inferred about the Milky Way?", "options": ["It has no black holes", "It has a supermassive black hole at its center", "It is the largest galaxy", "It is younger than M87"], "correct_index": 1, "explanation_ar": "ذُكر most large galaxies, including our own Milky Way, have supermassive black holes at their centers."}
+      ]
+    },
+    {
+      "id": "talk_03",
+      "level": "medium",
+      "subject_ar": "علم النفس",
+      "title_ar": "نظرية الذاكرة العاملة",
+      "audio_url": "TELEGRAM_URL_TALK_03",
+      "transcript_en": "Today we examine one of the most influential models in cognitive psychology: Baddeley and Hitch's working memory model, proposed in 1974. Before this model, psychologists viewed short-term memory as a single, passive storage system. Baddeley and Hitch argued instead that short-term memory is active and consists of multiple components. The first component is the central executive, which acts like a manager - directing attention and coordinating information. The second is the phonological loop, which handles verbal and auditory information, such as repeating a phone number in your head. The third is the visuospatial sketchpad, responsible for visual and spatial data - imagining a map, for example. Later, in 2000, Baddeley added a fourth component: the episodic buffer, which integrates information from different sources into coherent episodes. What is particularly important about this model is its practical implications. It helps explain why we can simultaneously listen to music while doing math, but struggle to read while having a conversation - both rely on the same verbal component. Understanding working memory has shaped modern teaching methods, especially for students with learning difficulties.",
+      "transcript_ar": "محاضرة عن نموذج Baddeley and Hitch للذاكرة العاملة (1974) ومكوناتها الأربعة وتطبيقاتها التعليمية.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the main purpose of the lecture?", "options": ["To compare long-term and short-term memory", "To introduce the components and importance of the working memory model", "To criticize Baddeley and Hitch's research", "To describe brain anatomy"], "correct_index": 1, "explanation_ar": "المحاضرة تشرح مكونات نموذج الذاكرة العاملة وأهميته."},
+        {"q_type": "detail", "question_en": "Which component handles verbal and auditory information?", "options": ["The central executive", "The phonological loop", "The visuospatial sketchpad", "The episodic buffer"], "correct_index": 1, "explanation_ar": "ذُكر phonological loop, which handles verbal and auditory information."},
+        {"q_type": "detail", "question_en": "When was the episodic buffer added to the model?", "options": ["1974", "1985", "2000", "2010"], "correct_index": 2, "explanation_ar": "ذُكر Later, in 2000, Baddeley added a fourth component: the episodic buffer."},
+        {"q_type": "inference", "question_en": "Why can a person listen to music while doing math but struggle to read while talking?", "options": ["Math is easier than reading", "Music and math use different components, but reading and talking share the verbal component", "Reading requires the visuospatial sketchpad only", "Listening to music is not a real task"], "correct_index": 1, "explanation_ar": "المحاضرة توضح أن المهمتين المتعارضتين تستخدمان نفس المكوّن اللفظي."}
+      ]
+    },
+    {
+      "id": "talk_04",
+      "level": "medium",
+      "subject_ar": "العلوم البيئية",
+      "title_ar": "الشعاب المرجانية وابيضاضها",
+      "audio_url": "TELEGRAM_URL_TALK_04",
+      "transcript_en": "Coral reefs are often called the rainforests of the sea, and for good reason. Although they cover less than one percent of the ocean floor, they support nearly twenty-five percent of all marine species. Today, however, reefs face an existential crisis known as coral bleaching. To understand bleaching, we need to know that corals have a symbiotic relationship with tiny algae called zooxanthellae, which live inside their tissues. These algae give corals their vibrant colors and provide most of their food through photosynthesis. When ocean temperatures rise even slightly - just one or two degrees above normal - corals become stressed and expel the algae, turning ghostly white. Without their algae partners, corals can survive only a few weeks before starving. The largest mass bleaching event in history occurred between 2014 and 2017, affecting over seventy-five percent of the world's reefs. The Great Barrier Reef in Australia lost half of its coral cover during this period. Some scientists are now experimenting with heat-resistant coral species, while others focus on reducing pollution and runoff that weaken reefs further. The race against time is urgent.",
+      "transcript_ar": "محاضرة عن الشعاب المرجانية وعلاقتها التكافلية مع الطحالب وحدث الابيضاض 2014-2017 وجهود الإنقاذ.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the central focus of this lecture?", "options": ["The history of marine biology", "Coral bleaching: its causes, scale, and possible solutions", "Australian tourism and the Great Barrier Reef", "Algae as a food source for humans"], "correct_index": 1, "explanation_ar": "المحاضرة تركز على ابيضاض المرجان وأسبابه وحجمه والحلول."},
+        {"q_type": "vocabulary", "question_en": "What does symbiotic most likely mean in the context of coral and algae?", "options": ["Mutually beneficial", "Competitive", "Random", "Destructive"], "correct_index": 0, "explanation_ar": "السياق يوضح أن الطحالب تعطي الألوان والغذاء والمرجان يعطيها مأوى."},
+        {"q_type": "detail", "question_en": "What percentage of marine species do coral reefs support?", "options": ["About 5%", "About 15%", "About 25%", "About 50%"], "correct_index": 2, "explanation_ar": "ذُكر nearly twenty-five percent of all marine species."},
+        {"q_type": "inference", "question_en": "What can be inferred about the future of coral reefs?", "options": ["They will recover quickly without intervention", "Their survival depends on urgent action against multiple threats", "They are no longer worth saving", "They will only survive in cold waters"], "correct_index": 1, "explanation_ar": "النبرة تؤكد The race against time is urgent وتذكر تعدد التهديدات."}
+      ]
+    },
+    {
+      "id": "talk_05",
+      "level": "difficult",
+      "subject_ar": "الاقتصاد",
+      "title_ar": "أزمة 2008 المالية",
+      "audio_url": "TELEGRAM_URL_TALK_05",
+      "transcript_en": "To understand the 2008 global financial crisis, we must trace its roots back to the early 2000s, when American banks began offering subprime mortgages - loans given to borrowers with poor credit histories and little ability to repay. These risky loans were bundled together into financial products called mortgage-backed securities and sold to investors worldwide, often with misleading high credit ratings. As long as housing prices kept rising, the system appeared stable. However, when prices began to fall in 2006, borrowers started defaulting in large numbers. The crisis reached a tipping point in September 2008, when Lehman Brothers, a major investment bank with one hundred fifty years of history, filed for bankruptcy. Global financial markets nearly collapsed. Governments responded with massive bailouts and stimulus packages - the U.S. alone committed over seven hundred billion dollars. Unemployment soared, millions lost their homes, and trust in financial institutions plummeted. The crisis exposed deep flaws: insufficient regulation, conflicts of interest among credit rating agencies, and the dangerous interconnectedness of global banks. In response, governments introduced reforms like the Dodd-Frank Act in the United States. Yet many economists argue that the underlying vulnerabilities remain, making future crises possible.",
+      "transcript_ar": "محاضرة تشرح أزمة 2008 المالية: القروض عالية المخاطر وانهيار Lehman Brothers والاستجابة الحكومية والإصلاحات.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the main argument of the lecture?", "options": ["Banks should never lend money", "The 2008 crisis was caused by multiple linked failures, and risks may remain", "American housing is the only stable investment", "Lehman Brothers was unfairly blamed"], "correct_index": 1, "explanation_ar": "المحاضرة تربط أسباب الأزمة بعدة إخفاقات وتختم بأن المخاطر لم تختفِ."},
+        {"q_type": "vocabulary", "question_en": "What does subprime most likely mean here?", "options": ["Of the highest quality", "Given to borrowers with poor credit", "Government-issued only", "Free of interest"], "correct_index": 1, "explanation_ar": "السياق يعرّفها loans given to borrowers with poor credit histories."},
+        {"q_type": "detail", "question_en": "What major event marked the tipping point of the crisis?", "options": ["The launch of new banking laws", "The bankruptcy of Lehman Brothers in September 2008", "The election of a new president", "A stock market boom"], "correct_index": 1, "explanation_ar": "ذُكر reached a tipping point in September 2008, when Lehman Brothers filed for bankruptcy."},
+        {"q_type": "inference", "question_en": "What does the professor imply about the Dodd-Frank Act?", "options": ["It completely solved the problem", "It addressed reforms but underlying vulnerabilities remain", "It caused the crisis", "It was never implemented"], "correct_index": 1, "explanation_ar": "ذُكر Yet many economists argue that the underlying vulnerabilities remain."}
+      ]
+    },
+    {
+      "id": "talk_06",
+      "level": "difficult",
+      "subject_ar": "التاريخ",
+      "title_ar": "سقوط الإمبراطورية الرومانية",
+      "audio_url": "TELEGRAM_URL_TALK_06",
+      "transcript_en": "The fall of the Western Roman Empire in 476 CE remains one of history's most debated turning points. Traditional accounts blame barbarian invasions, particularly the Germanic tribes that crossed the Rhine and Danube rivers. However, modern historians view the collapse as the result of long-term internal pressures, with invasions acting merely as the final blow. First, consider economic factors. By the third century, the empire suffered from severe currency devaluation, heavy taxation, and the decline of trade networks that once stretched from Britain to Persia. Wealthy landowners increasingly avoided taxes, shifting the burden onto small farmers, many of whom abandoned their lands. Second, political instability played a major role. Between 235 and 284 CE alone, over fifty emperors ruled - most assassinated. Frequent civil wars drained resources and weakened military discipline. Third, the empire's reliance on barbarian mercenaries created a paradox: the very forces hired to defend Rome eventually turned against it. Some historians also point to environmental factors. Recent studies of tree rings and ice cores suggest climate cooling and plagues, like the Antonine Plague, killed millions and reduced the labor force. Edward Gibbon, the famous eighteenth-century historian, even blamed Christianity for weakening Roman military values - a controversial view still discussed today. The lesson, perhaps, is that great civilizations rarely fall from a single cause; they erode through accumulated failures.",
+      "transcript_ar": "محاضرة عن سقوط الإمبراطورية الرومانية الغربية: العوامل الاقتصادية والسياسية والعسكرية والبيئية وتفسير جيبون.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the lecturer's main thesis?", "options": ["Rome fell solely because of barbarian invasions", "The fall of Rome resulted from multiple long-term internal pressures, not a single cause", "Christianity caused the fall of Rome", "Rome never truly fell"], "correct_index": 1, "explanation_ar": "المحاضر يختم great civilizations rarely fall from a single cause; they erode through accumulated failures."},
+        {"q_type": "detail", "question_en": "How many emperors ruled between 235 and 284 CE?", "options": ["Around 20", "Around 30", "Over 50", "Over 100"], "correct_index": 2, "explanation_ar": "ذُكر over fifty emperors ruled - most assassinated."},
+        {"q_type": "purpose", "question_en": "Why does the lecturer mention tree rings and ice cores?", "options": ["To prove ancient agriculture was advanced", "To support the role of environmental factors like climate and plagues", "To criticize modern historians", "To describe Roman architecture"], "correct_index": 1, "explanation_ar": "ذُكر Recent studies of tree rings and ice cores suggest climate cooling and plagues."},
+        {"q_type": "inference", "question_en": "What can be inferred about the lecturer's view of Edward Gibbon?", "options": ["The lecturer fully agrees with Gibbon", "The lecturer presents Gibbon's view but considers it controversial and not definitive", "The lecturer believes Gibbon was the only correct historian", "The lecturer rejects all of Gibbon's work"], "correct_index": 1, "explanation_ar": "وصف المحاضر رأي جيبون بأنه controversial view still discussed today."}
+      ]
+    }
+  ]
+}

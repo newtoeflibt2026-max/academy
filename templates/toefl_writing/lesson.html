@@ -7,79 +7,90 @@
 body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;padding:20px;color:#1a202c}
 .container{max-width:900px;margin:0 auto}
 .back{display:inline-block;background:#fff;color:#667eea;text-decoration:none;padding:8px 16px;border-radius:8px;margin-bottom:15px;font-weight:600}
-.lesson-card{background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.06);margin-bottom:20px}
-.lesson-card h1{color:#667eea;margin:0 0 10px}
+.lesson-card,.quiz-card{background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.06);margin-bottom:20px}
+.lesson-card h1,.quiz-card h2{color:#667eea;margin:0 0 15px}
 .meta{color:#64748b;font-size:14px;margin-bottom:20px}
 .content{line-height:1.9;font-size:15px}
-.content table{width:100%;border-collapse:collapse;margin:15px 0}
-.content table th,.content table td{padding:8px;border:1px solid #e2e8f0}
-.quiz-card{background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.06);margin-bottom:20px}
-.quiz-card h2{color:#667eea;margin:0 0 15px}
-.question{background:#f7fafc;border-radius:12px;padding:18px;margin-bottom:15px;border-right:4px solid #667eea}
-.question h3{margin:0 0 12px;font-size:16px}
-.options{display:flex;flex-direction:column;gap:8px}
-.option{background:#fff;border:2px solid #e2e8f0;border-radius:8px;padding:10px 14px;cursor:pointer;transition:all .15s}
-.option:hover{border-color:#667eea;background:#eef2ff}
-.option.selected{border-color:#667eea;background:#667eea;color:#fff;font-weight:600}
-.scrambled{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;min-height:50px;padding:12px;background:#fff;border:2px dashed #cbd5e0;border-radius:8px}
-.word-chip{background:#667eea;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;user-select:none;transition:all .15s}
+.question{background:#f7fafc;border-radius:12px;padding:18px;margin-bottom:18px;border-right:4px solid #667eea}
+.question h3{margin:0 0 12px;font-size:16px;direction:ltr;text-align:left;color:#1a202c}
+.q-num{color:#667eea;font-weight:bold;margin-left:6px}
+.scrambled{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;min-height:50px;padding:12px;background:#fff;border:2px dashed #cbd5e0;border-radius:8px;direction:ltr}
+.word-chip{background:#667eea;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;user-select:none;transition:all .15s;font-family:'Segoe UI',sans-serif}
 .word-chip:hover{background:#5a67d8;transform:translateY(-2px)}
+.word-chip.used{opacity:0.25;cursor:not-allowed;pointer-events:none}
 .answer-area{display:flex;flex-wrap:wrap;gap:8px;min-height:50px;padding:12px;background:#eef2ff;border:2px solid #667eea;border-radius:8px;margin-top:10px;direction:ltr}
 .answer-area .word-chip{background:#10b981}
-.answer-area .word-chip:hover{background:#0e9f6e}
+.answer-area .word-chip:hover{background:#dc2626}
+.answer-hint{font-size:12px;color:#64748b;margin-top:6px;text-align:left;direction:ltr}
 .btn-primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:14px 36px;font-size:16px;font-weight:600;border-radius:10px;cursor:pointer;transition:all .2s;display:inline-block;text-decoration:none}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(102,126,234,0.4)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
-.result-card{background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.06);text-align:center;display:none}
+.result-card{background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.06);text-align:center;display:none;margin-bottom:20px}
 .score-circle{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;font-size:28px;font-weight:bold;color:#fff}
-.score-pass{background:#10b981}
-.score-fail{background:#ef4444}
-.feedback-item{text-align:right;background:#f7fafc;border-radius:10px;padding:14px;margin-top:10px;border-right:4px solid #cbd5e0}
-.feedback-item.correct{border-right-color:#10b981}
-.feedback-item.wrong{border-right-color:#ef4444}
-.feedback-item .ans{color:#64748b;font-size:13px;margin-top:6px;direction:ltr;text-align:left}
-.feedback-item .expl{color:#667eea;font-size:13px;margin-top:6px}
+.score-pass{background:#10b981}.score-fail{background:#ef4444}
+.feedback-item{text-align:right;background:#f7fafc;border-radius:10px;padding:16px;margin-top:12px;border-right:4px solid #cbd5e0}
+.feedback-item.correct{border-right-color:#10b981;background:#f0fdf4}
+.feedback-item.wrong{border-right-color:#ef4444;background:#fef2f2}
+.fb-line{margin-top:8px;font-size:14px;line-height:1.7}
+.fb-line.en{direction:ltr;text-align:left;font-family:'Segoe UI',sans-serif;background:#fff;padding:8px 12px;border-radius:6px;border:1px solid #e2e8f0}
+.fb-label{color:#667eea;font-weight:bold}
 </style>
 </head>
 <body>
+<div style="position:fixed;top:15px;left:15px;z-index:9999;">
+  <a href="/writing/stage/{{ lesson.stage_id }}?user_id={{ user_id }}"
+     style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#fff;border:2px solid #667eea;color:#667eea;text-decoration:none;border-radius:10px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+     <span style="font-size:18px;">←</span><span>رجوع</span>
+  </a>
+</div>
+
 <div class="container">
 <a href="/writing/stage/{{ stage.id }}?user_id={{ user_id }}" class="back">← العودة للمرحلة</a>
 
 <div class="lesson-card">
 <h1>{{ lesson.title_ar }}</h1>
-<div class="meta">⏱ {{ lesson.duration_min }} دقائق{% if is_exam %} • امتحان المرحلة{% endif %}</div>
+<div class="meta">⏱ {{ lesson.duration_min }} دقائق</div>
 <div class="content">{{ lesson.content_html|safe }}</div>
+{% if not questions or questions|length == 0 %}
+<div style="text-align:center;margin:25px 0;">
+  <button onclick="finishReadingLesson()" id="finish-reading-btn"
+          style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:16px 40px;font-size:17px;font-weight:700;border-radius:12px;cursor:pointer;box-shadow:0 6px 18px rgba(16,185,129,0.35);">
+    ✅ أنهيت الدرس - الانتقال للدرس التالي
+  </button>
+</div>
+{% endif %}
 </div>
 
 {% if questions %}
 <div class="quiz-card" id="quiz">
-<h2>📝 الأسئلة ({{ questions|length }})</h2>
+<h2>📝 Practice Exercises ({{ questions|length }})</h2>
+<p style="color:#64748b;text-align:right;margin-bottom:20px">اضغط على الكلمة لإضافتها للإجابة، واضغط عليها مرة أخرى في منطقة الإجابة لإرجاعها.</p>
 <div id="questions-list">
 {% for q in questions %}
-<div class="question" data-qid="{{ q.id }}" data-qtype="{{ q.q_type }}" data-correct="{{ q.correct_answer|e }}">
-<h3>{{ loop.index }}. {{ q.question_ar }}</h3>
+<div class="question" data-qid="{{ q.id }}" data-qtype="{{ q.q_type }}"
+     data-correct="{{ q.correct_answer|e }}"
+     data-translation="{{ q.arabic_translation|e }}"
+     data-rule="{{ q.rule_applied|e }}"
+     data-strategy="{{ q.strategy_ar|e }}"
+     data-explanation="{{ q.explanation_ar|e }}"
+     data-error="{{ q.common_error_ar|e }}"
+     data-hint="{{ q.hint_ar|e }}">
+<h3><span class="q-num">{{ loop.index }}.</span> Rearrange the words to form a correct English sentence:</h3>
 
-{% if q.q_type == 'mcq' %}
-<div class="options">
-{% set opts = q.options_json|fromjson if q.options_json else [] %}
-{% for opt in opts %}
-<div class="option" onclick="selectOption(this)" data-value="{{ opt|e }}">{{ opt }}</div>
-{% endfor %}
-</div>
-
-{% elif q.q_type == 'sentence_order' %}
+{% if q.q_type == 'sentence_order' %}
 {% set words = q.scrambled_words|fromjson if q.scrambled_words else [] %}
 <div class="scrambled" data-words='{{ q.scrambled_words|safe }}'>
-{% for w in words %}<span class="word-chip" onclick="pickWord(this)">{{ w }}</span>{% endfor %}
+{% for w in words %}<span class="word-chip src-chip" data-idx="{{ loop.index0 }}" onclick="pickWord(this)">{{ w }}</span>{% endfor %}
 </div>
-<div class="answer-area" onclick="clearLast(this)" title="انقر على آخر كلمة لإزالتها"></div>
+<div class="answer-area" data-empty="true"></div>
+<div class="answer-hint">💡 Click a word to add it. Click it again in the answer to remove it.</div>
 {% endif %}
 </div>
 {% endfor %}
 </div>
 
 <div style="text-align:center;margin-top:25px">
-<button class="btn-primary" id="submit-btn" onclick="submitAnswers()">📤 تسليم الإجابات</button>
+<button class="btn-primary" id="submit-btn" onclick="submitAnswers()">📤 Submit Answers</button>
 </div>
 </div>
 
@@ -89,77 +100,96 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 <script>
 const LESSON_ID = {{ lesson.id }};
 const USER_ID = "{{ user_id }}";
-const IS_EXAM = {{ 'true' if is_exam else 'false' }};
-const SUBMIT_URL = IS_EXAM
-  ? `/api/writing/stage/{{ stage.id }}/exam/submit`
-  : `/api/writing/lesson/${LESSON_ID}/submit`;
-
-function selectOption(el){
-  const parent = el.parentElement;
-  parent.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-}
+const SUBMIT_URL = `/api/writing/lesson/${LESSON_ID}/submit`;
 
 function pickWord(el){
+  // If chip is already used, ignore
+  if(el.classList.contains('used')) return;
   const question = el.closest('.question');
   const answerArea = question.querySelector('.answer-area');
   if(!answerArea) return;
-  const clone = el.cloneNode(true);
-  clone.onclick = function(){ this.remove(); };
-  answerArea.appendChild(clone);
-  el.style.visibility = 'hidden';
-}
 
-function clearLast(area){
-  // Click on empty area: do nothing. Clicks on chips remove themselves (handled in pickWord).
+  // Create a clone in answer area that knows its source index
+  const clone = document.createElement('span');
+  clone.className = 'word-chip';
+  clone.textContent = el.textContent;
+  clone.dataset.srcIdx = el.dataset.idx;
+  clone.onclick = function(){
+    // Return word to its source position
+    const srcIdx = this.dataset.srcIdx;
+    const src = question.querySelector('.src-chip[data-idx="' + srcIdx + '"]');
+    if(src) src.classList.remove('used');
+    this.remove();
+    updateSubmitState();
+  };
+  answerArea.appendChild(clone);
+  el.classList.add('used');
+  updateSubmitState();
 }
 
 function collectAnswers(){
   const answers = {};
   document.querySelectorAll('.question').forEach(q => {
     const qid = q.dataset.qid;
-    const qtype = q.dataset.qtype;
-    if(qtype === 'mcq'){
-      const sel = q.querySelector('.option.selected');
-      answers[qid] = sel ? sel.dataset.value : '';
-    } else if(qtype === 'sentence_order'){
-      const chips = q.querySelectorAll('.answer-area .word-chip');
-      const words = Array.from(chips).map(c => c.textContent.trim());
-      answers[qid] = JSON.stringify(words);
-    }
+    const chips = q.querySelectorAll('.answer-area .word-chip');
+    const words = Array.from(chips).map(c => c.textContent.trim());
+    answers[qid] = JSON.stringify(words);
   });
   return answers;
 }
 
-function buildNextButton(data){
-  if(data.is_exam){
-    if(data.passed && data.next_stage_id){
-      return `<a href="/writing?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">🎉 ادخل المرحلة التالية</a>`;
-    } else if(data.passed){
-      return `<a href="/writing?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">🏆 أتممت كل المراحل!</a>`;
+function buildFeedback(data){
+  let html = '';
+  (data.feedback || []).forEach((f, i) => {
+    const cls = f.is_correct ? 'correct' : 'wrong';
+    const icon = f.is_correct ? '✅' : '❌';
+    let body = `<div><b>${icon} Question ${i+1}</b></div>`;
+    if(f.is_correct){
+      body += `<div class="fb-line en"><b>${f.correct_answer || ''}</b></div>`;
+      if(f.arabic_translation) body += `<div class="fb-line">🌍 <span class="fb-label">الترجمة:</span> ${f.arabic_translation}</div>`;
     } else {
-      return `<button onclick="location.reload()" class="btn-primary">🔄 إعادة الامتحان (تحتاج ${data.threshold}%)</button>`;
+      if(f.user_answer) body += `<div class="fb-line en" style="color:#dc2626"><s>${f.user_answer}</s></div>`;
+      body += `<div class="fb-line en" style="color:#059669"><b>✓ ${f.correct_answer || ''}</b></div>`;
+      if(f.arabic_translation) body += `<div class="fb-line">🌍 <span class="fb-label">الترجمة:</span> ${f.arabic_translation}</div>`;
+      if(f.rule_applied) body += `<div class="fb-line">📐 <span class="fb-label">القاعدة:</span> ${f.rule_applied}</div>`;
+      if(f.strategy_ar) body += `<div class="fb-line">🎯 <span class="fb-label">الاستراتيجية:</span> ${f.strategy_ar}</div>`;
+      if(f.explanation_ar) body += `<div class="fb-line">💡 <span class="fb-label">الشرح:</span> ${f.explanation_ar}</div>`;
+      if(f.common_error_ar) body += `<div class="fb-line">⚠️ <span class="fb-label">خطأ شائع:</span> ${f.common_error_ar}</div>`;
+      if(f.hint_ar) body += `<div class="fb-line">💭 <span class="fb-label">تلميح:</span> ${f.hint_ar}</div>`;
     }
-  }
+    html += `<div class="feedback-item ${cls}">${body}</div>`;
+  });
+  return html;
+}
+
+function buildNextButton(data){
   if(data.passed){
     if(data.next_lesson_id){
-      return `<a href="/writing/lesson/${data.next_lesson_id}?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">✅ الدرس التالي ←</a>`;
+      return `<a href="/writing/lesson/${data.next_lesson_id}?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">✅ Next Lesson →</a>`;
     } else if(data.stage_exam_id){
-      return `<a href="/writing/lesson/${data.stage_exam_id}?user_id=${USER_ID}" class="btn-primary" style="background:#8b5cf6">🎯 ابدأ امتحان المرحلة</a>`;
+      return `<a href="/writing/lesson/${data.stage_exam_id}?user_id=${USER_ID}" class="btn-primary" style="background:#8b5cf6">🎯 Start Stage Exam</a>`;
     } else {
-      return `<a href="/writing?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">✅ عُد للمسار</a>`;
+      return `<a href="/writing/stage/${data.stage_id || '{{ stage.id }}'}?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">✅ Back to Stage</a>`;
     }
   }
-  return `<button onclick="location.reload()" class="btn-primary">🔄 حاول مرة أخرى (تحتاج ${data.threshold}%)</button>`;
+  return `<button onclick="location.reload()" class="btn-primary">🔄 Try Again (need ${data.threshold}%)</button>`;
 }
 
 async function submitAnswers(){
   const btn = document.getElementById('submit-btn');
+  // Verify ALL exercises are filled (button enable handled by updateSubmitState)
+  const answers = collectAnswers();
+  const entries = Object.entries(answers);
+  const empty = entries.filter(([k,v]) => {
+    try { return JSON.parse(v).length === 0; } catch(e) { return true; }
+  });
+  if(empty.length > 0){
+    alert('يجب حل جميع التمارين قبل التسليم (' + empty.length + ' فارغة)');
+    return;
+  }
   btn.disabled = true;
-  btn.textContent = 'جاري التصحيح...';
-
+  btn.textContent = 'Checking...';
   try {
-    const answers = collectAnswers();
     const res = await fetch(SUBMIT_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -167,39 +197,25 @@ async function submitAnswers(){
     });
     const data = await res.json();
     console.log('Submit response:', data);
-
     if(!data.success){
       alert('خطأ: ' + (data.error || 'حدث خطأ غير معروف'));
       btn.disabled = false;
-      btn.textContent = '📤 تسليم الإجابات';
+      btn.textContent = '📤 Submit Answers';
       return;
     }
-
     const score = Math.round(data.score || 0);
     const correct = data.correct || 0;
     const total = data.total || 0;
     const passed = data.passed;
-
-    let fbHtml = '';
-    (data.feedback || []).forEach((f, i) => {
-      const cls = f.is_correct ? 'correct' : 'wrong';
-      const icon = f.is_correct ? '✅' : '❌';
-      fbHtml += `<div class="feedback-item ${cls}">
-        <b>${icon} سؤال ${i+1}</b>
-        ${!f.is_correct ? `<div class="ans">الإجابة الصحيحة: <b>${f.correct_answer || ''}</b></div>` : ''}
-        ${f.explanation ? `<div class="expl">💡 ${f.explanation}</div>` : ''}
-      </div>`;
-    });
-
     const resultDiv = document.getElementById('result');
     resultDiv.style.display = 'block';
     resultDiv.innerHTML = `
       <div class="score-circle ${passed ? 'score-pass' : 'score-fail'}">${score}%</div>
       <h2 style="margin:10px 0;color:${passed ? '#10b981' : '#ef4444'}">
-        ${passed ? '🎉 أحسنت! لقد اجتزت' : '💪 لم تنجح، حاول مرة أخرى'}
+        ${passed ? '🎉 Excellent! You passed' : '💪 Keep practicing'}
         (${correct}/${total})
       </h2>
-      <div style="margin:20px 0">${fbHtml}</div>
+      <div style="margin:20px 0">${buildFeedback(data)}</div>
       <div style="text-align:center;margin-top:20px">${buildNextButton(data)}</div>
     `;
     document.getElementById('quiz').style.display = 'none';
@@ -208,9 +224,65 @@ async function submitAnswers(){
     console.error('Submit error:', e);
     alert('خطأ في الاتصال: ' + e.message);
     btn.disabled = false;
-    btn.textContent = '📤 تسليم الإجابات';
+    btn.textContent = '📤 Submit Answers';
   }
 }
+
+function updateSubmitState(){
+  const btn = document.getElementById('submit-btn');
+  if(!btn) return;
+  const answers = collectAnswers();
+  const entries = Object.entries(answers);
+  const filled = entries.filter(([k,v]) => {
+    try { return JSON.parse(v).length > 0; } catch(e) { return false; }
+  }).length;
+  const total = entries.length;
+  if(filled === total && total > 0){
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = '📤 Submit Answers (' + filled + '/' + total + ')';
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.textContent = 'Complete all exercises (' + filled + '/' + total + ')';
+  }
+}
+
+// Wrap pickWord to also refresh submit state
+const _originalPickWord = window.pickWord;
+
+function finishReadingLesson(){
+  const btn = document.getElementById('finish-reading-btn');
+  btn.disabled = true;
+  btn.innerHTML = "⏳ جاري الحفظ...";
+  fetch(SUBMIT_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({user_id: USER_ID, answers: {}})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if(data.success){
+      btn.innerHTML = "✅ تم! جاري الانتقال...";
+      setTimeout(() => {
+        window.location.href = `/writing/stage/{{ lesson.stage_id }}?user_id=${USER_ID}`;
+      }, 800);
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = "✅ أنهيت الدرس - الانتقال للدرس التالي";
+      alert("خطأ: " + (data.error || "غير معروف"));
+    }
+  })
+  .catch(err => {
+    btn.disabled = false;
+    btn.innerHTML = "✅ أنهيت الدرس - الانتقال للدرس التالي";
+    alert("فشل الاتصال: " + err);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', function(){
+  if(document.getElementById('submit-btn')) updateSubmitState();
+});
 </script>
 </body>
 </html>

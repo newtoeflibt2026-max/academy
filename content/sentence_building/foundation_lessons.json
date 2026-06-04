@@ -1,0 +1,137 @@
+[
+  {
+    "rule_number": 1,
+    "title_ar": "القاعدة الذهبية الأولى: ترتيب الجملة الأساسي",
+    "title_en": "Rule 1: Basic Sentence Order (SVO)",
+    "rule_ar": "كل جملة إنجليزية تتكوّن من ثلاثة أجزاء بهذا الترتيب: الفاعل ثم الفعل ثم المفعول به. هذا الترتيب لا يتغيّر أبداً في الجمل العادية.",
+    "rule_en": "Every English sentence follows this order: Subject + Verb + Object (SVO).",
+    "formula": "Subject (S) + Verb (V) + Object (O)",
+    "examples": [
+      {
+        "en": "I eat apples.",
+        "ar": "أنا (S) آكل (V) تفاحاً (O)"
+      },
+      {
+        "en": "She loves music.",
+        "ar": "هي (S) تحب (V) الموسيقى (O)"
+      },
+      {
+        "en": "They play football.",
+        "ar": "هم (S) يلعبون (V) كرة القدم (O)"
+      },
+      {
+        "en": "The cat drinks milk.",
+        "ar": "القطة (S) تشرب (V) الحليب (O)"
+      }
+    ],
+    "memory_trick_ar": "احفظ كلمة 'سفو' (SVO): سـ = سَوّاي (الفاعل)، فـ = فِعل، و = وين راح (المفعول). كل جملة لازم تبدأ بالسؤال: من سوّى؟ سوّى إيش؟ في إيش؟"
+  },
+  {
+    "rule_number": 2,
+    "title_ar": "القاعدة الذهبية الثانية: الصفة قبل الاسم",
+    "title_en": "Rule 2: Adjective Before Noun",
+    "rule_ar": "في اللغة الإنجليزية، الصفة تأتي دائماً قبل الاسم الذي تصفه. هذا عكس العربية تماماً.",
+    "rule_en": "In English, the adjective always comes BEFORE the noun.",
+    "formula": "Adjective + Noun",
+    "examples": [
+      {
+        "en": "a red car (سيارة حمراء)",
+        "ar": "صفة (red) + اسم (car)"
+      },
+      {
+        "en": "a beautiful day (يوم جميل)",
+        "ar": "صفة (beautiful) + اسم (day)"
+      },
+      {
+        "en": "an old book (كتاب قديم)",
+        "ar": "صفة (old) + اسم (book)"
+      },
+      {
+        "en": "delicious food (طعام لذيذ)",
+        "ar": "صفة (delicious) + اسم (food)"
+      }
+    ],
+    "memory_trick_ar": "تذكّر: الإنجليزي 'يصف قبل ما يسمّي'. لو شفت كلمتين معاً، الصفة دائماً تسبق الاسم. اقلب الترتيب العربي في رأسك: 'سيارة حمراء' → 'حمراء سيارة' → red car ✅"
+  },
+  {
+    "rule_number": 3,
+    "title_ar": "القاعدة الذهبية الثالثة: السؤال يبدأ بفعل مساعدة",
+    "title_en": "Rule 3: Questions Start with Helping Verb or Wh-Word",
+    "rule_ar": "السؤال في الإنجليزية لا يبدأ بالفاعل، بل يبدأ بـ فعل مساعدة (Do, Does, Is, Are, Can, Will...) أو بكلمة سؤال (What, Where, When, Why, How).",
+    "rule_en": "Questions begin with a helping verb (Do/Does/Is/Are) or a Wh-word (What/Where/When/Why/How).",
+    "formula": "Wh-word/Helper + Subject + Verb + Object?",
+    "examples": [
+      {
+        "en": "Do you like coffee?",
+        "ar": "Do (مساعد) + you (فاعل) + like (فعل) + coffee?"
+      },
+      {
+        "en": "Where is the book?",
+        "ar": "Where (سؤال) + is (مساعد) + the book (فاعل)?"
+      },
+      {
+        "en": "Can she swim?",
+        "ar": "Can (مساعد) + she (فاعل) + swim (فعل)?"
+      },
+      {
+        "en": "What do you want?",
+        "ar": "What (سؤال) + do (مساعد) + you (فاعل) + want (فعل)?"
+      }
+    ],
+    "memory_trick_ar": "قاعدة 'القلب': في الجملة العادية (You like coffee)، لتحويلها لسؤال اقلب الفاعل مع المساعد → (Do you like coffee?). فعل المساعد دائماً يقفز للأمام في السؤال."
+  },
+  {
+    "rule_number": 4,
+    "title_ar": "القاعدة الذهبية الرابعة: النفي يحتاج فعل مساعد",
+    "title_en": "Rule 4: Negation Needs a Helping Verb",
+    "rule_ar": "لنفي الجملة في الإنجليزية، لا يمكنك وضع 'not' مع الفعل الأساسي مباشرة. يجب استخدام فعل مساعد (do not / does not / is not / cannot...) ثم الفعل.",
+    "rule_en": "To make a negative sentence, use a helping verb + not + main verb.",
+    "formula": "Subject + Helper + not + Verb",
+    "examples": [
+      {
+        "en": "I do not like fish.",
+        "ar": "I (فاعل) + do not (مساعد+نفي) + like (فعل) + fish"
+      },
+      {
+        "en": "She does not work here.",
+        "ar": "She (فاعل) + does not + work (فعل)"
+      },
+      {
+        "en": "We cannot go.",
+        "ar": "We + cannot (مساعد+نفي) + go (فعل)"
+      },
+      {
+        "en": "He is not happy.",
+        "ar": "He + is not (نفي) + happy (صفة)"
+      }
+    ],
+    "memory_trick_ar": "تذكّر: 'not' لا تمشي وحدها أبداً مع الفعل العادي. لازم تجلب لها 'صديق مساعد' (do/does/is/can). الخطأ الشائع: 'I not like' ❌ - الصح: 'I do not like' ✅"
+  },
+  {
+    "rule_number": 5,
+    "title_ar": "القاعدة الذهبية الخامسة: ظرف الزمان في النهاية",
+    "title_en": "Rule 5: Time Adverbs Go at the End",
+    "rule_ar": "ظروف الزمان (yesterday, today, tomorrow, last week, in the morning...) تأتي عادة في نهاية الجملة، وليس في البداية أو الوسط.",
+    "rule_en": "Time adverbs (yesterday, today, last week) usually come at the END of the sentence.",
+    "formula": "Subject + Verb + Object + Time",
+    "examples": [
+      {
+        "en": "I went to school yesterday.",
+        "ar": "ذهبت + إلى المدرسة + أمس (في النهاية)"
+      },
+      {
+        "en": "She will call me tomorrow.",
+        "ar": "ستتصل بي + غداً (في النهاية)"
+      },
+      {
+        "en": "We studied English last night.",
+        "ar": "درسنا الإنجليزية + الليلة الماضية"
+      },
+      {
+        "en": "He works in the morning.",
+        "ar": "يعمل + في الصباح (في النهاية)"
+      }
+    ],
+    "memory_trick_ar": "قاعدة 'الذيل': الزمن دائماً 'ذيل' الجملة (في الآخر). لو حسّيت إنه الزمن في البداية بالعربي ('أمس ذهبت')، اقلبه للآخر بالإنجليزي ('I went yesterday'). الزمن دائماً يطلع آخر شي."
+  }
+]

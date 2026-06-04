@@ -1,0 +1,312 @@
+{
+  "_note": "فرصة بحثية | tier90",
+  "scenario": {
+    "code": "research_opportunity",
+    "title_ar": "فرصة بحثية",
+    "title_en": "Research Opportunity Application",
+    "scenario_text": "Your department announced a research assistant position with Professor Johnson, whose work in environmental science aligns with your interests. The position requires strong analytical skills and previous research experience. Write an email expressing your interest in the position.",
+    "recipient_role": "Professor (potential supervisor)",
+    "target_tier": "tier90",
+    "min_words": 150,
+    "difficulty": "hard",
+    "order_index": 5,
+    "requirements": [
+      "Express your interest and explain why this research area attracts you",
+      "Describe your relevant background and skills with specific examples",
+      "Propose a time to meet and discuss the opportunity further"
+    ]
+  },
+  "coach_content": {
+    "step1_situation_ar": "أعلن قسمك عن فرصة مساعد باحث مع البروفيسور جونسون في علوم البيئة (مجال تحبه). الوظيفة تتطلب مهارات تحليلية وخبرة بحثية. مهمتك: تكتب إيميلا يقدمك كأفضل مرشح ويفتح باب لقاء.",
+    "step1_situation_en": "Apply for a research assistant position with Prof. Johnson in environmental science.",
+    "step1_recipient_ar": "بروفيسور لم تعمل معه قبلا (مشرف محتمل). يقرأ كثير من الإيميلات يوميا فيجب أن يكون إيميلك متميزا ومركزا.",
+    "step1_tone_ar": "احترافي واستراتيجي. كل جملة لها هدف. اربط شغفك بأبحاثه وخبرتك بمتطلبات الوظيفة.",
+    "step1_goals_json": [
+      {
+        "num": 1,
+        "ar": "أظهر اهتماما عميقا بمجاله البحثي تحديدا",
+        "en": "Show deep interest in his research"
+      },
+      {
+        "num": 2,
+        "ar": "اعرض خلفيتك بأمثلة محددة",
+        "en": "Present background with specifics"
+      },
+      {
+        "num": 3,
+        "ar": "اقترح موعد لقاء لمناقشة الفرصة",
+        "en": "Propose a meeting"
+      }
+    ],
+    "step2_structure_json": [
+      {
+        "part": "1. Greeting",
+        "purpose_ar": "تحية رسمية مع اللقب الأكاديمي",
+        "example_en": "Dear Professor Johnson,",
+        "tip_ar": "اللقب يظهر احتراما للمكانة الأكاديمية."
+      },
+      {
+        "part": "2. Hook",
+        "purpose_ar": "افتتاحية تلفت انتباهه فورا",
+        "example_en": "I was excited to see the announcement about the research assistant position.",
+        "tip_ar": "اذكر ورقة محددة أو موضوعا له."
+      },
+      {
+        "part": "3. Background",
+        "purpose_ar": "عرض الخبرة بأمثلة محددة",
+        "example_en": "I have developed strong analytical skills through coursework and research.",
+        "tip_ar": "كن محددا في المهارات ومصدرها."
+      },
+      {
+        "part": "4. Value Proposition",
+        "purpose_ar": "ماذا ستضيف لمختبره",
+        "example_en": "I believe my background in data analysis would allow me to contribute meaningfully.",
+        "tip_ar": "ركز على ما تقدمه وليس فقط ما تريده."
+      },
+      {
+        "part": "5. Call to Action",
+        "purpose_ar": "اقترح خطوة محددة",
+        "example_en": "Would it be possible to schedule a brief meeting?",
+        "tip_ar": "at your convenience يظهر احتراما لوقته."
+      },
+      {
+        "part": "6. Closing",
+        "purpose_ar": "ختام مع توقع رد",
+        "example_en": "Thank you for your consideration. I have attached my CV.",
+        "tip_ar": "ذكر مرفق وشكر وتوقيع رسمي."
+      }
+    ],
+    "step3_phrases_json": {
+      "greetings": [
+        {
+          "en": "Dear Professor Johnson,",
+          "ar": "عزيزي البروفيسور جونسون،"
+        }
+      ],
+      "hooks": [
+        {
+          "en": "I was excited to see the announcement about the research position.",
+          "ar": "سررت برؤية الإعلان عن وظيفة الباحث."
+        },
+        {
+          "en": "Your recent work aligns directly with my academic interests.",
+          "ar": "عملك الأخير يتماشى مع اهتماماتي."
+        },
+        {
+          "en": "I have been following your research with great interest.",
+          "ar": "أتابع أبحاثك باهتمام كبير."
+        }
+      ],
+      "experience": [
+        {
+          "en": "I have developed strong analytical skills over the past two years.",
+          "ar": "طورت مهارات تحليلية قوية خلال العامين الماضيين."
+        },
+        {
+          "en": "I have hands-on experience with R and Python.",
+          "ar": "لدي خبرة عملية في R و Python."
+        },
+        {
+          "en": "My coursework in statistics has prepared me to contribute.",
+          "ar": "دراستي في الإحصاء أعدتني للمساهمة."
+        }
+      ],
+      "value": [
+        {
+          "en": "I believe my background would allow me to contribute meaningfully.",
+          "ar": "أعتقد أن خلفيتي ستمكنني من المساهمة بفعالية."
+        },
+        {
+          "en": "I am eager to apply my skills to your ongoing research.",
+          "ar": "أتطلع لتطبيق مهاراتي في أبحاثك."
+        }
+      ],
+      "requests": [
+        {
+          "en": "Would it be possible to schedule a brief meeting at your convenience?",
+          "ar": "هل يمكن ترتيب لقاء قصير حسب وقتك المناسب؟"
+        },
+        {
+          "en": "I would welcome the opportunity to discuss how I might contribute.",
+          "ar": "سيشرفني فرصة مناقشة كيف يمكنني المساهمة."
+        }
+      ],
+      "closings": [
+        {
+          "en": "Thank you for your time and consideration.",
+          "ar": "شكرا لوقتك واعتبارك."
+        },
+        {
+          "en": "I look forward to the possibility of working with you.",
+          "ar": "أتطلع لإمكانية العمل معك."
+        }
+      ],
+      "signoffs": [
+        {
+          "en": "Yours sincerely,",
+          "ar": "بإخلاص،"
+        },
+        {
+          "en": "With sincere appreciation,",
+          "ar": "مع خالص التقدير،"
+        }
+      ]
+    },
+    "step4_model_email": "Dear Professor Johnson,\n\nI was excited to see the announcement about the research assistant position in your environmental sustainability lab. Your recent work on coastal ecosystem resilience, particularly the 2025 publication in the Journal of Environmental Science, aligns directly with my own academic interests, and I am writing to formally express my interest in this opportunity.\n\nOver the past two years, I have developed strong analytical skills through coursework in statistical methods, GIS mapping, and ecological modeling. As part of my undergraduate thesis, I independently analyzed a dataset of over 10,000 biodiversity records from Mediterranean coastal regions and presented my findings at the university's annual research symposium. Additionally, I gained hands-on experience with R and Python during a summer internship at the National Marine Institute.\n\nI believe my background in data analysis, combined with my genuine passion for environmental science, would allow me to contribute meaningfully to your ongoing research from the outset. I am particularly interested in expanding my expertise in remote sensing applications, an area in which your lab is widely recognized.\n\nWould it be possible to schedule a brief meeting at your convenience to discuss the position in greater detail? I have attached my CV and a writing sample for your review.\n\nThank you very much for your time and consideration. I look forward to the possibility of working with you.\n\nYours sincerely,\nAhmad Al-Yamani",
+    "step4_annotations_json": [
+      {
+        "line": "I was excited to see the announcement.",
+        "comment_ar": "افتتاحية حماسية ومهنية - excited أفضل من interested الباهت."
+      },
+      {
+        "line": "Your recent work on coastal ecosystem resilience.",
+        "comment_ar": "ذكر نشر محدد دليل قاطع على أنك قرأت أبحاثه (الهدف الأول)."
+      },
+      {
+        "line": "Over the past two years, I have developed strong analytical skills.",
+        "comment_ar": "تأطير الخبرة بإطار زمني ينظم المعلومات."
+      },
+      {
+        "line": "I independently analyzed a dataset of over 10,000 records.",
+        "comment_ar": "رقم محدد (10,000) يعطي مصداقية ويظهر حجم العمل."
+      },
+      {
+        "line": "presented my findings at the annual research symposium.",
+        "comment_ar": "إنجاز ملموس وخبرة عرض جاهز للبيئة الأكاديمية."
+      },
+      {
+        "line": "hands-on experience with R and Python.",
+        "comment_ar": "أدوات محددة وخبرة عمل (الهدف الثاني)."
+      },
+      {
+        "line": "I believe my background would allow me to contribute meaningfully.",
+        "comment_ar": "قيمة مضافة وليس فقط أريد أن أتعلم."
+      },
+      {
+        "line": "Would it be possible to schedule a brief meeting?",
+        "comment_ar": "طلب لقاء بأدب راق (الهدف الثالث)."
+      },
+      {
+        "line": "I have attached my CV and a writing sample.",
+        "comment_ar": "استباق طلباته يظهر تنظيما واحترافية."
+      }
+    ],
+    "step5_fill_template": "Dear Professor _____,\n\nI was excited to see the announcement about _____. Your recent work on _____ aligns directly with my own academic interests.\n\nOver the past _____, I have developed _____ through _____. As part of _____, I _____. Additionally, I gained hands-on experience with _____.\n\nI believe my background in _____ would allow me to contribute meaningfully to _____. I am particularly interested in _____.\n\nWould it be possible to _____ at your convenience? I have attached _____ for your review.\n\nThank you for your time and consideration.\n\nYours sincerely,\n_____",
+    "step5_blanks_hints_json": [
+      {
+        "blank": 1,
+        "hint_ar": "لقب البروفيسور",
+        "example": "Johnson"
+      },
+      {
+        "blank": 2,
+        "hint_ar": "الوظيفة المعلنة",
+        "example": "the research assistant position"
+      },
+      {
+        "blank": 3,
+        "hint_ar": "موضوع بحثي محدد له",
+        "example": "coastal ecosystem resilience"
+      },
+      {
+        "blank": 4,
+        "hint_ar": "الفترة الزمنية لخبرتك",
+        "example": "two years"
+      },
+      {
+        "blank": 5,
+        "hint_ar": "المهارات التي طورتها",
+        "example": "strong analytical skills"
+      },
+      {
+        "blank": 6,
+        "hint_ar": "كيف اكتسبتها",
+        "example": "coursework in statistics and GIS"
+      },
+      {
+        "blank": 7,
+        "hint_ar": "مشروع رئيسي قمت به",
+        "example": "my undergraduate thesis"
+      },
+      {
+        "blank": 8,
+        "hint_ar": "ما أنجزته في المشروع",
+        "example": "analyzed 10,000 records"
+      },
+      {
+        "blank": 9,
+        "hint_ar": "أدوات تقنية تتقنها",
+        "example": "R and Python"
+      },
+      {
+        "blank": 10,
+        "hint_ar": "خلفيتك الرئيسية",
+        "example": "data analysis"
+      },
+      {
+        "blank": 11,
+        "hint_ar": "ما الذي ستساهم به",
+        "example": "your ongoing research"
+      },
+      {
+        "blank": 12,
+        "hint_ar": "مجال محدد في مختبره",
+        "example": "remote sensing applications"
+      },
+      {
+        "blank": 13,
+        "hint_ar": "اقتراحك للقاء",
+        "example": "schedule a brief meeting"
+      },
+      {
+        "blank": 14,
+        "hint_ar": "ما المستندات المرفقة",
+        "example": "my CV and a writing sample"
+      },
+      {
+        "blank": 15,
+        "hint_ar": "اسمك الكامل",
+        "example": "Ahmad Al-Yamani"
+      }
+    ],
+    "step6_checklist_json": [
+      "بدأت بـ Dear Professor مع اللقب",
+      "ذكرت ورقة أو موضوعا محددا من أبحاثه",
+      "أظهرت شغفا صادقا ومحددا",
+      "ذكرت إنجازا قابلا للقياس",
+      "ذكرت أدوات ومهارات محددة",
+      "ربطت خبرتك بمتطلبات الوظيفة",
+      "اقترحت قيمة محددة ستضيفها",
+      "اقترحت لقاء بأدب",
+      "ذكرت مرفقات (CV)",
+      "ختمت بـ Yours sincerely مع الاسم الكامل",
+      "عدد الكلمات لا يقل عن 150",
+      "تنوعت الجمل بين قصيرة ومركبة",
+      "استخدمت مفردات أكاديمية",
+      "لا اختصارات أبدا"
+    ],
+    "common_mistakes_json": [
+      {
+        "wrong": "I saw your job and I want to apply",
+        "right": "I was excited to see the announcement about the research assistant position.",
+        "why_ar": "Tier 90 يتطلب افتتاحية محددة ومحفزة."
+      },
+      {
+        "wrong": "I like environmental science",
+        "right": "Your recent work on coastal ecosystem resilience aligns with my interests.",
+        "why_ar": "اربط شغفك بعمله المحدد."
+      },
+      {
+        "wrong": "I have good skills in data",
+        "right": "I have developed strong analytical skills through coursework in statistical methods.",
+        "why_ar": "كن محددا في المهارات ومصادرها."
+      },
+      {
+        "wrong": "Reply to me soon",
+        "right": "Thank you very much for your time and consideration.",
+        "why_ar": "لا تطلب ردا سريعا. اشكر وانتظر."
+      }
+    ],
+    "video_url": null
+  }
+}

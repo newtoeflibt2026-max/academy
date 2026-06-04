@@ -1,0 +1,376 @@
+{
+  "scenario": {
+    "code": "recommendation_letter_v1",
+    "title_ar": "طلب رسالة توصية أكاديمية",
+    "title_en": "Requesting an Academic Recommendation Letter",
+    "scenario_text": "You are an outstanding undergraduate planning to apply to a prestigious Master's program in Applied Linguistics at the University of Edinburgh. You need a strong recommendation letter from Professor Smith, who taught you in two courses (ENGL 401 Advanced Linguistics in Fall 2024, and ENGL 412 Sociolinguistics in Spring 2025) and supervised your undergraduate thesis. The application deadline is in 6 weeks. Write a highly professional academic email requesting the recommendation.",
+    "recipient_role": "Former Professor & Thesis Supervisor",
+    "requirements": [
+      "Re-establish your academic identity with precise course details (codes + semesters)",
+      "Articulate why this specific professor is uniquely qualified to recommend you",
+      "Use diplomatic hedging language (e.g., 'whether you would be willing')",
+      "Provide a face-saving option ('I completely understand if...')",
+      "Organize logistical info clearly (deadline, submission method, materials)",
+      "Close with sincere appreciation and acknowledgment of past guidance"
+    ],
+    "target_tier": "tier90",
+    "min_words": 150,
+    "difficulty": "hard",
+    "order_index": 4
+  },
+  "coach_content": {
+    "step1_situation_ar": "هذا موقف يتطلب أعلى مستوى من الـ academic register. عليك تذكير الأستاذ بسياقك الأكاديمي بدقة (المواد، الدرجات، البحث)، تخصيص الطلب (لماذا هذا الأستاذ بالذات)، استخدام صيغ دبلوماسية، وتقديم 'face-saving option' بأن تتيح للأستاذ رفض الطلب بأدب.",
+    "step1_situation_en": "You are an outstanding undergraduate applying to a prestigious MA program. You need a strong recommendation letter from a professor who taught you in two courses and supervised your thesis. The deadline is in 6 weeks. Write a highly professional academic email.",
+    "step1_recipient_ar": "أستاذك السابق ومشرف رسالتك (Professor Smith)",
+    "step1_tone_ar": "احترافي أكاديمي رفيع جداً — يجمع بين الاحترام العميق، الدقة الأكاديمية، والدبلوماسية. لا مكان للمجاملات العاطفية أو الضغط الزمني.",
+    "step1_goals_json": [
+      {
+        "num": 1,
+        "ar": "تذكير الأستاذ بهويتك الأكاديمية بدقة",
+        "en": "Re-establish your academic identity with precision",
+        "tip_ar": "اذكر اسمك الكامل، رمز المادة + اسمها + الفصل (مثل: ENGL 401 Fall 2024)، الإشراف على البحث. تجنب 'last year' الغامضة."
+      },
+      {
+        "num": 2,
+        "ar": "تخصيص الطلب لهذا الأستاذ بالذات",
+        "en": "Personalize the request to this specific professor",
+        "tip_ar": "اربط بين تخصص الأستاذ والبرنامج المستهدف. مثال: 'Given your expertise in sociolinguistic methodology...'"
+      },
+      {
+        "num": 3,
+        "ar": "تقديم طلب دبلوماسي مع خيار الرفض المحفوظ للكرامة",
+        "en": "Make a diplomatic request with a face-saving exit option",
+        "tip_ar": "استخدم 'whether you would be willing' بدلاً من 'can you'، وأضف 'I completely understand if...' للحفاظ على العلاقة."
+      }
+    ],
+    "step2_structure_json": [
+      {
+        "part": "Subject Line",
+        "purpose_ar": "عنوان دقيق يلخص الطلب مع الموعد النهائي",
+        "example_en": "Recommendation Letter Request — Ahmed Al-Yemeni, MA Application (Deadline: 30 June 2026)",
+        "tip_ar": "Tier 90: ضع اسمك والموعد في العنوان — يساعد الأستاذ في تنظيم الأولويات."
+      },
+      {
+        "part": "Greeting",
+        "purpose_ar": "تحية رسمية مع اللقب الأكاديمي الصحيح",
+        "example_en": "Dear Professor Smith,",
+        "tip_ar": "لا تستخدم 'Hi' أبداً. استخدم 'Professor' (افتراضياً) أو 'Dr.' إذا فضّل ذلك."
+      },
+      {
+        "part": "Opening & Re-introduction",
+        "purpose_ar": "تعريف نفسك بدقة أكاديمية كاملة",
+        "example_en": "I hope this message finds you well. My name is Ahmed Al-Yemeni, and I had the privilege of being your student in ENGL 401 (Advanced Linguistics, Fall 2024) and ENGL 412 (Sociolinguistics, Spring 2025), in addition to working under your supervision on my undergraduate thesis.",
+        "tip_ar": "ادمج: تحية + اسم كامل + مواد محددة + بحث/إشراف. هذا يظهر احتراماً لوقت الأستاذ."
+      },
+      {
+        "part": "The Diplomatic Request",
+        "purpose_ar": "طلب التوصية بصياغة دبلوماسية مع التخصيص",
+        "example_en": "I am writing to ask whether you would be willing to write a letter of recommendation in support of my application to the MA program in Applied Linguistics at the University of Edinburgh. Given your expertise in sociolinguistic methodology and your familiarity with my academic work, a letter from you would carry exceptional weight.",
+        "tip_ar": "'whether you would be willing' = دبلوماسي / 'Given your expertise' = تخصيص / 'exceptional weight' = تقدير مهني."
+      },
+      {
+        "part": "Logistical Information",
+        "purpose_ar": "تقديم التفاصيل العملية بشكل منظم",
+        "example_en": "The application deadline is 30 June 2026, giving us approximately six weeks. Should you agree, I would be glad to provide: (1) my updated CV, (2) a draft of my personal statement, (3) my academic transcripts, and (4) a brief summary of the program requirements. The recommendation can be submitted directly through the university's online portal — I will send you the secure link once you confirm.",
+        "tip_ar": "قائمة مرقمة + 'us' بدلاً من 'you' = شراكة / تحديد طريقة التقديم يقلل العبء."
+      },
+      {
+        "part": "Face-Saving Exit & Closing",
+        "purpose_ar": "ترك خيار الرفض بأدب + اعتراف بالفضل + خاتمة رسمية",
+        "example_en": "I completely understand if your current commitments do not allow for this, and I am deeply grateful for the guidance you have already provided throughout my undergraduate studies. I look forward to your response at your convenience.\n\nWith sincere appreciation,\nAhmed Al-Yemeni",
+        "tip_ar": "العناصر الذهبية: face-saving + اعتراف بالجميل + 'at your convenience' + خاتمة أكاديمية رسمية."
+      }
+    ],
+    "step3_phrases_json": {
+      "greetings": [
+        {
+          "phrase": "Dear Professor [Last Name],",
+          "when_to_use_ar": "الافتتاح الرسمي الوحيد المقبول مع الأساتذة."
+        },
+        {
+          "phrase": "Dear Dr. [Last Name],",
+          "when_to_use_ar": "إذا كان الأستاذ يفضل لقب Dr."
+        }
+      ],
+      "openings": [
+        {
+          "phrase": "I hope this message finds you well.",
+          "when_to_use_ar": "الافتتاحية الكلاسيكية المهذبة — استخدمها دائماً."
+        },
+        {
+          "phrase": "I had the privilege of being your student in...",
+          "when_to_use_ar": "لتذكير الأستاذ بك بطريقة محترمة."
+        },
+        {
+          "phrase": "I am writing to ask whether you would be willing to...",
+          "when_to_use_ar": "الصيغة الأكثر دبلوماسية لتقديم طلب."
+        }
+      ],
+      "hedging": [
+        {
+          "phrase": "I would be deeply grateful if you would consider...",
+          "when_to_use_ar": "تقديم طلب مع إظهار الامتنان مقدماً."
+        },
+        {
+          "phrase": "Should you agree, I would be glad to provide...",
+          "when_to_use_ar": "عرض المساعدة بشرط الموافقة."
+        },
+        {
+          "phrase": "If your schedule permits...",
+          "when_to_use_ar": "إقرار بأن وقت الأستاذ ثمين."
+        },
+        {
+          "phrase": "I completely understand if...",
+          "when_to_use_ar": "Face-saving — إعطاء خيار الرفض بأدب."
+        }
+      ],
+      "requests": [
+        {
+          "phrase": "...would be willing to write a letter of recommendation in support of my application to...",
+          "when_to_use_ar": "الصياغة الكاملة الاحترافية للطلب."
+        },
+        {
+          "phrase": "Given your expertise in [field] and your familiarity with my work,...",
+          "when_to_use_ar": "تخصيص الطلب — لماذا هذا الأستاذ."
+        },
+        {
+          "phrase": "A letter from you would carry exceptional weight.",
+          "when_to_use_ar": "إظهار التقدير لمكانة الأستاذ."
+        }
+      ],
+      "closings": [
+        {
+          "phrase": "I look forward to your response at your convenience.",
+          "when_to_use_ar": "خاتمة دون ضغط زمني."
+        },
+        {
+          "phrase": "With sincere appreciation,",
+          "when_to_use_ar": "خاتمة أكاديمية رسمية."
+        },
+        {
+          "phrase": "I am deeply grateful for the guidance you have already provided...",
+          "when_to_use_ar": "اعتراف بالفضل السابق — يقوي العلاقة."
+        }
+      ]
+    },
+    "step4_model_email": "Dear Professor Smith,\n\nI hope this message finds you well. My name is Ahmed Al-Yemeni, and I had the privilege of being your student in ENGL 401 (Advanced Linguistics, Fall 2024) and ENGL 412 (Sociolinguistics, Spring 2025), in addition to working under your supervision on my undergraduate thesis on language attitudes in multilingual communities.\n\nI am writing to ask whether you would be willing to write a letter of recommendation in support of my application to the MA program in Applied Linguistics at the University of Edinburgh. Given your expertise in sociolinguistic methodology and your familiarity with my academic work, a letter from you would carry exceptional weight in my application.\n\nThe application deadline is 30 June 2026, giving us approximately six weeks. Should you agree, I would be glad to provide: (1) my updated CV, (2) a draft of my personal statement, (3) my academic transcripts, and (4) a brief summary of the program requirements. The recommendation can be submitted directly through the university's online portal, and I will send you the secure link once you confirm.\n\nI completely understand if your current commitments do not allow for this, and I am deeply grateful for the guidance you have already provided throughout my undergraduate studies. I look forward to your response at your convenience.\n\nWith sincere appreciation,\nAhmed Al-Yemeni\nStudent ID: 20210456\nahmed.alyemeni@university.edu",
+    "step4_annotations_json": [
+      {
+        "sentence_en": "I hope this message finds you well.",
+        "why_ar": "افتتاحية أكاديمية كلاسيكية — تظهر الأدب دون مبالغة.",
+        "weaker_alternative_en": "Hi! How are you?",
+        "why_weaker_ar": "غير رسمية ولا تليق بالأستاذ."
+      },
+      {
+        "sentence_en": "I had the privilege of being your student in...",
+        "why_ar": "'privilege' كلمة قوية تظهر الاحترام والامتنان.",
+        "weaker_alternative_en": "I was your student in...",
+        "why_weaker_ar": "محايد، لا يظهر التقدير."
+      },
+      {
+        "sentence_en": "ENGL 401 (Advanced Linguistics, Fall 2024)",
+        "why_ar": "دقة أكاديمية: رمز + اسم + فصل.",
+        "weaker_alternative_en": "your linguistics class last year",
+        "why_weaker_ar": "غامض — يجبر الأستاذ على التخمين."
+      },
+      {
+        "sentence_en": "whether you would be willing to write...",
+        "why_ar": "Hedging دبلوماسي — يعطي الأستاذ مساحة للرفض.",
+        "weaker_alternative_en": "Can you write me a letter?",
+        "why_weaker_ar": "مباشر جداً وقد يبدو وقحاً."
+      },
+      {
+        "sentence_en": "Given your expertise in sociolinguistic methodology...",
+        "why_ar": "يخصص الطلب — يوضح لماذا هذا الأستاذ.",
+        "weaker_alternative_en": "You are a good professor.",
+        "why_weaker_ar": "مجاملة عامة فارغة."
+      },
+      {
+        "sentence_en": "a letter from you would carry exceptional weight",
+        "why_ar": "يظهر فهم الطالب لأهمية الأستاذ.",
+        "weaker_alternative_en": "your letter would help me",
+        "why_weaker_ar": "ضعيف ولا يعكس قيمة الأستاذ."
+      },
+      {
+        "sentence_en": "giving us approximately six weeks",
+        "why_ar": "'us' (وليس 'you') — يبني شراكة.",
+        "weaker_alternative_en": "you have six weeks",
+        "why_weaker_ar": "يضع كل العبء على الأستاذ."
+      },
+      {
+        "sentence_en": "Should you agree, I would be glad to provide:",
+        "why_ar": "صياغة شرطية مهذبة + قائمة منظمة.",
+        "weaker_alternative_en": "I will send you these things:",
+        "why_weaker_ar": "يفترض الموافقة قبل حدوثها."
+      },
+      {
+        "sentence_en": "(1)...(2)...(3)...(4)...",
+        "why_ar": "تنظيم بصري يسهل المراجعة.",
+        "weaker_alternative_en": "I have CV and statement and transcripts.",
+        "why_weaker_ar": "غير منظم ويصعب تتبعه."
+      },
+      {
+        "sentence_en": "I completely understand if your current commitments do not allow for this",
+        "why_ar": "Face-saving sentence جوهرية — تحافظ على العلاقة.",
+        "weaker_alternative_en": "Please don't say no.",
+        "why_weaker_ar": "ضغط مباشر يضع الأستاذ في موقف محرج."
+      },
+      {
+        "sentence_en": "I am deeply grateful for the guidance you have already provided",
+        "why_ar": "اعتراف بالفضل السابق — يقوي العلاقة.",
+        "weaker_alternative_en": "Thanks for everything.",
+        "why_weaker_ar": "عام جداً."
+      },
+      {
+        "sentence_en": "at your convenience",
+        "why_ar": "لا ضغط زمني — يحترم جدول الأستاذ.",
+        "weaker_alternative_en": "as soon as possible",
+        "why_weaker_ar": "يضع ضغطاً غير مناسب."
+      }
+    ],
+    "step5_fill_template": "Dear Professor _____,\n\nI hope this message finds you well. My name is _____, and I had the privilege of being your student in _____ (_____, _____) and _____ (_____, _____), in addition to _____.\n\nI am writing to ask whether you would be willing to write a letter of recommendation in support of my application to _____ at _____. Given your expertise in _____ and your familiarity with my academic work, a letter from you would carry exceptional weight.\n\nThe application deadline is _____, giving us approximately _____ weeks. Should you agree, I would be glad to provide: (1) my updated CV, (2) a draft of my personal statement, (3) my academic transcripts, and (4) _____. The recommendation can be submitted directly through _____.\n\nI completely understand if your current commitments do not allow for this, and I am deeply grateful for _____. I look forward to your response at your convenience.\n\nWith sincere appreciation,\n_____\n_____",
+    "step5_blanks_hints_json": [
+      {
+        "blank": 1,
+        "hint_ar": "لقب الأستاذ (Last Name)"
+      },
+      {
+        "blank": 2,
+        "hint_ar": "اسمك الكامل"
+      },
+      {
+        "blank": 3,
+        "hint_ar": "رمز المادة الأولى + اسمها + الفصل"
+      },
+      {
+        "blank": 4,
+        "hint_ar": "رمز المادة الثانية + اسمها + الفصل"
+      },
+      {
+        "blank": 5,
+        "hint_ar": "نشاط أكاديمي إضافي (بحث، إشراف...)"
+      },
+      {
+        "blank": 6,
+        "hint_ar": "اسم البرنامج المستهدف"
+      },
+      {
+        "blank": 7,
+        "hint_ar": "اسم الجامعة"
+      },
+      {
+        "blank": 8,
+        "hint_ar": "تخصص الأستاذ المرتبط بالبرنامج"
+      },
+      {
+        "blank": 9,
+        "hint_ar": "الموعد النهائي (تاريخ كامل)"
+      },
+      {
+        "blank": 10,
+        "hint_ar": "عدد الأسابيع المتبقية"
+      },
+      {
+        "blank": 11,
+        "hint_ar": "مادة إضافية تريد توفيرها"
+      },
+      {
+        "blank": 12,
+        "hint_ar": "طريقة التقديم (portal/email)"
+      },
+      {
+        "blank": 13,
+        "hint_ar": "اعتراف بالفضل السابق"
+      },
+      {
+        "blank": 14,
+        "hint_ar": "توقيعك"
+      },
+      {
+        "blank": 15,
+        "hint_ar": "معلومات الاتصال (Student ID, email)"
+      }
+    ],
+    "step6_checklist_json": [
+      {
+        "item_ar": "هل بدأت بـ 'Dear Professor [Last Name],' وليس 'Hi'؟"
+      },
+      {
+        "item_ar": "هل ذكرت اسمك الكامل في الفقرة الأولى؟"
+      },
+      {
+        "item_ar": "هل ذكرت المواد بدقة (رمز + اسم + فصل)؟"
+      },
+      {
+        "item_ar": "هل ذكرت اسم البرنامج والجامعة المستهدفة؟"
+      },
+      {
+        "item_ar": "هل استخدمت 'whether you would be willing' بدلاً من 'can you'؟"
+      },
+      {
+        "item_ar": "هل وضحت لماذا هذا الأستاذ بالذات (تخصصه، إلمامه بعملك)؟"
+      },
+      {
+        "item_ar": "هل ذكرت الموعد النهائي بصيغة واضحة (تاريخ + عدد الأسابيع)؟"
+      },
+      {
+        "item_ar": "هل قدمت قائمة مرقمة بالمواد التي ستوفرها؟"
+      },
+      {
+        "item_ar": "هل وضحت طريقة التقديم (portal/email)؟"
+      },
+      {
+        "item_ar": "هل أضفت face-saving sentence ('I completely understand if...')؟"
+      },
+      {
+        "item_ar": "هل اعترفت بالفضل السابق للأستاذ؟"
+      },
+      {
+        "item_ar": "هل ختمت بـ 'With sincere appreciation' أو ما يماثلها؟"
+      }
+    ],
+    "common_mistakes_json": [
+      {
+        "wrong_en": "Hi Professor, How are you?",
+        "correct_en": "Dear Professor [Last Name], I hope this message finds you well.",
+        "explanation_ar": "❌ 'Hi' غير رسمية. ✅ 'Dear Professor' هو المعيار الذهبي."
+      },
+      {
+        "wrong_en": "Can you write me a recommendation letter?",
+        "correct_en": "I am writing to ask whether you would be willing to write a letter of recommendation.",
+        "explanation_ar": "❌ 'Can you' مباشرة وتفترض الموافقة. ✅ صياغة دبلوماسية تعطي خيار الرفض."
+      },
+      {
+        "wrong_en": "I need this letter by June 30. Please send it soon.",
+        "correct_en": "The application deadline is 30 June 2026, giving us approximately six weeks.",
+        "explanation_ar": "❌ 'I need' و 'please send it soon' يضعان ضغطاً غير مهذب. ✅ صياغة محايدة مع 'us'."
+      },
+      {
+        "wrong_en": "You are my favorite professor.",
+        "correct_en": "Given your expertise in [field], a letter from you would carry exceptional weight.",
+        "explanation_ar": "❌ مجاملة عاطفية غير مهنية. ✅ تقدير مهني محدد بالتخصص."
+      },
+      {
+        "wrong_en": "I took your class last year.",
+        "correct_en": "I was your student in ENGL 401 (Advanced Linguistics, Fall 2024).",
+        "explanation_ar": "❌ غامض — يجبر الأستاذ على التخمين. ✅ دقة أكاديمية."
+      },
+      {
+        "wrong_en": "Don't say no please!",
+        "correct_en": "I completely understand if your current commitments do not allow for this.",
+        "explanation_ar": "❌ ضغط عاطفي. ✅ Face-saving option كاملة الاحتراف."
+      },
+      {
+        "wrong_en": "Thanks!",
+        "correct_en": "With sincere appreciation,",
+        "explanation_ar": "❌ 'Thanks!' عامية. ✅ خاتمة أكاديمية رسمية."
+      },
+      {
+        "wrong_en": "ASAP please reply.",
+        "correct_en": "I look forward to your response at your convenience.",
+        "explanation_ar": "❌ 'ASAP' وقحة. ✅ 'at your convenience' تحترم وقت الأستاذ."
+      }
+    ],
+    "video_url": ""
+  }
+}

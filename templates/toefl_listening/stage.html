@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ stage.title_ar }}</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Segoe UI", "Tajawal", Tahoma, sans-serif;
+  background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+  color: #102a43; min-height: 100vh; padding: 20px;
+}
+.container { max-width: 900px; margin: 0 auto; }
+.back-btn {
+  display: inline-block; margin-bottom: 16px; padding: 8px 16px;
+  background: white; color: #2563eb; border-radius: 8px;
+  text-decoration: none; font-weight: 600; font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+.header {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  color: white; padding: 24px; border-radius: 16px; margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(37,99,235,0.25);
+}
+.header h1 { font-size: 22px; margin-bottom: 6px; }
+.header p { font-size: 14px; opacity: 0.95; }
+.lesson-card {
+  background: white; border-radius: 12px; padding: 18px; margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex;
+  align-items: center; gap: 14px; text-decoration: none; color: inherit;
+  transition: all 0.15s; position: relative;
+}
+.lesson-card:not(.locked):hover { transform: translateX(-3px); box-shadow: 0 4px 14px rgba(0,0,0,0.10); }
+.lesson-card.locked { opacity: 0.6; cursor: not-allowed; background: #f1f5f9; }
+.lesson-card.locked .lesson-title { color: #64748b; }
+.lesson-icon {
+  width: 50px; height: 50px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0; font-weight: 700;
+}
+.icon-pending { background: #e0e7ef; color: #627d98; }
+.icon-done { background: #d1fae5; color: #10b981; }
+.icon-progress { background: #fef3c7; color: #d97706; }
+.icon-exhausted { background: #fee2e2; color: #dc2626; }
+.icon-locked { background: #e2e8f0; color: #94a3b8; }
+.lesson-body { flex: 1; }
+.lesson-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; color: #1e40af; }
+.lesson-meta { font-size: 12px; color: #627d98; }
+.lesson-status {
+  font-size: 11px; padding: 3px 10px; border-radius: 6px; font-weight: 600;
+}
+.status-completed { background: #10b981; color: white; }
+.status-progress { background: #f59e0b; color: white; }
+.status-exhausted { background: #dc2626; color: white; }
+.status-locked { background: #cbd5e1; color: #475569; }
+.mastery-badge {
+  display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  background: #ede9fe; color: #6d28d9; font-weight: 700; margin-right: 6px;
+  letter-spacing: 0.3px;
+}
+.empty {
+  background: white; padding: 30px; border-radius: 12px; text-align: center;
+  color: #627d98; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/listening?user_id={{ user_id }}" class="back-btn">← المراحل</a>
+
+  <div class="header">
+    <h1>🎧 المرحلة {{ stage.id }}: {{ stage.title_ar }}</h1>
+    {% if stage.description_ar %}<p>{{ stage.description_ar }}</p>{% endif %}
+  </div>
+
+  {% if lessons|length == 0 %}
+    <div class="empty">لا توجد دروس في هذه المرحلة بعد.</div>
+  {% endif %}
+
+  {% for lesson in lessons %}
+    {% if lesson.is_mastery %}
+      {% set target_url = "/listening/mastery/" ~ lesson.id ~ "?user_id=" ~ user_id %}
+    {% else %}
+      {% set target_url = "/listening/lesson/" ~ lesson.id ~ "?user_id=" ~ user_id %}
+    {% endif %}
+
+    {% if lesson.is_locked %}
+      <div class="lesson-card locked">
+        <div class="lesson-icon icon-locked">🔒</div>
+        <div class="lesson-body">
+          <div class="lesson-title">{{ lesson.title_ar }}</div>
+          <div class="lesson-meta">
+            <span class="mastery-badge">MASTERY</span>
+            🎧 {{ lesson.clip_count }} مقاطع
+            {% if lesson.duration_min %} · ⏱ {{ lesson.duration_min }} دقيقة{% endif %}
+          </div>
+        </div>
+        <span class="lesson-status status-locked">🔒 مقفل</span>
+      </div>
+    {% else %}
+      <a href="{{ target_url }}" class="lesson-card">
+        {% if lesson.user_status == 'completed' %}
+          <div class="lesson-icon icon-done">✓</div>
+        {% elif lesson.user_status == 'in_progress' %}
+          <div class="lesson-icon icon-progress">⏳</div>
+        {% elif lesson.user_status == 'exhausted' %}
+          <div class="lesson-icon icon-exhausted">!</div>
+        {% else %}
+          <div class="lesson-icon icon-pending">{{ loop.index }}</div>
+        {% endif %}
+        <div class="lesson-body">
+          <div class="lesson-title">{{ lesson.title_ar }}</div>
+          <div class="lesson-meta">
+            {% if lesson.is_mastery %}<span class="mastery-badge">MASTERY</span>{% endif %}
+            {% if stage.id == 1 %}
+              📖 درس نظري
+            {% else %}
+              🎧 {{ lesson.clip_count }} {% if lesson.clip_count == 1 %}مقطع{% else %}مقاطع{% endif %} صوتية
+            {% endif %}
+            {% if lesson.duration_min %} · ⏱ {{ lesson.duration_min }} دقيقة{% endif %}
+          </div>
+        </div>
+        {% if lesson.user_status == 'completed' %}
+          <span class="lesson-status status-completed">✓ مكتمل</span>
+        {% elif lesson.user_status == 'in_progress' %}
+          <span class="lesson-status status-progress">قيد التقدم</span>
+        {% elif lesson.user_status == 'exhausted' %}
+          <span class="lesson-status status-exhausted">في بنك الأخطاء</span>
+        {% endif %}
+      </a>
+    {% endif %}
+  {% endfor %}
+</div>
+</body>
+</html>

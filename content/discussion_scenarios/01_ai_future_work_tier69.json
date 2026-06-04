@@ -1,0 +1,204 @@
+{
+  "code": "ai_future_work_tier69",
+  "title_ar": "الذكاء الاصطناعي ومستقبل العمل",
+  "title_en": "AI and the Future of Work",
+  "target_tier": "tier69",
+  "difficulty": 4,
+  "min_words": 120,
+  "time_limit_minutes": 10,
+  "topic_category": "Technology",
+  "professor_name": "Dr. Anderson",
+  "professor_title_en": "Professor of Economics",
+  "professor_avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=anderson",
+  "professor_question": "Artificial intelligence is rapidly transforming the workplace. Some experts predict that AI will eliminate millions of jobs in the coming decades, while others argue it will create new opportunities and improve productivity. Companies are increasingly using AI tools to automate tasks that were once performed by humans, ranging from customer service to data analysis. Should governments regulate the use of AI in workplaces to protect workers, or should they allow companies to adopt AI freely to maximize economic growth? What do you think? Why?",
+  "student_replies": [
+    {
+      "name": "Sarah",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=sarah",
+      "text": "I strongly believe governments should regulate AI in workplaces. Without rules, companies will replace workers with machines just to save money, leaving millions unemployed. My uncle worked at a factory for 20 years before being replaced by automated systems last year. Regulations could require companies to retrain workers or limit how fast they replace human jobs. We need to protect families and communities."
+    },
+    {
+      "name": "Michael",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=michael",
+      "text": "I disagree with Sarah. Heavy regulation will slow down innovation and make our country fall behind competitors like China. Companies should be free to adopt AI because it creates better jobs in technology fields. Yes, some jobs will disappear, but history shows new industries always emerge. Workers should adapt by learning new skills rather than expecting the government to protect outdated jobs."
+    }
+  ],
+  "model_response": "In my opinion, governments should regulate the use of AI in workplaces, although I understand Michael's concern about innovation. While AI can boost productivity and create new opportunities, it also poses serious risks to ordinary workers. For example, in my country, thousands of bank employees have lost their jobs in the past five years because of automated systems. Without proper regulations, companies will prioritize profits over people, which could lead to widespread unemployment. I agree with Sarah that retraining programs are essential. Furthermore, governments could require companies that adopt AI to invest in education for displaced workers. This approach balances economic growth with social responsibility. Therefore, I strongly believe that smart regulation, rather than no regulation, is the best path forward for both workers and the economy.",
+  "tier_explanation_ar": "هذا المستوى المتوسط (Score 4). الهدف: 120 كلمة مع تنوع نحوي (although, while, furthermore) ومفردات أكثر دقة. أظهر فهمك لوجهتي النظر قبل تقديم رأيك.",
+  "phrases": {
+    "giving_opinion": [
+      {
+        "phrase": "In my opinion,...",
+        "when_to_use_ar": "للبدء برأي قوي ومنظّم"
+      },
+      {
+        "phrase": "I would argue that...",
+        "when_to_use_ar": "لرأي مدروس ومدعوم"
+      },
+      {
+        "phrase": "From my perspective,...",
+        "when_to_use_ar": "تنويع للتعبير عن وجهة النظر"
+      }
+    ],
+    "acknowledging_others": [
+      {
+        "phrase": "I understand Michael's concern about...",
+        "when_to_use_ar": "للاعتراف برأي مخالف قبل الرد عليه"
+      },
+      {
+        "phrase": "While Sarah makes a good point,...",
+        "when_to_use_ar": "للموافقة جزئياً مع تحفظ"
+      },
+      {
+        "phrase": "Although I agree that...",
+        "when_to_use_ar": "للتنازل قبل تقديم رأي مختلف"
+      }
+    ],
+    "adding_reasons": [
+      {
+        "phrase": "Furthermore,...",
+        "when_to_use_ar": "لإضافة سبب قوي إضافي"
+      },
+      {
+        "phrase": "Moreover,...",
+        "when_to_use_ar": "مرادف لـ furthermore - للتنويع"
+      },
+      {
+        "phrase": "In addition,...",
+        "when_to_use_ar": "لإضافة معلومة داعمة"
+      }
+    ],
+    "giving_examples": [
+      {
+        "phrase": "For example,...",
+        "when_to_use_ar": "للمثال المباشر"
+      },
+      {
+        "phrase": "For instance, in my country,...",
+        "when_to_use_ar": "لمثال من بيئتك يضيف مصداقية"
+      },
+      {
+        "phrase": "A clear example is...",
+        "when_to_use_ar": "لمثال محدد ومركّز"
+      }
+    ],
+    "concluding": [
+      {
+        "phrase": "Therefore, I strongly believe...",
+        "when_to_use_ar": "لخاتمة قوية تربط الأسباب بالرأي"
+      },
+      {
+        "phrase": "For these reasons,...",
+        "when_to_use_ar": "لختام يلخّص الأسباب السابقة"
+      },
+      {
+        "phrase": "In conclusion,...",
+        "when_to_use_ar": "للخاتمة الرسمية"
+      }
+    ]
+  },
+  "annotations": [
+    {
+      "label_ar": "افتتاحية قوية",
+      "tip_ar": "ابدأ بـ 'In my opinion' أو 'I would argue that' لإظهار رأي مدروس."
+    },
+    {
+      "label_ar": "اعترف بالرأي المخالف",
+      "tip_ar": "اذكر although/while للاعتراف بوجهة النظر الأخرى قبل تقديم رأيك."
+    },
+    {
+      "label_ar": "استخدم روابط متنوعة",
+      "tip_ar": "نوّع بين Furthermore, Moreover, In addition. لا تكرر because فقط."
+    },
+    {
+      "label_ar": "مثال واحد قوي",
+      "tip_ar": "مثال واحد مفصّل (3-4 أسطر) أقوى من ثلاثة أمثلة قصيرة."
+    },
+    {
+      "label_ar": "اربط الجمل",
+      "tip_ar": "استخدم which, who, that لربط الأفكار وتجنّب الجمل القصيرة المتتالية."
+    },
+    {
+      "label_ar": "نوّع الأزمنة",
+      "tip_ar": "استخدم Present Perfect (have lost) للتجارب، وModals (could, would) للاحتمالات."
+    },
+    {
+      "label_ar": "ذكر الزملاء بأسلوب",
+      "tip_ar": "لا تقل فقط 'I agree with Sarah'. قل 'Sarah's point about retraining is crucial.'"
+    },
+    {
+      "label_ar": "خاتمة منظّمة",
+      "tip_ar": "ابدأ الخاتمة بـ Therefore أو For these reasons، وكرّر رأيك بصياغة جديدة."
+    },
+    {
+      "label_ar": "تجنّب التكرار",
+      "tip_ar": "لا تستخدم نفس الكلمة مرتين في فقرة واحدة. استبدل companies بـ firms أحياناً."
+    },
+    {
+      "label_ar": "120 كلمة كحد أدنى",
+      "tip_ar": "أقل من 120 كلمة ستخسر نقاط. اهدف لـ 130-140 لضمان السلامة."
+    },
+    {
+      "label_ar": "راجع التطابق",
+      "tip_ar": "تأكد من تطابق الفاعل مع الفعل (companies prioritize، not prioritizes)."
+    },
+    {
+      "label_ar": "تجنّب الكلمات الفارغة",
+      "tip_ar": "بدلاً من 'very good' استخدم 'beneficial' أو 'crucial'."
+    }
+  ],
+  "checklist": [
+    "افتتحت بـ 'In my opinion' أو ما يعادلها؟",
+    "اعترفت بوجهة النظر المخالفة (although/while)؟",
+    "استخدمت رابطين مختلفين (Furthermore, Moreover...)؟",
+    "أعطيت مثال واحد مفصّل من بيئتك؟",
+    "ذكرت Sarah و Michael بأسلوب محترم؟",
+    "استخدمت Present Perfect أو Modal verb؟",
+    "ربطت الجمل بـ which/who/that؟",
+    "ختمت بـ Therefore أو For these reasons؟",
+    "تجنّبت تكرار نفس الكلمة كثيراً؟",
+    "عدد الكلمات 120 على الأقل؟"
+  ],
+  "common_mistakes": [
+    {
+      "mistake_en": "Although AI is useful, but it has risks.",
+      "correct_en": "Although AI is useful, it has risks.",
+      "explanation_ar": "لا تستخدم although و but معاً في نفس الجملة."
+    },
+    {
+      "mistake_en": "I agree with Sarah opinion.",
+      "correct_en": "I agree with Sarah's opinion.",
+      "explanation_ar": "أضف 's للملكية بعد الاسم."
+    },
+    {
+      "mistake_en": "Companies prioritizes profits.",
+      "correct_en": "Companies prioritize profits.",
+      "explanation_ar": "Companies جمع، لذا الفعل بدون s."
+    },
+    {
+      "mistake_en": "In conclusion, I think that AI is good and bad.",
+      "correct_en": "In conclusion, AI offers both benefits and challenges.",
+      "explanation_ar": "الخاتمة يجب أن تكون أكثر دقة، تجنّب 'good and bad'."
+    },
+    {
+      "mistake_en": "Furthermore, also workers need help.",
+      "correct_en": "Furthermore, workers need help.",
+      "explanation_ar": "Furthermore تكفي - لا تضف also."
+    },
+    {
+      "mistake_en": "I have lost my job since 2020.",
+      "correct_en": "I lost my job in 2020.",
+      "explanation_ar": "مع تاريخ محدد استخدم Past Simple."
+    },
+    {
+      "mistake_en": "The regulation are important.",
+      "correct_en": "Regulation is important. / Regulations are important.",
+      "explanation_ar": "regulation (مفرد) is، regulations (جمع) are."
+    },
+    {
+      "mistake_en": "For example like banks fired workers.",
+      "correct_en": "For example, banks fired workers.",
+      "explanation_ar": "بعد For example ضع فاصلة، لا تستخدم like."
+    }
+  ]
+}

@@ -1,0 +1,457 @@
+﻿{
+  "lessons": [
+    {
+      "id": 201,
+      "code": "M3_L01",
+      "sub_lesson_index": 1,
+      "level": "easy",
+      "title_ar": "المرحلة 3 - الدرس 1: المحادثات حول الطعام",
+      "title_en": "Food & Dining Conversations",
+      "principle_en": "Identify the main idea — what are the speakers mainly discussing?",
+      "principle_ar": "حدّد الفكرة الرئيسية — ما الذي يناقشه المتحدثان بشكل أساسي؟",
+      "strategy_ar": "ركّز على أول 2-3 جمل لفهم موضوع الحوار، ولا تشتت ذهنك بالتفاصيل الصغيرة.",
+      "clips": [
+        {
+          "code": "conv_e01",
+          "title_ar": "تمهيد: لقاء على الغداء",
+          "context_ar": "مقطع تمهيدي — استمع لأسلوب الحوار الطبيعي",
+          "is_intro": true,
+          "lines": [
+            ["F", "Hey, are you heading to lunch?"],
+            ["M", "Yeah, I was thinking of trying the new cafe on campus."],
+            ["F", "Oh, the one near the library? I heard their sandwiches are great."],
+            ["M", "Exactly. Want to come with me?"],
+            ["F", "Sure, let me grab my bag."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_e02",
+          "title_ar": "محادثة 1: الكافتيريا",
+          "context_ar": "حوار حول وجبة الغداء في الكافتيريا",
+          "lines": [
+            ["M", "Have you eaten lunch yet?"],
+            ["F", "Not yet. I was waiting for you. Where should we go?"],
+            ["M", "The cafeteria is serving pasta and salad today. It's only five dollars."],
+            ["F", "That sounds perfect. The Student Center is too crowded at this hour."],
+            ["M", "Agreed. Let's head to the cafeteria before the line gets long."],
+            ["F", "Good idea. Do they still have that lemon dressing I like?"],
+            ["M", "I think so. Come on, let's go."]
+          ],
+          "questions": [
+            {
+              "q": "Where are the students planning to go for lunch?",
+              "options": ["Library", "Cafeteria", "Student Center", "Sports Hall"],
+              "correct": 1,
+              "explanation_ar": "ذكر الطالب صراحةً 'The cafeteria is serving pasta and salad'، وأكدا قرارهما بالذهاب إلى الكافتيريا.",
+              "wrong_explanation_ar": "الـ Student Center ذُكر فقط بأنه مزدحم، والمكتبة لم تُذكر كمكان للأكل.",
+              "elimination_hint_ar": "ابحث عن المكان الذي وافقا على الذهاب إليه، ليس المكان الذي رفضاه."
+            },
+            {
+              "q": "What kind of food is being served?",
+              "options": ["Pizza", "Sandwiches", "Pasta and salad", "Burgers"],
+              "correct": 2,
+              "explanation_ar": "ذُكر بوضوح 'pasta and salad today' كقائمة طعام اليوم.",
+              "wrong_explanation_ar": "الـ Sandwiches ذُكرت في المقطع التمهيدي عن كافيه مختلف، وليس هنا.",
+              "elimination_hint_ar": "استمع للتفاصيل الدقيقة عن قائمة الطعام في هذا الحوار تحديداً."
+            }
+          ]
+        },
+        {
+          "code": "conv_e03",
+          "title_ar": "محادثة 2: المطعم الجديد",
+          "context_ar": "حوار عن افتتاح مطعم جديد قرب الحرم",
+          "lines": [
+            ["F", "Did you hear about the new Italian place that just opened?"],
+            ["M", "No, where is it?"],
+            ["F", "Right across from the main gate. They have authentic pizza."],
+            ["M", "Sounds amazing. How are the prices?"],
+            ["F", "A bit higher than the cafeteria, but worth it for a weekend treat."],
+            ["M", "Let's try it Saturday night then."],
+            ["F", "Perfect. I'll make a reservation for seven."]
+          ],
+          "questions": [
+            {
+              "q": "What is the main topic of the conversation?",
+              "options": ["A new restaurant near campus", "A cooking class", "A food festival", "A grocery store"],
+              "correct": 0,
+              "explanation_ar": "الحوار يدور حول مطعم إيطالي افتُتح حديثاً قرب البوابة الرئيسية، وقررا تجربته.",
+              "wrong_explanation_ar": "لم يُذكر أي صف طبخ أو مهرجان طعام؛ فقط مطعم جديد.",
+              "elimination_hint_ar": "ركّز على الكلمة المتكررة في الحوار: ما الذي يدور حوله النقاش؟"
+            },
+            {
+              "q": "When do they plan to go?",
+              "options": ["Friday morning", "Saturday night", "Sunday lunch", "Monday evening"],
+              "correct": 1,
+              "explanation_ar": "اتفقا على 'Saturday night' وحجزت الفتاة طاولة الساعة السابعة.",
+              "wrong_explanation_ar": "الأيام الأخرى لم تُذكر؛ Saturday night هو اليوم الوحيد المتفق عليه.",
+              "elimination_hint_ar": "انتبه للوقت المحدد الذي وافق عليه الطرفان."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "code": "M3_L02",
+      "sub_lesson_index": 2,
+      "level": "easy",
+      "title_ar": "المرحلة 3 - الدرس 2: خدمات الجامعة",
+      "title_en": "Campus Services Conversations",
+      "principle_en": "Catch specific details — locations, documents, and requirements.",
+      "principle_ar": "التقط التفاصيل المحددة — الأماكن، الوثائق، والمتطلبات.",
+      "strategy_ar": "دوّن أي رقم، اسم مكتب، أو وثيقة تُذكر. هذه عادةً ما يُسأل عنها.",
+      "clips": [
+        {
+          "code": "conv_e04",
+          "title_ar": "تمهيد: استفسار في الاستقبال",
+          "context_ar": "مقطع تمهيدي يوضح أسلوب طلب المعلومات",
+          "is_intro": true,
+          "lines": [
+            ["M", "Excuse me, where can I find the registrar's office?"],
+            ["F", "It's on the second floor of the admin building."],
+            ["M", "Do I need an appointment?"],
+            ["F", "Not for general inquiries. Just walk in."],
+            ["M", "Great, thank you."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_e05",
+          "title_ar": "محادثة 1: بطاقة الطالب",
+          "context_ar": "طالب جديد يطلب بطاقة هويته الجامعية",
+          "lines": [
+            ["M", "Hi, I'm a new student. Where do I get my ID card?"],
+            ["F", "You'll need to go to the Student Services Office. It's in Building C."],
+            ["M", "Okay. What do I need to bring with me?"],
+            ["F", "Your passport and the enrollment letter you received by email."],
+            ["M", "Got it. Is there a fee?"],
+            ["F", "No, the first card is free. Just bring those two documents."],
+            ["M", "Perfect. Thanks for your help."]
+          ],
+          "questions": [
+            {
+              "q": "Where should the student go to get the ID card?",
+              "options": ["Library", "Cafeteria", "Student Services Office", "Sports Center"],
+              "correct": 2,
+              "explanation_ar": "ذُكر بوضوح 'You'll need to go to the Student Services Office in Building C'.",
+              "wrong_explanation_ar": "الخيارات الأخرى أماكن جامعية لكنها لا تُصدر بطاقات الهوية.",
+              "elimination_hint_ar": "ابحث عن المكتب المسؤول عن خدمات الطلاب تحديداً."
+            },
+            {
+              "q": "What documents does the student need to bring?",
+              "options": ["Library card and ID", "Passport and enrollment letter", "Notebook and pen", "Class schedule"],
+              "correct": 1,
+              "explanation_ar": "حدّدت الموظفة الوثيقتين: 'Your passport and the enrollment letter'.",
+              "wrong_explanation_ar": "الجدول الدراسي والدفاتر ليست مطلوبة لإصدار البطاقة.",
+              "elimination_hint_ar": "استمع للوثيقتين المُحددتين بدقة."
+            }
+          ]
+        },
+        {
+          "code": "conv_e06",
+          "title_ar": "محادثة 2: حساب البريد الإلكتروني",
+          "context_ar": "طالب يحتاج تفعيل حسابه الجامعي",
+          "lines": [
+            ["F", "Hi, I haven't received my university email account yet."],
+            ["M", "Let me check. Can I have your student ID number?"],
+            ["F", "Sure, it's 2025-4471."],
+            ["M", "Okay, I see your account is ready. You can activate it at the IT Help Desk."],
+            ["F", "Where is that located?"],
+            ["M", "Ground floor of the Library Building, next to the entrance."],
+            ["F", "Thank you. I'll go right now."]
+          ],
+          "questions": [
+            {
+              "q": "What is the student's problem?",
+              "options": ["Lost ID card", "Email account not received", "Wrong class schedule", "Library fine"],
+              "correct": 1,
+              "explanation_ar": "الطالبة قالت صراحةً 'I haven't received my university email account yet'.",
+              "wrong_explanation_ar": "بقية الخيارات لم تُذكر في الحوار.",
+              "elimination_hint_ar": "أول جملة من الطالبة تكشف المشكلة عادةً."
+            },
+            {
+              "q": "Where is the IT Help Desk located?",
+              "options": ["Top floor of admin building", "Ground floor of the Library Building", "Student Center", "Sports Hall"],
+              "correct": 1,
+              "explanation_ar": "حدّد الموظف الموقع: 'Ground floor of the Library Building, next to the entrance'.",
+              "wrong_explanation_ar": "المباني الأخرى لم تُذكر كمواقع للدعم التقني.",
+              "elimination_hint_ar": "انتبه للموقع المحدد بدقة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "code": "M3_L03",
+      "sub_lesson_index": 3,
+      "level": "easy",
+      "title_ar": "المرحلة 3 - الدرس 3: الأنشطة الاجتماعية",
+      "title_en": "Social Activities Conversations",
+      "principle_en": "Recognize tone and feelings — is the speaker excited, worried, or hesitant?",
+      "principle_ar": "اعرف النبرة والمشاعر — هل المتحدث متحمس، قلق، أم متردد؟",
+      "strategy_ar": "لاحظ نبرة الصوت والكلمات العاطفية مثل 'great', 'worried', 'not sure'.",
+      "clips": [
+        {
+          "code": "conv_e07",
+          "title_ar": "تمهيد: دعوة لحفلة",
+          "context_ar": "مقطع تمهيدي عن دعوة اجتماعية",
+          "is_intro": true,
+          "lines": [
+            ["M", "Are you coming to the welcome party tonight?"],
+            ["F", "I'd love to, but I have an early class tomorrow."],
+            ["M", "Just stop by for an hour. It'll be fun."],
+            ["F", "Maybe. I'll see how I feel after dinner."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_e08",
+          "title_ar": "محادثة 1: حفلة الطلاب",
+          "context_ar": "طالبان يخططان لحضور حفلة",
+          "lines": [
+            ["F", "Are you going to the student party on Friday?"],
+            ["M", "Yes, definitely. My classmates from the engineering club are all going."],
+            ["F", "Oh nice. I wasn't sure if I should come alone."],
+            ["M", "You should come with us. The more, the merrier."],
+            ["F", "That's really kind. What time does it start?"],
+            ["M", "Eight o'clock at the main hall. We can meet at the entrance."],
+            ["F", "Perfect. I'll be there."]
+          ],
+          "questions": [
+            {
+              "q": "What event are the students talking about?",
+              "options": ["Library study session", "Student party", "Sports event", "Lecture"],
+              "correct": 1,
+              "explanation_ar": "الحوار يدور حول 'student party on Friday'.",
+              "wrong_explanation_ar": "بقية الأحداث لم تُذكر في الحوار.",
+              "elimination_hint_ar": "الفكرة الرئيسية تتضح من السؤال الأول."
+            },
+            {
+              "q": "Who is the male student going with?",
+              "options": ["His classmates", "His professor", "His family", "No one"],
+              "correct": 0,
+              "explanation_ar": "قال 'My classmates from the engineering club are all going'.",
+              "wrong_explanation_ar": "لم يُذكر الأستاذ أو العائلة، وهو ليس وحيداً.",
+              "elimination_hint_ar": "استمع لمن يرافقه."
+            }
+          ]
+        },
+        {
+          "code": "conv_e09",
+          "title_ar": "محادثة 2: نادي الكتاب",
+          "context_ar": "طالبة تدعو زميلها لنادي القراءة",
+          "lines": [
+            ["F", "Have you ever joined the book club?"],
+            ["M", "No, but I've been curious about it."],
+            ["F", "We meet every Thursday at six in the lounge. It's really relaxed."],
+            ["M", "What kind of books do you read?"],
+            ["F", "Mostly modern fiction. This month we're reading a novel by a Japanese author."],
+            ["M", "Sounds interesting. Can I just show up?"],
+            ["F", "Absolutely. New members are always welcome."]
+          ],
+          "questions": [
+            {
+              "q": "How does the male speaker feel about joining?",
+              "options": ["Annoyed", "Curious and interested", "Confused", "Disappointed"],
+              "correct": 1,
+              "explanation_ar": "قال 'I've been curious about it' و'Sounds interesting' — نبرة فضول واهتمام.",
+              "wrong_explanation_ar": "لا يوجد ما يدل على الانزعاج أو الارتباك.",
+              "elimination_hint_ar": "ركّز على الكلمات العاطفية: curious, interesting."
+            },
+            {
+              "q": "When does the book club meet?",
+              "options": ["Every Monday at five", "Every Thursday at six", "Every Friday at seven", "Every weekend"],
+              "correct": 1,
+              "explanation_ar": "حُدد الموعد: 'every Thursday at six in the lounge'.",
+              "wrong_explanation_ar": "الأوقات الأخرى لم تُذكر.",
+              "elimination_hint_ar": "انتبه لليوم والساعة بدقة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 204,
+      "code": "M3_L04",
+      "sub_lesson_index": 4,
+      "level": "easy",
+      "title_ar": "المرحلة 3 - الدرس 4: المهام الدراسية",
+      "title_en": "Academic Tasks Conversations",
+      "principle_en": "Catch task requirements — length, deadline, sources, and format.",
+      "principle_ar": "التقط متطلبات المهمة — الطول، الموعد النهائي، المصادر، والصيغة.",
+      "strategy_ar": "دوّن كل رقم وقيد ذُكر: عدد الصفحات، نوع المصادر، الموعد النهائي.",
+      "clips": [
+        {
+          "code": "conv_e10",
+          "title_ar": "تمهيد: استفسار عن واجب",
+          "context_ar": "مقطع تمهيدي حول مهمة دراسية",
+          "is_intro": true,
+          "lines": [
+            ["F", "When is the history assignment due?"],
+            ["M", "Next Wednesday by midnight."],
+            ["F", "And how long should it be?"],
+            ["M", "Around 1500 words. Don't forget the bibliography."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_e11",
+          "title_ar": "محادثة 1: المقال البحثي",
+          "context_ar": "طالبان يناقشان متطلبات مقال",
+          "lines": [
+            ["M", "Did you start the essay for Professor Adams?"],
+            ["F", "Not yet. What were the requirements again?"],
+            ["M", "Minimum five pages, double-spaced, and at least four academic sources."],
+            ["F", "Can we use online sources?"],
+            ["M", "Only peer-reviewed journals. No regular websites or blogs."],
+            ["F", "Got it. So online is fine if it's academic."],
+            ["M", "Exactly. The university library database has plenty."]
+          ],
+          "questions": [
+            {
+              "q": "What is the required minimum length of the essay?",
+              "options": ["Three pages", "Five pages", "Six pages", "Ten pages"],
+              "correct": 1,
+              "explanation_ar": "حدّد بوضوح 'Minimum five pages, double-spaced'.",
+              "wrong_explanation_ar": "الأرقام الأخرى لم تُذكر.",
+              "elimination_hint_ar": "ركّز على كلمة 'minimum' والرقم الذي يليها."
+            },
+            {
+              "q": "Can the student use online sources?",
+              "options": ["Yes, any online source", "No, never", "Only peer-reviewed journals", "Only library books"],
+              "correct": 2,
+              "explanation_ar": "قال صراحةً 'Only peer-reviewed journals. No regular websites or blogs'.",
+              "wrong_explanation_ar": "الإجابة ليست مطلقة بنعم أو لا، بل مشروطة.",
+              "elimination_hint_ar": "انتبه للقيد المحدد على المصادر الإلكترونية."
+            }
+          ]
+        },
+        {
+          "code": "conv_e12",
+          "title_ar": "محادثة 2: عرض تقديمي",
+          "context_ar": "طالبة تستفسر عن متطلبات العرض",
+          "lines": [
+            ["F", "Quick question — how long should the presentation be?"],
+            ["M", "Ten minutes maximum, including Q and A."],
+            ["F", "And do we need to use slides?"],
+            ["M", "Slides are optional, but visuals are encouraged."],
+            ["F", "What about working in pairs?"],
+            ["M", "This one is individual. Group work comes later in the semester."],
+            ["F", "Okay, thanks for clarifying."]
+          ],
+          "questions": [
+            {
+              "q": "What is the maximum length of the presentation?",
+              "options": ["Five minutes", "Ten minutes", "Fifteen minutes", "Twenty minutes"],
+              "correct": 1,
+              "explanation_ar": "ذكر 'Ten minutes maximum, including Q and A'.",
+              "wrong_explanation_ar": "الأوقات الأخرى لم تُذكر.",
+              "elimination_hint_ar": "ابحث عن كلمة 'maximum' والرقم."
+            },
+            {
+              "q": "Can students work in pairs?",
+              "options": ["Yes, in pairs", "No, individual only", "Groups of three", "Optional"],
+              "correct": 1,
+              "explanation_ar": "حُسم الأمر بـ 'This one is individual'.",
+              "wrong_explanation_ar": "العمل الجماعي مذكور لاحقاً في الفصل، ليس هذه المهمة.",
+              "elimination_hint_ar": "انتبه لكلمة individual."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 205,
+      "code": "M3_L05",
+      "sub_lesson_index": 5,
+      "level": "easy",
+      "title_ar": "المرحلة 3 - الدرس 5: الصحة والعيادة",
+      "title_en": "Health & Clinic Conversations",
+      "principle_en": "Identify locations and procedures — where to go and what to do.",
+      "principle_ar": "حدّد الأماكن والإجراءات — إلى أين تذهب وماذا تفعل.",
+      "strategy_ar": "ابحث عن عبارات الإرشاد مثل 'you should go to' أو 'first you need to'.",
+      "clips": [
+        {
+          "code": "conv_e13",
+          "title_ar": "تمهيد: شعور بالتعب",
+          "context_ar": "مقطع تمهيدي عن طلب نصيحة طبية",
+          "is_intro": true,
+          "lines": [
+            ["F", "I haven't been feeling well since yesterday."],
+            ["M", "Have you visited the campus clinic?"],
+            ["F", "Not yet. Where is it exactly?"],
+            ["M", "Behind the gym, next to the parking lot."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_e14",
+          "title_ar": "محادثة 1: عيادة الجامعة",
+          "context_ar": "طالب يسأل عن خدمات العيادة",
+          "lines": [
+            ["M", "I think I'm coming down with a cold. Should I see a doctor?"],
+            ["F", "You can go to the campus clinic. They handle minor illnesses."],
+            ["M", "Do I need an appointment?"],
+            ["F", "Walk-ins are fine before noon. Just bring your student ID."],
+            ["M", "What about the cost?"],
+            ["F", "It's completely free for enrolled students. Even medicine is included."],
+            ["M", "Wow, that's great. I'll head there now."]
+          ],
+          "questions": [
+            {
+              "q": "Where should the student go for help?",
+              "options": ["Library", "Campus clinic", "Cafeteria", "Professor's office"],
+              "correct": 1,
+              "explanation_ar": "وُجّه إلى 'campus clinic' لعلاج الأمراض البسيطة.",
+              "wrong_explanation_ar": "الأماكن الأخرى لا تقدم خدمات طبية.",
+              "elimination_hint_ar": "ركّز على المكان المتخصص بالعلاج."
+            },
+            {
+              "q": "Will the student have to pay for the consultation?",
+              "options": ["Yes, full fee", "No, it's free", "Only for medicine", "Only on weekends"],
+              "correct": 1,
+              "explanation_ar": "قِيلت العبارة 'completely free for enrolled students. Even medicine is included'.",
+              "wrong_explanation_ar": "الدواء أيضاً مجاني، فالخيار 'only for medicine' خاطئ.",
+              "elimination_hint_ar": "كل الخدمات مجانية بدون استثناء."
+            }
+          ]
+        },
+        {
+          "code": "conv_e15",
+          "title_ar": "محادثة 2: تجديد وصفة طبية",
+          "context_ar": "طالبة تستفسر عن تجديد دواء",
+          "lines": [
+            ["F", "Hi, I need to refill my prescription. Can you help?"],
+            ["M", "Of course. Do you have a copy of the original prescription?"],
+            ["F", "Yes, it's right here from my doctor back home."],
+            ["M", "Perfect. We'll need to verify it, which takes about 24 hours."],
+            ["F", "Is there any cost?"],
+            ["M", "The verification is free. The medicine itself depends on the insurance."],
+            ["F", "I have student insurance."],
+            ["M", "Then most likely it'll be covered. Come back tomorrow afternoon."]
+          ],
+          "questions": [
+            {
+              "q": "What does the student want to do?",
+              "options": ["Get a new prescription", "Refill an existing prescription", "See a doctor", "Cancel insurance"],
+              "correct": 1,
+              "explanation_ar": "قالت 'I need to refill my prescription'.",
+              "wrong_explanation_ar": "ليس وصفة جديدة، بل تجديد القديمة.",
+              "elimination_hint_ar": "كلمة refill تعني تجديد."
+            },
+            {
+              "q": "When should she come back?",
+              "options": ["In one hour", "Tomorrow afternoon", "Next week", "Friday morning"],
+              "correct": 1,
+              "explanation_ar": "حدد الموظف: 'Come back tomorrow afternoon' بعد التحقق الذي يأخذ 24 ساعة.",
+              "wrong_explanation_ar": "الأوقات الأخرى لم تُذكر.",
+              "elimination_hint_ar": "انتبه للوقت المحدد بعد التحقق."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

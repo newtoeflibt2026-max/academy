@@ -1,0 +1,246 @@
+{
+  "topic_code": "smartphones",
+  "topic_ar": "الهواتف الذكية",
+  "topic_en": "Smartphones",
+  "category": "Daily Life",
+  "order_index": 1,
+  "interviewer": {
+    "avatar_id": "aria",
+    "name": "Aria",
+    "accent": "US Female",
+    "voice": "en-US-AriaNeural",
+    "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=aria&backgroundColor=b6e3f4"
+  },
+  "intro": {
+    "en": "You have agreed to take part in a research study about smartphone usage. You will have a short online interview with a researcher. The researcher will ask you some questions. Please answer the interviewer's questions.",
+    "ar": "وافقت على المشاركة في دراسة بحثية عن استخدام الهواتف الذكية. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة. أجب عن أسئلة المُحاورة."
+  },
+  "questions": [
+    {
+      "q_num": 1,
+      "pattern": "Personal Recall",
+      "pattern_ar": "ذكرى شخصية",
+      "purpose": "Warm-up with a memory or life experience",
+      "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+      "question_en": "Thank you for speaking with me today. Please think back to the last time you used your phone for something important — such as contacting someone, finding your way, making a payment, or translating. Why did you use it then? What did you like about how it worked for you?",
+      "question_ar": "شكراً لحديثك معي اليوم. عُد بذاكرتك إلى آخر مرة استخدمت فيها هاتفك لشيء مهم — مثل التواصل مع شخص، أو إيجاد طريقك، أو الدفع، أو الترجمة. لماذا استخدمته حينها؟ وما الذي أعجبك في الطريقة التي عمل بها؟",
+      "audio_duration_sec": 16,
+      "key_vocabulary": [
+        {
+          "word": "directions",
+          "ipa": "/dəˈrekʃənz/",
+          "ar": "إرشادات الطريق"
+        },
+        {
+          "word": "translate",
+          "ipa": "/trænzˈleɪt/",
+          "ar": "يُترجم"
+        },
+        {
+          "word": "contact",
+          "ipa": "/ˈkɒntækt/",
+          "ar": "يتواصل مع"
+        },
+        {
+          "word": "useful",
+          "ipa": "/ˈjuːsfəl/",
+          "ar": "مفيد"
+        },
+        {
+          "word": "quickly",
+          "ipa": "/ˈkwɪkli/",
+          "ar": "بسرعة"
+        }
+      ],
+      "answer_tier69": {
+        "text": "Last week, I used my phone to find directions. I was in a new area and I felt lost. So I opened the map app on my phone. It showed me the way to my friend's house. I liked it because it was very fast and easy. I just typed the address and the phone did everything. Without my phone, I would be very late. That is why I think my phone is really helpful in my daily life.",
+        "word_count": 75,
+        "level": "A2-B1",
+        "structure_notes": "Simple past + simple present. Short sentences. Basic linkers (so, because, that is why)."
+      },
+      "answer_tier90": {
+        "text": "Just last week, I used my phone for navigation when I got completely lost in an unfamiliar neighborhood. I opened a map app, typed the destination, and within seconds I had clear walking directions. What I really appreciated was how accurate and quick it was — it even suggested a shortcut. Honestly, without that tool I would have wasted at least an hour wandering around. That experience reminded me how much I rely on my smartphone for solving everyday problems efficiently.",
+        "word_count": 82,
+        "level": "B2-C1",
+        "structure_notes": "Past tenses + 'what I appreciated was', 'honestly', 'rely on'. Advanced vocabulary: navigation, unfamiliar, destination, accurate, efficiently."
+      },
+      "self_assessment": [
+        "هل ذكرت موقفاً محدداً (متى وأين)؟",
+        "هل وضحت سبب استخدام الهاتف؟",
+        "هل قلت ما الذي أعجبك تحديداً؟",
+        "هل تكلمت بطلاقة لمدة 30 ثانية على الأقل؟"
+      ]
+    },
+    {
+      "q_num": 2,
+      "pattern": "Emotional Reaction / Preference",
+      "pattern_ar": "رد فعل أو تفضيل",
+      "purpose": "Explore feelings or everyday behaviors",
+      "tests": "Pronunciation, rhythm, vocabulary precision",
+      "question_en": "Everyone feels differently about phones. Some feel phones make them more connected and efficient, while others feel distracted or overwhelmed. How do you usually react to your phone in daily life? Why do you think you react that way?",
+      "question_ar": "يشعر كل شخص بشكل مختلف تجاه الهواتف. يشعر البعض أن الهواتف تجعلهم أكثر تواصلاً وكفاءة، بينما يشعر آخرون بالتشتت أو الإرهاق. كيف تتفاعل عادةً مع هاتفك في حياتك اليومية؟ ولماذا تعتقد أنك تتفاعل بهذه الطريقة؟",
+      "audio_duration_sec": 14,
+      "key_vocabulary": [
+        {
+          "word": "distracted",
+          "ipa": "/dɪˈstræktɪd/",
+          "ar": "مُشتّت"
+        },
+        {
+          "word": "connected",
+          "ipa": "/kəˈnektɪd/",
+          "ar": "متصل"
+        },
+        {
+          "word": "react",
+          "ipa": "/riˈækt/",
+          "ar": "يتفاعل"
+        },
+        {
+          "word": "notification",
+          "ipa": "/ˌnəʊtɪfɪˈkeɪʃən/",
+          "ar": "إشعار"
+        },
+        {
+          "word": "balance",
+          "ipa": "/ˈbæləns/",
+          "ar": "توازن"
+        }
+      ],
+      "answer_tier69": {
+        "text": "Honestly, my phone sometimes makes me feel distracted. I check it too many times every day, even when I am working or studying. I think this is because I get many messages from family and friends. I do not want to miss anything important. But it is also bad, because I cannot focus well. I want to use my phone less in the future. I think a small break from the phone is good for the mind.",
+        "word_count": 78,
+        "level": "A2-B1",
+        "structure_notes": "Present simple + simple connectors (because, but). Honest tone."
+      },
+      "answer_tier90": {
+        "text": "To be honest, I often feel quite distracted by my phone. I tend to check it constantly throughout the day, even during important tasks, which seriously affects my concentration. The main reason is probably the endless stream of notifications — messages, social media, news updates. I feel a strange pressure to respond immediately. Although my phone keeps me connected, I have realized I really need to set healthier limits and find a better balance between staying in touch and staying focused on what truly matters.",
+        "word_count": 86,
+        "level": "B2-C1",
+        "structure_notes": "Adverbs (constantly, seriously, probably). 'Although' clause. Advanced phrases: 'endless stream', 'healthier limits', 'staying focused'."
+      },
+      "self_assessment": [
+        "هل وصفت شعورك الحقيقي (إيجابي أو سلبي)؟",
+        "هل أعطيت سبباً واضحاً لشعورك؟",
+        "هل ذكرت مثالاً من حياتك اليومية؟",
+        "هل استخدمت 'because' أو 'so' أو رابطاً مشابهاً؟"
+      ]
+    },
+    {
+      "q_num": 3,
+      "pattern": "Opinion with Support",
+      "pattern_ar": "رأي مع دعم",
+      "purpose": "Take a position and justify it",
+      "tests": "Grammar control, idea development, coherence",
+      "question_en": "Now I'd like your opinion. Some people believe smartphones clearly make life better in the modern world. They would argue, for example, that smartphones give people instant access to information and services. Do you agree that smartphones make life better? Why or why not?",
+      "question_ar": "الآن أود معرفة رأيك. يعتقد بعض الناس أن الهواتف الذكية تجعل الحياة أفضل بشكل واضح في العالم الحديث. قد يقولون مثلاً إنها تتيح الوصول الفوري للمعلومات والخدمات. هل توافق على أن الهواتف الذكية تجعل الحياة أفضل؟ ولماذا؟",
+      "audio_duration_sec": 17,
+      "key_vocabulary": [
+        {
+          "word": "agree",
+          "ipa": "/əˈɡriː/",
+          "ar": "يوافق"
+        },
+        {
+          "word": "access",
+          "ipa": "/ˈækses/",
+          "ar": "وصول"
+        },
+        {
+          "word": "information",
+          "ipa": "/ˌɪnfəˈmeɪʃən/",
+          "ar": "معلومات"
+        },
+        {
+          "word": "modern",
+          "ipa": "/ˈmɒdən/",
+          "ar": "حديث"
+        },
+        {
+          "word": "benefit",
+          "ipa": "/ˈbenɪfɪt/",
+          "ar": "فائدة"
+        }
+      ],
+      "answer_tier69": {
+        "text": "Yes, I agree that smartphones make life better. The main reason is information. We can find any answer in seconds. For example, when I cook, I just search for the recipe on my phone. Also, students can learn many things online for free. In the past, this was very hard. Of course, smartphones have some bad sides too, like too much screen time. But in general, I think the good things are bigger than the bad things.",
+        "word_count": 79,
+        "level": "A2-B1",
+        "structure_notes": "Clear position (Yes, I agree). 'For example' + 'Also' + 'But in general'. Acknowledges counterargument simply."
+      },
+      "answer_tier90": {
+        "text": "I completely agree that smartphones make modern life significantly better, mainly because they provide instant access to information and services. For instance, with just a few taps I can book a doctor's appointment, learn a new skill on YouTube, or transfer money to my family abroad. These things used to take hours, or even days. Of course, smartphones are not perfect — overuse can cause real problems. However, when used wisely, the benefits clearly outweigh the drawbacks in today's fast-paced world.",
+        "word_count": 84,
+        "level": "B2-C1",
+        "structure_notes": "Strong position + 'significantly', 'instant access'. Concrete examples. 'However', 'outweigh the drawbacks' — advanced concession."
+      },
+      "self_assessment": [
+        "هل أعلنت موقفك بوضوح في البداية (أوافق / لا أوافق)؟",
+        "هل قدمت سبباً رئيسياً واحداً على الأقل؟",
+        "هل أعطيت مثالاً محدداً يدعم رأيك؟",
+        "هل ربطت الأفكار بـ 'because' أو 'for example' أو 'however'؟"
+      ]
+    },
+    {
+      "q_num": 4,
+      "pattern": "Policy or Prediction",
+      "pattern_ar": "سياسة أو توقع مستقبلي",
+      "purpose": "Speculate or evaluate a broader issue",
+      "tests": "Complex sentence structure, logical reasoning",
+      "question_en": "One last question. Do you think schools and workplaces should encourage healthier phone habits — for example, by asking people to turn off their phones during breaks or meetings? Why or why not? Please give one benefit and one drawback of this idea.",
+      "question_ar": "سؤال أخير. هل تعتقد أن المدارس وأماكن العمل يجب أن تشجع عادات أكثر صحية في استخدام الهاتف — مثلاً بأن تطلب من الناس إغلاق هواتفهم خلال الاستراحات أو الاجتماعات؟ ولماذا؟ من فضلك اذكر فائدة واحدة ومضرة واحدة لهذه الفكرة.",
+      "audio_duration_sec": 16,
+      "key_vocabulary": [
+        {
+          "word": "encourage",
+          "ipa": "/ɪnˈkʌrɪdʒ/",
+          "ar": "يشجع"
+        },
+        {
+          "word": "habit",
+          "ipa": "/ˈhæbɪt/",
+          "ar": "عادة"
+        },
+        {
+          "word": "rule",
+          "ipa": "/ruːl/",
+          "ar": "قاعدة"
+        },
+        {
+          "word": "emergency",
+          "ipa": "/ɪˈmɜːdʒənsi/",
+          "ar": "حالة طارئة"
+        },
+        {
+          "word": "productive",
+          "ipa": "/prəˈdʌktɪv/",
+          "ar": "مُنتِج"
+        }
+      ],
+      "answer_tier69": {
+        "text": "Yes, I think this is a great idea. One big benefit is that people can focus better on their work or studies. When phones are off, the mind is quiet and ideas come faster. For example, in meetings, people listen more carefully without phones. But there is one drawback. Some people need their phones for emergencies, like sick family members. So the rule should be flexible. Maybe phones can be on silent mode, not fully off, in important cases.",
+        "word_count": 81,
+        "level": "A2-B1",
+        "structure_notes": "Clear yes/no answer. 'One benefit' + 'But there is one drawback' — directly answers both parts."
+      },
+      "answer_tier90": {
+        "text": "Yes, I genuinely believe schools and workplaces should encourage healthier phone habits. The biggest benefit is improved focus — when people are not constantly checking their screens, they become noticeably more productive and engaged in conversations. However, one clear drawback is that strict rules might create stress, especially for parents or caregivers who need to stay reachable in emergencies. So I think the best approach is a flexible policy: phones on silent during meetings, but not completely banned. That way, both productivity and peace of mind are protected.",
+        "word_count": 90,
+        "level": "B2-C1",
+        "structure_notes": "Complex sentences with 'when', 'especially for', 'so I think'. Balanced answer (benefit + drawback + solution)."
+      },
+      "self_assessment": [
+        "هل اتخذت موقفاً واضحاً (نعم / لا)؟",
+        "هل ذكرت فائدة واحدة محددة كما طلب السؤال؟",
+        "هل ذكرت مضرة واحدة محددة كما طلب السؤال؟",
+        "هل استخدمت كلمات تدل على المستقبل أو السياسة (should, could, might)؟"
+      ]
+    }
+  ],
+  "overall_self_assessment": [
+    "هل أكملت 4 أسئلة كاملة بمحاولتين لكل سؤال؟",
+    "هل تحسنت محاولتك الثانية بعد قراءة الإجابة المقترحة؟",
+    "هل التزمت بـ 45 ثانية تقريباً لكل إجابة؟",
+    "ما المفردة الجديدة التي تعلمتها وستستخدمها لاحقاً؟"
+  ]
+}

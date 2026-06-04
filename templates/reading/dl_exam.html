@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ item.title_en }} — Daily Reading</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Cairo', sans-serif; background: #f1f5f9; min-height: 100vh; color: #1e293b; }
+  .en { font-family: 'Inter', sans-serif; direction: ltr; }
+
+  /* Header (ETS-style) */
+  .ets-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white;
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .ets-timer {
+    background: #fbbf24; color: #1e293b; font-weight: 800;
+    padding: 8px 16px; border-radius: 8px; font-family: 'Inter', monospace;
+    font-size: 1.1rem; min-width: 90px; text-align: center;
+  }
+  .ets-timer.warning { background: #f97316; color: white; animation: pulse 1s infinite; }
+  .ets-timer.danger  { background: #dc2626; color: white; animation: pulse .5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .65; } }
+
+  .progress-info { font-size: .95rem; opacity: .9; }
+  .progress-info b { color: #fbbf24; font-family: 'Inter', sans-serif; }
+  .header-title { font-size: 1rem; font-weight: 700; }
+  .header-title .badge { background: rgba(255,255,255,.15); padding: 4px 10px;
+    border-radius: 6px; font-size: .8rem; margin-inline-end: 8px; }
+  .btn-close {
+    background: rgba(255,255,255,.1); color: white; border: none;
+    width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+    font-size: 1.2rem; transition: all .2s;
+  }
+  .btn-close:hover { background: rgba(239,68,68,.8); }
+
+  .progress-wrap { background: #1e293b; padding: 0 24px 12px; }
+  .progress-bar { background: rgba(255,255,255,.15); height: 6px; border-radius: 999px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; width: 0%; transition: width .3s ease; }
+
+  /* Split layout */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1280px;
+    margin: 24px auto; padding: 0 20px; }
+  @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+
+  /* Passage panel */
+  .passage-panel {
+    background: white; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 26px 30px; box-shadow: 0 4px 24px rgba(0,0,0,.04);
+    position: sticky; top: 90px; max-height: calc(100vh - 110px); overflow-y: auto;
+  }
+  .passage-title {
+    font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 14px;
+    padding-bottom: 10px; border-bottom: 2px solid #e2e8f0;
+  }
+  .passage-text {
+    font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    font-size: 1rem; line-height: 1.85; color: #334155; white-space: pre-wrap;
+  }
+
+  /* Questions panel */
+  .questions-panel { display: flex; flex-direction: column; gap: 16px; }
+  .question {
+    background: white; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 22px 26px; box-shadow: 0 4px 24px rgba(0,0,0,.04);
+  }
+  .q-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .q-num {
+    width: 32px; height: 32px; background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white; border-radius: 50%; display: inline-flex; align-items: center;
+    justify-content: center; font-weight: 700; font-family: 'Inter', sans-serif; font-size: .95rem;
+  }
+  .q-prompt {
+    font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    font-size: 1rem; font-weight: 600; color: #1e293b; line-height: 1.6; margin: 10px 0 12px;
+  }
+  .q-prompt-ar { font-size: .9rem; color: #64748b; line-height: 1.7; margin-bottom: 14px; }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+    border: 1.5px solid #e2e8f0; border-radius: 10px; cursor: pointer;
+    transition: all .15s; background: white;
+  }
+  .option:hover { border-color: #6366f1; background: #f8fafc; }
+  .option.selected {
+    border-color: #4f46e5; background: #eef2ff;
+    box-shadow: 0 2px 8px rgba(79,70,229,.15);
+  }
+  .option input { display: none; }
+  .opt-letter {
+    width: 28px; height: 28px; border: 2px solid #cbd5e1; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #64748b; font-family: 'Inter', sans-serif; font-size: .85rem;
+    flex-shrink: 0; transition: all .15s;
+  }
+  .option.selected .opt-letter { background: #4f46e5; color: white; border-color: #4f46e5; }
+  .opt-text {
+    font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    font-size: .98rem; color: #1e293b; line-height: 1.5; flex: 1;
+  }
+
+  /* Action bar */
+  .action-bar {
+    max-width: 1280px; margin: 24px auto; padding: 0 20px;
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 26px; border-radius: 10px; font-weight: 700; border: none;
+    cursor: pointer; font-family: 'Cairo', sans-serif; font-size: .98rem;
+    transition: all .2s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;
+    box-shadow: 0 4px 14px rgba(79,70,229,.35); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,70,229,.45); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: white; color: #475569; border: 1px solid #cbd5e1; }
+  .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+
+  /* Modal (ETS-style) */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(15,23,42,.55);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px; animation: fadeIn .2s ease;
+  }
+  .modal-backdrop.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: white; border-radius: 16px; max-width: 460px; width: 100%;
+    padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    animation: scaleIn .25s cubic-bezier(.16,1,.3,1); text-align: center;
+  }
+  @keyframes scaleIn { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 2rem;
+  }
+  .modal-icon.warning { background: #fef3c7; color: #d97706; }
+  .modal-icon.danger  { background: #fee2e2; color: #dc2626; }
+  .modal-icon.info    { background: #dbeafe; color: #2563eb; }
+  .modal h3 { font-size: 1.25rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
+  .modal p  { color: #64748b; font-size: .95rem; line-height: 1.6; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .modal-actions .btn { flex: 1; min-width: 120px; justify-content: center; }
+</style>
+</head>
+<body>
+
+<header class="ets-header">
+  <div class="header-left">
+    <div class="ets-timer en" id="timer">--:--</div>
+    <div class="progress-info"><b id="progress-text">0</b> / <span>{{ item.questions|length }}</span> أسئلة</div>
+  </div>
+  <div class="header-title">
+    <span class="badge">Daily Reading</span>
+    <span class="en">{{ item.title_en }}</span>
+  </div>
+  <button class="btn-close" onclick="askExit()" title="إنهاء">✕</button>
+</header>
+<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div></div>
+
+<div class="split">
+  <!-- Passage -->
+  <div class="passage-panel">
+    <div class="passage-title en">{{ item.passage.title_en or item.title_en }}</div>
+    <div class="passage-text en">{{ item.passage.text_en }}</div>
+  </div>
+
+  <!-- Questions -->
+  <div class="questions-panel">
+    {% for q in item.questions %}
+    <div class="question" data-qid="{{ q.id }}">
+      <div class="q-header">
+        <span class="q-num">{{ loop.index }}</span>
+        <span style="font-weight:700; color:#64748b">Question {{ loop.index }}</span>
+      </div>
+      <div class="q-prompt en">{{ q.prompt_en }}</div>
+      {% if q.prompt_ar %}<div class="ar-translation" data-qid="{{ loop.index0 }}" style="display:none; margin-top:8px; padding:8px 12px; background:#f3f4f6; border-right:3px solid #8b5cf6; border-radius:6px; font-size:14px; color:#6b7280; direction:rtl;"><div class="q-prompt-ar">{{ q.prompt_ar }}</div></div>{% endif %}
+      <div class="options">
+        {% for opt in q.options %}
+        <label class="option" data-opt="{{ opt.id }}">
+          <input type="radio" name="q_{{ q.id }}" value="{{ opt.id }}">
+          <span class="opt-letter en">{{ opt.id }}</span>
+          <span class="opt-text en">{{ opt.text_en }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="action-bar">
+  <button class="btn btn-primary" id="btn-submit" onclick="askSubmit()">✓ إرسال الإجابات</button>
+  <button class="btn btn-secondary" onclick="window.location.href='/reading/?user_id={{ user_id }}'">← العودة</button>
+</div>
+
+<!-- Modals -->
+<div class="modal-backdrop" id="modal-submit">
+  <div class="modal">
+    <div class="modal-icon info">📤</div>
+    <h3>إرسال الإجابات؟</h3>
+    <p id="submit-msg">أنت على وشك إرسال إجاباتك للتقييم.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-submit')">مراجعة</button>
+      <button class="btn btn-primary" id="confirm-submit" onclick="doSubmit()">تأكيد الإرسال</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-exit">
+  <div class="modal">
+    <div class="modal-icon danger">🚪</div>
+    <h3>الخروج من الامتحان؟</h3>
+    <p>إذا خرجت الآن لن يتم حفظ تقدمك.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-exit')">البقاء</button>
+      <button class="btn btn-primary" style="background:#dc2626" onclick="window.location.href='/reading/?user_id={{ user_id }}'">نعم، اخرج</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-timeup">
+  <div class="modal">
+    <div class="modal-icon danger">⏰</div>
+    <h3>انتهى الوقت!</h3>
+    <p>سيتم إرسال إجاباتك تلقائياً.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="doSubmit()">عرض النتيجة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONTENT_ID = "{{ item.id }}";
+const USER_ID    = "{{ user_id }}";
+const DURATION   = {{ item.duration_seconds|default(300) }};
+const TOTAL_Q    = {{ item.questions|length }};
+
+// Timer
+let timeLeft = DURATION;
+const timerEl = document.getElementById('timer');
+function fmt(s) { const m=Math.floor(s/60), r=s%60; return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0'); }
+timerEl.textContent = fmt(timeLeft);
+const timerInt = setInterval(() => {
+  timeLeft--;
+  if (timeLeft <= 0) { clearInterval(timerInt); timerEl.textContent='00:00'; openModal('modal-timeup'); return; }
+  timerEl.textContent = fmt(timeLeft);
+  timerEl.classList.toggle('warning', timeLeft <= 60 && timeLeft > 30);
+  timerEl.classList.toggle('danger',  timeLeft <= 30);
+}, 1000);
+
+// Option selection
+document.querySelectorAll('.option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const name = opt.querySelector('input').name;
+    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+      r.closest('.option').classList.remove('selected');
+    });
+    opt.classList.add('selected');
+    opt.querySelector('input').checked = true;
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const answered = document.querySelectorAll('.option.selected').length;
+  document.getElementById('progress-text').textContent = answered;
+  document.getElementById('progress-fill').style.width = (answered/TOTAL_Q*100) + '%';
+}
+
+// Modals
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
+});
+
+function askExit() { openModal('modal-exit'); }
+function askSubmit() {
+  const answered = document.querySelectorAll('.option.selected').length;
+  const unanswered = TOTAL_Q - answered;
+  const msg = unanswered > 0
+    ? `لديك <b>${unanswered}</b> سؤال غير مُجاب من أصل ${TOTAL_Q}. هل تريد الإرسال؟`
+    : `أجبت على جميع الأسئلة (${TOTAL_Q}/${TOTAL_Q}). جاهز للتقييم؟`;
+  document.getElementById('submit-msg').innerHTML = msg;
+  openModal('modal-submit');
+}
+
+async function doSubmit() {
+  clearInterval(timerInt);
+  const btn = document.getElementById('confirm-submit');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري الإرسال...'; }
+
+  // Collect answers
+  const answers = [];
+  document.querySelectorAll('.question').forEach(qEl => {
+    const qid = qEl.dataset.qid;
+    const sel = qEl.querySelector('input:checked');
+    answers.push({ question_id: qid, selected: sel ? sel.value : null });
+  });
+  const time_spent = DURATION - timeLeft;
+
+  try {
+    const res = await fetch('/reading/dl/submit?user_id=' + USER_ID, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content_id: CONTENT_ID, answers, time_spent })
+    });
+    const data = await res.json();
+    if (data.redirect) window.location.href = data.redirect;
+    else if (data.attempt_id) window.location.href = '/reading/dl/result/' + data.attempt_id + '?user_id=' + USER_ID;
+    else showResultModal('error','خطأ في الإرسال', String('تم الإرسال: ' + JSON.stringify(data)).slice(0,200));
+  } catch (err) {
+    showResultModal('error','خطأ في الإرسال', String('فشل الإرسال: ' + err.message));
+    if (btn) { btn.disabled = false; btn.textContent = 'تأكيد الإرسال'; }
+  }
+}
+</script>
+
+<script id="reveal-ar-script">
+// Phase 5.7: Reveal Arabic translation only after user selects an answer
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      // ابحث عن أقرب block للسؤال (parent question card)
+      var card = radio.closest('.question-card, .q-card, [class*="question"], .mcq-card');
+      if (!card) card = radio.closest('div');
+      // ابحث صعوداً حتى نجد div يحتوي ar-translation
+      var node = radio.parentElement;
+      while (node && node !== document.body) {
+        var ar = node.querySelector('.ar-translation');
+        if (ar) {
+          ar.style.display = 'block';
+          ar.style.animation = 'fadeIn 0.3s ease-in';
+          break;
+        }
+        node = node.parentElement;
+      }
+    });
+  });
+});
+</script>
+<style>
+@keyframes fadeIn { from {opacity:0; transform:translateY(-4px);} to {opacity:1; transform:translateY(0);} }
+.ar-translation { transition: all 0.3s ease; }
+</style>
+
+
+<div id="resultModal" class="modal-backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:scaleIn 0.25s ease-out;">
+    <div id="resultIcon" style="font-size:56px;margin-bottom:12px;">⚠️</div>
+    <h3 id="resultTitle" style="font-size:20px;color:#1e293b;margin-bottom:8px;font-family:Cairo,sans-serif;">حدث خطأ</h3>
+    <p id="resultMsg" style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;font-family:Cairo,sans-serif;">يرجى المحاولة مرة أخرى</p>
+    <button id="resultBtn" onclick="document.getElementById('resultModal').style.display='none'" style="padding:10px 24px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-family:Cairo,sans-serif;">حسناً</button>
+  </div>
+</div>
+<style>@keyframes scaleIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}</style>
+<script id="error-modal-script">
+window.showResultModal = function(type, title, msg, onClose){
+  var modal = document.getElementById('resultModal');
+  var icon = document.getElementById('resultIcon');
+  var t = document.getElementById('resultTitle');
+  var m = document.getElementById('resultMsg');
+  var btn = document.getElementById('resultBtn');
+  icon.textContent = (type==='success') ? '✅' : (type==='error' ? '❌' : '⚠️');
+  t.textContent = title;
+  m.textContent = msg;
+  modal.style.display = 'flex';
+  btn.onclick = function(){ modal.style.display='none'; if(onClose) onClose(); };
+};
+</script>
+
+</body>
+</html>

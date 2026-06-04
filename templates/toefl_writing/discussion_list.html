@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مناقشات أكاديمية - TOEFL</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; color: #1a202c; line-height: 1.7; padding: 30px 20px; }
+.container { max-width: 1100px; margin: 0 auto; }
+.page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.page-header h1 { font-size: 28px; margin-bottom: 10px; }
+.page-header p { opacity: 0.95; font-size: 16px; }
+.scenarios-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.scenario-card { background: white; border-radius: 12px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent; }
+.scenario-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); border-color: #667eea; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.tier-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.tier-tier59 { background: #c6f6d5; color: #22543d; }
+.tier-tier69 { background: #fef3c7; color: #78350f; }
+.tier-tier90 { background: #fecaca; color: #7f1d1d; }
+.difficulty-stars { color: #f59e0b; font-size: 14px; }
+.card-title { font-size: 18px; font-weight: 700; color: #2c5282; margin-bottom: 6px; }
+.card-title-en { font-size: 13px; color: #718096; margin-bottom: 14px; font-style: italic; }
+.card-meta { display: flex; gap: 15px; font-size: 13px; color: #4a5568; margin-bottom: 14px; }
+.card-meta span { display: flex; align-items: center; gap: 4px; }
+.card-actions { display: flex; gap: 10px; margin-top: 16px; }
+.btn { flex: 1; padding: 10px 14px; border-radius: 8px; text-decoration: none; text-align: center; font-weight: 600; font-size: 14px; transition: all 0.2s; border: none; cursor: pointer; }
+.btn-primary { background: #4299e1; color: white; }
+.btn-primary:hover { background: #3182ce; }
+.btn-secondary { background: #ed8936; color: white; }
+.btn-secondary:hover { background: #dd6b20; }
+.empty { text-align: center; padding: 60px 20px; color: #718096; }
+</style>
+</head>
+<body>
+<!-- BACK BUTTON (auto-added) -->
+<div style="position:fixed;top:15px;left:15px;z-index:9999;">
+  <a href="/home?user_id={{ request.args.get('user_id','') or user_id or '' }}"
+     style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#fff;border:2px solid #667eea;color:#667eea;text-decoration:none;border-radius:10px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-family:Arial,sans-serif;">
+     <span style="font-size:18px;">←</span>
+     <span>رجوع</span>
+  </a>
+</div>
+<!-- /BACK BUTTON -->
+
+<div class="container">
+  <div class="page-header">
+    <h1>💬 المناقشات الأكاديمية</h1>
+    <p>Write for an Academic Discussion - TOEFL iBT Writing Task 1 (10 دقائق / 100+ كلمة)</p>
+  </div>
+
+  {% if scenarios %}
+  <div class="scenarios-grid">
+    {% for s in scenarios %}
+    <div class="scenario-card">
+      <div class="card-header">
+        <span class="tier-badge tier-{{ s.target_tier }}">{{ s.target_tier|upper }}</span>
+        <span class="difficulty-stars">{% for i in range(s.difficulty) %}★{% endfor %}{% for i in range(5 - s.difficulty) %}☆{% endfor %}</span>
+      </div>
+      <div class="card-title">{{ s.title_ar }}</div>
+      <div class="card-title-en">{{ s.title_en }}</div>
+      <div class="card-meta">
+        <span>⏱️ {{ (s.time_limit_seconds // 60) }} دق</span>
+        <span>✍️ {{ s.min_words }}+ كلمة</span>
+        <span>📖 {{ s.topic_category }}</span>
+      </div>
+      <div class="card-actions">
+        <a href="/writing/discussion/{{ s.id }}/coach/1?user_id={{ request.args.get('user_id', 'guest') }}" class="btn btn-secondary">🎓 تدريب</a>
+        <a href="/writing/discussion/{{ s.id }}/exam?user_id={{ request.args.get('user_id', 'guest') }}" class="btn btn-primary">📝 امتحان</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">
+    <h2>📭 لا توجد سيناريوهات بعد</h2>
+    <p>ستظهر السيناريوهات هنا بعد إضافتها</p>
+  </div>
+  {% endif %}
+</div>
+</body>
+</html>

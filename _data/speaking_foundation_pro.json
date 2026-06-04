@@ -1,0 +1,720 @@
+{
+  "stage_info": {
+    "code": "speak_foundation_pro",
+    "title_ar": "المرحلة 2: التأسيس الاحترافي للمحادثة",
+    "title_en": "Professional Speaking Foundation",
+    "description_ar": "تعلّم كيف تتحدث باحترافية، وكيف تحلّ كل مشكلة تواجهك أثناء التحدث",
+    "icon": "🎓",
+    "total_lessons": 10
+  },
+  "lessons": [
+    {
+      "code": "fp_01_prew",
+      "lesson_num": 1,
+      "category": "professional",
+      "title_ar": "🎯 بنية PREW الذهبية لكل إجابة",
+      "title_en": "The Golden PREW Structure",
+      "principle_ar": "كل إجابة احترافية تتكوّن من 4 أجزاء: نقطة (Point) → سبب (Reason) → مثال (Example) → خاتمة (Wrap-up)",
+      "why_important_ar": "بدون هذه البنية، إجابتك ستبدو عشوائية ومفككة. مع PREW، حتى لو نسيت بعض الكلمات، يبقى المعنى منظماً ويفهمك السامع بسهولة.",
+      "rules": [
+        {
+          "step": "P - Point (8 ثوان)",
+          "ar": "ابدأ بإجابة مباشرة للسؤال",
+          "templates_en": [
+            "In my opinion, ...",
+            "I personally believe that ...",
+            "I would have to say ...",
+            "From my perspective, ..."
+          ]
+        },
+        {
+          "step": "R - Reason (10 ثوان)",
+          "ar": "اشرح السبب الرئيسي",
+          "templates_en": [
+            "The main reason is that ...",
+            "This is because ...",
+            "There are two key reasons for this. First, ..."
+          ]
+        },
+        {
+          "step": "E - Example (20 ثانية)",
+          "ar": "ادعم بمثال شخصي أو واقعي",
+          "templates_en": [
+            "For instance, when I was in high school, ...",
+            "Let me give you an example. Last year, ...",
+            "To illustrate, my own experience shows that ..."
+          ]
+        },
+        {
+          "step": "W - Wrap-up (7 ثوان)",
+          "ar": "اختم بجملة تربط بالنقطة الأولى",
+          "templates_en": [
+            "That's why I strongly feel ...",
+            "So, overall, I think ...",
+            "For these reasons, I believe ..."
+          ]
+        }
+      ],
+      "full_example": {
+        "question": "Do you prefer studying alone or with friends?",
+        "answer_en": "I personally prefer studying alone, mainly because I can focus much better without distractions. The main reason is that when I'm by myself, I control the pace and can spend more time on difficult topics. For instance, last semester I had a tough math exam, and I locked myself in the library for three days. I finished all the practice problems and got an A. If I had studied with friends, we would have chatted half the time. That's why I strongly feel solo study works best for serious exams.",
+        "ar_translation": "أفضل الدراسة وحدي لأنني أركز بشكل أفضل. السبب الرئيسي أنني أتحكم في الإيقاع. مثال: في الفصل الماضي، حبست نفسي في المكتبة 3 أيام لامتحان رياضيات صعب وحصلت على A. لو درست مع أصدقاء، لضاع نصف الوقت في الحديث. لذلك أؤمن بأن الدراسة الفردية أفضل."
+      },
+      "practice_tip_ar": "تدرّب على PREW يومياً مع أي سؤال عشوائي. خصّص 45 ثانية وحاول الالتزام بالأجزاء الأربعة."
+    },
+    {
+      "code": "fp_02_rhythm",
+      "lesson_num": 2,
+      "category": "professional",
+      "title_ar": "🎵 النطق والإيقاع - Stress, Pauses, Linking",
+      "title_en": "Pronunciation Rhythm",
+      "principle_ar": "الإنجليزية لغة إيقاعية. اضغط على الكلمات المهمة، توقف بين الأفكار، واربط الكلمات النهائية بالبادئة",
+      "why_important_ar": "المتحدثون بطلاقة لا ينطقون كل كلمة بنفس القوة. الكلمات المضغوطة (المحتوى) تكون أعلى وأبطأ، والكلمات الوظيفية (a, the, of) تكون خفيفة وسريعة.",
+      "rules": [
+        {
+          "rule": "Content words = STRESSED",
+          "ar": "الأسماء، الأفعال، الصفات، الظروف = اضغط عليها",
+          "examples": [
+            "I STUDIED at the LIBRARY",
+            "She LIKES CHOCOLATE CAKE"
+          ]
+        },
+        {
+          "rule": "Function words = weak",
+          "ar": "(a, the, of, to, in, is, am) = خفيفة",
+          "examples": [
+            "I went to the store → /aɪ went tə ðə stɔːr/"
+          ]
+        },
+        {
+          "rule": "Linking",
+          "ar": "اربط نهاية الكلمة ببداية التالية إن كانت حرف علة",
+          "examples": [
+            "pick it up → /pɪˈkɪˈtʌp/",
+            "an apple → /əˈnæpəl/"
+          ]
+        },
+        {
+          "rule": "Pauses",
+          "ar": "توقف 0.5 ثانية بين الأفكار (الفواصل)",
+          "examples": [
+            "First, │ I studied hard, │ and then │ I passed."
+          ]
+        }
+      ],
+      "practice_sentences": [
+        {
+          "en": "I think learning English is really important.",
+          "stress": [
+            "think",
+            "learning",
+            "English",
+            "really",
+            "important"
+          ],
+          "pauses": [
+            3
+          ]
+        },
+        {
+          "en": "She decided to travel alone to Europe last summer.",
+          "stress": [
+            "decided",
+            "travel",
+            "alone",
+            "Europe",
+            "last",
+            "summer"
+          ],
+          "pauses": [
+            4
+          ]
+        },
+        {
+          "en": "The most challenging part was finding a good job.",
+          "stress": [
+            "most",
+            "challenging",
+            "finding",
+            "good",
+            "job"
+          ],
+          "pauses": []
+        },
+        {
+          "en": "If you practice every day, you will improve quickly.",
+          "stress": [
+            "practice",
+            "every",
+            "day",
+            "improve",
+            "quickly"
+          ],
+          "pauses": [
+            5
+          ]
+        }
+      ],
+      "practice_tip_ar": "سجّل صوتك وقارن مع الأصلي. ركّز على الكلمات المضغوطة فقط."
+    },
+    {
+      "code": "fp_03_phrasebank",
+      "lesson_num": 3,
+      "category": "professional",
+      "title_ar": "💼 بنك العبارات الجاهزة - 40 عبارة احترافية",
+      "title_en": "Professional Phrase Bank",
+      "principle_ar": "احفظ هذه العبارات وستنطلق بدون تفكير. اختر 10 عبارات تحبها واستخدمها في كل إجابة",
+      "categories": [
+        {
+          "name_ar": "🚀 عبارات الافتتاح (10)",
+          "name_en": "Openers",
+          "phrases": [
+            "In my opinion, ...",
+            "I personally believe ...",
+            "From my point of view, ...",
+            "I would have to say ...",
+            "As far as I'm concerned, ...",
+            "Speaking from experience, ...",
+            "Honestly, I think ...",
+            "If you ask me, ...",
+            "There's no doubt that ...",
+            "Without question, ..."
+          ]
+        },
+        {
+          "name_ar": "🔗 عبارات التبرير (10)",
+          "name_en": "Justification",
+          "phrases": [
+            "The main reason is that ...",
+            "This is mainly because ...",
+            "One key factor is ...",
+            "What makes this important is ...",
+            "The thing is, ...",
+            "It comes down to ...",
+            "A big part of it is ...",
+            "This stems from ...",
+            "Largely due to ...",
+            "Primarily because ..."
+          ]
+        },
+        {
+          "name_ar": "📌 عبارات الأمثلة (10)",
+          "name_en": "Examples",
+          "phrases": [
+            "For instance, ...",
+            "Let me give you an example.",
+            "Take, for example, ...",
+            "To illustrate this, ...",
+            "A good example would be ...",
+            "I remember when ...",
+            "Just the other day, ...",
+            "In my own experience, ...",
+            "Consider the case of ...",
+            "Look at how ..."
+          ]
+        },
+        {
+          "name_ar": "🎯 عبارات الإغلاق (10)",
+          "name_en": "Closing",
+          "phrases": [
+            "That's why I strongly feel ...",
+            "So, overall, ...",
+            "For these reasons, ...",
+            "In short, ...",
+            "All things considered, ...",
+            "At the end of the day, ...",
+            "When all is said and done, ...",
+            "To sum it up, ...",
+            "So, to wrap up, ...",
+            "That's my take on it."
+          ]
+        }
+      ],
+      "practice_tip_ar": "اختر عبارة افتتاح + 2 تبرير + 1 مثال + 1 إغلاق. هذه 5 عبارات ستحفظها بسهولة وتغطي كل إجاباتك."
+    },
+    {
+      "code": "fp_04_forgot_word",
+      "lesson_num": 4,
+      "category": "problem_solving",
+      "title_ar": "😰 المشكلة 1: نسيت الكلمة وأنا أتحدث",
+      "title_en": "Problem 1: Forgot a Word",
+      "the_problem_ar": "أحاول أن أقول 'thermometer' ولكن نسيت الكلمة، فأتوقف وأرتبك ويذهب الوقت",
+      "the_solution_ar": "لا تتوقف! استخدم تقنية الـ Paraphrasing - اشرح الكلمة بكلمات أخرى",
+      "techniques": [
+        {
+          "name": "Describe the function",
+          "ar": "اشرح وظيفة الشيء",
+          "example_en": "I forgot the word... it's a small device you use to measure your body heat when you're sick.",
+          "example_ar": "(بدلاً من thermometer قال: 'جهاز صغير يقيس حرارة الجسم')"
+        },
+        {
+          "name": "Describe the shape/look",
+          "ar": "اشرح الشكل أو المظهر",
+          "example_en": "It's a long, thin object made of glass or plastic.",
+          "example_ar": "(يشرح الشكل بدلاً من إيجاد اسم محدد)"
+        },
+        {
+          "name": "Compare to similar",
+          "ar": "اقرن بشيء مشابه",
+          "example_en": "It's similar to a pen, but it has numbers on it.",
+          "example_ar": "(يقارن بقلم)"
+        },
+        {
+          "name": "Use a general word",
+          "ar": "استخدم كلمة عامة",
+          "example_en": "I'll just call it a... medical tool.",
+          "example_ar": "(يستخدم 'أداة طبية' كحل سريع)"
+        }
+      ],
+      "rescue_phrases_en": [
+        "What I mean is...",
+        "It's like... how do I say it...",
+        "The word escapes me, but it's basically...",
+        "I'm blanking on the word, but you know...",
+        "It's a kind of...",
+        "It's the thing that..."
+      ],
+      "rescue_phrases_ar": [
+        "ما أقصده هو...",
+        "إنه شبيه بـ... كيف أقولها...",
+        "نسيت الكلمة، لكنه أساساً...",
+        "ذهنياً فارغ من الكلمة، لكنك تعرف...",
+        "إنه نوع من...",
+        "هو الشيء الذي..."
+      ],
+      "practice_tip_ar": "تدرّب: اختر 5 كلمات صعبة (mortgage, nostalgia, procrastinate) وحاول شرحها بدون استخدامها"
+    },
+    {
+      "code": "fp_05_blank_mind",
+      "lesson_num": 5,
+      "category": "problem_solving",
+      "title_ar": "🧠 المشكلة 2: توقفت فجأة (Blank Mind)",
+      "title_en": "Problem 2: Blank Mind",
+      "the_problem_ar": "كنت أتحدث ثم فجأة فرغ ذهني وأنا في منتصف الجملة. الصمت يقتلني",
+      "the_solution_ar": "لا تقع في الصمت! استخدم Natural Fillers - كلمات تكسبك ثانيتين للتفكير",
+      "natural_fillers": [
+        {
+          "en": "Well, let me think...",
+          "ar": "حسناً، دعني أفكر..."
+        },
+        {
+          "en": "That's a great question.",
+          "ar": "هذا سؤال رائع."
+        },
+        {
+          "en": "Hmm, how should I put this?",
+          "ar": "كيف أضع هذا؟"
+        },
+        {
+          "en": "You know, it's interesting...",
+          "ar": "تعرف، إنه مثير..."
+        },
+        {
+          "en": "Actually, ...",
+          "ar": "في الواقع..."
+        },
+        {
+          "en": "Now that you mention it...",
+          "ar": "بما أنك ذكرت..."
+        },
+        {
+          "en": "I guess what I'd say is...",
+          "ar": "ما أعتقد أنني سأقوله..."
+        },
+        {
+          "en": "The way I see it...",
+          "ar": "بالطريقة التي أراها..."
+        }
+      ],
+      "rescue_strategies": [
+        {
+          "strategy": "Restart the sentence",
+          "ar": "أعد بداية الجملة بصياغة مختلفة",
+          "example_en": "I was saying that... well, let me start over. The key point is..."
+        },
+        {
+          "strategy": "Ask yourself a question out loud",
+          "ar": "اطرح سؤالاً على نفسك بصوت عالٍ",
+          "example_en": "What was I trying to say? Right, I was talking about..."
+        },
+        {
+          "strategy": "Move to the next point",
+          "ar": "انتقل لنقطة جديدة",
+          "example_en": "Anyway, another important thing is..."
+        }
+      ],
+      "what_to_avoid_ar": [
+        "❌ الصمت الطويل (أكثر من 2 ثانية)",
+        "❌ كلمات 'uhhhh' أو 'ummmm' الطويلة",
+        "❌ التوقف عن الإجابة كلياً",
+        "❌ القول 'I don't know' والاستسلام"
+      ],
+      "practice_tip_ar": "اختر 3 fillers تحبها واستخدمها في كل تمرين. ستصبح تلقائية خلال أسبوع."
+    },
+    {
+      "code": "fp_06_grammar_mistake",
+      "lesson_num": 6,
+      "category": "problem_solving",
+      "title_ar": "📝 المشكلة 3: أخطأت قواعدياً وأنا أتحدث",
+      "title_en": "Problem 3: Grammar Mistake",
+      "the_problem_ar": "قلت 'She go to school' وأنا أعرف أن الصحيح 'She goes'. هل أتوقف وأصحّح؟",
+      "the_solution_ar": "نعم، صحّح بأناقة! استخدم 'self-correction' الذكي - يُظهر أنك تعرف القاعدة",
+      "rules": [
+        {
+          "rule": "Quick correction (1 ثانية)",
+          "ar": "صحّح مباشرة بدون اعتذار",
+          "example_en": "She go... I mean, she goes to school every day.",
+          "ar_explanation": "لاحظ: 'I mean' يكفي. لا تقل 'sorry'"
+        },
+        {
+          "rule": "Smooth restart",
+          "ar": "أعد بدء الجملة كاملة",
+          "example_en": "She go... let me say that again. She goes to school every day.",
+          "ar_explanation": "أفضل للجمل المعقدة"
+        },
+        {
+          "rule": "Ignore minor mistakes",
+          "ar": "تجاهل الأخطاء الصغيرة جداً واستمر",
+          "example_en": "(قلت 'a apple' بدل 'an apple') → استمر! الفاحص يفهم",
+          "ar_explanation": "لا تتوقف لكل خطأ - يضيع الإيقاع"
+        }
+      ],
+      "self_correction_phrases_en": [
+        "I mean, ...",
+        "Or rather, ...",
+        "Let me rephrase that.",
+        "What I meant to say is...",
+        "Sorry, I should say..."
+      ],
+      "common_mistakes_to_watch": [
+        {
+          "wrong": "She go",
+          "correct": "She goes",
+          "rule": "Third person -s"
+        },
+        {
+          "wrong": "I am agree",
+          "correct": "I agree",
+          "rule": "agree is a verb, not adjective"
+        },
+        {
+          "wrong": "More better",
+          "correct": "Better / Much better",
+          "rule": "Double comparative"
+        },
+        {
+          "wrong": "He is good in English",
+          "correct": "He is good AT English",
+          "rule": "Preposition: good at"
+        },
+        {
+          "wrong": "I am living here since 2020",
+          "correct": "I have been living here since 2020",
+          "rule": "Present perfect with 'since'"
+        }
+      ],
+      "practice_tip_ar": "احفظ الـ 5 أخطاء الأكثر شيوعاً وراجعها قبل كل تسجيل. ستلتقطها أثناء الحديث وتصلحها بسرعة."
+    },
+    {
+      "code": "fp_07_pace",
+      "lesson_num": 7,
+      "category": "problem_solving",
+      "title_ar": "⏱️ المشكلة 4: أتحدث بسرعة أو ببطء شديد",
+      "title_en": "Problem 4: Speed Control",
+      "the_problem_ar": "إما أن أتحدث بسرعة فلا أُفهَم، أو ببطء فلا أكمل الإجابة في 45 ثانية",
+      "the_solution_ar": "تعلّم Chunking - تقسيم الجمل إلى مجموعات صغيرة مع وقفة قصيرة بينها",
+      "ideal_pace_ar": "السرعة المثالية: 130-150 كلمة في الدقيقة (تقريباً 100-110 كلمة في 45 ثانية)",
+      "chunking_examples": [
+        {
+          "sentence": "I think that technology has changed our lives in many positive ways.",
+          "chunks": [
+            "I think that",
+            "technology has changed",
+            "our lives",
+            "in many positive ways"
+          ],
+          "ar": "قسّمها لـ 4 مجموعات، توقف 0.3 ثانية بين كل مجموعة"
+        },
+        {
+          "sentence": "When I was a child, my parents always took us to the beach every summer.",
+          "chunks": [
+            "When I was a child",
+            "my parents always took us",
+            "to the beach",
+            "every summer"
+          ],
+          "ar": "الوقفات تعطي الفاحص وقتاً ليفهم"
+        }
+      ],
+      "speed_tips_ar": [
+        "✅ تنفّس بين الجمل (يبطئك تلقائياً)",
+        "✅ اضغط على الكلمات المهمة (يبطئك ويوضح المعنى)",
+        "✅ تخيّل أنك تشرح لطفل (يجعلك أوضح)",
+        "❌ لا تحاول حشو معلومات كثيرة (الجودة > الكمية)"
+      ],
+      "exercise_ar": "خذ فقرة 100 كلمة وسجّلها 3 مرات: مرة سريعة (30s)، مرة بطيئة (60s)، ومرة معتدلة (45s). استمع وميّز الفرق.",
+      "practice_tip_ar": "استخدم الموقّت! 45 ثانية حدّك الأقصى. تدرّب 5 مرات يومياً."
+    },
+    {
+      "code": "fp_08_synonyms",
+      "lesson_num": 8,
+      "category": "problem_solving",
+      "title_ar": "🔄 المشكلة 5: أكرر نفس الكلمات كثيراً",
+      "title_en": "Problem 5: Repetition",
+      "the_problem_ar": "أستخدم 'good' و 'very' و 'important' في كل جملة. صوتي يبدو ضعيفاً ومتكرراً",
+      "the_solution_ar": "احفظ بنك المرادفات - 3 بدائل قوية لكل كلمة شائعة",
+      "synonym_bank": [
+        {
+          "weak": "good",
+          "strong": [
+            "excellent",
+            "outstanding",
+            "remarkable",
+            "solid",
+            "decent",
+            "impressive"
+          ]
+        },
+        {
+          "weak": "bad",
+          "strong": [
+            "terrible",
+            "poor",
+            "awful",
+            "harmful",
+            "negative",
+            "problematic"
+          ]
+        },
+        {
+          "weak": "very",
+          "strong": [
+            "extremely",
+            "incredibly",
+            "remarkably",
+            "absolutely",
+            "particularly"
+          ]
+        },
+        {
+          "weak": "important",
+          "strong": [
+            "crucial",
+            "essential",
+            "vital",
+            "significant",
+            "key",
+            "fundamental"
+          ]
+        },
+        {
+          "weak": "big",
+          "strong": [
+            "huge",
+            "enormous",
+            "substantial",
+            "massive",
+            "significant"
+          ]
+        },
+        {
+          "weak": "small",
+          "strong": [
+            "tiny",
+            "minor",
+            "minimal",
+            "modest",
+            "limited"
+          ]
+        },
+        {
+          "weak": "nice",
+          "strong": [
+            "pleasant",
+            "delightful",
+            "wonderful",
+            "enjoyable",
+            "appealing"
+          ]
+        },
+        {
+          "weak": "think",
+          "strong": [
+            "believe",
+            "feel",
+            "consider",
+            "argue",
+            "maintain"
+          ]
+        },
+        {
+          "weak": "like",
+          "strong": [
+            "enjoy",
+            "appreciate",
+            "love",
+            "be fond of",
+            "be a fan of"
+          ]
+        },
+        {
+          "weak": "many",
+          "strong": [
+            "numerous",
+            "countless",
+            "plenty of",
+            "a great deal of"
+          ]
+        }
+      ],
+      "upgrade_examples": [
+        {
+          "weak": "This is a very good idea.",
+          "strong": "This is an outstanding idea."
+        },
+        {
+          "weak": "I think it's important.",
+          "strong": "I believe it's crucial."
+        },
+        {
+          "weak": "Many people like coffee.",
+          "strong": "Countless people enjoy coffee."
+        }
+      ],
+      "practice_tip_ar": "في كل تسجيل، التزم باستخدام 3 مرادفات قوية. ستحفظها تلقائياً خلال أسبوعين."
+    },
+    {
+      "code": "fp_09_openings",
+      "lesson_num": 9,
+      "category": "problem_solving",
+      "title_ar": "🎬 المشكلة 6: لا أعرف كيف أبدأ بقوة",
+      "title_en": "Problem 6: Strong Openings",
+      "the_problem_ar": "أسمع السؤال، يمر 5 ثوانٍ من الـ 45 وأنا لا أعرف كيف أبدأ. أضيع وقتاً ثميناً",
+      "the_solution_ar": "احفظ 3 افتتاحيات جاهزة لكل نمط سؤال (24 افتتاحية لـ 8 أنماط)",
+      "patterns": [
+        {
+          "pattern": "Personal Experience",
+          "ar": "تجربة شخصية",
+          "openings": [
+            "I'll never forget the time when...",
+            "One experience that really stands out is...",
+            "Looking back, I remember vividly..."
+          ]
+        },
+        {
+          "pattern": "Preference",
+          "ar": "تفضيل",
+          "openings": [
+            "I personally prefer X over Y because...",
+            "If I had to choose, I'd definitely go with...",
+            "Between the two, I lean towards..."
+          ]
+        },
+        {
+          "pattern": "Agree/Disagree",
+          "ar": "موافقة أو معارضة",
+          "openings": [
+            "I completely agree with this statement because...",
+            "I have to disagree, and here's why...",
+            "While I see both sides, I tend to..."
+          ]
+        },
+        {
+          "pattern": "Problem-Solution",
+          "ar": "مشكلة وحل",
+          "openings": [
+            "This is a serious issue that requires...",
+            "The most effective solution would be...",
+            "I think the best approach is to..."
+          ]
+        },
+        {
+          "pattern": "Compare-Contrast",
+          "ar": "مقارنة",
+          "openings": [
+            "While both have their merits, X stands out because...",
+            "The main difference between them is...",
+            "Comparing the two, I find that..."
+          ]
+        },
+        {
+          "pattern": "Advantages/Disadvantages",
+          "ar": "مزايا وعيوب",
+          "openings": [
+            "There are clear benefits, but also some drawbacks...",
+            "On the positive side, ... However, ...",
+            "While X offers many advantages, we shouldn't ignore..."
+          ]
+        },
+        {
+          "pattern": "Process",
+          "ar": "خطوات",
+          "openings": [
+            "The first step would be...",
+            "There are three main stages to this...",
+            "I would approach this by..."
+          ]
+        },
+        {
+          "pattern": "Prediction/Future",
+          "ar": "توقع مستقبلي",
+          "openings": [
+            "In the next few years, I expect...",
+            "Looking ahead, I think we'll see...",
+            "My prediction is that..."
+          ]
+        }
+      ],
+      "practice_tip_ar": "اختر افتتاحية واحدة لكل نمط (8 افتتاحيات فقط). احفظها جيداً واستخدمها كلما رأيت نمطها."
+    },
+    {
+      "code": "fp_10_timing",
+      "lesson_num": 10,
+      "category": "problem_solving",
+      "title_ar": "⏰ المشكلة 7: إدارة الـ 45 ثانية",
+      "title_en": "Problem 7: Time Management",
+      "the_problem_ar": "إما ينتهي الوقت وأنا في منتصف الإجابة، أو أنهي خلال 20 ثانية ولا أعرف ماذا أضيف",
+      "the_solution_ar": "اتبع التقسيم الذهبي: 8s + 28s + 9s = 45s",
+      "time_breakdown": {
+        "opening": {
+          "seconds": "8 ثوان",
+          "ar": "افتتاحية + النقطة الرئيسية (Point)",
+          "words": "20-25 كلمة",
+          "example_en": "In my opinion, online learning has clearly become more effective than traditional classrooms."
+        },
+        "body": {
+          "seconds": "28 ثانية",
+          "ar": "السبب + المثال (Reason + Example)",
+          "words": "70-80 كلمة",
+          "example_en": "The main reason is flexibility. Students can study at their own pace and review materials anytime. For instance, last year I took an online programming course. Whenever I struggled, I rewatched the lecture three or four times until I understood. In a regular classroom, that simply wouldn't be possible."
+        },
+        "closing": {
+          "seconds": "9 ثوان",
+          "ar": "الخاتمة + الربط (Wrap-up)",
+          "words": "20-25 كلمة",
+          "example_en": "So, for these reasons, I strongly believe online learning offers advantages that traditional classrooms can't match."
+        }
+      },
+      "warning_signs": [
+        {
+          "signal": "10 ثوان مرّت وأنت لم تبدأ النقطة",
+          "fix": "اقفز للجملة الرئيسية فوراً: 'My main point is...'"
+        },
+        {
+          "signal": "20 ثانية مرّت ولم تبدأ المثال",
+          "fix": "اختصر السبب وانتقل: 'For example...'"
+        },
+        {
+          "signal": "35 ثانية ولم تبدأ الخاتمة",
+          "fix": "أوقف المثال واختم: 'So overall...'"
+        },
+        {
+          "signal": "أنهيت في 30 ثانية",
+          "fix": "أضف نقطة ثانية: 'Another reason is...'"
+        }
+      ],
+      "training_exercise_ar": "تدرّب يومياً مع مؤقّت. اطبع 4 خانات: 0-8 / 9-36 / 37-45. تحدّث وراقب أين أنت في كل لحظة.",
+      "practice_tip_ar": "بعد 20 جلسة تدريب، ستحس بالوقت تلقائياً بدون النظر للمؤقّت."
+    }
+  ]
+}

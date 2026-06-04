@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>{{ lesson.title_ar }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#f7f9fc;min-height:100vh;color:#1a2332;padding-bottom:120px;overflow-x:hidden}
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #eef0f4;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 8px rgba(0,0,0,.04)}
+.close-btn{background:none;border:none;cursor:pointer;color:#6b7a90;padding:4px;text-decoration:none}
+.close-btn svg{width:22px;height:22px}
+.progress-bar{flex:1;height:14px;background:#eef0f4;border-radius:10px;overflow:hidden;position:relative}
+.progress-fill{height:100%;background:linear-gradient(90deg,#58cc02,#34d399);border-radius:10px;transition:width .4s;position:relative}
+.progress-fill::after{content:"";position:absolute;top:2px;left:6px;right:30%;height:4px;background:rgba(255,255,255,.4);border-radius:4px}
+.hearts-mini{display:flex;align-items:center;gap:4px;background:#fee2e2;color:#ef4444;padding:6px 10px;border-radius:20px;font-weight:700;font-size:14px}
+.hearts-mini svg{width:14px;height:14px}
+.container{max-width:540px;margin:0 auto;padding:24px 16px}
+
+/* INTRO */
+.intro h1{font-size:24px;font-weight:900;margin-bottom:8px;line-height:1.3}
+.intro .subtitle{color:#6b7a90;font-size:14px;margin-bottom:20px}
+.media{margin-bottom:24px;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.media img{width:100%;display:block}
+.media iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.media audio{width:100%;display:block;padding:20px;background:#fff}
+.intro-text{background:#fff;padding:18px 20px;border-radius:16px;font-size:15px;line-height:1.7;box-shadow:0 4px 12px rgba(0,0,0,.04);border-right:4px solid #58cc02}
+.start-btn{display:block;width:100%;margin-top:24px;background:linear-gradient(135deg,#58cc02,#3fa201);color:#fff;border:none;padding:18px;border-radius:16px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 5px 0 #2d7a00,0 10px 20px rgba(88,204,2,.3);text-decoration:none;text-align:center;letter-spacing:.5px}
+.start-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #2d7a00,0 5px 10px rgba(88,204,2,.3)}
+
+/* QUIZ */
+.quiz{display:none}
+.quiz.active{display:block}
+.q-counter{font-size:12px;font-weight:700;color:#6b7a90;margin-bottom:8px}
+.passage{background:#fff8e1;border:1px solid #fde68a;padding:14px 16px;border-radius:14px;margin-bottom:18px;font-size:14px;line-height:1.7;color:#78350f}
+.passage-label{font-size:11px;font-weight:900;color:#92400e;margin-bottom:6px;letter-spacing:1px}
+.question{background:#fff;padding:20px;border-radius:18px;margin-bottom:18px;box-shadow:0 4px 12px rgba(0,0,0,.04)}
+.question h2{font-size:17px;font-weight:700;line-height:1.5}
+.q-type-badge{display:inline-block;background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-bottom:10px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{background:#fff;border:2px solid #e5e7eb;padding:14px 18px;border-radius:14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .15s;text-align:right;font-size:15px;font-weight:600}
+.option:hover{border-color:#9ca3af;background:#f9fafb}
+.option.selected{border-color:#3b82f6;background:#eff6ff}
+.option.correct{border-color:#10b981;background:#d1fae5;color:#065f46}
+.option.wrong{border-color:#ef4444;background:#fee2e2;color:#991b1b;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.option-letter{width:32px;height:32px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-weight:900;color:#6b7a90;flex-shrink:0}
+.option.selected .option-letter{background:#3b82f6;color:#fff}
+.option.correct .option-letter{background:#10b981;color:#fff}
+.option.wrong .option-letter{background:#ef4444;color:#fff}
+.option-text{flex:1}
+
+/* Feedback */
+.feedback{display:none;background:#fff;border-radius:18px;padding:18px;margin-top:18px;box-shadow:0 4px 12px rgba(0,0,0,.04);animation:slideUp .3s}
+.feedback.show{display:block}
+.feedback.correct{border-top:4px solid #10b981}
+.feedback.wrong{border-top:4px solid #ef4444}
+.feedback-header{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;margin-bottom:10px}
+.feedback.correct .feedback-header{color:#10b981}
+.feedback.wrong .feedback-header{color:#ef4444}
+.feedback-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.feedback.correct .feedback-icon{background:#10b981}
+.feedback.wrong .feedback-icon{background:#ef4444}
+.feedback-icon svg{width:18px;height:18px;stroke-width:3}
+.feedback-block{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.6}
+.feedback-block.expl{background:#f0f9ff;color:#075985;border-right:3px solid #0ea5e9}
+.feedback-block.tip{background:#fef3c7;color:#92400e;border-right:3px solid #f59e0b}
+.feedback-block.trap{background:#fce7f3;color:#9f1239;border-right:3px solid #ec4899}
+.feedback-block strong{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.5px}
+
+/* Bottom action bar */
+.action-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:14px 16px;border-top:1px solid #eef0f4;box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:40}
+.action-inner{max-width:540px;margin:0 auto}
+.btn-primary{width:100%;background:linear-gradient(135deg,#58cc02,#3fa201);color:#fff;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #2d7a00;transition:all .15s;letter-spacing:.5px}
+.btn-primary:disabled{background:#d1d5db;box-shadow:0 4px 0 #9ca3af;cursor:not-allowed;opacity:.7}
+.btn-primary:not(:disabled):active{transform:translateY(2px);box-shadow:0 2px 0 #2d7a00}
+.btn-primary.wrong{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 4px 0 #991b1b}
+
+/* RESULT */
+.result{display:none;text-align:center;padding:40px 20px}
+.result.active{display:block}
+.result-icon{width:120px;height:120px;margin:0 auto 20px;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:pop .5s}
+.result.pass .result-icon{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 10px 30px rgba(245,158,11,.4)}
+.result.fail .result-icon{background:linear-gradient(135deg,#94a3b8,#64748b);box-shadow:0 10px 30px rgba(100,116,139,.3)}
+.result-icon svg{width:64px;height:64px;color:#fff;stroke-width:2.5}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.result h1{font-size:26px;font-weight:900;margin-bottom:8px}
+.result .desc{color:#6b7a90;font-size:14px;margin-bottom:24px}
+.result-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.stat-card{background:#fff;padding:16px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.04)}
+.stat-value{font-size:24px;font-weight:900}
+.stat-label{font-size:12px;color:#6b7a90;margin-top:2px}
+.stars-result{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.stars-result span{width:36px;height:36px}
+.stars-result svg{width:100%;height:100%}
+.stars-result .filled{color:#fbbf24}
+.stars-result .empty{color:#d1d5db}
+.btn-secondary{display:inline-block;background:#fff;color:#3b82f6;border:2px solid #3b82f6;padding:14px 28px;border-radius:14px;font-weight:700;text-decoration:none;margin:6px}
+
+/* No hearts modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:24px;padding:28px;max-width:340px;width:100%;text-align:center}
+.modal-icon-big{width:80px;height:80px;background:linear-gradient(135deg,#fee2e2,#fca5a5);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center}
+.modal-icon-big svg{width:44px;height:44px;color:#ef4444}
+.modal h3{font-size:18px;font-weight:900;margin-bottom:8px}
+.modal p{font-size:13px;color:#6b7a90;margin-bottom:18px;line-height:1.6}
+.modal button{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;padding:12px 28px;border-radius:14px;font-weight:700;cursor:pointer;width:100%}
+
+.content-block{background:#fff;padding:22px 24px;border-radius:18px;margin-top:18px;box-shadow:0 4px 12px rgba(0,0,0,.04);line-height:1.9;font-size:15px;color:#1a2332}
+.content-block h2,.content-block h3{font-weight:900;margin:16px 0 8px;font-size:18px;color:#1a2332}
+.content-block p{margin-bottom:10px}
+.content-block ul,.content-block ol{padding-right:22px;margin:8px 0}
+.content-block li{margin-bottom:6px}
+.content-block strong{color:#1d4ed8;font-weight:700}
+.content-block em{color:#92400e;font-style:normal;background:#fef3c7;padding:1px 5px;border-radius:4px}
+.content-block code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-family:Menlo,monospace;font-size:13px;color:#1e40af;direction:ltr;display:inline-block}
+.content-block .vocab-list{background:#eff6ff;border-radius:12px;padding:14px 18px;margin-top:12px}
+.content-block .vocab-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #cbd5e1}
+.content-block .vocab-item:last-child{border-bottom:none}
+.content-block .vocab-en{font-weight:700;color:#1e40af;direction:ltr}
+.content-block .vocab-ar{color:#475569}
+
+    .lesson-content-block{background:#fff;border-radius:18px;padding:24px;margin:16px auto;max-width:680px;box-shadow:0 4px 12px rgba(0,0,0,.06);text-align:right;direction:rtl}
+    .lesson-content-block h3{color:#1976d2;font-size:20px;margin:0 0 12px;font-weight:700}
+    .lesson-content-block p{color:#333;font-size:15px;line-height:1.9;margin:8px 0}
+    .lesson-content-block .passage-en{background:#f5f9ff;border-right:4px solid #1976d2;padding:14px;border-radius:10px;direction:ltr;text-align:left;font-family:Georgia,serif;color:#222;margin:12px 0}
+    .lesson-content-block .vocab-list{background:#fff8e1;border-radius:10px;padding:12px;margin:12px 0}
+    .lesson-content-block .vocab-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #ffd54f}
+    .lesson-content-block .vocab-item:last-child{border:none}
+    
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/path/{{ lesson.section }}?user_id={{ user_id }}" class="close-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="hearts-mini"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19.5 5 21 9 19.5 12c-2.5 4.5-9.5 9-9.5 9z"/></svg><span id="heartsCount">{{ student.hearts if student.hearts is not none else 5 }}</span></div>
+</div>
+
+<div class="container">
+
+  <!-- ============ INTRO ============ -->
+  <div id="introScreen" class="intro">
+    <h1>{{ lesson.title_ar }}</h1>
+    <p class="subtitle">{{ lesson.subtitle_ar or '' }}</p>
+
+    {% if lesson.media_url and lesson.media_type == 'youtube' %}
+    <div class="media"><iframe src="{{ lesson.media_url }}" allowfullscreen></iframe></div>
+    {% elif lesson.media_url and lesson.media_type == 'image' %}
+    <div class="media"><img src="{{ lesson.media_url }}" alt=""></div>
+    {% elif lesson.media_url and lesson.media_type == 'audio' %}
+    <div class="media"><audio controls src="{{ lesson.media_url }}"></audio></div>
+    {% endif %}
+
+    {% if lesson_content_html %}
+    <div class="content-block">
+      {{ lesson_content_html|safe }}
+    </div>
+    {% endif %}
+
+    {% if lesson.intro_text_ar %}
+    <div class="intro-text">{{ lesson.intro_text_ar }}</div>
+    {% endif %}
+
+    {% if questions and questions|length > 0 %}
+      {% if lesson_content_html %}<div class="lesson-content-block">{{ lesson_content_html|safe }}</div>{% endif %}
+
+    <button class="start-btn" onclick="startQuiz()">ابدأ الدرس</button>
+    {% else %}
+    <div class="intro-text" style="margin-top:18px;border-right-color:#f59e0b">
+      محتوى الأسئلة قيد الإعداد - سيتوفر قريباً
+    </div>
+    <a href="/path/{{ lesson.section }}?user_id={{ user_id }}" class="start-btn" style="background:linear-gradient(135deg,#94a3b8,#64748b);box-shadow:0 5px 0 #475569">العودة للمسار</a>
+    {% endif %}
+  </div>
+
+  <!-- ============ QUIZ ============ -->
+  <div id="quizScreen" class="quiz">
+    {% if passage %}
+    <div class="passage">
+      <div class="passage-label">النص</div>
+      {{ passage }}
+    </div>
+    {% endif %}
+
+    <div class="q-counter">السؤال <span id="qNow">1</span> من <span id="qTotal">{{ questions|length }}</span></div>
+
+    <div class="question">
+      <span class="q-type-badge" id="qTypeBadge">mcq</span>
+      <h2 id="qText">...</h2>
+    </div>
+
+    <div class="options" id="optionsList"></div>
+
+    <div class="feedback" id="feedback">
+      <div class="feedback-header">
+        <div class="feedback-icon" id="fbIcon"></div>
+        <span id="fbTitle"></span>
+      </div>
+      <div class="feedback-block expl" id="fbExpl" style="display:none"><strong>الشرح</strong><span id="fbExplText"></span></div>
+      <div class="feedback-block tip" id="fbTip" style="display:none"><strong>نصيحة</strong><span id="fbTipText"></span></div>
+      <div class="feedback-block trap" id="fbTrap" style="display:none"><strong>فخ شائع</strong><span id="fbTrapText"></span></div>
+    </div>
+  </div>
+
+  <!-- ============ RESULT ============ -->
+  <div id="resultScreen" class="result">
+    <div class="result-icon" id="resultIcon"></div>
+    <h1 id="resultTitle"></h1>
+    <p class="desc" id="resultDesc"></p>
+    <div class="stars-result" id="starsResult"></div>
+    <div class="result-stats">
+      <div class="stat-card">
+        <div class="stat-value" id="statCorrect" style="color:#10b981">0</div>
+        <div class="stat-label">إجابة صحيحة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statXp" style="color:#fbbf24">0 XP</div>
+        <div class="stat-label">نتيجتك</div>
+      </div>
+    </div>
+    <a href="/path/{{ lesson.section }}?user_id={{ user_id }}" class="btn-secondary">العودة للمسار</a>
+    <a id="retryBtn" href="javascript:location.reload()" class="btn-secondary" style="display:none">حاول مرة أخرى</a>
+  </div>
+
+</div>
+
+<!-- Bottom Action Bar (only during quiz) -->
+<div class="action-bar" id="actionBar" style="display:none">
+  <div class="action-inner">
+    <button class="btn-primary" id="checkBtn" disabled onclick="checkAnswer()">تحقق</button>
+  </div>
+</div>
+
+<!-- No Hearts Modal -->
+<div class="modal-bg" id="noHeartsModal">
+  <div class="modal">
+    <div class="modal-icon-big"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19.5 5 21 9 19.5 12c-2.5 4.5-9.5 9-9.5 9z"/></svg></div>
+    <h3>نفدت القلوب!</h3>
+    <p>عود لاحقاً عندما تتجدد القلوب أو اشترك في باقة مدفوعة</p>
+    <button onclick="location.href='/path/{{ lesson.section }}?user_id={{ user_id }}'">العودة للمسار</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = {{ questions_json|safe }};
+const USER_ID = {{ user_id }};
+const LESSON_ID = {{ lesson.id }};
+const MIN_CORRECT = {{ lesson.min_correct or 4 }};
+const TOTAL_Q = QUESTIONS.length;
+const XP_REWARD = {{ lesson.xp_reward or 10 }};
+
+let currentQ = 0;
+let selected = null;
+let answered = false;
+let correctCount = 0;
+let answersLog = [];
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').classList.add('active');
+  document.getElementById('actionBar').style.display = 'block';
+  loadQuestion();
+}
+
+function loadQuestion(){
+  if (currentQ >= TOTAL_Q){ finishQuiz(); return; }
+  selected = null; answered = false;
+  const q = QUESTIONS[currentQ];
+  document.getElementById('qNow').textContent = currentQ + 1;
+  document.getElementById('qText').textContent = q.question;
+  document.getElementById('qTypeBadge').textContent = q.q_type || 'mcq';
+  document.getElementById('progressFill').style.width = ((currentQ / TOTAL_Q) * 100) + '%';
+
+  const opts = q.options;
+  const html = ['A','B','C','D'].filter(k => opts[k] !== undefined).map(k =>
+    `<button class="option" data-key="${k}" onclick="selectOption('${k}', this)">
+      <div class="option-letter">${k}</div>
+      <div class="option-text">${opts[k]}</div>
+    </button>`
+  ).join('');
+  document.getElementById('optionsList').innerHTML = html;
+
+  document.getElementById('feedback').classList.remove('show');
+  document.getElementById('checkBtn').disabled = true;
+  document.getElementById('checkBtn').classList.remove('wrong');
+  document.getElementById('checkBtn').textContent = 'تحقق';
+}
+
+function selectOption(key, el){
+  if (answered) return;
+  selected = key;
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('checkBtn').disabled = false;
+}
+
+function checkAnswer(){
+  if (!selected) return;
+  if (!answered){
+    answered = true;
+    const q = QUESTIONS[currentQ];
+    const isCorrect = (selected === q.correct);
+    answersLog.push({q_id: q.id, selected: selected, correct: isCorrect});
+
+    // Highlight options
+    document.querySelectorAll('.option').forEach(o => {
+      const k = o.dataset.key;
+      if (k === q.correct) o.classList.add('correct');
+      else if (k === selected && !isCorrect) o.classList.add('wrong');
+      o.style.pointerEvents = 'none';
+    });
+
+    // Show feedback
+    const fb = document.getElementById('feedback');
+    fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+    document.getElementById('fbIcon').innerHTML = isCorrect ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    document.getElementById('fbTitle').textContent = isCorrect ? 'أحسنت!' : 'إجابة خاطئة';
+
+    if (q.explanation){
+      document.getElementById('fbExpl').style.display = 'block';
+      document.getElementById('fbExplText').textContent = q.explanation;
+    } else document.getElementById('fbExpl').style.display = 'none';
+    if (q.tip){
+      document.getElementById('fbTip').style.display = 'block';
+      document.getElementById('fbTipText').textContent = q.tip;
+    } else document.getElementById('fbTip').style.display = 'none';
+    if (q.common_trap){
+      document.getElementById('fbTrap').style.display = 'block';
+      document.getElementById('fbTrapText').textContent = q.common_trap;
+    } else document.getElementById('fbTrap').style.display = 'none';
+
+    if (isCorrect){
+      correctCount++;
+      document.getElementById('checkBtn').textContent = 'متابعة';
+    } else {
+      document.getElementById('checkBtn').textContent = 'متابعة';
+      document.getElementById('checkBtn').classList.add('wrong');
+      loseHeart();
+    }
+  } else {
+    // continue
+    currentQ++;
+    loadQuestion();
+  }
+}
+
+async function loseHeart(){
+  try{
+    const r = await fetch('/api/hearts/lose', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: USER_ID})
+    });
+    const data = await r.json();
+    if (data.hearts !== undefined){
+      document.getElementById('heartsCount').textContent = data.hearts;
+      if (data.hearts <= 0 && !data.unlimited){
+        setTimeout(()=>document.getElementById('noHeartsModal').classList.add('show'), 1200);
+      }
+    }
+  } catch(e){ console.warn('hearts API failed', e); }
+}
+
+async function finishQuiz(){
+  document.getElementById('progressFill').style.width = '100%';
+  const passed = correctCount >= MIN_CORRECT;
+  const stars = passed ? (correctCount === TOTAL_Q ? 3 : (correctCount >= MIN_CORRECT + 1 ? 2 : 1)) : 0;
+  const xpEarned = passed ? XP_REWARD : Math.floor(XP_REWARD * 0.3);
+
+  // Submit to server
+  try{
+    await fetch('/api/lesson/submit', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: USER_ID, lesson_id: LESSON_ID, correct: correctCount, total: TOTAL_Q, passed: passed, stars: stars, xp: xpEarned, answers: answersLog})
+    });
+  } catch(e){ console.warn('submit failed', e); }
+
+  document.getElementById('quizScreen').classList.remove('active');
+  document.getElementById('actionBar').style.display = 'none';
+  const result = document.getElementById('resultScreen');
+  result.classList.add('active');
+  result.classList.add(passed ? 'pass' : 'fail');
+  document.getElementById('resultIcon').innerHTML = passed ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9H4a2 2 0 01-2-2V5a1 1 0 011-1h3M18 9h2a2 2 0 002-2V5a1 1 0 00-1-1h-3M6 4v6a6 6 0 0012 0V4M12 15v6M9 21h6"/></svg>` : `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19.5 5 21 9 19.5 12c-2.5 4.5-9.5 9-9.5 9z"/></svg>`;
+  document.getElementById('resultTitle').textContent = passed ? 'مبروك! نجحت في الدرس!' : 'لم تنجح هذه المرة';
+  document.getElementById('resultDesc').textContent = passed
+    ? 'إجابة صحيحة: ' + correctCount + ' / ' + TOTAL_Q
+    : 'إجابة صحيحة: ' + correctCount + ' / ' + TOTAL_Q + ' (' + (MIN_CORRECT) + '+ إجابة صحيحة)';
+  document.getElementById('statCorrect').textContent = correctCount + ' / ' + TOTAL_Q;
+  document.getElementById('statXp').textContent = '+' + xpEarned + ' XP';
+
+  // Stars
+  const starsHtml = [1,2,3].map(i => `<span class="${i <= stars ? 'filled' : 'empty'}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>`).join('');
+  document.getElementById('starsResult').innerHTML = starsHtml;
+  if (!passed) document.getElementById('retryBtn').style.display = 'inline-block';
+}
+</script>
+
+</body>
+</html>

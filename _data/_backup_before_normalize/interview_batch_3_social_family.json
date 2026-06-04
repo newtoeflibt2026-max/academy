@@ -1,0 +1,990 @@
+{
+  "batch": "3",
+  "category": "Social & Family",
+  "topics": [
+    {
+      "topic_code": "friendships",
+      "topic_ar": "الصداقات",
+      "topic_en": "Friendships",
+      "category": "Social & Family",
+      "order_index": 11,
+      "interviewer": {
+        "avatar_id": "emma",
+        "name": "Emma",
+        "accent": "UK Female",
+        "voice": "en-GB-SoniaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=emma&backgroundColor=ffd5dc"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about friendships. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن الصداقات. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining. Please think about a time when a friend really helped you with something important. What did they do, and how did it affect you?",
+          "question_ar": "شكراً لانضمامك. فكر في وقت ساعدك فيه صديق في شيء مهم حقاً. ماذا فعل؟ وكيف أثّر فيك؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "support",
+              "ipa": "/səˈpɔːt/",
+              "ar": "دعم"
+            },
+            {
+              "word": "grateful",
+              "ipa": "/ˈɡreɪtfəl/",
+              "ar": "ممتن"
+            },
+            {
+              "word": "advice",
+              "ipa": "/ədˈvaɪs/",
+              "ar": "نصيحة"
+            },
+            {
+              "word": "kind",
+              "ipa": "/kaɪnd/",
+              "ar": "لطيف"
+            },
+            {
+              "word": "trust",
+              "ipa": "/trʌst/",
+              "ar": "ثقة"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Two years ago, I was very sick for one week. My best friend came to my house every day. She brought me food, medicine, and even helped me with my homework so I would not fall behind. I felt really grateful. She did not ask for anything in return. After that experience, I understood the true value of a real friend. I try to be the same kind of friend to others now.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + emotional impact + lesson learned."
+          },
+          "answer_tier90": {
+            "text": "Two years ago, I came down with a really bad flu and was bedridden for almost a week. My closest friend came over every single day — she brought me homemade soup, picked up my medication, and even helped me catch up on schoolwork so I wouldn't fall behind. I felt incredibly grateful, and honestly, a bit emotional. That experience taught me what genuine friendship looks like, and ever since, I've tried to be that kind of supportive friend to others.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "'Came down with', 'bedridden', 'genuine friendship', 'ever since'."
+          },
+          "self_assessment": [
+            "هل ذكرت موقفاً محدداً؟",
+            "هل وصفت ما فعله الصديق؟",
+            "هل ذكرت مشاعرك؟",
+            "هل ذكرت ما تعلمته؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People feel differently about friendships. Some prefer having many friends, while others prefer just a few very close ones. Which do you prefer, and why?",
+          "question_ar": "يشعر الناس بشكل مختلف تجاه الصداقات. يفضل البعض أن يكون لهم أصدقاء كثيرون، بينما يفضل آخرون عدداً قليلاً من الأصدقاء المقربين. ماذا تفضل؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "close",
+              "ipa": "/kləʊs/",
+              "ar": "مقرّب"
+            },
+            {
+              "word": "deep",
+              "ipa": "/diːp/",
+              "ar": "عميق"
+            },
+            {
+              "word": "shallow",
+              "ipa": "/ˈʃæləʊ/",
+              "ar": "سطحي"
+            },
+            {
+              "word": "quality",
+              "ipa": "/ˈkwɒləti/",
+              "ar": "جودة"
+            },
+            {
+              "word": "quantity",
+              "ipa": "/ˈkwɒntəti/",
+              "ar": "كمية"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I strongly prefer to have just a few very close friends. For me, quality is much more important than quantity. With close friends, I can talk about real problems and real feelings. We trust each other, and we always help each other. Having many friends can be nice, but those relationships are often shallow. I do not have time for twenty friendships. Three or four deep friendships are more than enough for me.",
+            "word_count": 75,
+            "level": "A2-B1",
+            "structure_notes": "Strong preference + 'quality vs quantity' + clear reason."
+          },
+          "answer_tier90": {
+            "text": "I strongly prefer having a small circle of very close friends. For me, quality matters far more than quantity. With deep friendships, you can share real struggles, celebrate genuine joys, and feel completely understood. Having dozens of friends sounds appealing in theory, but those relationships often stay superficial. Honestly, I simply don't have the emotional energy to maintain twenty friendships properly. Three or four meaningful connections are more than enough for me.",
+            "word_count": 76,
+            "level": "B2-C1",
+            "structure_notes": "'Small circle', 'genuine joys', 'emotional energy', 'meaningful connections'."
+          },
+          "self_assessment": [
+            "هل اخترت بوضوح؟",
+            "هل قارنت بين الخيارين؟",
+            "هل أعطيت سبباً قوياً؟",
+            "هل ذكرت مثالاً ملموساً؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that childhood friendships are more important and meaningful than adult friendships. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن صداقات الطفولة أهم وأعمق من صداقات الكبار. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "childhood",
+              "ipa": "/ˈtʃaɪldhʊd/",
+              "ar": "طفولة"
+            },
+            {
+              "word": "memory",
+              "ipa": "/ˈmeməri/",
+              "ar": "ذكرى"
+            },
+            {
+              "word": "mature",
+              "ipa": "/məˈtʃʊə/",
+              "ar": "ناضج"
+            },
+            {
+              "word": "understand",
+              "ipa": "/ˌʌndəˈstænd/",
+              "ar": "يفهم"
+            },
+            {
+              "word": "share",
+              "ipa": "/ʃeə/",
+              "ar": "يشارك"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I do not fully agree. Childhood friendships are special because we share many fun memories. But I do not think they are always more meaningful than adult ones. As adults, we choose our friends more carefully. We can talk about deeper things like work, dreams, and problems. For example, my best friend now, who I met at twenty-five, understands me better than anyone from school. So I think both kinds are important, in different ways.",
+            "word_count": 79,
+            "level": "A2-B1",
+            "structure_notes": "Partial disagreement + comparison + personal example + 'both important' conclusion."
+          },
+          "answer_tier90": {
+            "text": "I respectfully disagree with this idea. Childhood friendships are undeniably special — we share so many formative memories from those early years. However, I don't believe they're automatically more meaningful than adult friendships. As adults, we choose friends much more intentionally, based on shared values and deeper understanding. For instance, my closest friend now, whom I met in my mid-twenties, truly gets me in ways no childhood friend ever did. Both types matter, just differently.",
+            "word_count": 77,
+            "level": "B2-C1",
+            "structure_notes": "'Undeniably special', 'formative memories', 'intentionally', 'truly gets me'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل اعترفت بنقطة الطرف الآخر؟",
+            "هل أعطيت مثالاً شخصياً؟",
+            "هل لخصت في النهاية؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools should teach students how to build healthy friendships as part of the curriculum? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس يجب أن تُعلّم الطلاب كيف يبنون صداقات صحية كجزء من المنهج؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "healthy",
+              "ipa": "/ˈhelθi/",
+              "ar": "صحي"
+            },
+            {
+              "word": "social skill",
+              "ipa": "/ˈsəʊʃəl skɪl/",
+              "ar": "مهارة اجتماعية"
+            },
+            {
+              "word": "bullying",
+              "ipa": "/ˈbʊliɪŋ/",
+              "ar": "تنمر"
+            },
+            {
+              "word": "natural",
+              "ipa": "/ˈnætʃərəl/",
+              "ar": "طبيعي"
+            },
+            {
+              "word": "boundaries",
+              "ipa": "/ˈbaʊndəriz/",
+              "ar": "حدود"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a wonderful idea. The biggest benefit is that students will learn important social skills early. Many young people do not know how to set boundaries or stop bullying. A class on friendship can help reduce these problems. But there is one drawback. Friendship is also natural — it cannot all be taught from a book. So the lessons must be practical, with role-play and real situations, not just theory.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Yes + benefit + 'But' + drawback + practical solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I strongly support this idea. The main benefit is teaching essential social skills early — things like setting boundaries, resolving conflicts, and recognizing bullying. These skills genuinely shape how young people connect for the rest of their lives. However, one real drawback is that friendship is partly natural and emotional, and it can't be fully taught from a textbook. So the lessons should be highly practical — role-play, discussions, real scenarios — rather than just theoretical content.",
+            "word_count": 78,
+            "level": "B2-C1",
+            "structure_notes": "'Setting boundaries', 'resolving conflicts', 'genuinely shape', 'practical not theoretical'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت طريقة تدريس؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "family_time",
+      "topic_ar": "وقت العائلة",
+      "topic_en": "Family Time",
+      "category": "Social & Family",
+      "order_index": 12,
+      "interviewer": {
+        "avatar_id": "andrew",
+        "name": "Andrew",
+        "accent": "US Male",
+        "voice": "en-US-AndrewNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=andrew&backgroundColor=c0aede"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about spending time with family. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن قضاء الوقت مع العائلة. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for being here. Please think about a recent activity you did with your family that you really enjoyed. What was it, and what made it so special?",
+          "question_ar": "شكراً لمشاركتك. فكر في نشاط قمت به مؤخراً مع عائلتك واستمتعت به حقاً. ما هو؟ وما الذي جعله مميزاً؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "gather",
+              "ipa": "/ˈɡæðə/",
+              "ar": "يجتمع"
+            },
+            {
+              "word": "laugh",
+              "ipa": "/lɑːf/",
+              "ar": "يضحك"
+            },
+            {
+              "word": "bond",
+              "ipa": "/bɒnd/",
+              "ar": "رابطة"
+            },
+            {
+              "word": "memorable",
+              "ipa": "/ˈmemərəbəl/",
+              "ar": "لا يُنسى"
+            },
+            {
+              "word": "tradition",
+              "ipa": "/trəˈdɪʃən/",
+              "ar": "تقليد"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last weekend, my whole family went to the beach together. There were ten of us — parents, siblings, cousins, and grandparents. We played games on the sand, ate lunch under a big umbrella, and swam in the sea. The best part was the evening, when we sat together, watched the sunset, and shared old stories. It was so special because everyone was relaxed and happy in the same place. I will remember it for a long time.",
+            "word_count": 79,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + sensory details + reflection."
+          },
+          "answer_tier90": {
+            "text": "Last weekend, my entire family — about ten of us, including grandparents and cousins — spent the day together at the beach. We played beach games, shared a huge picnic lunch, and swam in the sea. The most memorable part was the evening, when we all sat watching the sunset and sharing old family stories. What made it truly special was that everyone, regardless of age, was completely relaxed and present. Moments like that are rare, and I'll treasure that day for a long time.",
+            "word_count": 86,
+            "level": "B2-C1",
+            "structure_notes": "'Memorable', 'regardless of age', 'completely present', 'treasure that day'."
+          },
+          "self_assessment": [
+            "هل ذكرت نشاطاً محدداً؟",
+            "هل وصفت من كان معك؟",
+            "هل ذكرت تفاصيل ملموسة؟",
+            "هل ذكرت لماذا كان مميزاً؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People spend time with family in different ways. Some prefer big gatherings with lots of relatives, while others prefer small, quiet time with just immediate family. Which do you prefer, and why?",
+          "question_ar": "يقضي الناس وقت العائلة بطرق مختلفة. يفضل البعض التجمعات الكبيرة، بينما يفضل آخرون وقتاً صغيراً وهادئاً مع العائلة المباشرة فقط. ماذا تفضل؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "gathering",
+              "ipa": "/ˈɡæðərɪŋ/",
+              "ar": "تجمّع"
+            },
+            {
+              "word": "intimate",
+              "ipa": "/ˈɪntɪmət/",
+              "ar": "حميمي"
+            },
+            {
+              "word": "relatives",
+              "ipa": "/ˈrelətɪvz/",
+              "ar": "أقارب"
+            },
+            {
+              "word": "noisy",
+              "ipa": "/ˈnɔɪzi/",
+              "ar": "صاخب"
+            },
+            {
+              "word": "peaceful",
+              "ipa": "/ˈpiːsfəl/",
+              "ar": "هادئ"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Honestly, I prefer small, quiet times with just my close family. Big gatherings are fun, but they can be very noisy and tiring. With twenty people, it is hard to have a real conversation. But with just my parents and siblings, we can really talk, share food, and laugh together. I feel more peaceful and connected. I love big family events for special days, but for normal weekends, small is better for me.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Clear preference + reason + contrast + balanced final."
+          },
+          "answer_tier90": {
+            "text": "Honestly, I lean strongly toward small, intimate moments with just my immediate family. Big gatherings are enjoyable, but they can quickly become loud and exhausting, and meaningful conversations are nearly impossible with twenty people around. With just my parents and siblings, we can actually share real stories, cook together, and genuinely connect. That said, I do love big family gatherings for major occasions — weddings, holidays — but for regular weekends, the quiet version is far more my style.",
+            "word_count": 81,
+            "level": "B2-C1",
+            "structure_notes": "'Lean strongly toward', 'meaningful conversations', 'genuinely connect', 'far more my style'."
+          },
+          "self_assessment": [
+            "هل اخترت تفضيلاً واضحاً؟",
+            "هل قارنت بين الخيارين؟",
+            "هل ذكرت مثالاً؟",
+            "هل اعترفت بميزات الخيار الآخر؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that families should always eat dinner together every day, with no phones or TV. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن العائلات يجب أن تتناول العشاء معاً كل يوم، بدون هواتف أو تلفاز. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "dinner",
+              "ipa": "/ˈdɪnə/",
+              "ar": "عشاء"
+            },
+            {
+              "word": "communication",
+              "ipa": "/kəˌmjuːnɪˈkeɪʃən/",
+              "ar": "تواصل"
+            },
+            {
+              "word": "tradition",
+              "ipa": "/trəˈdɪʃən/",
+              "ar": "تقليد"
+            },
+            {
+              "word": "schedule",
+              "ipa": "/ˈʃedjuːl/",
+              "ar": "جدول"
+            },
+            {
+              "word": "realistic",
+              "ipa": "/ˌrɪəˈlɪstɪk/",
+              "ar": "واقعي"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I mostly agree with this idea. Eating together is a wonderful tradition. It helps the family talk, share the day, and feel closer. Phones and TV are big distractions. They make people quiet at the table. But 'every day' is not always realistic. Some days, family members have work, sports, or classes at different times. So the goal should be eating together as often as possible, maybe four or five times a week, with no screens.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + reasons + realistic adjustment."
+          },
+          "answer_tier90": {
+            "text": "I largely agree with this idea, though with some realism. Eating together regularly is a beautiful tradition that strengthens communication and family bonds. Phones and TV are obvious killers of meaningful conversation. However, expecting it every single day might be unrealistic for modern families, where work, school, and activities create wildly different schedules. So in my view, the goal should be shared, screen-free dinners several times a week — quality over rigid daily rules is what really counts.",
+            "word_count": 81,
+            "level": "B2-C1",
+            "structure_notes": "'Killers of conversation', 'wildly different schedules', 'quality over rigid daily rules'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل قدمت سبباً؟",
+            "هل ذكرت تحدّياً واقعياً؟",
+            "هل اقترحت توازناً؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think workplaces should give parents more flexible hours so they can spend more time with their children? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن أماكن العمل يجب أن تعطي الآباء ساعات عمل أكثر مرونة ليقضوا وقتاً أكثر مع أطفالهم؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "flexible",
+              "ipa": "/ˈfleksəbəl/",
+              "ar": "مرن"
+            },
+            {
+              "word": "parent",
+              "ipa": "/ˈpeərənt/",
+              "ar": "والد"
+            },
+            {
+              "word": "productive",
+              "ipa": "/prəˈdʌktɪv/",
+              "ar": "منتج"
+            },
+            {
+              "word": "fairness",
+              "ipa": "/ˈfeənəs/",
+              "ar": "إنصاف"
+            },
+            {
+              "word": "single",
+              "ipa": "/ˈsɪŋɡəl/",
+              "ar": "أعزب"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I strongly support this idea. The biggest benefit is healthier children and happier families. When parents have time, they can help with homework, eat meals together, and just talk. This is very important for child development. But there is one drawback. It may feel unfair to other workers, like single people without children. They may also want flexible hours. So the rule should be fair: flexibility for all workers, not just parents, in different ways.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Yes + child-focused benefit + 'But' + fairness drawback + balanced solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I'm strongly in favor of this kind of policy. The clearest benefit is healthier, more connected families — when parents have flexibility, they can be more present in their children's daily lives, which is genuinely important for child development. However, one real drawback is fairness, since single employees or those without children might feel left out. So the best approach is offering flexibility broadly to all employees, perhaps for different purposes — childcare, studies, or personal projects — to keep things equitable.",
+            "word_count": 85,
+            "level": "B2-C1",
+            "structure_notes": "'Strongly in favor', 'more present', 'left out', 'equitable'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت حلاً عادلاً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "social_media",
+      "topic_ar": "وسائل التواصل الاجتماعي",
+      "topic_en": "Social Media",
+      "category": "Social & Family",
+      "order_index": 13,
+      "interviewer": {
+        "avatar_id": "brian",
+        "name": "Brian",
+        "accent": "UK Male",
+        "voice": "en-GB-RyanNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=brian&backgroundColor=ffdfbf"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about social media. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن وسائل التواصل الاجتماعي. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining. Please think about the last time you posted something on social media or shared something with friends online. What did you share, and how did people respond?",
+          "question_ar": "شكراً لانضمامك. فكر في آخر مرة نشرت فيها شيئاً على وسائل التواصل الاجتماعي أو شاركت شيئاً مع الأصدقاء عبر الإنترنت. ماذا شاركت؟ وكيف كان رد الناس؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "post",
+              "ipa": "/pəʊst/",
+              "ar": "ينشر"
+            },
+            {
+              "word": "share",
+              "ipa": "/ʃeə/",
+              "ar": "يشارك"
+            },
+            {
+              "word": "comment",
+              "ipa": "/ˈkɒment/",
+              "ar": "تعليق"
+            },
+            {
+              "word": "react",
+              "ipa": "/riˈækt/",
+              "ar": "يتفاعل"
+            },
+            {
+              "word": "platform",
+              "ipa": "/ˈplætfɔːm/",
+              "ar": "منصة"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last week, I shared a photo of a beautiful sunset on Instagram. I took it from the roof of my building. Many friends and family liked the photo, and some left kind comments. My cousin in another country sent me a message and said it reminded her of home. That made me happy. Social media is sometimes a problem, but it can also help us stay connected with people we love but cannot see every day.",
+            "word_count": 78,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + emotional reaction + balanced reflection."
+          },
+          "answer_tier90": {
+            "text": "Last week, I posted a stunning sunset photo on Instagram that I'd taken from the roof of my building. The response was surprisingly warm — friends and family liked it, several left thoughtful comments, and my cousin abroad even messaged me saying it reminded her of home. That small moment really touched me. While social media often gets a bad reputation, this kind of experience shows how it can genuinely strengthen connections with people we love but rarely see in person.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "'Surprisingly warm', 'thoughtful comments', 'really touched me', 'rarely see in person'."
+          },
+          "self_assessment": [
+            "هل ذكرت ما شاركته؟",
+            "هل ذكرت المنصة؟",
+            "هل وصفت رد الفعل؟",
+            "هل ذكرت شعورك؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People feel very differently about social media. Some enjoy it and use it every day, while others find it negative or a waste of time. How do you usually feel about social media, and why?",
+          "question_ar": "يشعر الناس بشكل مختلف جداً تجاه وسائل التواصل الاجتماعي. يستمتع بها البعض ويستخدمها يومياً، بينما يجدها آخرون سلبية أو مضيعة للوقت. كيف تشعر عادةً تجاهها؟ ولماذا؟",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "addictive",
+              "ipa": "/əˈdɪktɪv/",
+              "ar": "مدمن"
+            },
+            {
+              "word": "waste",
+              "ipa": "/weɪst/",
+              "ar": "مضيعة"
+            },
+            {
+              "word": "informative",
+              "ipa": "/ɪnˈfɔːmətɪv/",
+              "ar": "مفيد معلوماتياً"
+            },
+            {
+              "word": "compare",
+              "ipa": "/kəmˈpeə/",
+              "ar": "يُقارن"
+            },
+            {
+              "word": "mixed",
+              "ipa": "/mɪkst/",
+              "ar": "مختلط"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Honestly, I have mixed feelings about social media. On one side, it is fun and useful. I can talk to my friends, see news, and learn new things. But on the other side, it can be addictive. Sometimes I open my phone 'just for a minute' and lose one hour. Also, I often compare myself to others, and this makes me feel bad. So I try to use it less and only for short times every day.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Mixed feelings + 'on one side... on the other side' clear structure."
+          },
+          "answer_tier90": {
+            "text": "Honestly, my feelings about social media are quite mixed. On the positive side, it's genuinely entertaining and useful — I can chat with friends, stay updated on news, and discover interesting content. However, it can also be incredibly addictive. I often unlock my phone for 'just a minute' and somehow lose an entire hour. Worse, constantly comparing myself to others online sometimes affects my mood. That's why I've been trying to limit my usage to specific, short windows each day.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "'Quite mixed', 'genuinely entertaining', 'incredibly addictive', 'specific, short windows'."
+          },
+          "self_assessment": [
+            "هل وصفت شعورك بصدق؟",
+            "هل ذكرت الإيجابيات؟",
+            "هل ذكرت السلبيات؟",
+            "هل ذكرت كيف تتعامل مع الأمر؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that social media has done more harm than good to society. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن وسائل التواصل الاجتماعي سببت ضرراً أكبر من الفائدة للمجتمع. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "harm",
+              "ipa": "/hɑːm/",
+              "ar": "ضرر"
+            },
+            {
+              "word": "society",
+              "ipa": "/səˈsaɪəti/",
+              "ar": "مجتمع"
+            },
+            {
+              "word": "spread",
+              "ipa": "/spred/",
+              "ar": "ينتشر"
+            },
+            {
+              "word": "fake news",
+              "ipa": "/feɪk njuːz/",
+              "ar": "أخبار كاذبة"
+            },
+            {
+              "word": "useful",
+              "ipa": "/ˈjuːsfəl/",
+              "ar": "مفيد"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I partly agree with this idea. Social media has clear problems: fake news spreads very fast, and many young people feel sad when they compare themselves to others. These are real harms. But social media also gives us many good things. Small businesses can find new customers, families stay connected across countries, and people can learn for free. So I do not think it is all bad. The problem is how we use it, not the platform itself.",
+            "word_count": 82,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + harms + benefits + final nuance."
+          },
+          "answer_tier90": {
+            "text": "I partly agree, but I wouldn't say social media has done more harm than good overall. Yes, the harms are real — fake news spreads at lightning speed, and many young people struggle with mental health due to constant comparison. However, the benefits are also significant: small businesses thrive online, families stay connected across continents, and anyone can access free education. In my view, the real issue isn't the technology itself, but how we choose to use it.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "'At lightning speed', 'struggle with mental health', 'thrive online', 'how we choose to use it'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل ذكرت أضراراً محددة؟",
+            "هل ذكرت فوائد محددة؟",
+            "هل لخصت بحكمة؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think governments should put age limits on social media — for example, banning kids under sixteen from using it? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الحكومات يجب أن تضع حدوداً عمرية على وسائل التواصل الاجتماعي — مثلاً منع الأطفال تحت 16 من استخدامها؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "age limit",
+              "ipa": "/eɪdʒ ˈlɪmɪt/",
+              "ar": "حد عمري"
+            },
+            {
+              "word": "protect",
+              "ipa": "/prəˈtekt/",
+              "ar": "يحمي"
+            },
+            {
+              "word": "enforce",
+              "ipa": "/ɪnˈfɔːs/",
+              "ar": "يُطبّق"
+            },
+            {
+              "word": "mental health",
+              "ipa": "/ˈmentəl helθ/",
+              "ar": "صحة نفسية"
+            },
+            {
+              "word": "freedom",
+              "ipa": "/ˈfriːdəm/",
+              "ar": "حرية"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a good idea. The big benefit is protecting children's mental health. Many young kids are not ready for the pressure of likes and comments. They can become sad, anxious, or even bullied online. Age limits can help them grow safely. But there is one drawback. Rules are very hard to enforce. Kids can easily lie about their age. So the rule alone is not enough — we also need education and good parenting.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Yes + protection benefit + 'But' + enforcement drawback + holistic view."
+          },
+          "answer_tier90": {
+            "text": "Yes, I generally support age limits on social media for younger children. The biggest benefit is protecting their mental health — kids under sixteen are often emotionally unprepared for the pressure of likes, comments, and online bullying. A clear rule could shield them during crucial developmental years. However, the obvious drawback is enforcement: kids can easily lie about their age. So while legislation is a useful starting point, it needs to be paired with parental guidance and proper digital education.",
+            "word_count": 83,
+            "level": "B2-C1",
+            "structure_notes": "'Emotionally unprepared', 'shield them', 'crucial developmental years', 'paired with parental guidance'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت حلاً عملياً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "communication",
+      "topic_ar": "التواصل",
+      "topic_en": "Communication",
+      "category": "Social & Family",
+      "order_index": 14,
+      "interviewer": {
+        "avatar_id": "aria",
+        "name": "Aria",
+        "accent": "US Female",
+        "voice": "en-US-AriaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=aria&backgroundColor=b6e3f4"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about communication. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن التواصل. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining the study. Please think about a recent conversation that really mattered to you — maybe with a friend, family member, or coworker. What was it about, and why was it important?",
+          "question_ar": "شكراً لمشاركتك. فكر في محادثة حدثت مؤخراً وكانت مهمة لك حقاً — ربما مع صديق أو أحد أفراد العائلة أو زميل. عن ماذا كانت؟ ولماذا كانت مهمة؟",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "conversation",
+              "ipa": "/ˌkɒnvəˈseɪʃən/",
+              "ar": "محادثة"
+            },
+            {
+              "word": "honest",
+              "ipa": "/ˈɒnɪst/",
+              "ar": "صادق"
+            },
+            {
+              "word": "listen",
+              "ipa": "/ˈlɪsən/",
+              "ar": "يستمع"
+            },
+            {
+              "word": "express",
+              "ipa": "/ɪkˈspres/",
+              "ar": "يُعبّر"
+            },
+            {
+              "word": "relief",
+              "ipa": "/rɪˈliːf/",
+              "ar": "ارتياح"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last month, I had an important conversation with my father. I wanted to change my career plan, but I was afraid to tell him. We sat together one evening, and I explained everything honestly. He listened carefully and did not get angry. Then he gave me good advice and said he supported my choice. After that talk, I felt very relieved and closer to him. It taught me that honest conversations can solve many problems and build trust.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + emotional progression + lesson learned."
+          },
+          "answer_tier90": {
+            "text": "Last month, I had a deeply meaningful conversation with my father about changing my career path. I'd been nervous for weeks, worried about his reaction. We sat down one evening, and I explained everything honestly — my doubts, my hopes, my plan. To my surprise, he listened patiently without interrupting and then offered genuinely thoughtful advice. I walked away feeling enormous relief and noticeably closer to him. That experience really showed me how powerful honest communication can be in strengthening relationships.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Deeply meaningful', 'patiently without interrupting', 'enormous relief', 'noticeably closer'."
+          },
+          "self_assessment": [
+            "هل ذكرت محادثة محددة؟",
+            "هل وصفت مع من؟",
+            "هل ذكرت الموضوع؟",
+            "هل ذكرت شعورك بعدها؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People prefer different ways of communicating. Some prefer talking face-to-face, while others prefer texting or calling. What's your favorite way to communicate, and why?",
+          "question_ar": "يفضل الناس طرقاً مختلفة للتواصل. يفضل البعض الحديث وجهاً لوجه، بينما يفضل آخرون الرسائل النصية أو المكالمات. ما طريقتك المفضلة للتواصل؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "face-to-face",
+              "ipa": "/feɪs tə feɪs/",
+              "ar": "وجهاً لوجه"
+            },
+            {
+              "word": "texting",
+              "ipa": "/ˈtekstɪŋ/",
+              "ar": "مراسلة نصية"
+            },
+            {
+              "word": "tone",
+              "ipa": "/təʊn/",
+              "ar": "نبرة"
+            },
+            {
+              "word": "convenient",
+              "ipa": "/kənˈviːniənt/",
+              "ar": "مريح"
+            },
+            {
+              "word": "expression",
+              "ipa": "/ɪkˈspreʃən/",
+              "ar": "تعبير"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Personally, I love face-to-face conversations the most. When I see the other person, I can read their face and understand them better. We can laugh together, see real emotions, and feel a real connection. Texting is fast and easy, but it often causes misunderstandings. I cannot hear the tone, so I do not always know if my friend is joking or serious. So for important talks, I always prefer in person, even if it takes more time.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Clear preference + reason (reading faces) + contrast + final rule."
+          },
+          "answer_tier90": {
+            "text": "Personally, I'm a huge fan of face-to-face communication. There's something about reading body language, facial expressions, and real-time emotions that just can't be matched by texting. With messages, the tone is often misinterpreted — what looks like a serious sentence might actually be a joke, and vice versa. Texting is undeniably convenient for quick updates, but for anything emotional or important, I always prefer meeting in person, even if it takes extra time and effort.",
+            "word_count": 78,
+            "level": "B2-C1",
+            "structure_notes": "'Huge fan of', 'body language', 'misinterpreted', 'undeniably convenient'."
+          },
+          "self_assessment": [
+            "هل اخترت طريقة بوضوح؟",
+            "هل ذكرت سبباً قوياً؟",
+            "هل قارنت مع الطريقة الأخرى؟",
+            "هل ذكرت متى تستخدم كل طريقة؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that good communication skills are more important for success in life than intelligence or hard work. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن مهارات التواصل الجيدة أهم للنجاح في الحياة من الذكاء أو العمل الجاد. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "skill",
+              "ipa": "/skɪl/",
+              "ar": "مهارة"
+            },
+            {
+              "word": "success",
+              "ipa": "/səkˈses/",
+              "ar": "نجاح"
+            },
+            {
+              "word": "team",
+              "ipa": "/tiːm/",
+              "ar": "فريق"
+            },
+            {
+              "word": "express",
+              "ipa": "/ɪkˈspres/",
+              "ar": "يُعبّر"
+            },
+            {
+              "word": "equally",
+              "ipa": "/ˈiːkwəli/",
+              "ar": "بالتساوي"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I partly agree with this idea. Communication is very important — it helps us work in teams, sell ideas, and lead people. A smart person who cannot explain his ideas will not succeed easily. But I do not think communication alone is enough. Hard work and knowledge are also necessary. The best leaders have all three: good communication, strong skills, and real effort. So I think they are equally important, not one above the others.",
+            "word_count": 78,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + reason + counterpoint + 'equally important' conclusion."
+          },
+          "answer_tier90": {
+            "text": "I partly agree with this view. Communication skills are absolutely essential — even the most brilliant person will struggle to succeed if they can't clearly express their ideas, work well in teams, or connect with others. However, I don't believe communication alone guarantees success. Intelligence, hard work, and resilience matter just as much. In my view, the most successful people combine all of these qualities. Communication is a key piece, but it's not the whole puzzle.",
+            "word_count": 79,
+            "level": "B2-C1",
+            "structure_notes": "'Absolutely essential', 'guarantees success', 'resilience', 'whole puzzle'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل اعترفت بأهمية التواصل؟",
+            "هل ذكرت عوامل أخرى؟",
+            "هل لخصت بحكمة؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools should teach public speaking and conversation skills as a required subject? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس يجب أن تُدرّس التحدث أمام الجمهور ومهارات المحادثة كمادة إجبارية؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "public speaking",
+              "ipa": "/ˈpʌblɪk ˈspiːkɪŋ/",
+              "ar": "التحدث أمام الجمهور"
+            },
+            {
+              "word": "confidence",
+              "ipa": "/ˈkɒnfɪdəns/",
+              "ar": "ثقة"
+            },
+            {
+              "word": "shy",
+              "ipa": "/ʃaɪ/",
+              "ar": "خجول"
+            },
+            {
+              "word": "curriculum",
+              "ipa": "/kəˈrɪkjələm/",
+              "ar": "منهج"
+            },
+            {
+              "word": "pressure",
+              "ipa": "/ˈpreʃə/",
+              "ar": "ضغط"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I strongly support this idea. The biggest benefit is confidence. Many students are very shy and cannot speak in front of people. This affects them later at work and in life. Practice in school can really help. But there is one drawback. Some students are naturally very shy, and forcing them to speak can cause stress. So the lessons must be kind and step-by-step, starting with small groups before moving to bigger ones.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Yes + confidence benefit + 'But' + stress drawback + practical solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I strongly support this kind of policy. The clearest benefit is building lifelong confidence — many students are paralyzed by the fear of speaking in public, and this fear can hold them back in interviews, university, and careers. Regular practice in a safe school environment could genuinely transform that. However, one real drawback is the pressure on naturally shy students, who might feel deeply anxious. So the curriculum should be gentle and gradual, starting with small group discussions before larger audiences.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Building lifelong confidence', 'paralyzed by the fear', 'gentle and gradual'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت طريقة تدريس؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    }
+  ]
+}

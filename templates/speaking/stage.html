@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ stage.title_ar }}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh; padding: 20px; color: #fff;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .header {
+    text-align: center; padding: 25px 20px;
+    background: rgba(255,255,255,0.1); border-radius: 20px;
+    backdrop-filter: blur(10px); margin-bottom: 25px;
+  }
+  .header h1 { font-size: 1.9em; margin-bottom: 8px; }
+  .header p { opacity: 0.9; }
+  .lessons-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+  }
+  .lesson-card {
+    background: rgba(255,255,255,0.95); color: #333;
+    border-radius: 15px; padding: 18px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    text-decoration: none; display: block;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .lesson-card:hover:not(.locked) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+  .lesson-card.locked {
+    opacity: 0.55; cursor: not-allowed;
+    background: rgba(255,255,255,0.7);
+  }
+  .lesson-card.completed { border: 2px solid #27ae60; }
+  .lesson-num {
+    position: absolute; top: 10px; left: 10px;
+    background: #667eea; color: #fff;
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 0.85em;
+  }
+  .lesson-card.completed .lesson-num { background: #27ae60; }
+  .lesson-card.locked .lesson-num { background: #95a5a6; }
+  .lesson-title {
+    font-size: 1.05em; color: #2c3e50; margin: 5px 0 8px 40px;
+    font-weight: 600;
+  }
+  .lesson-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 10px; font-size: 0.85em; color: #7f8c8d;
+  }
+  .lesson-badge {
+    padding: 3px 10px; border-radius: 12px; font-weight: bold;
+    font-size: 0.75em;
+  }
+  .badge-available { background: #e3f2fd; color: #1976d2; }
+  .badge-completed { background: #e8f5e9; color: #2e7d32; }
+  .badge-locked    { background: #f5f5f5; color: #9e9e9e; }
+  .lesson-score { font-weight: bold; color: #667eea; }
+  .back-link {
+    display: inline-block; margin-bottom: 20px; padding: 8px 16px;
+    background: rgba(255,255,255,0.2); color: #fff; text-decoration: none;
+    border-radius: 8px;
+  }
+  .back-link:hover { background: rgba(255,255,255,0.3); }
+  .type-tag {
+    display: inline-block; font-size: 0.7em; padding: 2px 8px;
+    border-radius: 8px; margin-right: 5px;
+  }
+  .type-word { background: #fff3e0; color: #e65100; }
+  .type-short_sentence { background: #e8eaf6; color: #283593; }
+  .type-long_sentence { background: #fce4ec; color: #ad1457; }
+  .type-listen_repeat { background: #f3e5f5; color: #6a1b9a; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/speaking?user_id={{ user_id }}" class="back-link">← العودة لقسم Speaking</a>
+  <div class="header">
+    <h1>{{ stage.icon or '' }} {{ stage.title_ar }}</h1>
+    <p>{{ stage.description_ar or '' }}</p>
+  </div>
+
+  <div class="lessons-grid">
+    {% for l in lessons %}
+    {% if l.status == 'locked' %}
+    <div class="lesson-card locked">
+      <div class="lesson-num">🔒</div>
+      <div class="lesson-title">{{ l.title_ar }}</div>
+      <div class="lesson-meta">
+        <span class="type-tag type-{{ l.lesson_type }}">{{ l.lesson_type }}</span>
+        <span class="lesson-badge badge-locked">مقفل</span>
+      </div>
+    </div>
+    {% else %}
+    <a href="/speaking/lesson/{{ l.id }}?user_id={{ user_id }}"
+       class="lesson-card {% if l.status == 'completed' %}completed{% endif %}">
+      <div class="lesson-num">{{ loop.index }}</div>
+      <div class="lesson-title">{{ l.title_ar }}</div>
+      <div class="lesson-meta">
+        <span class="type-tag type-{{ l.lesson_type }}">{{ l.items_count }} عناصر</span>
+        {% if l.status == 'completed' %}
+          <span class="lesson-score">{{ l.score }}%</span>
+          <span class="lesson-badge badge-completed">✓ مكتمل</span>
+        {% else %}
+          <span class="lesson-badge badge-available">ابدأ</span>
+        {% endif %}
+      </div>
+    </a>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+{
+  "id": "dl_easy_02",
+  "type": "daily_reading",
+  "tier": "easy",
+  "title_en": "Text Message Chain",
+  "title_ar": "سلسلة رسائل نصية",
+  "topic": "Messages",
+  "duration_seconds": 240,
+  "passage": {
+    "title_en": "Text Messages",
+    "text_en": "Sarah: Hi Emma! Are we still meeting tomorrow?\nEmma:  Yes! At 3 PM at the café on Main Street.\nSarah: Perfect. Should I bring anything?\nEmma:  Just bring your books for study. I'll bring the coffee!\nSarah: Sounds great. See you tomorrow!"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "What time is the meeting?",
+      "prompt_ar": "متى موعد اللقاء؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "2:00 PM"
+        },
+        {
+          "id": "B",
+          "text_en": "3:00 PM"
+        },
+        {
+          "id": "C",
+          "text_en": "4:00 PM"
+        },
+        {
+          "id": "D",
+          "text_en": "Tomorrow"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "إيما قالت: 'At 3 PM at the café'.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "What will Emma bring?",
+      "prompt_ar": "ماذا ستحضر إيما؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Coffee"
+        },
+        {
+          "id": "B",
+          "text_en": "Money"
+        },
+        {
+          "id": "C",
+          "text_en": "Books"
+        },
+        {
+          "id": "D",
+          "text_en": "Food"
+        }
+      ],
+      "correct": "A",
+      "explanation_ar": "إيما قالت: 'I'll bring the coffee!'",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "Where are they meeting?",
+      "prompt_ar": "أين سيلتقيان؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "At a library"
+        },
+        {
+          "id": "B",
+          "text_en": "At Emma's house"
+        },
+        {
+          "id": "C",
+          "text_en": "At a café"
+        },
+        {
+          "id": "D",
+          "text_en": "At Sarah's office"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "ذُكر صراحةً: 'at the café on Main Street'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "EASY"
+  }
+}

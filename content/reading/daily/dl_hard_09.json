@@ -1,0 +1,100 @@
+{
+  "id": "dl_hard_09",
+  "type": "daily_reading",
+  "tier": "hard",
+  "title_en": "Auto Insurance Claim Process",
+  "title_ar": "إجراءات مطالبة تأمين السيارة",
+  "topic": "Insurance",
+  "duration_seconds": 420,
+  "passage": {
+    "title_en": "AUTO INSURANCE CLAIM PROCESS — Fast Guard Insurance",
+    "text_en": "AUTO INSURANCE CLAIM PROCESS — Fast Guard Insurance\n\nIMMEDIATE STEPS (Within 24 hours of incident):\n1. Call our 24/7 hotline: 1-800-CLAIM-01\n2. Obtain police report number if accident involves:\n   - Injuries to any party\n   - Property damage exceeding $2,000\n   - Hit-and-run situations\n\nDOCUMENTATION REQUIRED (Submit within 5 business days):\n- Completed claim form (online or paper)\n- Photos of all vehicle damage (minimum 4 angles)\n- Contact information for all parties involved\n- Witness statements, if available\n- Police report (if applicable)\n\nRENTAL CAR COVERAGE:\nApproved for accidents where your vehicle is undrivable. Maximum: $45/day for up to 14 days while repairs are in progress. Luxury and premium vehicles not covered.\n\nCLAIM REVIEW:\nInitial review: 3–5 business days after complete documentation.\nPayment/repair authorization: 7–10 business days post-review.\nIncomplete submissions will delay processing by 10–15 business days."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "In which situation is a police report NOT required?",
+      "prompt_ar": "في أي حالة لا يُشترط تقرير الشرطة؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Someone is injured"
+        },
+        {
+          "id": "B",
+          "text_en": "Your car has $1,500 in damage and no one is hurt"
+        },
+        {
+          "id": "C",
+          "text_en": "The other driver left the scene"
+        },
+        {
+          "id": "D",
+          "text_en": "Property damage is $2,500"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "التقرير مطلوب فقط إذا تجاوز الضرر 2000$ أو حدثت إصابات أو هرب من الموقع. ضرر 1500$ وبدون إصابة لا يستوجبه.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "What is the maximum total rental car reimbursement?",
+      "prompt_ar": "ما الحد الأقصى لإجمالي تعويض إيجار السيارة؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "$45"
+        },
+        {
+          "id": "B",
+          "text_en": "$450"
+        },
+        {
+          "id": "C",
+          "text_en": "$630"
+        },
+        {
+          "id": "D",
+          "text_en": "$900"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "45$ × 14 يوم = 630$.",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "If you submit incomplete documentation, how long total might it take before payment/repair authorization?",
+      "prompt_ar": "إذا قدمت وثائق غير مكتملة، كم قد تستغرق المعالجة الكلية قبل اعتماد الدفع؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "5 business days"
+        },
+        {
+          "id": "B",
+          "text_en": "10-15 business days"
+        },
+        {
+          "id": "C",
+          "text_en": "20-30 business days"
+        },
+        {
+          "id": "D",
+          "text_en": "7-10 business days"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "تأخير 10–15 يوماً + مراجعة 3–5 + اعتماد 7–10 = يقارب 20–30 يوم عمل.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "HARD"
+  }
+}

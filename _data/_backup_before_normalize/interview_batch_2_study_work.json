@@ -1,0 +1,1236 @@
+{
+  "batch": "2",
+  "category": "Study & Work",
+  "topics": [
+    {
+      "topic_code": "study_habits",
+      "topic_ar": "عادات الدراسة",
+      "topic_en": "Study Habits",
+      "category": "Study & Work",
+      "order_index": 6,
+      "interviewer": {
+        "avatar_id": "emma",
+        "name": "Emma",
+        "accent": "UK Female",
+        "voice": "en-GB-SoniaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=emma&backgroundColor=ffd5dc"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about study habits. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن عادات الدراسة. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining. Please think about a recent time when you studied hard for an exam or a project. What did you study, where did you study, and how did it go?",
+          "question_ar": "شكراً لانضمامك. فكر في وقت قريب درست فيه بجد لامتحان أو مشروع. ماذا درست؟ وأين؟ وكيف كانت النتيجة؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "review",
+              "ipa": "/rɪˈvjuː/",
+              "ar": "يُراجع"
+            },
+            {
+              "word": "notes",
+              "ipa": "/nəʊts/",
+              "ar": "ملاحظات"
+            },
+            {
+              "word": "focused",
+              "ipa": "/ˈfəʊkəst/",
+              "ar": "مُركّز"
+            },
+            {
+              "word": "library",
+              "ipa": "/ˈlaɪbrəri/",
+              "ar": "مكتبة"
+            },
+            {
+              "word": "succeed",
+              "ipa": "/səkˈsiːd/",
+              "ar": "ينجح"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last month, I studied very hard for an English test. I prepared for one week. I studied at home, but my house was a little noisy. So in the last two days, I went to the library. There, I was more focused. I reviewed my notes, did practice questions, and read some short articles. On the day of the exam, I felt ready. I got a good score, and I was very happy with the result.",
+            "word_count": 78,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + clear sequence (one week, last two days, on the day)."
+          },
+          "answer_tier90": {
+            "text": "Last month, I studied intensively for an important English test over the course of a week. I started at home, but with constant distractions, I quickly realized I needed a better environment. So for the final two days, I moved to the local library, where I was able to focus far more effectively. I reviewed my notes carefully, worked through practice questions, and tackled a few articles. By exam day, I felt genuinely prepared, and the result reflected that effort.",
+            "word_count": 80,
+            "level": "B2-C1",
+            "structure_notes": "'Intensively', 'constant distractions', 'tackled', 'reflected that effort'."
+          },
+          "self_assessment": [
+            "هل ذكرت موضوع الدراسة؟",
+            "هل ذكرت المكان؟",
+            "هل وصفت طريقتك في المذاكرة؟",
+            "هل ذكرت النتيجة؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People study in very different ways. Some prefer studying alone in silence, while others prefer studying in groups or with background music. What's your preferred study style, and why?",
+          "question_ar": "يدرس الناس بطرق مختلفة جداً. يفضل البعض الدراسة بمفرده في صمت، بينما يفضل آخرون الدراسة جماعياً أو مع موسيقى خلفية. ما أسلوبك المفضل في الدراسة؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "silence",
+              "ipa": "/ˈsaɪləns/",
+              "ar": "صمت"
+            },
+            {
+              "word": "concentrate",
+              "ipa": "/ˈkɒnsəntreɪt/",
+              "ar": "يُركّز"
+            },
+            {
+              "word": "distraction",
+              "ipa": "/dɪˈstrækʃən/",
+              "ar": "إلهاء"
+            },
+            {
+              "word": "discuss",
+              "ipa": "/dɪˈskʌs/",
+              "ar": "يُناقش"
+            },
+            {
+              "word": "atmosphere",
+              "ipa": "/ˈætməsfɪə/",
+              "ar": "أجواء"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I prefer to study alone in a quiet place. When I am alone, I can concentrate better and think clearly. Music and other voices are big distractions for me. But I sometimes study with one friend, especially for math problems. We help each other, and it is faster. For me, the best study style depends on the subject. Easy subjects with a friend, hard subjects alone in silence.",
+            "word_count": 71,
+            "level": "A2-B1",
+            "structure_notes": "Clear preference + reason + exception + final rule."
+          },
+          "answer_tier90": {
+            "text": "I'm definitely someone who prefers studying alone in a quiet environment. When there's silence, I can fully concentrate and process new information much more effectively. Music and background chatter completely throw off my focus. That said, I do occasionally study with one trusted friend, particularly for problem-solving subjects like math — discussing ideas out loud actually helps. So my approach really depends on the subject and the goal of that study session.",
+            "word_count": 75,
+            "level": "B2-C1",
+            "structure_notes": "'Throw off my focus', 'background chatter', 'study session'."
+          },
+          "self_assessment": [
+            "هل اخترت أسلوباً بوضوح؟",
+            "هل أعطيت سبباً؟",
+            "هل ذكرت استثناءً؟",
+            "هل ذكرت نوع المادة؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe it's better to study a little every day, while others think it's better to study a lot just before the exam. Which approach do you support, and why?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن الأفضل هو الدراسة قليلاً كل يوم، بينما يعتقد آخرون أن الأفضل الدراسة كثيراً قبل الامتحان مباشرة. أي طريقة تدعم؟ ولماذا؟",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "consistent",
+              "ipa": "/kənˈsɪstənt/",
+              "ar": "ثابت"
+            },
+            {
+              "word": "memorize",
+              "ipa": "/ˈmeməraɪz/",
+              "ar": "يحفظ"
+            },
+            {
+              "word": "long-term",
+              "ipa": "/ˌlɒŋˈtɜːm/",
+              "ar": "طويل المدى"
+            },
+            {
+              "word": "cramming",
+              "ipa": "/ˈkræmɪŋ/",
+              "ar": "حشو معلومات بسرعة"
+            },
+            {
+              "word": "stressful",
+              "ipa": "/ˈstresfəl/",
+              "ar": "مرهق"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I strongly believe that studying a little every day is much better. When you study every day, you remember the information for a long time. Your brain has time to understand and connect ideas. But when you study only before the exam, you may pass it, but you will forget everything next week. Also, last-minute studying is very stressful. I always feel tired and worried. So a small amount each day is the best plan.",
+            "word_count": 77,
+            "level": "A2-B1",
+            "structure_notes": "Strong position + reasons + comparison + final summary."
+          },
+          "answer_tier90": {
+            "text": "I strongly support studying a little every day rather than cramming right before exams. Consistent daily study allows the brain to gradually build long-term memory and make meaningful connections between concepts. Last-minute cramming might help you pass the test, but most of that information disappears within a week. On top of that, cramming is incredibly stressful and exhausting. In my experience, slow and steady progress always beats panicked all-nighters before exams.",
+            "word_count": 73,
+            "level": "B2-C1",
+            "structure_notes": "'Cramming', 'meaningful connections', 'slow and steady', 'all-nighters'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك بوضوح؟",
+            "هل قارنت بين الطريقتين؟",
+            "هل ذكرت نتائج كل طريقة؟",
+            "هل ربطت الأفكار منطقياً؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools should teach students how to study effectively as a separate subject? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس يجب أن تدرّس الطلاب كيفية الدراسة بفعالية كمادة منفصلة؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "skill",
+              "ipa": "/skɪl/",
+              "ar": "مهارة"
+            },
+            {
+              "word": "effective",
+              "ipa": "/ɪˈfektɪv/",
+              "ar": "فعّال"
+            },
+            {
+              "word": "curriculum",
+              "ipa": "/kəˈrɪkjələm/",
+              "ar": "منهج"
+            },
+            {
+              "word": "time",
+              "ipa": "/taɪm/",
+              "ar": "وقت"
+            },
+            {
+              "word": "lifelong",
+              "ipa": "/ˈlaɪflɒŋ/",
+              "ar": "مدى الحياة"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a great idea. The big benefit is that students will learn important skills. Many people do not know how to study well, so they waste a lot of time. A clear method can help them learn faster and remember more. But there is one drawback. The school day is already full with many subjects. Adding a new one may be too much. So maybe one short class per week is enough.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Yes + clear benefit + 'But' + drawback + practical solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I strongly support this idea. The biggest benefit is empowering students with lifelong learning skills — knowing how to study effectively saves time, reduces stress, and boosts results across every subject. However, one practical drawback is that adding another subject to an already packed curriculum could overwhelm both students and teachers. A reasonable middle ground would be integrating short study-skills lessons into existing subjects, or offering one focused class per week.",
+            "word_count": 74,
+            "level": "B2-C1",
+            "structure_notes": "'Empowering', 'lifelong learning', 'packed curriculum', 'middle ground'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت حلاً عملياً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "reading",
+      "topic_ar": "القراءة",
+      "topic_en": "Reading",
+      "category": "Study & Work",
+      "order_index": 7,
+      "interviewer": {
+        "avatar_id": "brian",
+        "name": "Brian",
+        "accent": "UK Male",
+        "voice": "en-GB-RyanNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=brian&backgroundColor=ffdfbf"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about reading habits. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن عادات القراءة. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for taking part. Please think about a book or article you read recently that made a real impression on you. What was it about, and what did you learn from it?",
+          "question_ar": "شكراً لمشاركتك. فكر في كتاب أو مقال قرأته مؤخراً وترك أثراً حقيقياً فيك. عن ماذا كان؟ وما الذي تعلمته منه؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "novel",
+              "ipa": "/ˈnɒvəl/",
+              "ar": "رواية"
+            },
+            {
+              "word": "author",
+              "ipa": "/ˈɔːθə/",
+              "ar": "مؤلف"
+            },
+            {
+              "word": "lesson",
+              "ipa": "/ˈlesən/",
+              "ar": "درس"
+            },
+            {
+              "word": "perspective",
+              "ipa": "/pəˈspektɪv/",
+              "ar": "منظور"
+            },
+            {
+              "word": "inspire",
+              "ipa": "/ɪnˈspaɪə/",
+              "ar": "يُلهم"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last month, I read a book about successful people and their daily habits. The book showed how small actions, like waking up early or reading every day, can change your life. I learned that success is not about luck. It is about small, good habits done every day. After reading, I tried to wake up earlier and read for thirty minutes each morning. It is not always easy, but I feel more focused and happy.",
+            "word_count": 77,
+            "level": "A2-B1",
+            "structure_notes": "Clear topic + lesson + personal change after reading."
+          },
+          "answer_tier90": {
+            "text": "Last month, I read a fascinating book about the daily habits of highly successful people. The main idea was that success isn't really about luck or talent — it's about small, consistent actions repeated every single day. That perspective genuinely shifted how I view my own routines. Inspired by it, I started waking up thirty minutes earlier to read and reflect. Honestly, it hasn't been easy, but I already feel more focused, calm, and intentional about how I spend my time.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "'Genuinely shifted', 'consistent actions', 'intentional'."
+          },
+          "self_assessment": [
+            "هل ذكرت اسم/نوع الكتاب؟",
+            "هل لخصت الفكرة الرئيسية؟",
+            "هل قلت ماذا تعلمت؟",
+            "هل ذكرت كيف أثر فيك؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have different reading preferences. Some love fiction and novels, while others prefer non-fiction like biographies or science books. What kind of reading do you usually enjoy, and why?",
+          "question_ar": "للناس تفضيلات قراءة مختلفة. يحب البعض الروايات الخيالية، بينما يفضل آخرون كتب غير خيالية مثل السير الذاتية أو العلوم. ما نوع القراءة التي تستمتع بها عادةً؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "fiction",
+              "ipa": "/ˈfɪkʃən/",
+              "ar": "خيال"
+            },
+            {
+              "word": "biography",
+              "ipa": "/baɪˈɒɡrəfi/",
+              "ar": "سيرة ذاتية"
+            },
+            {
+              "word": "imagine",
+              "ipa": "/ɪˈmædʒɪn/",
+              "ar": "يتخيّل"
+            },
+            {
+              "word": "real life",
+              "ipa": "/rɪəl laɪf/",
+              "ar": "حياة حقيقية"
+            },
+            {
+              "word": "knowledge",
+              "ipa": "/ˈnɒlɪdʒ/",
+              "ar": "معرفة"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Personally, I prefer non-fiction, especially biographies. I love to read about real people who did great things. Their stories give me motivation and new ideas. For example, I read about Steve Jobs and learned about creativity and hard work. I read fiction sometimes too, but for me, real stories are more powerful. They show that with hard work, normal people can do amazing things in real life.",
+            "word_count": 70,
+            "level": "A2-B1",
+            "structure_notes": "Clear preference + concrete example + comparison."
+          },
+          "answer_tier90": {
+            "text": "Personally, I'm drawn much more to non-fiction, especially biographies and books about science or psychology. Reading about real people who overcame challenges gives me genuine motivation and fresh perspectives I can actually apply. For instance, I recently read a biography of a famous scientist, and it completely changed how I think about creativity. I do enjoy fiction occasionally, but for me, true stories tend to leave a deeper, more lasting impact on the way I see the world.",
+            "word_count": 81,
+            "level": "B2-C1",
+            "structure_notes": "'Drawn to', 'overcame challenges', 'fresh perspectives', 'lasting impact'."
+          },
+          "self_assessment": [
+            "هل اخترت نوعاً واضحاً؟",
+            "هل أعطيت سبباً؟",
+            "هل ذكرت مثالاً محدداً؟",
+            "هل قارنت مع النوع الآخر؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that reading paper books is much better than reading on a screen, like a phone or tablet. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن قراءة الكتب الورقية أفضل بكثير من القراءة على شاشة، مثل الهاتف أو الجهاز اللوحي. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "screen",
+              "ipa": "/skriːn/",
+              "ar": "شاشة"
+            },
+            {
+              "word": "paper",
+              "ipa": "/ˈpeɪpə/",
+              "ar": "ورق"
+            },
+            {
+              "word": "eyes",
+              "ipa": "/aɪz/",
+              "ar": "عينان"
+            },
+            {
+              "word": "portable",
+              "ipa": "/ˈpɔːtəbəl/",
+              "ar": "قابل للحمل"
+            },
+            {
+              "word": "experience",
+              "ipa": "/ɪkˈspɪəriəns/",
+              "ar": "تجربة"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I mostly agree. Paper books are better in many ways. First, they are easier on the eyes. Screens make my eyes tired after one hour. Second, with paper, there are no notifications and no distractions. You can focus only on the book. But screens have one advantage: you can carry hundreds of books in one small device. So for travel, screens win. But for deep reading at home, paper is the winner.",
+            "word_count": 75,
+            "level": "A2-B1",
+            "structure_notes": "'First... second' + concession + clear final position."
+          },
+          "answer_tier90": {
+            "text": "I largely agree, though with some nuance. Paper books offer real advantages — they're much easier on the eyes during long reading sessions, and they don't come with constant notifications pulling your attention away. That said, screens have undeniable benefits too: you can carry hundreds of books on one device, perfect for traveling or commuting. So in my view, paper is ideal for deep, focused reading at home, while digital wins for convenience on the move.",
+            "word_count": 78,
+            "level": "B2-C1",
+            "structure_notes": "'Largely agree, though with some nuance', 'undeniable benefits', 'on the move'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل ذكرت سببين على الأقل؟",
+            "هل اعترفت بميزة الطرف الآخر؟",
+            "هل لخصت في النهاية؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think parents should limit their children's screen time to make them read more books? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الآباء يجب أن يحدّوا وقت الشاشة لأطفالهم ليقرأوا كتباً أكثر؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "limit",
+              "ipa": "/ˈlɪmɪt/",
+              "ar": "يحدّ"
+            },
+            {
+              "word": "screen time",
+              "ipa": "/skriːn taɪm/",
+              "ar": "وقت الشاشة"
+            },
+            {
+              "word": "imagination",
+              "ipa": "/ɪˌmædʒɪˈneɪʃən/",
+              "ar": "خيال"
+            },
+            {
+              "word": "rebel",
+              "ipa": "/rɪˈbel/",
+              "ar": "يتمرّد"
+            },
+            {
+              "word": "balance",
+              "ipa": "/ˈbæləns/",
+              "ar": "توازن"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a good idea. The clear benefit is that children will develop better imagination and language skills. Books make the brain work harder than passive videos. But there is one big drawback. If parents are too strict, children may rebel and hate reading. The goal is to make books look fun, not like a punishment. So I think balance is the answer: less screen time, but in a kind and positive way.",
+            "word_count": 77,
+            "level": "A2-B1",
+            "structure_notes": "Yes + benefit + 'But' + drawback + balanced solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I generally support this idea, but with care. The main benefit is that reading actively develops imagination, vocabulary, and patience in ways that passive screen-watching simply can't match. However, the obvious drawback is that strict rules can backfire — children might rebel and start associating books with punishment. So instead of forcing the issue, parents should make reading appealing: read together, suggest exciting titles, and create a calm reading space at home.",
+            "word_count": 76,
+            "level": "B2-C1",
+            "structure_notes": "'Backfire', 'associating with', 'forcing the issue', 'create a calm space'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة؟",
+            "هل ذكرت مضرة؟",
+            "هل اقترحت طريقة عملية؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "remote_work",
+      "topic_ar": "العمل عن بُعد",
+      "topic_en": "Remote Work",
+      "category": "Study & Work",
+      "order_index": 8,
+      "interviewer": {
+        "avatar_id": "andrew",
+        "name": "Andrew",
+        "accent": "US Male",
+        "voice": "en-US-AndrewNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=andrew&backgroundColor=c0aede"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about remote work. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن العمل عن بُعد. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining. Please think about a time when you worked or studied from home — maybe during the pandemic or for any other reason. What was that experience like for you?",
+          "question_ar": "شكراً لانضمامك. فكر في وقت عملت أو درست فيه من المنزل — ربما خلال الجائحة أو لأي سبب آخر. كيف كانت تلك التجربة بالنسبة لك؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "remotely",
+              "ipa": "/rɪˈməʊtli/",
+              "ar": "عن بُعد"
+            },
+            {
+              "word": "pandemic",
+              "ipa": "/pænˈdemɪk/",
+              "ar": "جائحة"
+            },
+            {
+              "word": "comfortable",
+              "ipa": "/ˈkʌmftəbəl/",
+              "ar": "مريح"
+            },
+            {
+              "word": "lonely",
+              "ipa": "/ˈləʊnli/",
+              "ar": "وحيد"
+            },
+            {
+              "word": "flexible",
+              "ipa": "/ˈfleksəbəl/",
+              "ar": "مرن"
+            }
+          ],
+          "answer_tier69": {
+            "text": "During the pandemic, I studied from home for almost a year. At the beginning, I really enjoyed it. I could wake up later, wear comfortable clothes, and save time on transportation. But after a few months, I started to feel lonely. I missed seeing my classmates and teachers face to face. The first weeks were fun, but in the end, I was very happy to go back to normal classes.",
+            "word_count": 73,
+            "level": "A2-B1",
+            "structure_notes": "'At the beginning... but after a few months' clear contrast over time."
+          },
+          "answer_tier90": {
+            "text": "During the pandemic, I studied from home for almost a year, and the experience was honestly mixed. At first, I genuinely enjoyed the flexibility — waking up later, working in comfortable clothes, and skipping the long commute. But after a few months, the isolation really started getting to me. I missed real conversations with classmates and the energy of being on campus. So while remote learning has clear advantages, I was relieved when in-person classes finally resumed.",
+            "word_count": 80,
+            "level": "B2-C1",
+            "structure_notes": "'Genuinely enjoyed', 'getting to me', 'energy of being on campus', 'resumed'."
+          },
+          "self_assessment": [
+            "هل ذكرت متى ولماذا؟",
+            "هل وصفت البداية؟",
+            "هل وصفت ما تغير بعد ذلك؟",
+            "هل ذكرت مشاعرك؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People feel differently about working from home. Some love the flexibility, while others struggle with focus and motivation. Which group do you belong to, and why?",
+          "question_ar": "يشعر الناس بشكل مختلف تجاه العمل من المنزل. يحب البعض المرونة، بينما يعاني آخرون مع التركيز والتحفيز. إلى أي مجموعة تنتمي؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "flexibility",
+              "ipa": "/ˌfleksəˈbɪləti/",
+              "ar": "مرونة"
+            },
+            {
+              "word": "motivation",
+              "ipa": "/ˌməʊtɪˈveɪʃən/",
+              "ar": "تحفيز"
+            },
+            {
+              "word": "productive",
+              "ipa": "/prəˈdʌktɪv/",
+              "ar": "منتج"
+            },
+            {
+              "word": "interruption",
+              "ipa": "/ˌɪntəˈrʌpʃən/",
+              "ar": "مقاطعة"
+            },
+            {
+              "word": "routine",
+              "ipa": "/ruːˈtiːn/",
+              "ar": "روتين"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Honestly, I struggle a little with working from home. I like the flexibility, but my focus is not great. There are too many distractions around me — my family, my phone, the TV. I work better in a quiet office or library. Also, I feel more motivated when I see other people working too. So I prefer a mix: maybe two days at home, and three days at the office. That works best for me.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Honest position + concrete distractions + practical solution."
+          },
+          "answer_tier90": {
+            "text": "Honestly, I'm somewhere in the middle, but I lean toward struggling at home. I genuinely appreciate the flexibility, but staying focused is tough — distractions from family, my phone, and household chores constantly pull me away. I'm far more productive in a structured workspace, surrounded by other people who are also focused. That's why a hybrid arrangement — a couple of days at home and the rest at the office — works best for me personally.",
+            "word_count": 76,
+            "level": "B2-C1",
+            "structure_notes": "'Lean toward', 'constantly pull me away', 'hybrid arrangement'."
+          },
+          "self_assessment": [
+            "هل اخترت مجموعة بوضوح؟",
+            "هل أعطيت أسباباً محددة؟",
+            "هل ذكرت أمثلة؟",
+            "هل اقترحت حلاً؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that remote work is the future and most jobs should be done from home. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن العمل عن بُعد هو المستقبل، وأن معظم الوظائف يجب أن تُؤدّى من المنزل. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "future",
+              "ipa": "/ˈfjuːtʃə/",
+              "ar": "مستقبل"
+            },
+            {
+              "word": "teamwork",
+              "ipa": "/ˈtiːmwɜːk/",
+              "ar": "عمل جماعي"
+            },
+            {
+              "word": "communication",
+              "ipa": "/kəˌmjuːnɪˈkeɪʃən/",
+              "ar": "تواصل"
+            },
+            {
+              "word": "industry",
+              "ipa": "/ˈɪndəstri/",
+              "ar": "صناعة"
+            },
+            {
+              "word": "hybrid",
+              "ipa": "/ˈhaɪbrɪd/",
+              "ar": "هجين"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I do not fully agree with this idea. Yes, remote work is great for some jobs, like programming or writing. But many jobs need people to be together. Doctors, teachers, and chefs cannot work from home. Also, teamwork and creativity are better face-to-face. So I do not think most jobs will be remote. The hybrid model — some days at home, some at the office — is the real future, I believe.",
+            "word_count": 75,
+            "level": "A2-B1",
+            "structure_notes": "Partial disagreement + concrete examples + final position."
+          },
+          "answer_tier90": {
+            "text": "I respectfully disagree with that view. While remote work is excellent for certain industries — like tech, writing, or design — many essential jobs simply can't be done from home. Doctors, teachers, mechanics, and chefs need physical presence. Plus, teamwork, creativity, and company culture genuinely thrive on face-to-face interaction. In my opinion, the real future isn't fully remote — it's a flexible hybrid model that combines the best of both worlds.",
+            "word_count": 73,
+            "level": "B2-C1",
+            "structure_notes": "'Respectfully disagree', 'genuinely thrive on', 'best of both worlds'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل أعطيت أمثلة محددة؟",
+            "هل اعترفت بالطرف الآخر؟",
+            "هل اقترحت بديلاً؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think companies should give all their employees the choice to work from home if they want to? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الشركات يجب أن تعطي جميع موظفيها خيار العمل من المنزل إذا أرادوا؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "employee",
+              "ipa": "/ɪmˈplɔɪiː/",
+              "ar": "موظف"
+            },
+            {
+              "word": "choice",
+              "ipa": "/tʃɔɪs/",
+              "ar": "خيار"
+            },
+            {
+              "word": "trust",
+              "ipa": "/trʌst/",
+              "ar": "ثقة"
+            },
+            {
+              "word": "supervision",
+              "ipa": "/ˌsuːpəˈvɪʒən/",
+              "ar": "إشراف"
+            },
+            {
+              "word": "fairness",
+              "ipa": "/ˈfeənəs/",
+              "ar": "إنصاف"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a fair idea. The main benefit is happiness. When people choose where to work, they feel respected and trusted by the company. Happy workers do better work. But there is one drawback. Not all jobs are equal. Some jobs really need the worker in the office every day. So if only some people get the choice, it may feel unfair. Companies need clear and fair rules about who can work from home.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Yes + 'main benefit' + 'But' + drawback + practical concern."
+          },
+          "answer_tier90": {
+            "text": "Yes, I generally support giving employees this choice. The biggest benefit is increased job satisfaction — when people feel trusted and have control over their work environment, they're noticeably more engaged and loyal. However, one real drawback is fairness, since not every role can be done remotely. If only some employees get the choice, resentment among others can quickly build up. So companies should set clear, transparent policies based on the actual nature of each job.",
+            "word_count": 78,
+            "level": "B2-C1",
+            "structure_notes": "'Increased job satisfaction', 'engaged and loyal', 'resentment can build up'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة؟",
+            "هل ذكرت مضرة؟",
+            "هل اقترحت قاعدة عادلة؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "time_management",
+      "topic_ar": "إدارة الوقت",
+      "topic_en": "Time Management",
+      "category": "Study & Work",
+      "order_index": 9,
+      "interviewer": {
+        "avatar_id": "aria",
+        "name": "Aria",
+        "accent": "US Female",
+        "voice": "en-US-AriaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=aria&backgroundColor=b6e3f4"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about time management. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن إدارة الوقت. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining the study. Please think about a time when you had too many things to do at the same time. How did you handle it, and what was the result?",
+          "question_ar": "شكراً لمشاركتك. فكر في وقت كان عندك فيه الكثير من الأشياء لتفعلها في نفس الوقت. كيف تعاملت مع الأمر؟ وما كانت النتيجة؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "deadline",
+              "ipa": "/ˈdedlaɪn/",
+              "ar": "موعد نهائي"
+            },
+            {
+              "word": "priority",
+              "ipa": "/praɪˈɒrəti/",
+              "ar": "أولوية"
+            },
+            {
+              "word": "overwhelmed",
+              "ipa": "/ˌəʊvəˈwelmd/",
+              "ar": "غامر/مُرهق"
+            },
+            {
+              "word": "organize",
+              "ipa": "/ˈɔːɡənaɪz/",
+              "ar": "ينظّم"
+            },
+            {
+              "word": "manage",
+              "ipa": "/ˈmænɪdʒ/",
+              "ar": "يُدير"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last semester, I had three big projects and one exam in the same week. I felt very stressed and overwhelmed. So I sat down on Saturday morning and made a simple plan. I put the most important task first. Then I worked on one thing at a time, not everything at once. I also slept enough and ate well. In the end, I finished all the projects and got a good score on the exam. I learned that a clear plan saves time.",
+            "word_count": 84,
+            "level": "A2-B1",
+            "structure_notes": "Past simple + clear sequence (Saturday morning, then, in the end) + lesson learned."
+          },
+          "answer_tier90": {
+            "text": "Last semester, I had three major projects and a big exam all due in the same week. Honestly, I felt completely overwhelmed at first. So that Saturday morning, I sat down with a coffee and built a simple priority list. I tackled the most urgent task first and focused on one thing at a time instead of jumping between them. I also made sure to sleep and eat properly. By the end of the week, I'd finished everything and scored well. That experience really taught me the power of planning.",
+            "word_count": 91,
+            "level": "B2-C1",
+            "structure_notes": "'Tackled', 'priority list', 'jumping between', 'power of planning'."
+          },
+          "self_assessment": [
+            "هل ذكرت موقفاً محدداً؟",
+            "هل وصفت كيف تعاملت؟",
+            "هل ذكرت النتيجة؟",
+            "هل ذكرت درساً تعلمته؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have very different approaches to managing their time. Some plan every minute of the day, while others prefer to be flexible and spontaneous. Which style fits you best, and why?",
+          "question_ar": "للناس طرق مختلفة جداً لإدارة وقتهم. يخطط البعض لكل دقيقة في اليوم، بينما يفضل آخرون المرونة والعفوية. أي أسلوب يناسبك أكثر؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "schedule",
+              "ipa": "/ˈʃedjuːl/",
+              "ar": "جدول"
+            },
+            {
+              "word": "spontaneous",
+              "ipa": "/spɒnˈteɪniəs/",
+              "ar": "عفوي"
+            },
+            {
+              "word": "structure",
+              "ipa": "/ˈstrʌktʃə/",
+              "ar": "هيكل"
+            },
+            {
+              "word": "freedom",
+              "ipa": "/ˈfriːdəm/",
+              "ar": "حرية"
+            },
+            {
+              "word": "balance",
+              "ipa": "/ˈbæləns/",
+              "ar": "توازن"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I am somewhere in the middle. I do not plan every minute, but I always make a simple list every morning. For me, planning the most important three or four tasks is enough. After that, I like to be flexible. If a friend calls or something new happens, I can change my plan easily. I think strict schedules can be stressful. A loose plan gives both structure and freedom. That balance works very well for me.",
+            "word_count": 78,
+            "level": "A2-B1",
+            "structure_notes": "Middle position + clear method + reasoning + 'balance' conclusion."
+          },
+          "answer_tier90": {
+            "text": "I'm definitely somewhere in the middle. I'm not the type to schedule every single minute, but I always write a short list of three or four key tasks each morning. After that, I prefer to stay flexible. If something unexpected comes up — a phone call, a sudden meeting — I can adjust without panic. Strictly timed schedules feel suffocating to me, while pure spontaneity is too chaotic. A simple list plus flexibility gives me both structure and freedom, which is exactly what I need.",
+            "word_count": 86,
+            "level": "B2-C1",
+            "structure_notes": "'Suffocating', 'pure spontaneity', 'chaotic', 'structure and freedom'."
+          },
+          "self_assessment": [
+            "هل وصفت أسلوبك بوضوح؟",
+            "هل أعطيت سبباً؟",
+            "هل ذكرت مثالاً عملياً؟",
+            "هل قارنت مع الأسلوب الآخر؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that being busy all the time is a sign of success in modern life. Do you agree with this idea? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن الانشغال طوال الوقت هو علامة على النجاح في الحياة الحديثة. هل توافق على هذه الفكرة؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "busy",
+              "ipa": "/ˈbɪzi/",
+              "ar": "مشغول"
+            },
+            {
+              "word": "burnout",
+              "ipa": "/ˈbɜːnaʊt/",
+              "ar": "إنهاك تام"
+            },
+            {
+              "word": "rest",
+              "ipa": "/rest/",
+              "ar": "راحة"
+            },
+            {
+              "word": "quality",
+              "ipa": "/ˈkwɒləti/",
+              "ar": "جودة"
+            },
+            {
+              "word": "achievement",
+              "ipa": "/əˈtʃiːvmənt/",
+              "ar": "إنجاز"
+            }
+          ],
+          "answer_tier69": {
+            "text": "No, I do not agree at all. Being busy all the time is not success — it is a problem. Many busy people are tired, stressed, and unhealthy. Real success is finishing important goals and still having time to rest and enjoy life. For example, a smart worker can finish his job in six hours, not twelve. He has more time for family, sport, and sleep. So I think quality of work is much more important than just being busy.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Strong disagreement + clear reasoning + example + final summary."
+          },
+          "answer_tier90": {
+            "text": "I strongly disagree with this idea. Being constantly busy isn't a sign of success — it's often a sign of poor planning or burnout. Many people who claim to be 'super busy' are actually exhausted, stressed, and producing low-quality work. True success, in my view, is achieving meaningful goals while still having time to rest, see family, and enjoy life. A focused worker who finishes in six hours is far more successful than someone working twelve hours without real direction.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Constantly busy', 'burnout', 'meaningful goals', 'without real direction'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل أعطيت سبباً قوياً؟",
+            "هل ذكرت مثالاً محدداً؟",
+            "هل لخصت في النهاية؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think companies should switch to a four-day work week instead of five days? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الشركات يجب أن تتحول إلى أسبوع عمل 4 أيام بدلاً من 5؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "work week",
+              "ipa": "/wɜːk wiːk/",
+              "ar": "أسبوع عمل"
+            },
+            {
+              "word": "productivity",
+              "ipa": "/ˌprɒdʌkˈtɪvəti/",
+              "ar": "إنتاجية"
+            },
+            {
+              "word": "well-being",
+              "ipa": "/ˌwelˈbiːɪŋ/",
+              "ar": "صحة نفسية وجسدية"
+            },
+            {
+              "word": "industry",
+              "ipa": "/ˈɪndəstri/",
+              "ar": "صناعة"
+            },
+            {
+              "word": "deadline",
+              "ipa": "/ˈdedlaɪn/",
+              "ar": "موعد نهائي"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a wonderful idea. The biggest benefit is the well-being of workers. With three days off, people can rest, see family, and relax. Many studies show that happier workers are also more productive in fewer days. But there is one drawback. Some industries, like hospitals or shops, need workers seven days a week. So a four-day week is not possible for every job. The rule should be flexible depending on the type of work.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Yes + clear benefit + 'But' + practical drawback + solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I'm a strong supporter of the four-day work week. The clearest benefit is improved well-being — workers get more time to rest, exercise, and spend with family, which actually boosts productivity during work hours. Several studies have confirmed this. However, the obvious drawback is that not every industry can operate this way. Hospitals, restaurants, and emergency services need staff seven days a week. So while the policy is great for office-based jobs, it needs to be adapted carefully for service industries.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Strong supporter', 'boosts productivity', 'adapted carefully'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت تعديلاً عملياً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "learning_skills",
+      "topic_ar": "تعلّم مهارات جديدة",
+      "topic_en": "Learning New Skills",
+      "category": "Study & Work",
+      "order_index": 10,
+      "interviewer": {
+        "avatar_id": "brian",
+        "name": "Brian",
+        "accent": "UK Male",
+        "voice": "en-GB-RyanNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=brian&backgroundColor=ffdfbf"
+      },
+      "intro": {
+        "en": "You have agreed to take part in a research study about learning new skills. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+        "ar": "وافقت على المشاركة في دراسة بحثية عن تعلّم مهارات جديدة. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة."
+      },
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for being here. Please think about a new skill you tried to learn recently — maybe cooking, a language, a sport, or anything else. What was it, and how did the learning process go?",
+          "question_ar": "شكراً لانضمامك. فكر في مهارة جديدة حاولت تعلّمها مؤخراً — ربما الطبخ، أو لغة، أو رياضة، أو أي شيء آخر. ما هي؟ وكيف سارت عملية التعلّم؟",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "skill",
+              "ipa": "/skɪl/",
+              "ar": "مهارة"
+            },
+            {
+              "word": "practice",
+              "ipa": "/ˈpræktɪs/",
+              "ar": "ممارسة"
+            },
+            {
+              "word": "improve",
+              "ipa": "/ɪmˈpruːv/",
+              "ar": "يتحسّن"
+            },
+            {
+              "word": "challenge",
+              "ipa": "/ˈtʃæləndʒ/",
+              "ar": "تحدّي"
+            },
+            {
+              "word": "patience",
+              "ipa": "/ˈpeɪʃəns/",
+              "ar": "صبر"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Last year, I decided to learn how to swim. I never learned as a child, so it was a real challenge. At first, I was very scared of deep water. But I joined a class with a kind teacher, and I practiced two times a week. After three months, I could swim across the pool. I felt very proud and confident. Now, swimming is one of my favorite ways to relax and exercise. The lesson? Never too late to learn.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + clear progression (at first, after three months, now)."
+          },
+          "answer_tier90": {
+            "text": "Last year, I finally decided to learn how to swim properly. I'd never learned as a child, so it was a genuine personal challenge. At first, I was honestly terrified of deep water, but I signed up for a class with a patient instructor and committed to twice-weekly practice. After about three months, I could swim across the entire pool without stopping. The sense of accomplishment was incredible. Swimming has now become one of my favorite ways to unwind, and the experience taught me it's truly never too late to learn.",
+            "word_count": 92,
+            "level": "B2-C1",
+            "structure_notes": "'Terrified of', 'committed to', 'sense of accomplishment', 'unwind'."
+          },
+          "self_assessment": [
+            "هل ذكرت المهارة تحديداً؟",
+            "هل وصفت البداية؟",
+            "هل وصفت التقدم؟",
+            "هل ذكرت النتيجة والشعور؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People learn new skills in different ways. Some prefer learning from a teacher in a class, while others prefer learning alone using videos and online courses. Which way works better for you, and why?",
+          "question_ar": "يتعلم الناس المهارات الجديدة بطرق مختلفة. يفضل البعض التعلّم من معلم في صف، بينما يفضل آخرون التعلّم بمفرده باستخدام الفيديوهات والدورات الإلكترونية. أي طريقة تعمل أفضل لك؟ ولماذا؟",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "teacher",
+              "ipa": "/ˈtiːtʃə/",
+              "ar": "معلم"
+            },
+            {
+              "word": "online course",
+              "ipa": "/ˈɒnlaɪn kɔːs/",
+              "ar": "دورة إلكترونية"
+            },
+            {
+              "word": "feedback",
+              "ipa": "/ˈfiːdbæk/",
+              "ar": "ملاحظات"
+            },
+            {
+              "word": "self-study",
+              "ipa": "/ˌself ˈstʌdi/",
+              "ar": "دراسة ذاتية"
+            },
+            {
+              "word": "interaction",
+              "ipa": "/ˌɪntərˈækʃən/",
+              "ar": "تفاعل"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I prefer learning from a real teacher in a class. When I have a teacher, I can ask questions immediately and get feedback. The teacher can also see my mistakes and correct them. Online videos are good for some things, but I get distracted easily at home. Also, I miss the interaction with classmates. We learn from each other too. So for important skills, a real class is the best choice for me, even if it costs more.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Clear preference + reasons + comparison + acknowledging cost."
+          },
+          "answer_tier90": {
+            "text": "I definitely learn better from a real teacher in a classroom setting. The biggest advantage is immediate feedback — when I make a mistake, the teacher catches it instantly and corrects it. Online videos are convenient and often cheaper, but I'm easily distracted at home, and there's no real interaction. I also genuinely enjoy learning alongside classmates; we tend to motivate each other. So for skills that really matter to me, a structured class is worth the extra investment of time and money.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Classroom setting', 'catches it instantly', 'worth the extra investment'."
+          },
+          "self_assessment": [
+            "هل اخترت طريقة بوضوح؟",
+            "هل أعطيت سبباً قوياً؟",
+            "هل ذكرت إيجابيات الطريقة الأخرى؟",
+            "هل ذكرت مثالاً؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that adults should keep learning new skills throughout their entire life, not just when they are young. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن البالغين يجب أن يستمروا في تعلم مهارات جديدة طوال حياتهم، وليس فقط عندما يكونون صغاراً. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "lifelong",
+              "ipa": "/ˈlaɪflɒŋ/",
+              "ar": "مدى الحياة"
+            },
+            {
+              "word": "career",
+              "ipa": "/kəˈrɪə/",
+              "ar": "مهنة"
+            },
+            {
+              "word": "brain",
+              "ipa": "/breɪn/",
+              "ar": "دماغ"
+            },
+            {
+              "word": "active",
+              "ipa": "/ˈæktɪv/",
+              "ar": "نشط"
+            },
+            {
+              "word": "world",
+              "ipa": "/wɜːld/",
+              "ar": "عالم"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I strongly agree. The world is changing very fast, especially because of technology. If we stop learning, we will be left behind. For example, my uncle is fifty years old, and he just learned how to use a new computer system at his job. He says it helped him keep his career. Also, learning keeps the brain active and young. So I believe people of all ages should always be learning something new.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Strong agreement + example + second reason + summary."
+          },
+          "answer_tier90": {
+            "text": "I absolutely agree with this idea. In today's rapidly changing world — especially with technology evolving so quickly — anyone who stops learning quickly falls behind. For example, my uncle, who's fifty, recently mastered a new software system at his job, and it genuinely saved his career. Beyond practical benefits, continuous learning keeps the brain sharp and active, which is essential for healthy aging. So in my view, lifelong learning isn't just useful — it's necessary for staying relevant and engaged.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "'Rapidly changing', 'mastered', 'genuinely saved his career', 'staying relevant'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك بقوة؟",
+            "هل أعطيت مثالاً ملموساً؟",
+            "هل ذكرت أكثر من سبب؟",
+            "هل لخصت في النهاية؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think governments should provide free training programs for adults who want to learn new skills? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الحكومات يجب أن توفر برامج تدريب مجانية للبالغين الذين يريدون تعلّم مهارات جديدة؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "government",
+              "ipa": "/ˈɡʌvənmənt/",
+              "ar": "حكومة"
+            },
+            {
+              "word": "free",
+              "ipa": "/friː/",
+              "ar": "مجاني"
+            },
+            {
+              "word": "training",
+              "ipa": "/ˈtreɪnɪŋ/",
+              "ar": "تدريب"
+            },
+            {
+              "word": "opportunity",
+              "ipa": "/ˌɒpəˈtjuːnəti/",
+              "ar": "فرصة"
+            },
+            {
+              "word": "budget",
+              "ipa": "/ˈbʌdʒɪt/",
+              "ar": "ميزانية"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a great idea. The main benefit is opportunity for everyone, not just rich people. Many adults want to change jobs but cannot pay for expensive courses. Free training can help them improve their life. But there is one drawback. These programs cost a lot of money. The government needs a big budget, and the money comes from taxes. So the rule must be careful: good programs, but not too expensive for the country.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Yes + 'main benefit' + 'But' + drawback (cost) + balanced view."
+          },
+          "answer_tier90": {
+            "text": "Yes, I strongly support this kind of policy. The biggest benefit is equal opportunity — many talented adults can't afford expensive courses, and free training would help them change careers or improve their lives. However, the obvious drawback is cost. Quality training programs require significant funding, which ultimately comes from taxpayers. So while I'm in favor, governments need to design these programs efficiently, perhaps focusing on the skills the economy actually needs most.",
+            "word_count": 77,
+            "level": "B2-C1",
+            "structure_notes": "'Equal opportunity', 'significant funding', 'design efficiently'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة؟",
+            "هل ذكرت مضرة؟",
+            "هل اقترحت طريقة عملية؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    }
+  ]
+}

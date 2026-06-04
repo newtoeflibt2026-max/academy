@@ -1,0 +1,464 @@
+﻿{
+  "lessons": [
+    {
+      "id": 211,
+      "code": "M3_L11",
+      "sub_lesson_index": 11,
+      "level": "difficult",
+      "title_ar": "المرحلة 3 - الدرس 11: المساعدات المالية",
+      "title_en": "Financial Aid Conversations",
+      "principle_en": "Make inferences — what is implied but not directly stated?",
+      "principle_ar": "استنتج المعلومات — ما الذي يُلمَّح إليه دون ذكره صراحةً؟",
+      "strategy_ar": "اقرأ بين السطور: نبرة المتحدث، اختياره للكلمات، وما لم يُقَل قد يكون أهم من المُصرَّح.",
+      "clips": [
+        {
+          "code": "conv_d01",
+          "title_ar": "تمهيد: طلب منحة",
+          "context_ar": "مقطع تمهيدي عن استفسار مالي",
+          "is_intro": true,
+          "lines": [
+            ["F", "I wanted to ask about scholarship options."],
+            ["M", "Most are merit-based. What's your current GPA?"],
+            ["F", "3.7."],
+            ["M", "That qualifies you for several. Let me show you the list."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_d02",
+          "title_ar": "محادثة 1: قرض دراسي",
+          "context_ar": "طالبة تستفسر عن قرض جامعي",
+          "lines": [
+            ["F", "I'm considering applying for a student loan, but I'm a bit nervous."],
+            ["M", "I understand. What concerns you most?"],
+            ["F", "Repayment after graduation. I'm not sure I'll find a job right away."],
+            ["M", "That's a valid concern, but our loans have a six-month grace period after graduation."],
+            ["F", "Six months? That's helpful, but still feels tight."],
+            ["M", "If you face hardship, you can apply for income-based repayment."],
+            ["F", "So payments adjust to my actual salary?"],
+            ["M", "Exactly. Many graduates use this option in their first year."]
+          ],
+          "questions": [
+            {
+              "q": "What can be inferred about the student?",
+              "options": ["She is wealthy", "She is anxious about future finances", "She already has a job", "She doesn't need a loan"],
+              "correct": 1,
+              "explanation_ar": "كلمات مثل 'nervous' و'not sure I'll find a job' تكشف القلق المالي رغم عدم تصريحها مباشرةً.",
+              "wrong_explanation_ar": "لا يوجد دليل على الثراء أو وجود وظيفة.",
+              "elimination_hint_ar": "استنتج المشاعر من اختيار الكلمات."
+            },
+            {
+              "q": "What is implied about the income-based repayment?",
+              "options": ["It's rarely used", "It's commonly used by new graduates", "It increases interest", "It's only for emergencies"],
+              "correct": 1,
+              "explanation_ar": "قال 'Many graduates use this option in their first year' — يُلمح لكونه شائعاً.",
+              "wrong_explanation_ar": "لم يُذكر أنه نادر أو طارئ.",
+              "elimination_hint_ar": "كلمة Many تشير للشيوع."
+            }
+          ]
+        },
+        {
+          "code": "conv_d03",
+          "title_ar": "محادثة 2: تأخر منحة",
+          "context_ar": "طالب يستفسر عن تأخر دفعة منحته",
+          "lines": [
+            ["M", "I'm still waiting for my scholarship deposit. It was due last week."],
+            ["F", "Let me check your file. I see your paperwork is complete."],
+            ["M", "So why the delay?"],
+            ["F", "It appears the bank verification took longer than usual this semester."],
+            ["M", "Will this affect my ability to pay tuition on time?"],
+            ["F", "Don't worry. We've flagged your account so no late fees apply."],
+            ["M", "That's a relief. When can I expect the deposit?"],
+            ["F", "Within three business days, latest."]
+          ],
+          "questions": [
+            {
+              "q": "What can be inferred about the delay?",
+              "options": ["It is the student's fault", "It is a wider administrative issue this semester", "Documents are missing", "The scholarship was canceled"],
+              "correct": 1,
+              "explanation_ar": "ذكرت 'bank verification took longer than usual this semester' — مشكلة عامة وليس فردية.",
+              "wrong_explanation_ar": "أوراق الطالب مكتملة، ولم يُلغَ شيء.",
+              "elimination_hint_ar": "كلمة 'this semester' تشير لمشكلة موسمية."
+            },
+            {
+              "q": "Why won't the student face late fees?",
+              "options": ["He paid early", "His account has been flagged due to the delay", "He has scholarship privileges", "Tuition was waived"],
+              "correct": 1,
+              "explanation_ar": "قالت 'We've flagged your account so no late fees apply' — حماية إدارية مؤقتة.",
+              "wrong_explanation_ar": "لم يدفع شيئاً ولم يُلغَ القسط.",
+              "elimination_hint_ar": "السبب الإجرائي المُحدد."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 212,
+      "code": "M3_L12",
+      "sub_lesson_index": 12,
+      "level": "difficult",
+      "title_ar": "المرحلة 3 - الدرس 12: مركز التوظيف",
+      "title_en": "Career Center Conversations",
+      "principle_en": "Predict what the speaker will do next based on context.",
+      "principle_ar": "تنبأ بما سيفعله المتحدث لاحقاً اعتماداً على السياق.",
+      "strategy_ar": "في آخر جملتين، يلمح المتحدث لخطوته التالية. اربط الكلمات مع النية.",
+      "clips": [
+        {
+          "code": "conv_d04",
+          "title_ar": "تمهيد: مراجعة سيرة ذاتية",
+          "context_ar": "مقطع تمهيدي عن استشارة وظيفية",
+          "is_intro": true,
+          "lines": [
+            ["M", "Can someone review my CV?"],
+            ["F", "Yes, our advisors do that. Have you booked an appointment?"],
+            ["M", "Not yet."],
+            ["F", "You can book online or stop by tomorrow."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_d05",
+          "title_ar": "محادثة 1: استعداد للمقابلة",
+          "context_ar": "طالبة تحضّر لمقابلة عمل",
+          "lines": [
+            ["F", "I have a job interview next Tuesday. Could you help me prepare?"],
+            ["M", "Certainly. Have you researched the company?"],
+            ["F", "Briefly. I know they're in renewable energy."],
+            ["M", "Go deeper. Look at their recent projects and leadership."],
+            ["F", "What about practice questions?"],
+            ["M", "We offer mock interviews. Would you like to schedule one for Friday?"],
+            ["F", "Yes, that would be amazing. I'll prepare more research first."],
+            ["M", "Bring your notes Friday and we'll do a full simulation."]
+          ],
+          "questions": [
+            {
+              "q": "What will the student most likely do before Friday?",
+              "options": ["Attend the actual interview", "Research the company more thoroughly", "Apply for other jobs", "Cancel the appointment"],
+              "correct": 1,
+              "explanation_ar": "قالت 'I'll prepare more research first' و طُلب منها التعمق في الشركة.",
+              "wrong_explanation_ar": "المقابلة الحقيقية يوم الثلاثاء التالي، وليس هناك إشارة لتقديم لوظائف أخرى.",
+              "elimination_hint_ar": "اربط 'prepare more research' بالخطوة التالية."
+            },
+            {
+              "q": "What will happen during the Friday meeting?",
+              "options": ["A real interview", "A mock interview simulation", "Just CV review", "Phone consultation"],
+              "correct": 1,
+              "explanation_ar": "ذكر 'we'll do a full simulation' — مقابلة تجريبية.",
+              "wrong_explanation_ar": "ليست مقابلة حقيقية، فقط تجريبية.",
+              "elimination_hint_ar": "كلمة simulation تعني محاكاة."
+            }
+          ]
+        },
+        {
+          "code": "conv_d06",
+          "title_ar": "محادثة 2: معرض الوظائف",
+          "context_ar": "طالب يستفسر عن معرض التوظيف القادم",
+          "lines": [
+            ["M", "I want to attend the upcoming career fair, but I've never been to one."],
+            ["F", "Good first step. The fair has over 80 companies this year."],
+            ["M", "Should I dress formally?"],
+            ["F", "Business attire is expected. Also bring at least ten copies of your CV."],
+            ["M", "Ten copies? That sounds like a lot."],
+            ["F", "It goes quickly. Some students leave with leads from five or six companies."],
+            ["M", "What if I don't know what to say at the booths?"],
+            ["F", "We have a pre-fair workshop next Wednesday. I'd strongly recommend attending."]
+          ],
+          "questions": [
+            {
+              "q": "What will the student most likely do next?",
+              "options": ["Skip the fair entirely", "Attend the pre-fair workshop", "Apply to all 80 companies", "Cancel his current classes"],
+              "correct": 1,
+              "explanation_ar": "نصيحة قوية 'I'd strongly recommend attending' تجعل الحضور هو الخطوة المنطقية التالية.",
+              "wrong_explanation_ar": "لا يوجد ما يدل على التخلي عن الفكرة.",
+              "elimination_hint_ar": "اربط النصيحة القوية بسلوك الطالب المتوقع."
+            },
+            {
+              "q": "What does the speaker imply about CVs?",
+              "options": ["One copy is enough", "Distributing many copies is normal", "Companies prefer digital CVs", "CVs are not needed"],
+              "correct": 1,
+              "explanation_ar": "قال 'It goes quickly' و'leads from five or six companies' — يُلمح إلى استهلاك سريع للنسخ.",
+              "wrong_explanation_ar": "العكس مذكور صراحةً: 10 نسخ تنفد بسرعة.",
+              "elimination_hint_ar": "لاحظ ما يُلمح إليه ضمنياً."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 213,
+      "code": "M3_L13",
+      "sub_lesson_index": 13,
+      "level": "difficult",
+      "title_ar": "المرحلة 3 - الدرس 13: الدعم التقني",
+      "title_en": "Tech Support Conversations",
+      "principle_en": "Follow the flow of ideas across multiple turns.",
+      "principle_ar": "تابع تسلسل الأفكار عبر تبادلات متعددة.",
+      "strategy_ar": "تتبع المنطق: المشكلة → التشخيص → الحل → التأكيد. كل خطوة تبني على ما قبلها.",
+      "clips": [
+        {
+          "code": "conv_d07",
+          "title_ar": "تمهيد: مشكلة في الحاسوب",
+          "context_ar": "مقطع تمهيدي عن طلب مساعدة تقنية",
+          "is_intro": true,
+          "lines": [
+            ["F", "My laptop won't connect to the campus Wi-Fi."],
+            ["M", "Did you reset your network settings?"],
+            ["F", "Not yet."],
+            ["M", "Try that first, then come back if it doesn't work."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_d08",
+          "title_ar": "محادثة 1: استرداد بريد إلكتروني",
+          "context_ar": "طالب يحاول استعادة حسابه",
+          "lines": [
+            ["M", "I forgot my email password and can't reset it."],
+            ["F", "Did you try the recovery email option?"],
+            ["M", "Yes, but the recovery email is also my old high school account, which is closed."],
+            ["F", "That's the problem. We'll need to verify your identity manually."],
+            ["M", "How do I do that?"],
+            ["F", "Come to the IT desk with your student ID and a second photo ID."],
+            ["M", "Will the process take long?"],
+            ["F", "About fifteen minutes. After verification, we'll reset your password immediately."]
+          ],
+          "questions": [
+            {
+              "q": "Why couldn't the student reset his password online?",
+              "options": ["He doesn't have internet", "His recovery email account is closed", "The system is down", "He doesn't have a phone"],
+              "correct": 1,
+              "explanation_ar": "السبب المنطقي: 'recovery email is also my old high school account, which is closed'.",
+              "wrong_explanation_ar": "بقية الأسباب لم تُذكر.",
+              "elimination_hint_ar": "السبب التقني المحدد في الحوار."
+            },
+            {
+              "q": "What is the solution proposed?",
+              "options": ["Create a new account", "Manual identity verification at IT desk", "Wait 24 hours", "Use a different device"],
+              "correct": 1,
+              "explanation_ar": "اقترحت 'verify your identity manually' في مكتب الدعم.",
+              "wrong_explanation_ar": "لا حاجة لإنشاء حساب جديد أو الانتظار.",
+              "elimination_hint_ar": "الحل المُحدد في الحوار."
+            }
+          ]
+        },
+        {
+          "code": "conv_d09",
+          "title_ar": "محادثة 2: برنامج لا يعمل",
+          "context_ar": "طالبة تواجه مشكلة في برنامج جامعي",
+          "lines": [
+            ["F", "The statistics software keeps crashing whenever I open large data sets."],
+            ["M", "Have you checked the system requirements?"],
+            ["F", "Yes, my laptop meets them, but barely."],
+            ["M", "That might be the issue. The software needs significantly more RAM for big files."],
+            ["F", "Is there a solution that doesn't involve buying a new laptop?"],
+            ["M", "You can access the same software remotely through our computer lab servers."],
+            ["F", "Really? That would be perfect for my thesis work."],
+            ["M", "I'll send you the login instructions and remote access guide via email."]
+          ],
+          "questions": [
+            {
+              "q": "What is the root cause of the crashes?",
+              "options": ["Software bug", "Insufficient RAM for big data", "Internet connection", "Outdated operating system"],
+              "correct": 1,
+              "explanation_ar": "حدد بوضوح 'The software needs significantly more RAM for big files'.",
+              "wrong_explanation_ar": "بقية الأسباب لم تُذكر كمصدر مباشر.",
+              "elimination_hint_ar": "السبب التقني الذي تشخّص في الحوار."
+            },
+            {
+              "q": "What is the proposed workaround?",
+              "options": ["Buy a new laptop", "Access software remotely via lab servers", "Use a different program", "Reduce data size"],
+              "correct": 1,
+              "explanation_ar": "اقترح 'access the same software remotely through our computer lab servers'.",
+              "wrong_explanation_ar": "الحل تجنب شراء جهاز جديد.",
+              "elimination_hint_ar": "البديل الذي يتجنب التكلفة العالية."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 214,
+      "code": "M3_L14",
+      "sub_lesson_index": 14,
+      "level": "difficult",
+      "title_ar": "المرحلة 3 - الدرس 14: الإرشاد الأكاديمي",
+      "title_en": "Academic Advising Conversations",
+      "principle_en": "Track decision-making — how does the speaker reach a conclusion?",
+      "principle_ar": "تتبع اتخاذ القرار — كيف يصل المتحدث إلى استنتاج؟",
+      "strategy_ar": "في حوارات الإرشاد، ابحث عن: الخيارات، الإيجابيات والسلبيات، ثم القرار النهائي.",
+      "clips": [
+        {
+          "code": "conv_d10",
+          "title_ar": "تمهيد: اختيار تخصص فرعي",
+          "context_ar": "مقطع تمهيدي عن قرار أكاديمي",
+          "is_intro": true,
+          "lines": [
+            ["M", "I'm torn between two minors."],
+            ["F", "What are they?"],
+            ["M", "Economics and Data Science."],
+            ["F", "Both are valuable. Let's compare them based on your career goals."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_d11",
+          "title_ar": "محادثة 1: دراسة في الخارج",
+          "context_ar": "طالبة تفكر في برنامج تبادل",
+          "lines": [
+            ["F", "I'm considering studying abroad next semester, but I'm hesitant."],
+            ["M", "What's holding you back?"],
+            ["F", "I'm worried about delaying my graduation."],
+            ["M", "Many courses transfer back. Have you looked at partner universities?"],
+            ["F", "Some, but the credit transfer rules are confusing."],
+            ["M", "Let's identify three programs where most credits transfer easily."],
+            ["F", "That would help. If credits transfer, I think I'd commit."],
+            ["M", "Then let's start there. I'll send program details tomorrow."]
+          ],
+          "questions": [
+            {
+              "q": "What is the main factor influencing the student's decision?",
+              "options": ["Cost", "Credit transfer and graduation timing", "Language barrier", "Location"],
+              "correct": 1,
+              "explanation_ar": "ذكرت قلقها من 'delaying my graduation' وأن نقل الكريديت سيحسم القرار.",
+              "wrong_explanation_ar": "بقية العوامل لم تُذكر كعقبات.",
+              "elimination_hint_ar": "العامل الذي قد يغيّر قرارها."
+            },
+            {
+              "q": "What will the advisor do next?",
+              "options": ["Enroll her immediately", "Send her details of three suitable programs", "Cancel her current courses", "Reject her application"],
+              "correct": 1,
+              "explanation_ar": "وعد بـ 'send program details tomorrow' لثلاثة برامج محددة.",
+              "wrong_explanation_ar": "لا تسجيل فوري أو إلغاء.",
+              "elimination_hint_ar": "الخطوة العملية التالية."
+            }
+          ]
+        },
+        {
+          "code": "conv_d12",
+          "title_ar": "محادثة 2: تأجيل فصل دراسي",
+          "context_ar": "طالب يفكر في إجازة أكاديمية",
+          "lines": [
+            ["M", "I've been thinking about taking a leave of absence next semester."],
+            ["F", "That's a big decision. What's prompting it?"],
+            ["M", "Burnout. I've taken heavy course loads for three semesters straight."],
+            ["F", "Have you considered a reduced course load instead?"],
+            ["M", "I thought of that, but I really need a complete break."],
+            ["F", "Understood. A leave can be granted, but you'll need to formally re-enroll later."],
+            ["M", "Will my scholarship be affected?"],
+            ["F", "It pauses during your leave and resumes when you return, if you maintain good standing."]
+          ],
+          "questions": [
+            {
+              "q": "Why is the student considering a leave?",
+              "options": ["Family issues", "Burnout from heavy workload", "Financial reasons", "Health condition"],
+              "correct": 1,
+              "explanation_ar": "ذكر 'Burnout. I've taken heavy course loads for three semesters'.",
+              "wrong_explanation_ar": "السبب أكاديمي/نفسي وليس مالياً أو عائلياً.",
+              "elimination_hint_ar": "السبب الذي ذكره صراحةً."
+            },
+            {
+              "q": "What happens to his scholarship during the leave?",
+              "options": ["It is canceled", "It pauses and resumes upon return", "It transfers to another student", "It must be repaid"],
+              "correct": 1,
+              "explanation_ar": "وضحت 'It pauses during your leave and resumes when you return'.",
+              "wrong_explanation_ar": "ليس إلغاءً ولا سداداً.",
+              "elimination_hint_ar": "حالة المنحة المُحددة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 215,
+      "code": "M3_L15",
+      "sub_lesson_index": 15,
+      "level": "difficult",
+      "title_ar": "المرحلة 3 - الدرس 15: مراجعة شاملة",
+      "title_en": "Mixed Review Conversations",
+      "principle_en": "Apply all skills together — main idea, details, tone, inference, and prediction.",
+      "principle_ar": "طبّق كل المهارات معاً — الفكرة الرئيسية، التفاصيل، النبرة، الاستنتاج، والتنبؤ.",
+      "strategy_ar": "في هذا الدرس، استخدم كل ما تعلمته. اقرأ السؤال بدقة لتحدد أي مهارة يختبرها.",
+      "clips": [
+        {
+          "code": "conv_d13",
+          "title_ar": "تمهيد: محادثة شاملة",
+          "context_ar": "مقطع تمهيدي يجمع عدة مهارات",
+          "is_intro": true,
+          "lines": [
+            ["F", "Professor, I have some questions about the final project."],
+            ["M", "Sure, what would you like to know?"],
+            ["F", "First, can we work in pairs?"],
+            ["M", "Yes, pairs are encouraged this time."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_d14",
+          "title_ar": "محادثة 1: مشروع تخرج معقد",
+          "context_ar": "طالبة تناقش متطلبات مشروع متعدد المراحل",
+          "lines": [
+            ["F", "Professor, my research project has more variables than I expected."],
+            ["M", "That's common. Can you narrow your scope?"],
+            ["F", "I tried, but reducing variables might weaken my conclusions."],
+            ["M", "What if you split it into two phases? Phase one explores; phase two confirms."],
+            ["F", "That sounds manageable. Would phase two be next semester?"],
+            ["M", "Possibly, depending on your phase-one findings."],
+            ["F", "I like that approach. It feels more rigorous."],
+            ["M", "Excellent. Submit a revised proposal by Friday outlining both phases."]
+          ],
+          "questions": [
+            {
+              "q": "What is the main concern of the student?",
+              "options": ["Her project lacks data", "Her project has too many variables", "Her project is too short", "She wants to change topics"],
+              "correct": 1,
+              "explanation_ar": "ذكرت 'my research project has more variables than I expected'.",
+              "wrong_explanation_ar": "ليست قلة بيانات، بل كثرة متغيرات.",
+              "elimination_hint_ar": "الفكرة الرئيسية في الجملة الأولى."
+            },
+            {
+              "q": "What is the professor's suggested approach?",
+              "options": ["Reduce all variables", "Split the project into two phases", "Change the topic completely", "Add more variables"],
+              "correct": 1,
+              "explanation_ar": "اقترح 'split it into two phases'.",
+              "wrong_explanation_ar": "بقية الخيارات ضد توجيه الأستاذ.",
+              "elimination_hint_ar": "حل وسط بين التقليل والتوسع."
+            }
+          ]
+        },
+        {
+          "code": "conv_d15",
+          "title_ar": "محادثة 2: نزاع حول درجة",
+          "context_ar": "طالب يطعن في درجة مع نبرة محترمة لكن قلقة",
+          "lines": [
+            ["M", "Professor, may I discuss the grading on my essay?"],
+            ["F", "Of course. What specifically concerns you?"],
+            ["M", "I lost six points on the analysis section, but I'm not clear on the criteria."],
+            ["F", "Let me explain. Your argument was solid, but you relied heavily on one source."],
+            ["M", "I see. I focused on depth over breadth."],
+            ["F", "Both matter in academic writing. Try diversifying sources in your next paper."],
+            ["M", "Is there any chance to revise this essay?"],
+            ["F", "Not for a grade change, but I'm happy to discuss revisions for your learning."]
+          ],
+          "questions": [
+            {
+              "q": "What can be inferred about the student's tone?",
+              "options": ["Angry and aggressive", "Respectful but concerned", "Indifferent", "Sarcastic"],
+              "correct": 1,
+              "explanation_ar": "استخدامه لـ 'may I' و'I see' يدل على الاحترام، بينما القلق ظاهر من الاستفسار.",
+              "wrong_explanation_ar": "لا توجد علامات غضب أو سخرية.",
+              "elimination_hint_ar": "اقرأ النبرة من اختيار الكلمات."
+            },
+            {
+              "q": "What will most likely happen next?",
+              "options": ["The grade will change", "The student will discuss revisions for learning, not grades", "The professor will report him", "He will drop the course"],
+              "correct": 1,
+              "explanation_ar": "وضحت 'Not for a grade change, but I'm happy to discuss revisions for your learning'.",
+              "wrong_explanation_ar": "لا تغيير في الدرجة ولا إجراء عقابي.",
+              "elimination_hint_ar": "النتيجة الواقعية المتوقعة."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

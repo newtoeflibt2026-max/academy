@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "description": "Task 1 - Sentence Building exercises schema",
+  "foundation_lesson": {
+    "rule_number": "int (1-5)",
+    "title_ar": "string",
+    "title_en": "string",
+    "rule_ar": "string (Arabic explanation)",
+    "rule_en": "string (English rule)",
+    "formula": "string (e.g. S + V + O)",
+    "examples": [
+      {
+        "en": "I eat apples",
+        "ar": "أنا آكل تفاح"
+      }
+    ],
+    "memory_trick_ar": "string (easy-to-memorize trick)"
+  },
+  "exercise": {
+    "code": "string (unique identifier)",
+    "target_tier": "tier59 | tier69 | tier90",
+    "difficulty": "int (1-5)",
+    "word_count": "int (3-15)",
+    "correct_sentence": "string (full correct sentence)",
+    "arabic_translation": "string (Arabic meaning)",
+    "scrambled_words": [
+      "array of words in scrambled order"
+    ],
+    "rule_applied": "string (which golden rule)",
+    "strategy_ar": "string (trick to solve even without understanding)",
+    "explanation_ar": "string (Arabic explanation)",
+    "common_error_ar": "string (typical mistake)",
+    "hint_ar": "string (optional hint)"
+  }
+}

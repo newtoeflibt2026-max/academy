@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Listen and Response</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","Tahoma",sans-serif;background:linear-gradient(135deg,#eef2ff 0%,#f1f5f9 100%);min-height:100vh;color:#1f2937;padding:0}
+  .top-bar{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:12px 16px;z-index:100;display:flex;align-items:center;gap:12px}
+  .back-btn{background:#f3f4f6;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px;color:#374151;font-weight:600}
+  .back-btn:hover{background:#e5e7eb}
+  .top-bar .title{flex:1;font-size:15px;font-weight:700;color:#1f2937;text-align:center}
+  .progress-top{height:6px;background:#e5e7eb;border-radius:99px;overflow:hidden;flex:0 0 200px}
+  .progress-top .bar{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);border-radius:99px;transition:width .4s ease}
+  .counter-pill{background:#3b82f6;color:#fff;padding:6px 14px;border-radius:99px;font-size:13px;font-weight:700;white-space:nowrap}
+  .container{max-width:780px;margin:0 auto;padding:20px 16px 80px}
+  .theory-content{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 12px rgba(0,0,0,.06);line-height:1.9;font-size:15px}
+  .theory-content h2{color:#1d4ed8;margin:18px 0 10px;font-size:18px}
+  .theory-content p{margin:8px 0;color:#374151}
+  .theory-content b,.theory-content strong{color:#7c3aed}
+  .finish-bar{display:flex;justify-content:center;margin-top:24px}
+  .btn-finish{background:linear-gradient(135deg,#059669,#10b981);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(5,150,105,.3)}
+  .btn-finish:hover{transform:translateY(-2px)}
+  .btn-finish:disabled{background:#9ca3af;cursor:not-allowed}
+  .exam-screen{background:#fff;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.08);padding:24px;margin-top:14px;display:none;animation:slideIn .35s ease}
+  .exam-screen.active{display:block}
+  @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+  .start-card{text-align:center;padding:30px 20px}
+  .start-card .icon{font-size:64px;margin-bottom:12px}
+  .start-card h1{font-size:22px;color:#1f2937;margin-bottom:8px}
+  .start-card .info{color:#6b7280;font-size:14px;line-height:1.8;margin:14px auto;max-width:480px}
+  .start-card .stats-row{display:flex;justify-content:center;gap:16px;margin:18px 0;flex-wrap:wrap}
+  .start-card .stat-box{background:#f3f4f6;border-radius:10px;padding:12px 18px;min-width:90px}
+  .start-card .stat-box .n{font-size:22px;font-weight:800;color:#1d4ed8}
+  .start-card .stat-box .l{font-size:11px;color:#6b7280;margin-top:2px}
+  .btn-start{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border:none;padding:14px 42px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(59,130,246,.35)}
+  .btn-start:hover{transform:translateY(-2px)}
+  .audio-phase{text-align:center;padding:24px 16px}
+  .audio-phase .clip-title{font-size:18px;font-weight:700;color:#1f2937;margin-bottom:6px}
+  .audio-phase .clip-context{font-size:13px;color:#6b7280;margin-bottom:18px}
+  .audio-phase .clip-tags{display:flex;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .tag{background:#dbeafe;color:#1d4ed8;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700}
+  .tag.easy{background:#d1fae5;color:#065f46}
+  .tag.medium{background:#fef3c7;color:#92400e}
+  .tag.hard{background:#fee2e2;color:#991b1b}
+  .audio-phase audio{width:100%;max-width:520px;margin:14px auto;display:block}
+  .audio-phase .audio-hint{color:#6b7280;font-size:12px;margin-top:8px}
+  .play-counter{background:#f3f4f6;color:#374151;padding:6px 14px;border-radius:99px;font-size:12px;display:inline-block;margin-top:10px}
+  .question-phase{padding:6px 0}
+  .q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+  .q-number{background:#3b82f6;color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700}
+  .timer{display:flex;align-items:center;gap:6px;background:#fef3c7;color:#92400e;padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;border:2px solid #fbbf24}
+  .timer.warn{background:#fee2e2;color:#991b1b;border-color:#dc2626;animation:pulse 1s infinite}
+  .timer.expired{background:#9ca3af;color:#fff;border-color:#6b7280;animation:none}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  .q-text{font-size:17px;font-weight:600;color:#1f2937;margin:12px 0;line-height:1.6}
+  .q-text-ar{font-size:14px;color:#6b7280;margin-bottom:14px;direction:rtl}
+  .options{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .option{background:#f9fafb;border:2px solid #e5e7eb;border-radius:10px;padding:14px 16px;cursor:pointer;font-size:15px;color:#1f2937;transition:all .2s;display:flex;align-items:center;gap:10px;text-align:start;direction:ltr}
+  .option:hover{background:#eff6ff;border-color:#93c5fd}
+  .option.selected,.option.selected:hover{background:linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 100%)!important;border-color:#4f46e5!important;color:#312e81!important;opacity:1!important;box-shadow:0 0 0 3px rgba(99,102,241,.25)!important}
+  .option .letter{background:#e5e7eb;color:#374151;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+  .option.selected .letter{background:#4f46e5!important;color:#fff!important}
+  .inline-fb{margin-top:14px;padding:12px;border-radius:10px;font-size:13px;line-height:1.7;display:none}
+  .inline-fb.show{display:block;animation:slideIn .3s}
+  .inline-fb.ok{background:#d1fae5;border:1px solid #10b981;color:#065f46}
+  .inline-fb.no{background:#fee2e2;border:1px solid #ef4444;color:#991b1b}
+  .inline-fb .hd{font-weight:800;font-size:14px;margin-bottom:4px}
+  .transcript-toggle{display:none;margin-top:14px;text-align:center}
+  .transcript-toggle.show{display:block}
+  .btn-transcript{background:#f3f4f6;border:1px solid #d1d5db;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;color:#374151;font-weight:600}
+  .btn-transcript:hover{background:#e5e7eb}
+  .transcript-box{display:none;background:#1f2937;color:#f9fafb;border-radius:10px;padding:14px;margin-top:10px;font-size:13px;line-height:1.8;direction:ltr;text-align:start;font-family:ui-monospace,monospace}
+  .transcript-box.open{display:block}
+  .transcript-box .ar-note{color:#fbbf24;font-family:"Segoe UI",sans-serif;direction:rtl;text-align:end;font-size:12px;margin-top:8px;padding-top:8px;border-top:1px solid #4b5563}
+  .next-row{display:none;justify-content:center;gap:10px;margin-top:18px}
+  .next-row.show{display:flex}
+  .btn-next{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+  .toast-wrap{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+  .toast{background:#1f2937;color:#fff;padding:12px 20px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:14px;font-weight:600;opacity:0;transform:translateY(-20px);transition:all .3s ease;pointer-events:auto}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast.error{background:linear-gradient(135deg,#dc2626,#991b1b)}
+  .toast.warn{background:linear-gradient(135deg,#f59e0b,#d97706)}
+  .toast.info{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:9000;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+  .modal-overlay.open{display:flex;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .modal-card{background:#fff;border-radius:18px;max-width:780px;width:100%;margin:auto;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden;animation:slideUp .4s cubic-bezier(.2,.9,.3,1.2)}
+  @keyframes slideUp{from{transform:translateY(40px) scale(.96);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+  .modal-head{padding:28px 24px 20px;text-align:center;color:#fff}
+  .modal-head.pass{background:linear-gradient(135deg,#059669,#10b981)}
+  .modal-head.fail{background:linear-gradient(135deg,#dc2626,#ef4444)}
+  .modal-head .icon-big{font-size:54px;line-height:1;margin-bottom:8px}
+  .modal-head .title-big{font-size:22px;font-weight:800;margin-bottom:6px}
+  .modal-head .score-big{font-size:48px;font-weight:900;margin:10px 0}
+  .modal-head .sub{font-size:14px;opacity:.92}
+  .modal-progress{height:8px;background:rgba(255,255,255,.25);border-radius:99px;overflow:hidden;margin:12px auto 0;max-width:300px}
+  .modal-progress .bar{height:100%;background:#fff;border-radius:99px;transition:width 1s}
+  .modal-stats{display:flex;justify-content:center;gap:24px;padding:16px;background:#f9fafb;border-bottom:1px solid #e5e7eb;flex-wrap:wrap}
+  .modal-stats .stat{text-align:center}
+  .modal-stats .stat .n{font-size:22px;font-weight:800;color:#111827}
+  .modal-stats .stat.ok .n{color:#059669}
+  .modal-stats .stat.bad .n{color:#dc2626}
+  .modal-stats .stat .l{font-size:11px;color:#6b7280;margin-top:2px}
+  .modal-body{padding:18px 22px;max-height:55vh;overflow-y:auto}
+  .modal-body h3{font-size:15px;color:#374151;margin:0 0 12px;font-weight:700}
+  .wrong-q-card{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fecaca;border-radius:12px;padding:14px;margin-bottom:12px}
+  .wrong-q-card .q-title{font-weight:700;color:#991b1b;font-size:14px;margin-bottom:8px}
+  .wrong-q-card .answer-row{display:flex;gap:8px;margin:4px 0;font-size:13px}
+  .wrong-q-card .answer-row .lbl{font-weight:700;min-width:80px;color:#374151}
+  .wrong-q-card .answer-row.your .lbl{color:#dc2626}
+  .wrong-q-card .answer-row.right .lbl{color:#059669}
+  .wrong-q-card .exp-block{background:#fff;border-radius:8px;padding:10px;margin-top:8px;font-size:13px;line-height:1.6;color:#374151}
+  .wrong-q-card .exp-block .lab{font-weight:700;display:block;margin-bottom:4px;color:#7c2d12}
+  .wrong-q-card .elim{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px dashed #f59e0b;border-radius:10px;padding:12px;margin-top:8px}
+  .wrong-q-card .elim .lab{color:#92400e;font-weight:800;font-size:13px;display:block;margin-bottom:4px}
+  .modal-foot{padding:16px 22px;background:#f9fafb;border-top:1px solid #e5e7eb;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .modal-foot .btn{padding:11px 22px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;border:none}
+  .btn-mod-next{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
+  .btn-mod-retry{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+  .btn-mod-back{background:#e5e7eb;color:#374151}
+
+  /* ===== indigo selected override (injected) ===== */
+  .option.selected,
+  .option.selected:hover,
+  .option.selected:focus,
+  .option.selected:active,
+  #qOptions .option.selected,
+  #qOptions .option.selected:hover {
+    background: linear-gradient(135deg,#e0e7ff 0%,#c7d2fe 100%) !important;
+    border: 2px solid #4f46e5 !important;
+    color: #312e81 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,.30), 0 4px 12px rgba(79,70,229,.15) !important;
+    opacity: 1 !important;
+  }
+  .option.selected .letter,
+  #qOptions .option.selected .letter {
+    background: #4f46e5 !important;
+    color: #fff !important;
+  }
+  .option.selected::before,
+  .option.selected::after { background: #4f46e5 !important; color:#fff !important; border-color:#4f46e5 !important; }
+
+
+  /* ===== Next button reveal (injected) ===== */
+  .next-row { display:none; }
+  .next-row.show { display:flex; justify-content:center; margin-top:18px; animation: nextPop .3s ease-out; }
+  @keyframes nextPop { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  .btn-next {
+    background: linear-gradient(135deg,#4f46e5,#6366f1) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 28px !important;
+    border-radius: 24px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(79,70,229,.30) !important;
+    transition: transform .15s, box-shadow .15s !important;
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79,70,229,.40) !important; }
+  .btn-next:active { transform: translateY(0); }
+
+
+  /* ===== counter pill LTR (injected) ===== */
+  #counterPill { direction: ltr !important; unicode-bidi: isolate !important; }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="confirmExit()">← Exit</button>
+  <div class="title">{{ lesson.title_en or lesson.title_ar }}</div>
+  {% if not is_theory %}
+  <div class="counter-pill" id="counterPill">0 / 0</div>
+  <div class="progress-top"><div class="bar" id="topBar" style="width:0%"></div></div>
+  {% endif %}
+</div>
+
+<div class="container">
+
+  {% if is_theory %}
+  <div class="theory-content">
+    {{ lesson.content_html | safe }}
+  </div>
+  <div class="finish-bar">
+    <button class="btn-finish" id="finishBtn" onclick="finishTheory()">✓ أنهيت الدرس</button>
+  </div>
+
+  {% else %}
+
+  <div class="exam-screen active" id="startScreen">
+    <div class="start-card">
+      <div class="icon">🎧</div>
+      <h1>{{ lesson.title_en or lesson.title_ar }}</h1>
+      <div class="info">
+        ستستمع إلى مقاطع صوتية ثم تجيب على أسئلة متعددة الخيارات.<br>
+        بعد كل سؤال، لديك مؤقّت محدد للإجابة. لا يمكنك العودة لسؤال سابق.
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="n" id="totalClips">0</div><div class="l">مقاطع</div></div>
+        <div class="stat-box"><div class="n" id="totalQs">0</div><div class="l">أسئلة</div></div>
+        <div class="stat-box"><div class="n">65%</div><div class="l">للنجاح</div></div>
+      </div>
+      <button class="btn-start" onclick="startExam()">ابدأ التمرين ▶️</button>
+    </div>
+  </div>
+
+  <div class="exam-screen" id="audioScreen">
+    <div class="audio-phase">
+      <div class="clip-tags" id="audioTags"></div>
+      <div class="clip-title" id="audioTitle"></div>
+      <div class="clip-context" id="audioContext" style="display:none"></div>
+      <audio id="audioPlayer" controls></audio>
+      <div class="play-counter" id="playCounter">المحاولة 1 من 2</div>
+      <div class="audio-hint">🎧 Listen carefully. The timer starts when the audio ends.</div>
+    </div>
+  </div>
+
+  <div class="exam-screen" id="qScreen">
+    <div class="question-phase">
+      <div class="q-header">
+        <div class="q-number" id="qNumber">Question 1</div>
+        <div class="timer" id="timer">⏱️ 00:30</div>
+      </div>
+      <div class="q-text" id="qTextEn"></div>
+      <div class="q-text-ar" id="qTextAr" style="display:none"></div>
+      <div class="options" id="qOptions"></div>
+      <div class="replay-row" id="replayRow" style="margin-top:14px;text-align:center">
+        <button type="button" class="btn-replay" id="btnReplay" onclick="replayClip()" style="background:#eef2ff;border:1.5px solid #c7d2fe;color:#3730a3;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer">🔁 Replay</button>
+        <span id="replayInfo" style="display:inline-block;margin-inline-start:10px;color:#6b7280;font-size:12px"></span>
+        <audio id="qPlayer" preload="auto" style="display:none"></audio>
+      </div>
+      <div class="inline-fb" id="inlineFb"></div>
+      <div class="transcript-toggle" id="transcriptToggle">
+        <button class="btn-transcript" onclick="toggleTranscript()">📜 Show Transcript</button>
+        <div class="transcript-box" id="transcriptBox"></div>
+      </div>
+      <div class="next-row" id="nextRow">
+        <button class="btn-next" onclick="goNext()">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="modal-overlay" id="resultModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-card">
+    <div class="modal-head" id="modalHead">
+      <div class="icon-big" id="modalIcon">🎯</div>
+      <div class="title-big" id="modalTitle">Result</div>
+      <div class="score-big" id="modalScore">0%</div>
+      <div class="sub" id="modalSub"></div>
+      <div class="modal-progress"><div class="bar" id="modalBar" style="width:0%"></div></div>
+    </div>
+    <div class="modal-stats" id="modalStats"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<script>
+  const LESSON_ID = {{ lesson.id }};
+  const STAGE_ID = {{ lesson.stage_id }};
+  const USER_ID = "{{ user_id }}";
+  const IS_THEORY = {{ "true" if is_theory else "false" }};
+  const TIMER_BY_STAGE = { 2: 45, 3: 45, 4: 45, 5: 45 };
+  const MAX_PLAYS = 2;
+
+  {% if not is_theory %}
+  const CLIPS = [
+    {% for clip in clips %}
+    {
+      id: {{ clip.id }},
+      code: "{{ clip.code }}",
+      title_ar: {{ clip.title_ar|tojson }}, title_en: {{ clip.title_en|tojson }},
+      context_ar: {{ clip.context_ar|tojson }},
+      audio_url: {{ clip.audio_url|tojson }},
+      difficulty: "{{ clip.difficulty or 'easy' }}",
+      target_tier: "{{ clip.target_tier or '' }}",
+      transcript_en: {{ clip.transcript_en|tojson }},
+      transcript_ar: {{ clip.transcript_ar|tojson }},
+      questions: [
+        {% for q in clip.questions %}
+        { id: {{ q.id }}, question_en: {{ q.question_en|tojson }}, question_ar: {{ q.question_ar|tojson }}, options: {{ q.options|tojson }} }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+  const QPLAN = [];
+  CLIPS.forEach((c, ci) => c.questions.forEach((q, qi) => QPLAN.push({ci, qi})));
+  let currentIdx = 0, answers = {}, timerHandle = null, timeLeft = 0, playsForCurrentClip = 0, lastClipIdx = -1;
+  document.getElementById("totalClips").textContent = CLIPS.length;
+  document.getElementById("totalQs").textContent = QPLAN.length;
+  document.getElementById("counterPill").textContent = `0 / ${QPLAN.length}`;
+  {% endif %}
+
+  async function finishTheory(){
+    const btn = document.getElementById("finishBtn");
+    btn.disabled = true; btn.textContent = "Saving...";
+    try {
+      const r = await fetch(`/api/listening/lesson/${LESSON_ID}/submit?user_id=${USER_ID}`, {
+        method: "POST", headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({answers:{}})
+      });
+      const d = await r.json();
+      if (d.success) {
+        showToast("✅ تم إنهاء الدرس بنجاح", "info");
+        setTimeout(() => {
+          location.href = d.next_lesson_id
+            ? `/listening/lesson/${d.next_lesson_id}?user_id=${USER_ID}`
+            : `/listening/stage/${STAGE_ID}?user_id=${USER_ID}`;
+        }, 1100);
+      } else {
+        showToast(d.error || "حدث خطأ", "error");
+        btn.disabled = false; btn.textContent = "✓ أنهيت الدرس";
+      }
+    } catch(e) {
+      showToast("فشل الاتصال: " + e.message, "error");
+      btn.disabled = false; btn.textContent = "✓ أنهيت الدرس";
+    }
+  }
+
+  function confirmExit(){
+    {% if not is_theory %}
+    if (Object.keys(answers).length > 0 && Object.keys(answers).length < QPLAN.length) {
+      if (!confirm("سيتم فقدان تقدّمك. هل أنت متأكد من الExit؟")) return;
+    }
+    {% endif %}
+    location.href = `/listening/stage/${STAGE_ID}?user_id=${USER_ID}`;
+  }
+
+  {% if not is_theory %}
+  function showScreen(id){
+    document.querySelectorAll(".exam-screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+  function startExam(){ currentIdx = 0; answers = {}; loadStep(); }
+  function loadStep(){
+    if (currentIdx >= QPLAN.length){ submitAll(); return; }
+    const {ci, qi} = QPLAN[currentIdx];
+    const clip = CLIPS[ci];
+    document.getElementById("counterPill").textContent = `${currentIdx} / ${QPLAN.length}`;
+    document.getElementById("topBar").style.width = ((currentIdx / QPLAN.length) * 100) + "%";
+    if (ci !== lastClipIdx) { lastClipIdx = ci; playsForCurrentClip = 0; showAudioScreen(clip); }
+    else { showQuestion(ci, qi); }
+  }
+  function showAudioScreen(clip){
+    const tagsEl = document.getElementById("audioTags");
+    tagsEl.innerHTML = "";
+    if (clip.difficulty) { const t = document.createElement("span"); t.className = "tag " + clip.difficulty; t.textContent = clip.difficulty; tagsEl.appendChild(t); }
+    if (clip.target_tier) { const t = document.createElement("span"); t.className = "tag"; t.textContent = clip.target_tier; tagsEl.appendChild(t); }
+    document.getElementById("audioTitle").textContent = clip.title_en || clip.title_ar || "";
+    document.getElementById("audioContext").textContent = clip.context_ar || "";
+    const player = document.getElementById("audioPlayer");
+    const isValidUrl = clip.audio_url && clip.audio_url.startsWith("/static/");
+    if (isValidUrl) {
+      player.src = clip.audio_url;
+      player.style.display = "block";
+      playsForCurrentClip = 0;
+      updatePlayCounter();
+      player.onended = () => {
+        playsForCurrentClip += 1;
+        updatePlayCounter();
+        // Show question immediately after FIRST play; replay button stays inside question screen
+        if (playsForCurrentClip >= 1) {
+          setTimeout(() => showQuestion(QPLAN[currentIdx].ci, QPLAN[currentIdx].qi), 300);
+        }
+      };
+    } else {
+      player.style.display = "none";
+      document.getElementById("playCounter").textContent = "⚠️ No audio file available";
+      setTimeout(() => showQuestion(QPLAN[currentIdx].ci, QPLAN[currentIdx].qi), 1500);
+    }
+    showScreen("audioScreen");
+  }
+  function updatePlayCounter(){
+    document.getElementById("playCounter").textContent = playsForCurrentClip < MAX_PLAYS
+      ? `Attempt ${playsForCurrentClip+1} of ${MAX_PLAYS}`
+      : `No more attempts. Question coming...`;
+  }
+  function showQuestion(ci, qi){
+    const clip = CLIPS[ci]; const q = clip.questions[qi];
+    document.getElementById("qNumber").textContent = `Question ${currentIdx+1} of ${QPLAN.length}`;
+    document.getElementById("qTextEn").textContent = q.question_en || "";
+    document.getElementById("qTextAr").textContent = q.question_ar || "";
+    const optsEl = document.getElementById("qOptions"); optsEl.innerHTML = "";
+    // Build shuffled order (Fisher-Yates) — stored per question on first display
+    if (!q._order){
+      const n = (q.options || []).length;
+      const order = Array.from({length:n}, (_,k)=>k);
+      for (let k=n-1; k>0; k--){
+        const j = Math.floor(Math.random()*(k+1));
+        [order[k], order[j]] = [order[j], order[k]];
+      }
+      q._order = order;
+    }
+    q._order.forEach((origIdx, shownIdx) => {
+      const txt = (q.options || [])[origIdx];
+      const div = document.createElement("div");
+      div.className = "option";
+      div.dataset.idx = origIdx;      // ORIGINAL index used when submitting
+      div.dataset.shown = shownIdx;   // position user sees
+      div.innerHTML = `<span class="letter">${String.fromCharCode(65+shownIdx)}</span><span>${escapeHtml(txt)}</span>`;
+      div.onclick = () => pickOption(q.id, origIdx, div);
+      optsEl.appendChild(div);
+    });
+    document.getElementById("inlineFb").className = "inline-fb";
+    document.getElementById("inlineFb").innerHTML = "";
+    document.getElementById("transcriptToggle").className = "transcript-toggle";
+    document.getElementById("transcriptBox").className = "transcript-box";
+    document.getElementById("transcriptBox").innerHTML = "";
+    document.getElementById("nextRow").className = "next-row";
+    document.getElementById("transcriptBox").dataset.en = clip.transcript_en || "";
+    document.getElementById("transcriptBox").dataset.ar = clip.transcript_ar || "";
+    const _btnR = document.getElementById("btnReplay");
+    const _infoR = document.getElementById("replayInfo");
+    if (_btnR){
+      _btnR.disabled = false; _btnR.style.opacity = "1"; _btnR.style.cursor = "pointer";
+      if (_infoR) _infoR.textContent = `Attempt ${playsForCurrentClip} of ${MAX_PLAYS}`;
+    }
+    const _qp = document.getElementById("qPlayer");
+    if (_qp){ try{ _qp.pause(); }catch(e){} _qp.src = ""; }
+    showScreen("qScreen");
+    startTimer();
+  }
+  function startTimer(){
+    if (timerHandle) clearInterval(timerHandle);
+    timeLeft = TIMER_BY_STAGE[STAGE_ID] || 45;
+    renderTimer();
+    timerHandle = setInterval(() => {
+      timeLeft--; renderTimer();
+      if (timeLeft <= 0) { clearInterval(timerHandle); onTimeExpired(); }
+    }, 1000);
+  }
+  function renderTimer(){
+    const t = document.getElementById("timer");
+    const m = Math.floor(timeLeft/60), s = timeLeft%60;
+    t.textContent = `⏱️ ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    t.classList.remove("warn","expired");
+    if (timeLeft <= 0) t.classList.add("expired");
+    else if (timeLeft <= 5) t.classList.add("warn");
+  }
+  function onTimeExpired(){
+    const {ci, qi} = QPLAN[currentIdx];
+    const q = CLIPS[ci].questions[qi];
+    if (!(q.id in answers)) answers[q.id] = -1;
+    document.querySelectorAll("#qOptions .option").forEach(o => o.classList.add("locked"));
+    const fb = document.getElementById("inlineFb");
+    fb.className = "inline-fb no show";
+    fb.innerHTML = `<div class="hd">⏰ Time's up</div><div>Click Next to continue</div>`;
+    document.getElementById("transcriptToggle").className = "transcript-toggle show";
+    
+  
+    const _nr = document.getElementById("nextRow");
+    if (_nr) _nr.className = "next-row show";
+  }
+  function pickOption(qid, idx, el){
+    if (el.classList.contains("locked")) return;
+    if (timerHandle) clearInterval(timerHandle);
+    answers[qid] = idx;
+    document.querySelectorAll("#qOptions .option").forEach(o => { o.classList.remove("selected"); o.classList.add("locked"); });
+    el.classList.add("selected");
+    const fb = document.getElementById("inlineFb");
+    fb.className = "inline-fb ok show";
+    fb.innerHTML = `<div class="hd">✓ Answer recorded</div><div>Review the transcript or click Next →</div>`;
+    document.getElementById("transcriptToggle").className = "transcript-toggle show";
+    document.getElementById("nextRow").className = "next-row show";
+    // auto-advance removed — user must click Next
+  }
+  function toggleTranscript(){
+    const box = document.getElementById("transcriptBox");
+    if (box.classList.contains("open")) { box.classList.remove("open"); return; }
+    const en = box.dataset.en || "(no transcript)";
+    const ar = box.dataset.ar || "";
+    let html = `<div>${escapeHtml(en)}</div>`;
+    if (ar) html += `<div class="ar-note">📝 ${escapeHtml(ar)}</div>`;
+    box.innerHTML = html; box.classList.add("open");
+  }
+  function replayClip(){
+    const {ci} = QPLAN[currentIdx];
+    const clip = CLIPS[ci];
+    const btn = document.getElementById("btnReplay");
+    const info = document.getElementById("replayInfo");
+    if (playsForCurrentClip >= MAX_PLAYS){
+      btn.disabled = true; btn.style.opacity = ".5"; btn.style.cursor = "not-allowed";
+      info.textContent = "No more attempts. Question coming...";
+      return;
+    }
+    const p = document.getElementById("qPlayer");
+    p.src = clip.audio_url;
+    p.play().catch(()=>{});
+    playsForCurrentClip += 1;
+    info.textContent = `Attempt ${playsForCurrentClip} of ${MAX_PLAYS}`;
+    p.onended = () => {
+      if (playsForCurrentClip >= MAX_PLAYS){
+        btn.disabled = true; btn.style.opacity = ".5"; btn.style.cursor = "not-allowed";
+        info.textContent = "No more attempts. Question coming...";
+      }
+    };
+  }
+  function goNext(){ if (timerHandle) clearInterval(timerHandle); currentIdx++; loadStep(); }
+  async function submitAll(){
+    document.getElementById("counterPill").innerHTML = `<bdi>${QPLAN.length}</bdi> / <bdi>${QPLAN.length}</bdi>`;
+    document.getElementById("topBar").style.width = "100%";
+    showToast("جارٍ التصحيح...", "info");
+    try {
+      const r = await fetch(`/api/listening/lesson/${LESSON_ID}/submit?user_id=${USER_ID}`, {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({answers})
+      });
+      const d = await r.json();
+      if (!d.success) { showToast(d.error || "خطأ", "error"); return; }
+      openResultModal(d);
+    } catch(e) { showToast("فشل الاتصال: " + e.message, "error"); }
+  }
+  {% endif %}
+
+  function showToast(msg, type){
+    type = type || "info";
+    const w = document.getElementById("toastWrap");
+    const t = document.createElement("div");
+    t.className = "toast " + type; t.textContent = msg;
+    w.appendChild(t);
+    requestAnimationFrame(() => t.classList.add("show"));
+    setTimeout(() => { t.classList.remove("show"); setTimeout(() => t.remove(), 350); }, 3500);
+  }
+  function closeModal(){ document.getElementById("resultModal").classList.remove("open"); }
+  function openResultModal(data){
+    const modal = document.getElementById("resultModal");
+    const head = document.getElementById("modalHead");
+    const passed = !!data.passed;
+    head.className = "modal-head " + (passed ? "pass" : "fail");
+    document.getElementById("modalIcon").textContent = passed ? "🎉" : "💪";
+    document.getElementById("modalTitle").textContent = passed ? "أحسنت! اجتزت الدرس" : "تحتاج محاولة أخرى";
+    document.getElementById("modalScore").textContent = (data.score||0) + "%";
+    document.getElementById("modalSub").textContent = `${data.correct||0} صحيحة من ${data.total||0} · الحد المطلوب: ${data.threshold||65}%`;
+    setTimeout(() => { document.getElementById("modalBar").style.width = Math.min(100, data.score||0) + "%"; }, 100);
+    const wrongCnt = (data.total||0) - (data.correct||0);
+    document.getElementById("modalStats").innerHTML = `
+      <div class="stat ok"><div class="n">${data.correct||0}</div><div class="l">صحيحة ✓</div></div>
+      <div class="stat bad"><div class="n">${wrongCnt}</div><div class="l">خاطئة ✗</div></div>
+      <div class="stat"><div class="n">${data.total||0}</div><div class="l">المجموع</div></div>`;
+    const body = document.getElementById("modalBody");
+    const wrongs = (data.feedback||[]).filter(f => !f.is_correct);
+    if (wrongs.length === 0) {
+      body.innerHTML = `<div style="text-align:center;padding:30px;color:#059669;font-size:16px;font-weight:700">🏆 لم ترتكب أي خطأ! أداء ممتاز.</div>`;
+    } else {
+      let html = `<h3>📋 مراجعة الأسئلة الخاطئة (${wrongs.length})</h3>`;
+      wrongs.forEach((fb, i) => {
+        const _q = CLIPS.flatMap(c=>c.questions).find(qq=>qq.id===fb.question_id); const _rawOpts = (fb.options && fb.options.length) ? fb.options : (_q?.options) || []; const _ord = _q && _q._order ? _q._order : _rawOpts.map((_,k)=>k); const opts = _ord.map(i => _rawOpts[i]); const _userShown = (fb.user_answer>=0) ? _ord.indexOf(fb.user_answer) : -1; const _rightShown = (fb.correct_answer>=0) ? _ord.indexOf(fb.correct_answer) : -1;
+        const userTxt = (_userShown >= 0 && _userShown < opts.length) ? opts[_userShown] : "(لم تُجب)";
+        const rightTxt = (_rightShown >= 0 && _rightShown < opts.length) ? opts[_rightShown] : "?";
+        const userLet = _userShown >= 0 ? String.fromCharCode(65+_userShown) : "—";
+        const rightLet = _rightShown >= 0 ? String.fromCharCode(65+_rightShown) : "?";
+        const qText = fb.question_ar || fb.question_en || `السؤال ${i+1}`;
+        html += `<div class="wrong-q-card"><div class="q-title">❓ ${i+1}. ${escapeHtml(qText)}</div>
+          <div class="answer-row your"><span class="lbl">إجابتك ✗:</span><span>${userLet}) ${escapeHtml(userTxt)}</span></div>
+          <div class="answer-row right"><span class="lbl">الصحيحة ✓:</span><span>${rightLet}) ${escapeHtml(rightTxt)}</span></div>
+          ${fb.explanation_ar ? `<div class="exp-block"><span class="lab">📖 شرح الإجابة الصحيحة:</span>${escapeHtml(fb.explanation_ar)}</div>` : ''}
+          ${fb.wrong_explanation_ar ? `<div class="exp-block"><span class="lab">❌ لماذا الخيارات الأخرى خاطئة:</span>${escapeHtml(fb.wrong_explanation_ar)}</div>` : ''}
+          ${fb.elimination_hint_ar ? `<div class="elim"><span class="lab">🎯 استراتيجية الاستبعاد:</span><div>${escapeHtml(fb.elimination_hint_ar)}</div></div>` : ''}
+          ${fb.strategy_ar ? `<div class="exp-block"><span class="lab">💡 الاستراتيجية:</span>${escapeHtml(fb.strategy_ar)}</div>` : ''}
+          ${fb.listening_tip_ar ? `<div class="exp-block"><span class="lab">🎧 نصيحة الاستماع:</span>${escapeHtml(fb.listening_tip_ar)}</div>` : ''}
+        </div>`;
+      });
+      body.innerHTML = html;
+    }
+    const foot = document.getElementById("modalFoot");
+    let btns = "";
+    if (passed) {
+      if (data.next_lesson_id) btns += `<button class="btn btn-mod-next" onclick="location.href='/listening/lesson/${data.next_lesson_id}?user_id=${USER_ID}'">→ الدرس التالي</button>`;
+      btns += `<button class="btn btn-mod-back" onclick="location.href='/listening/stage/${STAGE_ID}?user_id=${USER_ID}'">🏠 Back to Stage</button>`;
+    } else {
+      btns += `<button class="btn btn-mod-retry" onclick="location.reload()">🔄 Retry</button>`;
+      btns += `<button class="btn btn-mod-back" onclick="location.href='/listening/stage/${STAGE_ID}?user_id=${USER_ID}'">🏠 Back</button>`;
+    }
+    foot.innerHTML = btns;
+    modal.classList.add("open");
+  }
+  function escapeHtml(s){
+    if (s==null) return "";
+    return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+</script>
+</body>
+</html>

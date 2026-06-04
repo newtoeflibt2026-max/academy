@@ -1,0 +1,572 @@
+[
+  {
+    "clip_id": 49,
+    "title_ar": "غداء في الكافتيريا",
+    "title_en": "Lunch at the Cafeteria",
+    "principle_en": "Listen for the location and decision in casual dialogues",
+    "principle_ar": "ركّز على المكان والقرار في الحوارات اليومية",
+    "q3": {
+      "q": "What can be inferred about the cafeteria's pricing?",
+      "opts": [
+        "It is expensive",
+        "It is reasonably priced",
+        "Prices vary daily",
+        "Food is free for students"
+      ],
+      "correct": 1,
+      "exp": "ذكر الطالب 'It's only five dollars' مما يدل على أن السعر معقول/مناسب."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 50,
+    "title_ar": "افتتاح مطعم إيطالي",
+    "title_en": "New Italian Restaurant",
+    "principle_en": "Track plans, times, and reservations",
+    "principle_ar": "تتبّع الخطط والمواعيد والحجوزات",
+    "q3": {
+      "q": "What will the speakers most likely do next?",
+      "opts": [
+        "Go to the restaurant tonight",
+        "Wait until Saturday evening",
+        "Cancel their plans",
+        "Look for another place"
+      ],
+      "correct": 1,
+      "exp": "اتفقا على Saturday night وحجزت الفتاة طاولة الساعة السابعة، فالخطوة التالية هي انتظار يوم السبت."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 52,
+    "title_ar": "بطاقة الطالب الجامعية",
+    "title_en": "Student ID Card",
+    "principle_en": "Note locations, documents, and procedures",
+    "principle_ar": "دوّن المواقع والوثائق والإجراءات المطلوبة",
+    "q3": {
+      "q": "What is the tone of the female speaker?",
+      "opts": [
+        "Impatient",
+        "Confused",
+        "Helpful and informative",
+        "Rushed"
+      ],
+      "correct": 2,
+      "exp": "الموظفة قدّمت معلومات واضحة ومفصلة عن المكان والوثائق، مما يدل على نبرة مساعدة ومعلوماتية."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 53,
+    "title_ar": "تفعيل البريد الجامعي",
+    "title_en": "Activating University Email",
+    "principle_en": "Identify the problem and the recommended action",
+    "principle_ar": "حدّد المشكلة والإجراء الموصى به",
+    "q3": {
+      "q": "What will the student likely do after this conversation?",
+      "opts": [
+        "Email the IT department",
+        "Visit the Library Building",
+        "Call the help desk",
+        "Wait for an email"
+      ],
+      "correct": 1,
+      "exp": "أرشدها الموظف للذهاب إلى IT Help Desk في Library Building، فالخطوة التالية هي زيارة المبنى."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 55,
+    "title_ar": "حفلة الطلاب",
+    "title_en": "Student Party Plans",
+    "principle_en": "Catch social plans and who is involved",
+    "principle_ar": "التقط الخطط الاجتماعية والأشخاص المشاركين",
+    "q3": {
+      "q": "What can be inferred about the female speaker?",
+      "opts": [
+        "She dislikes parties",
+        "She was hesitant to attend alone",
+        "She knows everyone there",
+        "She has other plans"
+      ],
+      "correct": 1,
+      "exp": "قولها 'I wasn't sure if I should come alone' يدل على ترددها في الحضور بمفردها."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 56,
+    "title_ar": "نادي القراءة",
+    "title_en": "Book Club Invitation",
+    "principle_en": "Pick up schedules and interests",
+    "principle_ar": "التقط الجداول والاهتمامات",
+    "q3": {
+      "q": "What is the male speaker's attitude toward the book club?",
+      "opts": [
+        "Disinterested",
+        "Curious and open",
+        "Annoyed",
+        "Already a member"
+      ],
+      "correct": 1,
+      "exp": "عبّر بوضوح بـ 'I've been curious about it' و 'Sounds interesting'، فهو فضولي ومنفتح."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 58,
+    "title_ar": "المهام الدراسية",
+    "title_en": "Course Assignments",
+    "principle_en": "Listen for deadlines and requirements",
+    "principle_ar": "اسمع المواعيد النهائية والمتطلبات",
+    "q3": {
+      "q": "What can be inferred about the assignment?",
+      "opts": [
+        "It is optional",
+        "It requires significant preparation",
+        "It is already submitted",
+        "It was cancelled"
+      ],
+      "correct": 1,
+      "exp": "من سياق الحوار حول الإعداد والوقت اللازم يُستنتج أن المهمة تتطلب تحضيراً ملموساً."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 59,
+    "title_ar": "العمل الجماعي",
+    "title_en": "Group Project Coordination",
+    "principle_en": "Track roles and meeting arrangements",
+    "principle_ar": "تتبّع الأدوار وترتيبات الاجتماع",
+    "q3": {
+      "q": "What will the students most likely do next?",
+      "opts": [
+        "Submit the project",
+        "Schedule a group meeting",
+        "Drop the course",
+        "Work individually"
+      ],
+      "correct": 1,
+      "exp": "الحوار يدور حول تنسيق العمل الجماعي، فالخطوة المنطقية التالية هي ترتيب اجتماع."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 61,
+    "title_ar": "زيارة العيادة الطلابية",
+    "title_en": "Visiting the Student Clinic",
+    "principle_en": "Identify symptoms and recommendations",
+    "principle_ar": "حدّد الأعراض والتوصيات",
+    "q3": {
+      "q": "What is the tone of the clinic staff?",
+      "opts": [
+        "Dismissive",
+        "Professional and caring",
+        "Hurried",
+        "Suspicious"
+      ],
+      "correct": 1,
+      "exp": "التعامل الواضح والمنظم مع الطالب يدل على نبرة مهنية وراعية."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 62,
+    "title_ar": "التطعيمات الصحية",
+    "title_en": "Health Vaccinations",
+    "principle_en": "Note required documents and timing",
+    "principle_ar": "دوّن الوثائق المطلوبة والتوقيت",
+    "q3": {
+      "q": "What can be inferred about the vaccination policy?",
+      "opts": [
+        "It is optional",
+        "It is mandatory for enrollment",
+        "It costs extra",
+        "It is only for new students"
+      ],
+      "correct": 1,
+      "exp": "من إصرار العيادة على إتمام التطعيم قبل التسجيل يُستنتج أنه إلزامي."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 64,
+    "title_ar": "حجز رحلة دراسية",
+    "title_en": "Booking a Study Trip",
+    "principle_en": "Track costs, dates, and logistics",
+    "principle_ar": "تتبّع التكاليف والتواريخ واللوجستيات",
+    "q3": {
+      "q": "What will the student most likely do next?",
+      "opts": [
+        "Cancel the trip",
+        "Pay the deposit",
+        "Find another tour",
+        "Travel alone"
+      ],
+      "correct": 1,
+      "exp": "بعد الاتفاق على التفاصيل، الخطوة التالية المنطقية هي دفع العربون لتأكيد الحجز."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 65,
+    "title_ar": "عطلة نهاية الأسبوع",
+    "title_en": "Weekend Getaway",
+    "principle_en": "Distinguish preferences from final decisions",
+    "principle_ar": "ميّز بين التفضيلات والقرارات النهائية",
+    "q3": {
+      "q": "What can be inferred about the speakers?",
+      "opts": [
+        "They rarely travel",
+        "They are experienced travelers",
+        "They dislike outdoors",
+        "They cannot afford the trip"
+      ],
+      "correct": 1,
+      "exp": "معرفتهما بالوجهات والترتيبات تدل على خبرة سابقة في السفر."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 67,
+    "title_ar": "استعارة الكتب",
+    "title_en": "Borrowing Library Books",
+    "principle_en": "Catch lending rules and durations",
+    "principle_ar": "التقط قواعد الإعارة ومدتها",
+    "q3": {
+      "q": "What is the librarian's tone?",
+      "opts": [
+        "Strict and unfriendly",
+        "Patient and helpful",
+        "Indifferent",
+        "Confused"
+      ],
+      "correct": 1,
+      "exp": "شرحه الواضح للقواعد والإجابة على الأسئلة يدل على نبرة صبور ومساعد."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 68,
+    "title_ar": "خدمات المكتبة الرقمية",
+    "title_en": "Digital Library Services",
+    "principle_en": "Note access procedures and resources",
+    "principle_ar": "دوّن إجراءات الوصول والموارد المتاحة",
+    "q3": {
+      "q": "What will the student most likely do next?",
+      "opts": [
+        "Visit in person",
+        "Log into the digital portal",
+        "Call for help",
+        "Wait for an email"
+      ],
+      "correct": 1,
+      "exp": "بعد شرح طريقة الوصول الرقمي، الخطوة المنطقية هي تسجيل الدخول للبوابة."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 70,
+    "title_ar": "السكن الجامعي",
+    "title_en": "University Dormitory",
+    "principle_en": "Identify application steps and deadlines",
+    "principle_ar": "حدّد خطوات التقديم والمواعيد النهائية",
+    "q3": {
+      "q": "What can be inferred about housing availability?",
+      "opts": [
+        "Plenty of rooms",
+        "Limited and competitive",
+        "Free for all",
+        "Only for graduates"
+      ],
+      "correct": 1,
+      "exp": "الإشارة إلى المواعيد النهائية والتنافس تدل على محدودية السكن."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 71,
+    "title_ar": "تغيير الغرفة",
+    "title_en": "Room Change Request",
+    "principle_en": "Track reasons and approval processes",
+    "principle_ar": "تتبّع الأسباب وإجراءات الموافقة",
+    "q3": {
+      "q": "What is the student's attitude?",
+      "opts": [
+        "Aggressive",
+        "Polite but firm",
+        "Indifferent",
+        "Apologetic"
+      ],
+      "correct": 1,
+      "exp": "الطالب يقدم طلبه بأدب مع إصرار واضح على الحاجة للتغيير."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 73,
+    "title_ar": "التسجيل في المواد",
+    "title_en": "Course Registration",
+    "principle_en": "Catch prerequisites and credit hours",
+    "principle_ar": "التقط المتطلبات السابقة والساعات المعتمدة",
+    "q3": {
+      "q": "What will the student most likely do next?",
+      "opts": [
+        "Drop the course",
+        "Meet with the advisor",
+        "Register online",
+        "Take a different course"
+      ],
+      "correct": 1,
+      "exp": "الحوار يشير إلى الحاجة لمراجعة المرشد الأكاديمي قبل التسجيل."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 74,
+    "title_ar": "تعديل الجدول",
+    "title_en": "Schedule Adjustment",
+    "principle_en": "Note add/drop deadlines and rules",
+    "principle_ar": "دوّن مواعيد الإضافة/الحذف والقواعد",
+    "q3": {
+      "q": "What can be inferred about the deadline?",
+      "opts": [
+        "It is flexible",
+        "It is approaching quickly",
+        "It already passed",
+        "It has no effect"
+      ],
+      "correct": 1,
+      "exp": "السياق يشير إلى ضيق الوقت قبل انتهاء فترة التعديل."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 76,
+    "title_ar": "ساعات مكتب الأستاذ",
+    "title_en": "Professor Office Hours",
+    "principle_en": "Identify topics and appointment etiquette",
+    "principle_ar": "حدّد المواضيع وأسلوب الموعد",
+    "q3": {
+      "q": "What is the professor's tone?",
+      "opts": [
+        "Dismissive",
+        "Encouraging and approachable",
+        "Strict",
+        "Bored"
+      ],
+      "correct": 1,
+      "exp": "ترحيب الأستاذ ومناقشته للأسئلة يدل على نبرة مشجعة وودودة."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 77,
+    "title_ar": "طلب توصية أكاديمية",
+    "title_en": "Requesting a Recommendation",
+    "principle_en": "Track timing and required materials",
+    "principle_ar": "تتبّع التوقيت والمواد المطلوبة",
+    "q3": {
+      "q": "What will the student do next?",
+      "opts": [
+        "Forget about it",
+        "Send the required documents",
+        "Find another professor",
+        "Apply without a letter"
+      ],
+      "correct": 1,
+      "exp": "الأستاذ طلب وثائق محددة، فالخطوة التالية هي إرسالها."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 79,
+    "title_ar": "المساعدات المالية",
+    "title_en": "Financial Aid Office",
+    "principle_en": "Catch eligibility criteria and deadlines",
+    "principle_ar": "التقط معايير الأهلية والمواعيد النهائية",
+    "q3": {
+      "q": "What can be inferred about the financial aid process?",
+      "opts": [
+        "It is simple",
+        "It involves multiple steps and documents",
+        "It is automatic",
+        "It is unavailable"
+      ],
+      "correct": 1,
+      "exp": "الإشارة لوثائق متعددة وإجراءات تدل على تعقيد العملية."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 80,
+    "title_ar": "المنح الدراسية",
+    "title_en": "Scholarship Application",
+    "principle_en": "Identify requirements and competitive aspects",
+    "principle_ar": "حدّد المتطلبات والجوانب التنافسية",
+    "q3": {
+      "q": "What is the advisor's tone?",
+      "opts": [
+        "Discouraging",
+        "Realistic and informative",
+        "Overly optimistic",
+        "Sarcastic"
+      ],
+      "correct": 1,
+      "exp": "عرضه للحقائق دون مبالغة يدل على نبرة واقعية ومعلوماتية."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 82,
+    "title_ar": "مركز التوظيف",
+    "title_en": "Career Services Center",
+    "principle_en": "Note career resources and services",
+    "principle_ar": "دوّن موارد وخدمات التوظيف",
+    "q3": {
+      "q": "What will the student most likely do next?",
+      "opts": [
+        "Apply for a job today",
+        "Update their resume",
+        "Skip the appointment",
+        "Change majors"
+      ],
+      "correct": 1,
+      "exp": "المستشار اقترح تحديث السيرة الذاتية أولاً قبل التقديم."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 83,
+    "title_ar": "التحضير لمقابلة عمل",
+    "title_en": "Job Interview Preparation",
+    "principle_en": "Catch interview strategies and common pitfalls",
+    "principle_ar": "التقط استراتيجيات المقابلة والأخطاء الشائعة",
+    "q3": {
+      "q": "What can be inferred about the student?",
+      "opts": [
+        "Very experienced",
+        "Nervous but motivated",
+        "Uninterested",
+        "Already hired"
+      ],
+      "correct": 1,
+      "exp": "طلبه للمساعدة في التحضير يدل على القلق مع الدافعية للنجاح."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 85,
+    "title_ar": "الدعم التقني",
+    "title_en": "Technical Support Issue",
+    "principle_en": "Identify the problem and troubleshooting steps",
+    "principle_ar": "حدّد المشكلة وخطوات الحل",
+    "q3": {
+      "q": "What is the technician's approach?",
+      "opts": [
+        "Dismissive",
+        "Systematic and patient",
+        "Rushed",
+        "Confused"
+      ],
+      "correct": 1,
+      "exp": "تنفيذه خطوات منظمة لتشخيص المشكلة يدل على منهج منظم وصبور."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 86,
+    "title_ar": "إعداد الشبكة الجامعية",
+    "title_en": "University Network Setup",
+    "principle_en": "Track configuration steps and credentials",
+    "principle_ar": "تتبّع خطوات الإعداد وبيانات الدخول",
+    "q3": {
+      "q": "What will the student do next?",
+      "opts": [
+        "Give up",
+        "Follow the setup instructions",
+        "Buy new equipment",
+        "Switch universities"
+      ],
+      "correct": 1,
+      "exp": "بعد شرح الخطوات، المهمة الواضحة هي اتباع التعليمات."
+    },
+    "type": "prediction"
+  },
+  {
+    "clip_id": 88,
+    "title_ar": "الإرشاد الأكاديمي",
+    "title_en": "Academic Advising Session",
+    "principle_en": "Catch degree planning and prerequisites",
+    "principle_ar": "التقط تخطيط الدرجة والمتطلبات السابقة",
+    "q3": {
+      "q": "What can be inferred about the student's progress?",
+      "opts": [
+        "On track but needs guidance",
+        "Failing courses",
+        "Already graduated",
+        "Considering dropping out"
+      ],
+      "correct": 0,
+      "exp": "الحوار يدل على طالب يسير في المسار لكنه يحتاج توجيهاً للخطوات التالية."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 89,
+    "title_ar": "تغيير التخصص",
+    "title_en": "Changing Major",
+    "principle_en": "Note implications and approval requirements",
+    "principle_ar": "دوّن الآثار ومتطلبات الموافقة",
+    "q3": {
+      "q": "What is the advisor's tone?",
+      "opts": [
+        "Disapproving",
+        "Cautious and balanced",
+        "Enthusiastic",
+        "Indifferent"
+      ],
+      "correct": 1,
+      "exp": "المستشار يعرض الإيجابيات والسلبيات مما يدل على نبرة متوازنة وحذرة."
+    },
+    "type": "tone"
+  },
+  {
+    "clip_id": 91,
+    "title_ar": "مراجعة شاملة للفصل",
+    "title_en": "Semester Final Review",
+    "principle_en": "Synthesize multi-topic academic discussions",
+    "principle_ar": "اجمع المناقشات الأكاديمية متعددة المواضيع",
+    "q3": {
+      "q": "What can be inferred about the student's preparation?",
+      "opts": [
+        "Fully prepared",
+        "Partially prepared, needs more review",
+        "Not prepared at all",
+        "Already passed"
+      ],
+      "correct": 1,
+      "exp": "الحوار يكشف عن إعداد جزئي يحتاج مراجعة إضافية."
+    },
+    "type": "inference"
+  },
+  {
+    "clip_id": 92,
+    "title_ar": "خطة الفصل القادم",
+    "title_en": "Next Semester Planning",
+    "principle_en": "Track long-term academic planning",
+    "principle_ar": "تتبّع التخطيط الأكاديمي طويل الأمد",
+    "q3": {
+      "q": "What will the student most likely do next?",
+      "opts": [
+        "Finalize the schedule",
+        "Take a semester off",
+        "Change universities",
+        "Skip planning"
+      ],
+      "correct": 0,
+      "exp": "بعد مراجعة الخيارات، الخطوة المنطقية هي تثبيت الجدول النهائي."
+    },
+    "type": "prediction"
+  }
+]

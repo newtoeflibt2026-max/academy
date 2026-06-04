@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "version": "2.0",
+    "description": "بنية محتوى السيناريو مع شرح متدرج حسب tier",
+    "tiers": {
+      "tier59": "🟢 مبتدئ - شرح بسيط، مفردات أساسية، نموذج 60-80 كلمة",
+      "tier69": "🟡 متوسط - شرح يربط الأفكار، مفردات متنوعة، نموذج 110-130 كلمة",
+      "tier90": "🔴 متقدم - شرح عميق (register/pragmatics)، مفردات أكاديمية، نموذج 170-200 كلمة"
+    }
+  },
+  "scenario": {
+    "id": "integer - معرف السيناريو",
+    "title_ar": "عنوان عربي",
+    "title_en": "English title",
+    "target_tier": "tier59 | tier69 | tier90",
+    "difficulty_badge": "🟢 | 🟡 | 🔴",
+    "min_words": "integer - الحد الأدنى للكلمات",
+    "situation_ar": "وصف الموقف بالعربي",
+    "recipient_role": "professor | classmate | advisor | etc."
+  },
+  "step1_understand": {
+    "tier59_explanation": "شرح بسيط جداً مع مثال واحد",
+    "tier69_explanation": "شرح متوسط يربط بالسياق",
+    "tier90_explanation": "شرح عميق يغطي register و pragmatics"
+  },
+  "step2_goals": {
+    "goals_list": "[{num, ar, en, tier59_tip, tier69_tip, tier90_tip}]"
+  },
+  "step3_structure": {
+    "parts": "[{part, purpose_ar, example_tier59, example_tier69, example_tier90, tip_ar}]"
+  },
+  "step4_phrases": {
+    "greetings": "[{phrase, level, when_to_use_ar}]",
+    "openings": "[{phrase, level, when_to_use_ar}]",
+    "requests": "[{phrase, level, when_to_use_ar}]",
+    "closings": "[{phrase, level, when_to_use_ar}]"
+  },
+  "step5_model": {
+    "tier59_model": "نموذج بسيط 60-80 كلمة",
+    "tier69_model": "نموذج متوسط 110-130 كلمة",
+    "tier90_model": "نموذج متقدم 170-200 كلمة",
+    "annotations": "[{sentence_en, why_ar, weaker_alternative_en, why_weaker_ar}]"
+  },
+  "step6_practice": {
+    "template_with_blanks": "القالب مع [_____]",
+    "checklist": "[{item_ar, tier_required}]",
+    "common_mistakes": "[{wrong_en, correct_en, explanation_ar, severity}]"
+  }
+}

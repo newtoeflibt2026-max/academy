@@ -1,0 +1,560 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ lesson.title_ar }}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:14px;color:#1f2937}
+.container{max-width:780px;margin:0 auto}
+.topbar{background:#fff;border-radius:14px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.08);flex-wrap:wrap}
+.topbar a{color:#3b82f6;text-decoration:none;font-weight:bold;background:#eff6ff;padding:6px 12px;border-radius:8px}
+.topbar h1{font-size:16px;color:#1e40af;flex:1;text-align:center}
+.voice-btn{background:#8b5cf6;color:#fff;border:0;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:bold}
+.card{background:#fff;border-radius:14px;padding:22px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.loading{text-align:center;padding:40px;color:#6b7280}
+
+/* ===== Practice (Listen→Record→Reveal) ===== */
+.item-header{text-align:center;color:#6b7280;font-size:14px;margin-bottom:16px;font-weight:bold}
+.listen-status{background:#eff6ff;padding:18px;border-radius:12px;text-align:center;margin:12px 0;font-size:17px;color:#1e40af;font-weight:bold;line-height:1.8}
+.listen-status .count{display:inline-block;background:#3b82f6;color:#fff;padding:3px 12px;border-radius:20px;font-size:13px;margin:0 6px}
+
+.play-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:0;padding:16px 32px;border-radius:50px;font-size:18px;cursor:pointer;display:block;margin:16px auto;box-shadow:0 4px 12px rgba(59,130,246,.3);font-weight:bold}
+.play-btn:hover{transform:scale(1.05)}
+.play-btn:disabled{background:#9ca3af;cursor:not-allowed;transform:none}
+
+.rec-section{margin-top:20px;text-align:center;padding-top:20px;border-top:2px dashed #e5e7eb}
+.rec-btn{background:#dc2626;color:#fff;border:0;padding:16px 32px;border-radius:50px;font-size:17px;cursor:pointer;font-weight:bold;box-shadow:0 4px 12px rgba(220,38,38,.3)}
+.rec-btn.recording{background:#7f1d1d;animation:pulse 1s infinite}
+.rec-btn:disabled{background:#9ca3af;cursor:not-allowed}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.85;transform:scale(1.05)}}
+
+.rec-status{margin-top:10px;color:#6b7280;font-size:14px}
+.playback{margin-top:12px;display:none}
+.playback audio{width:100%}
+
+.reveal-section{margin-top:20px;padding-top:20px;border-top:2px dashed #e5e7eb;display:none}
+.reveal-btn{background:#f59e0b;color:#fff;border:0;padding:12px 24px;border-radius:10px;font-size:15px;cursor:pointer;display:block;margin:0 auto;font-weight:bold}
+.reveal-btn:hover{background:#d97706}
+
+.transcript{display:none;margin-top:14px}
+.transcript .text-en{font-size:20px;text-align:center;background:#f0fdf4;padding:18px;border-radius:12px;margin:10px 0;direction:ltr;font-family:Georgia,serif;line-height:1.6;border:2px solid #86efac}
+.transcript .text-ar{font-size:15px;text-align:center;color:#4b5563;padding:12px;background:#fef3c7;border-radius:10px;margin:10px 0;line-height:1.8}
+.transcript .replay{background:#10b981;color:#fff;border:0;padding:10px 20px;border-radius:8px;cursor:pointer;display:block;margin:10px auto;font-size:14px}
+
+.next-item{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:0;padding:14px 28px;border-radius:10px;font-size:16px;cursor:pointer;display:block;margin:20px auto 0;width:100%;font-weight:bold}
+.next-item:hover{transform:translateY(-2px)}
+
+/* ===== Theory Mode ===== */
+.theory h2{text-align:center;color:#1e40af;font-size:22px;margin-bottom:14px}
+.theory .intro{background:linear-gradient(135deg,#dbeafe,#bfdbfe);padding:14px 18px;border-radius:12px;font-weight:bold;color:#1e3a8a;margin-bottom:18px;line-height:1.9;font-size:15px;border-right:5px solid #2563eb}
+.theory .section{margin:16px 0;padding:16px;border-radius:12px;border-right:5px solid #ccc}
+.theory .section h3{font-size:17px;margin-bottom:10px;font-weight:bold}
+.theory .section .body{line-height:2;font-size:15px}
+.sec-problem{background:#fef2f2;border-right-color:#dc2626}.sec-problem h3{color:#991b1b}
+.sec-solution{background:#f0fdf4;border-right-color:#16a34a}.sec-solution h3{color:#14532d}
+.sec-scoring{background:#fffbeb;border-right-color:#f59e0b}.sec-scoring h3{color:#92400e}
+.sec-tech{background:#eff6ff;border-right-color:#3b82f6}.sec-tech h3{color:#1e3a8a}
+.sec-phrases{background:#faf5ff;border-right-color:#9333ea}.sec-phrases h3{color:#581c87}
+.sec-warn{background:#fef2f2;border-right-color:#ef4444}.sec-warn h3{color:#991b1b}
+.sec-tip{background:#ecfeff;border-right-color:#06b6d4}.sec-tip h3{color:#155e75}
+.sec-default{background:#f9fafb;border-right-color:#6b7280}.sec-default h3{color:#374151}
+.theory ul{padding-right:22px;margin:6px 0}
+.theory li{margin:8px 0;line-height:1.9}
+.theory .en-line{direction:ltr;text-align:left;background:#fff;padding:8px 12px;border-radius:8px;margin:6px 0;font-family:Georgia,serif;display:inline-flex;align-items:center;gap:8px;border:1px solid #e5e7eb}
+.theory .phrase-btn{background:#3b82f6;color:#fff;border:0;padding:5px 11px;border-radius:6px;cursor:pointer;font-size:13px;flex-shrink:0}
+.theory .obj-block{background:rgba(255,255,255,.6);border-radius:10px;padding:10px 14px;margin:8px 0}
+.theory .obj-label{font-weight:bold;color:#374151;margin-left:6px}
+.next-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:0;padding:16px 28px;border-radius:12px;font-size:17px;font-weight:bold;cursor:pointer;width:100%;margin-top:20px;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+
+/* ===== Voice Modal ===== */
+#voiceModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:20px}
+#voiceModal.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:24px}
+.voice-card{border:2px solid #e5e7eb;border-radius:12px;padding:12px;margin:8px 0;background:#f9fafb}
+.voice-card.picked{border-color:#10b981;background:#dcfce7}
+.voice-card .row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.voice-card .name{font-weight:bold;font-size:14px;color:#1f2937}
+.voice-card .meta{font-size:12px;color:#6b7280;margin-top:4px}
+.voice-card .tag{padding:2px 8px;border-radius:6px;font-size:11px;color:#fff;margin-right:4px}
+.tag-natural{background:#10b981}.tag-online{background:#3b82f6}.tag-google{background:#f59e0b}
+.try-btn{background:#3b82f6;color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+.pick-btn{background:#8b5cf6;color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:bold}
+.pick-btn.picked{background:#10b981}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <a href="/speaking/stage/{{ lesson.stage_id }}?user_id={{ user_id }}">← العودة</a>
+    <h1>{{ lesson.title_ar }}</h1>
+    <button class="voice-btn" onclick="openVoicePicker()">🎙️ الأصوات</button>
+  </div>
+  <div id="content" class="card">
+    <div class="loading">⏳ جاري التحميل...</div>
+  </div>
+</div>
+
+<div id="voiceModal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2 style="color:#1e40af;font-size:20px">🎙️ اختر الصوت المفضل</h2>
+      <button onclick="closeVoicePicker()" style="background:#ef4444;color:#fff;border:0;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px">✕</button>
+    </div>
+    <div style="background:#fef3c7;padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:14px;line-height:1.7">
+      💡 جرّب كل صوت بزر ▶ ثم اضغط "اختر" لحفظه. يُستخدم تلقائياً في كل الدروس.
+    </div>
+    <div id="voiceList"></div>
+    <div style="background:#dbeafe;padding:10px 14px;border-radius:10px;margin-top:14px;font-size:13px;line-height:1.7">
+      🎁 <b>لإضافة أصوات Natural:</b> Windows Settings → Time &amp; Language → Speech → Manage voices → Add → English (US) → Andrew/Emma/Brian (Natural).
+    </div>
+  </div>
+</div>
+
+<script>
+const LESSON_ID = {{ lesson.id }};
+const USER_ID = "{{ user_id }}";
+const STAGE_ID = {{ lesson.stage_id or 1 }};
+const MAX_LISTEN = {{ lesson.max_listen_count or 3 }};
+const LESSON_TYPE = "{{ lesson.lesson_type or 'sentence' }}";
+let state = { items:[], idx:0, listenCount:0, hasListened:false, hasRecorded:false, revealed:false, mediaRecorder:null, audioChunks:[], audioBlob:null, lesson:null };
+
+// ===== Helpers =====
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+function isEnglish(s){ return typeof s==='string' && /[a-zA-Z]/.test(s) && /^[\x00-\x7F\s.,!?'"\-:;()]+$/.test(s); }
+
+function cleanForTTS(txt){
+  return String(txt||'')
+    .replace(/\s*\/\s*/g, ', ')
+    .replace(/\s*\|\s*/g, ', ')
+    .replace(/[\[\]\(\)\{\}]/g, ' ')
+    .replace(/[*_#`~]/g, '')
+    .replace(/❌|✅|🔊|🚨|💎|🎯|⚠️|⛔|🚑|🎤|📖|📂|📋|🛠️|🎬|🗣️|📚|⬆️|📦|💨|⏰|🏋️|🔧|🔄|⏱️|😰|🧠|📝|💼|🎵|💡|📊|🐢|🐇|🎙️|🌬️|💬/g, '')
+    .replace(/→|←|↔/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([,.!?])/g, '$1')
+    .trim();
+}
+
+function pickVoice(){
+  const vs = window.speechSynthesis.getVoices();
+  const saved = localStorage.getItem('preferred_voice');
+  if(saved){
+    const v = vs.find(x => x.name === saved);
+    if(v) return v;
+  }
+  const priorities = [
+    /Andrew.*Online.*Natural/i, /Emma.*Online.*Natural/i, /Brian.*Online.*Natural/i,
+    /Ava.*Multilingual/i, /Andrew.*Natural/i, /Emma.*Natural/i, /Brian.*Natural/i,
+    /Christopher.*Natural/i, /Eric.*Natural/i, /Roger.*Natural/i, /Steffan.*Natural/i,
+    /Aria.*Natural/i, /Jenny.*Natural/i, /Guy.*Natural/i, /Natural/i,
+    /Google UK English Female/i, /Google US English/i, /Microsoft Zira/i,
+    /en[-_]US/i, /en[-_]GB/i
+  ];
+  for(const p of priorities){
+    const v = vs.find(x => p.test(x.name));
+    if(v) return v;
+  }
+  return vs.find(x => /^en/i.test(x.lang)) || vs[0] || null;
+}
+
+function speak(txt, onEnd){
+  const clean = cleanForTTS(txt);
+  if(!clean) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = 'en-US'; u.rate = 0.95; u.pitch = 1.0;
+    const v = pickVoice();
+    if(v){ u.voice = v; u.lang = v.lang || 'en-US'; }
+    if(onEnd) u.onend = onEnd;
+    window.speechSynthesis.speak(u);
+  }catch(e){ console.error(e); if(onEnd) onEnd(); }
+}
+
+// ===== Voice Picker =====
+function openVoicePicker(){
+  document.getElementById('voiceModal').classList.add('open');
+  const list = document.getElementById('voiceList');
+  const vs = window.speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+  const saved = localStorage.getItem('preferred_voice');
+  const sample = "Hello! I am here to help you practice English speaking. This is how I sound when I read your lessons.";
+  if(!vs.length){
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:#dc2626">لا توجد أصوات إنجليزية. ثبّت أصواتاً من إعدادات Windows.</div>';
+    return;
+  }
+  vs.sort((a,b)=>{
+    const score = n => (/Natural/i.test(n.name)?3:0) + (/Online/i.test(n.name)?2:0) + (/Google/i.test(n.name)?1:0);
+    return score(b) - score(a);
+  });
+  let h = '';
+  for(const v of vs){
+    const isPicked = v.name === saved;
+    let tag = '';
+    if(/Natural/i.test(v.name)) tag = '<span class="tag tag-natural">طبيعي</span>';
+    else if(/Online/i.test(v.name)) tag = '<span class="tag tag-online">عبر الإنترنت</span>';
+    else if(/Google/i.test(v.name)) tag = '<span class="tag tag-google">Google</span>';
+    h += '<div class="voice-card '+(isPicked?'picked':'')+'"><div class="row">';
+    h += '<div style="flex:1;min-width:200px"><div class="name">'+esc(v.name)+'</div><div class="meta">'+esc(v.lang)+' '+tag+'</div></div>';
+    h += '<div style="display:flex;gap:6px">';
+    h += '<button class="try-btn" onclick="testVoice('+JSON.stringify(v.name).replace(/"/g,'&quot;')+')">▶ جرّب</button>';
+    h += '<button class="pick-btn '+(isPicked?'picked':'')+'" onclick="pickThisVoice('+JSON.stringify(v.name).replace(/"/g,'&quot;')+')">'+(isPicked?'✓ مُختار':'اختر')+'</button>';
+    h += '</div></div></div>';
+  }
+  list.innerHTML = h;
+}
+function closeVoicePicker(){
+  document.getElementById('voiceModal').classList.remove('open');
+  window.speechSynthesis.cancel();
+}
+function testVoice(voiceName){
+  const vs = window.speechSynthesis.getVoices();
+  const v = vs.find(x => x.name === voiceName);
+  if(!v) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance("Hello! I am here to help you practice English. This is how I sound.");
+  u.voice = v; u.lang = v.lang; u.rate = 0.95;
+  window.speechSynthesis.speak(u);
+}
+function pickThisVoice(voiceName){
+  localStorage.setItem('preferred_voice', voiceName);
+  openVoicePicker();
+  setTimeout(()=>{ alert('✓ تم حفظ الصوت: '+voiceName); }, 50);
+}
+
+// ===== Theory Rendering =====
+const SECTION_MAP = {
+  the_problem_ar:{label:'😰 المشكلة',cls:'sec-problem'}, scoring_impact_ar:{label:'📊 التأثير على درجتك',cls:'sec-scoring'},
+  the_solution_ar:{label:'✅ الحل',cls:'sec-solution'}, principle_ar:{label:'🎯 المبدأ',cls:'sec-solution'},
+  why_important_ar:{label:'💡 لماذا هذا مهم؟',cls:'sec-scoring'}, ideal_pace_ar:{label:'⏱️ السرعة المثالية',cls:'sec-tech'},
+  rules:{label:'📋 القواعد',cls:'sec-tech'}, techniques:{label:'🛠️ التقنيات',cls:'sec-tech'},
+  patterns:{label:'🎬 أنماط البدء',cls:'sec-tech'}, natural_fillers:{label:'🗣️ عبارات الوقفة الطبيعية',cls:'sec-phrases'},
+  rescue_strategies:{label:'🎯 استراتيجيات الإنقاذ',cls:'sec-tech'},
+  rescue_phrases_en:{label:'🚑 عبارات الإنقاذ (إنجليزي)',cls:'sec-phrases'},
+  rescue_phrases_ar:{label:'🚑 عبارات الإنقاذ (عربي)',cls:'sec-phrases'},
+  self_correction_phrases_en:{label:'🔧 عبارات التصحيح الذاتي',cls:'sec-phrases'},
+  synonym_bank:{label:'📚 بنك المرادفات',cls:'sec-tech'}, upgrade_examples:{label:'⬆️ ترقية الجمل',cls:'sec-solution'},
+  chunking_examples:{label:'📦 أمثلة التقطيع',cls:'sec-tech'}, speed_tips_ar:{label:'💨 نصائح السرعة',cls:'sec-tech'},
+  time_breakdown:{label:'⏰ توزيع الوقت',cls:'sec-tech'}, practice_sentences:{label:'🎤 جمل للتدريب',cls:'sec-phrases'},
+  full_example:{label:'📖 مثال كامل',cls:'sec-solution'}, categories:{label:'📂 فئات العبارات',cls:'sec-phrases'},
+  common_mistakes_to_watch:{label:'⚠️ أخطاء شائعة',cls:'sec-warn'}, what_to_avoid_ar:{label:'⛔ تجنّب هذه',cls:'sec-warn'},
+  warning_signs:{label:'🚨 إشارات تحذير',cls:'sec-warn'}, exercise_ar:{label:'🏋️ تمرين',cls:'sec-tip'},
+  training_exercise_ar:{label:'🎯 تمرين تدريبي',cls:'sec-tip'}, practice_tip_ar:{label:'💎 نصيحة التدريب اليومي',cls:'sec-tip'}
+};
+const SECTION_ORDER = ['the_problem_ar','principle_ar','scoring_impact_ar','why_important_ar','the_solution_ar','ideal_pace_ar','rules','techniques','patterns','natural_fillers','rescue_strategies','synonym_bank','time_breakdown','rescue_phrases_en','rescue_phrases_ar','self_correction_phrases_en','chunking_examples','upgrade_examples','practice_sentences','full_example','categories','common_mistakes_to_watch','what_to_avoid_ar','warning_signs','speed_tips_ar','exercise_ar','training_exercise_ar','practice_tip_ar'];
+
+function renderValue(val, parentKey){
+  if(val==null) return '';
+  if(typeof val==='string' || typeof val==='number'){
+    const s = String(val);
+    if(isEnglish(s)) return '<div class="en-line"><span>'+esc(s)+'</span><button class="phrase-btn" onclick="speak('+JSON.stringify(s).replace(/"/g,'&quot;')+')">🔊</button></div>';
+    return '<div>'+esc(s)+'</div>';
+  }
+  if(Array.isArray(val)){
+    let h='<ul>';
+    for(const it of val){
+      if(typeof it==='string'){
+        if(isEnglish(it)) h+='<li><span class="en-line"><span>'+esc(it)+'</span><button class="phrase-btn" onclick="speak('+JSON.stringify(it).replace(/"/g,'&quot;')+')">🔊</button></span></li>';
+        else h+='<li>'+esc(it)+'</li>';
+      } else if(typeof it==='object'){ h+='<li>'+renderObject(it)+'</li>'; }
+    }
+    h+='</ul>'; return h;
+  }
+  if(typeof val==='object') return renderObject(val);
+  return '';
+}
+function renderObject(obj){
+  let h='<div class="obj-block">';
+  for(const k in obj){
+    const v = obj[k];
+    const label = k.replace(/_ar$|_en$/,'').replace(/_/g,' ');
+    h+='<div style="margin:8px 0"><span class="obj-label">'+esc(label)+':</span> ';
+    if(typeof v==='string'){
+      if(isEnglish(v) || k.endsWith('_en')){
+        h+='<span class="en-line"><span>'+esc(v)+'</span><button class="phrase-btn" onclick="speak('+JSON.stringify(v).replace(/"/g,'&quot;')+')">🔊</button></span>';
+      } else h+=esc(v);
+    } else { h+=renderValue(v, k); }
+    h+='</div>';
+  }
+  h+='</div>'; return h;
+}
+function renderTheory(lesson){
+  let content = {};
+  try{ content = JSON.parse(lesson.overall_self_assessment_json || '{}'); }catch(e){ content = {}; }
+  const root = document.getElementById('content');
+  let h = '<div class="theory">';
+  h += '<h2>'+esc(lesson.title_ar||'')+'</h2>';
+  if(lesson.intro_ar) h += '<div class="intro">'+esc(lesson.intro_ar)+'</div>';
+  const used = new Set();
+  for(const k of SECTION_ORDER){
+    if(k in content){
+      const cfg = SECTION_MAP[k] || {label:k.replace(/_/g,' '), cls:'sec-default'};
+      h += '<div class="section '+cfg.cls+'"><h3>'+cfg.label+'</h3><div class="body">'+renderValue(content[k], k)+'</div></div>';
+      used.add(k);
+    }
+  }
+  for(const k in content){
+    if(!used.has(k)){
+      const cfg = SECTION_MAP[k] || {label:k.replace(/_/g,' '), cls:'sec-default'};
+      h += '<div class="section '+cfg.cls+'"><h3>'+cfg.label+'</h3><div class="body">'+renderValue(content[k], k)+'</div></div>';
+    }
+  }
+  h += '<button class="next-btn" onclick="finishLesson()">✓ فهمت — إنهاء الدرس</button></div>';
+  root.innerHTML = h;
+}
+
+// ===== Practice: Listen → Record → Reveal =====
+function renderPractice(){
+  const root = document.getElementById('content');
+  if(!state.items.length){
+    root.innerHTML = '<div class="loading">لا توجد عناصر في هذا الدرس.</div>';
+    return;
+  }
+  // Reset per-item state
+  state.hasListened = false;
+  state.hasRecorded = false;
+  state.revealed = false;
+  state.listenCount = 0;
+  state.audioBlob = null;
+
+  const it = state.items[state.idx];
+  let h = '<div class="item-header">العنصر '+(state.idx+1)+' من '+state.items.length+'</div>';
+
+  // Step 1: Listen
+  h += '<div class="listen-status" id="listenStatus">';
+  h += '🎧 <b>الخطوة 1:</b> استمع للسؤال ('+MAX_LISTEN+' مرات كحد أقصى)';
+  h += '<br><span class="count">Listens: <span id="listenCount">0</span> / '+MAX_LISTEN+'</span>';
+  h += '</div>';
+  h += '<button class="play-btn" id="playBtn" onclick="playItem()">▶ تشغيل الصوت</button>';
+
+  // Step 2: Record (hidden until first listen)
+  h += '<div class="rec-section" id="recSection" style="display:none">';
+  h += '<div style="color:#1e40af;font-weight:bold;margin-bottom:10px">🎤 الخطوة 2: سجّل إجابتك</div>';
+  h += '<button class="rec-btn" id="recBtn" onclick="toggleRecord()">🎤 ابدأ التسجيل</button>';
+  h += '<div class="rec-status" id="recStatus"></div>';
+  h += '<div class="playback" id="playback"><audio controls></audio></div>';
+  h += '</div>';
+
+  // Step 3: Reveal transcript (hidden until recorded)
+  h += '<div class="reveal-section" id="revealSection">';
+  h += '<button class="reveal-btn" onclick="revealTranscript()">📖 إظهار النص للمراجعة</button>';
+  h += '<div class="transcript" id="transcript"></div>';
+  h += '</div>';
+
+  // Buttons row (Next + Skip transcript) - shown right after recording
+  h += '<div style="display:flex;gap:10px;margin-top:20px">';
+  h += '<button class="next-item" id="nextBtn" onclick="nextItem()" style="display:none;flex:1;margin:0">';
+  h += (state.idx < state.items.length - 1 ? 'التالي ←' : '✓ إنهاء الدرس');
+  h += '</button>';
+  h += '<button id="skipBtn" onclick="nextItem()" style="display:none;flex:1;background:#6b7280;color:#fff;border:0;padding:14px 20px;border-radius:10px;font-size:15px;cursor:pointer;font-weight:bold">⏭ تخطي وتالي</button>';
+  h += '</div>';
+
+  root.innerHTML = h;
+}
+
+function playItem(){
+  const it = state.items[state.idx];
+  const txt = it.text_en || it.question_en || '';
+  if(!txt){ alert('لا يوجد نص للتشغيل'); return; }
+  if(state.listenCount >= MAX_LISTEN){
+    alert('وصلت للحد الأقصى من الاستماع ('+MAX_LISTEN+' مرات). يجب أن تسجّل إجابتك الآن.');
+    return;
+  }
+  const btn = document.getElementById('playBtn');
+  btn.disabled = true;
+  btn.textContent = '🔊 جاري التشغيل...';
+  speak(txt, ()=>{
+    state.listenCount++;
+    state.hasListened = true;
+    document.getElementById('listenCount').textContent = state.listenCount;
+    btn.disabled = false;
+    if(state.listenCount >= MAX_LISTEN){
+      btn.textContent = '✓ انتهى الاستماع';
+      btn.disabled = true;
+    } else {
+      btn.textContent = '▶ استمع مرة أخرى ('+(MAX_LISTEN - state.listenCount)+' متبقية)';
+    }
+    document.getElementById('recSection').style.display = 'block';
+    document.getElementById('recSection').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+}
+
+async function toggleRecord(){
+  const btn = document.getElementById('recBtn');
+  const status = document.getElementById('recStatus');
+  if(state.mediaRecorder && state.mediaRecorder.state === 'recording'){
+    state.mediaRecorder.stop();
+    return;
+  }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    state.audioChunks = [];
+    state.mediaRecorder = new MediaRecorder(stream);
+    state.mediaRecorder.ondataavailable = e => state.audioChunks.push(e.data);
+    state.mediaRecorder.onstop = ()=>{
+      state.audioBlob = new Blob(state.audioChunks, {type:'audio/webm'});
+      const url = URL.createObjectURL(state.audioBlob);
+      const pb = document.getElementById('playback');
+      pb.innerHTML = '<div style="background:#f0fdf4;padding:14px;border-radius:12px;border:2px solid #86efac;margin-top:12px">' +
+        '<div style="font-weight:bold;color:#14532d;margin-bottom:10px;text-align:center">🎧 تسجيلك جاهز</div>' +
+        '<audio controls src="' + url + '" style="width:100%;margin-bottom:10px"></audio>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">' +
+        '<button onclick="playMyRecording()" style="background:#3b82f6;color:#fff;border:0;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px">▶ تشغيل</button>' +
+        '<button onclick="downloadRecording()" style="background:#10b981;color:#fff;border:0;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px">💾 تحميل</button>' +
+        '<button onclick="rerecord()" style="background:#f59e0b;color:#fff;border:0;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px">🔄 إعادة التسجيل</button>' +
+        '<button onclick="deleteRecording()" style="background:#dc2626;color:#fff;border:0;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px">🗑 حذف</button>' +
+        '</div></div>';
+      pb.style.display = 'block';
+      btn.style.display = 'none';
+      status.textContent = '';
+      stream.getTracks().forEach(t => t.stop());
+      state.hasRecorded = true;
+      state.audioUrl = url;
+      document.getElementById('revealSection').style.display = 'block';
+      document.getElementById('nextBtn').style.display = 'block';
+      document.getElementById('skipBtn').style.display = 'block';
+      stopRecordTimer();
+    };
+    state.mediaRecorder.start();
+    btn.classList.add('recording');
+    btn.textContent = '⏹ إيقاف التسجيل';
+    // Timer only for Task 2 (Interview = stage 3 or question type)
+    const it = state.items[state.idx];
+    const isInterview = (STAGE_ID === 3) || (it && it.item_type === 'question');
+    if(isInterview){
+      status.textContent = '🔴 جاري التسجيل... تحدّث الآن.';
+      startRecordTimer();
+    } else {
+      status.textContent = '🔴 جاري التسجيل... كرّر الجملة التي سمعتها.';
+    }
+  }catch(e){
+    alert('لم يتمكن من الوصول للميكروفون. تأكد من السماح للموقع.');
+    console.error(e);
+  }
+}
+
+
+let recordTimerId = null;
+let recordSecondsLeft = 45;
+function startRecordTimer(){
+  recordSecondsLeft = 45;
+  const status = document.getElementById('recStatus');
+  recordTimerId = setInterval(()=>{
+    recordSecondsLeft--;
+    if(status) status.innerHTML = '🔴 جاري التسجيل... <b style="color:#dc2626;font-size:18px">' + recordSecondsLeft + ' ثانية متبقية</b>';
+    if(recordSecondsLeft <= 0){
+      stopRecordTimer();
+      if(state.mediaRecorder && state.mediaRecorder.state === 'recording'){
+        state.mediaRecorder.stop();
+      }
+    }
+  }, 1000);
+}
+function stopRecordTimer(){
+  if(recordTimerId){ clearInterval(recordTimerId); recordTimerId = null; }
+}
+
+function revealTranscript(){
+  const it = state.items[state.idx];
+  const txtEn = it.text_en || it.question_en || '';
+  const txtAr = it.text_ar || it.question_ar || '';
+  const t = document.getElementById('transcript');
+  let h = '';
+  if(txtEn) h += '<div class="text-en">'+esc(txtEn)+'</div>';
+  if(txtAr) h += '<div class="text-ar">'+esc(txtAr)+'</div>';
+  if(txtEn) h += '<button class="replay" onclick="speak('+JSON.stringify(txtEn).replace(/"/g,'&quot;')+')">🔊 استمع مرة أخيرة للمقارنة</button>';
+  t.innerHTML = h;
+  t.style.display = 'block';
+  state.revealed = true;
+  document.getElementById('nextBtn').style.display = 'block';
+  t.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+
+function playMyRecording(){
+  const audio = document.querySelector('#playback audio');
+  if(audio){ audio.currentTime=0; audio.play(); }
+}
+function downloadRecording(){
+  if(!state.audioBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(state.audioBlob);
+  a.download = 'recording_lesson_' + LESSON_ID + '_item_' + (state.idx+1) + '.webm';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+function rerecord(){
+  const pb = document.getElementById('playback');
+  pb.innerHTML = '';
+  pb.style.display = 'none';
+  const btn = document.getElementById('recBtn');
+  btn.style.display = 'inline-block';
+  btn.classList.remove('recording');
+  btn.textContent = '🎤 ابدأ التسجيل';
+  state.hasRecorded = false;
+  state.audioBlob = null;
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('skipBtn').style.display = 'none';
+  document.getElementById('revealSection').style.display = 'none';
+}
+function deleteRecording(){
+  if(!confirm('هل أنت متأكد من حذف التسجيل؟')) return;
+  rerecord();
+}
+
+function nextItem(){
+  if(state.idx < state.items.length - 1){
+    state.idx++;
+    renderPractice();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    finishLesson();
+  }
+}
+
+function finishLesson(){
+  var total = (state.items && state.items.length) ? state.items.length : 1;
+  var correct = total;
+  fetch('/api/speaking/lesson/'+LESSON_ID+'/complete',{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({user_id:USER_ID, items_total:total, items_correct:correct, score:100})
+  }).then(r=>r.json()).then(d=>{
+    console.log('Complete response:', d);
+  }).catch(e=>{
+    console.error('Complete error:', e);
+  }).finally(()=>{
+    window.location.href='/speaking/stage/'+STAGE_ID+'?user_id='+encodeURIComponent(USER_ID);
+  });
+}
+
+// ===== Boot =====
+async function boot(){
+  try{
+    const r = await fetch('/api/speaking/lesson/'+LESSON_ID+'/items');
+    const data = await r.json();
+    state.lesson = data.lesson || {};
+    state.items = data.items || [];
+    console.log('Lesson loaded:', state.lesson.id, 'type:', state.lesson.lesson_type, 'items:', state.items.length);
+    if(state.lesson.lesson_type === 'principle' || (state.lesson.overall_self_assessment_json && state.items.length <= 1)){
+      renderTheory(state.lesson);
+    } else if(state.items.length === 0){
+      document.getElementById('content').innerHTML = '<div class="loading">⚠️ هذا الدرس لا يحتوي على عناصر. <a href="/speaking/stage/'+STAGE_ID+'?user_id='+encodeURIComponent(USER_ID)+'" style="color:#3b82f6">عودة</a></div>';
+    } else {
+      renderPractice();
+    }
+  }catch(e){
+    document.getElementById('content').innerHTML = '<div class="loading">⚠️ خطأ في تحميل الدرس: '+esc(e.message)+'</div>';
+  }
+}
+
+if(window.speechSynthesis){
+  window.speechSynthesis.getVoices();
+  if(window.speechSynthesis.onvoiceschanged !== undefined){
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+}
+boot();
+</script>
+</body>
+</html>

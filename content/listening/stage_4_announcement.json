@@ -1,0 +1,154 @@
+{
+  "stage_id": 4,
+  "stage_code": "announcement",
+  "title_ar": "المرحلة 4: الإعلانات الجامعية",
+  "title_en": "Stage 4: University Announcements",
+  "description_ar": "إعلانات قصيرة (40-85 كلمة) من إدارة الجامعة أو الأقسام أو الفعاليات. سؤالان لكل إعلان: الفكرة الرئيسية والتفاصيل/الغرض.",
+  "intro_lesson": {
+    "title_ar": "استراتيجيات الإعلانات",
+    "coach_notes_ar": [
+      "📢 الإعلان قصير - لا وقت للسرحان. ركّز من الجملة الأولى.",
+      "🎯 اسأل نفسك فوراً: من المتحدث؟ من الجمهور؟ ما الموضوع؟",
+      "📅 انتبه للأرقام: تواريخ، أوقات، أماكن، رسوم - غالباً تُسأل عنها.",
+      "🔑 الجملة الأولى أو الأخيرة تحتوي عادةً على الفكرة الرئيسية.",
+      "⚠️ احذر: قد يُذكر تغيير في آخر الإعلان (مثل تأجيل أو نقل مكان)."
+    ]
+  },
+  "announcements": [
+    {
+      "id": "ann_01", "level": "easy", "title_ar": "تغيير قاعة المحاضرة",
+      "audio_url": "TELEGRAM_URL_ANN_01",
+      "transcript_en": "Attention students of History 201. Please note that today's lecture has been moved from Room 305 to Hall B on the second floor due to a maintenance issue with the air conditioning. The lecture will start at the regular time, 10 AM. Please arrive five minutes early to find seats.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the main purpose of this announcement?", "options": ["To cancel the lecture", "To inform students of a room change", "To delay the lecture", "To introduce a new professor"], "correct_index": 1, "explanation_ar": "الإعلان يخبر بنقل المحاضرة من غرفة 305 إلى قاعة B."},
+        {"q_type": "detail", "question_en": "Why was the room changed?", "options": ["The professor is sick", "Air conditioning maintenance", "Too many students", "An exam is scheduled"], "correct_index": 1, "explanation_ar": "ذُكر صراحةً 'maintenance issue with the air conditioning'."}
+      ]
+    },
+    {
+      "id": "ann_02", "level": "easy", "title_ar": "موعد إغلاق المكتبة",
+      "audio_url": "TELEGRAM_URL_ANN_02",
+      "transcript_en": "This is a reminder that the main library will close two hours earlier than usual this Friday, at 6 PM instead of 8 PM, due to a staff training event. The library will resume normal hours on Saturday morning. Students are encouraged to check out books before 5:45 PM to avoid delays at the counter.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the announcement about?", "options": ["A new library opening", "Early library closing on Friday", "Library renovation", "Lost books"], "correct_index": 1, "explanation_ar": "الإعلان عن إغلاق المكتبة مبكراً يوم الجمعة."},
+        {"q_type": "detail", "question_en": "What time will the library close on Friday?", "options": ["5 PM", "6 PM", "7 PM", "8 PM"], "correct_index": 1, "explanation_ar": "ذُكر بوضوح 'at 6 PM instead of 8 PM'."}
+      ]
+    },
+    {
+      "id": "ann_03", "level": "easy", "title_ar": "رحلة ميدانية",
+      "audio_url": "TELEGRAM_URL_ANN_03",
+      "transcript_en": "Geology students, our field trip to the Crystal Mountains has been rescheduled from this Saturday to next Sunday because of the weather forecast. The bus will leave campus at 7 AM sharp from the main gate. Bring your hiking boots, water, and notebooks. The fee remains twenty dollars, payable at the department office.",
+      "questions": [
+        {"q_type": "detail", "question_en": "When will the field trip take place now?", "options": ["This Saturday", "Next Sunday", "Tomorrow", "Next Saturday"], "correct_index": 1, "explanation_ar": "أُعيد جدولتها 'from this Saturday to next Sunday'."},
+        {"q_type": "purpose", "question_en": "Why was the trip rescheduled?", "options": ["Bus problems", "The weather forecast", "Low registration", "A holiday"], "correct_index": 1, "explanation_ar": "السبب 'because of the weather forecast'."}
+      ]
+    },
+    {
+      "id": "ann_04", "level": "easy", "title_ar": "تسجيل النادي الرياضي",
+      "audio_url": "TELEGRAM_URL_ANN_04",
+      "transcript_en": "Good afternoon. The university sports center is now accepting registration for the spring fitness program. Sessions include yoga, swimming, and basketball. Membership costs fifty dollars per semester for students and includes access to all facilities. Sign up at the front desk before March 1st to receive a free fitness assessment.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is being announced?", "options": ["A new sports center", "Spring fitness registration", "Free yoga lessons", "Equipment sale"], "correct_index": 1, "explanation_ar": "الإعلان عن فتح التسجيل لبرنامج اللياقة الربيعي."},
+        {"q_type": "detail", "question_en": "What does early registration include?", "options": ["A free t-shirt", "A free fitness assessment", "Free swimming lessons", "A free locker"], "correct_index": 1, "explanation_ar": "التسجيل قبل 1 مارس يمنح 'free fitness assessment'."}
+      ]
+    },
+    {
+      "id": "ann_05", "level": "easy", "title_ar": "حفل التخرج",
+      "audio_url": "TELEGRAM_URL_ANN_05",
+      "transcript_en": "Attention graduating seniors. The commencement ceremony will be held in the Main Auditorium on June 15th at 5 PM. Graduates must arrive by 4 PM to collect their gowns and line up. Each student is allowed four guest tickets, available at the dean's office starting next Monday. Photography is permitted only from designated areas.",
+      "questions": [
+        {"q_type": "detail", "question_en": "How many guest tickets is each graduate allowed?", "options": ["Two", "Three", "Four", "Five"], "correct_index": 2, "explanation_ar": "ذُكر 'four guest tickets' لكل طالب."},
+        {"q_type": "purpose", "question_en": "Why must graduates arrive by 4 PM?", "options": ["To take photographs", "To collect gowns and line up", "To register guests", "To pay fees"], "correct_index": 1, "explanation_ar": "ذُكر 'to collect their gowns and line up'."}
+      ]
+    },
+    {
+      "id": "ann_06", "level": "medium", "title_ar": "إضراب موظفي الكافتيريا",
+      "audio_url": "TELEGRAM_URL_ANN_06",
+      "transcript_en": "Important notice to all students. The campus cafeteria staff will be participating in a one-day strike this Thursday to support ongoing wage negotiations. As a result, the main cafeteria and two side kitchens will be closed all day. Vending machines will remain operational, and nearby off-campus restaurants are offering a ten percent student discount on Thursday only.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "Why is the cafeteria closing?", "options": ["For renovation", "Because of a staff strike", "For deep cleaning", "Due to food shortage"], "correct_index": 1, "explanation_ar": "السبب إضراب موظفي الكافتيريا."},
+        {"q_type": "inference", "question_en": "What can students likely do for food on Thursday?", "options": ["Wait until Friday", "Use vending machines or eat at discounted nearby restaurants", "Cook in their dorms only", "Attend a free university dinner"], "correct_index": 1, "explanation_ar": "الإعلان يذكر آلات البيع والمطاعم المجاورة بخصم."}
+      ]
+    },
+    {
+      "id": "ann_07", "level": "medium", "title_ar": "ورشة كتابة أكاديمية",
+      "audio_url": "TELEGRAM_URL_ANN_07",
+      "transcript_en": "The Writing Center is hosting a free workshop on academic essay structure next Wednesday from 3 to 5 PM in Room 210. The session is especially recommended for first-year students preparing their first research paper. Topics include thesis development, paragraph cohesion, and citation styles. Seats are limited to twenty-five participants, so early registration through the center's website is strongly advised.",
+      "questions": [
+        {"q_type": "purpose", "question_en": "Who is the workshop mainly aimed at?", "options": ["Graduate researchers", "First-year students writing their first paper", "Faculty members", "International students only"], "correct_index": 1, "explanation_ar": "ذُكر 'especially recommended for first-year students'."},
+        {"q_type": "detail", "question_en": "Why is early registration advised?", "options": ["Because the workshop costs money", "Because seats are limited to twenty-five", "Because the date may change", "Because there is a test at the end"], "correct_index": 1, "explanation_ar": "ذُكر 'Seats are limited to twenty-five participants'."}
+      ]
+    },
+    {
+      "id": "ann_08", "level": "medium", "title_ar": "تحديث نظام البريد الإلكتروني",
+      "audio_url": "TELEGRAM_URL_ANN_08",
+      "transcript_en": "Attention all university email account holders. The IT department will perform a major system upgrade this Saturday between 1 AM and 6 AM. During this period, you will be unable to send or receive emails. After the upgrade, all users must reset their passwords using the link sent to their backup email. If you do not have a backup email registered, please visit the IT help desk before Friday afternoon.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the announcement about?", "options": ["A new email service", "An email system upgrade requiring password reset", "Free IT training", "Closing all email accounts"], "correct_index": 1, "explanation_ar": "الإعلان عن ترقية نظام البريد وضرورة إعادة تعيين كلمات المرور."},
+        {"q_type": "inference", "question_en": "What should a student without a backup email do?", "options": ["Wait until Monday", "Visit the IT help desk before Friday", "Create a new account", "Ignore the message"], "correct_index": 1, "explanation_ar": "ذُكر 'please visit the IT help desk before Friday afternoon'."}
+      ]
+    },
+    {
+      "id": "ann_09", "level": "medium", "title_ar": "محاضرة ضيف",
+      "audio_url": "TELEGRAM_URL_ANN_09",
+      "transcript_en": "The Department of Economics is pleased to host Professor Lena Hoffman from Berlin University, who will deliver a public lecture titled 'Global Trade After the Pandemic' this Friday at 4 PM in Lecture Hall A. The talk will be followed by a thirty-minute Q&A session. Although the event is free, registration is required for non-economics students to secure a seat.",
+      "questions": [
+        {"q_type": "detail", "question_en": "What is the topic of the lecture?", "options": ["European universities", "Global trade after the pandemic", "Berlin's economy", "Online learning"], "correct_index": 1, "explanation_ar": "العنوان 'Global Trade After the Pandemic'."},
+        {"q_type": "purpose", "question_en": "Why must non-economics students register?", "options": ["To pay a fee", "To secure a seat", "To receive a certificate", "To get the slides"], "correct_index": 1, "explanation_ar": "ذُكر 'registration is required for non-economics students to secure a seat'."}
+      ]
+    },
+    {
+      "id": "ann_10", "level": "medium", "title_ar": "إعادة فتح حديقة الحرم",
+      "audio_url": "TELEGRAM_URL_ANN_10",
+      "transcript_en": "Good news, everyone. The central campus garden, which has been closed for three months for landscaping, will reopen this Monday. New features include a meditation area, more benches, and a small outdoor study space with Wi-Fi access. Please respect the new plants by staying on the marked paths. The garden is open from 6 AM to 9 PM daily.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the announcement primarily about?", "options": ["A new building", "The reopening of the campus garden", "Garden maintenance closure", "A landscaping competition"], "correct_index": 1, "explanation_ar": "الإعلان عن إعادة فتح الحديقة بعد التجديد."},
+        {"q_type": "detail", "question_en": "Which is NOT a new feature of the garden?", "options": ["Meditation area", "More benches", "Outdoor study space with Wi-Fi", "A small café"], "correct_index": 3, "explanation_ar": "المقهى لم يُذكر - الميزات المذكورة: تأمل، مقاعد، مساحة دراسة بـ Wi-Fi."}
+      ]
+    },
+    {
+      "id": "ann_11", "level": "difficult", "title_ar": "تعديل سياسة الغياب",
+      "audio_url": "TELEGRAM_URL_ANN_11",
+      "transcript_en": "All students, please be aware of an updated attendance policy effective next semester. Previously, students were allowed up to four unexcused absences per course. Under the revised policy, only three are permitted, and a fourth absence will result in an automatic letter-grade reduction. Medical absences with documentation remain excluded from this count. Department heads have the discretion to apply stricter rules in laboratory or seminar courses, where physical presence is critical.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the key change in the attendance policy?", "options": ["Absences are now unlimited", "The allowed unexcused absences decreased from four to three", "Medical absences are no longer accepted", "Attendance is no longer tracked"], "correct_index": 1, "explanation_ar": "التغيير الأساسي: تقليل الغياب المسموح من 4 إلى 3."},
+        {"q_type": "inference", "question_en": "What can be inferred about lab courses under the new policy?", "options": ["They may have even stricter attendance rules", "They are exempt from the policy", "They will be online only", "They cancel the policy entirely"], "correct_index": 0, "explanation_ar": "ذُكر 'Department heads have the discretion to apply stricter rules in laboratory or seminar courses'."}
+      ]
+    },
+    {
+      "id": "ann_12", "level": "difficult", "title_ar": "منح دراسية للأبحاث",
+      "audio_url": "TELEGRAM_URL_ANN_12",
+      "transcript_en": "The Office of Graduate Studies is pleased to announce the opening of applications for the Faculty Research Grant. Up to ten graduate students will receive funding of three thousand dollars each to support thesis-related travel, equipment, or specialized software. Applicants must submit a detailed budget, a faculty recommendation, and a two-page project description by May 30th. Note that recipients are expected to present their results in the annual graduate symposium next fall.",
+      "questions": [
+        {"q_type": "detail", "question_en": "What must applicants submit?", "options": ["Only a project description", "A budget, a faculty recommendation, and a project description", "A full thesis draft", "An online video"], "correct_index": 1, "explanation_ar": "المتطلبات الثلاثة ذُكرت بوضوح."},
+        {"q_type": "purpose", "question_en": "Why must recipients present in the symposium?", "options": ["To get extra money", "As an expected outcome of receiving the grant", "To compete for another award", "It is optional"], "correct_index": 1, "explanation_ar": "ذُكر 'recipients are expected to present their results' - شرط متوقع."}
+      ]
+    },
+    {
+      "id": "ann_13", "level": "difficult", "title_ar": "تحديث سياسة المختبرات",
+      "audio_url": "TELEGRAM_URL_ANN_13",
+      "transcript_en": "Attention all biology and chemistry majors. Starting this month, lab access outside of scheduled class hours will require a new safety certification. The certification involves a two-hour online module and a brief in-person evaluation. Students who fail to complete it by the end of the month will lose evening and weekend lab privileges. The change responds to recent safety incidents and aims to ensure that all independent lab users are properly trained.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the primary reason for this new requirement?", "options": ["To reduce lab usage", "To respond to safety incidents and ensure proper training", "To charge students extra fees", "To close the labs entirely"], "correct_index": 1, "explanation_ar": "ذُكر 'responds to recent safety incidents and aims to ensure that all independent lab users are properly trained'."},
+        {"q_type": "inference", "question_en": "What will happen to a student who does not complete certification?", "options": ["They will be expelled", "They will lose evening and weekend lab access", "They will pay a fine", "Nothing will happen"], "correct_index": 1, "explanation_ar": "ذُكر 'will lose evening and weekend lab privileges'."}
+      ]
+    },
+    {
+      "id": "ann_14", "level": "difficult", "title_ar": "تغيير في رسوم السكن",
+      "audio_url": "TELEGRAM_URL_ANN_14",
+      "transcript_en": "Important notice from the housing office. Beginning next academic year, dormitory fees will increase by approximately seven percent to cover rising utility costs and planned renovations of older buildings. Students who renew their housing contract before April 15th will be eligible for a partial rate freeze, paying only the current rate for the first semester. Financial aid will be adjusted accordingly for qualifying students; please contact the financial aid office for details.",
+      "questions": [
+        {"q_type": "purpose", "question_en": "Why is the housing fee increasing?", "options": ["To build a new dorm", "To cover utility costs and renovations of older buildings", "Because of more students", "For administrative bonuses"], "correct_index": 1, "explanation_ar": "السبب 'rising utility costs and planned renovations of older buildings'."},
+        {"q_type": "inference", "question_en": "What benefit do early renewers get?", "options": ["No fee at all", "Current rate for the first semester only", "Free meals", "A private room"], "correct_index": 1, "explanation_ar": "ذُكر 'paying only the current rate for the first semester'."}
+      ]
+    },
+    {
+      "id": "ann_15", "level": "difficult", "title_ar": "إعلان طارئ - تدريب على الإخلاء",
+      "audio_url": "TELEGRAM_URL_ANN_15",
+      "transcript_en": "This is an emergency preparedness announcement. A full-campus evacuation drill will take place this Thursday at 11 AM. When the alarm sounds, all students, faculty, and staff must leave their buildings immediately using the nearest marked exit and gather at the designated assembly points outdoors. Do not use elevators. The drill should take no more than twenty minutes. Department coordinators will record attendance, and unexcused absences may affect course participation grades for students in attendance-mandatory classes.",
+      "questions": [
+        {"q_type": "main_idea", "question_en": "What is the announcement about?", "options": ["A real emergency", "A planned evacuation drill", "A new fire alarm system", "Construction work"], "correct_index": 1, "explanation_ar": "تدريب مخطط، وليس طارئاً حقيقياً."},
+        {"q_type": "inference", "question_en": "What can be inferred about students who skip the drill?", "options": ["They will be expelled", "They may face grade consequences in attendance-mandatory classes", "They get extra credit", "Nothing happens to them"], "correct_index": 1, "explanation_ar": "ذُكر 'unexcused absences may affect course participation grades'."}
+      ]
+    }
+  ]
+}

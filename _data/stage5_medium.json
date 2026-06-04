@@ -1,0 +1,594 @@
+[
+  {
+    "code": "lec_m01",
+    "voice": "F",
+    "level": "medium",
+    "title_en": "Online Learning Tools in Higher Education",
+    "title_ar": "أدوات التعلم الإلكتروني في التعليم العالي",
+    "topic_ar": "التكنولوجيا التعليمية",
+    "principle_en": "Distinguish enabling skills from specific platform functions",
+    "principle_ar": "ميّز بين المهارات الممكِّنة ووظائف المنصة المحددة",
+    "transcript_en": "Over the past decade, online learning tools have become central to university education. Platforms like Moodle, Canvas, and Blackboard now host everything from lecture videos to assignment submissions. But what does it take for students to actually benefit from these tools? Research from educational technology institutes suggests that academic success with online platforms depends heavily on one trait: the capacity to manage one's time and effort effectively. Without supervision from a traditional classroom, students must motivate themselves to log in regularly, watch recorded lectures, and complete assignments before deadlines. These platforms typically offer four main functions: distributing reading materials, submitting graded work, hosting group forums for discussion, and providing recorded lessons for review. Notice that booking appointments with academic advisors is generally handled through a separate system — a common misconception among new students. Professors increasingly rely on these tools because they efficiently share and distribute educational resources to large numbers of students simultaneously. Moreover, online tools increase flexibility — students can access materials and complete tasks outside of fixed class times, which is especially valuable for those balancing studies with work or family responsibilities.",
+    "duration_sec": 100,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker mainly discussing?",
+        "q_ar": "عمَّ تتحدث المتحدثة بشكل رئيسي؟",
+        "options": [
+          "The history of online education",
+          "How students and professors use online learning tools and what makes them effective",
+          "Why traditional classrooms are obsolete",
+          "Comparing Moodle and Canvas"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تغطي: ما هي الأدوات + ما يحتاجه الطالب للنجاح + وظائف المنصات + لماذا يستخدمها الأساتذة.",
+        "strategy_ar": "🎯 Main Idea في المحاضرات الموسعة = الموضوع الذي يربط كل الفقرات.",
+        "elimination_ar": "A لم يُذكر، C مبالغ، D تفصيل."
+      },
+      {
+        "type": "detail",
+        "q_en": "What key characteristic does the speaker identify for student success with online tools?",
+        "q_ar": "ما السمة الرئيسية لنجاح الطلاب مع الأدوات الإلكترونية؟",
+        "options": [
+          "Reliance on classmates",
+          "Access to a fast internet connection",
+          "Frequent communication with the professor",
+          "The capacity to manage one's time and effort effectively"
+        ],
+        "correct": 3,
+        "explanation_ar": "ذُكر صراحة: 'depends heavily on one trait: the capacity to manage one's time and effort effectively'.",
+        "strategy_ar": "🎯 جملة 'depends on' = إجابة سؤال 'ما المطلوب'.",
+        "elimination_ar": "A، B، C معقولة لكن غير مذكورة كسمة رئيسية."
+      },
+      {
+        "type": "inference",
+        "q_en": "Which activity is NOT explicitly mentioned as facilitated by online platforms?",
+        "q_ar": "أي نشاط ليس مذكوراً صراحة كميسَّر بالمنصات؟",
+        "options": [
+          "Submitting graded work",
+          "Reviewing lesson content",
+          "Participating in group forums",
+          "Booking appointments with academic advisors"
+        ],
+        "correct": 3,
+        "explanation_ar": "المتحدثة استثنت 'booking appointments with academic advisors is generally handled through a separate system'.",
+        "strategy_ar": "🎯 NOT questions: ابحث عن الاستثناء الذي ذكره المتحدث ('except', 'separate').",
+        "elimination_ar": "A، B، C كلها ضمن الأربع وظائف المذكورة."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does 'flexibility' refer to in this context?",
+        "q_ar": "ما المقصود بـ 'flexibility' في السياق؟",
+        "options": [
+          "The ability to change majors easily",
+          "The ability to access materials and complete tasks outside fixed class times",
+          "Switching from one tool to another",
+          "Freedom to choose any course material"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق التالي يفسرها: 'students can access materials and complete tasks outside of fixed class times'.",
+        "strategy_ar": "🎯 Vocab: الجملة التالية لكلمة محددة عادة تشرحها.",
+        "elimination_ar": "A، C، D معاني عامة لا تطابق السياق."
+      }
+    ]
+  },
+  {
+    "code": "lec_m02",
+    "voice": "M",
+    "level": "medium",
+    "title_en": "University Health Services",
+    "title_ar": "خدمات الصحة الجامعية",
+    "topic_ar": "صحة الطلاب",
+    "principle_en": "Track multiple services with distinct functions and access methods",
+    "principle_ar": "تتبّع خدمات متعددة بوظائف مختلفة وطرق وصول",
+    "transcript_en": "Good afternoon. I want to introduce you to the medical and wellness services available right here on campus. Many students don't realize the range of support they have access to — at no additional cost beyond their student fees. The main campus clinic is staffed by licensed doctors and nurses, and it operates during regular business hours from nine AM to five PM, Monday through Friday. Services include general consultations, basic prescriptions, vaccinations, and referrals to specialists. To make a medical appointment, students should use the online booking system available through the student portal. Walk-ins are accepted but may involve a longer wait. Beyond physical health, our counseling center offers confidential mental health support — individual sessions, group therapy, and crisis intervention. These services are also free for enrolled students. Additionally, the clinic organizes monthly health awareness campaigns. These have a dual purpose: to inform the student body about specific health topics — like nutrition, sleep, or stress management — and to encourage overall wellness through preventive habits. Don't wait until you're seriously ill to learn where these resources are. Knowing your options ahead of time is itself a form of healthcare.",
+    "duration_sec": 105,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the central message about university health services?",
+        "q_ar": "ما الرسالة المركزية؟",
+        "options": [
+          "Students should avoid the campus clinic unless emergency",
+          "A wide variety of medical and wellness services are available to students at no cost",
+          "Students must pay separately for counseling",
+          "The university is planning to hire more doctors"
+        ],
+        "correct": 1,
+        "explanation_ar": "الافتتاحية: 'medical and wellness services available... at no additional cost' — رسالة مركزية.",
+        "strategy_ar": "🎯 Main Idea في الإعلانات الخدمية = ما هو متاح + لمن.",
+        "elimination_ar": "A عكس النص، C خطأ، D لم يُذكر."
+      },
+      {
+        "type": "detail",
+        "q_en": "When can students typically receive services at the clinic?",
+        "q_ar": "متى تقدم الخدمات عادة في العيادة؟",
+        "options": [
+          "During evening and night hours",
+          "Only by walk-in appointments",
+          "During regular business hours 9 AM to 5 PM",
+          "On weekends only"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'regular business hours from nine AM to five PM, Monday through Friday'.",
+        "strategy_ar": "🎯 الأوقات والأرقام = دوّنها بدقة.",
+        "elimination_ar": "A، B، D فخاخ."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is the dual purpose of the monthly health awareness campaigns?",
+        "q_ar": "ما الهدف المزدوج من حملات التوعية الصحية الشهرية؟",
+        "options": [
+          "To advertise fee structure",
+          "To inform students about health topics and encourage wellness",
+          "To raise money for equipment",
+          "To recruit new staff"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'to inform the student body about specific health topics... and to encourage overall wellness'.",
+        "strategy_ar": "🎯 الكلمات المفتاحية 'dual purpose' = ابحث عن نقطتين.",
+        "elimination_ar": "A، C، D غير مذكورة."
+      },
+      {
+        "type": "detail",
+        "q_en": "How should students set up a medical appointment?",
+        "q_ar": "كيف يحجز الطالب موعداً طبياً؟",
+        "options": [
+          "By calling the clinic directly",
+          "By visiting the clinic in person",
+          "By using the online booking system",
+          "By contacting their professor"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'students should use the online booking system available through the student portal'.",
+        "strategy_ar": "🎯 Detail عن الإجراءات = ابحث عن 'should' أو 'must'.",
+        "elimination_ar": "A، B، D خطأ (B walk-in بديل وليس الأساس)."
+      }
+    ]
+  },
+  {
+    "code": "lec_m03",
+    "voice": "F",
+    "level": "medium",
+    "title_en": "Academic Integrity and Plagiarism",
+    "title_ar": "النزاهة الأكاديمية والانتحال",
+    "topic_ar": "الأخلاقيات الأكاديمية",
+    "principle_en": "Understand definitions, consequences, and prevention strategies",
+    "principle_ar": "افهم التعريفات والعواقب واستراتيجيات الوقاية",
+    "transcript_en": "Today we'll discuss something every university student must understand clearly: academic integrity, and its opposite, plagiarism. Plagiarism is presenting someone else's ideas, words, or research as your own without proper credit. It includes copying sentences from a website, paraphrasing without citation, or even reusing your own previous work without permission — what's called 'self-plagiarism.' Many students don't realize that intent doesn't matter. Whether you copied deliberately or simply forgot to cite, the consequences can be severe: failing the assignment, failing the course, or even expulsion in serious cases. How do you avoid it? First, take careful notes during research. When you copy a sentence directly, mark it with quotation marks immediately. Second, learn your university's preferred citation style — APA, MLA, or Chicago — and use it consistently. Third, when in doubt, cite. It's always safer to over-cite than to under-cite. Modern detection software, like Turnitin, can identify matches with billions of documents online. But honestly, the best protection against plagiarism isn't fear of getting caught — it's developing genuine intellectual habits. Universities are communities built on trust, and your integrity is one of your most valuable academic assets.",
+    "duration_sec": 110,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the main idea of this lecture?",
+        "q_ar": "ما الفكرة الرئيسية؟",
+        "options": [
+          "Plagiarism software is unreliable",
+          "Understanding plagiarism — its definition, consequences, and how to avoid it",
+          "All copying is acceptable in research",
+          "Citation styles are too complicated"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تعرّف الانتحال + تشرح العواقب + تقدم نصائح للتجنب.",
+        "strategy_ar": "🎯 Main Idea في المحاضرات التوعوية = التعريف + الإرشاد.",
+        "elimination_ar": "A، C، D إما عكس النص أو سطحية."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is 'self-plagiarism'?",
+        "q_ar": "ما 'self-plagiarism'؟",
+        "options": [
+          "Citing yourself too much",
+          "Reusing your own previous work without permission",
+          "Writing about yourself",
+          "Plagiarizing in solo assignments"
+        ],
+        "correct": 1,
+        "explanation_ar": "تعريف مباشر: 'reusing your own previous work without permission — what's called self-plagiarism'.",
+        "strategy_ar": "🎯 المصطلحات تُعرَّف عادة بفعل 'is' أو 'called'.",
+        "elimination_ar": "A، C، D تفسيرات حرفية خاطئة."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about students who forget to cite?",
+        "q_ar": "ماذا يُستنتج عن الطلاب الذين ينسون التوثيق؟",
+        "options": [
+          "They are forgiven automatically",
+          "They can still face serious consequences because intent doesn't matter",
+          "Their professors won't notice",
+          "They get extra time"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر صراحة: 'intent doesn't matter. Whether you copied deliberately or simply forgot to cite, the consequences can be severe'.",
+        "strategy_ar": "🎯 Inference يأتي مباشرة من جملة صريحة عادة.",
+        "elimination_ar": "كل الخيارات الأخرى عكس النص."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention Turnitin software?",
+        "q_ar": "لماذا ذكرت برنامج Turnitin؟",
+        "options": [
+          "To advertise the software",
+          "To illustrate that detection is sophisticated but isn't the main reason to avoid plagiarism",
+          "To complain about technology",
+          "To recommend students avoid digital tools"
+        ],
+        "correct": 1,
+        "explanation_ar": "بعد ذكر Turnitin قالت 'the best protection isn't fear of getting caught — it's developing genuine intellectual habits'.",
+        "strategy_ar": "🎯 Purpose: المعلومة + الجملة التالية تكشف الهدف.",
+        "elimination_ar": "A، C، D خارج السياق."
+      }
+    ]
+  },
+  {
+    "code": "lec_m04",
+    "voice": "M",
+    "level": "medium",
+    "title_en": "Internship Opportunities for Undergraduates",
+    "title_ar": "فرص التدريب للطلاب الجامعيين",
+    "topic_ar": "التطوير المهني",
+    "principle_en": "Connect career-building activities with academic timing",
+    "principle_ar": "اربط أنشطة بناء المهنة بالتوقيت الأكاديمي",
+    "transcript_en": "Let's talk about internships — one of the most important steps between your studies and your future career. An internship is short-term professional experience, usually lasting from eight to twelve weeks, that allows students to apply classroom knowledge in real workplaces. There are two main types. Paid internships offer financial compensation along with experience, while unpaid internships — often in non-profits or research settings — emphasize learning and networking over salary. Both types appear on your resume; both signal initiative to future employers. When should you start applying? The traditional advice was to wait until your junior year, but the job market has changed. Many companies now recruit students as early as the summer after freshman year. Career services on this campus can help you build a competitive resume even with limited experience. What do internships actually teach? Beyond technical skills, they develop professional habits — meeting deadlines, communicating with supervisors, working in teams, and navigating workplace culture. Surveys show that students who complete at least one internship are significantly more likely to receive job offers before graduation. My advice: visit the career services office during your first semester, not your last. Building your professional profile takes time.",
+    "duration_sec": 110,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker mainly trying to communicate?",
+        "q_ar": "ما الذي يحاول المتحدث إيصاله؟",
+        "options": [
+          "All internships should be paid",
+          "The importance of internships and how students should approach them",
+          "Only senior students should apply",
+          "Career services are too slow"
+        ],
+        "correct": 1,
+        "explanation_ar": "يغطي تعريف التدريب + أنواعه + التوقيت + الفوائد + النصيحة النهائية.",
+        "strategy_ar": "🎯 Main Idea في النصائح المهنية = ما + لماذا + كيف.",
+        "elimination_ar": "A، C، D إما خطأ أو سطحي."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is the typical duration of an internship?",
+        "q_ar": "ما المدة النموذجية للتدريب؟",
+        "options": [
+          "One to two weeks",
+          "Eight to twelve weeks",
+          "Six months",
+          "Two years"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'usually lasting from eight to twelve weeks'.",
+        "strategy_ar": "🎯 المدد الزمنية = ركّز على الأرقام مباشرة.",
+        "elimination_ar": "كل الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about freshman students and internships?",
+        "q_ar": "ماذا يُستنتج عن طلاب السنة الأولى؟",
+        "options": [
+          "They cannot apply at all",
+          "Job market changes mean they may now apply earlier than the traditional advice suggested",
+          "They must finish all courses first",
+          "They are guaranteed paid positions"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر 'the traditional advice was to wait... but the job market has changed. Many companies now recruit... freshman year'.",
+        "strategy_ar": "🎯 Inference: المقارنة بين الماضي والحاضر = إشارة للتغيير.",
+        "elimination_ar": "A، C، D عكس النص."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker advise visiting career services 'during your first semester, not your last'?",
+        "q_ar": "لماذا ينصح بزيارة خدمات المهنة في الفصل الأول؟",
+        "options": [
+          "The office is less crowded then",
+          "To emphasize that building a professional profile takes time",
+          "First semester students get discounts",
+          "To skip later semester requirements"
+        ],
+        "correct": 1,
+        "explanation_ar": "الجملة الختامية: 'Building your professional profile takes time' — تبرير صريح.",
+        "strategy_ar": "🎯 الجملة الختامية عادة تبرر النصيحة كاملة.",
+        "elimination_ar": "A، C، D خارج النص."
+      }
+    ]
+  },
+  {
+    "code": "lec_m05",
+    "voice": "F",
+    "level": "medium",
+    "title_en": "Study Abroad Programs",
+    "title_ar": "برامج الدراسة في الخارج",
+    "topic_ar": "التبادل الأكاديمي الدولي",
+    "principle_en": "Weigh benefits against challenges in educational opportunities",
+    "principle_ar": "وازن بين الفوائد والتحديات في الفرص التعليمية",
+    "transcript_en": "If you've ever wondered whether spending a semester abroad is worth the effort, today's talk should help you decide. Our university maintains exchange agreements with over forty partner institutions across Europe, Asia, and South America. Students typically go abroad during their second or third year, when they've completed core requirements but still have elective flexibility. The benefits are substantial. Academically, you'll experience different teaching styles and access courses unavailable at home. Personally, you'll develop independence, adaptability, and often a new language. Professionally, employers increasingly value international experience as evidence of cross-cultural competence. But let's be realistic about the challenges. Financial costs vary widely — some exchange programs are tuition-neutral, meaning you pay your home tuition while abroad, but living expenses can be significant. Scholarships and grants are available, but applications must be submitted at least six months in advance. Culturally, the first weeks abroad can be disorienting. Researchers describe a common pattern called 'culture shock,' which usually peaks around the second month and gradually fades as students adapt. Knowing this in advance helps students push through rather than give up early. If you're considering it, attend our information sessions held every Thursday in the international office.",
+    "duration_sec": 115,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the main purpose of this lecture?",
+        "q_ar": "ما الهدف الرئيسي؟",
+        "options": [
+          "To discourage students from studying abroad",
+          "To present both the benefits and challenges of study abroad so students can decide",
+          "To advertise specific countries",
+          "To compare universities globally"
+        ],
+        "correct": 1,
+        "explanation_ar": "الافتتاحية: 'help you decide' + موازنة بين الفوائد والتحديات.",
+        "strategy_ar": "🎯 'help you decide' = موازنة. الإجابة الصحيحة عادة متوازنة.",
+        "elimination_ar": "A، C، D عكس أو غير متوازن."
+      },
+      {
+        "type": "detail",
+        "q_en": "How many partner institutions does the university have?",
+        "q_ar": "كم عدد المؤسسات الشريكة؟",
+        "options": [
+          "Over twenty",
+          "Over thirty",
+          "Over forty",
+          "Over fifty"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'over forty partner institutions'.",
+        "strategy_ar": "🎯 الأرقام في البيانات المؤسسية = دقيقة.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does 'tuition-neutral' mean in this context?",
+        "q_ar": "ما معنى 'tuition-neutral'؟",
+        "options": [
+          "The university doesn't have any tuition",
+          "You pay nothing at all",
+          "You pay your home tuition rather than the host university's",
+          "Tuition is paid by the government"
+        ],
+        "correct": 2,
+        "explanation_ar": "السياق التالي يفسرها: 'meaning you pay your home tuition while abroad'.",
+        "strategy_ar": "🎯 Vocab: ابحث عن 'meaning' أو 'that is' بعد الكلمة.",
+        "elimination_ar": "A، B، D تفسيرات خاطئة."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about students experiencing 'culture shock'?",
+        "q_ar": "ماذا يُستنتج عن الطلاب الذين يعانون من الصدمة الثقافية؟",
+        "options": [
+          "They should return home immediately",
+          "Knowing the pattern in advance helps them persist through the difficult phase",
+          "They cannot adapt at all",
+          "They will fail academically"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'Knowing this in advance helps students push through rather than give up early'.",
+        "strategy_ar": "🎯 Inference عن المعرفة المسبقة = استفادة عملية.",
+        "elimination_ar": "A، C، D إما عكس أو مبالغ."
+      }
+    ]
+  },
+  {
+    "code": "lec_m06",
+    "voice": "M",
+    "level": "medium",
+    "title_en": "Developing Critical Thinking",
+    "title_ar": "تطوير التفكير النقدي",
+    "topic_ar": "المهارات المعرفية",
+    "principle_en": "Distinguish steps of an analytical process",
+    "principle_ar": "ميّز خطوات العملية التحليلية",
+    "transcript_en": "Critical thinking is mentioned in nearly every university mission statement, but what does it actually mean? Today I'll break it down into a practical framework you can apply in any course. At its core, critical thinking involves four steps. First, identify the claim — what exactly is being argued? Many students react to ideas emotionally before they've clearly understood them. Second, evaluate the evidence. Is the source credible? Is the data current? Is the sample size meaningful? Third, consider alternative explanations. Could there be another interpretation of the same evidence? Fourth, draw a tentative conclusion — one you're willing to revise if new information appears. Notice the word 'tentative.' Critical thinkers don't pretend to have final answers; they hold their conclusions with appropriate uncertainty. This is why expert researchers often sound less confident than amateurs — they understand the limits of their evidence. How can you practice critical thinking daily? When you read a news article, ask: who wrote this, and what might they want me to believe? When a friend makes a strong claim, ask: what evidence supports that? These habits, repeated consistently, reshape how your mind processes information. Critical thinking isn't a talent some people have and others don't. It's a discipline anyone can develop with deliberate practice.",
+    "duration_sec": 115,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker's main goal in this talk?",
+        "q_ar": "ما الهدف الرئيسي؟",
+        "options": [
+          "To criticize university education",
+          "To provide a practical four-step framework for critical thinking",
+          "To prove that critical thinking is innate",
+          "To recommend specific news sources"
+        ],
+        "correct": 1,
+        "explanation_ar": "الافتتاحية: 'a practical framework you can apply' + شرح أربع خطوات.",
+        "strategy_ar": "🎯 'practical framework' = إعلان طريقة عملية.",
+        "elimination_ar": "A، C، D إما عكس أو خارج."
+      },
+      {
+        "type": "detail",
+        "q_en": "How many steps does the speaker identify in critical thinking?",
+        "q_ar": "كم خطوة حدد المتحدث؟",
+        "options": [
+          "Three",
+          "Four",
+          "Five",
+          "Six"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'critical thinking involves four steps' ثم عُدّدت.",
+        "strategy_ar": "🎯 الخطوات المعدّدة = احسبها بدقة.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "inference",
+        "q_en": "Why do expert researchers often sound less confident than amateurs?",
+        "q_ar": "لماذا يبدو الباحثون الخبراء أقل ثقة من الهواة؟",
+        "options": [
+          "They are less intelligent",
+          "They understand the limits of their evidence",
+          "They are afraid of criticism",
+          "They lack experience"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر صراحة: 'they understand the limits of their evidence'.",
+        "strategy_ar": "🎯 Inference: ابحث عن السبب المباشر بعد العبارة.",
+        "elimination_ar": "A، C، D عكس المنطق."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker say critical thinking is 'a discipline anyone can develop'?",
+        "q_ar": "لماذا قال إن التفكير النقدي 'انضباط يمكن لأي شخص تطويره'؟",
+        "options": [
+          "To discourage students who struggle",
+          "To empower students by emphasizing that critical thinking is learnable, not innate",
+          "To criticize natural talent",
+          "To recommend more courses"
+        ],
+        "correct": 1,
+        "explanation_ar": "الجملة قبلها 'isn't a talent some people have' = نفي الفطرة وإثبات التعلم.",
+        "strategy_ar": "🎯 الخاتمة التحفيزية = تمكين الجمهور.",
+        "elimination_ar": "A، C، D عكس النبرة."
+      }
+    ]
+  },
+  {
+    "code": "lec_m07",
+    "voice": "F",
+    "level": "medium",
+    "title_en": "Understanding Public Speaking Anxiety",
+    "title_ar": "فهم قلق التحدث أمام الجمهور",
+    "topic_ar": "علم النفس التطبيقي",
+    "principle_en": "Connect physiological responses with behavioral strategies",
+    "principle_ar": "اربط الاستجابات الفيزيولوجية بالاستراتيجيات السلوكية",
+    "transcript_en": "Public speaking is consistently ranked among the most common fears — sometimes even ahead of fear of heights or spiders. But why does standing in front of an audience trigger such intense anxiety, and what can you actually do about it? Biologically, your brain interprets a crowd of staring faces as a potential threat. This activates your sympathetic nervous system, releasing adrenaline. Your heart races, your hands tremble, your mouth goes dry. These responses evolved to help our ancestors escape predators — they weren't designed for PowerPoint presentations. The good news is that this anxiety is manageable. Research-based strategies include three main approaches. First, preparation. The more familiar you are with your material, the less your brain treats the situation as threatening. Practice out loud, not just in your head. Second, controlled breathing. Slow, deep breaths activate the parasympathetic nervous system, which calms the body. Third, cognitive reframing. Instead of telling yourself 'I'm nervous,' say 'I'm excited.' This subtle shift, supported by recent studies, changes how your brain interprets the physical sensations. It's also worth knowing that some level of anxiety actually improves performance. Researchers call this 'optimal arousal' — a moderate state of alertness sharpens focus. The goal isn't to eliminate anxiety entirely; it's to channel it productively.",
+    "duration_sec": 115,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the central topic of the lecture?",
+        "q_ar": "ما الموضوع المركزي؟",
+        "options": [
+          "Why some people are naturally good speakers",
+          "Why public speaking causes anxiety and how to manage it",
+          "How to memorize speeches",
+          "The history of public speaking"
+        ],
+        "correct": 1,
+        "explanation_ar": "يغطي السبب البيولوجي + الاستراتيجيات السلوكية.",
+        "strategy_ar": "🎯 المحاضرات النفسية = ظاهرة + تفسير + علاج.",
+        "elimination_ar": "A، C، D إما خاطئ أو سطحي."
+      },
+      {
+        "type": "detail",
+        "q_en": "How many main strategies does the speaker mention for managing anxiety?",
+        "q_ar": "كم استراتيجية رئيسية ذكرت؟",
+        "options": [
+          "Two",
+          "Three",
+          "Four",
+          "Five"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'three main approaches' (preparation, breathing, reframing).",
+        "strategy_ar": "🎯 الأرقام في القوائم = دقيقة دائماً.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does 'optimal arousal' refer to?",
+        "q_ar": "ما المقصود بـ 'optimal arousal'؟",
+        "options": [
+          "Complete relaxation",
+          "A moderate state of alertness that improves performance",
+          "Maximum anxiety",
+          "Sleep deprivation"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'a moderate state of alertness sharpens focus'.",
+        "strategy_ar": "🎯 المصطلحات العلمية تُعرَّف عادة بفعل 'is' أو 'called'.",
+        "elimination_ar": "A، C، D عكس أو خطأ."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention our ancestors and predators?",
+        "q_ar": "لماذا ذكرت الأجداد والمفترسات؟",
+        "options": [
+          "To suggest students take history classes",
+          "To illustrate that the anxiety response is an evolutionary mechanism not designed for modern situations",
+          "To compare modern people to ancient humans negatively",
+          "To recommend outdoor activities"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق التالي: 'they weren't designed for PowerPoint presentations' — تفسير تطوري.",
+        "strategy_ar": "🎯 المراجع التطورية = شرح أصل الظاهرة.",
+        "elimination_ar": "A، C، D خارج السياق."
+      }
+    ]
+  },
+  {
+    "code": "lec_m08",
+    "voice": "M",
+    "level": "medium",
+    "title_en": "Using Library Databases for Research",
+    "title_ar": "استخدام قواعد بيانات المكتبة للبحث",
+    "topic_ar": "مهارات البحث الأكاديمي",
+    "principle_en": "Differentiate source types and evaluate credibility",
+    "principle_ar": "ميّز أنواع المصادر وقيّم مصداقيتها",
+    "transcript_en": "When professors assign research papers, many students start with a general search engine. That's a mistake. Today I'll show you why library databases should be your first stop, and how to use them effectively. Library databases — like JSTOR, ProQuest, and EBSCO — provide access to peer-reviewed academic journals, scholarly books, and verified primary sources. 'Peer-reviewed' means that other experts in the field have evaluated the work before publication, ensuring a baseline of quality and credibility. Free websites rarely meet this standard. Searching effectively requires more than typing your topic into the search bar. Use specific keywords combined with Boolean operators — 'AND' to narrow, 'OR' to broaden, 'NOT' to exclude. For instance, searching 'climate change AND agriculture NOT politics' returns far more relevant results than just 'climate.' Once you find a useful article, examine three things: the publication date — is it current enough for your topic? The author's credentials — are they an established expert? And the citation list — do other researchers cite this work? These three checks separate strong sources from weak ones. Finally, take advantage of the library's reference librarians. They specialize in helping students navigate databases and refine research questions. A fifteen-minute consultation can save you hours of frustration.",
+    "duration_sec": 115,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker's main message?",
+        "q_ar": "ما الرسالة الرئيسية؟",
+        "options": [
+          "Search engines are completely useless",
+          "Library databases are essential for serious research and how to use them properly",
+          "Reference librarians replace databases",
+          "Free websites are always wrong"
+        ],
+        "correct": 1,
+        "explanation_ar": "يشرح أهمية قواعد البيانات + كيفية البحث + تقييم المصادر + الاستعانة بالمكتبيين.",
+        "strategy_ar": "🎯 المحاضرات التعليمية = أهمية + طريقة.",
+        "elimination_ar": "A، C، D مطلق أو خاطئ."
+      },
+      {
+        "type": "detail",
+        "q_en": "What does 'peer-reviewed' mean according to the speaker?",
+        "q_ar": "ما معنى 'peer-reviewed'؟",
+        "options": [
+          "Reviewed by students",
+          "Other experts in the field have evaluated the work before publication",
+          "The author paid for review",
+          "It's reviewed by the public"
+        ],
+        "correct": 1,
+        "explanation_ar": "تعريف صريح: 'other experts in the field have evaluated the work before publication'.",
+        "strategy_ar": "🎯 المصطلحات تُعرَّف بـ 'means that'.",
+        "elimination_ar": "A، C، D تفسيرات خاطئة."
+      },
+      {
+        "type": "detail",
+        "q_en": "What are the three Boolean operators mentioned?",
+        "q_ar": "ما العوامل المنطقية الثلاثة المذكورة؟",
+        "options": [
+          "YES, NO, MAYBE",
+          "AND, OR, NOT",
+          "ADD, SUBTRACT, MULTIPLY",
+          "SEARCH, FIND, GET"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'AND to narrow, OR to broaden, NOT to exclude'.",
+        "strategy_ar": "🎯 المصطلحات التقنية تذكر بترتيب محدد.",
+        "elimination_ar": "كل الخيارات الأخرى مختلقة."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention reference librarians?",
+        "q_ar": "لماذا ذكر أمناء المراجع؟",
+        "options": [
+          "To complain about their workload",
+          "To inform students about a valuable human resource that complements databases",
+          "To recommend students replace librarians with AI",
+          "Because librarians are required for grading"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'They specialize in helping students... can save you hours of frustration'.",
+        "strategy_ar": "🎯 ذكر مورد + فائدة = إعلام بمصدر مساعد.",
+        "elimination_ar": "A، C، D خارج السياق."
+      }
+    ]
+  }
+]

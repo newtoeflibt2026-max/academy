@@ -1,0 +1,100 @@
+{
+  "id": "dl_easy_04",
+  "type": "daily_reading",
+  "tier": "easy",
+  "title_en": "Restaurant Menu Note",
+  "title_ar": "ملاحظة قائمة المطعم",
+  "topic": "Dining",
+  "duration_seconds": 240,
+  "passage": {
+    "title_en": "DAILY SPECIAL — Lunch",
+    "text_en": "DAILY SPECIAL\n\nToday's lunch special includes a main dish, your choice of soup or salad, and one drink — all for $12.99.\n\nSTUDENT DISCOUNT:\nShow a valid student ID and get 15% off your total bill.\n\nAvailable Monday to Friday, 11:30 AM – 2:30 PM."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "What is included with the daily special?",
+      "prompt_ar": "ماذا يتضمن العرض اليومي؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Only the main dish"
+        },
+        {
+          "id": "B",
+          "text_en": "Main dish and dessert"
+        },
+        {
+          "id": "C",
+          "text_en": "Main dish, soup or salad, and drink"
+        },
+        {
+          "id": "D",
+          "text_en": "Only soup and salad"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "النص: 'main dish, your choice of soup or salad, and one drink'.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "How much discount do students receive?",
+      "prompt_ar": "كم نسبة الخصم للطلاب؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "5%"
+        },
+        {
+          "id": "B",
+          "text_en": "10%"
+        },
+        {
+          "id": "C",
+          "text_en": "12%"
+        },
+        {
+          "id": "D",
+          "text_en": "15%"
+        }
+      ],
+      "correct": "D",
+      "explanation_ar": "النص: 'get 15% off your total bill'.",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "What must students show to get the discount?",
+      "prompt_ar": "ماذا يجب على الطلاب إظهاره للحصول على الخصم؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Receipt"
+        },
+        {
+          "id": "B",
+          "text_en": "Money"
+        },
+        {
+          "id": "C",
+          "text_en": "Valid ID"
+        },
+        {
+          "id": "D",
+          "text_en": "Menu"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "النص: 'Show a valid student ID'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "EASY"
+  }
+}

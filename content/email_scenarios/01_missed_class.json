@@ -1,0 +1,249 @@
+{
+  "_note": "غياب عن المحاضرة | tier59",
+  "scenario": {
+    "code": "missed_class",
+    "title_ar": "غياب عن المحاضرة",
+    "title_en": "Missed a Class",
+    "scenario_text": "You are a student in a university course. You missed an important class yesterday because you were sick. Your professor sent an email asking why you were absent and reminding you that an assignment is due this Friday. Write a reply to your professor.",
+    "recipient_role": "Professor",
+    "target_tier": "tier59",
+    "min_words": 100,
+    "difficulty": "easy",
+    "order_index": 1,
+    "requirements": [
+      "Apologize for missing the class",
+      "Explain why you were absent",
+      "Ask about the missed material and the assignment"
+    ]
+  },
+  "coach_content": {
+    "step1_situation_ar": "تخيل أنك طالب جامعي ومرضت يوم أمس فلم تستطع حضور المحاضرة. أرسل لك أستاذك إيميل يسأل عن سبب الغياب ويذكرك بواجب يجب تسليمه يوم الجمعة. مهمتك: ترد بإيميل مهذب يحقق ثلاثة أهداف رئيسية.",
+    "step1_situation_en": "You are a university student who missed an important class because you were sick. Your professor emailed you asking why, and reminded you about a Friday assignment. Reply politely.",
+    "step1_recipient_ar": "الأستاذ الجامعي (Professor) - شخص رسمي وأكبر منك مقاما. تكتب له بنبرة محترمة جدا.",
+    "step1_tone_ar": "رسمية ومحترمة (Formal). تجنب الاختصارات (don't اكتب do not). استخدم Could you بدلا من Can you.",
+    "step1_goals_json": [
+      {
+        "num": 1,
+        "ar": "اعتذر عن الغياب",
+        "en": "Apologize for being absent"
+      },
+      {
+        "num": 2,
+        "ar": "اشرح سبب غيابك (المرض)",
+        "en": "Explain the reason"
+      },
+      {
+        "num": 3,
+        "ar": "اسأل عن الدرس والواجب",
+        "en": "Ask about the lesson and assignment"
+      }
+    ],
+    "step2_structure_json": [
+      {
+        "part": "1. Greeting (التحية)",
+        "purpose_ar": "نبدأ باحترام",
+        "example_en": "Dear Professor Smith,",
+        "tip_ar": "استخدم Dear للأكاديميين وليس Hi"
+      },
+      {
+        "part": "2. Opening (الافتتاحية)",
+        "purpose_ar": "نقول سبب الإيميل في جملة واحدة",
+        "example_en": "I am writing to apologize for missing your class.",
+        "tip_ar": "ابدأ بـ I am writing to - افتتاحية احترافية"
+      },
+      {
+        "part": "3. Body (الجسم)",
+        "purpose_ar": "نشرح السبب ونطلب المعلومات",
+        "example_en": "I was sick. Could you please tell me what we studied?",
+        "tip_ar": "اذكر السبب بإيجاز ثم اسأل بأدب"
+      },
+      {
+        "part": "4. Closing (الختام)",
+        "purpose_ar": "نشكر ونعتذر",
+        "example_en": "Thank you for your understanding.",
+        "tip_ar": "اختم دائما بـ Thank you"
+      },
+      {
+        "part": "5. Sign-off (التوقيع)",
+        "purpose_ar": "ننهي بشكل رسمي",
+        "example_en": "Best regards,\nAhmad",
+        "tip_ar": "Best regards مهنية ومحترمة"
+      }
+    ],
+    "step3_phrases_json": {
+      "greetings": [
+        {
+          "en": "Dear Professor Smith,",
+          "ar": "عزيزي البروفيسور سميث،"
+        },
+        {
+          "en": "Dear Dr. Johnson,",
+          "ar": "عزيزي الدكتور جونسون،"
+        }
+      ],
+      "openings": [
+        {
+          "en": "I am writing to apologize for missing your class.",
+          "ar": "أكتب لأعتذر عن غيابي."
+        },
+        {
+          "en": "I am sorry I could not attend the lecture yesterday.",
+          "ar": "آسف لأنني لم أحضر أمس."
+        }
+      ],
+      "explanations": [
+        {
+          "en": "I was sick and had to stay home.",
+          "ar": "كنت مريضا واضطررت للبقاء في البيت."
+        },
+        {
+          "en": "I had a high fever yesterday.",
+          "ar": "كانت لدي حرارة عالية."
+        },
+        {
+          "en": "The doctor told me to rest.",
+          "ar": "نصحني الطبيب بالراحة."
+        }
+      ],
+      "requests": [
+        {
+          "en": "Could you please tell me what we studied?",
+          "ar": "هل يمكنك إخباري بما درسنا؟"
+        },
+        {
+          "en": "Can you give me the homework details?",
+          "ar": "هل تعطيني تفاصيل الواجب؟"
+        }
+      ],
+      "closings": [
+        {
+          "en": "Thank you for your understanding.",
+          "ar": "شكرا لتفهمك."
+        },
+        {
+          "en": "I appreciate your help.",
+          "ar": "أقدر مساعدتك."
+        }
+      ],
+      "signoffs": [
+        {
+          "en": "Best regards,",
+          "ar": "أطيب التحيات،"
+        },
+        {
+          "en": "Sincerely,",
+          "ar": "بإخلاص،"
+        }
+      ]
+    },
+    "step4_model_email": "Dear Professor Smith,\n\nI am writing to apologize for missing your class yesterday. I was very sick with a high fever, so I had to stay home and rest. The doctor told me not to go out for one day.\n\nI am sorry I missed the lesson. Could you please tell me what we studied? I also want to know about the homework. When is it due, and what should I do?\n\nThank you for your understanding. I will work hard to catch up.\n\nBest regards,\nAhmad",
+    "step4_annotations_json": [
+      {
+        "line": "Dear Professor Smith,",
+        "comment_ar": "تحية رسمية بكلمة Dear مع اللقب الأكاديمي. ممنوع Hi للأستاذ."
+      },
+      {
+        "line": "I am writing to apologize for missing your class yesterday.",
+        "comment_ar": "افتتاحية ذهبية تخبر الأستاذ مباشرة بالهدف."
+      },
+      {
+        "line": "I was very sick with a high fever, so I had to stay home.",
+        "comment_ar": "سبب واضح ومختصر. كلمة had to تعني اضطررت وهي أقوى من wanted to."
+      },
+      {
+        "line": "Could you please tell me what we studied?",
+        "comment_ar": "سؤال بأدب. Could you please أهم ثلاث كلمات في الإيميل الرسمي."
+      },
+      {
+        "line": "Thank you for your understanding.",
+        "comment_ar": "ختام مهذب. هذه الجملة سحرية في كل إيميل رسمي."
+      },
+      {
+        "line": "Best regards, Ahmad",
+        "comment_ar": "توقيع رسمي مع الاسم الأول."
+      }
+    ],
+    "step5_fill_template": "Dear Professor _____,\n\nI am writing to apologize for _____. I was _____, so I had to _____.\n\nI am sorry I missed the lesson. Could you please _____? I also want to know about _____. When _____?\n\nThank you for _____.\n\nBest regards,\n_____",
+    "step5_blanks_hints_json": [
+      {
+        "blank": 1,
+        "hint_ar": "لقب الأستاذ",
+        "example": "Smith"
+      },
+      {
+        "blank": 2,
+        "hint_ar": "ما الذي تعتذر عنه",
+        "example": "missing your class yesterday"
+      },
+      {
+        "blank": 3,
+        "hint_ar": "حالتك الصحية",
+        "example": "very sick with a high fever"
+      },
+      {
+        "blank": 4,
+        "hint_ar": "ما اضطررت لفعله",
+        "example": "stay home and rest"
+      },
+      {
+        "blank": 5,
+        "hint_ar": "اطلب شرح الدرس بأدب",
+        "example": "tell me what we studied"
+      },
+      {
+        "blank": 6,
+        "hint_ar": "ماذا تريد أن تعرف",
+        "example": "the homework"
+      },
+      {
+        "blank": 7,
+        "hint_ar": "متى موعد التسليم",
+        "example": "is it due"
+      },
+      {
+        "blank": 8,
+        "hint_ar": "علام تشكره",
+        "example": "your understanding"
+      },
+      {
+        "blank": 9,
+        "hint_ar": "اسمك",
+        "example": "Ahmad"
+      }
+    ],
+    "step6_checklist_json": [
+      "بدأت بـ Dear Professor وليس Hi",
+      "ذكرت سبب الإيميل في الجملة الأولى",
+      "اعتذرت عن الغياب",
+      "شرحت سبب الغياب",
+      "سألت عن الدرس والواجب",
+      "استخدمت Could you please وليس Can you",
+      "شكرت في النهاية",
+      "ختمت بـ Best regards مع اسمي",
+      "عدد الكلمات لا يقل عن 100"
+    ],
+    "common_mistakes_json": [
+      {
+        "wrong": "Hi teacher,",
+        "right": "Dear Professor Smith,",
+        "why_ar": "Hi غير رسمي وكلمة teacher لا تستخدم للأستاذ الجامعي."
+      },
+      {
+        "wrong": "I want know homework",
+        "right": "Could you please tell me about the homework?",
+        "why_ar": "ينقصها to بعد want والصياغة غير مهذبة."
+      },
+      {
+        "wrong": "Thanks. Bye.",
+        "right": "Thank you for your understanding. Best regards,",
+        "why_ar": "Thanks وBye غير رسميين."
+      },
+      {
+        "wrong": "I dont came because im sick",
+        "right": "I could not attend because I was sick.",
+        "why_ar": "اختصار dont خاطئ والفعل في الزمن الخطأ."
+      }
+    ],
+    "video_url": null
+  }
+}

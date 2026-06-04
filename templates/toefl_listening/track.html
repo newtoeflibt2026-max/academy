@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ track.title_ar or "مسار الاستماع TOEFL" }}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    color: #102a43; min-height: 100vh; padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .header {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white; padding: 28px 24px; border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(37,99,235,0.25); margin-bottom: 24px;
+    text-align: center;
+  }
+  .header h1 { font-size: 24px; margin-bottom: 8px; }
+  .header p { font-size: 14px; opacity: 0.95; }
+  .back-btn {
+    display: inline-block; margin-bottom: 16px; padding: 8px 16px;
+    background: white; color: #2563eb; border-radius: 8px;
+    text-decoration: none; font-weight: 600; font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  .stage-card {
+    background: white; border-radius: 14px; padding: 20px;
+    margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-right: 5px solid #2563eb; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .stage-card:hover { transform: translateX(-3px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .stage-card a { text-decoration: none; color: inherit; display: block; }
+  .stage-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: #1e40af; }
+  .stage-meta { font-size: 13px; color: #627d98; margin-bottom: 12px; }
+  .progress-row { display: flex; align-items: center; gap: 10px; }
+  .progress-bar {
+    flex: 1; height: 10px; background: #e0e7ef; border-radius: 5px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 5px; transition: width 0.4s;
+  }
+  .progress-pct { font-weight: 700; color: #10b981; font-size: 14px; min-width: 40px; }
+  .badge-completed { background: #10b981; color: white; padding: 2px 8px; border-radius: 8px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/home?user_id={{ user_id }}" class="back-btn">← الرئيسية</a>
+
+  <div class="header">
+    <h1>🎧 {{ track.title_ar or "مسار الاستماع TOEFL" }}</h1>
+    <p>{{ track.description_ar or "تدرّب على مهارات الاستماع عبر 5 مراحل متدرجة" }}</p>
+  </div>
+
+  {% for stage in stages %}
+  <div class="stage-card">
+    <a href="/listening/stage/{{ stage.id }}?user_id={{ user_id }}">
+      <div class="stage-title">
+        المرحلة {{ stage.id }}: {{ stage.title_ar }}
+        {% if stage.progress_pct >= 100 %}
+          <span class="badge-completed">✓ مكتمل</span>
+        {% endif %}
+      </div>
+      <div class="stage-meta">
+        {% if stage.id == 1 %}
+          📚 {{ stage.lesson_count }} درس نظري
+        {% else %}
+          🎧 {{ stage.clip_count }} مقطع صوتي · ❓ {{ stage.question_count }} سؤال
+        {% endif %}
+      </div>
+      <div class="progress-row">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: {{ stage.progress_pct }}%"></div>
+        </div>
+        <div class="progress-pct">{{ stage.progress_pct }}%</div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+</body>
+</html>

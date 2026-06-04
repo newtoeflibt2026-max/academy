@@ -1,269 +1,211 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOEFL Reading — {{ content.title_en }}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reading Exam</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-         background: #f5f6fa; color: #2c3e50; line-height: 1.6; height: 100vh; overflow: hidden; }
+  body { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:#f5f7fa; color:#1a202c; padding:16px; }
+  .container { max-width:1280px; margin:0 auto; }
+  .header { display:flex; justify-content:space-between; align-items:center; background:#fff; padding:14px 20px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); margin-bottom:16px; }
+  .title { font-size:18px; font-weight:600; color:#2563eb; }
+  .timer { font-size:16px; font-weight:600; background:#eff6ff; color:#1e40af; padding:8px 14px; border-radius:8px; min-width:90px; text-align:center; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:900px){ .grid{grid-template-columns:1fr;} }
+  .card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .card h3 { color:#2563eb; margin-bottom:12px; font-size:16px; }
+  .passage-text { line-height:1.8; font-size:15px; max-height:65vh; overflow-y:auto; white-space:pre-wrap; color:#2d3748; }
+  .passage-ar { line-height:1.8; font-size:15px; direction:rtl; text-align:right; color:#4a5568; padding:14px; background:#fefce8; border-radius:8px; margin-top:12px; display:none; }
+  .passage-ar.shown { display:block; }
+  .btn-translate { margin-top:12px; padding:8px 16px; background:#f59e0b; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; }
+  .btn-translate:hover { background:#d97706; }
+  .qmap { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .qmap-btn { width:36px; height:36px; border:1px solid #cbd5e0; background:#fff; border-radius:6px; cursor:pointer; font-weight:600; color:#4a5568; transition:all .15s; }
+  .qmap-btn.answered { background:#10b981; color:#fff; border-color:#10b981; }
+  .qmap-btn.current { background:#2563eb; color:#fff; border-color:#2563eb; }
+  .qmap-btn.marked { box-shadow:0 0 0 2px #f59e0b; }
+  .q-number { color:#2563eb; font-size:13px; margin-bottom:6px; }
+  .q-text { font-size:16px; font-weight:500; margin-bottom:16px; color:#1a202c; line-height:1.5; }
+  .options { display:flex; flex-direction:column; gap:10px; margin-bottom:18px; }
+  .option { display:flex; align-items:center; padding:12px 14px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; transition:all .15s; }
+  .option:hover { border-color:#2563eb; background:#f8fafc; }
+  .option.selected { border-color:#2563eb; background:#eff6ff; }
+  .option-label { display:inline-flex; width:28px; height:28px; border-radius:50%; background:#dbeafe; color:#2563eb; align-items:center; justify-content:center; font-weight:600; margin-right:12px; font-size:13px; }
+  .option.selected .option-label { background:#2563eb; color:#fff; }
+  .option-text { flex:1; color:#2d3748; }
+  .actions { display:flex; gap:8px; justify-content:flex-end; }
+  .btn { padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; transition:all .15s; }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+  .btn-back { background:#e2e8f0; color:#475569; }
+  .btn-mark { background:#64748b; color:#fff; }
+  .btn-review { background:#f59e0b; color:#fff; }
+  .btn-next { background:#2563eb; color:#fff; }
+  .btn-submit { background:#10b981; color:#fff; padding:12px 24px; font-size:14px; }
 
-  /* TOP BAR */
-  .topbar { background: #1a2540; color: #fff; padding: 10px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; }
-  .topbar-title { font-size: 14px; opacity: 0.85; }
-  .topbar-title b { font-size: 16px; opacity: 1; }
-  .timer { font-size: 22px; font-weight: bold; font-variant-numeric: tabular-nums;
-           background: #2d3a5f; padding: 6px 16px; border-radius: 6px; letter-spacing: 1px; }
-  .timer.warn { background: #d4691f; animation: pulse 1s infinite; }
-  .timer.danger { background: #c0392b; animation: pulse 0.5s infinite; }
-  @keyframes pulse { 50% { opacity: 0.6; } }
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9999;}
+  .modal-overlay.show{display:flex;}
+  .modal-box{background:#fff;border-radius:14px;padding:28px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;animation:popin .2s ease;}
+  @keyframes popin{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .modal-icon{font-size:48px;margin-bottom:12px;}
+  .modal-title{font-size:20px;font-weight:700;color:#1a202c;margin-bottom:8px;}
+  .modal-msg{font-size:14px;color:#64748b;margin-bottom:20px;line-height:1.5;}
+  .modal-actions{display:flex;gap:10px;justify-content:center;}
+  .modal-btn{padding:10px 22px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;}
+  .modal-btn.cancel{background:#e2e8f0;color:#475569;}
+  .modal-btn.confirm{background:#10b981;color:#fff;}
+  .modal-btn.cancel:hover{background:#cbd5e0;}
+  .modal-btn.confirm:hover{background:#059669;}
 
-  /* QUESTION MAP */
-  .qmap { background: #fff; padding: 8px 20px; display: flex; gap: 6px;
-          overflow-x: auto; border-bottom: 1px solid #e0e4ec; }
-  .qmap-btn { min-width: 36px; height: 36px; border: 2px solid #d1d8e3; background: #fff;
-              border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;
-              position: relative; transition: all 0.15s; }
-  .qmap-btn.answered { background: #27ae60; color: #fff; border-color: #27ae60; }
-  .qmap-btn.marked::after { content: "🚩"; position: absolute; top: -8px; right: -8px; font-size: 12px; }
-  .qmap-btn.current { box-shadow: 0 0 0 3px #3498db; }
-
-  /* MAIN SPLIT */
-  .main { display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-          height: calc(100vh - 56px - 52px - 64px); }
-  .pane { padding: 24px; overflow-y: auto; }
-  .pane-left { background: #fff; border-right: 2px solid #e0e4ec; }
-  .pane-right { background: #fafbfc; }
-  .passage-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #1a2540; }
-  .passage-text { font-size: 15.5px; line-height: 1.8; color: #34495e; white-space: pre-wrap; }
-
-  .q-number { font-size: 13px; color: #7f8c8d; margin-bottom: 8px; font-weight: 600; }
-  .q-text { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #1a2540; }
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option { padding: 14px 16px; background: #fff; border: 2px solid #d1d8e3;
-            border-radius: 8px; cursor: pointer; transition: all 0.15s; font-size: 15px; }
-  .option:hover { border-color: #3498db; background: #f0f7fc; }
-  .option.selected { border-color: #3498db; background: #e3f0fa; font-weight: 600; }
-  .option-label { display: inline-block; width: 24px; height: 24px; line-height: 24px;
-                  text-align: center; background: #ecf0f1; border-radius: 50%;
-                  margin-right: 10px; font-weight: 700; font-size: 13px; }
-  .option.selected .option-label { background: #3498db; color: #fff; }
-
-  /* BOTTOM BAR */
-  .bottombar { background: #fff; border-top: 1px solid #e0e4ec; padding: 12px 20px;
-               display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-  .btn { padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600;
-         font-size: 14px; cursor: pointer; transition: all 0.15s; }
-  .btn-secondary { background: #ecf0f1; color: #2c3e50; }
-  .btn-secondary:hover { background: #d1d8e3; }
-  .btn-mark { background: #f39c12; color: #fff; }
-  .btn-mark.active { background: #e67e22; }
-  .btn-primary { background: #3498db; color: #fff; }
-  .btn-primary:hover { background: #2980b9; }
-  .btn-success { background: #27ae60; color: #fff; }
-  .btn-success:hover { background: #229954; }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* REVIEW MODAL */
-  .modal-bg { position: fixed; inset: 0; background: rgba(26,37,64,0.85);
-              display: none; align-items: center; justify-content: center; z-index: 100; }
-  .modal-bg.show { display: flex; }
-  .modal { background: #fff; border-radius: 12px; padding: 28px; max-width: 600px;
-           width: 92%; max-height: 85vh; overflow-y: auto; }
-  .modal h2 { margin-bottom: 16px; color: #1a2540; }
-  .review-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-  .review-table th, .review-table td { padding: 10px; text-align: left; border-bottom: 1px solid #ecf0f1; font-size: 14px; }
-  .review-table th { background: #f5f6fa; font-weight: 600; }
-  .status-badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-  .status-answered { background: #d4f5e1; color: #1a7a3e; }
-  .status-blank { background: #fde8e8; color: #a02020; }
-  .status-marked { background: #fef3d0; color: #8a5a00; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-
-  /* MOBILE */
-  @media (max-width: 768px) {
-    .main { grid-template-columns: 1fr; grid-template-rows: 40vh 1fr; }
-    .pane-left { border-right: none; border-bottom: 2px solid #e0e4ec; }
-    .topbar-title b { display: block; font-size: 13px; }
-    .timer { font-size: 18px; padding: 4px 12px; }
-  }
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="topbar-title">TOEFL Reading · <b>{{ content.title_en }}</b></div>
-  <div class="timer" id="timer">--:--</div>
-</div>
-
-<div class="qmap" id="qmap"></div>
-
-<div class="main">
-  <div class="pane pane-left">
-    <div class="passage-title">{{ content.passage.title_en or content.title_en }}</div>
-    <div class="passage-text">{{ content.passage.text_en }}</div>
+<div class="container">
+  <div class="header">
+    <div class="title">{{ content.title_en or 'Reading Exam' }}</div>
+    <div class="timer" id="timer">--:--</div>
   </div>
-  <div class="pane pane-right">
-    <div class="q-number" id="qNumber">Question 1 of N</div>
-    <div class="q-text" id="qText">Loading...</div>
-    <div class="options" id="qOptions"></div>
-  </div>
-</div>
-
-<div class="bottombar">
-  <button class="btn btn-secondary" id="btnBack">◀ Back</button>
-  <button class="btn btn-mark" id="btnMark">🚩 Mark for Review</button>
-  <button class="btn btn-secondary" id="btnReview">📋 Review</button>
-  <button class="btn btn-primary" id="btnNext">Next ▶</button>
-  <button class="btn btn-success" id="btnSubmit" style="display:none">✓ Submit</button>
-</div>
-
-<div class="modal-bg" id="reviewModal">
-  <div class="modal">
-    <h2>📋 Review Your Answers</h2>
-    <p style="color:#7f8c8d;font-size:14px;">Click any question to jump to it. Submit when ready.</p>
-    <table class="review-table" id="reviewTable"></table>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeReview()">Continue</button>
-      <button class="btn btn-success" onclick="finalSubmit()">Submit Final</button>
+  <div class="grid">
+    <div class="card">
+      <h3>Passage</h3>
+      <div class="passage-text" id="passageEn">{{ content.passage.text_en if content.passage else '' }}</div>
+      <button class="btn-translate" id="btnTranslate" onclick="toggleTranslation()">🌐 Show Translation</button>
+      <div class="passage-ar" id="passageAr">{{ content.passage.text_ar if content.passage and content.passage.text_ar else 'ترجمة القطعة قيد الإعداد.' }}</div>
+    </div>
+    <div class="card">
+      <div class="qmap" id="qmap"></div>
+      <div class="q-number" id="qNumber">Question 1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="qOptions"></div>
+      <div class="actions">
+        <button class="btn btn-back" id="btnBack" onclick="goBack()">Back</button>
+        <button class="btn btn-mark" id="btnMark" onclick="toggleMark()">Mark</button>
+        <button class="btn btn-review" onclick="goReview()">Review</button>
+        <button class="btn btn-next" id="btnNext" onclick="goNext()">Next</button>
+        <button class="btn btn-submit" id="btnSubmit" onclick="submitExam()" style="display:none;">Submit</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-// ====== DATA INJECTED FROM FLASK ======
-const ATTEMPT_ID = "{{ attempt_id }}";
-const CONTENT_ID = "{{ content.id }}";
+const ATTEMPT_ID = {{ attempt_id }};
+const USER_ID = {{ user_id or 0 }};
 const QUESTIONS = {{ content.questions | tojson }};
-const DURATION = {{ content.duration_seconds | int }};
-const SUBMIT_URL = "{{ submit_url }}";
-const STORAGE_KEY = "reading_attempt_" + ATTEMPT_ID;
+const DURATION = {{ content.duration_seconds or 1080 }};
+const SUBMIT_URL = "{{ url_for('reading_bp.submit') if False else '/reading/submit' }}";
+const RESULT_URL = "/reading/result/" + ATTEMPT_ID + "?user_id=" + USER_ID;
 
-// ====== STATE ======
-let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
-  answers: {}, marked: {}, current: 0, deadline: Date.now() + DURATION * 1000
-};
-let submitted = false;
+const stateKey = "rdg_" + ATTEMPT_ID;
+let state = { current:0, answers:{}, marked:{}, start: Date.now() };
+try {
+  const saved = JSON.parse(localStorage.getItem(stateKey) || "null");
+  if (saved) state = saved;
+} catch(e){}
 
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function save(){ localStorage.setItem(stateKey, JSON.stringify(state)); }
 
-// ====== TIMER ======
-function tick() {
-  const left = Math.max(0, Math.floor((state.deadline - Date.now()) / 1000));
-  const m = String(Math.floor(left / 60)).padStart(2, "0");
-  const s = String(left % 60).padStart(2, "0");
-  const t = document.getElementById("timer");
-  t.textContent = m + ":" + s;
-  t.classList.toggle("warn", left <= 300 && left > 60);
-  t.classList.toggle("danger", left <= 60);
-  if (left === 0 && !submitted) { autoSubmit(); }
+function toggleTranslation(){
+  const ar = document.getElementById("passageAr");
+  const btn = document.getElementById("btnTranslate");
+  ar.classList.toggle("shown");
+  btn.textContent = ar.classList.contains("shown") ? "🌐 Hide Translation" : "🌐 Show Translation";
+}
+
+function tick(){
+  const elapsed = Math.floor((Date.now() - state.start)/1000);
+  const remain = Math.max(0, DURATION - elapsed);
+  const m = String(Math.floor(remain/60)).padStart(2,"0");
+  const s = String(remain%60).padStart(2,"0");
+  document.getElementById("timer").textContent = m+":"+s;
+  if (remain <= 0) submitExam();
 }
 setInterval(tick, 500); tick();
 
-// ====== RENDER ======
-function renderMap() {
-  const qmap = document.getElementById("qmap");
-  qmap.innerHTML = "";
-  QUESTIONS.forEach((q, i) => {
+function renderMap(){
+  const map = document.getElementById("qmap");
+  map.innerHTML = "";
+  QUESTIONS.forEach((q,i)=>{
     const b = document.createElement("button");
-    b.className = "qmap-btn";
-    b.textContent = i + 1;
+    b.className = "qmap-btn"; b.textContent = i+1;
     if (state.answers[i] !== undefined) b.classList.add("answered");
     if (state.marked[i]) b.classList.add("marked");
     if (i === state.current) b.classList.add("current");
-    b.onclick = () => { state.current = i; save(); renderAll(); };
-    qmap.appendChild(b);
+    b.onclick = ()=>{ state.current = i; save(); renderAll(); };
+    map.appendChild(b);
   });
 }
 
-function renderQ() {
+function renderQ(){
   const q = QUESTIONS[state.current];
-  document.getElementById("qNumber").textContent = `Question ${state.current + 1} of ${QUESTIONS.length}`;
-  document.getElementById("qText").textContent = q.question_en || q.question || "";
+  document.getElementById("qNumber").textContent = "Question "+(state.current+1)+" of "+QUESTIONS.length;
+  document.getElementById("qText").textContent = q.prompt_en || "";
   const opts = document.getElementById("qOptions");
   opts.innerHTML = "";
-  const labels = ["A","B","C","D","E"];
-  (q.options || []).forEach((opt, i) => {
+  (q.options || []).forEach((opt)=>{
     const d = document.createElement("div");
-    d.className = "option" + (state.answers[state.current] === i ? " selected" : "");
-    d.innerHTML = `<span class="option-label">${labels[i]}</span>${opt.text_en || opt.text || opt}`;
-    d.onclick = () => { state.answers[state.current] = i; save(); renderAll(); };
+    d.className = "option";
+    if (state.answers[state.current] === opt.id) d.classList.add("selected");
+    d.innerHTML = '<span class="option-label">'+opt.id+'</span><span class="option-text">'+(opt.text_en||"")+'</span>';
+    d.onclick = ()=>{ state.answers[state.current] = opt.id; save(); renderAll(); };
     opts.appendChild(d);
   });
   document.getElementById("btnBack").disabled = state.current === 0;
-  document.getElementById("btnNext").style.display = state.current === QUESTIONS.length - 1 ? "none" : "";
-  document.getElementById("btnSubmit").style.display = state.current === QUESTIONS.length - 1 ? "" : "none";
-  document.getElementById("btnMark").classList.toggle("active", !!state.marked[state.current]);
+  const isLast = state.current === QUESTIONS.length-1;
+  document.getElementById("btnNext").style.display = isLast ? "none" : "";
+  document.getElementById("btnSubmit").style.display = isLast ? "" : "none";
 }
 
-function renderAll() { renderMap(); renderQ(); }
-renderAll();
-
-// ====== NAVIGATION ======
-document.getElementById("btnBack").onclick = () => { if (state.current > 0) { state.current--; save(); renderAll(); } };
-document.getElementById("btnNext").onclick = () => { if (state.current < QUESTIONS.length - 1) { state.current++; save(); renderAll(); } };
-document.getElementById("btnMark").onclick = () => { state.marked[state.current] = !state.marked[state.current]; save(); renderAll(); };
-
-// ====== REVIEW ======
-document.getElementById("btnReview").onclick = () => openReview();
-document.getElementById("btnSubmit").onclick = () => openReview();
-
-function openReview() {
-  const tbl = document.getElementById("reviewTable");
-  let html = "<tr><th>#</th><th>Status</th><th>Action</th></tr>";
-  QUESTIONS.forEach((q, i) => {
-    const answered = state.answers[i] !== undefined;
-    const marked = state.marked[i];
-    let badge = answered ? '<span class="status-badge status-answered">Answered</span>'
-                         : '<span class="status-badge status-blank">Blank</span>';
-    if (marked) badge += ' <span class="status-badge status-marked">🚩 Marked</span>';
-    html += `<tr><td>${i+1}</td><td>${badge}</td><td><button class="btn btn-secondary" onclick="jump(${i})">Go</button></td></tr>`;
-  });
-  tbl.innerHTML = html;
-  document.getElementById("reviewModal").classList.add("show");
+function renderAll(){ renderMap(); renderQ(); }
+function goBack(){ if(state.current>0){ state.current--; save(); renderAll(); } }
+function goNext(){ if(state.current<QUESTIONS.length-1){ state.current++; save(); renderAll(); } }
+function goReview(){
+  const unanswered = QUESTIONS.findIndex((_,i)=>state.answers[i]===undefined);
+  if (unanswered >= 0){ state.current = unanswered; save(); renderAll(); }
+  else alert("All questions answered. Click Submit when ready.");
 }
-function closeReview() { document.getElementById("reviewModal").classList.remove("show"); }
-function jump(i) { state.current = i; save(); closeReview(); renderAll(); }
+function toggleMark(){ state.marked[state.current] = !state.marked[state.current]; save(); renderAll(); }
 
-// ====== SUBMIT ======
-async function doSubmit(reason) {
-  if (submitted) return;
-  submitted = true;
-  const payload = {
-    attempt_id: ATTEMPT_ID, content_id: CONTENT_ID,
-    answers: state.answers, marked: state.marked, reason: reason
-  };
+function submitExam(){
+  const unanswered = QUESTIONS.filter((_,i)=>state.answers[i]===undefined).length;
+  const msg = unanswered > 0
+    ? "You have " + unanswered + " unanswered question(s). Are you sure you want to submit?"
+    : "You are about to submit your exam. Make sure you've reviewed all your answers.";
+  document.getElementById("submitModalMsg").textContent = msg;
+  document.getElementById("submitModal").classList.add("show");
+}
+function closeSubmitModal(){
+  document.getElementById("submitModal").classList.remove("show");
+}
+async function confirmSubmit(){
+  closeSubmitModal();
   try {
-    const r = await fetch(SUBMIT_URL, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    await fetch(SUBMIT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({attempt_id: ATTEMPT_ID, answers: state.answers, user_id: USER_ID})
     });
-    const data = await r.json();
-    localStorage.removeItem(STORAGE_KEY);
-    if (data.redirect) { window.location.href = data.redirect; }
-    else { document.body.innerHTML = "<div style='padding:40px;text-align:center'><h2>✓ Submitted</h2></div>"; }
-  } catch (e) {
-    alert("Submit failed: " + e.message + "\nPlease try again.");
-    submitted = false;
-  }
+    localStorage.removeItem(stateKey);
+    window.location.href = RESULT_URL;
+  } catch(e){ alert("Submit failed: "+e); }
 }
-function finalSubmit() { closeReview(); doSubmit("manual"); }
-function autoSubmit() { doSubmit("timeout"); }
 
-// Prevent accidental tab close
-window.addEventListener("beforeunload", (e) => {
-  if (!submitted) { e.preventDefault(); e.returnValue = ""; }
-});
-
-// Telegram WebApp expand
-if (window.Telegram && window.Telegram.WebApp) {
-  window.Telegram.WebApp.ready();
-  window.Telegram.WebApp.expand();
-}
+renderAll();
+try { Telegram.WebApp.ready(); Telegram.WebApp.expand(); } catch(e){}
 </script>
+
+<div class="modal-overlay" id="submitModal">
+  <div class="modal-box">
+    <div class="modal-icon">📝</div>
+    <div class="modal-title">Submit Exam?</div>
+    <div class="modal-msg" id="submitModalMsg">You are about to submit your exam. Make sure you've reviewed all your answers.</div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeSubmitModal()">Cancel</button>
+      <button class="modal-btn confirm" onclick="confirmSubmit()">Yes, Submit</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

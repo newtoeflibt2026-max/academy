@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Read in Daily Life — Learn the Method</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Cairo', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+  .en { font-family: 'Inter', sans-serif; direction: ltr; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #6366f1 50%, #8b5cf6 100%);
+    color: white; padding: 50px 24px 70px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,.1) 0%, transparent 60%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,.15); backdrop-filter: blur(8px);
+    padding: 8px 20px; border-radius: 999px; font-size: .9rem; font-weight: 600; margin-bottom: 18px; }
+  .hero h1 { font-size: 2.4rem; font-weight: 900; margin-bottom: 12px; line-height: 1.3; }
+  .hero h1 .en { font-size: 2.4rem; }
+  .hero-sub { font-size: 1.1rem; opacity: .9; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+  /* Container */
+  .container { max-width: 900px; margin: -40px auto 0; padding: 0 20px 60px; position: relative; z-index: 2; }
+
+  /* Cards */
+  .card {
+    background: white; border-radius: 16px; padding: 32px 36px; margin-bottom: 22px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06); border: 1px solid #e2e8f0;
+  }
+  .card h2 {
+    font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .card h2 .num {
+    width: 38px; height: 38px; background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white; border-radius: 50%; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 1.1rem; font-weight: 700;
+  }
+
+  /* Steps */
+  .steps { display: grid; gap: 14px; }
+  .step {
+    background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+    border-right: 4px solid #6366f1; padding: 16px 20px; border-radius: 10px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0; width: 32px; height: 32px; background: #4f46e5; color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-family: 'Inter', sans-serif;
+  }
+  .step-text { flex: 1; color: #1e293b; line-height: 1.7; }
+  .step-text b { color: #4338ca; font-weight: 700; }
+
+  /* Text types grid */
+  .types-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .type-chip {
+    background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 10px;
+    display: flex; align-items: center; gap: 10px; transition: all .2s;
+  }
+  .type-chip:hover { background: #eef2ff; border-color: #6366f1; transform: translateY(-2px); }
+  .type-icon { font-size: 1.5rem; }
+  .type-name { font-size: .9rem; font-weight: 600; color: #475569; }
+
+  /* Example */
+  .example {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border-right: 4px solid #f59e0b; padding: 22px 24px; border-radius: 12px; margin-top: 18px;
+  }
+  .example-passage {
+    background: white; padding: 18px 22px; border-radius: 8px; margin: 14px 0;
+    font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    line-height: 1.8; color: #1e293b; border: 1px solid #fde68a;
+  }
+  .example-passage h4 { color: #92400e; font-weight: 700; margin-bottom: 10px; }
+  .example-q {
+    background: white; padding: 14px 18px; border-radius: 8px; margin-top: 12px;
+    border: 1px solid #fde68a;
+  }
+  .example-q .q-prompt { font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    font-weight: 600; color: #1e293b; margin-bottom: 8px; }
+  .example-q .q-opts { list-style: none; padding: 0; }
+  .example-q .q-opts li { padding: 6px 12px; margin: 4px 0; border-radius: 6px;
+    font-family: 'Inter', sans-serif; direction: ltr; text-align: left;
+    background: #f8fafc; }
+  .example-q .q-opts li.correct {
+    background: #d1fae5; color: #065f46; font-weight: 700; border: 1px solid #10b981;
+  }
+  .example-explain {
+    background: #ecfdf5; border-right: 3px solid #10b981; padding: 12px 16px;
+    border-radius: 8px; margin-top: 12px; color: #065f46; font-size: .95rem; line-height: 1.7;
+  }
+  .example-explain b { color: #047857; }
+
+  /* CTA */
+  .cta-box {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;
+    padding: 32px; border-radius: 16px; text-align: center; margin-top: 24px;
+    box-shadow: 0 10px 30px rgba(79,70,229,.3);
+  }
+  .cta-box h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+  .cta-box p { opacity: .95; margin-bottom: 20px; }
+  .cta-btn {
+    background: white; color: #4f46e5; padding: 14px 32px; border-radius: 10px;
+    font-weight: 700; text-decoration: none; display: inline-block; font-size: 1.05rem;
+    transition: all .2s; box-shadow: 0 4px 14px rgba(0,0,0,.1);
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+
+  .back-link {
+    position: absolute; top: 20px; right: 20px; color: white; text-decoration: none;
+    background: rgba(255,255,255,.15); padding: 8px 16px; border-radius: 8px; font-size: .9rem;
+    backdrop-filter: blur(8px); z-index: 3;
+  }
+  .back-link:hover { background: rgba(255,255,255,.25); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <a href="/reading/?user_id={{ user_id }}" class="back-link">← العودة</a>
+  <div class="hero-content">
+    <div class="hero-badge">📖 Reading Skill — Task 2</div>
+    <h1><span class="en">Read in Daily Life</span></h1>
+    <h1 style="font-size:1.6rem;margin-top:4px">القراءة في الحياة اليومية</h1>
+    <p class="hero-sub">
+      تعلّم طريقة احترافية لحل أسئلة القراءة اليومية في امتحان TOEFL.
+      نصوص قصيرة (15–150 كلمة) من واقع الحياة، مع أسئلة اختيار من متعدد.
+    </p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Goal -->
+  <div class="card">
+    <h2><span class="num">🎯</span> هدف هذا القسم</h2>
+    <p style="line-height:1.9; color:#334155; font-size:1.02rem">
+      يقيس هذا القسم قدرتك على فهم نصوص قصيرة وغير أكاديمية شائعة في الحياة اليومية.
+      تتراوح أطوال النصوص بين <b>15 إلى 150 كلمة</b>، يليها <b>2–3 أسئلة اختيار من متعدد</b>
+      تُقيّم مدى فهمك للمحتوى.
+    </p>
+  </div>
+
+  <!-- 11 Text Types -->
+  <div class="card">
+    <h2><span class="num">📚</span> 11 نوعاً من النصوص اليومية</h2>
+    <p style="color:#64748b; margin-bottom:18px">
+      ستواجه في الامتحان أنواعاً متعددة من النصوص العملية. تعرّف عليها:
+    </p>
+    <div class="types-grid">
+      <div class="type-chip"><span class="type-icon">📋</span><span class="type-name">Poster / Notice<br><small style="color:#94a3b8">لافتة أو إعلان</small></span></div>
+      <div class="type-chip"><span class="type-icon">🛍️</span><span class="type-name">Advertisement<br><small style="color:#94a3b8">إعلان تجاري</small></span></div>
+      <div class="type-chip"><span class="type-icon">🍽️</span><span class="type-name">Menu<br><small style="color:#94a3b8">قائمة طعام</small></span></div>
+      <div class="type-chip"><span class="type-icon">📰</span><span class="type-name">News Article<br><small style="color:#94a3b8">مقال إخباري</small></span></div>
+      <div class="type-chip"><span class="type-icon">💬</span><span class="type-name">Social Post<br><small style="color:#94a3b8">منشور تواصل</small></span></div>
+      <div class="type-chip"><span class="type-icon">📝</span><span class="type-name">Form<br><small style="color:#94a3b8">نموذج</small></span></div>
+      <div class="type-chip"><span class="type-icon">📅</span><span class="type-name">Schedule<br><small style="color:#94a3b8">جدول زمني</small></span></div>
+      <div class="type-chip"><span class="type-icon">💵</span><span class="type-name">Invoice<br><small style="color:#94a3b8">فاتورة</small></span></div>
+      <div class="type-chip"><span class="type-icon">📧</span><span class="type-name">Email<br><small style="color:#94a3b8">بريد إلكتروني</small></span></div>
+      <div class="type-chip"><span class="type-icon">🧾</span><span class="type-name">Receipt<br><small style="color:#94a3b8">إيصال</small></span></div>
+      <div class="type-chip"><span class="type-icon">📱</span><span class="type-name">Text Messages<br><small style="color:#94a3b8">رسائل نصية</small></span></div>
+    </div>
+  </div>
+
+  <!-- 5-Step Method -->
+  <div class="card">
+    <h2><span class="num">🧭</span> طريقة الحل في 5 خطوات</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <b>اقرأ السؤال أولاً</b> — قبل قراءة النص. هذا يوجّه انتباهك لما تحتاج إيجاده فقط.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <b>حدّد الكلمات المفتاحية (Keywords)</b> في السؤال — مثل أرقام، أوقات، أسماء أماكن أو أحداث.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <b>ارجع إلى النص</b> وابحث عن نفس الكلمات أو ما يقاربها في المعنى (synonyms).
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <b>استبعد الخيارات الخاطئة</b> واحدة تلو الأخرى — أي خيار يخالف النص أو يضيف معلومة غير مذكورة = خاطئ.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">
+          <b>اختر الإجابة المدعومة بالنص فقط</b> — لا تعتمد على معلوماتك الخارجية أو افتراضاتك.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solved Example -->
+  <div class="card">
+    <h2><span class="num">💡</span> مثال محلول: Library Notice</h2>
+    <div class="example">
+      <div class="example-passage">
+        <h4 class="en">Library Notice</h4>
+        <p class="en"><b>Dear Students,</b></p>
+        <p class="en">The university library will be closed for maintenance from October 8th to October 12th.
+        During this period, no physical books can be borrowed or returned. However, students can still access
+        online resources and e-books through the library website.</p>
+        <p class="en">Please make sure to return or renew your books before October 7th to avoid late fees.</p>
+        <p class="en">— University Library Management</p>
+      </div>
+
+      <div class="example-q">
+        <div class="q-prompt">Q1: According to the notice, what can students do while the library is closed?</div>
+        <ul class="q-opts">
+          <li>A. Borrow new books in person</li>
+          <li class="correct">B. Access e-books and online materials ✓</li>
+          <li>C. Visit the library study rooms</li>
+          <li>D. Return books at the front desk</li>
+        </ul>
+        <div class="example-explain">
+          <b>الشرح:</b> رجعنا للنص بحثاً عن "while the library is closed"، فوجدنا:
+          <i>"students can still access online resources and e-books"</i> — هذا الشيء الوحيد
+          المسموح به أثناء الإغلاق. باقي الخيارات تتطلب وصولاً مادياً للمكتبة المغلقة.
+        </div>
+      </div>
+
+      <div class="example-q">
+        <div class="q-prompt">Q2: Why does the library ask students to return books before October 7th?</div>
+        <ul class="q-opts">
+          <li class="correct">A. Because the library will not be open for book returns during maintenance ✓</li>
+          <li>B. Because the new semester starts on October 7th</li>
+          <li>C. Because all library accounts will be deleted</li>
+          <li>D. Because new books will arrive after October 12th</li>
+        </ul>
+        <div class="example-explain">
+          <b>الشرح:</b> النص يذكر أن المكتبة مغلقة من 8 إلى 12 أكتوبر، وأن الإرجاع البدني غير ممكن خلال الإغلاق.
+          إذن سبب الطلب بالإرجاع قبل 7 أكتوبر هو منطقياً: <i>لن تكون مفتوحة لاستلام الكتب</i>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h3>جاهز للتدريب؟</h3>
+    <p>ابدأ بالمستوى السهل (Easy) ثم تدرّج إلى المتوسط والصعب.</p>
+    <a href="/reading/?user_id={{ user_id }}" class="cta-btn">📚 العودة لقائمة النصوص</a>
+  </div>
+
+</main>
+
+</body>
+</html>

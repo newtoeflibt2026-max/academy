@@ -1,0 +1,464 @@
+﻿{
+  "lessons": [
+    {
+      "id": 206,
+      "code": "M3_L06",
+      "sub_lesson_index": 6,
+      "level": "medium",
+      "title_ar": "المرحلة 3 - الدرس 6: السفر والرحلات",
+      "title_en": "Travel & Flights Conversations",
+      "principle_en": "Catch numbers and dates — flights, prices, and schedules.",
+      "principle_ar": "التقط الأرقام والتواريخ — الرحلات، الأسعار، والمواعيد.",
+      "strategy_ar": "ابحث عن أرقام الرحلات، التواريخ، وفروق الأسعار. اكتبها فوراً.",
+      "clips": [
+        {
+          "code": "conv_m01",
+          "title_ar": "تمهيد: تأكيد موعد",
+          "context_ar": "مقطع تمهيدي عن حجز رحلة",
+          "is_intro": true,
+          "lines": [
+            ["F", "I'd like to confirm my flight for June 10."],
+            ["M", "Let me check. Yes, flight 207 to New York, departing 9 AM."],
+            ["F", "Perfect. And the gate?"],
+            ["M", "Gate B12. Please arrive two hours early."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_m02",
+          "title_ar": "محادثة 1: تغيير موعد الرحلة",
+          "context_ar": "طالبة تطلب تعديل تاريخ سفرها",
+          "lines": [
+            ["F", "Hi, I need to change my return flight. The semester ended earlier than expected."],
+            ["M", "I see. What's your original date?"],
+            ["F", "June 15. I'd like to move it to June 6 if possible."],
+            ["M", "Let me check availability. Yes, we have seats on the morning flight."],
+            ["F", "Is there a change fee?"],
+            ["M", "Normally yes, but students get one free change per semester."],
+            ["F", "Oh wonderful. Please book it for June 6 then."],
+            ["M", "Done. You'll receive a confirmation email shortly."]
+          ],
+          "questions": [
+            {
+              "q": "Why does the student want to change the flight?",
+              "options": ["The semester ended earlier than expected", "She missed the original flight", "She wants to visit a friend", "The flight was canceled"],
+              "correct": 0,
+              "explanation_ar": "قالت صراحةً 'The semester ended earlier than expected'.",
+              "wrong_explanation_ar": "بقية الأسباب لم تُذكر؛ السبب أكاديمي بحت.",
+              "elimination_hint_ar": "السبب يُذكر في أول جملة من الطالبة."
+            },
+            {
+              "q": "When is the new flight scheduled?",
+              "options": ["June 5", "June 6", "June 10", "June 15"],
+              "correct": 1,
+              "explanation_ar": "اتفقا على 'June 6' بعد التحقق من توفر مقاعد.",
+              "wrong_explanation_ar": "June 15 هو الموعد الأصلي، وJune 10 وJune 5 لم تُذكر.",
+              "elimination_hint_ar": "انتبه للموعد الجديد بعد التعديل."
+            }
+          ]
+        },
+        {
+          "code": "conv_m03",
+          "title_ar": "محادثة 2: حقيبة مفقودة",
+          "context_ar": "مسافر يبلغ عن فقدان حقيبته",
+          "lines": [
+            ["M", "Excuse me, my luggage hasn't arrived on the carousel."],
+            ["F", "I'm sorry to hear that. Can I have your baggage tag?"],
+            ["M", "Yes, here it is. The tag number is 4782."],
+            ["F", "Let me check the system. It seems your bag was delayed in Frankfurt."],
+            ["M", "When will it arrive?"],
+            ["F", "Tomorrow morning around 10. We'll deliver it to your address."],
+            ["M", "Thank you. Is there compensation for essentials tonight?"],
+            ["F", "Yes, the airline provides fifty dollars for emergency items."]
+          ],
+          "questions": [
+            {
+              "q": "What is the man's problem?",
+              "options": ["He lost his ticket", "His luggage didn't arrive", "His flight was delayed", "He missed his connection"],
+              "correct": 1,
+              "explanation_ar": "ذكر 'my luggage hasn't arrived on the carousel'.",
+              "wrong_explanation_ar": "المشكلة في الحقيبة فقط، الرحلة وصلت طبيعياً.",
+              "elimination_hint_ar": "ركّز على ما يفتقده فعلاً."
+            },
+            {
+              "q": "How much compensation does the airline provide?",
+              "options": ["Twenty dollars", "Thirty dollars", "Fifty dollars", "One hundred dollars"],
+              "correct": 2,
+              "explanation_ar": "حُدد المبلغ: 'fifty dollars for emergency items'.",
+              "wrong_explanation_ar": "بقية المبالغ لم تُذكر.",
+              "elimination_hint_ar": "انتبه للرقم المحدد للتعويض."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 207,
+      "code": "M3_L07",
+      "sub_lesson_index": 7,
+      "level": "medium",
+      "title_ar": "المرحلة 3 - الدرس 7: خدمات المكتبة",
+      "title_en": "Library Services Conversations",
+      "principle_en": "Understand inquiry and action — what is requested and what is offered.",
+      "principle_ar": "افهم الاستفسار والإجراء — ما المطلوب وما المُقدَّم.",
+      "strategy_ar": "ميّز بين سؤال الطالب والحل الذي يقدمه الموظف. عادةً السؤال يأتي قبل الحل.",
+      "clips": [
+        {
+          "code": "conv_m04",
+          "title_ar": "تمهيد: استعارة كتاب",
+          "context_ar": "مقطع تمهيدي عن خدمة الإعارة",
+          "is_intro": true,
+          "lines": [
+            ["M", "I'd like to borrow this book."],
+            ["F", "Your card please. The loan period is three weeks."],
+            ["M", "Can I renew it online?"],
+            ["F", "Yes, through your library account."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_m05",
+          "title_ar": "محادثة 1: حجز قاعة دراسة",
+          "context_ar": "طالبة تحاول حجز قاعة جماعية",
+          "lines": [
+            ["F", "I'd like to book a group study room for tomorrow."],
+            ["M", "How many people will be using it?"],
+            ["F", "Four of us, for about three hours."],
+            ["M", "Then you'll need room 204. It accommodates up to six."],
+            ["F", "What times are available?"],
+            ["M", "From 2 PM onwards. The morning slots are already booked."],
+            ["F", "Let's go with 3 to 6 PM then."],
+            ["M", "Booked. Please arrive on time, rooms are released after 15 minutes."]
+          ],
+          "questions": [
+            {
+              "q": "What does the student want to do?",
+              "options": ["Borrow books", "Book a study room", "Return a laptop", "Pay a fine"],
+              "correct": 1,
+              "explanation_ar": "قالت 'I'd like to book a group study room for tomorrow'.",
+              "wrong_explanation_ar": "بقية الخدمات لم تُطلب.",
+              "elimination_hint_ar": "الإجراء المطلوب في أول جملة."
+            },
+            {
+              "q": "What happens if students arrive late?",
+              "options": ["They get a fine", "The room is released after 15 minutes", "Their booking doubles", "Nothing happens"],
+              "correct": 1,
+              "explanation_ar": "حذّر الموظف: 'rooms are released after 15 minutes'.",
+              "wrong_explanation_ar": "لا يوجد ذكر لغرامة أو مضاعفة.",
+              "elimination_hint_ar": "انتبه للشرط المتعلق بالتأخر."
+            }
+          ]
+        },
+        {
+          "code": "conv_m06",
+          "title_ar": "محادثة 2: غرامة كتاب متأخر",
+          "context_ar": "طالب يعيد كتاباً بعد الموعد",
+          "lines": [
+            ["M", "Hi, I'm returning this book. I know it's overdue."],
+            ["F", "Let me scan it. Yes, it's twelve days late."],
+            ["F", "The fine is fifty cents per day, so six dollars total."],
+            ["M", "I expected that. Can I pay by card?"],
+            ["F", "Unfortunately, the system only accepts cash for fines."],
+            ["M", "Oh, I don't have cash on me right now."],
+            ["F", "That's fine. The amount will be added to your account, and you can pay within seven days."],
+            ["M", "Great, I'll come back tomorrow with cash. Thank you."]
+          ],
+          "questions": [
+            {
+              "q": "How much is the total fine?",
+              "options": ["Three dollars", "Four dollars", "Six dollars", "Twelve dollars"],
+              "correct": 2,
+              "explanation_ar": "حسبتها الموظفة: 12 يوماً × 0.50 = ستة دولارات.",
+              "wrong_explanation_ar": "Twelve هي عدد الأيام، ليست المبلغ.",
+              "elimination_hint_ar": "احسب: عدد الأيام × سعر اليوم."
+            },
+            {
+              "q": "How can the fine be paid?",
+              "options": ["Credit card only", "Cash only", "Both cash and card", "Bank transfer"],
+              "correct": 1,
+              "explanation_ar": "حُدد بوضوح: 'the system only accepts cash for fines'.",
+              "wrong_explanation_ar": "البطاقات والتحويلات غير مقبولة للغرامات.",
+              "elimination_hint_ar": "طريقة الدفع الوحيدة المُحددة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 208,
+      "code": "M3_L08",
+      "sub_lesson_index": 8,
+      "level": "medium",
+      "title_ar": "المرحلة 3 - الدرس 8: السكن الجامعي",
+      "title_en": "Housing & Dorms Conversations",
+      "principle_en": "Identify complaints and solutions — what's wrong and how is it fixed?",
+      "principle_ar": "حدّد الشكوى والحل — ما المشكلة وكيف ستُحل؟",
+      "strategy_ar": "اقسم الحوار إلى جزئين: المشكلة (الجزء الأول) والحل (الجزء الثاني).",
+      "clips": [
+        {
+          "code": "conv_m07",
+          "title_ar": "تمهيد: مشكلة في الغرفة",
+          "context_ar": "مقطع تمهيدي عن صيانة السكن",
+          "is_intro": true,
+          "lines": [
+            ["F", "The heater in my room isn't working."],
+            ["M", "Since when?"],
+            ["F", "Two days ago. It's getting cold."],
+            ["M", "We'll send maintenance this afternoon."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_m08",
+          "title_ar": "محادثة 1: زميل سكن مزعج",
+          "context_ar": "طالبة تشكو من جارها في السكن",
+          "lines": [
+            ["F", "I'd like to file a complaint about my dormitory."],
+            ["M", "Of course. What's the issue?"],
+            ["F", "My neighbor plays loud music until 2 AM almost every night."],
+            ["M", "Have you tried talking to them directly?"],
+            ["F", "Yes, but the situation hasn't improved."],
+            ["M", "I understand. We can send a formal warning and even consider relocation if needed."],
+            ["F", "Relocation would actually be ideal. Is there a fee?"],
+            ["M", "No, room transfers due to noise complaints are free."]
+          ],
+          "questions": [
+            {
+              "q": "What is the student's complaint?",
+              "options": ["Broken heater", "Loud neighbor", "High rent", "Dirty kitchen"],
+              "correct": 1,
+              "explanation_ar": "قالت 'My neighbor plays loud music until 2 AM'.",
+              "wrong_explanation_ar": "بقية المشاكل لم تُذكر.",
+              "elimination_hint_ar": "المشكلة الرئيسية تتضح في أول جملتين."
+            },
+            {
+              "q": "What is the proposed solution?",
+              "options": ["Pay a fine", "Send a warning and possibly relocate", "Cancel her housing", "Talk to the neighbor herself"],
+              "correct": 1,
+              "explanation_ar": "اقترح الموظف 'send a formal warning and even consider relocation'.",
+              "wrong_explanation_ar": "الحديث المباشر جُرّب بالفعل ولم ينجح.",
+              "elimination_hint_ar": "الحل المُقدم من الموظف، ليس ما جربته الطالبة."
+            }
+          ]
+        },
+        {
+          "code": "conv_m09",
+          "title_ar": "محادثة 2: تسرب مياه",
+          "context_ar": "طالب يبلغ عن خلل في الحمام",
+          "lines": [
+            ["M", "There's water leaking from the bathroom ceiling in my dorm."],
+            ["F", "Oh, that needs urgent attention. Which building and room?"],
+            ["M", "Building D, room 314."],
+            ["F", "I'll send a plumber within the hour. Are you using the bathroom now?"],
+            ["M", "No, I turned off the water main as a precaution."],
+            ["F", "Smart thinking. Please stay in your room until the plumber arrives."],
+            ["M", "Will I need to move out temporarily?"],
+            ["F", "Hopefully not. Most leaks like this are fixed within a few hours."]
+          ],
+          "questions": [
+            {
+              "q": "What did the student do before calling?",
+              "options": ["Called a friend", "Turned off the water main", "Cleaned the room", "Moved his belongings"],
+              "correct": 1,
+              "explanation_ar": "ذكر 'I turned off the water main as a precaution'.",
+              "wrong_explanation_ar": "بقية الإجراءات لم تُذكر.",
+              "elimination_hint_ar": "ركّز على ما فعله قبل الاتصال."
+            },
+            {
+              "q": "How soon will help arrive?",
+              "options": ["In ten minutes", "Within an hour", "Tomorrow morning", "Next week"],
+              "correct": 1,
+              "explanation_ar": "وعدت الموظفة: 'I'll send a plumber within the hour'.",
+              "wrong_explanation_ar": "بقية الأوقات لم تُذكر.",
+              "elimination_hint_ar": "انتبه للوقت المُحدد للاستجابة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 209,
+      "code": "M3_L09",
+      "sub_lesson_index": 9,
+      "level": "medium",
+      "title_ar": "المرحلة 3 - الدرس 9: التسجيل في المواد",
+      "title_en": "Course Registration Conversations",
+      "principle_en": "Understand administrative requirements — prerequisites, deadlines, signatures.",
+      "principle_ar": "افهم المتطلبات الإدارية — المتطلبات السابقة، المواعيد النهائية، التوقيعات.",
+      "strategy_ar": "ركّز على ما يجب فعله بالتسلسل: أولاً، ثم، أخيراً.",
+      "clips": [
+        {
+          "code": "conv_m10",
+          "title_ar": "تمهيد: إضافة مادة",
+          "context_ar": "مقطع تمهيدي عن تعديل الجدول",
+          "is_intro": true,
+          "lines": [
+            ["M", "I want to add a chemistry course."],
+            ["F", "Did you complete the prerequisite?"],
+            ["M", "Yes, last semester."],
+            ["F", "Then bring the form signed by your advisor."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_m11",
+          "title_ar": "محادثة 1: تجاوز موعد التسجيل",
+          "context_ar": "طالبة تطلب تسجيل متأخر",
+          "lines": [
+            ["F", "Hi, I missed the registration deadline. Is there any way to still enroll?"],
+            ["M", "Late registration is possible but requires approval from the department chair."],
+            ["F", "What do I need to do?"],
+            ["M", "Fill out the late registration form and write a brief explanation of your reason."],
+            ["F", "I was in the hospital. I have documentation."],
+            ["M", "That should be accepted. Late fees are usually waived for medical reasons."],
+            ["F", "Where do I submit the paperwork?"],
+            ["M", "Bring everything to the registrar's office before Friday."]
+          ],
+          "questions": [
+            {
+              "q": "Why did the student miss the deadline?",
+              "options": ["She forgot", "She was in the hospital", "She was traveling", "Her advisor was absent"],
+              "correct": 1,
+              "explanation_ar": "ذكرت 'I was in the hospital. I have documentation'.",
+              "wrong_explanation_ar": "بقية الأسباب لم تُذكر.",
+              "elimination_hint_ar": "السبب الذي ذكرته الطالبة صراحةً."
+            },
+            {
+              "q": "Will she have to pay a late fee?",
+              "options": ["Yes, full fee", "No, it will be waived for medical reasons", "Only partial fee", "Only after approval"],
+              "correct": 1,
+              "explanation_ar": "قال الموظف 'Late fees are usually waived for medical reasons'.",
+              "wrong_explanation_ar": "حالتها طبية، فالاستثناء يطبّق عليها.",
+              "elimination_hint_ar": "ربط السبب الطبي بسياسة الرسوم."
+            }
+          ]
+        },
+        {
+          "code": "conv_m12",
+          "title_ar": "محادثة 2: تغيير التخصص",
+          "context_ar": "طالب يستفسر عن إجراءات تغيير التخصص",
+          "lines": [
+            ["M", "I'm thinking about changing my major from biology to psychology."],
+            ["F", "That's a significant decision. Have you spoken to an advisor in psychology?"],
+            ["M", "Not yet. What does the process look like?"],
+            ["F", "First, you meet with the psychology department advisor for approval."],
+            ["F", "Then you submit a change-of-major form before the end of the semester."],
+            ["M", "Will I lose any of my completed credits?"],
+            ["F", "Many credits will transfer, but introductory psychology courses are required for your new major."],
+            ["M", "Okay, I'll set up that meeting first. Thank you."]
+          ],
+          "questions": [
+            {
+              "q": "What is the first step in changing his major?",
+              "options": ["Submitting a form", "Meeting with the psychology advisor", "Taking new courses", "Paying a fee"],
+              "correct": 1,
+              "explanation_ar": "قالت 'First, you meet with the psychology department advisor'.",
+              "wrong_explanation_ar": "تقديم الاستمارة يأتي بعد اللقاء.",
+              "elimination_hint_ar": "كلمة First تحدد البداية."
+            },
+            {
+              "q": "What will happen to his completed credits?",
+              "options": ["All will be lost", "Many will transfer", "None will transfer", "He needs to retake them all"],
+              "correct": 1,
+              "explanation_ar": "ذكرت 'Many credits will transfer'.",
+              "wrong_explanation_ar": "ليس الفقد كاملاً، فقط مواد محددة لن تحتسب.",
+              "elimination_hint_ar": "نتيجة جزئية، ليست متطرفة."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 210,
+      "code": "M3_L10",
+      "sub_lesson_index": 10,
+      "level": "medium",
+      "title_ar": "المرحلة 3 - الدرس 10: ساعات مكتب الأستاذ",
+      "title_en": "Professor Office Hours Conversations",
+      "principle_en": "Understand the speaker's purpose — why are they having this conversation?",
+      "principle_ar": "افهم غرض المتحدث — لماذا يجري هذه المحادثة؟",
+      "strategy_ar": "اسأل نفسك: ما الهدف من الزيارة؟ شرح، شكوى، طلب، أم استشارة؟",
+      "clips": [
+        {
+          "code": "conv_m13",
+          "title_ar": "تمهيد: زيارة مكتب",
+          "context_ar": "مقطع تمهيدي عن لقاء قصير",
+          "is_intro": true,
+          "lines": [
+            ["F", "Professor, do you have a minute?"],
+            ["M", "Of course, come in. What's on your mind?"],
+            ["F", "I have a question about last week's lecture."],
+            ["M", "Sure, ask away."]
+          ],
+          "questions": []
+        },
+        {
+          "code": "conv_m14",
+          "title_ar": "محادثة 1: مناقشة درجة منخفضة",
+          "context_ar": "طالب يستفسر عن نتيجته",
+          "lines": [
+            ["M", "Professor, I'd like to discuss my midterm grade."],
+            ["F", "I figured you might. What's your concern?"],
+            ["M", "I got a 65, but I felt I prepared well. I'm not sure where I went wrong."],
+            ["F", "Let me pull up your exam. Most of your errors were in essay section three."],
+            ["M", "What can I do to improve?"],
+            ["F", "Focus on building stronger thesis statements and supporting evidence."],
+            ["F", "I also recommend the writing center for additional help."],
+            ["M", "Thank you, I'll go there this week."]
+          ],
+          "questions": [
+            {
+              "q": "Why did the student visit the professor?",
+              "options": ["To complain about the course", "To discuss his midterm grade", "To ask for an extension", "To change his major"],
+              "correct": 1,
+              "explanation_ar": "قال 'I'd like to discuss my midterm grade'.",
+              "wrong_explanation_ar": "بقية الأغراض لم تُذكر.",
+              "elimination_hint_ar": "الغرض في أول جملة من الطالب."
+            },
+            {
+              "q": "What does the professor recommend?",
+              "options": ["Retaking the exam", "Visiting the writing center", "Dropping the course", "Hiring a tutor"],
+              "correct": 1,
+              "explanation_ar": "اقترحت 'I also recommend the writing center for additional help'.",
+              "wrong_explanation_ar": "بقية الخيارات لم تُذكر كحلول.",
+              "elimination_hint_ar": "النصيحة المُحددة من الأستاذة."
+            }
+          ]
+        },
+        {
+          "code": "conv_m15",
+          "title_ar": "محادثة 2: طلب فرصة بحثية",
+          "context_ar": "طالبة تسأل عن المشاركة في بحث",
+          "lines": [
+            ["F", "Professor, I read your paper on coral reefs and I'm fascinated."],
+            ["M", "Thank you. Are you considering marine biology as a career?"],
+            ["F", "Yes. I was wondering if you accept undergraduate researchers."],
+            ["M", "Sometimes, when funding allows. Do you have lab experience?"],
+            ["F", "Only basic lab skills from my biology courses."],
+            ["M", "That's a start. Send me your CV and a one-page proposal of your interests."],
+            ["F", "I'll have it ready by next week."],
+            ["M", "Excellent. We can meet again after I review your materials."]
+          ],
+          "questions": [
+            {
+              "q": "What does the student want?",
+              "options": ["To drop a course", "To join the professor's research", "To extend an assignment", "To borrow a book"],
+              "correct": 1,
+              "explanation_ar": "سألت 'if you accept undergraduate researchers'.",
+              "wrong_explanation_ar": "غرضها بحثي، ليس إدارياً.",
+              "elimination_hint_ar": "ركّز على ما تطلبه فعلاً."
+            },
+            {
+              "q": "What does the professor ask her to submit?",
+              "options": ["Lab results", "CV and a one-page proposal", "Transcript", "Reference letter"],
+              "correct": 1,
+              "explanation_ar": "طلب 'Send me your CV and a one-page proposal'.",
+              "wrong_explanation_ar": "بقية الوثائق لم تُطلب.",
+              "elimination_hint_ar": "الوثيقتان المُحددتان بدقة."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

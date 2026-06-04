@@ -1,0 +1,73 @@
+{
+  "id": "dl_easy_03",
+  "type": "daily_reading",
+  "tier": "easy",
+  "title_en": "Medicine Label",
+  "title_ar": "ملصق دواء",
+  "topic": "Health",
+  "duration_seconds": 240,
+  "passage": {
+    "title_en": "PAIN RELIEF TABLETS — Dosage",
+    "text_en": "PAIN RELIEF TABLETS\nActive ingredient: Acetaminophen 500 mg\n\nDOSAGE:\nAdults (18+):  Take 1–2 tablets every 4–6 hours.\n               Do not exceed 8 tablets in 24 hours.\nChildren (12–17): Take 1 tablet every 6 hours.\nUnder 12:      Consult a doctor before use.\n\nWARNING: Do not use with other acetaminophen products."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "How many tablets can an adult take at one time?",
+      "prompt_ar": "كم قرصاً يمكن للبالغ تناولها في المرة الواحدة؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "1 tablet"
+        },
+        {
+          "id": "B",
+          "text_en": "2 tablets"
+        },
+        {
+          "id": "C",
+          "text_en": "4 tablets"
+        },
+        {
+          "id": "D",
+          "text_en": "8 tablets"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "النص: 'Take 1–2 tablets'، فالحد الأعلى مرة واحدة = 2.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "What should you do if the patient is 10 years old?",
+      "prompt_ar": "ماذا تفعل إذا كان المريض عمره 10 سنوات؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Give 1 tablet"
+        },
+        {
+          "id": "B",
+          "text_en": "Give 2 tablets"
+        },
+        {
+          "id": "C",
+          "text_en": "Ask a doctor"
+        },
+        {
+          "id": "D",
+          "text_en": "Give no medicine"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "تحت سن 12: 'Consult a doctor before use'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "EASY"
+  }
+}

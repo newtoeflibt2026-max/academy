@@ -1,0 +1,1457 @@
+{
+  "batch_id": 4,
+  "batch_name": "Leisure & Modern Issues",
+  "batch_name_ar": "الترفيه والقضايا المعاصرة",
+  "topics_count": 6,
+  "questions_count": 24,
+  "topics": [
+    {
+      "topic_code": "travel",
+      "title_en": "Travel",
+      "title_ar": "السفر",
+      "category": "Leisure & Culture",
+      "order_index": 15,
+      "interviewer": {
+        "avatar_id": "aria",
+        "name": "Aria",
+        "accent": "US Female",
+        "voice": "en-US-AriaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=aria&backgroundColor=b6e3f4"
+      },
+      "intro_en": "You have agreed to take part in a research study about travel. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن السفر. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة.",
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining the study. Please think back to a memorable trip you took, near or far. Where did you go, who were you with, and what made the trip special?",
+          "question_ar": "شكراً لانضمامك. عُد بذاكرتك إلى رحلة لا تُنسى قمت بها، قريبة أو بعيدة. إلى أين ذهبت؟ ومع من كنت؟ وما الذي جعلها مميزة؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "destination",
+              "ipa": "/ˌdestɪˈneɪʃən/",
+              "ar": "وجهة"
+            },
+            {
+              "word": "culture",
+              "ipa": "/ˈkʌltʃə/",
+              "ar": "ثقافة"
+            },
+            {
+              "word": "explore",
+              "ipa": "/ɪkˈsplɔː/",
+              "ar": "يستكشف"
+            },
+            {
+              "word": "unforgettable",
+              "ipa": "/ˌʌnfəˈɡetəbəl/",
+              "ar": "لا يُنسى"
+            },
+            {
+              "word": "scenery",
+              "ipa": "/ˈsiːnəri/",
+              "ar": "مناظر طبيعية"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Two years ago, I went to Turkey with my brother. It was my first trip outside my country, so I was very excited. We visited Istanbul for five days. We saw old mosques, walked in the bazaar, and ate amazing Turkish food. The best part was a boat trip on the Bosphorus river. The view was beautiful. I will never forget that trip because it opened my eyes to a new culture and new people. I want to travel more in the future.",
+            "word_count": 86,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + sensory details + emotional impact + future hope."
+          },
+          "answer_tier90": {
+            "text": "Two years ago, I traveled to Turkey with my brother — my first trip abroad, which made it incredibly exciting. We spent five days exploring Istanbul, visiting magnificent old mosques, wandering through the colorful Grand Bazaar, and indulging in delicious Turkish cuisine. The absolute highlight was a sunset boat trip along the Bosphorus, with breathtaking views of both Europe and Asia. That experience truly opened my eyes to a completely new culture, and it sparked a real passion for exploring more of the world.",
+            "word_count": 85,
+            "level": "B2-C1",
+            "structure_notes": "'Incredibly exciting', 'wandering through', 'indulging in', 'sparked a real passion'."
+          },
+          "self_assessment": [
+            "هل ذكرت المكان والوقت؟",
+            "هل وصفت ما فعلت؟",
+            "هل ذكرت ذروة الرحلة؟",
+            "هل ذكرت كيف أثّرت فيك؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have different travel styles. Some love planning every detail in advance, while others prefer being spontaneous and seeing where the trip takes them. Which style suits you better, and why?",
+          "question_ar": "للناس أساليب سفر مختلفة. يحب البعض التخطيط لكل تفصيل مسبقاً، بينما يفضل آخرون العفوية والاكتشاف. أي أسلوب يناسبك أكثر؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocabulary": [
+            {
+              "word": "plan",
+              "ipa": "/plæn/",
+              "ar": "يُخطط"
+            },
+            {
+              "word": "spontaneous",
+              "ipa": "/spɒnˈteɪniəs/",
+              "ar": "عفوي"
+            },
+            {
+              "word": "itinerary",
+              "ipa": "/aɪˈtɪnərəri/",
+              "ar": "خط سير"
+            },
+            {
+              "word": "adventure",
+              "ipa": "/ədˈventʃə/",
+              "ar": "مغامرة"
+            },
+            {
+              "word": "stress-free",
+              "ipa": "/stres friː/",
+              "ar": "خالٍ من التوتر"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I am somewhere in the middle, but closer to the planner. Before any trip, I always book the hotel, plan the first day, and learn a few basic phrases in the local language. But after that, I like to be flexible. Some of the best memories come from things you do not plan, like meeting a local person who shows you a hidden cafe. So I plan the important things, but I leave space for adventure too.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Middle position leaning one way + reasons + clear balance."
+          },
+          "answer_tier90": {
+            "text": "I'm definitely somewhere in the middle, but I lean toward being a planner. Before any trip, I always book accommodation, sketch out a rough itinerary, and learn a few key phrases in the local language. That said, I deliberately leave plenty of room for spontaneity. Honestly, some of my most unforgettable travel memories came from completely unplanned moments — chatting with a local who recommended a hidden gem of a restaurant. So I plan the essentials, but always leave space for adventure.",
+            "word_count": 83,
+            "level": "B2-C1",
+            "structure_notes": "'Sketch out a rough itinerary', 'deliberately leave plenty of room', 'hidden gem'."
+          },
+          "self_assessment": [
+            "هل اخترت أسلوباً بوضوح؟",
+            "هل ذكرت كيف تخطط؟",
+            "هل اعترفت بإيجابيات الأسلوب الآخر؟",
+            "هل ذكرت مثالاً؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that traveling abroad teaches you more than years of school education. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن السفر إلى الخارج يُعلّمك أكثر من سنوات من التعليم المدرسي. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "abroad",
+              "ipa": "/əˈbrɔːd/",
+              "ar": "في الخارج"
+            },
+            {
+              "word": "education",
+              "ipa": "/ˌedʒuˈkeɪʃən/",
+              "ar": "تعليم"
+            },
+            {
+              "word": "experience",
+              "ipa": "/ɪkˈspɪəriəns/",
+              "ar": "تجربة"
+            },
+            {
+              "word": "perspective",
+              "ipa": "/pəˈspektɪv/",
+              "ar": "منظور"
+            },
+            {
+              "word": "complement",
+              "ipa": "/ˈkɒmplɪment/",
+              "ar": "يُكمّل"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I partly agree with this idea. Travel teaches things that books cannot. When you visit another country, you learn about real people, languages, and ways of life. You also become more open and confident. But I do not think travel can fully replace school. Math, science, and writing skills come from study, not just travel. So the best learning is both: school for knowledge, and travel for real experience. Together, they make a complete person.",
+            "word_count": 79,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + reason + counterpoint + 'both together' conclusion."
+          },
+          "answer_tier90": {
+            "text": "I partly agree, but I wouldn't say travel replaces formal education. Traveling abroad genuinely teaches things no classroom can — you learn empathy, gain new perspectives, and develop real independence. However, school provides foundational skills like critical thinking, math, and writing that travel alone simply can't deliver. In my view, the two complement each other beautifully. Formal education builds the foundation, while travel adds depth, perspective, and real-world wisdom. Together, they create a well-rounded, thoughtful person.",
+            "word_count": 78,
+            "level": "B2-C1",
+            "structure_notes": "'Genuinely teaches', 'foundational skills', 'complement each other', 'well-rounded'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل ذكرت ما يُعلّمه السفر؟",
+            "هل ذكرت ما يُعلّمه التعليم؟",
+            "هل لخصت بحكمة؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think governments should make all young people travel to at least one foreign country before they finish university? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الحكومات يجب أن تجعل كل الشباب يسافرون إلى دولة أجنبية على الأقل قبل إنهاء الجامعة؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 14,
+          "key_vocabulary": [
+            {
+              "word": "exchange program",
+              "ipa": "/ɪksˈtʃeɪndʒ ˈprəʊɡræm/",
+              "ar": "برنامج تبادل"
+            },
+            {
+              "word": "fund",
+              "ipa": "/fʌnd/",
+              "ar": "يُموّل"
+            },
+            {
+              "word": "broaden",
+              "ipa": "/ˈbrɔːdən/",
+              "ar": "يُوسّع"
+            },
+            {
+              "word": "cost",
+              "ipa": "/kɒst/",
+              "ar": "تكلفة"
+            },
+            {
+              "word": "voluntary",
+              "ipa": "/ˈvɒləntri/",
+              "ar": "تطوّعي"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a wonderful idea, but with some conditions. The big benefit is that young people will broaden their minds. Seeing another culture makes them more open, kind, and confident. They will also learn a foreign language faster. But there is one drawback. Travel is very expensive. Not all governments can pay for every student. So the rule should be voluntary, with the government helping the students who really cannot afford to travel.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Yes with conditions + benefit + 'But' + cost drawback + practical solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I genuinely support this idea, though with some practical conditions. The biggest benefit is broadening young minds — experiencing a foreign culture firsthand builds empathy, confidence, and global awareness in ways no textbook can. It also accelerates language learning significantly. However, the obvious drawback is cost — international travel is expensive, and not every government can fully fund such programs. So a better approach might be subsidized, voluntary exchange programs that prioritize students who genuinely couldn't otherwise afford the experience.",
+            "word_count": 83,
+            "level": "B2-C1",
+            "structure_notes": "'Broadening young minds', 'global awareness', 'accelerates language learning', 'subsidized voluntary'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت حلاً عملياً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "music",
+      "title_en": "Music",
+      "title_ar": "الموسيقى",
+      "category": "Leisure & Culture",
+      "order_index": 16,
+      "interviewer": {
+        "avatar_id": "emma",
+        "name": "Emma",
+        "accent": "UK Female",
+        "voice": "en-GB-SoniaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=emma&backgroundColor=ffd5dc"
+      },
+      "intro_en": "You have agreed to take part in a research study about music. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن الموسيقى. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة.",
+      "questions": [
+        {
+          "q_num": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "tests": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for being here. Please think about a song or piece of music that means a lot to you. What is it, and why is it so meaningful?",
+          "question_ar": "شكراً لمشاركتك. فكر في أغنية أو مقطوعة موسيقية تعني لك الكثير. ما هي؟ ولماذا هي مميزة بالنسبة لك؟",
+          "audio_duration_sec": 11,
+          "key_vocabulary": [
+            {
+              "word": "song",
+              "ipa": "/sɒŋ/",
+              "ar": "أغنية"
+            },
+            {
+              "word": "meaningful",
+              "ipa": "/ˈmiːnɪŋfəl/",
+              "ar": "ذو معنى"
+            },
+            {
+              "word": "remind",
+              "ipa": "/rɪˈmaɪnd/",
+              "ar": "يُذكّر"
+            },
+            {
+              "word": "lyrics",
+              "ipa": "/ˈlɪrɪks/",
+              "ar": "كلمات الأغنية"
+            },
+            {
+              "word": "emotion",
+              "ipa": "/ɪˈməʊʃən/",
+              "ar": "عاطفة"
+            }
+          ],
+          "answer_tier69": {
+            "text": "There is one Arabic song that means a lot to me. It is an old song my father used to play in the car when I was a child. The lyrics talk about hope and never giving up. Every time I hear it, I remember those happy days with my family. It also gives me strength when I am sad or tired. Music has a special power. It can take you back in time in just one minute.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Personal memory + emotional connection + reflection on music's power."
+          },
+          "answer_tier90": {
+            "text": "There's one Arabic song that means an incredible amount to me. It's an old song my father used to play in the car during long family drives when I was little. The lyrics speak about hope and perseverance, which always lifts my spirit. Every single time I hear it, I'm instantly transported back to those carefree childhood days. It's amazing how music can compress entire chapters of your life into a three-minute melody — that's its real power.",
+            "word_count": 80,
+            "level": "B2-C1",
+            "structure_notes": "'Incredible amount', 'perseverance', 'lifts my spirit', 'compress entire chapters'."
+          },
+          "self_assessment": [
+            "هل ذكرت الأغنية/النوع؟",
+            "هل ذكرت متى تعرفت عليها؟",
+            "هل ذكرت لماذا هي مميزة؟",
+            "هل وصفت شعورك؟"
+          ]
+        },
+        {
+          "q_num": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "tests": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have very different music tastes. Some love calm and slow music, while others prefer energetic or fast music. What kind of music do you usually enjoy, and why?",
+          "question_ar": "للناس أذواق موسيقية مختلفة جداً. يحب البعض الموسيقى الهادئة والبطيئة، بينما يفضل آخرون الموسيقى النشيطة والسريعة. ما نوع الموسيقى التي تستمتع بها عادةً؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "taste",
+              "ipa": "/teɪst/",
+              "ar": "ذوق"
+            },
+            {
+              "word": "calm",
+              "ipa": "/kɑːm/",
+              "ar": "هادئ"
+            },
+            {
+              "word": "upbeat",
+              "ipa": "/ˌʌpˈbiːt/",
+              "ar": "نشيط"
+            },
+            {
+              "word": "genre",
+              "ipa": "/ˈʒɒnrə/",
+              "ar": "نوع موسيقي"
+            },
+            {
+              "word": "mood",
+              "ipa": "/muːd/",
+              "ar": "مزاج"
+            }
+          ],
+          "answer_tier69": {
+            "text": "My music taste depends on my mood. When I work or study, I prefer calm music without words, like piano or soft instrumental music. It helps me focus. But when I exercise or clean the house, I love fast and energetic music. It gives me power and makes the time go faster. So for me, music is like a tool. Calm music for focus, fast music for energy. I cannot live without it in my daily life.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Preference by situation + clear contrast + practical use of music."
+          },
+          "answer_tier90": {
+            "text": "Honestly, my taste in music depends entirely on my mood and what I'm doing. When I'm working or studying, I prefer calm instrumental music — soft piano or acoustic guitar — because it helps me concentrate without becoming distracting. However, when I'm exercising or doing housework, I crave upbeat, energetic tracks that boost my energy and make boring tasks more enjoyable. So music functions almost like a tool for me: calm tracks for focus, upbeat ones for motivation. I genuinely can't imagine daily life without it.",
+            "word_count": 87,
+            "level": "B2-C1",
+            "structure_notes": "'Crave upbeat tracks', 'boost my energy', 'functions almost like a tool'."
+          },
+          "self_assessment": [
+            "هل ذكرت نوع الموسيقى المفضل؟",
+            "هل ذكرت متى تسمعها؟",
+            "هل ذكرت السبب؟",
+            "هل قارنت بين أنواع مختلفة؟"
+          ]
+        },
+        {
+          "q_num": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "tests": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that listening to music while studying or working actually makes you less productive. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن الاستماع إلى الموسيقى أثناء الدراسة أو العمل يجعلك أقل إنتاجية. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "concentration",
+              "ipa": "/ˌkɒnsənˈtreɪʃən/",
+              "ar": "تركيز"
+            },
+            {
+              "word": "distract",
+              "ipa": "/dɪˈstrækt/",
+              "ar": "يُشتّت"
+            },
+            {
+              "word": "instrumental",
+              "ipa": "/ˌɪnstrəˈmentl/",
+              "ar": "موسيقى بدون كلمات"
+            },
+            {
+              "word": "background",
+              "ipa": "/ˈbækɡraʊnd/",
+              "ar": "خلفية"
+            },
+            {
+              "word": "depend on",
+              "ipa": "/dɪˈpend ɒn/",
+              "ar": "يعتمد على"
+            }
+          ],
+          "answer_tier69": {
+            "text": "I do not fully agree. It really depends on the type of music. Songs with words can be very distracting, especially when I am reading or writing. My brain tries to listen to the words instead of the work. But soft instrumental music, without words, often helps me. It blocks the noise around me and helps me focus. So for me, the rule is simple: no words while studying, but instrumental music is fine and even useful.",
+            "word_count": 80,
+            "level": "A2-B1",
+            "structure_notes": "Disagreement + nuance + clear personal rule."
+          },
+          "answer_tier90": {
+            "text": "I respectfully disagree, though I see the point. It really depends on the type of music. Songs with lyrics can be incredibly distracting, especially during tasks involving language, like reading or writing. The brain naturally tries to process the words. However, soft instrumental music — classical, ambient, or lo-fi — often boosts my concentration by blocking out background noise. So in my experience, the rule is simple: avoid lyrics while studying, but instrumental music can genuinely enhance focus and productivity.",
+            "word_count": 81,
+            "level": "B2-C1",
+            "structure_notes": "'Respectfully disagree', 'lo-fi', 'genuinely enhance focus'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل ميّزت بين أنواع الموسيقى؟",
+            "هل ذكرت سبباً علمياً أو منطقياً؟",
+            "هل أعطيت قاعدة عملية؟"
+          ]
+        },
+        {
+          "q_num": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "tests": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools should require every student to learn a musical instrument? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس يجب أن تلزم كل طالب بتعلّم آلة موسيقية؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 12,
+          "key_vocabulary": [
+            {
+              "word": "instrument",
+              "ipa": "/ˈɪnstrəmənt/",
+              "ar": "آلة"
+            },
+            {
+              "word": "creativity",
+              "ipa": "/ˌkriːeɪˈtɪvəti/",
+              "ar": "إبداع"
+            },
+            {
+              "word": "discipline",
+              "ipa": "/ˈdɪsəplɪn/",
+              "ar": "انضباط"
+            },
+            {
+              "word": "interest",
+              "ipa": "/ˈɪntrəst/",
+              "ar": "اهتمام"
+            },
+            {
+              "word": "expensive",
+              "ipa": "/ɪkˈspensɪv/",
+              "ar": "غالي"
+            }
+          ],
+          "answer_tier69": {
+            "text": "Yes, I think this is a great idea. The biggest benefit is creativity and discipline. Learning an instrument trains the brain in a special way. Students learn patience, hard work, and how to express their feelings. But there is one drawback. Not every child loves music, and instruments can be expensive. Forcing a student who hates piano may make them sad. So I think schools should offer many choices, and let each student pick the instrument that interests them.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Yes + benefit + 'But' + drawback + choice-based solution."
+          },
+          "answer_tier90": {
+            "text": "Yes, I strongly support this idea, with some flexibility. The clearest benefit is developing creativity, discipline, and emotional expression — learning an instrument trains the brain in unique ways that other subjects simply can't. However, the obvious drawback is that not every child is naturally drawn to music, and instruments can be quite expensive. So rather than forcing a specific instrument, schools should offer a wide variety of options, allowing each student to choose what genuinely sparks their interest.",
+            "word_count": 81,
+            "level": "B2-C1",
+            "structure_notes": "'Emotional expression', 'naturally drawn to', 'sparks their interest'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل اقترحت حلاً مرناً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "hobbies",
+      "title_en": "Hobbies",
+      "title_ar": "الهوايات",
+      "category": "Leisure & Culture",
+      "order_index": 17,
+      "interviewer": {
+        "avatar_id": "andrew",
+        "name": "Andrew",
+        "accent": "US Male",
+        "voice": "en-US-AndrewNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=andrew&backgroundColor=c0aede"
+      },
+      "intro_en": "Hello! I'm Andrew. Today I'd like to ask you a few short questions about your hobbies and free-time activities. Please answer naturally in about 45 seconds for each question. Let's begin.",
+      "intro_ar": "مرحبًا! أنا أندرو. سأطرح عليك اليوم بعض الأسئلة القصيرة عن هواياتك وأنشطتك في وقت الفراغ. أجب بشكل طبيعي خلال 45 ثانية لكل سؤال. لنبدأ.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "purpose": "Warm-up & fluency",
+          "test_focus": "Fluency, simple past",
+          "question_en": "Tell me about a hobby you started recently. What is it, and why did you choose it?",
+          "question_ar": "أخبرني عن هواية بدأتها مؤخرًا. ما هي، ولماذا اخترتها؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "hobby",
+              "ipa": "/ˈhɒbi/",
+              "ar": "هواية"
+            },
+            {
+              "word": "start",
+              "ipa": "/stɑːrt/",
+              "ar": "يبدأ"
+            },
+            {
+              "word": "enjoy",
+              "ipa": "/ɪnˈdʒɔɪ/",
+              "ar": "يستمتع"
+            },
+            {
+              "word": "free time",
+              "ipa": "/friː taɪm/",
+              "ar": "وقت الفراغ"
+            },
+            {
+              "word": "try",
+              "ipa": "/traɪ/",
+              "ar": "يجرب"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "A few months ago, I started drawing as a new hobby. I chose it because I wanted to relax after long study hours. At first, I was not good, but I practiced a little every day. I watched short videos online and copied simple pictures. Now I can draw faces and small objects. Drawing helps me forget my stress and feel calm. It is also cheap. I only need paper and a pencil. I really enjoy this hobby and plan to continue it for a long time.",
+            "word_count": 86,
+            "level": "A2-B1",
+            "structure_notes": "Time marker + simple past + reason + steps + present result"
+          },
+          "answer_tier_90": {
+            "text": "About six months ago, I picked up sketching as a fresh hobby, mainly because I needed something calming to balance my busy schedule. In the beginning, my drawings looked clumsy, but I committed to practicing for twenty minutes daily and following online tutorials. Gradually, my lines became cleaner and my proportions improved. What I love most is that sketching forces me to slow down and notice small details around me. It is also incredibly affordable, requiring only a notebook and pencil, which makes it a sustainable long-term passion.",
+            "word_count": 87,
+            "level": "B2-C1",
+            "structure_notes": "Specific time + reason + progression + reflection + sustainability"
+          },
+          "self_assessment": [
+            "هل ذكرت اسم الهواية بوضوح؟",
+            "هل شرحت سبب اختيارها؟",
+            "هل استخدمت الزمن الماضي بشكل صحيح؟",
+            "هل تحدثت بثقة دون توقف طويل؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "purpose": "Pronunciation & rhythm",
+          "test_focus": "Comparison, preference language",
+          "question_en": "Do you prefer indoor hobbies like reading, or outdoor hobbies like hiking? Why?",
+          "question_ar": "هل تفضل الهوايات الداخلية مثل القراءة، أم الخارجية مثل المشي في الطبيعة؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "indoor",
+              "ipa": "/ˈɪnˌdɔːr/",
+              "ar": "داخلي"
+            },
+            {
+              "word": "outdoor",
+              "ipa": "/ˈaʊtˌdɔːr/",
+              "ar": "خارجي"
+            },
+            {
+              "word": "prefer",
+              "ipa": "/prɪˈfɜːr/",
+              "ar": "يفضل"
+            },
+            {
+              "word": "fresh air",
+              "ipa": "/freʃ er/",
+              "ar": "هواء نقي"
+            },
+            {
+              "word": "relaxing",
+              "ipa": "/rɪˈlæksɪŋ/",
+              "ar": "مريح"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I prefer outdoor hobbies more than indoor ones. I love walking in the park or hiking on weekends. The fresh air makes me feel happy and full of energy. When I stay inside too long, I feel tired and bored. Outdoor activities also help me meet new people and see nature. Of course, I sometimes read books at home when the weather is bad. But if I can choose, I always pick the outdoors. Moving my body outside is the best way to relax my mind.",
+            "word_count": 84,
+            "level": "A2-B1",
+            "structure_notes": "Preference + reasons + contrast + conclusion"
+          },
+          "answer_tier_90": {
+            "text": "Honestly, I lean strongly toward outdoor hobbies, especially hiking and cycling. There is something refreshing about breathing fresh air and feeling sunlight after hours behind a screen. Outdoor activities not only improve my physical health but also clear my mind in ways that indoor hobbies rarely match. That said, I do appreciate quiet indoor pastimes like reading on rainy afternoons. However, given a real choice, I would always trade four walls for an open trail. The combination of movement, scenery, and unpredictability makes outdoor hobbies far more rewarding for me.",
+            "word_count": 88,
+            "level": "B2-C1",
+            "structure_notes": "Strong preference + sensory detail + dual benefit + concession + conclusion"
+          },
+          "self_assessment": [
+            "هل عبّرت عن تفضيلك بوضوح؟",
+            "هل قدمت سببين على الأقل؟",
+            "هل استخدمت كلمات مقارنة (more, than, prefer)؟",
+            "هل كان إيقاع كلامك طبيعيًا؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "purpose": "Grammar & idea development",
+          "test_focus": "Reasoning, complex sentences",
+          "question_en": "Some people say hobbies are a waste of time because they don't earn money. Do you agree?",
+          "question_ar": "يقول البعض إن الهوايات مضيعة للوقت لأنها لا تجلب المال. هل توافق؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "waste",
+              "ipa": "/weɪst/",
+              "ar": "مضيعة"
+            },
+            {
+              "word": "valuable",
+              "ipa": "/ˈvæljuəbl/",
+              "ar": "ثمين"
+            },
+            {
+              "word": "mental health",
+              "ipa": "/ˈmentl helθ/",
+              "ar": "صحة نفسية"
+            },
+            {
+              "word": "balance",
+              "ipa": "/ˈbæləns/",
+              "ar": "توازن"
+            },
+            {
+              "word": "skill",
+              "ipa": "/skɪl/",
+              "ar": "مهارة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I do not agree with this idea at all. Hobbies are not a waste of time. They help us feel happy and reduce stress after work or study. For example, my friend plays guitar every evening, and it helps him relax. Hobbies also teach us new skills. Some people even turn their hobby into a small business later. Most importantly, life is not only about money. We need balance between work and fun. Without hobbies, life becomes boring and tiring. So hobbies are very valuable for our mental health.",
+            "word_count": 89,
+            "level": "A2-B1",
+            "structure_notes": "Disagree + reasons + example + counter to money argument + conclusion"
+          },
+          "answer_tier_90": {
+            "text": "I strongly disagree with that view. Reducing hobbies to financial value misses the whole point of why humans pursue them. Hobbies nourish our mental health, sharpen creativity, and offer a meaningful escape from daily pressure. For instance, someone who paints after work isn't wasting hours; they are recharging their mind and building patience. Moreover, many successful careers actually grew out of hobbies, from photography to coding. Even when they never become profitable, hobbies remind us that life is not only productivity, and that balance is essential for long-term wellbeing.",
+            "word_count": 89,
+            "level": "B2-C1",
+            "structure_notes": "Strong disagreement + reasoning + concrete example + counter-argument + philosophical conclusion"
+          },
+          "self_assessment": [
+            "هل أبديت رأيك بوضوح (agree/disagree)؟",
+            "هل دعمت رأيك بسببين أو مثال؟",
+            "هل استخدمت جملًا مركبة (because, however, for example)؟",
+            "هل ربطت أفكارك بشكل منطقي؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "purpose": "Complex sentences & logical reasoning",
+          "test_focus": "Future forms, conditional, recommendation",
+          "question_en": "Should companies give employees one hour each week to practice a personal hobby at work?",
+          "question_ar": "هل ينبغي للشركات أن تمنح الموظفين ساعة أسبوعية لممارسة هواية شخصية في العمل؟",
+          "audio_duration_sec": 14,
+          "key_vocab": [
+            {
+              "word": "company",
+              "ipa": "/ˈkʌmpəni/",
+              "ar": "شركة"
+            },
+            {
+              "word": "employee",
+              "ipa": "/ɪmˈplɔɪiː/",
+              "ar": "موظف"
+            },
+            {
+              "word": "productive",
+              "ipa": "/prəˈdʌktɪv/",
+              "ar": "منتج"
+            },
+            {
+              "word": "burnout",
+              "ipa": "/ˈbɜːrnaʊt/",
+              "ar": "إنهاك"
+            },
+            {
+              "word": "creativity",
+              "ipa": "/ˌkriːeɪˈtɪvəti/",
+              "ar": "إبداع"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I think companies should give employees one hour each week for a hobby. This small break can make workers happier and more productive. When people do something they love, they feel less stress and burnout. For example, an office could have a small art corner or music room. Also, hobbies often improve creativity, which helps companies in the long run. Of course, the company must plan it well so work is not delayed. But overall, one hour is not much, and the benefits are much bigger than the cost.",
+            "word_count": 89,
+            "level": "A2-B1",
+            "structure_notes": "Agreement + benefit + example + condition + cost-benefit conclusion"
+          },
+          "answer_tier_90": {
+            "text": "Absolutely, I believe companies should offer employees a weekly hour dedicated to personal hobbies. Such a policy would directly tackle burnout, which is a major reason for resignations today. When workers spend even sixty minutes painting, reading, or learning guitar, they return to their tasks refreshed and noticeably more creative. Forward-thinking firms like Google have already proven that flexible time fuels innovation. Naturally, this policy needs structure to avoid abuse, but the trade-off is remarkable: happier staff, lower turnover, and stronger team culture. It is a small investment with substantial long-term returns.",
+            "word_count": 92,
+            "level": "B2-C1",
+            "structure_notes": "Strong agreement + problem addressed + concrete benefit + real-world example + caveat + ROI conclusion"
+          },
+          "self_assessment": [
+            "هل قدمت موقفك (نعم/لا) بوضوح؟",
+            "هل ذكرت فائدتين على الأقل؟",
+            "هل استخدمت زمن المستقبل أو الشرطية؟",
+            "هل اختتمت إجابتك بجملة قوية؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت الأسئلة الأربعة؟",
+        "في أي سؤال شعرت أنك تحسنت أكثر؟",
+        "هل بقيت ضمن الـ 45 ثانية لكل سؤال؟",
+        "ما الكلمة الجديدة التي تعلمتها اليوم؟"
+      ]
+    },
+    {
+      "topic_code": "environment",
+      "title_en": "Environment",
+      "title_ar": "البيئة",
+      "category": "Modern Issues",
+      "order_index": 18,
+      "interviewer": {
+        "avatar_id": "brian",
+        "name": "Brian",
+        "accent": "UK Male",
+        "voice": "en-GB-RyanNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=brian&backgroundColor=ffdfbf"
+      },
+      "intro_en": "Hello there! I'm Brian. I'd like to ask you a few short questions about the environment and how we care for our planet. Please answer naturally in about 45 seconds for each question. Let's begin.",
+      "intro_ar": "مرحبًا! أنا براين. سأطرح عليك بعض الأسئلة القصيرة عن البيئة وكيف نعتني بكوكبنا. أجب بشكل طبيعي خلال 45 ثانية لكل سؤال. لنبدأ.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "purpose": "Warm-up & fluency",
+          "test_focus": "Fluency, simple past, daily habits",
+          "question_en": "Tell me about something you did recently to help the environment.",
+          "question_ar": "أخبرني عن شيء فعلته مؤخرًا لمساعدة البيئة.",
+          "audio_duration_sec": 11,
+          "key_vocab": [
+            {
+              "word": "recycle",
+              "ipa": "/ˌriːˈsaɪkl/",
+              "ar": "يعيد تدوير"
+            },
+            {
+              "word": "plastic",
+              "ipa": "/ˈplæstɪk/",
+              "ar": "بلاستيك"
+            },
+            {
+              "word": "waste",
+              "ipa": "/weɪst/",
+              "ar": "نفايات"
+            },
+            {
+              "word": "reduce",
+              "ipa": "/rɪˈdjuːs/",
+              "ar": "يقلل"
+            },
+            {
+              "word": "reusable",
+              "ipa": "/riːˈjuːzəbl/",
+              "ar": "قابل لإعادة الاستخدام"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Last week, I started carrying a reusable water bottle every day. Before that, I used to buy plastic bottles all the time. Now I fill my bottle at home and at school. I also began to separate paper and plastic at home. My mother was very happy about this. These small changes are easy, but they help reduce waste. I feel good when I throw less plastic in the trash. I know one person cannot save the planet alone, but every small action counts in the end.",
+            "word_count": 87,
+            "level": "A2-B1",
+            "structure_notes": "Time marker + past action + comparison + extension + reflection"
+          },
+          "answer_tier_90": {
+            "text": "A couple of weeks ago, I made a conscious decision to cut down on single-use plastic. I switched to a reusable steel bottle and started bringing cloth bags whenever I shop. Honestly, the change felt small at first, but I quickly noticed how much packaging I used to throw away without thinking. I also began separating recyclables at home, which sparked interesting conversations with my family. While I cannot solve climate change alone, I genuinely believe that consistent personal habits, multiplied across millions of people, create meaningful environmental impact.",
+            "word_count": 87,
+            "level": "B2-C1",
+            "structure_notes": "Specific time + deliberate choice + actions + realization + collective impact reasoning"
+          },
+          "self_assessment": [
+            "هل ذكرت فعلًا محددًا قمت به؟",
+            "هل استخدمت الزمن الماضي بشكل صحيح؟",
+            "هل وصفت متى وأين فعلت ذلك؟",
+            "هل تحدثت بطلاقة دون توقف طويل؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "purpose": "Pronunciation & rhythm",
+          "test_focus": "Feelings, concern language",
+          "question_en": "How do you feel when you see pollution or litter in public places?",
+          "question_ar": "ما شعورك عندما ترى التلوث أو القمامة في الأماكن العامة؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "pollution",
+              "ipa": "/pəˈluːʃn/",
+              "ar": "تلوث"
+            },
+            {
+              "word": "litter",
+              "ipa": "/ˈlɪtər/",
+              "ar": "قمامة متناثرة"
+            },
+            {
+              "word": "disappointed",
+              "ipa": "/ˌdɪsəˈpɔɪntɪd/",
+              "ar": "محبط"
+            },
+            {
+              "word": "responsibility",
+              "ipa": "/rɪˌspɒnsəˈbɪləti/",
+              "ar": "مسؤولية"
+            },
+            {
+              "word": "ashamed",
+              "ipa": "/əˈʃeɪmd/",
+              "ar": "خجل"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Honestly, I feel very sad and disappointed when I see litter in parks or on streets. It looks ugly and dirty. It also harms animals and plants. Last month, I saw a beautiful beach full of plastic bottles, and it really hurt me. I think people forget that nature is a gift. We should protect it, not destroy it. Sometimes I pick up the trash myself if I have a bag. Of course, one person is not enough. Everyone should feel responsible for keeping public places clean.",
+            "word_count": 85,
+            "level": "A2-B1",
+            "structure_notes": "Emotion + reasons + personal example + reflection + call to action"
+          },
+          "answer_tier_90": {
+            "text": "Frankly, seeing litter in public spaces frustrates and saddens me deeply. It signals a worrying lack of respect, not just for nature but for the entire community sharing that space. I remember visiting a stunning coastline last summer that was almost ruined by scattered plastic, and I felt genuinely heartbroken. Beyond aesthetics, such pollution threatens wildlife and contaminates water sources. Whenever possible, I pick up rubbish myself, though I admit it sometimes feels overwhelming. Ultimately, clean public spaces require shared responsibility, stricter enforcement, and a cultural shift in attitudes.",
+            "word_count": 87,
+            "level": "B2-C1",
+            "structure_notes": "Strong emotion + deeper meaning + vivid example + multiple impacts + systemic conclusion"
+          },
+          "self_assessment": [
+            "هل عبّرت عن مشاعرك بوضوح؟",
+            "هل قدمت مثالًا محددًا؟",
+            "هل استخدمت كلمات شعورية متنوعة؟",
+            "هل كان إيقاع كلامك طبيعيًا؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "purpose": "Grammar & idea development",
+          "test_focus": "Reasoning, cause-effect, complex sentences",
+          "question_en": "Some people say individual actions cannot solve climate change, only governments can. Do you agree?",
+          "question_ar": "يقول البعض إن الأفعال الفردية لا تستطيع حل تغير المناخ، وإن الحكومات وحدها قادرة على ذلك. هل توافق؟",
+          "audio_duration_sec": 14,
+          "key_vocab": [
+            {
+              "word": "climate change",
+              "ipa": "/ˈklaɪmət tʃeɪndʒ/",
+              "ar": "تغير المناخ"
+            },
+            {
+              "word": "government",
+              "ipa": "/ˈɡʌvərnmənt/",
+              "ar": "حكومة"
+            },
+            {
+              "word": "individual",
+              "ipa": "/ˌɪndɪˈvɪdʒuəl/",
+              "ar": "فردي"
+            },
+            {
+              "word": "policy",
+              "ipa": "/ˈpɒləsi/",
+              "ar": "سياسة"
+            },
+            {
+              "word": "impact",
+              "ipa": "/ˈɪmpækt/",
+              "ar": "تأثير"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I partly agree, but not completely. It is true that governments have the biggest power. They can make laws about factories, cars, and clean energy. One law can change a whole country. However, individual actions are also important. If millions of people recycle and save water, the impact is huge. Also, people choose who leads the government. So when we care about the environment, we vote for better leaders. Both sides must work together. Governments alone cannot succeed if people do not support green policies in daily life.",
+            "word_count": 88,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + government role + individual role + connection + conclusion"
+          },
+          "answer_tier_90": {
+            "text": "I partly agree but ultimately disagree with that statement. Of course, governments hold immense power through legislation, taxation, and international agreements, and large-scale change is impossible without them. However, dismissing individual action entirely is misleading. Consumer choices shape markets, which in turn pressure corporations and politicians. Moreover, citizens elect leaders, so environmental awareness directly influences policy. The most realistic approach combines bold government regulation with widespread personal responsibility. Treating them as alternatives is a false dichotomy; meaningful progress on climate change demands sustained cooperation between institutions and individuals.",
+            "word_count": 88,
+            "level": "B2-C1",
+            "structure_notes": "Nuanced position + concession + counter-argument + market reasoning + synthesis"
+          },
+          "self_assessment": [
+            "هل وضّحت موقفك (موافق/غير موافق/جزئي)؟",
+            "هل دعمت رأيك بسببين على الأقل؟",
+            "هل استخدمت روابط منطقية (however, also, so)؟",
+            "هل اختتمت بنتيجة واضحة؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "purpose": "Complex sentences & logical reasoning",
+          "test_focus": "Future forms, conditional, recommendation",
+          "question_en": "Should cities ban private cars in their centers to reduce air pollution?",
+          "question_ar": "هل ينبغي للمدن أن تمنع السيارات الخاصة في مراكزها لتقليل تلوث الهواء؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "ban",
+              "ipa": "/bæn/",
+              "ar": "يمنع"
+            },
+            {
+              "word": "city center",
+              "ipa": "/ˈsɪti ˈsentər/",
+              "ar": "مركز المدينة"
+            },
+            {
+              "word": "public transport",
+              "ipa": "/ˈpʌblɪk ˈtrænspɔːrt/",
+              "ar": "نقل عام"
+            },
+            {
+              "word": "air quality",
+              "ipa": "/er ˈkwɒləti/",
+              "ar": "جودة الهواء"
+            },
+            {
+              "word": "alternative",
+              "ipa": "/ɔːlˈtɜːrnətɪv/",
+              "ar": "بديل"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I think cities should ban private cars in their centers. Air pollution is a serious problem in many cities. Cars are one of the biggest causes. If we remove cars from the center, the air will be cleaner and the streets will be safer. People can walk, ride bikes, or use buses and metros. Some European cities already did this, and the results are great. Of course, the government must first build good public transport. Without a strong alternative, the ban will be unfair to workers.",
+            "word_count": 86,
+            "level": "A2-B1",
+            "structure_notes": "Agreement + problem + benefit + example + condition"
+          },
+          "answer_tier_90": {
+            "text": "Yes, I genuinely support banning private cars from city centers, provided it is implemented thoughtfully. Urban air pollution causes thousands of premature deaths annually, and vehicles are a primary contributor. Cities like Oslo and Madrid have already reduced traffic in central zones, reporting cleaner air, quieter streets, and livelier public spaces. However, such a policy only works when authorities first invest in reliable public transport, safe cycling lanes, and accessible alternatives for disabled residents. If introduced gradually with proper infrastructure, this measure could transform cities into healthier, more human-friendly environments.",
+            "word_count": 90,
+            "level": "B2-C1",
+            "structure_notes": "Conditional support + statistical reasoning + real examples + caveat + visionary conclusion"
+          },
+          "self_assessment": [
+            "هل قدمت موقفك بوضوح؟",
+            "هل استخدمت زمن المستقبل أو الشرطية؟",
+            "هل ذكرت مثالًا واقعيًا أو شرطًا؟",
+            "هل اختتمت إجابتك بقوة؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت الأسئلة الأربعة؟",
+        "في أي سؤال شعرت أنك تحسنت أكثر؟",
+        "هل بقيت ضمن الـ 45 ثانية لكل سؤال؟",
+        "ما الكلمة الجديدة التي تعلمتها اليوم؟"
+      ]
+    },
+    {
+      "topic_code": "money",
+      "title_en": "Money & Saving",
+      "title_ar": "المال والادخار",
+      "category": "Modern Issues",
+      "order_index": 19,
+      "interviewer": {
+        "avatar_id": "emma",
+        "name": "Emma",
+        "accent": "UK Female",
+        "voice": "en-GB-SoniaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=emma&backgroundColor=ffd5dc"
+      },
+      "intro_en": "Hi! I'm Emma. Today I'd like to ask you a few short questions about money, spending, and saving habits. Please answer naturally in about 45 seconds for each question. Let's begin.",
+      "intro_ar": "مرحبًا! أنا إيما. سأطرح عليك اليوم بعض الأسئلة القصيرة عن المال والإنفاق وعادات الادخار. أجب بشكل طبيعي خلال 45 ثانية لكل سؤال. لنبدأ.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "purpose": "Warm-up & fluency",
+          "test_focus": "Fluency, simple past, personal experience",
+          "question_en": "Tell me about something important you bought recently. Why did you buy it?",
+          "question_ar": "أخبرني عن شيء مهم اشتريته مؤخرًا. لماذا اشتريته؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "buy",
+              "ipa": "/baɪ/",
+              "ar": "يشتري"
+            },
+            {
+              "word": "expensive",
+              "ipa": "/ɪkˈspensɪv/",
+              "ar": "غالي"
+            },
+            {
+              "word": "need",
+              "ipa": "/niːd/",
+              "ar": "حاجة"
+            },
+            {
+              "word": "worth it",
+              "ipa": "/wɜːrθ ɪt/",
+              "ar": "يستحق"
+            },
+            {
+              "word": "save",
+              "ipa": "/seɪv/",
+              "ar": "يدخر"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Last month, I bought a new pair of running shoes. They were a bit expensive, but I really needed them. My old shoes were broken, and they hurt my feet. I saved money for two months to buy a good brand. When I tried them, they felt very comfortable. Now I run three times a week without pain. I think it was worth every penny. Sometimes spending more on quality is better than buying cheap things many times. I am very happy with my choice.",
+            "word_count": 85,
+            "level": "A2-B1",
+            "structure_notes": "Time + item + reason + saving + result + reflection"
+          },
+          "answer_tier_90": {
+            "text": "About a month ago, I invested in a high-quality pair of running shoes, which turned out to be one of my best recent purchases. Although they were pricier than I usually spend, my old pair had completely worn out and was causing knee pain. I had been saving for several weeks specifically for this, so the purchase felt rewarding rather than impulsive. Since then, my runs have been noticeably smoother and injury-free. Honestly, this experience taught me that paying more for quality often saves money and discomfort in the long run.",
+            "word_count": 90,
+            "level": "B2-C1",
+            "structure_notes": "Time marker + investment framing + justification + planned saving + outcome + life lesson"
+          },
+          "self_assessment": [
+            "هل ذكرت ما اشتريته بوضوح؟",
+            "هل شرحت سبب الشراء؟",
+            "هل استخدمت الزمن الماضي بشكل صحيح؟",
+            "هل تحدثت بطلاقة دون توقف طويل؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "purpose": "Pronunciation & rhythm",
+          "test_focus": "Preference language, comparison",
+          "question_en": "Do you prefer saving money for the future or spending it now on experiences? Why?",
+          "question_ar": "هل تفضل ادخار المال للمستقبل أم إنفاقه الآن على التجارب؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "saving",
+              "ipa": "/ˈseɪvɪŋ/",
+              "ar": "ادخار"
+            },
+            {
+              "word": "spending",
+              "ipa": "/ˈspendɪŋ/",
+              "ar": "إنفاق"
+            },
+            {
+              "word": "experience",
+              "ipa": "/ɪkˈspɪriəns/",
+              "ar": "تجربة"
+            },
+            {
+              "word": "future",
+              "ipa": "/ˈfjuːtʃər/",
+              "ar": "مستقبل"
+            },
+            {
+              "word": "memory",
+              "ipa": "/ˈmeməri/",
+              "ar": "ذكرى"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I prefer a mix of both, but I lean more toward saving. Life is not safe without some money in the bank. If something bad happens, savings can really help. However, I also believe experiences are important. A trip with family or a nice meal with friends makes great memories. Money can be earned again, but special moments cannot. So I usually save about seventy percent of any money I get and spend the rest on experiences. This way, I feel safe and happy at the same time.",
+            "word_count": 88,
+            "level": "A2-B1",
+            "structure_notes": "Balanced preference + safety reason + experience value + concrete ratio + dual benefit"
+          },
+          "answer_tier_90": {
+            "text": "Honestly, I aim for a balance, but I lean slightly toward saving. Financial security gives me peace of mind, especially when emergencies or unexpected opportunities arise. That said, I firmly believe experiences create lasting value that material possessions rarely match. A meaningful trip or a shared meal with loved ones becomes a memory you carry forever, while gadgets quickly lose their appeal. My personal rule is to save roughly two-thirds of any income and spend the remainder on meaningful experiences. This approach keeps me financially stable while still genuinely enjoying life.",
+            "word_count": 90,
+            "level": "B2-C1",
+            "structure_notes": "Balanced lean + emotional reasoning + experience philosophy + personal rule + holistic conclusion"
+          },
+          "self_assessment": [
+            "هل عبّرت عن تفضيلك بوضوح؟",
+            "هل قدمت سببًا منطقيًا؟",
+            "هل استخدمت كلمات المقارنة (more, prefer, both)؟",
+            "هل كان إيقاع كلامك طبيعيًا؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "purpose": "Grammar & idea development",
+          "test_focus": "Reasoning, complex sentences, evidence",
+          "question_en": "Some people say money cannot buy happiness. Do you agree or disagree?",
+          "question_ar": "يقول البعض إن المال لا يستطيع شراء السعادة. هل توافق أم تختلف؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "happiness",
+              "ipa": "/ˈhæpinəs/",
+              "ar": "سعادة"
+            },
+            {
+              "word": "wealthy",
+              "ipa": "/ˈwelθi/",
+              "ar": "ثري"
+            },
+            {
+              "word": "stress",
+              "ipa": "/stres/",
+              "ar": "ضغط نفسي"
+            },
+            {
+              "word": "basic needs",
+              "ipa": "/ˈbeɪsɪk niːdz/",
+              "ar": "احتياجات أساسية"
+            },
+            {
+              "word": "satisfaction",
+              "ipa": "/ˌsætɪsˈfækʃn/",
+              "ar": "رضا"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I partly agree with this saying. Money alone cannot make people truly happy. We see many rich people who feel lonely or stressed. Happiness comes from family, health, and good relationships. However, money is still very important. Without enough money for food, housing, or medical care, life is very hard. So money cannot buy happiness, but it can remove many problems that cause sadness. The truth is in the middle. We need enough money to feel safe, but real happiness comes from love and purpose.",
+            "word_count": 85,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + counter-example + concession + middle-ground conclusion"
+          },
+          "answer_tier_90": {
+            "text": "I partly agree but with important nuance. While money itself does not generate happiness, it certainly removes many obstacles that cause unhappiness. Studies consistently show that income improves wellbeing significantly until basic needs are comfortably met, after which extra money matters far less. True happiness clearly stems from meaningful relationships, good health, and a sense of purpose. However, dismissing money entirely is unrealistic, especially for those struggling with bills or medical costs. The wisest view is that money is a tool: necessary, but never the destination itself.",
+            "word_count": 87,
+            "level": "B2-C1",
+            "structure_notes": "Nuanced agreement + research reference + true source of happiness + caveat + metaphorical conclusion"
+          },
+          "self_assessment": [
+            "هل أبديت موقفك بوضوح؟",
+            "هل دعمت رأيك بسببين على الأقل؟",
+            "هل استخدمت جملًا مركبة (because, however, while)؟",
+            "هل اختتمت بنتيجة واضحة؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "purpose": "Complex sentences & logical reasoning",
+          "test_focus": "Future forms, recommendation, conditional",
+          "question_en": "Should schools teach personal finance and money management to all students?",
+          "question_ar": "هل ينبغي للمدارس أن تُعلّم جميع الطلاب الإدارة المالية الشخصية؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "personal finance",
+              "ipa": "/ˈpɜːrsənl ˈfaɪnæns/",
+              "ar": "تمويل شخصي"
+            },
+            {
+              "word": "budget",
+              "ipa": "/ˈbʌdʒɪt/",
+              "ar": "ميزانية"
+            },
+            {
+              "word": "debt",
+              "ipa": "/det/",
+              "ar": "دين"
+            },
+            {
+              "word": "invest",
+              "ipa": "/ɪnˈvest/",
+              "ar": "يستثمر"
+            },
+            {
+              "word": "essential",
+              "ipa": "/ɪˈsenʃl/",
+              "ar": "أساسي"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I strongly believe schools should teach personal finance. Many young people leave school without knowing how to make a budget or save money. As a result, they fall into debt or waste their first salary. If schools teach these skills, students will be ready for real life. They will learn how to plan, save, and avoid bad loans. Math and history are important, but money skills are needed every single day. A simple weekly lesson about budgeting and saving can change a student's whole future.",
+            "word_count": 87,
+            "level": "A2-B1",
+            "structure_notes": "Strong agreement + current problem + benefit + comparison + practical suggestion"
+          },
+          "answer_tier_90": {
+            "text": "Absolutely, I firmly believe personal finance should be a compulsory subject in every school. Far too many young adults graduate without understanding budgeting, interest rates, or basic investing, leaving them vulnerable to debt and poor financial decisions. If students learned these skills early, they would enter adulthood with confidence rather than confusion. While academic subjects like math and literature matter, financial literacy directly shapes daily life. Schools could easily integrate weekly lessons covering saving, taxes, and credit, ultimately empowering an entire generation to build healthier, more secure financial futures.",
+            "word_count": 89,
+            "level": "B2-C1",
+            "structure_notes": "Strong agreement + current gap + benefit forecast + comparison + concrete implementation + generational vision"
+          },
+          "self_assessment": [
+            "هل قدمت موقفك (نعم/لا) بوضوح؟",
+            "هل ذكرت فائدتين على الأقل؟",
+            "هل استخدمت زمن المستقبل أو الشرطية؟",
+            "هل اختتمت إجابتك بقوة؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت الأسئلة الأربعة؟",
+        "في أي سؤال شعرت أنك تحسنت أكثر؟",
+        "هل بقيت ضمن الـ 45 ثانية لكل سؤال؟",
+        "ما الكلمة الجديدة التي تعلمتها اليوم؟"
+      ]
+    },
+    {
+      "topic_code": "health",
+      "title_en": "Health",
+      "title_ar": "الصحة",
+      "category": "Modern Issues",
+      "order_index": 20,
+      "interviewer": {
+        "avatar_id": "andrew",
+        "name": "Andrew",
+        "accent": "US Male",
+        "voice": "en-US-AndrewNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=andrew&backgroundColor=c0aede"
+      },
+      "intro_en": "Hi there! I'm Andrew. Today I'd like to ask you a few short questions about your health and well-being. Please answer naturally in about 45 seconds for each question. Let's begin.",
+      "intro_ar": "مرحبًا! أنا أندرو. سأطرح عليك اليوم بعض الأسئلة القصيرة عن صحتك ونمط حياتك. أجب بشكل طبيعي خلال 45 ثانية لكل سؤال. لنبدأ.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "purpose": "Warm-up & fluency",
+          "test_focus": "Fluency, simple past, health habits",
+          "question_en": "Tell me about a time when you felt sick. What did you do to feel better?",
+          "question_ar": "أخبرني عن مرة شعرت فيها بالمرض. ماذا فعلت لتشعر بتحسن؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "sick",
+              "ipa": "/sɪk/",
+              "ar": "مريض"
+            },
+            {
+              "word": "fever",
+              "ipa": "/ˈfiːvər/",
+              "ar": "حمى"
+            },
+            {
+              "word": "medicine",
+              "ipa": "/ˈmedəsən/",
+              "ar": "دواء"
+            },
+            {
+              "word": "rest",
+              "ipa": "/rest/",
+              "ar": "راحة"
+            },
+            {
+              "word": "recover",
+              "ipa": "/rɪˈkʌvər/",
+              "ar": "يتعافى"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "A few months ago, I caught a bad cold. I had a high fever and a sore throat. I felt very tired and could not study. First, I drank a lot of warm water and tea with honey. Then I took some medicine from the pharmacy. My mother made me hot soup, and I slept for many hours. After two days of rest, I started to feel much better. This experience taught me that the body needs rest and good food to recover from illness.",
+            "word_count": 86,
+            "level": "A2-B1",
+            "structure_notes": "Time + symptoms + actions + recovery + life lesson"
+          },
+          "answer_tier_90": {
+            "text": "About three months ago, I came down with a nasty flu that knocked me out completely. I had a high fever, body aches, and barely any energy. Rather than rushing to strong medication, I focused on natural recovery: plenty of fluids, warm soup, and at least nine hours of sleep nightly. I also took simple painkillers when the fever spiked. Within three days, I felt significantly better. Honestly, that experience reminded me how powerful basic rest, hydration, and nutrition can be when our bodies need to heal themselves.",
+            "word_count": 88,
+            "level": "B2-C1",
+            "structure_notes": "Specific time + vivid symptoms + recovery strategy + outcome + reflective insight"
+          },
+          "self_assessment": [
+            "هل وصفت أعراضك بوضوح؟",
+            "هل ذكرت ما فعلته للتعافي؟",
+            "هل استخدمت الزمن الماضي بشكل صحيح؟",
+            "هل تحدثت بطلاقة دون توقف طويل؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "purpose": "Pronunciation & rhythm",
+          "test_focus": "Preference, lifestyle vocabulary",
+          "question_en": "Which is more important for good health in your opinion: a healthy diet or regular exercise?",
+          "question_ar": "في رأيك، أيهما أهم للصحة الجيدة: النظام الغذائي الصحي أم التمارين المنتظمة؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "diet",
+              "ipa": "/ˈdaɪət/",
+              "ar": "نظام غذائي"
+            },
+            {
+              "word": "exercise",
+              "ipa": "/ˈeksərsaɪz/",
+              "ar": "تمرين"
+            },
+            {
+              "word": "nutrition",
+              "ipa": "/njuˈtrɪʃn/",
+              "ar": "تغذية"
+            },
+            {
+              "word": "fit",
+              "ipa": "/fɪt/",
+              "ar": "لائق بدنيًا"
+            },
+            {
+              "word": "balance",
+              "ipa": "/ˈbæləns/",
+              "ar": "توازن"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I believe a healthy diet is slightly more important than exercise. We eat every day, three or four times. So what we put in our body matters a lot. If you eat junk food, even one hour of exercise cannot fix the damage. Good food gives us energy, strong bones, and a clear mind. Of course, exercise is also very important for the heart and muscles. The best plan is to combine both, but if I must choose one, I will always pick healthy eating first.",
+            "word_count": 87,
+            "level": "A2-B1",
+            "structure_notes": "Choice + frequency reason + comparison + concession + final choice"
+          },
+          "answer_tier_90": {
+            "text": "Honestly, I would say a healthy diet matters slightly more than exercise. Nutrition is something we engage with multiple times daily, while exercise typically happens for a limited window. There is a popular saying that you cannot outrun a bad diet, and I genuinely agree with it. No amount of running burns the damage caused by consistently poor eating. That said, ideally both should work together for optimal health. However, if forced to choose, I would always prioritize what fuels my body over how I burn that fuel.",
+            "word_count": 87,
+            "level": "B2-C1",
+            "structure_notes": "Clear preference + frequency reasoning + popular saying + dual ideal + decisive conclusion"
+          },
+          "self_assessment": [
+            "هل اخترت إجابة واضحة؟",
+            "هل قدمت سببين على الأقل؟",
+            "هل استخدمت كلمات المقارنة (more, than, both)؟",
+            "هل كان إيقاع كلامك طبيعيًا؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "purpose": "Grammar & idea development",
+          "test_focus": "Reasoning, complex sentences",
+          "question_en": "Some people say mental health is just as important as physical health. Do you agree?",
+          "question_ar": "يقول البعض إن الصحة النفسية لا تقل أهمية عن الصحة الجسدية. هل توافق؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "mental health",
+              "ipa": "/ˈmentl helθ/",
+              "ar": "صحة نفسية"
+            },
+            {
+              "word": "physical",
+              "ipa": "/ˈfɪzɪkl/",
+              "ar": "جسدي"
+            },
+            {
+              "word": "anxiety",
+              "ipa": "/æŋˈzaɪəti/",
+              "ar": "قلق"
+            },
+            {
+              "word": "stigma",
+              "ipa": "/ˈstɪɡmə/",
+              "ar": "وصمة"
+            },
+            {
+              "word": "support",
+              "ipa": "/səˈpɔːrt/",
+              "ar": "دعم"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I strongly agree with this idea. Mental health is just as important as physical health, maybe even more. A person can have a strong body but still feel sad, anxious, or empty inside. If the mind is not well, life becomes very hard, and the body also suffers later. Many studies show that stress causes real physical problems like heart disease. Sadly, many cultures still ignore mental health and feel shame about it. We must talk about it openly and offer real support to people who need help.",
+            "word_count": 89,
+            "level": "A2-B1",
+            "structure_notes": "Strong agreement + comparison + mind-body link + cultural problem + call to action"
+          },
+          "answer_tier_90": {
+            "text": "Absolutely, I wholeheartedly agree. In fact, I would argue mental health deserves equal, if not greater, attention than physical health. The two are deeply connected; chronic stress and anxiety often manifest as real physical illnesses, from insomnia to heart problems. Unfortunately, many societies still treat mental health as a taboo, leaving countless people suffering in silence. Breaking this stigma requires open conversations, accessible therapy, and proper education starting from schools. Until we treat depression with the same urgency as a broken leg, true wellbeing will remain incomplete.",
+            "word_count": 88,
+            "level": "B2-C1",
+            "structure_notes": "Strong agreement + mind-body interconnection + societal critique + solution + powerful analogy"
+          },
+          "self_assessment": [
+            "هل أبديت موقفك بوضوح؟",
+            "هل دعمت رأيك بسببين على الأقل؟",
+            "هل استخدمت جملًا مركبة (because, however, while)؟",
+            "هل اختتمت بنتيجة قوية؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "purpose": "Complex sentences & logical reasoning",
+          "test_focus": "Future forms, recommendation, conditional",
+          "question_en": "Should governments make basic healthcare free for all citizens?",
+          "question_ar": "هل ينبغي للحكومات أن توفر الرعاية الصحية الأساسية مجانًا لجميع المواطنين؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "healthcare",
+              "ipa": "/ˈhelθker/",
+              "ar": "رعاية صحية"
+            },
+            {
+              "word": "citizen",
+              "ipa": "/ˈsɪtəzn/",
+              "ar": "مواطن"
+            },
+            {
+              "word": "afford",
+              "ipa": "/əˈfɔːrd/",
+              "ar": "يستطيع دفع"
+            },
+            {
+              "word": "tax",
+              "ipa": "/tæks/",
+              "ar": "ضريبة"
+            },
+            {
+              "word": "human right",
+              "ipa": "/ˈhjuːmən raɪt/",
+              "ar": "حق إنساني"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I strongly believe basic healthcare should be free for everyone. Health is not a luxury, it is a human right. Many poor families cannot afford a doctor or basic medicine. As a result, small problems become big and dangerous. If governments offer free basic care, the whole society becomes healthier and more productive. Of course, this costs money, and people must pay fair taxes for it. But a healthy nation is a strong nation. No one should die or suffer just because they have no money.",
+            "word_count": 88,
+            "level": "A2-B1",
+            "structure_notes": "Strong agreement + human right framing + problem + benefit + cost acknowledgment + ethical conclusion"
+          },
+          "answer_tier_90": {
+            "text": "Yes, I firmly believe basic healthcare should be a universal right rather than a privilege. When people cannot afford treatment, minor illnesses escalate into serious, costly emergencies that ultimately burden the entire system. Countries like the UK and Canada have demonstrated that publicly funded healthcare, while imperfect, dramatically improves overall population health and life expectancy. Naturally, such systems require reasonable taxation and efficient management to avoid waste. However, the moral argument is clear: no human being should die or suffer simply because they were born without financial means.",
+            "word_count": 89,
+            "level": "B2-C1",
+            "structure_notes": "Strong agreement + universal right framing + escalation argument + real examples + caveat + moral conclusion"
+          },
+          "self_assessment": [
+            "هل قدمت موقفك (نعم/لا) بوضوح؟",
+            "هل ذكرت فائدتين على الأقل؟",
+            "هل استخدمت زمن المستقبل أو الشرطية؟",
+            "هل اختتمت إجابتك بقوة؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت الأسئلة الأربعة؟",
+        "في أي سؤال شعرت أنك تحسنت أكثر؟",
+        "هل بقيت ضمن الـ 45 ثانية لكل سؤال؟",
+        "ما الكلمة الجديدة التي تعلمتها اليوم؟"
+      ]
+    }
+  ]
+}

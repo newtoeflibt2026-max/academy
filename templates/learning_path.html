@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>{{ section_title }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(180deg,#f7f9fc 0%,#eef2f7 100%);min-height:100vh;color:#1a2332;padding-bottom:80px}
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #eef0f4;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:#1a2332;font-weight:700;font-size:14px;text-decoration:none}
+.back-btn svg{width:20px;height:20px}
+.section-header{flex:1;text-align:center}
+.section-header h1{font-size:16px;font-weight:900}
+.section-header p{font-size:11px;color:#6b7a90;margin-top:2px}
+.hearts-mini{display:flex;align-items:center;gap:4px;background:#fee2e2;color:#ef4444;padding:6px 10px;border-radius:20px;font-weight:700;font-size:13px}
+.hearts-mini svg{width:14px;height:14px}
+
+/* Unit banner */
+.unit-banner{margin:14px auto 0;max-width:480px;padding:0 14px}
+.unit-card{background:linear-gradient(135deg,var(--c1),var(--c2));border-radius:18px;padding:14px 16px;color:#fff;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px var(--shadow)}
+.unit-card.read{--c1:#3b82f6;--c2:#2563eb;--shadow:rgba(59,130,246,.3)}
+.unit-card.listen{--c1:#8b5cf6;--c2:#7c3aed;--shadow:rgba(139,92,246,.3)}
+.unit-card.write{--c1:#ec4899;--c2:#db2777;--shadow:rgba(236,72,153,.3)}
+.unit-card.speak{--c1:#10b981;--c2:#059669;--shadow:rgba(16,185,129,.3)}
+.unit-icon{width:44px;height:44px;background:rgba(255,255,255,.25);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;font-weight:900}
+.unit-info h2{font-size:15px;font-weight:900}
+.unit-info p{font-size:12px;opacity:.9;margin-top:2px}
+
+/* Path tree */
+.path-container{max-width:480px;margin:24px auto 0;position:relative;padding:0 14px}
+.path-list{position:relative;display:flex;flex-direction:column;gap:6px}
+.node-wrap{display:flex;justify-content:center;position:relative;padding:14px 0}
+.node-wrap.pos-1{justify-content:center}
+.node-wrap.pos-0{justify-content:flex-start;padding-right:50px}
+.node-wrap.pos-2{justify-content:flex-end;padding-left:50px}
+
+/* Connector line (SVG curve) */
+.connector{position:absolute;top:-30px;width:100%;height:60px;pointer-events:none;z-index:0}
+.connector path{stroke:#d1d5db;stroke-width:4;stroke-dasharray:8 6;fill:none}
+
+/* Node */
+.node{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:inherit;cursor:pointer;border:none;background:none;padding:0}
+.node-circle{width:78px;height:78px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .2s;box-shadow:0 6px 0 var(--shadow-dark),0 10px 20px rgba(0,0,0,.15)}
+.node:active .node-circle{transform:translateY(3px);box-shadow:0 3px 0 var(--shadow-dark),0 5px 10px rgba(0,0,0,.15)}
+.node-circle svg{width:36px;height:36px;color:#fff;stroke-width:2.3}
+
+/* Available (color) */
+.node.available .node-circle{background:linear-gradient(135deg,var(--c1),var(--c2));--shadow-dark:var(--c2-dark)}
+.node.available.read{--c1:#60a5fa;--c2:#3b82f6;--c2-dark:#1e40af}
+.node.available.listen{--c1:#a78bfa;--c2:#8b5cf6;--c2-dark:#5b21b6}
+.node.available.write{--c1:#f472b6;--c2:#ec4899;--c2-dark:#9d174d}
+.node.available.speak{--c1:#34d399;--c2:#10b981;--c2-dark:#065f46}
+.node.available .node-circle::before{content:"";position:absolute;inset:-6px;border-radius:50%;border:3px solid var(--c2);opacity:.4;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.1);opacity:0}}
+
+/* Completed */
+.node.completed .node-circle{background:linear-gradient(135deg,#34d399,#10b981);--shadow-dark:#065f46}
+.node.completed .check-badge{position:absolute;bottom:-4px;right:-4px;background:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.node.completed .check-badge svg{width:16px;height:16px;color:#10b981;stroke-width:3.5}
+
+/* Locked */
+.node.locked .node-circle{background:#cbd5e1;--shadow-dark:#94a3b8;cursor:not-allowed}
+.node.locked .node-circle svg{color:#fff;opacity:.7}
+
+/* Quiz node (between lessons) */
+.node.quiz .node-circle{background:linear-gradient(135deg,#fbbf24,#f59e0b);--shadow-dark:#b45309;width:68px;height:68px}
+.node.quiz .node-circle svg{width:30px;height:30px}
+.node.quiz.locked .node-circle{background:#cbd5e1;--shadow-dark:#94a3b8}
+
+/* Stars */
+.stars{display:flex;gap:2px;margin-top:8px;height:14px}
+.stars span{width:12px;height:12px}
+.stars span svg{width:100%;height:100%}
+.stars .filled{color:#fbbf24}
+.stars .empty{color:#d1d5db}
+
+/* Label */
+.node-label{margin-top:6px;font-size:12px;font-weight:700;text-align:center;max-width:130px;line-height:1.3}
+.node.locked .node-label{color:#94a3b8}
+.node-meta{font-size:10px;color:#6b7a90;margin-top:2px;font-weight:600}
+
+/* Empty */
+.empty{text-align:center;padding:60px 20px;color:#6b7a90}
+.empty svg{width:64px;height:64px;margin-bottom:16px;color:#cbd5e1}
+.empty p{font-size:14px;font-weight:600}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:24px;padding:24px;max-width:340px;width:100%;text-align:center;animation:slideUp .3s}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-icon{width:72px;height:72px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center}
+.modal-icon svg{width:38px;height:38px;color:#fff}
+.modal h3{font-size:17px;font-weight:900;margin-bottom:8px}
+.modal p{font-size:13px;color:#6b7a90;margin-bottom:18px;line-height:1.5}
+.modal button{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;padding:12px 28px;border-radius:14px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 0 #1e40af}
+.modal button:active{transform:translateY(2px);box-shadow:0 2px 0 #1e40af}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/home?user_id={{ user_id }}" class="back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg><span>رجوع</span></a>
+  <div class="section-header">
+    <h1>{{ section_title }}</h1>
+    <p>{{ lessons|length }} دروس</p>
+  </div>
+  <div class="hearts-mini"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5 6.5 5c2 0 3.5 1 4.5 2.5C12 6 13.5 5 15.5 5 19.5 5 21 9 19.5 12c-2.5 4.5-9.5 9-9.5 9z"/></svg><span>{{ student.hearts if student.hearts is not none else 5 }}</span></div>
+</div>
+
+<div class="unit-banner">
+  <div class="unit-card {{ section_class }}">
+    <div class="unit-icon">1</div>
+    <div class="unit-info">
+      <h2>الوحدة 1</h2>
+      <p>{{ section_title }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="path-container">
+  {% if lessons %}
+  <div class="path-list">
+    {% for lesson in lessons %}
+      {% set pos = loop.index0 % 3 %}
+      <div class="node-wrap pos-{{ pos }}">
+        {% if not loop.first %}
+        <svg class="connector" preserveAspectRatio="none" viewBox="0 0 100 60">
+          <path d="M 50 0 Q {{ 20 if pos == 0 else (80 if pos == 2 else 50) }} 30, 50 60"/>
+        </svg>
+        {% endif %}
+
+        {% if lesson.lesson_type == 'quiz' %}
+          {% if lesson.status == 'locked' %}
+            <button class="node quiz locked" onclick="showLock()">
+              <div class="node-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+              <div class="node-label">{{ lesson.title_ar }}</div>
+              <div class="node-meta">كويز</div>
+            </button>
+          {% else %}
+            <a class="node quiz {{ lesson.status }}" href="/lesson/{{ lesson.id }}?user_id={{ user_id }}">
+              <div class="node-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9H4a2 2 0 01-2-2V5a1 1 0 011-1h3M18 9h2a2 2 0 002-2V5a1 1 0 00-1-1h-3M6 4v6a6 6 0 0012 0V4M12 15v6M9 21h6"/></svg>
+                {% if lesson.status == 'completed' %}<span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span>{% endif %}
+              </div>
+              <div class="stars">
+                <span class="{{ 'filled' if lesson.stars >= 1 else 'empty' }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
+                <span class="{{ 'filled' if lesson.stars >= 2 else 'empty' }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
+                <span class="{{ 'filled' if lesson.stars >= 3 else 'empty' }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
+              </div>
+              <div class="node-label">{{ lesson.title_ar }}</div>
+              <div class="node-meta">كويز • {{ lesson.xp_reward }} XP</div>
+            </a>
+          {% endif %}
+        {% else %}
+          {% if lesson.status == 'locked' %}
+            <button class="node {{ section_class }} locked" onclick="showLock()">
+              <div class="node-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+              <div class="node-label">{{ lesson.title_ar }}</div>
+              <div class="node-meta">مقفل</div>
+            </button>
+          {% elif lesson.status == 'completed' %}
+            <a class="node {{ section_class }} completed" href="/lesson/{{ lesson.id }}?user_id={{ user_id }}">
+              <div class="node-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg><span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+              <div class="stars">
+                <span class="{{ 'filled' if lesson.stars >= 1 else 'empty' }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
+                <span class="{{ 'filled' if lesson.stars >= 2 else 'empty' }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
+                <span class="{{ 'filled' if lesson.stars >= 3 else 'empty' }}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
+              </div>
+              <div class="node-label">{{ lesson.title_ar }}</div>
+              <div class="node-meta">مكتمل</div>
+            </a>
+          {% else %}
+            <a class="node {{ section_class }} available" href="/lesson/{{ lesson.id }}?user_id={{ user_id }}">
+              <div class="node-circle"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></div>
+              <div class="node-label">{{ lesson.title_ar }}</div>
+              <div class="node-meta">ابدأ • {{ lesson.xp_reward }} XP</div>
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5a2 2 0 012-2h6v18H4a2 2 0 01-2-2V5z"/><path d="M22 5a2 2 0 00-2-2h-6v18h6a2 2 0 002-2V5z"/></svg>
+    <p>لا يوجد دروس بعد</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="modal-bg" id="lockModal" onclick="if(event.target===this)closeLock()">
+  <div class="modal">
+    <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+    <h3>مقفل</h3>
+    <p>هذا الدرس مقفل ! أكمل الدرس السابق أولاً</p>
+    <button onclick="closeLock()">إغلاق</button>
+  </div>
+</div>
+
+<script>
+function showLock(){ document.getElementById('lockModal').classList.add('show'); }
+function closeLock(){ document.getElementById('lockModal').classList.remove('show'); }
+</script>
+
+</body>
+</html>

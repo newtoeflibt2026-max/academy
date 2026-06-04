@@ -100,7 +100,7 @@ app.secret_key = os.getenv("SECRET_KEY", "yamen-secret-2025")
 def _db_safe(path=None):
     """Open SQLite with WAL mode and 30s busy_timeout to prevent locks."""
     import sqlite3 as _sq
-    p = path or os.environ.get("DB_PATH") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
+    p = path or DB_PATH
     conn = _sq.connect(p, timeout=30.0, isolation_level=None, check_same_thread=False)
     try:
         conn.execute("PRAGMA journal_mode=WAL;")
@@ -5704,7 +5704,7 @@ def api_reading_daily_life():
 def api_admin_reading_stats_v2():
     import sqlite3, os as _os
     try:
-        db_path = "/app/data/academy.db" if _os.path.exists("/app/data/academy.db") else "academy.db"
+        from db import DB_PATH as _DB_P; db_path = _DB_P
         conn = sqlite3.connect(db_path); conn.row_factory = sqlite3.Row
         total = conn.execute("SELECT COUNT(*) FROM reading_attempts WHERE status='completed'").fetchone()[0]
         row = conn.execute("SELECT AVG(score*100.0/total) FROM reading_attempts WHERE status='completed' AND total>0").fetchone()
@@ -5969,7 +5969,7 @@ def _ensure_stages_columns():
     """Phase12F: Ensure stages table has all required columns (idempotent)."""
     import sqlite3
     try:
-        db = DB_PATH if "DB_PATH" in globals() else "academy.db"
+        db = DB_PATH
         conn = sqlite3.connect(db)
         cur = conn.cursor()
         cur.execute("PRAGMA table_info(stages)")
@@ -6158,7 +6158,7 @@ def admin_page():
 def api_admin_placement_list():
     import sqlite3
     try:
-        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")); conn.row_factory = sqlite3.Row
+        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
         rows = conn.execute("SELECT * FROM placement_questions ORDER BY id DESC").fetchall()
         conn.close()
         return _jsonify({"questions": [dict(r) for r in rows]})
@@ -6170,7 +6170,7 @@ def api_admin_placement_create():
     import sqlite3
     try:
         d = _request.get_json(force=True) or {}
-        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
+        conn = sqlite3.connect(DB_PATH)
         conn.execute("""
             INSERT INTO placement_questions
             (question_text, option_a, option_b, option_c, option_d, correct_option, skill, skill_type, difficulty, is_active)
@@ -6191,7 +6191,7 @@ def api_admin_placement_update(qid):
     import sqlite3
     try:
         d = _request.get_json(force=True) or {}
-        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
+        conn = sqlite3.connect(DB_PATH)
         conn.execute("""
             UPDATE placement_questions
             SET question_text=?, option_a=?, option_b=?, option_c=?, option_d=?,
@@ -6212,7 +6212,7 @@ def api_admin_placement_update(qid):
 def api_admin_placement_delete(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
+        conn = sqlite3.connect(DB_PATH)
         conn.execute("DELETE FROM placement_questions WHERE id=?", (qid,))
         conn.commit(); conn.close()
         return _jsonify({"ok": True})
@@ -6223,7 +6223,7 @@ def api_admin_placement_delete(qid):
 def api_admin_placement_toggle(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db"))
+        conn = sqlite3.connect(DB_PATH)
         row = conn.execute("SELECT is_active FROM placement_questions WHERE id=?", (qid,)).fetchone()
         if not row: return _jsonify({"error": "not found"}), 404
         new_val = 0 if row[0] == 1 else 1

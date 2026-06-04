@@ -879,5 +879,108 @@ async function sendMsgToStudent(uid) {
 }
 </script>
 
+
+
+
+
+<!-- READING-STATS-INJECTION -->
+<script>
+(function(){
+  function injectReadingCard(){
+    fetch("/api/admin/reading-stats").then(r=>r.json()).then(d=>{
+      if(d.error){ console.warn("[reading-stats]", d.error); return; }
+      // ابحث عن أول كونتينر يحوي كروت الإحصاءات
+      var cards = document.querySelectorAll(".stats-grid, .cards-grid, .dashboard-cards, .grid-cards");
+      var container = cards.length ? cards[0] : null;
+      // fallback: ابحث عن أي عنصر يحوي الرقم 32 (الدروس) أو 174 (الأسئلة)
+      if(!container){
+        var allDivs = document.querySelectorAll("div");
+        for(var i=0;i<allDivs.length;i++){
+          var t = allDivs[i].textContent || "";
+          if(/\b32\b/.test(t) && /درس/.test(t)){
+            container = allDivs[i].parentElement; break;
+          }
+        }
+      }
+      if(!container){ console.warn("[reading-stats] container not found"); return; }
+      // تجنب التكرار
+      if(document.getElementById("readingStatCard")) return;
+
+      var card = document.createElement("div");
+      card.id = "readingStatCard";
+      // نُحاكي نفس ستايل كروت الموجودة
+      var sibling = container.firstElementChild;
+      if(sibling){
+        card.className = sibling.className;
+        card.style.cssText = window.getComputedStyle(sibling).cssText;
+      } else {
+        card.style.cssText = "background:#1a1f2e;border-radius:10px;padding:20px;color:#fff;";
+      }
+      card.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
+        '<div>'+
+        '<div style="font-size:32px;font-weight:bold;color:#4fc3f7;">'+(d.total_attempts||0)+'</div>'+
+        '<div style="font-size:13px;color:#aaa;margin-top:4px;">محاولات قراءة</div>'+
+        '<div style="font-size:11px;color:#888;margin-top:2px;">متوسط: '+(d.avg_percentage||0)+'%</div>'+
+        '</div>'+
+        '<div style="font-size:28px;">📖</div>'+
+        '</div>';
+      card.style.cursor = "pointer";
+      card.title = "اضغط لعرض التفاصيل";
+      card.onclick = function(){ showReadingDetails(d); };
+      container.appendChild(card);
+    }).catch(e=>console.error("[reading-stats]", e));
+  }
+
+  window.showReadingDetails = function(d){
+    var modal = document.getElementById("readingModalOverlay");
+    if(modal){ modal.remove(); }
+    modal = document.createElement("div");
+    modal.id = "readingModalOverlay";
+    modal.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;";
+    var byType = (d.by_type||[]).map(function(x){
+      return '<div style="background:#232938;padding:10px 14px;border-radius:8px;margin:4px;display:inline-block;"><b>'+x.type+'</b>: '+x.count+' محاولة (متوسط '+x.avg_pct+'%)</div>';
+    }).join("");
+    var rows = (d.recent||[]).map(function(r){
+      return '<tr style="border-bottom:1px solid #2a3142;"><td style="padding:6px;">'+r.attempt_id+'</td><td style="padding:6px;">'+r.student_id+'</td><td style="padding:6px;font-size:11px;">'+r.content_id+'</td><td style="padding:6px;"><b>'+r.score+'/'+r.total+'</b> ('+r.pct+'%)</td><td style="padding:6px;color:#888;font-size:11px;">'+(r.finished_at||"")+'</td></tr>';
+    }).join("") || '<tr><td colspan="5" style="padding:20px;text-align:center;color:#888;">لا توجد محاولات بعد</td></tr>';
+    modal.innerHTML =
+      '<div style="background:#1a1f2e;border-radius:12px;padding:24px;max-width:900px;width:100%;max-height:85vh;overflow-y:auto;color:#e6e6e6;font-family:sans-serif;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'+
+      '<h2 style="color:#4fc3f7;margin:0;">📖 إحصائيات القراءة التفصيلية</h2>'+
+      '<button onclick="document.getElementById(chr34readingModalOverlaychr34).remove()" style="background:#d32f2f;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;">إغلاق ✕</button>'+
+      '</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px;">'+
+      '<div style="background:#232938;padding:14px;border-radius:8px;"><div style="font-size:12px;color:#888;">إجمالي المحاولات</div><div style="font-size:28px;font-weight:bold;color:#4fc3f7;">'+(d.total_attempts||0)+'</div></div>'+
+      '<div style="background:#232938;padding:14px;border-radius:8px;"><div style="font-size:12px;color:#888;">المتوسط العام</div><div style="font-size:28px;font-weight:bold;color:#2e7d32;">'+(d.avg_percentage||0)+'%</div></div>'+
+      '</div>'+
+      '<h3 style="color:#4fc3f7;font-size:15px;margin:14px 0 8px 0;">حسب النوع:</h3>'+
+      '<div>'+byType+'</div>'+
+      '<h3 style="color:#4fc3f7;font-size:15px;margin:20px 0 8px 0;">آخر 10 محاولات:</h3>'+
+      '<table style="width:100%;font-size:13px;border-collapse:collapse;">'+
+      '<thead><tr style="background:#232938;"><th style="padding:8px;text-align:right;">#</th><th style="padding:8px;text-align:right;">الطالب</th><th style="padding:8px;text-align:right;">الدرس</th><th style="padding:8px;text-align:right;">النتيجة</th><th style="padding:8px;text-align:right;">الوقت</th></tr></thead>'+
+      '<tbody>'+rows+'</tbody>'+
+      '</table>'+
+      '</div>';
+    modal.querySelector("button").setAttribute("onclick", "document.getElementById('readingModalOverlay').remove()");
+    document.body.appendChild(modal);
+    modal.onclick = function(e){ if(e.target===modal){ modal.remove(); } };
+  };
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", injectReadingCard);
+  } else {
+    setTimeout(injectReadingCard, 500);
+  }
+  // إعادة التحميل كل 60 ثانية
+  setInterval(function(){
+    var c = document.getElementById("readingStatCard");
+    if(c) c.remove();
+    injectReadingCard();
+  }, 60000);
+})();
+</script>
+<!-- END READING-STATS-INJECTION -->
+
 </body>
 </html>

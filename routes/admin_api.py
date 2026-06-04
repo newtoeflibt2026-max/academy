@@ -72,6 +72,17 @@ def admin_stats():
             "SELECT COUNT(*) FROM subscriptions WHERE days_available > 0"
         ).fetchone()[0]
 
+        # Phase 5.7: reading exam stats
+        reading_attempts = db.execute(
+            "SELECT COUNT(*) FROM reading_attempts WHERE status='completed'"
+        ).fetchone()[0]
+        reading_avg = db.execute(
+            "SELECT ROUND(AVG(CAST(score AS FLOAT)/NULLIF(total,0)*100),1) FROM reading_attempts WHERE status='completed'"
+        ).fetchone()[0] or 0
+        writing_attempts_n = db.execute(
+            "SELECT COUNT(*) FROM writing_attempts"
+        ).fetchone()[0]
+
         db.close()
 
         return _success(data={
@@ -80,6 +91,9 @@ def admin_stats():
             "pending_payments": pending,
             "total_lessons": total_lessons,
             "active_subscriptions": active_subs,
+            "reading_attempts": reading_attempts,
+            "reading_avg_pct": reading_avg,
+            "writing_attempts": writing_attempts_n,
         })
     except Exception:
         traceback.print_exc()

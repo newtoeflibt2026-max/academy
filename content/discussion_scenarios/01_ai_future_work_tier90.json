@@ -1,0 +1,283 @@
+{
+  "scenario": {
+    "code": "ai_future_work_v1",
+    "title_ar": "الذكاء الاصطناعي ومستقبل العمل",
+    "title_en": "AI and the Future of Work",
+    "topic_category": "technology",
+    "professor": {
+      "name": "Dr. Anderson",
+      "title": "Professor of Economics",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=DrAnderson&backgroundColor=b6e3f4",
+      "question_en": "Artificial intelligence is rapidly transforming the workplace. Some experts predict that AI will eliminate millions of jobs in the coming decades, while others argue it will create new opportunities and improve productivity. Companies are increasingly using AI tools to automate tasks that were once performed by humans, ranging from customer service to data analysis. Should governments regulate the use of AI in workplaces to protect workers, or should they allow companies to adopt AI freely to maximize economic growth? What do you think? Why?",
+      "question_ar": "يُحدث الذكاء الاصطناعي تحولاً سريعاً في مكان العمل. يتوقع بعض الخبراء أن الذكاء الاصطناعي سيُلغي ملايين الوظائف في العقود القادمة، بينما يرى آخرون أنه سيخلق فرصاً جديدة ويُحسّن الإنتاجية. الشركات تستخدم أدوات الذكاء الاصطناعي بشكل متزايد لأتمتة المهام التي كان يؤديها البشر. هل يجب أن تُنظّم الحكومات استخدام الذكاء الاصطناعي في أماكن العمل لحماية العمال، أم يجب السماح للشركات بتبني الذكاء الاصطناعي بحرية لتعظيم النمو الاقتصادي؟ ما رأيك؟ ولماذا؟"
+    },
+    "target_tier": "tier90",
+    "min_words": 100,
+    "time_limit_seconds": 600,
+    "difficulty": 5,
+    "order_index": 1
+  },
+  "student_replies": [
+    {
+      "student_name": "Sarah",
+      "student_avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=ffd5dc",
+      "reply_text_en": "I strongly believe governments should regulate AI in workplaces. Without rules, companies will replace workers with machines just to save money, leaving millions unemployed. My uncle worked at a factory for 20 years before being replaced by automated systems last year. Regulations could require companies to retrain workers or limit how quickly they can introduce AI. Protecting human workers should be a priority.",
+      "reply_text_ar": "أعتقد بقوة أن الحكومات يجب أن تُنظّم الذكاء الاصطناعي في أماكن العمل. بدون قواعد، ستستبدل الشركات العمال بالآلات لمجرد توفير المال. عمي عمل في مصنع لمدة 20 سنة قبل أن يُستبدل بأنظمة آلية العام الماضي. اللوائح يمكن أن تُلزم الشركات بإعادة تدريب العمال أو تحدّ من سرعة تبنّي الذكاء الاصطناعي.",
+      "position": "for_regulation",
+      "order_index": 1
+    },
+    {
+      "student_name": "Michael",
+      "student_avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=c0aede",
+      "reply_text_en": "I disagree with Sarah. Excessive regulation would slow innovation and make our country less competitive globally. Throughout history, new technologies have always disrupted jobs, but they also create new ones. When computers emerged, typists lost work, but millions of IT jobs appeared. Instead of regulating AI, governments should invest in education and training programs so workers can adapt to the changing economy.",
+      "reply_text_ar": "أختلف مع سارة. التنظيم المفرط سيُبطئ الابتكار ويجعل بلدنا أقل تنافسية عالمياً. عبر التاريخ، التقنيات الجديدة دائماً عطّلت وظائف، لكنها خلقت وظائف أخرى. عندما ظهرت الحواسيب، فقد الطابعون عملهم لكن ظهرت ملايين الوظائف في تقنية المعلومات. بدلاً من التنظيم، يجب أن تستثمر الحكومات في التعليم والتدريب.",
+      "position": "against_regulation",
+      "order_index": 2
+    }
+  ],
+  "coach_content": {
+    "step1_analyze_question_ar": "السؤال يطلب منك اتخاذ موقف واضح بين خيارين: (1) تنظيم حكومي للذكاء الاصطناعي لحماية العمال، أو (2) السماح بالتبني الحر للذكاء الاصطناعي. لاحظ أن السؤال يحتوي على كلمة 'OR' مما يعني أنك بحاجة لاختيار جانب وتبريره. الكلمات المفتاحية: regulate, protect workers, economic growth. تجنّب الإجابة المحايدة - ETS Score 5 يتطلب موقفاً واضحاً.",
+    "step1_keywords": [
+      "regulate AI",
+      "protect workers",
+      "economic growth",
+      "automation",
+      "job displacement",
+      "innovation"
+    ],
+    "step2_analyze_replies_ar": "ردّ سارة يُؤيّد التنظيم بحجة عاطفية (قصة عمها) لكنه يفتقر إلى دليل اقتصادي. ردّ مايكل يُعارض التنظيم بحجة تاريخية قوية (مثال الحواسيب) لكنه يتجاهل المعاناة قصيرة المدى للعمال. لإجابة Tier 90، يجب الإشارة إلى كلا الردين بأسمائهما (Sarah / Michael) وإضافة منظور جديد لم يذكره أيٌّ منهما - مثل الحل الوسط أو زاوية أخلاقية/اجتماعية.",
+    "step2_reply_analysis": [
+      {
+        "student": "Sarah",
+        "main_point_ar": "تؤيد التنظيم الحكومي لحماية العمال من البطالة",
+        "evidence_ar": "قصة شخصية عن عمها الذي فقد وظيفته",
+        "weakness_ar": "حجة عاطفية بدون بيانات اقتصادية شاملة",
+        "how_to_use_ar": "أشر إليها كأساس للموقف الإنساني، ثم طوّر بحجة اقتصادية"
+      },
+      {
+        "student": "Michael",
+        "main_point_ar": "يعارض التنظيم لأنه يُبطئ الابتكار",
+        "evidence_ar": "مثال تاريخي: الحواسيب خلقت وظائف جديدة",
+        "weakness_ar": "يتجاهل الفترة الانتقالية الصعبة للعمال المُستبدَلين",
+        "how_to_use_ar": "اعترف بصحة نقطته، ثم اطرح: ماذا عن الذين لا يستطيعون التكيّف؟"
+      }
+    ],
+    "step3_build_opinion_ar": "أفضل استراتيجية لـ Tier 90 هي 'الموقف المُحدَّد بدقة' (nuanced position): اتخذ جانباً واضحاً لكن اعترف بالجانب الآخر. مثال: 'أؤيد التنظيم المُتوازن - ليس الحظر الكامل ولا الترك المُطلق'. هذا يُظهر تفكيراً ناقداً ويتجاوز الإجابات السطحية.",
+    "step3_position_options": [
+      {
+        "position": "balanced_regulation",
+        "label_ar": "تنظيم متوازن (موصى به - Tier 90)",
+        "rationale_ar": "يأخذ من سارة قلقها الإنساني ومن مايكل احترامه للابتكار",
+        "thesis_example_en": "While Michael correctly notes that innovation drives progress, I align more with Sarah's concerns: governments must implement targeted regulations that protect vulnerable workers without stifling beneficial AI development."
+      },
+      {
+        "position": "strong_regulation",
+        "label_ar": "تنظيم قوي",
+        "rationale_ar": "يؤكد على حماية العمال أولاً",
+        "thesis_example_en": "I firmly side with Sarah: without robust government regulation, the human cost of AI adoption will far outweigh its economic benefits."
+      },
+      {
+        "position": "minimal_regulation",
+        "label_ar": "تنظيم محدود",
+        "rationale_ar": "يؤكد على الابتكار والتدريب",
+        "thesis_example_en": "I largely agree with Michael: rather than restricting AI, governments should invest in workforce reskilling to harness AI's potential."
+      }
+    ],
+    "step4_phrases": {
+      "stating_opinion": [
+        {
+          "phrase": "I firmly believe that...",
+          "when_to_use_ar": "لتأكيد رأي قوي وواضح"
+        },
+        {
+          "phrase": "In my view, the most compelling argument is...",
+          "when_to_use_ar": "لإظهار التفكير التحليلي"
+        },
+        {
+          "phrase": "While I understand both perspectives, I lean toward...",
+          "when_to_use_ar": "للموقف المتوازن - Tier 90"
+        }
+      ],
+      "agreeing": [
+        {
+          "phrase": "Sarah raises a valid point when she mentions...",
+          "when_to_use_ar": "للإشارة لزميل بشكل احترافي"
+        },
+        {
+          "phrase": "Michael's historical example is particularly persuasive because...",
+          "when_to_use_ar": "للاتفاق مع تحليل"
+        },
+        {
+          "phrase": "I find myself agreeing with [Name] that...",
+          "when_to_use_ar": "لإظهار التفاعل مع النقاش"
+        }
+      ],
+      "disagreeing": [
+        {
+          "phrase": "While [Name] makes a fair point, I must respectfully disagree because...",
+          "when_to_use_ar": "اعتراض مهذب - مهم لـ Tier 90"
+        },
+        {
+          "phrase": "However, this argument overlooks the fact that...",
+          "when_to_use_ar": "لكشف ثغرة في حجة"
+        },
+        {
+          "phrase": "I would push back on this notion by arguing that...",
+          "when_to_use_ar": "تعبير متقدم للاعتراض"
+        }
+      ],
+      "supporting": [
+        {
+          "phrase": "For instance, recent studies have shown that...",
+          "when_to_use_ar": "لإضافة دليل - Tier 90"
+        },
+        {
+          "phrase": "Take, for example, the case of...",
+          "when_to_use_ar": "لتقديم مثال محدد"
+        },
+        {
+          "phrase": "This is evidenced by the fact that...",
+          "when_to_use_ar": "ربط الدليل بالحجة"
+        },
+        {
+          "phrase": "Furthermore, it is worth noting that...",
+          "when_to_use_ar": "لإضافة نقطة داعمة"
+        }
+      ],
+      "concluding": [
+        {
+          "phrase": "Ultimately, the path forward requires...",
+          "when_to_use_ar": "خاتمة قوية - Tier 90"
+        },
+        {
+          "phrase": "In light of these considerations, I maintain that...",
+          "when_to_use_ar": "تأكيد الموقف نهائياً"
+        },
+        {
+          "phrase": "Therefore, the most prudent approach would be to...",
+          "when_to_use_ar": "اقتراح حل عملي"
+        }
+      ]
+    },
+    "step5_model_response": "While I understand both Sarah's concerns about worker displacement and Michael's enthusiasm for innovation, I lean toward a balanced regulatory approach. Sarah raises a valid point when she mentions her uncle's experience; the human cost of unchecked automation is real and immediate. However, Michael's historical example is particularly persuasive because new technologies have indeed generated employment over time. The key issue both posts overlook is the transition period. For instance, recent labor studies have shown that workers displaced by AI typically need three to five years to retrain for comparable positions—a gap during which many fall into poverty. Therefore, governments should implement targeted regulations requiring companies to fund retraining programs and provide reasonable transition periods before mass automation. This approach protects vulnerable workers without stifling the genuine economic benefits Michael describes. Ultimately, the path forward requires not choosing between workers and innovation, but designing policies that serve both.",
+    "step5_annotations": [
+      {
+        "text": "While I understand both Sarah's concerns... and Michael's enthusiasm",
+        "explanation_ar": "افتتاحية Tier 90: تُشير لكلا الطالبين بالاسم وتُظهر التفاعل مع النقاش",
+        "category": "engagement"
+      },
+      {
+        "text": "I lean toward a balanced regulatory approach",
+        "explanation_ar": "موقف واضح لكن مُحدَّد بدقة (nuanced) - علامة Tier 90",
+        "category": "thesis"
+      },
+      {
+        "text": "Sarah raises a valid point when she mentions",
+        "explanation_ar": "إشارة احترافية لزميل + اعتراف بحجته قبل البناء عليها",
+        "category": "engagement"
+      },
+      {
+        "text": "Michael's historical example is particularly persuasive because",
+        "explanation_ar": "تحليل متقدم - ليس فقط 'أتفق' بل 'لماذا'",
+        "category": "analysis"
+      },
+      {
+        "text": "The key issue both posts overlook is",
+        "explanation_ar": "إضافة منظور جديد - شرط أساسي لـ Score 5",
+        "category": "originality"
+      },
+      {
+        "text": "For instance, recent labor studies have shown",
+        "explanation_ar": "دليل محدد بدلاً من ادعاءات عامة",
+        "category": "evidence"
+      },
+      {
+        "text": "three to five years to retrain",
+        "explanation_ar": "أرقام محددة تزيد المصداقية",
+        "category": "specificity"
+      },
+      {
+        "text": "targeted regulations requiring companies to fund retraining",
+        "explanation_ar": "حل عملي وقابل للتطبيق - Tier 90",
+        "category": "solution"
+      },
+      {
+        "text": "This approach protects... without stifling",
+        "explanation_ar": "صياغة 'X without Y' تُظهر تفكير الموازنة",
+        "category": "sophistication"
+      },
+      {
+        "text": "Ultimately, the path forward requires",
+        "explanation_ar": "خاتمة قوية تتجاوز إعادة الموقف",
+        "category": "conclusion"
+      },
+      {
+        "text": "not choosing between workers and innovation, but designing policies that serve both",
+        "explanation_ar": "بنية 'not X but Y' - علامة قوية على Tier 90",
+        "category": "rhetoric"
+      },
+      {
+        "text": "implement targeted regulations",
+        "explanation_ar": "مفردات أكاديمية دقيقة (targeted vs general)",
+        "category": "vocabulary"
+      }
+    ],
+    "step6_checklist": [
+      "✓ هل ذكرت رأيي بوضوح في الجملة الأولى أو الثانية؟",
+      "✓ هل أشرت إلى كلا الطالبين بأسمائهما (Sarah / Michael)؟",
+      "✓ هل أضفت منظوراً جديداً لم يذكره أيٌّ منهما؟",
+      "✓ هل قدّمت دليلاً محدداً (دراسة / مثال / رقم)؟",
+      "✓ هل استخدمت 3+ عبارات أكاديمية متقدمة؟",
+      "✓ هل تجاوزت 100 كلمة (الحد الأدنى)؟",
+      "✓ هل استخدمت أدوات ربط متنوعة (However, Furthermore, Ultimately)؟",
+      "✓ هل اختتمت بحل عملي أو رؤية مستقبلية؟",
+      "✓ هل تجنّبت الأخطاء الإملائية (no spell-check on TOEFL!)؟",
+      "✓ هل استخدمت أزمنة صحيحة ومتنوعة؟"
+    ],
+    "step6_common_mistakes": [
+      {
+        "mistake_en": "I agree with the professor.",
+        "correction_en": "While the professor raises an important question, I lean toward...",
+        "why_ar": "البروفيسور لم يُبدِ رأياً - هو طرح سؤالاً. لا توافقه بل أجبه."
+      },
+      {
+        "mistake_en": "AI is good. AI is bad. Both are true.",
+        "correction_en": "While AI offers significant benefits, its risks require careful regulation.",
+        "why_ar": "تجنّب الإجابات المحايدة - ETS يطلب موقفاً واضحاً"
+      },
+      {
+        "mistake_en": "I think Sarah is right because she is right.",
+        "correction_en": "Sarah's argument is compelling because she identifies a real human cost.",
+        "why_ar": "السبب يجب أن يكون مختلفاً عن الادعاء - تجنّب الدوران"
+      },
+      {
+        "mistake_en": "Many people think AI is dangerous.",
+        "correction_en": "A 2024 Stanford study found that 67% of economists predict significant job displacement.",
+        "why_ar": "استبدل 'many people' بدليل محدد"
+      },
+      {
+        "mistake_en": "In my opinion in my view I think...",
+        "correction_en": "I firmly believe that... / In my view, ...",
+        "why_ar": "لا تُكرّر عبارات الرأي - اختر واحدة قوية"
+      },
+      {
+        "mistake_en": "AI will took our jobs.",
+        "correction_en": "AI will take our jobs. / AI has taken our jobs.",
+        "why_ar": "خطأ زمن الفعل - بعد 'will' نستخدم المصدر"
+      },
+      {
+        "mistake_en": "Government should regulating AI.",
+        "correction_en": "The government should regulate AI.",
+        "why_ar": "بعد modal verb (should/must) نستخدم المصدر، وأضف 'The'"
+      },
+      {
+        "mistake_en": "Sarah said her uncle worked in factory.",
+        "correction_en": "Sarah mentioned that her uncle worked in a factory.",
+        "why_ar": "أضف 'a' قبل الأسماء المعدودة المفردة"
+      }
+    ],
+    "tier59_explanation": "للمستوى المبتدئ (Score 3): ركّز على ذكر رأيك بوضوح + سبب واحد + مثال بسيط. لا تقلق من المفردات المتقدمة. الهدف: 100 كلمة بقواعد سليمة.",
+    "tier69_explanation": "للمستوى المتوسط (Score 4): أضف الإشارة لطالب واحد على الأقل بالاسم + سببين على الأقل + استخدم 2 من عبارات الربط (However, Furthermore). الهدف: 110-130 كلمة بتنوع نحوي.",
+    "tier90_explanation": "للمستوى المتقدم (Score 5): أشر لكلا الطالبين + قدّم منظوراً جديداً + دليل محدد (رقم/دراسة) + حل عملي + بنية متقدمة (not X but Y). الهدف: 140-180 كلمة مع تعبيرات Tier 90."
+  }
+}

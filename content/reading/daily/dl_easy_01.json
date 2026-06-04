@@ -1,0 +1,73 @@
+{
+  "id": "dl_easy_01",
+  "type": "daily_reading",
+  "tier": "easy",
+  "title_en": "Store Hours Sign",
+  "title_ar": "لافتة ساعات العمل",
+  "topic": "Daily Notice",
+  "duration_seconds": 240,
+  "passage": {
+    "title_en": "STORE HOURS",
+    "text_en": "STORE HOURS\n\nMonday – Friday:    9:00 AM – 9:00 PM\nWednesday:          10:00 AM – 9:00 PM\nSaturday:           8:00 AM – 10:00 PM\nSunday:             10:00 AM – 6:00 PM\n\nHolidays: Closed"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "What time does the store open on Wednesday?",
+      "prompt_ar": "في أي ساعة يفتح المتجر يوم الأربعاء؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "8:00 AM"
+        },
+        {
+          "id": "B",
+          "text_en": "9:00 AM"
+        },
+        {
+          "id": "C",
+          "text_en": "10:00 AM"
+        },
+        {
+          "id": "D",
+          "text_en": "6:00 PM"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "اللافتة تحدد الأربعاء صراحة: يفتح 10:00 صباحًا.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "On which day does the store close earliest?",
+      "prompt_ar": "في أي يوم يغلق المتجر أبكر؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Monday"
+        },
+        {
+          "id": "B",
+          "text_en": "Saturday"
+        },
+        {
+          "id": "C",
+          "text_en": "Sunday"
+        },
+        {
+          "id": "D",
+          "text_en": "Friday"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "الأحد يغلق 6:00 مساءً وهو أبكر من باقي الأيام (9 أو 10 مساءً).",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "EASY"
+  }
+}

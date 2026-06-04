@@ -21,10 +21,10 @@ class Settings:
     GEMINI_WRITING_KEYS = os.environ.get("GEMINI_WRITING_KEYS", "")
     GEMINI_SPEAKING_KEYS = os.environ.get("GEMINI_SPEAKING_KEYS", "")
     # مسار قاعدة البيانات: يمكن تجاوزه بـ DB_PATH في .env
-    _db_override = os.environ.get("DB_PATH", "")
-    DB_PATH      = _db_override if _db_override else os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "academy.db"
-    )
+    try:
+        from db import DB_PATH
+    except ImportError:
+        DB_PATH = os.environ.get("DB_PATH") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
     WEBHOOK_HOST = os.environ.get("WEBHOOK_HOST", "http://localhost:8080")
     GROUP_LINK   = os.environ.get("GROUP_LINK", "https://t.me/yamen_academy")
     ADMIN_IDS    = [

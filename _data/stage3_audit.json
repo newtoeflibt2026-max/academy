@@ -1,0 +1,932 @@
+[
+  {
+    "clip_id": 49,
+    "code": "conv_e02",
+    "title": "محادثة 1: الكافتيريا",
+    "context": "حوار حول وجبة الغداء في الكافتيريا",
+    "transcript": "M: Have you eaten lunch yet?\nF: Not yet. I was waiting for you. Where should we go?\nM: The cafeteria is serving pasta and salad today. It's only five dollars.\nF: That sounds perfect. The Student Center is too crowded at this hour.\nM: Agreed. Let's head to the cafeteria before the line gets long.\nF: Good idea. Do they still have that lemon dressing I like?\nM: I think so. Come on, let's go.",
+    "questions": [
+      {
+        "id": 87,
+        "q": "Where are the students planning to go for lunch?",
+        "opts": [
+          "Sports Hall",
+          "Student Center",
+          "Library",
+          "Cafeteria"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 88,
+        "q": "What kind of food is being served?",
+        "opts": [
+          "Pizza",
+          "Sandwiches",
+          "Burgers",
+          "Pasta and salad"
+        ],
+        "correct": "3"
+      }
+    ]
+  },
+  {
+    "clip_id": 50,
+    "code": "conv_e03",
+    "title": "محادثة 2: المطعم الجديد",
+    "context": "حوار عن افتتاح مطعم جديد قرب الحرم",
+    "transcript": "F: Did you hear about the new Italian place that just opened?\nM: No, where is it?\nF: Right across from the main gate. They have authentic pizza.\nM: Sounds amazing. How are the prices?\nF: A bit higher than the cafeteria, but worth it for a weekend treat.\nM: Let's try it Saturday night then.\nF: Perfect. I'll make a reservation for seven.",
+    "questions": [
+      {
+        "id": 89,
+        "q": "What is the main topic of the conversation?",
+        "opts": [
+          "A new restaurant near campus",
+          "A cooking class",
+          "A grocery store",
+          "A food festival"
+        ],
+        "correct": "0"
+      },
+      {
+        "id": 90,
+        "q": "When do they plan to go?",
+        "opts": [
+          "Friday morning",
+          "Saturday night",
+          "Monday evening",
+          "Sunday lunch"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 52,
+    "code": "conv_e05",
+    "title": "محادثة 1: بطاقة الطالب",
+    "context": "طالب جديد يطلب بطاقة هويته الجامعية",
+    "transcript": "M: Hi, I'm a new student. Where do I get my ID card?\nF: You'll need to go to the Student Services Office. It's in Building C.\nM: Okay. What do I need to bring with me?\nF: Your passport and the enrollment letter you received by email.\nM: Got it. Is there a fee?\nF: No, the first card is free. Just bring those two documents.\nM: Perfect. Thanks for your help.",
+    "questions": [
+      {
+        "id": 91,
+        "q": "Where should the student go to get the ID card?",
+        "opts": [
+          "Cafeteria",
+          "Library",
+          "Sports Center",
+          "Student Services Office"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 92,
+        "q": "What documents does the student need to bring?",
+        "opts": [
+          "Passport and enrollment letter",
+          "Notebook and pen",
+          "Library card and ID",
+          "Class schedule"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 53,
+    "code": "conv_e06",
+    "title": "محادثة 2: حساب البريد الإلكتروني",
+    "context": "طالب يحتاج تفعيل حسابه الجامعي",
+    "transcript": "F: Hi, I haven't received my university email account yet.\nM: Let me check. Can I have your student ID number?\nF: Sure, it's 2025-4471.\nM: Okay, I see your account is ready. You can activate it at the IT Help Desk.\nF: Where is that located?\nM: Ground floor of the Library Building, next to the entrance.\nF: Thank you. I'll go right now.",
+    "questions": [
+      {
+        "id": 93,
+        "q": "What is the student's problem?",
+        "opts": [
+          "Wrong class schedule",
+          "Library fine",
+          "Email account not received",
+          "Lost ID card"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 94,
+        "q": "Where is the IT Help Desk located?",
+        "opts": [
+          "Student Center",
+          "Top floor of admin building",
+          "Ground floor of the Library Building",
+          "Sports Hall"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 55,
+    "code": "conv_e08",
+    "title": "محادثة 1: حفلة الطلاب",
+    "context": "طالبان يخططان لحضور حفلة",
+    "transcript": "F: Are you going to the student party on Friday?\nM: Yes, definitely. My classmates from the engineering club are all going.\nF: Oh nice. I wasn't sure if I should come alone.\nM: You should come with us. The more, the merrier.\nF: That's really kind. What time does it start?\nM: Eight o'clock at the main hall. We can meet at the entrance.\nF: Perfect. I'll be there.",
+    "questions": [
+      {
+        "id": 95,
+        "q": "What event are the students talking about?",
+        "opts": [
+          "Library study session",
+          "Sports event",
+          "Student party",
+          "Lecture"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 96,
+        "q": "Who is the male student going with?",
+        "opts": [
+          "His classmates",
+          "No one",
+          "His professor",
+          "His family"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 56,
+    "code": "conv_e09",
+    "title": "محادثة 2: نادي الكتاب",
+    "context": "طالبة تدعو زميلها لنادي القراءة",
+    "transcript": "F: Have you ever joined the book club?\nM: No, but I've been curious about it.\nF: We meet every Thursday at six in the lounge. It's really relaxed.\nM: What kind of books do you read?\nF: Mostly modern fiction. This month we're reading a novel by a Japanese author.\nM: Sounds interesting. Can I just show up?\nF: Absolutely. New members are always welcome.",
+    "questions": [
+      {
+        "id": 97,
+        "q": "How does the male speaker feel about joining?",
+        "opts": [
+          "Disappointed",
+          "Annoyed",
+          "Curious and interested",
+          "Confused"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 98,
+        "q": "When does the book club meet?",
+        "opts": [
+          "Every weekend",
+          "Every Thursday at six",
+          "Every Friday at seven",
+          "Every Monday at five"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 58,
+    "code": "conv_e11",
+    "title": "محادثة 1: المقال البحثي",
+    "context": "طالبان يناقشان متطلبات مقال",
+    "transcript": "M: Did you start the essay for Professor Adams?\nF: Not yet. What were the requirements again?\nM: Minimum five pages, double-spaced, and at least four academic sources.\nF: Can we use online sources?\nM: Only peer-reviewed journals. No regular websites or blogs.\nF: Got it. So online is fine if it's academic.\nM: Exactly. The university library database has plenty.",
+    "questions": [
+      {
+        "id": 99,
+        "q": "What is the required minimum length of the essay?",
+        "opts": [
+          "Three pages",
+          "Five pages",
+          "Six pages",
+          "Ten pages"
+        ],
+        "correct": "1"
+      },
+      {
+        "id": 100,
+        "q": "Can the student use online sources?",
+        "opts": [
+          "Yes, any online source",
+          "Only peer-reviewed journals",
+          "No, never",
+          "Only library books"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 59,
+    "code": "conv_e12",
+    "title": "محادثة 2: عرض تقديمي",
+    "context": "طالبة تستفسر عن متطلبات العرض",
+    "transcript": "F: Quick question — how long should the presentation be?\nM: Ten minutes maximum, including Q and A.\nF: And do we need to use slides?\nM: Slides are optional, but visuals are encouraged.\nF: What about working in pairs?\nM: This one is individual. Group work comes later in the semester.\nF: Okay, thanks for clarifying.",
+    "questions": [
+      {
+        "id": 101,
+        "q": "What is the maximum length of the presentation?",
+        "opts": [
+          "Five minutes",
+          "Fifteen minutes",
+          "Twenty minutes",
+          "Ten minutes"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 102,
+        "q": "Can students work in pairs?",
+        "opts": [
+          "Yes, in pairs",
+          "No, individual only",
+          "Groups of three",
+          "Optional"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 61,
+    "code": "conv_e14",
+    "title": "محادثة 1: عيادة الجامعة",
+    "context": "طالب يسأل عن خدمات العيادة",
+    "transcript": "M: I think I'm coming down with a cold. Should I see a doctor?\nF: You can go to the campus clinic. They handle minor illnesses.\nM: Do I need an appointment?\nF: Walk-ins are fine before noon. Just bring your student ID.\nM: What about the cost?\nF: It's completely free for enrolled students. Even medicine is included.\nM: Wow, that's great. I'll head there now.",
+    "questions": [
+      {
+        "id": 103,
+        "q": "Where should the student go for help?",
+        "opts": [
+          "Campus clinic",
+          "Library",
+          "Cafeteria",
+          "Professor's office"
+        ],
+        "correct": "0"
+      },
+      {
+        "id": 104,
+        "q": "Will the student have to pay for the consultation?",
+        "opts": [
+          "Yes, full fee",
+          "Only on weekends",
+          "No, it's free",
+          "Only for medicine"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 62,
+    "code": "conv_e15",
+    "title": "محادثة 2: تجديد وصفة طبية",
+    "context": "طالبة تستفسر عن تجديد دواء",
+    "transcript": "F: Hi, I need to refill my prescription. Can you help?\nM: Of course. Do you have a copy of the original prescription?\nF: Yes, it's right here from my doctor back home.\nM: Perfect. We'll need to verify it, which takes about 24 hours.\nF: Is there any cost?\nM: The verification is free. The medicine itself depends on the insurance.\nF: I have student insurance.\nM: Then most likely it'll be covered. Come back tomorrow afternoon.",
+    "questions": [
+      {
+        "id": 105,
+        "q": "What does the student want to do?",
+        "opts": [
+          "Cancel insurance",
+          "Refill an existing prescription",
+          "See a doctor",
+          "Get a new prescription"
+        ],
+        "correct": "1"
+      },
+      {
+        "id": 106,
+        "q": "When should she come back?",
+        "opts": [
+          "Friday morning",
+          "Tomorrow afternoon",
+          "In one hour",
+          "Next week"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 64,
+    "code": "conv_m02",
+    "title": "محادثة 1: تغيير موعد الرحلة",
+    "context": "طالبة تطلب تعديل تاريخ سفرها",
+    "transcript": "F: Hi, I need to change my return flight. The semester ended earlier than expected.\nM: I see. What's your original date?\nF: June 15. I'd like to move it to June 6 if possible.\nM: Let me check availability. Yes, we have seats on the morning flight.\nF: Is there a change fee?\nM: Normally yes, but students get one free change per semester.\nF: Oh wonderful. Please book it for June 6 then.\nM: Done. You'll receive a confirmation email shortly.",
+    "questions": [
+      {
+        "id": 107,
+        "q": "Why does the student want to change the flight?",
+        "opts": [
+          "The semester ended earlier than expected",
+          "She wants to visit a friend",
+          "The flight was canceled",
+          "She missed the original flight"
+        ],
+        "correct": "0"
+      },
+      {
+        "id": 108,
+        "q": "When is the new flight scheduled?",
+        "opts": [
+          "June 6",
+          "June 5",
+          "June 10",
+          "June 15"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 65,
+    "code": "conv_m03",
+    "title": "محادثة 2: حقيبة مفقودة",
+    "context": "مسافر يبلغ عن فقدان حقيبته",
+    "transcript": "M: Excuse me, my luggage hasn't arrived on the carousel.\nF: I'm sorry to hear that. Can I have your baggage tag?\nM: Yes, here it is. The tag number is 4782.\nF: Let me check the system. It seems your bag was delayed in Frankfurt.\nM: When will it arrive?\nF: Tomorrow morning around 10. We'll deliver it to your address.\nM: Thank you. Is there compensation for essentials tonight?\nF: Yes, the airline provides fifty dollars for emergency items.",
+    "questions": [
+      {
+        "id": 109,
+        "q": "What is the man's problem?",
+        "opts": [
+          "He lost his ticket",
+          "His flight was delayed",
+          "He missed his connection",
+          "His luggage didn't arrive"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 110,
+        "q": "How much compensation does the airline provide?",
+        "opts": [
+          "One hundred dollars",
+          "Fifty dollars",
+          "Twenty dollars",
+          "Thirty dollars"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 67,
+    "code": "conv_m05",
+    "title": "محادثة 1: حجز قاعة دراسة",
+    "context": "طالبة تحاول حجز قاعة جماعية",
+    "transcript": "F: I'd like to book a group study room for tomorrow.\nM: How many people will be using it?\nF: Four of us, for about three hours.\nM: Then you'll need room 204. It accommodates up to six.\nF: What times are available?\nM: From 2 PM onwards. The morning slots are already booked.\nF: Let's go with 3 to 6 PM then.\nM: Booked. Please arrive on time, rooms are released after 15 minutes.",
+    "questions": [
+      {
+        "id": 111,
+        "q": "What does the student want to do?",
+        "opts": [
+          "Borrow books",
+          "Book a study room",
+          "Pay a fine",
+          "Return a laptop"
+        ],
+        "correct": "1"
+      },
+      {
+        "id": 112,
+        "q": "What happens if students arrive late?",
+        "opts": [
+          "They get a fine",
+          "Nothing happens",
+          "The room is released after 15 minutes",
+          "Their booking doubles"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 68,
+    "code": "conv_m06",
+    "title": "محادثة 2: غرامة كتاب متأخر",
+    "context": "طالب يعيد كتاباً بعد الموعد",
+    "transcript": "M: Hi, I'm returning this book. I know it's overdue.\nF: Let me scan it. Yes, it's twelve days late.\nF: The fine is fifty cents per day, so six dollars total.\nM: I expected that. Can I pay by card?\nF: Unfortunately, the system only accepts cash for fines.\nM: Oh, I don't have cash on me right now.\nF: That's fine. The amount will be added to your account, and you can pay within seven days.\nM: Great, I'll come back tomorrow with cash. Thank you.",
+    "questions": [
+      {
+        "id": 113,
+        "q": "How much is the total fine?",
+        "opts": [
+          "Twelve dollars",
+          "Six dollars",
+          "Three dollars",
+          "Four dollars"
+        ],
+        "correct": "1"
+      },
+      {
+        "id": 114,
+        "q": "How can the fine be paid?",
+        "opts": [
+          "Credit card only",
+          "Bank transfer",
+          "Both cash and card",
+          "Cash only"
+        ],
+        "correct": "3"
+      }
+    ]
+  },
+  {
+    "clip_id": 70,
+    "code": "conv_m08",
+    "title": "محادثة 1: زميل سكن مزعج",
+    "context": "طالبة تشكو من جارها في السكن",
+    "transcript": "F: I'd like to file a complaint about my dormitory.\nM: Of course. What's the issue?\nF: My neighbor plays loud music until 2 AM almost every night.\nM: Have you tried talking to them directly?\nF: Yes, but the situation hasn't improved.\nM: I understand. We can send a formal warning and even consider relocation if needed.\nF: Relocation would actually be ideal. Is there a fee?\nM: No, room transfers due to noise complaints are free.",
+    "questions": [
+      {
+        "id": 115,
+        "q": "What is the student's complaint?",
+        "opts": [
+          "Loud neighbor",
+          "Dirty kitchen",
+          "Broken heater",
+          "High rent"
+        ],
+        "correct": "0"
+      },
+      {
+        "id": 116,
+        "q": "What is the proposed solution?",
+        "opts": [
+          "Send a warning and possibly relocate",
+          "Pay a fine",
+          "Talk to the neighbor herself",
+          "Cancel her housing"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 71,
+    "code": "conv_m09",
+    "title": "محادثة 2: تسرب مياه",
+    "context": "طالب يبلغ عن خلل في الحمام",
+    "transcript": "M: There's water leaking from the bathroom ceiling in my dorm.\nF: Oh, that needs urgent attention. Which building and room?\nM: Building D, room 314.\nF: I'll send a plumber within the hour. Are you using the bathroom now?\nM: No, I turned off the water main as a precaution.\nF: Smart thinking. Please stay in your room until the plumber arrives.\nM: Will I need to move out temporarily?\nF: Hopefully not. Most leaks like this are fixed within a few hours.",
+    "questions": [
+      {
+        "id": 117,
+        "q": "What did the student do before calling?",
+        "opts": [
+          "Turned off the water main",
+          "Moved his belongings",
+          "Called a friend",
+          "Cleaned the room"
+        ],
+        "correct": "0"
+      },
+      {
+        "id": 118,
+        "q": "How soon will help arrive?",
+        "opts": [
+          "Within an hour",
+          "In ten minutes",
+          "Next week",
+          "Tomorrow morning"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 73,
+    "code": "conv_m11",
+    "title": "محادثة 1: تجاوز موعد التسجيل",
+    "context": "طالبة تطلب تسجيل متأخر",
+    "transcript": "F: Hi, I missed the registration deadline. Is there any way to still enroll?\nM: Late registration is possible but requires approval from the department chair.\nF: What do I need to do?\nM: Fill out the late registration form and write a brief explanation of your reason.\nF: I was in the hospital. I have documentation.\nM: That should be accepted. Late fees are usually waived for medical reasons.\nF: Where do I submit the paperwork?\nM: Bring everything to the registrar's office before Friday.",
+    "questions": [
+      {
+        "id": 119,
+        "q": "Why did the student miss the deadline?",
+        "opts": [
+          "Her advisor was absent",
+          "She was traveling",
+          "She forgot",
+          "She was in the hospital"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 120,
+        "q": "Will she have to pay a late fee?",
+        "opts": [
+          "Yes, full fee",
+          "Only after approval",
+          "Only partial fee",
+          "No, it will be waived for medical reasons"
+        ],
+        "correct": "3"
+      }
+    ]
+  },
+  {
+    "clip_id": 74,
+    "code": "conv_m12",
+    "title": "محادثة 2: تغيير التخصص",
+    "context": "طالب يستفسر عن إجراءات تغيير التخصص",
+    "transcript": "M: I'm thinking about changing my major from biology to psychology.\nF: That's a significant decision. Have you spoken to an advisor in psychology?\nM: Not yet. What does the process look like?\nF: First, you meet with the psychology department advisor for approval.\nF: Then you submit a change-of-major form before the end of the semester.\nM: Will I lose any of my completed credits?\nF: Many credits will transfer, but introductory psychology courses are required for your new major.\nM: Okay, I'll set up that meeting first. Thank you.",
+    "questions": [
+      {
+        "id": 121,
+        "q": "What is the first step in changing his major?",
+        "opts": [
+          "Taking new courses",
+          "Paying a fee",
+          "Submitting a form",
+          "Meeting with the psychology advisor"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 122,
+        "q": "What will happen to his completed credits?",
+        "opts": [
+          "All will be lost",
+          "None will transfer",
+          "Many will transfer",
+          "He needs to retake them all"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 76,
+    "code": "conv_m14",
+    "title": "محادثة 1: مناقشة درجة منخفضة",
+    "context": "طالب يستفسر عن نتيجته",
+    "transcript": "M: Professor, I'd like to discuss my midterm grade.\nF: I figured you might. What's your concern?\nM: I got a 65, but I felt I prepared well. I'm not sure where I went wrong.\nF: Let me pull up your exam. Most of your errors were in essay section three.\nM: What can I do to improve?\nF: Focus on building stronger thesis statements and supporting evidence.\nF: I also recommend the writing center for additional help.\nM: Thank you, I'll go there this week.",
+    "questions": [
+      {
+        "id": 123,
+        "q": "Why did the student visit the professor?",
+        "opts": [
+          "To change his major",
+          "To ask for an extension",
+          "To complain about the course",
+          "To discuss his midterm grade"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 124,
+        "q": "What does the professor recommend?",
+        "opts": [
+          "Dropping the course",
+          "Visiting the writing center",
+          "Hiring a tutor",
+          "Retaking the exam"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 77,
+    "code": "conv_m15",
+    "title": "محادثة 2: طلب فرصة بحثية",
+    "context": "طالبة تسأل عن المشاركة في بحث",
+    "transcript": "F: Professor, I read your paper on coral reefs and I'm fascinated.\nM: Thank you. Are you considering marine biology as a career?\nF: Yes. I was wondering if you accept undergraduate researchers.\nM: Sometimes, when funding allows. Do you have lab experience?\nF: Only basic lab skills from my biology courses.\nM: That's a start. Send me your CV and a one-page proposal of your interests.\nF: I'll have it ready by next week.\nM: Excellent. We can meet again after I review your materials.",
+    "questions": [
+      {
+        "id": 125,
+        "q": "What does the student want?",
+        "opts": [
+          "To borrow a book",
+          "To extend an assignment",
+          "To drop a course",
+          "To join the professor's research"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 126,
+        "q": "What does the professor ask her to submit?",
+        "opts": [
+          "CV and a one-page proposal",
+          "Transcript",
+          "Lab results",
+          "Reference letter"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 79,
+    "code": "conv_d02",
+    "title": "محادثة 1: قرض دراسي",
+    "context": "طالبة تستفسر عن قرض جامعي",
+    "transcript": "F: I'm considering applying for a student loan, but I'm a bit nervous.\nM: I understand. What concerns you most?\nF: Repayment after graduation. I'm not sure I'll find a job right away.\nM: That's a valid concern, but our loans have a six-month grace period after graduation.\nF: Six months? That's helpful, but still feels tight.\nM: If you face hardship, you can apply for income-based repayment.\nF: So payments adjust to my actual salary?\nM: Exactly. Many graduates use this option in their first year.",
+    "questions": [
+      {
+        "id": 127,
+        "q": "What can be inferred about the student?",
+        "opts": [
+          "She already has a job",
+          "She is wealthy",
+          "She doesn't need a loan",
+          "She is anxious about future finances"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 128,
+        "q": "What is implied about the income-based repayment?",
+        "opts": [
+          "It's commonly used by new graduates",
+          "It increases interest",
+          "It's only for emergencies",
+          "It's rarely used"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 80,
+    "code": "conv_d03",
+    "title": "محادثة 2: تأخر منحة",
+    "context": "طالب يستفسر عن تأخر دفعة منحته",
+    "transcript": "M: I'm still waiting for my scholarship deposit. It was due last week.\nF: Let me check your file. I see your paperwork is complete.\nM: So why the delay?\nF: It appears the bank verification took longer than usual this semester.\nM: Will this affect my ability to pay tuition on time?\nF: Don't worry. We've flagged your account so no late fees apply.\nM: That's a relief. When can I expect the deposit?\nF: Within three business days, latest.",
+    "questions": [
+      {
+        "id": 129,
+        "q": "What can be inferred about the delay?",
+        "opts": [
+          "Documents are missing",
+          "It is a wider administrative issue this semester",
+          "It is the student's fault",
+          "The scholarship was canceled"
+        ],
+        "correct": "1"
+      },
+      {
+        "id": 130,
+        "q": "Why won't the student face late fees?",
+        "opts": [
+          "He paid early",
+          "His account has been flagged due to the delay",
+          "He has scholarship privileges",
+          "Tuition was waived"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 82,
+    "code": "conv_d05",
+    "title": "محادثة 1: استعداد للمقابلة",
+    "context": "طالبة تحضّر لمقابلة عمل",
+    "transcript": "F: I have a job interview next Tuesday. Could you help me prepare?\nM: Certainly. Have you researched the company?\nF: Briefly. I know they're in renewable energy.\nM: Go deeper. Look at their recent projects and leadership.\nF: What about practice questions?\nM: We offer mock interviews. Would you like to schedule one for Friday?\nF: Yes, that would be amazing. I'll prepare more research first.\nM: Bring your notes Friday and we'll do a full simulation.",
+    "questions": [
+      {
+        "id": 131,
+        "q": "What will the student most likely do before Friday?",
+        "opts": [
+          "Attend the actual interview",
+          "Apply for other jobs",
+          "Research the company more thoroughly",
+          "Cancel the appointment"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 132,
+        "q": "What will happen during the Friday meeting?",
+        "opts": [
+          "Just CV review",
+          "Phone consultation",
+          "A mock interview simulation",
+          "A real interview"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 83,
+    "code": "conv_d06",
+    "title": "محادثة 2: معرض الوظائف",
+    "context": "طالب يستفسر عن معرض التوظيف القادم",
+    "transcript": "M: I want to attend the upcoming career fair, but I've never been to one.\nF: Good first step. The fair has over 80 companies this year.\nM: Should I dress formally?\nF: Business attire is expected. Also bring at least ten copies of your CV.\nM: Ten copies? That sounds like a lot.\nF: It goes quickly. Some students leave with leads from five or six companies.\nM: What if I don't know what to say at the booths?\nF: We have a pre-fair workshop next Wednesday. I'd strongly recommend attending.",
+    "questions": [
+      {
+        "id": 133,
+        "q": "What will the student most likely do next?",
+        "opts": [
+          "Skip the fair entirely",
+          "Cancel his current classes",
+          "Apply to all 80 companies",
+          "Attend the pre-fair workshop"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 134,
+        "q": "What does the speaker imply about CVs?",
+        "opts": [
+          "Companies prefer digital CVs",
+          "One copy is enough",
+          "CVs are not needed",
+          "Distributing many copies is normal"
+        ],
+        "correct": "3"
+      }
+    ]
+  },
+  {
+    "clip_id": 85,
+    "code": "conv_d08",
+    "title": "محادثة 1: استرداد بريد إلكتروني",
+    "context": "طالب يحاول استعادة حسابه",
+    "transcript": "M: I forgot my email password and can't reset it.\nF: Did you try the recovery email option?\nM: Yes, but the recovery email is also my old high school account, which is closed.\nF: That's the problem. We'll need to verify your identity manually.\nM: How do I do that?\nF: Come to the IT desk with your student ID and a second photo ID.\nM: Will the process take long?\nF: About fifteen minutes. After verification, we'll reset your password immediately.",
+    "questions": [
+      {
+        "id": 135,
+        "q": "Why couldn't the student reset his password online?",
+        "opts": [
+          "The system is down",
+          "He doesn't have internet",
+          "His recovery email account is closed",
+          "He doesn't have a phone"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 136,
+        "q": "What is the solution proposed?",
+        "opts": [
+          "Use a different device",
+          "Manual identity verification at IT desk",
+          "Create a new account",
+          "Wait 24 hours"
+        ],
+        "correct": "1"
+      }
+    ]
+  },
+  {
+    "clip_id": 86,
+    "code": "conv_d09",
+    "title": "محادثة 2: برنامج لا يعمل",
+    "context": "طالبة تواجه مشكلة في برنامج جامعي",
+    "transcript": "F: The statistics software keeps crashing whenever I open large data sets.\nM: Have you checked the system requirements?\nF: Yes, my laptop meets them, but barely.\nM: That might be the issue. The software needs significantly more RAM for big files.\nF: Is there a solution that doesn't involve buying a new laptop?\nM: You can access the same software remotely through our computer lab servers.\nF: Really? That would be perfect for my thesis work.\nM: I'll send you the login instructions and remote access guide via email.",
+    "questions": [
+      {
+        "id": 137,
+        "q": "What is the root cause of the crashes?",
+        "opts": [
+          "Software bug",
+          "Internet connection",
+          "Insufficient RAM for big data",
+          "Outdated operating system"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 138,
+        "q": "What is the proposed workaround?",
+        "opts": [
+          "Reduce data size",
+          "Use a different program",
+          "Access software remotely via lab servers",
+          "Buy a new laptop"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 88,
+    "code": "conv_d11",
+    "title": "محادثة 1: دراسة في الخارج",
+    "context": "طالبة تفكر في برنامج تبادل",
+    "transcript": "F: I'm considering studying abroad next semester, but I'm hesitant.\nM: What's holding you back?\nF: I'm worried about delaying my graduation.\nM: Many courses transfer back. Have you looked at partner universities?\nF: Some, but the credit transfer rules are confusing.\nM: Let's identify three programs where most credits transfer easily.\nF: That would help. If credits transfer, I think I'd commit.\nM: Then let's start there. I'll send program details tomorrow.",
+    "questions": [
+      {
+        "id": 139,
+        "q": "What is the main factor influencing the student's decision?",
+        "opts": [
+          "Language barrier",
+          "Cost",
+          "Credit transfer and graduation timing",
+          "Location"
+        ],
+        "correct": "2"
+      },
+      {
+        "id": 140,
+        "q": "What will the advisor do next?",
+        "opts": [
+          "Send her details of three suitable programs",
+          "Reject her application",
+          "Cancel her current courses",
+          "Enroll her immediately"
+        ],
+        "correct": "0"
+      }
+    ]
+  },
+  {
+    "clip_id": 89,
+    "code": "conv_d12",
+    "title": "محادثة 2: تأجيل فصل دراسي",
+    "context": "طالب يفكر في إجازة أكاديمية",
+    "transcript": "M: I've been thinking about taking a leave of absence next semester.\nF: That's a big decision. What's prompting it?\nM: Burnout. I've taken heavy course loads for three semesters straight.\nF: Have you considered a reduced course load instead?\nM: I thought of that, but I really need a complete break.\nF: Understood. A leave can be granted, but you'll need to formally re-enroll later.\nM: Will my scholarship be affected?\nF: It pauses during your leave and resumes when you return, if you maintain good standing.",
+    "questions": [
+      {
+        "id": 141,
+        "q": "Why is the student considering a leave?",
+        "opts": [
+          "Burnout from heavy workload",
+          "Family issues",
+          "Financial reasons",
+          "Health condition"
+        ],
+        "correct": "0"
+      },
+      {
+        "id": 142,
+        "q": "What happens to his scholarship during the leave?",
+        "opts": [
+          "It must be repaid",
+          "It is canceled",
+          "It pauses and resumes upon return",
+          "It transfers to another student"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 91,
+    "code": "conv_d14",
+    "title": "محادثة 1: مشروع تخرج معقد",
+    "context": "طالبة تناقش متطلبات مشروع متعدد المراحل",
+    "transcript": "F: Professor, my research project has more variables than I expected.\nM: That's common. Can you narrow your scope?\nF: I tried, but reducing variables might weaken my conclusions.\nM: What if you split it into two phases? Phase one explores; phase two confirms.\nF: That sounds manageable. Would phase two be next semester?\nM: Possibly, depending on your phase-one findings.\nF: I like that approach. It feels more rigorous.\nM: Excellent. Submit a revised proposal by Friday outlining both phases.",
+    "questions": [
+      {
+        "id": 143,
+        "q": "What is the main concern of the student?",
+        "opts": [
+          "Her project is too short",
+          "Her project lacks data",
+          "She wants to change topics",
+          "Her project has too many variables"
+        ],
+        "correct": "3"
+      },
+      {
+        "id": 144,
+        "q": "What is the professor's suggested approach?",
+        "opts": [
+          "Add more variables",
+          "Reduce all variables",
+          "Split the project into two phases",
+          "Change the topic completely"
+        ],
+        "correct": "2"
+      }
+    ]
+  },
+  {
+    "clip_id": 92,
+    "code": "conv_d15",
+    "title": "محادثة 2: نزاع حول درجة",
+    "context": "طالب يطعن في درجة مع نبرة محترمة لكن قلقة",
+    "transcript": "M: Professor, may I discuss the grading on my essay?\nF: Of course. What specifically concerns you?\nM: I lost six points on the analysis section, but I'm not clear on the criteria.\nF: Let me explain. Your argument was solid, but you relied heavily on one source.\nM: I see. I focused on depth over breadth.\nF: Both matter in academic writing. Try diversifying sources in your next paper.\nM: Is there any chance to revise this essay?\nF: Not for a grade change, but I'm happy to discuss revisions for your learning.",
+    "questions": [
+      {
+        "id": 145,
+        "q": "What can be inferred about the student's tone?",
+        "opts": [
+          "Sarcastic",
+          "Respectful but concerned",
+          "Indifferent",
+          "Angry and aggressive"
+        ],
+        "correct": "1"
+      },
+      {
+        "id": 146,
+        "q": "What will most likely happen next?",
+        "opts": [
+          "The student will discuss revisions for learning, not grades",
+          "The professor will report him",
+          "He will drop the course",
+          "The grade will change"
+        ],
+        "correct": "0"
+      }
+    ]
+  }
+]

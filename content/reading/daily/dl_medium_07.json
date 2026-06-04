@@ -1,0 +1,100 @@
+{
+  "id": "dl_medium_07",
+  "type": "daily_reading",
+  "tier": "medium",
+  "title_en": "Library Policy Update",
+  "title_ar": "تحديث سياسة المكتبة",
+  "topic": "Library",
+  "duration_seconds": 300,
+  "passage": {
+    "title_en": "UPDATED BORROWING POLICY — Effective July 1st",
+    "text_en": "UPDATED BORROWING POLICY — Effective July 1st\n\nBook Loans:\n• Fiction: 3 weeks (renewable once)\n• Non-fiction: 4 weeks (renewable twice)\n• New releases: 2 weeks (non-renewable)\nLate fees: $0.25 per day per item (maximum $5.00 per item).\n\nDigital Resources:\n• E-books and audiobooks: 21-day automatic return\n• No late fees on digital items\n\nYou can now place holds on up to 15 items (previously 10). Items not picked up within 5 days will be released to the next person on the waitlist.\n\nScan your library card at our new self-checkout stations!"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "How long can you borrow a new release book?",
+      "prompt_ar": "كم مدة استعارة كتاب جديد؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "2 weeks without renewal"
+        },
+        {
+          "id": "B",
+          "text_en": "3 weeks with one renewal"
+        },
+        {
+          "id": "C",
+          "text_en": "4 weeks with two renewals"
+        },
+        {
+          "id": "D",
+          "text_en": "21 days with automatic return"
+        }
+      ],
+      "correct": "A",
+      "explanation_ar": "النص: 'New releases: 2 weeks (non-renewable)'.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "What is the maximum late fee per item?",
+      "prompt_ar": "ما الحد الأقصى لرسوم التأخير لكل قطعة؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "$0.25"
+        },
+        {
+          "id": "B",
+          "text_en": "$2.50"
+        },
+        {
+          "id": "C",
+          "text_en": "$5.00"
+        },
+        {
+          "id": "D",
+          "text_en": "$15.00"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "النص: 'maximum $5.00 per item'.",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "What happens if you don't pick up a hold within 5 days?",
+      "prompt_ar": "ماذا يحدث إن لم تستلم الحجز خلال 5 أيام؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "You pay a fine"
+        },
+        {
+          "id": "B",
+          "text_en": "It goes to the next person"
+        },
+        {
+          "id": "C",
+          "text_en": "It's returned to the shelf"
+        },
+        {
+          "id": "D",
+          "text_en": "Your account is suspended"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "النص: 'released to the next person on the waitlist'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "MEDIUM"
+  }
+}

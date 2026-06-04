@@ -3,319 +3,477 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ item.title_ar }} — إكمال الكلمات</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>{{ item.title_en }} — Complete the Words</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Cairo', sans-serif; background: #f8fafc; min-height: 100vh; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Cairo', sans-serif; background: #f1f5f9; min-height: 100vh; color: #1e293b; }
   .en { font-family: 'Inter', sans-serif; direction: ltr; }
 
-  /* ETS-like header */
-  .ets-header { background: #1e293b; color: #f8fafc; }
-  .ets-timer { background: #fbbf24; color: #1e293b; font-weight: 700; padding: 6px 14px; border-radius: 6px; font-family: 'Inter', monospace; }
+  /* ───── Header (ETS-style) ───── */
+  .ets-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .ets-timer {
+    background: #fbbf24; color: #1e293b; font-weight: 800;
+    padding: 8px 16px; border-radius: 8px;
+    font-family: 'Inter', monospace; font-size: 1.1rem;
+    min-width: 90px; text-align: center;
+  }
   .ets-timer.warning { background: #f97316; color: white; animation: pulse 1s infinite; }
-  .ets-timer.danger { background: #dc2626; color: white; animation: pulse .5s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .7; } }
+  .ets-timer.danger  { background: #dc2626; color: white; animation: pulse .5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .65; } }
 
-  /* Passage area */
-  .passage-area {
-    background: white; border: 1px solid #e2e8f0; border-radius: 12px;
-    padding: 32px 36px; box-shadow: 0 4px 20px rgba(0,0,0,.04);
+  .progress-info { font-size: .95rem; opacity: .9; }
+  .progress-info b { color: #fbbf24; font-family: 'Inter', sans-serif; }
+
+  .header-title { font-size: 1rem; font-weight: 700; }
+  .header-title .badge { background: rgba(255,255,255,.15); padding: 4px 10px; border-radius: 6px; font-size: .8rem; margin-inline-end: 8px; }
+  .btn-close {
+    background: rgba(255,255,255,.1); color: white; border: none;
+    width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+    font-size: 1.2rem; transition: all .2s;
+  }
+  .btn-close:hover { background: rgba(239,68,68,.8); }
+
+  /* ───── Progress bar ───── */
+  .progress-wrap { background: #1e293b; padding: 0 24px 12px; }
+  .progress-bar { background: rgba(255,255,255,.15); height: 6px; border-radius: 999px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; width: 0%; transition: width .3s ease; }
+
+  /* ───── Main container ───── */
+  .container { max-width: 900px; margin: 24px auto; padding: 0 20px; }
+
+  .intro-card {
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    border-right: 4px solid #6366f1;
+    padding: 16px 20px; border-radius: 10px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .intro-label { font-size: .85rem; color: #4338ca; font-weight: 700; white-space: nowrap; }
+  .intro-text { font-family: 'Inter', sans-serif; direction: ltr; color: #1e293b; font-size: 1rem; flex: 1; text-align: left; }
+
+  /* ───── Passage ───── */
+  .passage {
+    background: white; border: 1px solid #e2e8f0; border-radius: 14px;
+    padding: 34px 38px; box-shadow: 0 4px 24px rgba(0,0,0,.05);
     font-family: 'Inter', sans-serif; direction: ltr;
-    font-size: 1.15rem; line-height: 2.4; color: #1e293b;
+    font-size: 1.18rem; line-height: 2.6; color: #1e293b; text-align: left;
   }
 
-  /* The blanks */
-  .word-group { display: inline-flex; align-items: baseline; gap: 1px; margin: 0 2px; }
+  /* ───── Blanks (smart inputs) ───── */
+  .word-group {
+    display: inline-flex; align-items: baseline; gap: 1px;
+    margin: 0 3px; vertical-align: baseline;
+  }
   .word-prefix { color: #1e293b; font-weight: 600; }
   .blank-input {
-    width: 1.5rem; height: 2rem; border: none; border-bottom: 2px solid #94a3b8;
-    text-align: center; font-family: 'Inter', monospace; font-weight: 700;
-    font-size: 1.05rem; color: #4f46e5; background: transparent;
-    outline: none; padding: 0; margin: 0 1px; transition: all .15s;
+    width: 1.4rem; height: 2.1rem;
+    border: none; border-bottom: 2.5px solid #94a3b8;
+    text-align: center;
+    font-family: 'Inter', monospace; font-weight: 700; font-size: 1.05rem;
+    color: #4f46e5; background: transparent;
+    outline: none; padding: 0; margin: 0 1px;
+    transition: all .15s ease;
     text-transform: lowercase;
+    caret-color: #4f46e5;
   }
   .blank-input:focus {
     border-bottom-color: #4f46e5; border-bottom-width: 3px;
-    background: #eef2ff; transform: translateY(-1px);
+    background: #eef2ff; transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(79,70,229,.15);
   }
   .blank-input.filled { color: #059669; border-bottom-color: #10b981; }
-
-  /* After submit */
   .blank-input.correct { background: #d1fae5 !important; color: #065f46 !important; border-bottom-color: #10b981 !important; }
-  .blank-input.wrong { background: #fee2e2 !important; color: #991b1b !important; border-bottom-color: #ef4444 !important; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
-  .blank-input.wrong { animation: shake .4s; }
+  .blank-input.wrong   { background: #fee2e2 !important; color: #991b1b !important; border-bottom-color: #ef4444 !important; animation: shake .4s; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
-  /* Progress bar */
-  .progress-bar { background: #e2e8f0; height: 8px; border-radius: 999px; overflow: hidden; }
-  .progress-fill { background: linear-gradient(90deg, #4f46e5, #7c3aed); height: 100%; transition: width .3s; }
-
-  /* Buttons */
+  /* ───── Action bar ───── */
+  .action-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .btn {
+    padding: 12px 26px; border-radius: 10px; font-weight: 700;
+    border: none; cursor: pointer; font-family: 'Cairo', sans-serif;
+    font-size: .98rem; transition: all .2s; display: inline-flex;
+    align-items: center; gap: 8px;
+  }
   .btn-primary {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; font-weight: 700;
-    padding: 12px 28px; border-radius: 10px; box-shadow: 0 4px 14px rgba(79,70,229,.3);
-    transition: all .2s; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;
+    box-shadow: 0 4px 14px rgba(79,70,229,.35);
   }
-  .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(79,70,229,.4); }
-  .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(79,70,229,.45); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
   .btn-secondary {
-    background: white; color: #475569; font-weight: 600; padding: 12px 24px;
-    border-radius: 10px; border: 1.5px solid #cbd5e1; transition: all .2s; cursor: pointer;
+    background: white; color: #475569; border: 1px solid #cbd5e1;
   }
-  .btn-secondary:hover { border-color: #4f46e5; color: #4f46e5; }
+  .btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+  .btn-danger {
+    background: white; color: #dc2626; border: 1px solid #fecaca;
+  }
+  .btn-danger:hover { background: #fef2f2; border-color: #ef4444; }
 
-  /* Modal */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(4px);
-    display: none; align-items: center; justify-content: center; z-index: 50;
+  /* ───── Hint bar ───── */
+  .hint-bar {
+    margin-top: 18px; padding: 12px 16px;
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
+    font-size: .88rem; color: #92400e; display: flex; align-items: center; gap: 10px;
+  }
+  .hint-bar .icon { font-size: 1.1rem; }
+  .hint-bar kbd {
+    background: white; border: 1px solid #fde68a; border-radius: 4px;
+    padding: 1px 6px; font-family: 'Inter', monospace; font-size: .8rem;
+    color: #92400e; box-shadow: 0 1px 0 #fde68a;
+  }
+
+  /* ───── Modal (Professional ETS-style) ───── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px;
     animation: fadeIn .2s ease;
   }
-  .modal-overlay.show { display: flex; }
-  .modal-card {
-    background: white; border-radius: 20px; padding: 32px; max-width: 480px; width: 90%;
-    box-shadow: 0 25px 60px rgba(0,0,0,.25); animation: slideUp .3s ease;
-  }
+  .modal-backdrop.show { display: flex; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .modal {
+    background: white; border-radius: 16px; max-width: 460px; width: 100%;
+    padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    animation: scaleIn .25s cubic-bezier(.16,1,.3,1);
+    text-align: center;
+  }
+  @keyframes scaleIn { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .modal-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 2rem;
+  }
+  .modal-icon.warning { background: #fef3c7; color: #d97706; }
+  .modal-icon.danger  { background: #fee2e2; color: #dc2626; }
+  .modal-icon.info    { background: #dbeafe; color: #2563eb; }
+  .modal-icon.success { background: #d1fae5; color: #059669; }
+
+  .modal h3 { font-size: 1.25rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
+  .modal p  { color: #64748b; font-size: .95rem; line-height: 1.6; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .modal-actions .btn { flex: 1; min-width: 120px; justify-content: center; }
 </style>
 </head>
 <body>
 
-<!-- ETS-style Header -->
-<header class="ets-header sticky top-0 z-40 shadow-md">
-  <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <a href="/reading/?user_id={{ user_id }}" class="text-slate-300 hover:text-white transition" title="رجوع">
-        <span class="text-xl">✕</span>
-      </a>
-      <div>
-        <div class="text-xs text-slate-400 en">Reading · Complete the Words</div>
-        <div class="font-bold text-base">{{ item.title_ar }}</div>
-      </div>
-    </div>
-    <div class="flex items-center gap-4">
-      <div class="text-sm">
-        <span class="text-slate-400">الفراغات:</span>
-        <span id="progress-text" class="font-bold text-white">0/{{ total_blanks }}</span>
-      </div>
-      <div id="timer" class="ets-timer en">--:--</div>
+<!-- ════════ HEADER ════════ -->
+<header class="ets-header">
+  <div class="header-left">
+    <div class="ets-timer en" id="timer">05:00</div>
+    <div class="progress-info">
+      <b id="progress-text">0</b> / <span id="total-words">{{ blanks_grouped|length }}</span> كلمة
     </div>
   </div>
-  <div class="progress-bar rounded-none">
-    <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+  <div class="header-title">
+    <span class="badge">Reading</span>
+    <span class="en">{{ item.title_en }}</span>
   </div>
+  <button class="btn-close" onclick="askExit()" title="إنهاء الامتحان">✕</button>
 </header>
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
 
-<!-- Main exam area -->
-<main class="max-w-4xl mx-auto px-6 py-8">
+<!-- ════════ MAIN ════════ -->
+<main class="container">
 
-  <!-- Intro sentence -->
-  <div class="bg-indigo-50 border-r-4 border-indigo-500 rounded-lg p-4 mb-6 en text-slate-700" dir="ltr">
-    <div class="text-xs text-indigo-600 font-bold mb-1" dir="rtl">الجملة التمهيدية (كاملة):</div>
-    {{ item.intro }}
+  {% if item.intro %}
+  <div class="intro-card">
+    <div class="intro-label">Intro:</div>
+    <div class="intro-text en">{{ item.intro }}</div>
   </div>
+  {% endif %}
 
-  <!-- Passage with blanks -->
-  <div class="passage-area" id="passage" dir="ltr">
+  <div class="passage">
     {% for seg in item.segments %}
-      {% if seg.text is defined %}{{ seg.text }}{% endif %}
-      {% if seg.blank is defined %}<span class="word-group">
-        <span class="word-prefix">{{ seg.blank.prefix }}</span>{% for i in range(seg.blank.missing|length) %}<input type="text" maxlength="1" class="blank-input" data-blank-idx="{{ loop.index0 }}" data-word-idx="{{ loop.index0 }}" autocomplete="off" spellcheck="false">{% endfor %}</span>{% endif %}
+      {%- if seg.text is defined -%}{{ seg.text }}{%- endif -%}
+      {%- if seg.blank is defined -%}
+        <span class="word-group" data-word-idx="{{ loop.index0 }}" data-prefix="{{ seg.blank.prefix }}" data-expected="{{ seg.blank.full_word }}">
+          <span class="word-prefix">{{ seg.blank.prefix }}</span>{%- for _ in range(seg.blank.missing|length) -%}<input type="text" maxlength="1" class="blank-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">{%- endfor -%}
+        </span>
+      {%- endif -%}
     {% endfor %}
   </div>
 
-  <!-- Action buttons -->
-  <div class="flex items-center justify-between gap-4 mt-8">
-    <button onclick="resetAll()" class="btn-secondary">🔄 إعادة المسح</button>
-    <div class="flex gap-3">
-      <button onclick="showReview()" class="btn-secondary">📋 مراجعة</button>
-      <button id="submit-btn" onclick="confirmSubmit()" class="btn-primary">✓ إرسال الإجابات</button>
-    </div>
+  <div class="action-bar">
+    <button class="btn btn-primary" id="btn-submit" onclick="askSubmit()">
+      ✓ إرسال الإجابات
+    </button>
+    <button class="btn btn-secondary" onclick="focusFirstEmpty()">
+      ⤵ الذهاب لأول فراغ فارغ
+    </button>
+    <button class="btn btn-danger" onclick="askClear()">
+      🗑 مسح الكل
+    </button>
   </div>
 
-  <!-- Help hint -->
-  <div class="mt-6 bg-slate-50 rounded-lg p-4 text-sm text-slate-600 flex items-start gap-3">
-    <span class="text-lg">💡</span>
-    <div>
-      <strong>تلميحات:</strong> اكتب حرفاً واحداً → ينتقل تلقائياً للتالي. اضغط <kbd class="bg-white border px-1.5 rounded text-xs en">Backspace</kbd> للرجوع. الكتابة بحروف صغيرة <span class="en">(lowercase)</span>.
-    </div>
+  <div class="hint-bar">
+    <span class="icon">💡</span>
+    <span>اكتب حرفاً واحداً → ينتقل للفراغ التالي تلقائياً. <kbd>Backspace</kbd> للرجوع. <kbd>←</kbd> <kbd>→</kbd> للتنقل اليدوي. الكتابة بحروف صغيرة (lowercase).</span>
   </div>
-
 </main>
 
-<!-- Confirmation Modal -->
-<div class="modal-overlay" id="confirm-modal" onclick="if(event.target===this)closeModal('confirm-modal')">
-  <div class="modal-card text-center">
-    <div class="text-5xl mb-3">🤔</div>
-    <h3 class="text-xl font-bold text-slate-800 mb-2">تأكيد الإرسال</h3>
-    <p class="text-slate-600 mb-2" id="confirm-text">هل أنت متأكد من إرسال إجاباتك؟</p>
-    <p class="text-sm text-slate-500 mb-6">لن تستطيع التعديل بعد الإرسال.</p>
-    <div class="flex gap-3 justify-center">
-      <button onclick="closeModal('confirm-modal')" class="btn-secondary">إلغاء</button>
-      <button onclick="doSubmit()" class="btn-primary">نعم، أرسل</button>
+<!-- ════════ MODALS ════════ -->
+<div class="modal-backdrop" id="modal-clear">
+  <div class="modal">
+    <div class="modal-icon warning">⚠️</div>
+    <h3>مسح كل الإجابات؟</h3>
+    <p>سيتم حذف جميع الحروف التي كتبتها. هذا الإجراء لا يمكن التراجع عنه.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-clear')">إلغاء</button>
+      <button class="btn btn-primary" style="background:#dc2626;box-shadow:0 4px 14px rgba(220,38,38,.35)" onclick="doClear()">نعم، امسح الكل</button>
     </div>
   </div>
 </div>
 
-<!-- Review Modal -->
-<div class="modal-overlay" id="review-modal" onclick="if(event.target===this)closeModal('review-modal')">
-  <div class="modal-card" style="max-width: 600px;">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-xl font-bold text-slate-800">📋 مراجعة الإجابات</h3>
-      <button onclick="closeModal('review-modal')" class="text-slate-400 hover:text-slate-700 text-2xl leading-none">×</button>
+<div class="modal-backdrop" id="modal-submit">
+  <div class="modal">
+    <div class="modal-icon info">📤</div>
+    <h3>إرسال الإجابات؟</h3>
+    <p id="submit-msg">أنت على وشك إرسال إجاباتك للتقييم.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-submit')">مراجعة</button>
+      <button class="btn btn-primary" id="confirm-submit" onclick="doSubmit()">تأكيد الإرسال</button>
     </div>
-    <div id="review-body" class="space-y-2 max-h-80 overflow-y-auto en" dir="ltr"></div>
-    <div class="mt-5 flex justify-end">
-      <button onclick="closeModal('review-modal')" class="btn-primary">حسناً</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-exit">
+  <div class="modal">
+    <div class="modal-icon danger">🚪</div>
+    <h3>الخروج من الامتحان؟</h3>
+    <p>إذا خرجت الآن لن يتم حفظ تقدمك. هل أنت متأكد؟</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-exit')">البقاء</button>
+      <button class="btn btn-primary" style="background:#dc2626;box-shadow:0 4px 14px rgba(220,38,38,.35)" onclick="window.location.href='/reading/?user_id={{ user_id }}'">نعم، اخرج</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-timeup">
+  <div class="modal">
+    <div class="modal-icon danger">⏰</div>
+    <h3>انتهى الوقت!</h3>
+    <p>سيتم إرسال إجاباتك الحالية تلقائياً للتقييم.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="doSubmit()">عرض النتيجة</button>
     </div>
   </div>
 </div>
 
 <script>
-const DURATION = {{ item.duration_seconds }};
-const CONTENT_ID = "{{ item.id }}";
-const USER_ID = "{{ user_id }}";
-const SUBMIT_URL = "/reading/cw/submit";
+// ════════════════════════════════════════════════════════
+// Configuration from server
+// ════════════════════════════════════════════════════════
+const CONTENT_ID  = "{{ item.id }}";
+const USER_ID     = "{{ user_id }}";
+const DURATION    = {{ item.duration_seconds|default(300) }};
+const TOTAL_WORDS = {{ blanks_grouped|length }};
 
-// === Smart input navigation ===
-const inputs = Array.from(document.querySelectorAll('.blank-input'));
-const totalBlanks = inputs.length;
-document.getElementById('progress-text').textContent = '0/' + totalBlanks;
-
-function updateProgress() {
-  const filled = inputs.filter(i => i.value.trim().length > 0).length;
-  document.getElementById('progress-text').textContent = filled + '/' + totalBlanks;
-  document.getElementById('progress-fill').style.width = (filled/totalBlanks*100) + '%';
-}
-
-inputs.forEach((inp, idx) => {
-  inp.addEventListener('input', (e) => {
-    inp.value = inp.value.toLowerCase().replace(/[^a-z]/g, '');
-    if (inp.value.length > 0) {
-      inp.classList.add('filled');
-      // move to next
-      if (idx + 1 < inputs.length) inputs[idx + 1].focus();
-    } else {
-      inp.classList.remove('filled');
-    }
-    updateProgress();
-  });
-  inp.addEventListener('keydown', (e) => {
-    if (e.key === 'Backspace' && inp.value === '' && idx > 0) {
-      e.preventDefault();
-      inputs[idx - 1].focus();
-      inputs[idx - 1].value = '';
-      inputs[idx - 1].classList.remove('filled');
-      updateProgress();
-    } else if (e.key === 'ArrowLeft' && idx > 0) {
-      e.preventDefault(); inputs[idx - 1].focus();
-    } else if (e.key === 'ArrowRight' && idx + 1 < inputs.length) {
-      e.preventDefault(); inputs[idx + 1].focus();
-    }
-  });
-});
-
-// Focus first input
-if (inputs.length > 0) inputs[0].focus();
-
-// === Timer ===
+// ════════════════════════════════════════════════════════
+// Timer
+// ════════════════════════════════════════════════════════
 let timeLeft = DURATION;
 const timerEl = document.getElementById('timer');
 function fmt(s) {
-  const m = Math.floor(s/60), sec = s%60;
-  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+  const m = Math.floor(s/60), r = s%60;
+  return String(m).padStart(2,'0') + ':' + String(r).padStart(2,'0');
 }
 timerEl.textContent = fmt(timeLeft);
-const tInterval = setInterval(() => {
+const timerInt = setInterval(() => {
   timeLeft--;
+  if (timeLeft <= 0) {
+    clearInterval(timerInt);
+    timerEl.textContent = '00:00';
+    openModal('modal-timeup');
+    return;
+  }
   timerEl.textContent = fmt(timeLeft);
-  if (timeLeft <= 60) timerEl.classList.add('warning');
-  if (timeLeft <= 20) { timerEl.classList.remove('warning'); timerEl.classList.add('danger'); }
-  if (timeLeft <= 0) { clearInterval(tInterval); doSubmit(true); }
+  timerEl.classList.toggle('warning', timeLeft <= 60 && timeLeft > 30);
+  timerEl.classList.toggle('danger',  timeLeft <= 30);
 }, 1000);
 
-// === Modal helpers ===
-function showModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+// ════════════════════════════════════════════════════════
+// Word groups + smart input navigation
+// ════════════════════════════════════════════════════════
+const groups = Array.from(document.querySelectorAll('.word-group'));
+const allInputs = Array.from(document.querySelectorAll('.blank-input'));
+
+function getGroupInputs(group) {
+  return Array.from(group.querySelectorAll('.blank-input'));
+}
+
+function updateProgress() {
+  let completed = 0;
+  groups.forEach(g => {
+    const ins = getGroupInputs(g);
+    if (ins.every(i => i.value.trim().length === 1)) completed++;
+  });
+  document.getElementById('progress-text').textContent = completed;
+  document.getElementById('progress-fill').style.width = (completed/TOTAL_WORDS*100) + '%';
+
+  // Mark filled words
+  groups.forEach(g => {
+    const ins = getGroupInputs(g);
+    const full = ins.every(i => i.value.trim().length === 1);
+    ins.forEach(i => i.classList.toggle('filled', full));
+  });
+}
+
+allInputs.forEach((inp, idx) => {
+  inp.addEventListener('input', (e) => {
+    // Only one char, lowercase
+    let v = inp.value.replace(/[^a-zA-Z]/g, '').toLowerCase();
+    if (v.length > 1) v = v.slice(-1);
+    inp.value = v;
+
+    // Move forward if char typed
+    if (v.length === 1) {
+      const next = allInputs[idx + 1];
+      if (next) next.focus();
+    }
+    updateProgress();
+  });
+
+  inp.addEventListener('keydown', (e) => {
+    // Backspace: if empty → go back & clear previous
+    if (e.key === 'Backspace' && inp.value === '') {
+      e.preventDefault();
+      const prev = allInputs[idx - 1];
+      if (prev) {
+        prev.focus();
+        prev.value = '';
+        updateProgress();
+      }
+      return;
+    }
+    // Arrow navigation
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const prev = allInputs[idx - 1];
+      if (prev) prev.focus();
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const next = allInputs[idx + 1];
+      if (next) next.focus();
+    }
+    // Enter: jump to next word's first input
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const curGroup = inp.closest('.word-group');
+      const curIdx = groups.indexOf(curGroup);
+      const nextGroup = groups[curIdx + 1];
+      if (nextGroup) getGroupInputs(nextGroup)[0].focus();
+    }
+  });
 });
 
-// === Actions ===
-function resetAll() {
-  if (!confirm('مسح كل الإجابات؟')) return;
-  inputs.forEach(i => { i.value = ''; i.classList.remove('filled','correct','wrong'); });
+// Auto-focus first input on load
+window.addEventListener('load', () => {
+  if (allInputs.length > 0) allInputs[0].focus();
+});
+
+function focusFirstEmpty() {
+  const empty = allInputs.find(i => i.value === '');
+  if (empty) empty.focus();
+  else allInputs[0]?.focus();
+}
+
+// ════════════════════════════════════════════════════════
+// Modals
+// ════════════════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', (e) => {
+    if (e.target === m) m.classList.remove('show');
+  });
+});
+// Close on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
+  }
+});
+
+function askClear() { openModal('modal-clear'); }
+function askExit()  { openModal('modal-exit'); }
+function askSubmit() {
+  // Count empty words
+  let empty = 0;
+  groups.forEach(g => {
+    const ins = getGroupInputs(g);
+    if (ins.some(i => i.value === '')) empty++;
+  });
+  const msg = empty > 0
+    ? `لديك <b>${empty}</b> كلمة غير مكتملة من أصل ${TOTAL_WORDS}. هل تريد الإرسال على أي حال؟`
+    : `أكملت جميع الكلمات (${TOTAL_WORDS}/${TOTAL_WORDS}). جاهز للإرسال؟`;
+  document.getElementById('submit-msg').innerHTML = msg;
+  openModal('modal-submit');
+}
+
+function doClear() {
+  allInputs.forEach(i => { i.value = ''; i.classList.remove('filled','correct','wrong'); });
   updateProgress();
-  inputs[0].focus();
+  closeModal('modal-clear');
+  allInputs[0]?.focus();
 }
 
-function showReview() {
-  // group inputs by word
-  const words = {{ blanks_grouped|tojson }};
-  const body = document.getElementById('review-body');
-  let html = '';
-  let inpIdx = 0;
-  words.forEach((w, i) => {
-    const letters = [];
-    for (let k = 0; k < w.missing_len; k++) {
-      letters.push(inputs[inpIdx].value || '_');
-      inpIdx++;
-    }
-    const userWord = w.prefix + letters.join('');
-    const status = letters.every(l => l !== '_') ? '✓' : '○';
-    html += `<div class="flex items-center justify-between bg-slate-50 rounded p-2"><span><strong>#${i+1}</strong> ${w.prefix}<span class="text-indigo-600">${letters.join('')}</span></span><span>${status}</span></div>`;
+// ════════════════════════════════════════════════════════
+// Submit
+// ════════════════════════════════════════════════════════
+async function doSubmit() {
+  clearInterval(timerInt);
+  const btn = document.getElementById('confirm-submit');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري الإرسال...'; }
+
+  // Build answers array
+  const answers = groups.map(g => {
+    const prefix = g.dataset.prefix || '';
+    const expected = g.dataset.expected || '';
+    const typed = getGroupInputs(g).map(i => i.value || '').join('');
+    return { full_word: (prefix + typed).toLowerCase(), expected: expected.toLowerCase() };
   });
-  body.innerHTML = html;
-  showModal('review-modal');
-}
-
-function confirmSubmit() {
-  const filled = inputs.filter(i => i.value.trim().length > 0).length;
-  const empty = totalBlanks - filled;
-  const txt = empty > 0
-    ? `لديك ${empty} فراغ غير مكتمل من أصل ${totalBlanks}. هل تريد الإرسال على أي حال؟`
-    : `أكملت جميع الفراغات (${totalBlanks}/${totalBlanks}). هل أنت متأكد من الإرسال؟`;
-  document.getElementById('confirm-text').textContent = txt;
-  showModal('confirm-modal');
-}
-
-async function doSubmit(autoSubmit) {
-  closeModal('confirm-modal');
-  document.getElementById('submit-btn').disabled = true;
-  clearInterval(tInterval);
-
-  // Build answers grouped by word
-  const words = {{ blanks_grouped|tojson }};
-  const answers = [];
-  let inpIdx = 0;
-  words.forEach((w) => {
-    const letters = [];
-    for (let k = 0; k < w.missing_len; k++) {
-      letters.push(inputs[inpIdx].value || '');
-      inpIdx++;
-    }
-    answers.push({ full_word: w.prefix + letters.join(''), expected: w.full_word });
-  });
+  const time_spent = DURATION - timeLeft;
 
   try {
-    const res = await fetch(SUBMIT_URL + '?user_id=' + USER_ID, {
+    const res = await fetch('/reading/cw/submit?user_id=' + USER_ID, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ content_id: CONTENT_ID, answers: answers, time_spent: DURATION - timeLeft, auto: !!autoSubmit })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content_id: CONTENT_ID, answers, time_spent })
     });
     const data = await res.json();
     if (data.redirect) {
       window.location.href = data.redirect;
+    } else if (data.attempt_id) {
+      window.location.href = '/reading/cw/result/' + data.attempt_id + '?user_id=' + USER_ID;
     } else {
-      alert('تم الإرسال');
+      alert('تم الإرسال لكن لم يصل رابط النتيجة. (' + JSON.stringify(data).slice(0,200) + ')');
     }
-  } catch (e) {
-    alert('خطأ في الإرسال: ' + e.message);
-    document.getElementById('submit-btn').disabled = false;
+  } catch (err) {
+    alert('فشل الإرسال: ' + err.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'تأكيد الإرسال'; }
   }
 }
-</script>
 
+// Initial progress
+updateProgress();
+</script>
 </body>
 </html>

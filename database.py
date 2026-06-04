@@ -2,8 +2,11 @@
 import sqlite3, os, json
 from datetime import datetime, timedelta
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "yamen_academy.db")
-
+# unified: use db.DB_PATH (single source of truth)
+try:
+    from db import DB_PATH
+except ImportError:
+    DB_PATH = os.path.join(os.path.dirname(__file__), "academy.db")
 def get_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)

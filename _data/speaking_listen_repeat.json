@@ -1,0 +1,1124 @@
+{
+  "topics": [
+    {
+      "code": "lr01_climate",
+      "title_en": "Climate Change",
+      "title_ar": "تغير المناخ",
+      "difficulty": "easy",
+      "principle_ar": "ركّز على نهايات الكلمات وعلامات الجمع/الماضي",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_01_s1",
+          "global_index": 1,
+          "topic_sentence_num": 1,
+          "text": "Climate change is affecting the planet and everyone living on it.",
+          "ar": "تغير المناخ يؤثر على الكوكب وكل من يعيش عليه",
+          "stress": [
+            "Climate",
+            "change",
+            "affecting",
+            "planet",
+            "everyone",
+            "living"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "ركّز على الـ /t/ في 'planet' والـ /ŋ/ في 'living'"
+        },
+        {
+          "audio_code": "lr_01_s2",
+          "global_index": 2,
+          "topic_sentence_num": 2,
+          "text": "Temperatures are rising faster than scientists expected.",
+          "ar": "درجات الحرارة ترتفع أسرع مما توقع العلماء",
+          "stress": [
+            "Temperatures",
+            "rising",
+            "faster",
+            "scientists",
+            "expected"
+          ],
+          "pauses": [],
+          "tips_ar": "نطق /sk/ في 'scientists' بوضوح"
+        },
+        {
+          "audio_code": "lr_01_s3",
+          "global_index": 3,
+          "topic_sentence_num": 3,
+          "text": "Ice caps are melting, and sea levels are increasing.",
+          "ar": "القمم الجليدية تذوب ومستويات البحار ترتفع",
+          "stress": [
+            "Ice",
+            "caps",
+            "melting",
+            "sea",
+            "levels",
+            "increasing"
+          ],
+          "pauses": [
+            3
+          ],
+          "tips_ar": "وقفة قصيرة بعد الفاصلة - 'melting / and'"
+        },
+        {
+          "audio_code": "lr_01_s4",
+          "global_index": 4,
+          "topic_sentence_num": 4,
+          "text": "Extreme weather like storms and floods is happening more often.",
+          "ar": "الطقس المتطرف كالعواصف والفيضانات يحدث أكثر",
+          "stress": [
+            "Extreme",
+            "weather",
+            "storms",
+            "floods",
+            "happening",
+            "often"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "ربط 'floods is' = floodsis (linking)"
+        },
+        {
+          "audio_code": "lr_01_s5",
+          "global_index": 5,
+          "topic_sentence_num": 5,
+          "text": "Human activities like burning coal and driving cars create greenhouse gases.",
+          "ar": "الأنشطة البشرية كحرق الفحم وقيادة السيارات تنتج غازات الدفيئة",
+          "stress": [
+            "Human",
+            "activities",
+            "burning",
+            "coal",
+            "driving",
+            "greenhouse",
+            "gases"
+          ],
+          "pauses": [
+            5,
+            8
+          ],
+          "tips_ar": "صعبة: قسّمها لثلاث أجزاء"
+        },
+        {
+          "audio_code": "lr_01_s6",
+          "global_index": 6,
+          "topic_sentence_num": 6,
+          "text": "Switching to renewable energy can help slow down climate change.",
+          "ar": "التحول للطاقة المتجددة يساعد على إبطاء تغير المناخ",
+          "stress": [
+            "Switching",
+            "renewable",
+            "energy",
+            "slow",
+            "climate"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "نطق 'renewable' = /rɪˈnjuːəbl/"
+        },
+        {
+          "audio_code": "lr_01_s7",
+          "global_index": 7,
+          "topic_sentence_num": 7,
+          "text": "People can reduce waste, save energy, and make small changes every day.",
+          "ar": "الناس يمكنهم تقليل النفايات وتوفير الطاقة وإجراء تغييرات صغيرة كل يوم",
+          "stress": [
+            "reduce",
+            "waste",
+            "save",
+            "energy",
+            "small",
+            "changes",
+            "every"
+          ],
+          "pauses": [
+            4,
+            7
+          ],
+          "tips_ar": "ثلاثة أفعال = ثلاث وقفات: reduce / save / make"
+        }
+      ]
+    },
+    {
+      "code": "lr02_tech_edu",
+      "title_en": "Technology in Education",
+      "title_ar": "التكنولوجيا في التعليم",
+      "difficulty": "easy",
+      "principle_ar": "ركّز على ربط الكلمات (linking) في الكلام السريع",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_02_s1",
+          "global_index": 8,
+          "topic_sentence_num": 1,
+          "text": "Technology is changing the way students learn in classrooms.",
+          "ar": "التكنولوجيا تغير طريقة تعلم الطلاب في الفصول",
+          "stress": [
+            "Technology",
+            "changing",
+            "students",
+            "learn",
+            "classrooms"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "نطق /tek-ˈnɒl-ə-dʒi/"
+        },
+        {
+          "audio_code": "lr_02_s2",
+          "global_index": 9,
+          "topic_sentence_num": 2,
+          "text": "Computers, tablets, and smart boards are common in schools.",
+          "ar": "الحواسيب واللوحيات واللوحات الذكية شائعة في المدارس",
+          "stress": [
+            "Computers",
+            "tablets",
+            "smart",
+            "boards",
+            "common"
+          ],
+          "pauses": [
+            1,
+            3
+          ],
+          "tips_ar": "وقفة قصيرة بعد كل عنصر في القائمة"
+        },
+        {
+          "audio_code": "lr_02_s3",
+          "global_index": 10,
+          "topic_sentence_num": 3,
+          "text": "Online courses allow people to study from anywhere in the world.",
+          "ar": "الدورات الإلكترونية تسمح للناس بالدراسة من أي مكان",
+          "stress": [
+            "Online",
+            "courses",
+            "study",
+            "anywhere",
+            "world"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "ربط 'from anywhere' بسلاسة"
+        },
+        {
+          "audio_code": "lr_02_s4",
+          "global_index": 11,
+          "topic_sentence_num": 4,
+          "text": "Educational apps help students practice and improve skills at home.",
+          "ar": "التطبيقات التعليمية تساعد الطلاب على التدرب وتحسين المهارات",
+          "stress": [
+            "Educational",
+            "apps",
+            "students",
+            "practice",
+            "improve",
+            "skills"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "نطق /ˈæps/ بوضوح"
+        },
+        {
+          "audio_code": "lr_02_s5",
+          "global_index": 12,
+          "topic_sentence_num": 5,
+          "text": "Teachers use digital tools to make lessons more interactive and fun.",
+          "ar": "المعلمون يستخدمون أدوات رقمية لجعل الدروس أكثر تفاعلية ومتعة",
+          "stress": [
+            "Teachers",
+            "digital",
+            "tools",
+            "interactive",
+            "fun"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "stress على 'interactive' = /ˌɪn-tər-ˈæk-tɪv/"
+        },
+        {
+          "audio_code": "lr_02_s6",
+          "global_index": 13,
+          "topic_sentence_num": 6,
+          "text": "Some students struggle with too much screen time and distractions.",
+          "ar": "بعض الطلاب يعانون من كثرة وقت الشاشة والمشتتات",
+          "stress": [
+            "students",
+            "struggle",
+            "much",
+            "screen",
+            "time",
+            "distractions"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/str/ في 'struggle' - تدريب مهم"
+        },
+        {
+          "audio_code": "lr_02_s7",
+          "global_index": 14,
+          "topic_sentence_num": 7,
+          "text": "Balancing technology and traditional learning is important for success.",
+          "ar": "الموازنة بين التكنولوجيا والتعلم التقليدي مهمة للنجاح",
+          "stress": [
+            "Balancing",
+            "technology",
+            "traditional",
+            "learning",
+            "important",
+            "success"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˈbæl-ən-sɪŋ/ - لا تنسَ /s/"
+        }
+      ]
+    },
+    {
+      "code": "lr03_space",
+      "title_en": "Space Exploration",
+      "title_ar": "استكشاف الفضاء",
+      "difficulty": "medium",
+      "principle_ar": "ركّز على إيقاع الجمل الطويلة - قسّمها لأجزاء",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_03_s1",
+          "global_index": 15,
+          "topic_sentence_num": 1,
+          "text": "Humans have always been curious about space and planets.",
+          "ar": "البشر كانوا دائماً فضوليين بشأن الفضاء والكواكب",
+          "stress": [
+            "Humans",
+            "always",
+            "curious",
+            "space",
+            "planets"
+          ],
+          "pauses": [
+            3
+          ],
+          "tips_ar": "نطق 'curious' = /ˈkjʊə-ri-əs/"
+        },
+        {
+          "audio_code": "lr_03_s2",
+          "global_index": 16,
+          "topic_sentence_num": 2,
+          "text": "Satellites orbit the Earth and help us communicate every day.",
+          "ar": "الأقمار الصناعية تدور حول الأرض وتساعدنا على التواصل يومياً",
+          "stress": [
+            "Satellites",
+            "orbit",
+            "Earth",
+            "communicate",
+            "every"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "ربط 'help us' = helpus"
+        },
+        {
+          "audio_code": "lr_03_s3",
+          "global_index": 17,
+          "topic_sentence_num": 3,
+          "text": "Space missions help scientists understand how the universe works.",
+          "ar": "مهمات الفضاء تساعد العلماء على فهم آلية عمل الكون",
+          "stress": [
+            "Space",
+            "missions",
+            "scientists",
+            "understand",
+            "universe"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˈjuː-nɪ-vɜːrs/"
+        },
+        {
+          "audio_code": "lr_03_s4",
+          "global_index": 18,
+          "topic_sentence_num": 4,
+          "text": "Astronauts train for years to prepare for dangerous space travel.",
+          "ar": "رواد الفضاء يتدربون لسنوات للاستعداد للسفر الخطر للفضاء",
+          "stress": [
+            "Astronauts",
+            "train",
+            "years",
+            "prepare",
+            "dangerous",
+            "space"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˈæs-trə-nɔːts/"
+        },
+        {
+          "audio_code": "lr_03_s5",
+          "global_index": 19,
+          "topic_sentence_num": 5,
+          "text": "Rockets carry equipment and experiments into orbit.",
+          "ar": "الصواريخ تحمل المعدات والتجارب إلى المدار",
+          "stress": [
+            "Rockets",
+            "carry",
+            "equipment",
+            "experiments",
+            "orbit"
+          ],
+          "pauses": [],
+          "tips_ar": "نطق 'equipment' = /ɪˈkwɪp-mənt/"
+        },
+        {
+          "audio_code": "lr_03_s6",
+          "global_index": 20,
+          "topic_sentence_num": 6,
+          "text": "Space exploration can inspire new technologies for life on Earth.",
+          "ar": "استكشاف الفضاء يلهم تقنيات جديدة للحياة على الأرض",
+          "stress": [
+            "Space",
+            "exploration",
+            "inspire",
+            "technologies",
+            "life",
+            "Earth"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˌek-splə-ˈreɪ-ʃn/"
+        },
+        {
+          "audio_code": "lr_03_s7",
+          "global_index": 21,
+          "topic_sentence_num": 7,
+          "text": "Learning about space helps us understand our own planet better.",
+          "ar": "تعلم الفضاء يساعدنا على فهم كوكبنا بشكل أفضل",
+          "stress": [
+            "Learning",
+            "space",
+            "understand",
+            "own",
+            "planet",
+            "better"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "stress قوي على 'own' لتأكيد المعنى"
+        }
+      ]
+    },
+    {
+      "code": "lr04_health",
+      "title_en": "Health and Nutrition",
+      "title_ar": "الصحة والتغذية",
+      "difficulty": "medium",
+      "principle_ar": "ركّز على الكلام المتصل ونهايات الجمع",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_04_s1",
+          "global_index": 22,
+          "topic_sentence_num": 1,
+          "text": "Eating healthy foods helps the body grow strong and stay active.",
+          "ar": "تناول الأطعمة الصحية يساعد الجسم على النمو والنشاط",
+          "stress": [
+            "Eating",
+            "healthy",
+            "foods",
+            "body",
+            "grow",
+            "strong",
+            "active"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/s/ في 'foods' و 'helps'"
+        },
+        {
+          "audio_code": "lr_04_s2",
+          "global_index": 23,
+          "topic_sentence_num": 2,
+          "text": "Fruits, vegetables, and whole grains are important every day.",
+          "ar": "الفواكه والخضروات والحبوب الكاملة مهمة يومياً",
+          "stress": [
+            "Fruits",
+            "vegetables",
+            "whole",
+            "grains",
+            "important"
+          ],
+          "pauses": [
+            1,
+            3
+          ],
+          "tips_ar": "/ˈvedʒ-tə-bl/ - 'vegetables' حرف v صعب"
+        },
+        {
+          "audio_code": "lr_04_s3",
+          "global_index": 24,
+          "topic_sentence_num": 3,
+          "text": "Drinking water regularly keeps the body hydrated and working well.",
+          "ar": "شرب الماء بانتظام يبقي الجسم رطباً وعاملاً جيداً",
+          "stress": [
+            "Drinking",
+            "water",
+            "regularly",
+            "body",
+            "hydrated",
+            "working"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˈhaɪ-dreɪ-tɪd/ بوضوح"
+        },
+        {
+          "audio_code": "lr_04_s4",
+          "global_index": 25,
+          "topic_sentence_num": 4,
+          "text": "Too much sugar and fast food can cause serious health problems.",
+          "ar": "كثرة السكر والطعام السريع تسبب مشاكل صحية خطيرة",
+          "stress": [
+            "Too",
+            "sugar",
+            "fast",
+            "food",
+            "cause",
+            "serious",
+            "health"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "stress على 'Too' للتأكيد"
+        },
+        {
+          "audio_code": "lr_04_s5",
+          "global_index": 26,
+          "topic_sentence_num": 5,
+          "text": "Exercise is important for a healthy mind and body.",
+          "ar": "الرياضة مهمة للعقل والجسم الصحي",
+          "stress": [
+            "Exercise",
+            "important",
+            "healthy",
+            "mind",
+            "body"
+          ],
+          "pauses": [],
+          "tips_ar": "/ˈek-sər-saɪz/"
+        },
+        {
+          "audio_code": "lr_04_s6",
+          "global_index": 27,
+          "topic_sentence_num": 6,
+          "text": "Sleep also helps people feel energetic and focus better.",
+          "ar": "النوم أيضاً يساعد الناس على الشعور بالنشاط والتركيز",
+          "stress": [
+            "Sleep",
+            "helps",
+            "feel",
+            "energetic",
+            "focus",
+            "better"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˌen-ər-ˈdʒet-ɪk/ - 4 مقاطع"
+        },
+        {
+          "audio_code": "lr_04_s7",
+          "global_index": 28,
+          "topic_sentence_num": 7,
+          "text": "Small changes in diet and lifestyle can improve overall health.",
+          "ar": "تغييرات صغيرة في النظام والحياة تحسن الصحة العامة",
+          "stress": [
+            "Small",
+            "changes",
+            "diet",
+            "lifestyle",
+            "improve",
+            "overall",
+            "health"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "stress على 'Small' للتباين"
+        }
+      ]
+    },
+    {
+      "code": "lr05_animals",
+      "title_en": "Animal Conservation",
+      "title_ar": "الحفاظ على الحيوانات",
+      "difficulty": "medium",
+      "principle_ar": "ركّز على المفردات الأكاديمية والـ /sh/ و /tʃ/",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_05_s1",
+          "global_index": 29,
+          "topic_sentence_num": 1,
+          "text": "Many species of animals are at risk of extinction today.",
+          "ar": "أنواع كثيرة من الحيوانات معرضة لخطر الانقراض اليوم",
+          "stress": [
+            "Many",
+            "species",
+            "animals",
+            "risk",
+            "extinction"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "/ˈspiː-ʃiːz/ و /ɪkˈstɪŋk-ʃn/"
+        },
+        {
+          "audio_code": "lr_05_s2",
+          "global_index": 30,
+          "topic_sentence_num": 2,
+          "text": "Habitat loss, pollution, and hunting are major threats to wildlife.",
+          "ar": "فقدان الموطن والتلوث والصيد تهديدات كبرى للحياة البرية",
+          "stress": [
+            "Habitat",
+            "loss",
+            "pollution",
+            "hunting",
+            "major",
+            "threats",
+            "wildlife"
+          ],
+          "pauses": [
+            2,
+            4
+          ],
+          "tips_ar": "وقفات بعد كل عنصر"
+        },
+        {
+          "audio_code": "lr_05_s3",
+          "global_index": 31,
+          "topic_sentence_num": 3,
+          "text": "Zoos and reserves help protect endangered species.",
+          "ar": "حدائق الحيوان والمحميات تحمي الأنواع المهددة",
+          "stress": [
+            "Zoos",
+            "reserves",
+            "protect",
+            "endangered",
+            "species"
+          ],
+          "pauses": [],
+          "tips_ar": "/ɪnˈdeɪn-dʒərd/"
+        },
+        {
+          "audio_code": "lr_05_s4",
+          "global_index": 32,
+          "topic_sentence_num": 4,
+          "text": "Conservation programs teach people about the importance of nature.",
+          "ar": "برامج الحفاظ تعلم الناس عن أهمية الطبيعة",
+          "stress": [
+            "Conservation",
+            "programs",
+            "teach",
+            "importance",
+            "nature"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˌkɒn-sər-ˈveɪ-ʃn/ - كلمة طويلة"
+        },
+        {
+          "audio_code": "lr_05_s5",
+          "global_index": 33,
+          "topic_sentence_num": 5,
+          "text": "Saving animals helps maintain the balance of ecosystems.",
+          "ar": "إنقاذ الحيوانات يساعد على توازن النظم البيئية",
+          "stress": [
+            "Saving",
+            "animals",
+            "maintain",
+            "balance",
+            "ecosystems"
+          ],
+          "pauses": [
+            3
+          ],
+          "tips_ar": "/ˈek-oʊ-sɪs-təmz/"
+        },
+        {
+          "audio_code": "lr_05_s6",
+          "global_index": 34,
+          "topic_sentence_num": 6,
+          "text": "Volunteers can help by planting trees or cleaning natural areas.",
+          "ar": "المتطوعون يساعدون بزراعة الأشجار أو تنظيف المناطق الطبيعية",
+          "stress": [
+            "Volunteers",
+            "help",
+            "planting",
+            "trees",
+            "cleaning",
+            "natural"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "/ˌvɒl-ən-ˈtɪərz/"
+        },
+        {
+          "audio_code": "lr_05_s7",
+          "global_index": 35,
+          "topic_sentence_num": 7,
+          "text": "Awareness and education are key to protecting wildlife for the future.",
+          "ar": "الوعي والتعليم مفتاح حماية الحياة البرية للمستقبل",
+          "stress": [
+            "Awareness",
+            "education",
+            "key",
+            "protecting",
+            "wildlife",
+            "future"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/əˈweə-rə-nəs/"
+        }
+      ]
+    },
+    {
+      "code": "lr06_heritage",
+      "title_en": "Cultural Heritage",
+      "title_ar": "التراث الثقافي",
+      "difficulty": "hard",
+      "principle_ar": "كلمات أكاديمية - ركّز على /θ/ و /ʃ/",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_06_s1",
+          "global_index": 36,
+          "topic_sentence_num": 1,
+          "text": "Cultural heritage includes art, music, traditions, and historical sites.",
+          "ar": "التراث الثقافي يشمل الفن والموسيقى والتقاليد والمواقع التاريخية",
+          "stress": [
+            "Cultural",
+            "heritage",
+            "art",
+            "music",
+            "traditions",
+            "historical"
+          ],
+          "pauses": [
+            3,
+            5,
+            7
+          ],
+          "tips_ar": "/ˈherɪtɪdʒ/ - h واضحة"
+        },
+        {
+          "audio_code": "lr_06_s2",
+          "global_index": 37,
+          "topic_sentence_num": 2,
+          "text": "Preserving heritage helps people understand their history and identity.",
+          "ar": "الحفاظ على التراث يساعد الناس على فهم تاريخهم وهويتهم",
+          "stress": [
+            "Preserving",
+            "heritage",
+            "understand",
+            "history",
+            "identity"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/aɪˈden-tə-ti/"
+        },
+        {
+          "audio_code": "lr_06_s3",
+          "global_index": 38,
+          "topic_sentence_num": 3,
+          "text": "Museums and libraries store important documents and artifacts.",
+          "ar": "المتاحف والمكتبات تحفظ الوثائق والقطع الأثرية",
+          "stress": [
+            "Museums",
+            "libraries",
+            "important",
+            "documents",
+            "artifacts"
+          ],
+          "pauses": [
+            3
+          ],
+          "tips_ar": "/mjuˈzi-əmz/ - تأكد من /j/"
+        },
+        {
+          "audio_code": "lr_06_s4",
+          "global_index": 39,
+          "topic_sentence_num": 4,
+          "text": "Traditional festivals bring communities together every year.",
+          "ar": "المهرجانات التقليدية تجمع المجتمعات كل عام",
+          "stress": [
+            "Traditional",
+            "festivals",
+            "communities",
+            "together",
+            "every"
+          ],
+          "pauses": [
+            3
+          ],
+          "tips_ar": "/kəˈmjuː-nə-tiz/ - 4 مقاطع"
+        },
+        {
+          "audio_code": "lr_06_s5",
+          "global_index": 40,
+          "topic_sentence_num": 5,
+          "text": "Language is an important part of cultural heritage.",
+          "ar": "اللغة جزء مهم من التراث الثقافي",
+          "stress": [
+            "Language",
+            "important",
+            "part",
+            "cultural",
+            "heritage"
+          ],
+          "pauses": [],
+          "tips_ar": "ربط 'is an' = isan"
+        },
+        {
+          "audio_code": "lr_06_s6",
+          "global_index": 41,
+          "topic_sentence_num": 6,
+          "text": "Tourism can help support the preservation of historic sites.",
+          "ar": "السياحة تساعد على دعم الحفاظ على المواقع التاريخية",
+          "stress": [
+            "Tourism",
+            "support",
+            "preservation",
+            "historic",
+            "sites"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/prez-ər-ˈveɪ-ʃn/"
+        },
+        {
+          "audio_code": "lr_06_s7",
+          "global_index": 42,
+          "topic_sentence_num": 7,
+          "text": "Learning about other cultures promotes respect and understanding.",
+          "ar": "تعلم الثقافات الأخرى يعزز الاحترام والتفاهم",
+          "stress": [
+            "Learning",
+            "cultures",
+            "promotes",
+            "respect",
+            "understanding"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/prəˈmoʊts/ - /oʊ/ ديفثونغ"
+        }
+      ]
+    },
+    {
+      "code": "lr07_renewable",
+      "title_en": "Renewable Energy",
+      "title_ar": "الطاقة المتجددة",
+      "difficulty": "hard",
+      "principle_ar": "ركّز على المصطلحات التقنية والإيقاع المتقدم",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_07_s1",
+          "global_index": 43,
+          "topic_sentence_num": 1,
+          "text": "Renewable energy comes from natural sources like sun, wind, and water.",
+          "ar": "الطاقة المتجددة تأتي من مصادر طبيعية كالشمس والرياح والماء",
+          "stress": [
+            "Renewable",
+            "energy",
+            "natural",
+            "sources",
+            "sun",
+            "wind",
+            "water"
+          ],
+          "pauses": [
+            4,
+            7,
+            9
+          ],
+          "tips_ar": "ثلاث وقفات: sun / wind / water"
+        },
+        {
+          "audio_code": "lr_07_s2",
+          "global_index": 44,
+          "topic_sentence_num": 2,
+          "text": "Solar panels convert sunlight into electricity for homes and cities.",
+          "ar": "الألواح الشمسية تحول ضوء الشمس إلى كهرباء للمنازل",
+          "stress": [
+            "Solar",
+            "panels",
+            "convert",
+            "sunlight",
+            "electricity",
+            "homes"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "/ɪˌlek-ˈtrɪs-ə-ti/ - 5 مقاطع"
+        },
+        {
+          "audio_code": "lr_07_s3",
+          "global_index": 45,
+          "topic_sentence_num": 3,
+          "text": "Wind turbines use air movement to generate clean energy.",
+          "ar": "توربينات الرياح تستخدم حركة الهواء لتوليد طاقة نظيفة",
+          "stress": [
+            "Wind",
+            "turbines",
+            "air",
+            "movement",
+            "generate",
+            "clean"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˈtɜːr-baɪnz/"
+        },
+        {
+          "audio_code": "lr_07_s4",
+          "global_index": 46,
+          "topic_sentence_num": 4,
+          "text": "Hydroelectric power comes from rivers and dams.",
+          "ar": "الطاقة الكهرومائية تأتي من الأنهار والسدود",
+          "stress": [
+            "Hydroelectric",
+            "power",
+            "rivers",
+            "dams"
+          ],
+          "pauses": [],
+          "tips_ar": "/ˌhaɪ-droʊ-ɪˈlek-trɪk/ - 5 مقاطع!"
+        },
+        {
+          "audio_code": "lr_07_s5",
+          "global_index": 47,
+          "topic_sentence_num": 5,
+          "text": "Renewable energy reduces pollution and helps fight climate change.",
+          "ar": "الطاقة المتجددة تقلل التلوث وتساعد في مكافحة تغير المناخ",
+          "stress": [
+            "Renewable",
+            "energy",
+            "reduces",
+            "pollution",
+            "fight",
+            "climate"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/rɪˈdjuː-sɪz/"
+        },
+        {
+          "audio_code": "lr_07_s6",
+          "global_index": 48,
+          "topic_sentence_num": 6,
+          "text": "Governments invest in new technology to increase energy efficiency.",
+          "ar": "الحكومات تستثمر في تقنيات جديدة لزيادة كفاءة الطاقة",
+          "stress": [
+            "Governments",
+            "invest",
+            "technology",
+            "increase",
+            "energy",
+            "efficiency"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ɪˈfɪʃ-n-si/"
+        },
+        {
+          "audio_code": "lr_07_s7",
+          "global_index": 49,
+          "topic_sentence_num": 7,
+          "text": "Everyone can help by using less electricity and supporting clean energy.",
+          "ar": "الجميع يستطيع المساعدة باستخدام كهرباء أقل ودعم الطاقة النظيفة",
+          "stress": [
+            "Everyone",
+            "less",
+            "electricity",
+            "supporting",
+            "clean",
+            "energy"
+          ],
+          "pauses": [
+            5
+          ],
+          "tips_ar": "stress على 'less' للمقارنة"
+        }
+      ]
+    },
+    {
+      "code": "lr08_psychology",
+      "title_en": "Psychology and Human Behavior",
+      "title_ar": "علم النفس والسلوك البشري",
+      "difficulty": "hard",
+      "principle_ar": "كلمات أكاديمية متقدمة - أسرع إيقاع",
+      "voice": "en-US-AriaNeural",
+      "sentences": [
+        {
+          "audio_code": "lr_08_s1",
+          "global_index": 50,
+          "topic_sentence_num": 1,
+          "text": "Psychology is the study of the mind and human behavior.",
+          "ar": "علم النفس هو دراسة العقل والسلوك البشري",
+          "stress": [
+            "Psychology",
+            "study",
+            "mind",
+            "human",
+            "behavior"
+          ],
+          "pauses": [],
+          "tips_ar": "/saɪˈkɒl-ə-dʒi/ - حرف P صامت!"
+        },
+        {
+          "audio_code": "lr_08_s2",
+          "global_index": 51,
+          "topic_sentence_num": 2,
+          "text": "People think, feel, and act differently in different situations.",
+          "ar": "الناس يفكرون ويشعرون ويتصرفون باختلاف حسب المواقف",
+          "stress": [
+            "People",
+            "think",
+            "feel",
+            "act",
+            "differently",
+            "situations"
+          ],
+          "pauses": [
+            2,
+            4
+          ],
+          "tips_ar": "ثلاثة أفعال - وقفات قصيرة"
+        },
+        {
+          "audio_code": "lr_08_s3",
+          "global_index": 52,
+          "topic_sentence_num": 3,
+          "text": "Learning about emotions helps people understand themselves and others.",
+          "ar": "تعلم العواطف يساعد الناس على فهم أنفسهم والآخرين",
+          "stress": [
+            "Learning",
+            "emotions",
+            "understand",
+            "themselves",
+            "others"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ɪˈmoʊ-ʃnz/"
+        },
+        {
+          "audio_code": "lr_08_s4",
+          "global_index": 53,
+          "topic_sentence_num": 4,
+          "text": "Stress affects the body and mind in negative ways.",
+          "ar": "التوتر يؤثر على الجسم والعقل بطرق سلبية",
+          "stress": [
+            "Stress",
+            "affects",
+            "body",
+            "mind",
+            "negative"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/əˈfekts/ - فعل، لا اسم"
+        },
+        {
+          "audio_code": "lr_08_s5",
+          "global_index": 54,
+          "topic_sentence_num": 5,
+          "text": "Therapy can help people cope with mental health challenges.",
+          "ar": "العلاج يساعد الناس على التأقلم مع التحديات النفسية",
+          "stress": [
+            "Therapy",
+            "cope",
+            "mental",
+            "health",
+            "challenges"
+          ],
+          "pauses": [
+            4
+          ],
+          "tips_ar": "/ˈθer-ə-pi/ - /θ/ صعب"
+        },
+        {
+          "audio_code": "lr_08_s6",
+          "global_index": 55,
+          "topic_sentence_num": 6,
+          "text": "Social interactions influence habits and decision making.",
+          "ar": "التفاعلات الاجتماعية تؤثر على العادات واتخاذ القرارات",
+          "stress": [
+            "Social",
+            "interactions",
+            "influence",
+            "habits",
+            "decision"
+          ],
+          "pauses": [
+            3
+          ],
+          "tips_ar": "/ˈɪn-fluəns/ - فعل أو اسم؟ هنا فعل"
+        },
+        {
+          "audio_code": "lr_08_s7",
+          "global_index": 56,
+          "topic_sentence_num": 7,
+          "text": "Research in psychology can improve education, health, and relationships.",
+          "ar": "البحث في علم النفس يحسن التعليم والصحة والعلاقات",
+          "stress": [
+            "Research",
+            "psychology",
+            "improve",
+            "education",
+            "health",
+            "relationships"
+          ],
+          "pauses": [
+            4,
+            6,
+            8
+          ],
+          "tips_ar": "ثلاث وقفات في القائمة الختامية"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,594 @@
+[
+  {
+    "code": "lec_e01",
+    "voice": "F",
+    "level": "easy",
+    "title_en": "Recycling on Campus",
+    "title_ar": "إعادة التدوير في الحرم الجامعي",
+    "topic_ar": "البيئة والاستدامة الجامعية",
+    "principle_en": "Identify the speaker's main purpose and supporting examples",
+    "principle_ar": "حدّد هدف المتحدث الرئيسي والأمثلة الداعمة",
+    "transcript_en": "Good morning, everyone. Today I want to talk about something that affects all of us on this campus: recycling. As you may have noticed, the university has installed separate bins for paper, plastic, and glass throughout the buildings. This is part of a broader effort to reduce waste and help conserve resources. Now, why does this matter? Well, when materials are properly sorted, they can be processed and reused, which means fewer trees cut down, less plastic in our oceans, and lower energy costs overall. Some universities have even introduced incentives. For example, students who consistently recycle may receive price reductions when buying food on campus. It's a small reward, but it encourages everyone to participate. The success of any recycling program depends on student involvement. So next time you finish a bottle of water or a printed handout, please take a moment to use the correct bin. Together, we can make this campus a model of sustainability. Thank you.",
+    "duration_sec": 75,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker's main purpose in this talk?",
+        "q_ar": "ما الهدف الرئيسي للمتحدث في هذه المحاضرة؟",
+        "options": [
+          "To announce a mandatory campus policy change",
+          "To persuade students to join the environmental club",
+          "To inform students about campus recycling efforts and their benefits",
+          "To compare recycling programs across different universities"
+        ],
+        "correct": 2,
+        "explanation_ar": "المتحدث يقدم معلومات عن جهود إعادة التدوير في الحرم وفوائدها (الصناديق المنفصلة، توفير الموارد، الحوافز). الجملة الختامية تؤكد دعوة الطلاب للمشاركة، فالهدف إعلامي وتشجيعي.",
+        "strategy_ar": "🎯 استراتيجية Main Idea: ركّز على الجملة الأولى والأخيرة. هنا قال 'I want to talk about... recycling' وأنهى بـ 'a model of sustainability'.",
+        "elimination_ar": "A خطأ (لم يذكر إلزامية)، B خطأ (لم يذكر النادي)، D خطأ (لا مقارنة)."
+      },
+      {
+        "type": "detail",
+        "q_en": "According to the talk, what is one 'incentive' some universities offer?",
+        "q_ar": "حسب المحاضرة، ما الحافز الذي تقدمه بعض الجامعات؟",
+        "options": [
+          "Free parking permits",
+          "Price reductions when buying food on campus",
+          "Longer library hours",
+          "Extra credit in science classes"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر حرفياً: 'students who consistently recycle may receive price reductions when buying food on campus' — تخفيضات على طعام الحرم.",
+        "strategy_ar": "🎯 استراتيجية Detail: ابحث في ملاحظاتك عن الكلمة المفتاحية 'incentive' وما يليها مباشرة. الإجابة تكون حرفية أو مرادفة.",
+        "elimination_ar": "A، C، D لم تُذكر إطلاقاً (فخاخ منطقية لكن غير مذكورة)."
+      },
+      {
+        "type": "inference",
+        "q_en": "What is the implied reason for providing separate bins?",
+        "q_ar": "ما السبب الضمني لتوفير صناديق منفصلة؟",
+        "options": [
+          "To decorate the campus grounds",
+          "To limit the amount of waste students produce",
+          "To facilitate the sorting process necessary for effective recycling",
+          "To ensure students pay a fee for waste disposal"
+        ],
+        "correct": 2,
+        "explanation_ar": "قال 'when materials are properly sorted, they can be processed and reused' — الفصل يسهّل عملية الفرز اللازمة لإعادة التدوير الفعّالة.",
+        "strategy_ar": "🎯 استراتيجية Inference: اربط بين الأفكار. الفصل + المعالجة = هدف الفرز. لا تخمّن خارج النص.",
+        "elimination_ar": "A سطحي، B عكس المقصود، D لم يُذكر أي رسوم."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention that recycling 'helps conserve resources'?",
+        "q_ar": "لماذا ذكر المتحدث أن إعادة التدوير 'تساعد في حفظ الموارد'؟",
+        "options": [
+          "To introduce a new topic entirely",
+          "To highlight the environmental advantage of the campus initiative",
+          "To criticize the current resource usage",
+          "To suggest that resources are becoming cheaper"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر بعدها 'fewer trees cut down, less plastic in oceans' — الهدف إبراز الفائدة البيئية للمبادرة.",
+        "strategy_ar": "🎯 استراتيجية Purpose: اسأل 'لماذا قال هذه الجملة؟' غالباً لدعم الفكرة الرئيسية أو إعطاء مثال.",
+        "elimination_ar": "A خطأ (نفس الموضوع)، C خطأ (لا انتقاد)، D خطأ (لا علاقة بالأسعار)."
+      }
+    ]
+  },
+  {
+    "code": "lec_e02",
+    "voice": "M",
+    "level": "easy",
+    "title_en": "Campus Library Hours and Borrowing Rules",
+    "title_ar": "ساعات المكتبة الجامعية وقواعد الإعارة",
+    "topic_ar": "خدمات المكتبة الجامعية",
+    "principle_en": "Track specific times, durations, and consequences",
+    "principle_ar": "تتبّع الأوقات المحددة والمدد والعواقب",
+    "transcript_en": "Welcome, new students. I'd like to go over the basic regulations and schedule of our university library, since many of you will be using it frequently this semester. First, opening hours. From Monday to Friday, the library is open from eight in the morning until ten at night. On weekends, hours are shorter — we close at six PM on Saturdays, and the library remains closed on Sundays. Now, borrowing books. Each student may check out up to five books at a time. The standard loan period is fourteen days. If you need more time, you can renew a book online — provided no one else has reserved it. Please be aware that overdue books carry a nominal charge, calculated per day. We don't want to fine anyone, but timely returns ensure books are available to all students. Finally, our online catalogue allows you to search for any title and check its availability before coming in. If you have questions, the help desk is staffed throughout opening hours. Thank you, and welcome to your campus library.",
+    "duration_sec": 80,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the primary topic of this talk?",
+        "q_ar": "ما الموضوع الرئيسي لهذه المحاضرة؟",
+        "options": [
+          "Student responsibilities in the library",
+          "Regulations and schedule information for the university library",
+          "The history of the campus library",
+          "How to use the online catalogue system"
+        ],
+        "correct": 1,
+        "explanation_ar": "افتُتحت المحاضرة بـ 'I'd like to go over the basic regulations and schedule' — اللوائح والجدول هما الموضوع الرئيسي.",
+        "strategy_ar": "🎯 الجملة الافتتاحية = الفكرة الرئيسية في 90% من محاضرات TOEFL.",
+        "elimination_ar": "A جزئي، C لم يُذكر، D تفصيل واحد فقط."
+      },
+      {
+        "type": "detail",
+        "q_en": "Can a student work at the library late on a Tuesday evening?",
+        "q_ar": "هل يستطيع الطالب العمل في المكتبة مساء الثلاثاء متأخراً؟",
+        "options": [
+          "They must leave before 6 PM",
+          "They cannot access the library at all",
+          "They can stay until 10 PM",
+          "They must check the weekend schedule"
+        ],
+        "correct": 2,
+        "explanation_ar": "الثلاثاء يوم أسبوعي، والمحاضرة قالت 'Monday to Friday... open from eight in the morning until ten at night'.",
+        "strategy_ar": "🎯 Detail: دوّن الأرقام والأيام بالضبط. لا تخلط بين 'weekdays' و 'weekends'.",
+        "elimination_ar": "A و B خطأ، D فخ (الثلاثاء ليس عطلة)."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is the maximum duration a borrowed book can be kept?",
+        "q_ar": "ما المدة القصوى للإعارة قبل تاريخ الاستحقاق؟",
+        "options": [
+          "Five days",
+          "Fourteen days",
+          "One week",
+          "Until the end of the semester"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر صراحة: 'The standard loan period is fourteen days'.",
+        "strategy_ar": "🎯 الأرقام في المحاضرات الأكاديمية مهمة — دوّنها فوراً.",
+        "elimination_ar": "A، C، D أرقام مغرية لكن غير مذكورة."
+      },
+      {
+        "type": "purpose",
+        "q_en": "What is the consequence of failing to return a book on time?",
+        "q_ar": "ما عاقبة عدم إعادة الكتاب في الوقت المحدد؟",
+        "options": [
+          "The student will be banned from the library",
+          "The borrowing limit will be increased",
+          "The student must pay a nominal charge",
+          "The borrowing period will be automatically extended"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر 'overdue books carry a nominal charge, calculated per day' — غرامة رمزية يومية. كلمة 'nominal' = رمزية/بسيطة.",
+        "strategy_ar": "🎯 المفردات الأكاديمية: 'nominal' = رمزي، 'overdue' = متأخر.",
+        "elimination_ar": "A مبالغ فيه، B عكس المقصود، D خطأ (عكس المنطق)."
+      }
+    ]
+  },
+  {
+    "code": "lec_e03",
+    "voice": "F",
+    "level": "easy",
+    "title_en": "Time Management for University Students",
+    "title_ar": "إدارة الوقت لطلاب الجامعة",
+    "topic_ar": "المهارات الدراسية الأساسية",
+    "principle_en": "Recognize advice patterns and reasoning",
+    "principle_ar": "ميّز أنماط النصائح والمنطق الذي يدعمها",
+    "transcript_en": "Many of you have asked me how to handle the heavy workload at university. Today I'd like to share three practical strategies for managing your time effectively. First, prioritize your tasks. Not everything is equally urgent. Each evening, list what needs to be done and rank items by importance and deadline. This simple habit prevents last-minute panic. Second, break large projects into smaller pieces. A twenty-page research paper seems overwhelming as one task, but if you commit to writing two pages a day, the project becomes manageable. Psychologists call this 'chunking,' and it significantly reduces stress. Third, protect your study time. Turn off notifications on your phone, find a quiet location, and work in focused blocks of forty-five minutes followed by short breaks. Research shows the human brain concentrates best in such intervals. Remember, time management isn't about doing more — it's about doing what matters. Students who master this skill not only earn better grades but also enjoy their university experience more fully.",
+    "duration_sec": 85,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the main idea of this talk?",
+        "q_ar": "ما الفكرة الرئيسية للمحاضرة؟",
+        "options": [
+          "Why university students are always stressed",
+          "Three practical strategies for managing time effectively",
+          "The history of time-management theories",
+          "How to write a twenty-page research paper"
+        ],
+        "correct": 1,
+        "explanation_ar": "صرّحت المتحدثة: 'I'd like to share three practical strategies for managing your time effectively' — هذا تعريف صريح للفكرة الرئيسية.",
+        "strategy_ar": "🎯 ابحث عن 'I'd like to share/discuss' = إعلان مباشر للموضوع.",
+        "elimination_ar": "A سياق فقط، C لم يُذكر، D مثال واحد."
+      },
+      {
+        "type": "detail",
+        "q_en": "According to the speaker, what is 'chunking'?",
+        "q_ar": "ما هو 'chunking' حسب المتحدثة؟",
+        "options": [
+          "Working without any breaks",
+          "Breaking large projects into smaller pieces",
+          "Studying for forty-five minutes straight",
+          "Avoiding difficult assignments"
+        ],
+        "correct": 1,
+        "explanation_ar": "قالت 'break large projects into smaller pieces... Psychologists call this chunking'. التعريف مباشر.",
+        "strategy_ar": "🎯 المصطلحات الجديدة عادة معرّفة قبل أو بعد ذكرها مباشرة.",
+        "elimination_ar": "A عكس المعنى، C تفصيل آخر، D غير مذكور."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does 'overwhelming' mean in: 'A twenty-page paper seems overwhelming as one task'?",
+        "q_ar": "ماذا تعني 'overwhelming' في السياق؟",
+        "options": [
+          "Easy and quick",
+          "Boring and repetitive",
+          "Too difficult or stressful to handle",
+          "Unnecessary"
+        ],
+        "correct": 2,
+        "explanation_ar": "السياق يعارض 'overwhelming' بـ 'manageable' (قابل للإدارة) — أي overwhelming = صعب/مرهق.",
+        "strategy_ar": "🎯 Vocab: استخدم الكلمات المعاكسة في السياق لاستنتاج المعنى.",
+        "elimination_ar": "A و B و D لا تتناسب مع المقارنة في الجملة."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention turning off phone notifications?",
+        "q_ar": "لماذا ذكرت إيقاف إشعارات الهاتف؟",
+        "options": [
+          "To complain about modern technology",
+          "As an example of protecting focused study time",
+          "To recommend buying a new phone",
+          "Because phones harm physical health"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكرت ضمن الاستراتيجية الثالثة 'protect your study time' كمثال عملي على إزالة المشتتات.",
+        "strategy_ar": "🎯 الأمثلة تخدم النقطة الرئيسية التي قبلها مباشرة.",
+        "elimination_ar": "A، C، D خارج السياق الأكاديمي."
+      }
+    ]
+  },
+  {
+    "code": "lec_e04",
+    "voice": "M",
+    "level": "easy",
+    "title_en": "Effective Note-Taking Strategies",
+    "title_ar": "استراتيجيات تدوين الملاحظات الفعالة",
+    "topic_ar": "المهارات الدراسية",
+    "principle_en": "Distinguish methods and their specific benefits",
+    "principle_ar": "ميّز بين الطرق وفوائدها المحددة",
+    "transcript_en": "Note-taking is one of the most underestimated academic skills. Many students either write down every word the professor says — which is impossible — or they write almost nothing. Both approaches lead to poor results. Let me introduce you to a popular method: the Cornell system. You divide your page into three sections: a narrow column on the left for keywords, a wider column on the right for detailed notes during the lecture, and a small section at the bottom for a summary written after class. What makes this method powerful? First, the act of summarizing forces your brain to process information, not just record it. Second, the keyword column helps you review quickly before exams without re-reading everything. I also recommend using abbreviations and symbols. Replace 'because' with 'b/c,' use arrows to show cause and effect, and underline important terms. The goal is speed without losing meaning. Remember: notes are not transcripts. They are tools for understanding. The best notes are the ones you can use, review, and learn from later.",
+    "duration_sec": 90,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker mainly discussing?",
+        "q_ar": "عمَّ يتحدث المتحدث بشكل رئيسي؟",
+        "options": [
+          "Why students fail exams",
+          "Effective methods and habits for taking notes",
+          "The history of the Cornell University",
+          "How to use a notebook"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة كاملة تشرح طريقة Cornell + الاختصارات + فلسفة الملاحظات. الموضوع الموحّد: طرق وعادات تدوين فعّالة.",
+        "strategy_ar": "🎯 ابحث عن الموضوع المشترك بين كل أجزاء المحاضرة.",
+        "elimination_ar": "A سطحي، C خطأ (الطريقة سُمّيت Cornell لكن لا تاريخ)، D عام جداً."
+      },
+      {
+        "type": "detail",
+        "q_en": "How many sections does the Cornell note-taking page have?",
+        "q_ar": "كم قسماً في صفحة Cornell؟",
+        "options": [
+          "Two",
+          "Three",
+          "Four",
+          "Five"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر بوضوح: 'divide your page into three sections' (الكلمات المفتاحية، الملاحظات التفصيلية، الملخص).",
+        "strategy_ar": "🎯 الأرقام في الشروحات الإجرائية = دوّنها فوراً.",
+        "elimination_ar": "A و C و D أرقام تشتيت."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about students who write down every word?",
+        "q_ar": "ماذا يمكن استنتاجه عن الطلاب الذين يكتبون كل كلمة؟",
+        "options": [
+          "They will get the highest grades",
+          "They are likely missing the actual understanding of the material",
+          "They have the best memory",
+          "They are using the Cornell method correctly"
+        ],
+        "correct": 1,
+        "explanation_ar": "قال 'Both approaches lead to poor results' و 'notes are tools for understanding'. الكتابة الحرفية تمنع المعالجة الذهنية.",
+        "strategy_ar": "🎯 Inference: اربط بين 'poor results' وسبب الفشل المنطقي.",
+        "elimination_ar": "A عكس النص، C غير منطقي، D خطأ (لا يستخدمون Cornell)."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker recommend abbreviations and symbols?",
+        "q_ar": "لماذا يوصي بالاختصارات والرموز؟",
+        "options": [
+          "To make notes look professional",
+          "To achieve speed without losing meaning",
+          "To impress the professor",
+          "Because handwriting is difficult"
+        ],
+        "correct": 1,
+        "explanation_ar": "صرّح: 'The goal is speed without losing meaning' — السرعة مع الحفاظ على المعنى.",
+        "strategy_ar": "🎯 ابحث عن جملة 'The goal is...' = هدف صريح.",
+        "elimination_ar": "A سطحي، C خارج السياق، D غير مذكور."
+      }
+    ]
+  },
+  {
+    "code": "lec_e05",
+    "voice": "F",
+    "level": "easy",
+    "title_en": "The Benefits of Group Study",
+    "title_ar": "فوائد الدراسة الجماعية",
+    "topic_ar": "أساليب التعلم",
+    "principle_en": "Identify advantages and conditions for success",
+    "principle_ar": "حدّد المزايا والشروط اللازمة لنجاحها",
+    "transcript_en": "Studying alone has its place, but research consistently shows that group study, when done well, leads to deeper learning. Today I want to explain why — and how — students can benefit from working together. First, explaining concepts to others is one of the most effective ways to truly understand them. When you teach a friend how to solve an equation, you discover gaps in your own understanding. This is sometimes called the 'protégé effect.' Second, group members bring different perspectives. One student may understand calculus easily, while another excels at writing essays. By collaborating, everyone benefits from each other's strengths. However, group study isn't automatically productive. To work effectively, groups should be small — typically three to five members — and meetings need clear goals. Coming to a group session without preparation wastes everyone's time. I also encourage you to choose your group carefully. Look for committed students who are at a similar academic level. A well-chosen study group can turn challenging courses into your favorite ones.",
+    "duration_sec": 90,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the main idea of the talk?",
+        "q_ar": "ما الفكرة الرئيسية؟",
+        "options": [
+          "Group study is always better than individual study",
+          "Group study, when done well, provides significant learning benefits",
+          "Students should avoid studying alone",
+          "Calculus is easier to learn in groups"
+        ],
+        "correct": 1,
+        "explanation_ar": "الشرط 'when done well' محوري. المتحدثة تقدم الفوائد + شروط النجاح.",
+        "strategy_ar": "🎯 احذر الإجابات المطلقة (always, never). الإجابة الصحيحة عادة مشروطة.",
+        "elimination_ar": "A مطلق خطأ، C مبالغ، D مثال واحد."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is the 'protégé effect'?",
+        "q_ar": "ما 'protégé effect'؟",
+        "options": [
+          "Studying with someone older",
+          "Learning more deeply by teaching others",
+          "Failing to understand a topic",
+          "Working alone in silence"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'explaining concepts to others is one of the most effective ways to truly understand them... This is sometimes called the protégé effect'.",
+        "strategy_ar": "🎯 المصطلحات الأكاديمية: ابحث عن الجملة قبل أو بعد ذكرها.",
+        "elimination_ar": "A، C، D لا علاقة بالمصطلح."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is the recommended group size?",
+        "q_ar": "ما الحجم الموصى به للمجموعة؟",
+        "options": [
+          "Two members",
+          "Three to five members",
+          "Six to eight members",
+          "Ten or more members"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر صراحة: 'groups should be small — typically three to five members'.",
+        "strategy_ar": "🎯 الأرقام المحددة في النصائح = دوّنها فوراً.",
+        "elimination_ar": "كل الخيارات الأخرى تشتيت."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention coming to a session without preparation?",
+        "q_ar": "لماذا ذكرت الحضور بدون استعداد؟",
+        "options": [
+          "To praise spontaneous learning",
+          "As a warning about what wastes the group's time",
+          "To recommend it as a strategy",
+          "Because preparation is not necessary"
+        ],
+        "correct": 1,
+        "explanation_ar": "قالت 'Coming to a group session without preparation wastes everyone's time' — تحذير صريح.",
+        "strategy_ar": "🎯 Purpose: عبارات الكلفة/الخسارة = تحذيرات.",
+        "elimination_ar": "A، C، D عكس المقصود."
+      }
+    ]
+  },
+  {
+    "code": "lec_e06",
+    "voice": "M",
+    "level": "easy",
+    "title_en": "Dining Options on Campus",
+    "title_ar": "خيارات الطعام في الحرم الجامعي",
+    "topic_ar": "خدمات الحرم الجامعي",
+    "principle_en": "Track multiple services and their distinguishing features",
+    "principle_ar": "تتبّع خدمات متعددة وميزاتها التي تفرّقها",
+    "transcript_en": "Welcome, freshmen. One of the most practical questions you'll face this year is simple: where will you eat? Let me walk you through the dining options available on this campus. The main cafeteria, located in the Student Center, offers full meals from seven AM to nine PM. It serves a rotating menu including vegetarian, halal, and gluten-free choices. Most students use their meal plan card here, but cash is also accepted. If you prefer something quicker, there are three coffee shops scattered around campus — one in the library, one in the science building, and one near the engineering quad. These mainly sell sandwiches, salads, and beverages. For late-night studying, the Union Lounge stays open until two AM and offers microwavable snacks and vending machines. Finally, students with dietary restrictions should know that the cafeteria manager holds office hours every Wednesday afternoon. You can discuss special needs or suggest menu items. The goal is to ensure every student finds something they enjoy eating.",
+    "duration_sec": 85,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the main purpose of this talk?",
+        "q_ar": "ما الهدف الرئيسي للمحاضرة؟",
+        "options": [
+          "To advertise a specific restaurant",
+          "To overview campus dining options for new students",
+          "To complain about cafeteria food",
+          "To discuss nutrition science"
+        ],
+        "correct": 1,
+        "explanation_ar": "الافتتاحية: 'Let me walk you through the dining options available on this campus' — مراجعة شاملة لخيارات الطعام للطلاب الجدد.",
+        "strategy_ar": "🎯 'Let me walk you through' = إعلان موضوع المحاضرة.",
+        "elimination_ar": "A جزئي، C عكس النبرة الإيجابية، D خارج الموضوع."
+      },
+      {
+        "type": "detail",
+        "q_en": "How many coffee shops are on campus?",
+        "q_ar": "كم عدد المقاهي في الحرم؟",
+        "options": [
+          "One",
+          "Two",
+          "Three",
+          "Four"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'three coffee shops scattered around campus — one in the library, one in the science building, and one near the engineering quad'.",
+        "strategy_ar": "🎯 إذا ذُكرت قائمة، احسب العناصر بدقة.",
+        "elimination_ar": "الأرقام الأخرى لا تطابق العدد المذكور."
+      },
+      {
+        "type": "detail",
+        "q_en": "When does the Union Lounge close?",
+        "q_ar": "متى يغلق Union Lounge؟",
+        "options": [
+          "At 9 PM",
+          "At 12 AM (midnight)",
+          "At 2 AM",
+          "It never closes"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'the Union Lounge stays open until two AM'.",
+        "strategy_ar": "🎯 احذر فخاخ الأرقام — التركيز على الكلمة المرتبطة بكل مكان.",
+        "elimination_ar": "A خاص بالكافيتيريا، B و D غير مذكورين."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention the cafeteria manager's office hours?",
+        "q_ar": "لماذا ذكر ساعات مكتب مدير الكافيتيريا؟",
+        "options": [
+          "To complain about him",
+          "To inform students with dietary restrictions about a resource available to them",
+          "To require students to meet him",
+          "Because he is retiring soon"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'students with dietary restrictions should know that... You can discuss special needs or suggest menu items'.",
+        "strategy_ar": "🎯 'should know that' = إعلام بمورد مفيد.",
+        "elimination_ar": "A، C، D خارج السياق."
+      }
+    ]
+  },
+  {
+    "code": "lec_e07",
+    "voice": "F",
+    "level": "easy",
+    "title_en": "Student Clubs and Activities",
+    "title_ar": "نوادي وأنشطة الطلاب",
+    "topic_ar": "الحياة الجامعية",
+    "principle_en": "Identify benefits and categories of an opportunity",
+    "principle_ar": "حدّد الفوائد والفئات المتاحة من فرصة معيّنة",
+    "transcript_en": "University life isn't only about lectures and exams. In fact, some of your most valuable experiences will happen outside the classroom — in student clubs. We have over sixty active clubs on this campus, divided into four main categories. Academic clubs focus on specific subjects — like the Mathematics Society or the Debate Team. These are great if you want to deepen your knowledge beyond coursework. Cultural clubs celebrate traditions from around the world; they organize festivals, language exchanges, and food events. Athletic clubs range from competitive sports teams to casual hiking groups. And volunteer clubs let you give back to the local community through tutoring children or supporting elderly residents. Why join a club? Research shows that students who participate in extracurricular activities tend to perform better academically, build stronger friendships, and develop leadership skills. Employers also look favorably on club involvement. Most clubs welcome new members at the start of each semester. You can find a complete list on the student affairs website. I encourage every one of you to find at least one club that interests you.",
+    "duration_sec": 95,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker's main message?",
+        "q_ar": "ما رسالة المتحدثة الرئيسية؟",
+        "options": [
+          "Academic performance is the only thing that matters",
+          "Student clubs offer valuable opportunities and students should join one",
+          "All clubs require payment to join",
+          "Volunteer clubs are the best type"
+        ],
+        "correct": 1,
+        "explanation_ar": "أنهت بـ 'I encourage every one of you to find at least one club' بعد تعداد الأنواع والفوائد.",
+        "strategy_ar": "🎯 الخاتمة + النصيحة الصريحة = الرسالة الرئيسية.",
+        "elimination_ar": "A عكس النص، C لم يُذكر، D تفضيل غير موجود."
+      },
+      {
+        "type": "detail",
+        "q_en": "Into how many main categories are the clubs divided?",
+        "q_ar": "إلى كم فئة رئيسية تنقسم النوادي؟",
+        "options": [
+          "Three",
+          "Four",
+          "Five",
+          "Six"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'four main categories' (Academic, Cultural, Athletic, Volunteer).",
+        "strategy_ar": "🎯 احسب الفئات إذا تم تعدادها.",
+        "elimination_ar": "60 هو إجمالي النوادي وليس الفئات."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about students who join clubs?",
+        "q_ar": "ماذا يمكن استنتاجه عن الطلاب الذين ينضمون لنوادي؟",
+        "options": [
+          "They have less time for studies",
+          "They tend to develop more rounded academic and social skills",
+          "They are usually international students",
+          "They avoid coursework"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر 'perform better academically, build stronger friendships, develop leadership skills' — تطور أكاديمي واجتماعي.",
+        "strategy_ar": "🎯 Inference: اجمع الفوائد المذكورة → نتيجة منطقية.",
+        "elimination_ar": "A، C، D عكس النص أو خارج السياق."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention that employers view club involvement favorably?",
+        "q_ar": "لماذا ذكرت أن أصحاب العمل ينظرون بإيجابية للمشاركة في النوادي؟",
+        "options": [
+          "To discourage students from getting jobs",
+          "To strengthen the argument for joining a club by adding a career benefit",
+          "To advertise a specific employer",
+          "Because employers fund the clubs"
+        ],
+        "correct": 1,
+        "explanation_ar": "إضافة فائدة مهنية تعزز الدعوة للانضمام — حجة داعمة.",
+        "strategy_ar": "🎯 Purpose: المعلومات الإضافية في خطبة إقناعية = دعم الفكرة.",
+        "elimination_ar": "A عكس، C لم يُذكر، D لم يُذكر."
+      }
+    ]
+  },
+  {
+    "code": "lec_e08",
+    "voice": "M",
+    "level": "easy",
+    "title_en": "Email Etiquette in Academia",
+    "title_ar": "آداب البريد الإلكتروني الأكاديمي",
+    "topic_ar": "التواصل الأكاديمي",
+    "principle_en": "Recognize professional communication conventions",
+    "principle_ar": "تعرّف على أعراف التواصل المهني",
+    "transcript_en": "You'll be writing many emails to professors during your studies, and how you write them matters more than you might think. Today, let me share the basics of professional email etiquette. First, the subject line. It should be clear and specific. 'Question about Assignment 3 — Biology 201' is far better than just 'Hi' or 'Question.' Professors receive dozens of emails daily; a clear subject helps them prioritize. Second, the greeting. Always use a formal title — 'Dear Professor Smith' or 'Dear Dr. Johnson' — unless your professor has invited you to use their first name. Avoid casual greetings like 'Hey' in academic emails. Third, keep the body concise. State your purpose in the first sentence, provide necessary context briefly, and ask your question clearly. Long, rambling emails are less likely to receive prompt replies. Finally, proofread before sending. Spelling and grammar errors create a negative impression. And don't forget to include your full name and student ID at the end. These small habits will make a real difference in how you're perceived by faculty throughout your university career.",
+    "duration_sec": 95,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the main topic of this talk?",
+        "q_ar": "ما الموضوع الرئيسي؟",
+        "options": [
+          "How professors grade assignments",
+          "Basic rules of professional email communication with professors",
+          "Why students email too much",
+          "The history of email technology"
+        ],
+        "correct": 1,
+        "explanation_ar": "افتُتحت بـ 'let me share the basics of professional email etiquette' وعرضت أربع قواعد.",
+        "strategy_ar": "🎯 'let me share the basics' = إعلان موضوع تعليمي.",
+        "elimination_ar": "A، C، D خارج الموضوع."
+      },
+      {
+        "type": "detail",
+        "q_en": "What is the recommended example of a good subject line?",
+        "q_ar": "ما المثال الجيد للعنوان الفرعي للرسالة؟",
+        "options": [
+          "Hi",
+          "Question",
+          "Question about Assignment 3 — Biology 201",
+          "Help me please"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر كمثال محدد للعنوان الواضح والمحدد.",
+        "strategy_ar": "🎯 الأمثلة المحددة في الشروحات الإجرائية = الإجابات الصحيحة عادة.",
+        "elimination_ar": "A و B ذُكرا كأمثلة سيئة، D لم يُذكر."
+      },
+      {
+        "type": "inference",
+        "q_en": "Why is using 'Hey' as a greeting discouraged?",
+        "q_ar": "لماذا لا يُنصح باستخدام 'Hey'؟",
+        "options": [
+          "It's too long",
+          "It's grammatically incorrect",
+          "It's too informal for academic communication",
+          "Professors don't understand it"
+        ],
+        "correct": 2,
+        "explanation_ar": "السياق: 'Always use a formal title... Avoid casual greetings like Hey'. السبب الضمني = عدم الرسمية.",
+        "strategy_ar": "🎯 'casual' ضد 'formal' = الإجابة عن سبب الرفض.",
+        "elimination_ar": "A، B، D غير مذكورة كأسباب."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker recommend including your full name and student ID?",
+        "q_ar": "لماذا يوصي بكتابة الاسم الكامل ورقم الطالب؟",
+        "options": [
+          "To make emails longer",
+          "Because it's part of small habits that create a positive professional impression",
+          "To prove you're a real person",
+          "Because professors require it by policy"
+        ],
+        "correct": 1,
+        "explanation_ar": "أنهى بـ 'These small habits will make a real difference in how you're perceived' — الانطباع المهني الإيجابي.",
+        "strategy_ar": "🎯 الخاتمة عادة تبرر النصائح كلها.",
+        "elimination_ar": "A سطحي، C غير مذكور، D خطأ."
+      }
+    ]
+  }
+]

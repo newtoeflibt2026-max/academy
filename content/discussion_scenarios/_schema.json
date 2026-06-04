@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "type": "academic_discussion",
+  "description": "Schema for TOEFL Academic Discussion scenarios (ETS-aligned)",
+  "scenario": {
+    "code": "unique_identifier",
+    "title_ar": "عنوان عربي",
+    "title_en": "English title",
+    "topic_category": "technology|environment|education|work|society",
+    "professor": {
+      "name": "Dr. Smith",
+      "title": "Professor of...",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=ProfSmith",
+      "question_en": "Full question text...",
+      "question_ar": "النص العربي للسؤال..."
+    },
+    "target_tier": "tier59|tier69|tier90",
+    "min_words": 100,
+    "time_limit_seconds": 600,
+    "difficulty": 3,
+    "order_index": 1
+  },
+  "student_replies": [
+    {
+      "student_name": "Jay",
+      "student_avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jay",
+      "reply_text_en": "Student opinion...",
+      "reply_text_ar": "ترجمة عربية...",
+      "position": "against|for|neutral",
+      "order_index": 1
+    }
+  ],
+  "coach_content": {
+    "step1_analyze_question_ar": "كيف نحلل سؤال البروفيسور",
+    "step1_keywords": [
+      "keyword1",
+      "keyword2"
+    ],
+    "step2_analyze_replies_ar": "تحليل ردود الطلاب",
+    "step2_reply_analysis": [
+      {
+        "student": "Jay",
+        "main_point_ar": "...",
+        "weakness_ar": "..."
+      }
+    ],
+    "step3_build_opinion_ar": "كيف نبني رأينا",
+    "step3_position_options": [
+      {
+        "position": "agree",
+        "rationale_ar": "..."
+      }
+    ],
+    "step4_phrases": {
+      "stating_opinion": [
+        {
+          "phrase": "I firmly believe that...",
+          "when_to_use_ar": "..."
+        }
+      ],
+      "agreeing": [],
+      "disagreeing": [],
+      "supporting": [],
+      "concluding": []
+    },
+    "step5_model_response": "Full 120-word model essay",
+    "step5_annotations": [
+      {
+        "text": "phrase",
+        "explanation_ar": "..."
+      }
+    ],
+    "step6_checklist": [
+      "✓ ذكر رأيي بوضوح"
+    ],
+    "step6_common_mistakes": [
+      {
+        "mistake_en": "...",
+        "correction_en": "...",
+        "why_ar": "..."
+      }
+    ],
+    "tier59_explanation": "شرح للمستوى المبتدئ",
+    "tier69_explanation": "شرح للمستوى المتوسط",
+    "tier90_explanation": "شرح للمستوى المتقدم"
+  }
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>{{ section }} - قريباً</title>
+<style>
+  body{font-family:-apple-system,"Segoe UI",Tajawal,sans-serif;background:#f5f7fa;color:#1a202c;margin:0;padding:0;display:flex;align-items:center;justify-content:center;min-height:100vh;}
+  .card{background:#fff;padding:40px 32px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);text-align:center;max-width:420px;width:90%;}
+  .icon{font-size:64px;margin-bottom:16px;}
+  h1{color:#2563eb;font-size:24px;margin-bottom:8px;}
+  p{color:#64748b;line-height:1.7;margin-bottom:20px;}
+  .btn{display:inline-block;padding:11px 24px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;}
+  .btn:hover{background:#1e40af;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">🚧</div>
+  <h1>قسم {{ section }}</h1>
+  <p>هذا القسم قيد التطوير حالياً وسيكون متاحاً قريباً إن شاء الله.</p>
+  <a href="/home?user_id={{ user_id or 0 }}" class="btn">🏠 العودة للصفحة الرئيسية</a>
+</div>
+</body>
+</html>

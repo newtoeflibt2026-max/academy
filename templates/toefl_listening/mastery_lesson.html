@@ -1,0 +1,800 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEFL Listening - {{ lesson.title_ar or "Mastery Lesson" }}</title>
+<style>
+:root{
+  --primary:#1e3a5f; --primary-light:#2d5687; --accent:#4f46e5;
+  --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#64748b;
+  --success:#059669; --success-bg:#d1fae5; --error:#dc2626; --error-bg:#fee2e2;
+  --warning:#f59e0b; --warning-bg:#fef3c7; --border:#e2e8f0;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08); --shadow:0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 12px 28px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:ltr}
+.ar{font-family:'Tajawal','Segoe UI',sans-serif;direction:rtl;text-align:right}
+
+/* ── Top progress bar ── */
+.topbar{height:6px;background:linear-gradient(90deg,var(--accent) 0%,var(--success) 100%);width:0%;transition:width .5s ease}
+
+/* ── Header ── */
+.header{background:var(--primary);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+.header h1{font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px}
+.header .stage-pill{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
+.header .attempt-pill{background:var(--accent);padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600}
+
+/* ── Main container ── */
+.container{max-width:880px;margin:0 auto;padding:32px 20px}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:32px;margin-bottom:24px;border:1px solid var(--border)}
+
+/* ── Principle box ── */
+.principle{background:linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%);border-left:4px solid var(--accent);padding:20px 24px;border-radius:12px;margin-bottom:24px}
+.principle-label{display:inline-block;background:var(--accent);color:#fff;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:600;letter-spacing:.5px;margin-bottom:10px}
+.principle-en{font-size:16px;line-height:1.7;color:var(--primary);font-weight:500;margin-bottom:12px}
+.principle-ar{font-size:15px;line-height:1.8;color:#3730a3;background:rgba(255,255,255,.6);padding:14px;border-radius:8px}
+
+/* ── Audio player ── */
+.audio-section{background:#f1f5f9;border-radius:14px;padding:24px;text-align:center;margin-bottom:20px;border:2px solid var(--border)}
+.audio-title{font-size:14px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.audio-clip-code{font-family:'JetBrains Mono',monospace;background:var(--primary);color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;display:inline-block;margin-bottom:16px}
+audio{width:100%;max-width:520px;outline:none}
+.play-counter{margin-top:12px;font-size:13px;color:var(--muted);font-weight:500}
+
+/* ── Question ── */
+.question-text{font-size:18px;line-height:1.7;font-weight:500;color:var(--text);margin-bottom:24px;padding:18px 22px;background:#f8fafc;border-left:4px solid var(--primary);border-radius:8px}
+.options{display:flex;flex-direction:column;gap:12px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:#fff;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s ease;font-size:15px;line-height:1.6}
+.option:hover:not(.disabled){border-color:var(--accent);background:#f5f3ff;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.option.selected{border-color:var(--accent)!important;background:#eef2ff!important;box-shadow:0 0 0 3px rgba(79,70,229,.15)!important}
+.option.disabled{cursor:not-allowed;opacity:.7}
+.option.correct{border-color:var(--success)!important;background:var(--success-bg)!important}
+.option.wrong{border-color:var(--error)!important;background:var(--error-bg)!important}
+.option-letter{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.option.selected .option-letter{background:var(--accent);color:#fff}
+.option.correct .option-letter{background:var(--success);color:#fff}
+.option.wrong .option-letter{background:var(--error);color:#fff}
+
+/* ── Timer ── */
+.timer{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);padding:8px 16px;border-radius:24px;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--primary)}
+.timer.warn{border-color:var(--warning);color:var(--warning);animation:pulse 1s infinite}
+.timer.danger{border-color:var(--error);color:var(--error);animation:pulse .6s infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+
+/* ── Buttons ── */
+.btn{padding:12px 28px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--accent) 0%,#6366f1 100%);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(79,70,229,.4)}
+.btn-secondary{background:#fff;color:var(--primary);border:2px solid var(--border)}
+.btn-secondary:hover{border-color:var(--primary);background:#f8fafc}
+.btn-success{background:linear-gradient(135deg,var(--success) 0%,#10b981 100%);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* ── Feedback panel ── */
+.feedback{margin-top:20px;padding:24px;border-radius:14px;animation:slideDown .4s ease;display:none}
+.feedback.correct{background:var(--success-bg);border:2px solid var(--success)}
+.feedback.wrong{background:var(--error-bg);border:2px solid var(--error)}
+.feedback-header{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:700;margin-bottom:14px}
+.feedback-header .icon{font-size:32px}
+.feedback.correct .feedback-header{color:var(--success)}
+.feedback.wrong .feedback-header{color:var(--error)}
+.feedback-section{margin-top:14px;padding:14px;background:rgba(255,255,255,.7);border-radius:8px}
+.feedback-label{font-size:12px;text-transform:uppercase;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px}
+.feedback-text{font-size:14px;line-height:1.8;color:var(--text);direction:rtl;text-align:right}
+
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Attempt indicators ── */
+.attempts{display:flex;gap:8px;align-items:center}
+.attempt-dot{width:12px;height:12px;border-radius:50%;background:var(--border);transition:all .3s}
+.attempt-dot.correct{background:var(--success);box-shadow:0 0 0 3px rgba(5,150,105,.2)}
+.attempt-dot.wrong{background:var(--error);box-shadow:0 0 0 3px rgba(220,38,38,.2)}
+.attempt-dot.current{background:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.2);animation:pulse 1.5s infinite}
+
+/* ── Final modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex;animation:fadeIn .3s}
+.modal{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:36px;text-align:center;box-shadow:var(--shadow-lg);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+
+.modal h2{font-size:26px;color:var(--primary);margin-bottom:12px}
+.modal p{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+
+/* ── Transcript ── */
+.transcript-toggle{margin-top:14px;text-align:center}
+.transcript-box{display:none;margin-top:14px;padding:18px;background:#f1f5f9;border-radius:10px;border-left:4px solid var(--muted);font-size:14px;line-height:1.8;font-style:italic;color:var(--text)}
+.transcript-box.open{display:block}
+
+.hidden{display:none!important}
+
+/* === Professional Modal === */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(15,23,42,0.75);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;padding:20px;
+  animation:fadeIn .3s ease
+}
+.modal-backdrop.hidden{display:none}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+
+.modal-card{
+  background:#fff;border-radius:20px;
+  max-width:520px;width:100%;
+  box-shadow:0 25px 60px rgba(0,0,0,0.35);
+  overflow:hidden;
+  animation:slideUp .4s cubic-bezier(.34,1.56,.64,1)
+}
+.modal-header{
+  padding:32px 28px 24px;text-align:center;color:#fff;
+  background:linear-gradient(135deg,#10b981,#059669)
+}
+.modal-header.warning{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.modal-header.danger{background:linear-gradient(135deg,#ef4444,#dc2626)}
+
+.modal-icon{
+  font-size:64px;margin-bottom:8px;
+  animation:bounceIn .6s ease;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2))
+}
+.modal-title{
+  margin:0 0 6px;font-size:26px;font-weight:800;letter-spacing:-.5px
+}
+.modal-subtitle{
+  margin:0;font-size:15px;opacity:.95;font-weight:500
+}
+
+.modal-body{padding:28px}
+
+.score-display{display:flex;justify-content:center;margin-bottom:24px}
+.score-circle{
+  width:130px;height:130px;border-radius:50%;
+  background:linear-gradient(135deg,#f0fdf4,#dcfce7);
+  border:4px solid #10b981;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(16,185,129,0.25)
+}
+.score-circle.warning{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#f59e0b;box-shadow:0 8px 24px rgba(245,158,11,0.25)}
+.score-circle.danger{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#ef4444;box-shadow:0 8px 24px rgba(239,68,68,0.25)}
+
+.score-value{font-size:36px;font-weight:800;color:#10b981;line-height:1}
+.score-circle.warning .score-value{color:#d97706}
+.score-circle.danger .score-value{color:#dc2626}
+.score-label{font-size:13px;color:#64748b;font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+
+.result-stats{
+  background:#f8fafc;border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:12px;margin-bottom:20px
+}
+.stat-item{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 12px;background:#fff;border-radius:8px;
+  border:1px solid #e2e8f0
+}
+.stat-icon{font-size:24px;flex-shrink:0}
+.stat-content{flex:1;display:flex;justify-content:space-between;align-items:center}
+.stat-label{font-size:14px;color:#475569;font-weight:600}
+.stat-value{font-size:15px;color:#0f172a;font-weight:700}
+
+.modal-message{
+  margin:0;padding:14px 16px;
+  background:#eff6ff;border-right:4px solid #3b82f6;
+  border-radius:8px;color:#1e40af;font-size:14px;
+  line-height:1.6;text-align:center
+}
+
+.modal-actions{
+  padding:20px 28px 28px;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px
+}
+.modal-actions .btn-modal-primary{grid-column:1/-1}
+
+.btn-modal{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 18px;border-radius:10px;
+  font-size:14px;font-weight:700;text-decoration:none;
+  border:none;cursor:pointer;transition:all .2s;
+  font-family:inherit
+}
+.btn-modal-primary{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;
+  box-shadow:0 4px 12px rgba(59,130,246,0.35)
+}
+.btn-modal-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(59,130,246,0.45)}
+.btn-modal-secondary{
+  background:#f1f5f9;color:#475569;border:1px solid #cbd5e1
+}
+.btn-modal-secondary:hover{background:#e2e8f0}
+.btn-modal-warning{
+  background:#fef3c7;color:#92400e;border:1px solid #fde68a
+}
+.btn-modal-warning:hover{background:#fde68a}
+
+</style>
+</head>
+<body>
+<div class="topbar" id="topbar">
+  </div>
+
+<div class="header">
+  <h1>🎧 TOEFL Listening - {{ lesson.title_ar }}</h1>
+  <div style="display:flex;gap:12px;align-items:center">
+    <a href="/listening/stage/{{ stage.id }}?user_id={{ user_id }}" 
+       style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,0.18);color:#fff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,0.3);transition:all .2s"
+       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+       onmouseout="this.style.background='rgba(255,255,255,0.18)'">← العودة</a>
+    <span class="stage-pill">Stage {{ lesson.stage_id }} / Lesson {{ lesson.sub_lesson_index }}</span>
+    <span class="attempt-pill" id="attemptPill">Attempt — / —</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STAGE A: Principle teaching (shown on first load) -->
+  <div id="principleScreen" class="card">
+    <div class="principle">
+      <span class="principle-label">📚 LEARNING PRINCIPLE</span>
+      <div class="principle-en">{{ lesson.principle_en }}</div>
+      <div class="principle-ar ar">💡 {{ lesson.principle_ar }}</div>
+    </div>
+
+    <div id="introClipBox" class="hidden">
+      <div class="audio-section">
+        <div class="audio-title">Example Audio</div>
+        <div class="audio-clip-code" id="introClipCode">—</div>
+        <audio id="introAudio" controls></audio>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn btn-primary" id="startMasteryBtn">Start Mastery Question →</button>
+    </div>
+  </div>
+
+  <!-- STAGE B: Mastery question -->
+  <div id="questionScreen" class="card hidden">
+
+    <div class="toolbar">
+      <div class="attempts" id="attemptsDots">
+        <span style="font-size:13px;color:var(--muted);font-weight:600">Attempts:</span>
+        <div class="attempt-dot" data-n="1"></div>
+        <div class="attempt-dot" data-n="2"></div>
+        <div class="attempt-dot" data-n="3"></div>
+      </div>
+      <div class="timer" id="timer">⏱ 00:45</div>
+    </div>
+
+    <div class="audio-section">
+      <div class="audio-title">🎧 Listen carefully</div>
+      <div class="audio-clip-code" id="clipCode">—</div> <span id="convLabel" style="margin-left:8px;color:#6366f1;font-weight:600;font-size:13px;"></span>
+      <audio id="clipAudio" controls></audio>
+      <div class="play-counter" id="playCounter">Plays remaining: 2</div>
+    </div>
+
+    <div class="question-text" id="questionText">—</div>
+    <div class="options" id="optionsBox"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="transcript-toggle">
+      <button class="btn btn-secondary hidden" id="transcriptBtn">📜 Show Transcript</button>
+    </div>
+    <div class="transcript-box" id="transcriptBox"><span id="transcriptText"></span></div>
+
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn btn-primary hidden" id="nextBtn">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Final modal -->
+<div id="finalModalBackdrop" class="modal-backdrop hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal-card">
+    <div class="modal-header" id="modalHeader">
+      <div class="modal-icon" id="modalIcon">🏆</div>
+      <h2 class="modal-title" id="modalTitle">Lesson Mastered!</h2>
+      <p class="modal-subtitle" id="modalSubtitle">Excellent work</p>
+    </div>
+    <div class="modal-body">
+      <div class="score-display">
+        <div class="score-circle" id="scoreCircle">
+          <div class="score-value" id="scoreValue">3/3</div>
+          <div class="score-label">Correct</div>
+        </div>
+      </div>
+      <div class="result-stats">
+        <div class="stat-item">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-content">
+            <div class="stat-label">Accuracy</div>
+            <div class="stat-value" id="accuracyValue">100%</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-content">
+            <div class="stat-label">Attempts Used</div>
+            <div class="stat-value" id="attemptsValue">3/3</div>
+          </div>
+        </div>
+        <div class="stat-item" id="errorBankRow">
+          <div class="stat-icon">📚</div>
+          <div class="stat-content">
+            <div class="stat-label">Error Bank</div>
+            <div class="stat-value" id="errorBankValue">0 added</div>
+          </div>
+        </div>
+      </div>
+      <p class="modal-message" id="modalMessage">You have mastered this lesson. Keep up the great work!</p>
+    </div>
+    <div class="modal-actions">
+      <a href="/listening/stage/{{ stage.id }}?user_id={{ user_id }}" class="btn-modal btn-modal-secondary">← Back to Stage</a>
+      <button class="btn-modal btn-modal-warning" onclick="resetLesson()">🔄 Retake</button>
+      <a href="#" id="nextLessonBtn" class="btn-modal btn-modal-primary">Next Lesson →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const LESSON_ID = {{ lesson.id }};
+const USER_ID = "{{ user_id }}";
+const TIMER_SEC = 45;
+const MAX_PLAYS = 2;
+
+let state = {
+  attemptNumber: 1,
+  maxAttempts: 3,
+  currentQuestionId: null,
+  selectedIdx: null,
+  playsLeft: MAX_PLAYS,
+  timerHandle: null,
+  timeLeft: TIMER_SEC,
+  startTime: null,
+  attemptResults: []
+};
+
+function $(id){ return document.getElementById(id); }
+function fmt(s){ const m=Math.floor(s/60), x=s%60; return String(m).padStart(2,'0')+":"+String(x).padStart(2,'0'); }
+function setTopbar(pct){ const tb = $("topbar"); if(tb) tb.style.width = pct + "%"; }
+
+function updateAttemptDots(){
+  document.querySelectorAll(".attempt-dot").forEach(function(d, i){
+    d.classList.remove("correct","wrong","current");
+    if(i < state.attemptResults.length){
+      d.classList.add(state.attemptResults[i]);
+    } else if(i === state.attemptResults.length){
+      d.classList.add("current");
+    }
+  });
+}
+
+function startTimer(){
+  state.timeLeft = TIMER_SEC;
+  state.startTime = Date.now();
+  $("timer").textContent = "⏱ " + fmt(state.timeLeft);
+  $("timer").className = "timer";
+  if(state.timerHandle) clearInterval(state.timerHandle);
+  state.timerHandle = setInterval(function(){
+    state.timeLeft--;
+    $("timer").textContent = "⏱ " + fmt(state.timeLeft);
+    if(state.timeLeft <= 10) $("timer").className = "timer warn";
+    if(state.timeLeft <= 5) $("timer").className = "timer danger";
+    if(state.timeLeft <= 0){
+      clearInterval(state.timerHandle);
+      onTimeUp();
+    }
+  }, 1000);
+}
+
+function onTimeUp(){
+  if(state.selectedIdx !== null) return;
+  submitAnswer(-1);
+}
+
+async function loadStart(){
+  try {
+    const r = await fetch("/api/listening/mastery/" + LESSON_ID + "/start?user_id=" + USER_ID);
+    const data = await r.json();
+    console.log("[loadStart] response:", data);
+    if(!data.success){
+      showToast(data.error || "تعذر تحميل الدرس", "error");
+      return;
+    }
+    if(data.completed){
+      showFinalModal(data.passed, data.exhausted);
+      return;
+    }
+    state.maxAttempts = data.max_attempts;
+    state.attemptNumber = data.attempt_number;
+    $("attemptPill").textContent = "Attempt " + data.attempt_number + " / " + data.max_attempts;
+
+    if(data.intro_clip && data.intro_clip.audio_url){
+      $("introClipBox").classList.remove("hidden");
+      $("introClipCode").textContent = data.intro_clip.code || "intro";
+      $("introAudio").src = data.intro_clip.audio_url;
+    }
+
+    window._currentClip = data.current_clip;
+    window._currentQuestion = data.question;
+
+    if(data.attempt_number === 1){
+      $("principleScreen").classList.remove("hidden");
+      $("questionScreen").classList.add("hidden");
+    } else {
+      $("principleScreen").classList.add("hidden");
+      $("questionScreen").classList.remove("hidden");
+      renderQuestion(window._currentClip, window._currentQuestion);
+    }
+    setTopbar(10);
+  } catch(err) {
+    console.error("loadStart failed:", err);
+    showToast("فشل تحميل الدرس: " + err.message, "error");
+  }
+}
+
+function renderQuestion(clip, question){
+  // === FULL UI RESET (clear previous question's traces) ===
+  $("clipCode").textContent = clip.code || "—";
+  $("clipAudio").pause();
+  $("clipAudio").src = clip.audio_url;
+  $("clipAudio").load();
+  state.playsLeft = MAX_PLAYS;
+  $("playCounter").textContent = "Plays remaining: " + state.playsLeft;
+
+  // Reset question text + selection
+  $("questionText").textContent = question.question_en || "Choose the best answer.";
+  state.currentQuestionId = question.id;
+  state.selectedIdx = null;
+
+  // Build fresh options
+  const box = $("optionsBox");
+  box.innerHTML = "";
+  (question.options || []).forEach(function(opt, i){
+    const div = document.createElement("div");
+    div.className = "option";
+    div.dataset.idx = i;
+    div.innerHTML = '<div class="option-letter">' + String.fromCharCode(65+i) + '</div><div>' + opt + '</div>';
+    div.onclick = function(){ pickOption(i, div); };
+    box.appendChild(div);
+  });
+
+  // Clear feedback panel completely
+  const fb = $("feedback");
+  if(fb){
+    fb.style.display = "none";
+    fb.classList.remove("correct","incorrect","success","error");
+    // Clear inner explanation text if elements exist
+    var expEl = document.getElementById("explanationText");
+    if(expEl) expEl.textContent = "";
+    var fbTitle = document.getElementById("feedbackTitle");
+    if(fbTitle) fbTitle.textContent = "";
+  }
+
+  // Hide & reset transcript
+  $("nextBtn").classList.add("hidden");
+  var trBtn = $("transcriptBtn");
+  if(trBtn) trBtn.classList.add("hidden");
+  var trBox = $("transcriptBox");
+  if(trBox){
+    trBox.classList.remove("open");
+    // Also update transcript content for the NEW clip
+    var trText = document.getElementById("transcriptText");
+    if(trText) trText.textContent = clip.transcript_en || "";
+  }
+
+  // Update header conversation indicator if exists
+  var convLabel = document.getElementById("convLabel");
+  if(convLabel){
+    convLabel.textContent = clip.code || "";
+  }
+
+  startTimer();
+  setTopbar(Math.round(20 + ((state.attemptNumber - 1) / Math.max(1, (state.maxAttempts || 4) - 1)) * 75));
+}
+
+function pickOption(idx, el){
+  if(state.selectedIdx !== null) return;
+  state.selectedIdx = idx;
+  document.querySelectorAll(".option").forEach(function(o){ o.classList.add("disabled"); });
+  el.classList.add("selected");
+  submitAnswer(idx);
+}
+
+async function submitAnswer(idx){
+  if(state.timerHandle) clearInterval(state.timerHandle);
+  const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+  try {
+    const r = await fetch("/api/listening/mastery/" + LESSON_ID + "/submit?user_id=" + USER_ID, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        question_id: state.currentQuestionId,
+        user_answer: idx,
+        time_taken_sec: elapsed
+      })
+    });
+    const data = await r.json();
+    if(!data.success){
+      showToast(data.error || "فشل إرسال الإجابة", "error");
+      return;
+    }
+    document.querySelectorAll(".option").forEach(function(o){
+      const i = parseInt(o.dataset.idx);
+      if(i === data.feedback.correct_answer) o.classList.add("correct");
+      if(i === data.feedback.user_answer && !data.is_correct) o.classList.add("wrong");
+    });
+    state.attemptResults.push(data.is_correct ? "correct" : "wrong");
+    updateAttemptDots();
+
+    const fb = $("feedback");
+    fb.style.display = "block";
+    fb.className = "feedback " + (data.is_correct ? "correct" : "wrong");
+    let html = "";
+    if(data.is_correct){
+      html += '<div class="feedback-header"><span class="icon">✅</span> Correct! Well done.</div>';
+      html += '<div class="feedback-section"><div class="feedback-label">شرح</div><div class="feedback-text">' + (data.feedback.explanation_ar || "—") + '</div></div>';
+    } else {
+      html += '<div class="feedback-header"><span class="icon">❌</span> Not quite. Let\'s review.</div>';
+      if(data.feedback.wrong_explanation_ar)
+        html += '<div class="feedback-section"><div class="feedback-label">لماذا الإجابة خطأ</div><div class="feedback-text">' + data.feedback.wrong_explanation_ar + '</div></div>';
+      if(data.feedback.elimination_hint_ar)
+        html += '<div class="feedback-section"><div class="feedback-label">طريقة الاستبعاد</div><div class="feedback-text">' + data.feedback.elimination_hint_ar + '</div></div>';
+      if(data.feedback.strategy_ar)
+        html += '<div class="feedback-section"><div class="feedback-label">استراتيجية</div><div class="feedback-text">' + data.feedback.strategy_ar + '</div></div>';
+      if(data.feedback.listening_tip_ar)
+        html += '<div class="feedback-section"><div class="feedback-label">نصيحة استماع</div><div class="feedback-text">' + data.feedback.listening_tip_ar + '</div></div>';
+    }
+    fb.innerHTML = html;
+    $("transcriptBtn").classList.remove("hidden");
+
+    if(data.lesson_passed){
+      $("nextBtn").classList.remove("hidden");
+      $("nextBtn").textContent = "View Final Result →";
+      $("nextBtn").onclick = function(){ showFinalModal(data.is_correct, data.exhausted, data.next_lesson_id); };
+    } else {
+      $("nextBtn").classList.remove("hidden");
+      $("nextBtn").textContent = "Next Question (" + (data.attempt_number + 1) + "/" + data.max_attempts + ") →";
+      $("nextBtn").onclick = loadNextAttempt;
+    }
+  } catch(err) {
+    console.error("submit failed:", err);
+    showToast("Submit failed: " + err.message, "info");
+  }
+}
+
+async function loadNextAttempt(){
+  try {
+    const r = await fetch("/api/listening/mastery/" + LESSON_ID + "/next-attempt?user_id=" + USER_ID);
+    const data = await r.json();
+    if(!data.success){ showToast("Cannot load next question", "info"); return; }
+    if(data.completed){ showFinalModal(data.passed, data.exhausted); return; }
+    state.attemptNumber = data.attempt_number;
+    $("attemptPill").textContent = "Attempt " + data.attempt_number + " / " + data.max_attempts;
+    renderQuestion(data.current_clip, data.question);
+  } catch(err) {
+    console.error("next-attempt failed:", err);
+    showToast("Failed: " + err.message, "info");
+  }
+}
+
+function showFinalModal(passed, exhausted){
+  const results = state.attemptResults || [];
+  const correct = results.filter(r=>r).length;
+  const total = state.maxAttempts || 3;
+  const accuracy = total > 0 ? Math.round((correct/total)*100) : 0;
+  const errorsAdded = total - correct;
+
+  const backdrop = document.getElementById("finalModalBackdrop");
+  const header = document.getElementById("modalHeader");
+  const icon = document.getElementById("modalIcon");
+  const title = document.getElementById("modalTitle");
+  const subtitle = document.getElementById("modalSubtitle");
+  const scoreCircle = document.getElementById("scoreCircle");
+  const scoreValue = document.getElementById("scoreValue");
+  const accuracyValue = document.getElementById("accuracyValue");
+  const attemptsValue = document.getElementById("attemptsValue");
+  const errorBankValue = document.getElementById("errorBankValue");
+  const message = document.getElementById("modalMessage");
+  const nextBtn = document.getElementById("nextLessonBtn");
+
+  // Reset classes
+  header.className = "modal-header";
+  scoreCircle.className = "score-circle";
+
+  if(correct >= 2){
+    icon.textContent = "🏆";
+    title.textContent = "Lesson Mastered!";
+    subtitle.textContent = "Outstanding performance";
+    message.textContent = "You have mastered this listening principle. Keep applying it to real TOEFL practice!";
+  } else if(correct === 1){
+    header.classList.add("warning");
+    scoreCircle.classList.add("warning");
+    icon.textContent = "💪";
+    title.textContent = "Good Effort";
+    subtitle.textContent = "You're making progress";
+    message.textContent = "You got one correct. Review the principle and retake the lesson to strengthen your skills.";
+  } else {
+    header.classList.add("danger");
+    scoreCircle.classList.add("danger");
+    icon.textContent = "📚";
+    title.textContent = "Keep Practicing";
+    subtitle.textContent = "Every attempt builds mastery";
+    message.textContent = "All questions added to your Error Bank for review. Don't worry — practice makes perfect!";
+  }
+
+  scoreValue.textContent = correct + "/" + total;
+  accuracyValue.textContent = accuracy + "%";
+  attemptsValue.textContent = total + "/" + total;
+  errorBankValue.textContent = errorsAdded + " added";
+
+  // Set next lesson link
+  const nextId = (typeof LESSON_ID !== "undefined") ? LESSON_ID + 1 : null;
+  if(nextId && nextId <= 115){
+    nextBtn.href = "/listening/mastery/" + nextId + "?user_id=" + USER_ID;
+    nextBtn.style.display = "";
+  } else {
+    nextBtn.href = "/listening/stage/{{ stage.id }}?user_id={{ user_id }}";
+    nextBtn.textContent = "Back to Stage →";
+  }
+
+  backdrop.classList.remove("hidden");
+}
+
+function resetLesson(){
+  const backdrop = document.getElementById("confirmBackdrop");
+  const okBtn = document.getElementById("confirmOkBtn");
+  backdrop.classList.remove("hidden");
+  okBtn.onclick = async function(){
+    okBtn.disabled = true;
+    okBtn.textContent = "Resetting...";
+    try {
+      const r = await fetch(`/api/listening/mastery/${LESSON_ID}/reset?user_id=${USER_ID}`, {method:"POST"});
+      const d = await r.json();
+      if(d.success){ location.reload(); }
+      else { showToast("Reset failed: " + (d.error || "unknown", "info")); closeConfirm(); }
+    } catch(e){ showToast("Network error: " + e.message, "info"); closeConfirm(); }
+  };
+}
+function closeConfirm(){
+  const backdrop = document.getElementById("confirmBackdrop");
+  const okBtn = document.getElementById("confirmOkBtn");
+  backdrop.classList.add("hidden");
+  okBtn.disabled = false;
+  okBtn.textContent = "Yes, Retake";
+}
+
+// Event listeners (attached after DOM ready)
+document.addEventListener("DOMContentLoaded", function(){
+  console.log("[INIT] DOM ready, attaching handlers");
+
+  const audio = $("clipAudio");
+  if(audio){
+    audio.addEventListener("ended", function(){
+      state.playsLeft--;
+      if(state.playsLeft <= 0){
+        audio.controls = false;
+        $("playCounter").textContent = "No plays left.";
+      } else {
+        $("playCounter").textContent = "Plays remaining: " + state.playsLeft;
+      }
+    });
+  }
+
+  const tbBtn = $("transcriptBtn");
+  if(tbBtn){
+    tbBtn.addEventListener("click", function(){
+      const tb = $("transcriptBox");
+      if(tb.classList.contains("open")){
+        tb.classList.remove("open");
+        tbBtn.textContent = "📜 Show Transcript";
+      } else {
+        tb.textContent = (window._currentClip && window._currentClip.transcript_en) || "Transcript not available.";
+        tb.classList.add("open");
+        tbBtn.textContent = "📜 Hide Transcript";
+      }
+    });
+  }
+
+  const startBtn = $("startMasteryBtn");
+  if(startBtn){
+    startBtn.addEventListener("click", function(){
+      console.log("[CLICK] Start button pressed");
+      console.log("  _currentClip:", window._currentClip);
+      console.log("  _currentQuestion:", window._currentQuestion);
+      if(!window._currentClip || !window._currentQuestion){
+        showToast("جاري تحميل السؤال، يرجى الانتظار...", "warning"); return;
+        return;
+      }
+      $("principleScreen").classList.add("hidden");
+      $("questionScreen").classList.remove("hidden");
+      renderQuestion(window._currentClip, window._currentQuestion);
+    });
+    console.log("[INIT] Start button handler attached");
+  }
+
+  loadStart();
+});
+</script>
+
+<!-- Custom Confirm Dialog -->
+<div id="confirmBackdrop" class="modal-backdrop hidden" onclick="if(event.target===this)closeConfirm()">
+  <div class="modal-card" style="max-width:420px">
+    <div class="modal-header warning">
+      <div class="modal-icon">🔄</div>
+      <h2 class="modal-title">Retake Lesson?</h2>
+      <p class="modal-subtitle">Your current progress will be reset</p>
+    </div>
+    <div class="modal-body">
+      <p class="modal-message" style="background:#fef3c7;border-right-color:#f59e0b;color:#92400e">
+        ⚠️ This will delete your attempts and answers for this lesson. Are you sure you want to start over?
+      </p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal btn-modal-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-modal btn-modal-primary" id="confirmOkBtn" style="background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 4px 12px rgba(245,158,11,0.35)">Yes, Retake</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Professional Toast Notification -->
+<div id="toastContainer" style="position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none;"></div>
+<style>
+.toast-msg {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(30,58,138,0.4);
+  margin-bottom: 10px;
+  font-family: -apple-system, "Segoe UI", Tahoma, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 280px;
+  max-width: 420px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.toast-msg.show { opacity: 1; transform: translateY(0); }
+.toast-msg.info    { background: linear-gradient(135deg, #1e3a8a, #3730a3); }
+.toast-msg.warning { background: linear-gradient(135deg, #d97706, #b45309); }
+.toast-msg.error   { background: linear-gradient(135deg, #dc2626, #991b1b); }
+.toast-msg.success { background: linear-gradient(135deg, #059669, #047857); }
+.toast-icon { font-size: 20px; }
+</style>
+<script>
+function showToast(message, type){
+  type = type || "info";
+  var icons = {info:"ℹ️", warning:"⚠️", error:"❌", success:"✅"};
+  var c = document.getElementById("toastContainer");
+  if(!c) return;
+  var t = document.createElement("div");
+  t.className = "toast-msg " + type;
+  t.innerHTML = '<span class="toast-icon">' + icons[type] + '</span><span>' + message + '</span>';
+  c.appendChild(t);
+  setTimeout(function(){ t.classList.add("show"); }, 10);
+  setTimeout(function(){
+    t.classList.remove("show");
+    setTimeout(function(){ t.remove(); }, 300);
+  }, 3500);
+}
+</script>
+
+</body>
+</html>

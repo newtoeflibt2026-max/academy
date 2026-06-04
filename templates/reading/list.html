@@ -213,7 +213,7 @@ body {
         <div class="brand-sub">TOEFL Mastery Platform</div>
       </div>
     </div>
-    <a href="/student?user_id={{ user_id }}" class="back-btn">← لوحة الطالب</a>
+    <a href="/home?user_id={{ user_id }}" class="back-btn">← لوحة الطالب</a>
   </header>
 
   <section class="hero">
@@ -257,7 +257,7 @@ body {
     {% if items %}
     <div class="grid">
       {% for it in items %}
-      <div class="card" onclick="window.location.href='/reading/start/{{ it.id }}?user_id={{ user_id }}'">
+      <div class="card" onclick="goToExam('{{ it.type }}', '{{ it.id }}', '{{ user_id }}')">
         <div class="card-cover {{ cover_class[type_key] }}">
           {{ cover_icon[type_key] }}
           {% if it.attempts > 0 %}<div class="card-completed">✓</div>{% endif %}
@@ -276,9 +276,9 @@ body {
             <div class="meta-item">⏱ {{ it.duration_min }} د</div>
             <div class="meta-item">❓ {{ it.num_questions }}</div>
           </div>
-          <a href="/reading/start/{{ it.id }}?user_id={{ user_id }}"
+          <a href="javascript:void(0)" 
              class="card-btn {% if it.attempts > 0 %}retry{% endif %}"
-             onclick="event.stopPropagation()">
+             onclick="event.stopPropagation(); goToExam('{{ it.type }}', '{{ it.id }}', '{{ user_id }}'); return false;">
             {% if it.attempts > 0 %}إعادة المحاولة ↻{% else %}Start Exam ▶{% endif %}
           </a>
         </div>
@@ -310,5 +310,18 @@ if (window.Telegram && window.Telegram.WebApp) {
   window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand();
 }
 </script>
+
+<script>
+function goToExam(type, id, userId) {
+  if (type === 'complete_words') {
+    window.location.href = '/reading/cw/exam/' + id + '?user_id=' + userId;
+  } else if (type === 'daily_reading') {
+    window.location.href = '/reading/dl/exam/' + id + '?user_id=' + userId;
+  } else {
+    window.location.href = '/reading/start/' + id + '?user_id=' + userId;
+  }
+}
+</script>
+
 </body>
 </html>

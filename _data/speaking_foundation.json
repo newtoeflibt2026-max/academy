@@ -1,0 +1,859 @@
+{
+  "level_1_words": {
+    "title_ar": "المستوى 1: الكلمات الأساسية",
+    "title_en": "Level 1: Essential Words",
+    "description_ar": "50 كلمة الأكثر شيوعاً في امتحان TOEFL - استمع وكرّر مع التركيز على مخارج الحروف",
+    "voice": "en-US-AriaNeural",
+    "item_type": "word",
+    "lessons": [
+      {
+        "lesson_num": 1,
+        "title_ar": "الدرس 1: 5 كلمات",
+        "items": [
+          {
+            "text": "important",
+            "ar": "مهم",
+            "ipa": "/ɪmˈpɔːrtnt/"
+          },
+          {
+            "text": "different",
+            "ar": "مختلف",
+            "ipa": "/ˈdɪfərənt/"
+          },
+          {
+            "text": "available",
+            "ar": "متاح",
+            "ipa": "/əˈveɪləbl/"
+          },
+          {
+            "text": "experience",
+            "ar": "تجربة",
+            "ipa": "/ɪkˈspɪriəns/"
+          },
+          {
+            "text": "education",
+            "ar": "تعليم",
+            "ipa": "/ˌedʒuˈkeɪʃn/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 2,
+        "title_ar": "الدرس 2: 5 كلمات",
+        "items": [
+          {
+            "text": "technology",
+            "ar": "تقنية",
+            "ipa": "/tekˈnɒlədʒi/"
+          },
+          {
+            "text": "community",
+            "ar": "مجتمع",
+            "ipa": "/kəˈmjuːnəti/"
+          },
+          {
+            "text": "environment",
+            "ar": "بيئة",
+            "ipa": "/ɪnˈvaɪrənmənt/"
+          },
+          {
+            "text": "opportunity",
+            "ar": "فرصة",
+            "ipa": "/ˌɒpəˈtjuːnəti/"
+          },
+          {
+            "text": "successful",
+            "ar": "ناجح",
+            "ipa": "/səkˈsesfl/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 3,
+        "title_ar": "الدرس 3: 5 كلمات",
+        "items": [
+          {
+            "text": "academic",
+            "ar": "أكاديمي",
+            "ipa": "/ˌækəˈdemɪk/"
+          },
+          {
+            "text": "research",
+            "ar": "بحث",
+            "ipa": "/rɪˈsɜːrtʃ/"
+          },
+          {
+            "text": "professor",
+            "ar": "أستاذ",
+            "ipa": "/prəˈfesər/"
+          },
+          {
+            "text": "university",
+            "ar": "جامعة",
+            "ipa": "/ˌjuːnɪˈvɜːrsəti/"
+          },
+          {
+            "text": "knowledge",
+            "ar": "معرفة",
+            "ipa": "/ˈnɒlɪdʒ/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 4,
+        "title_ar": "الدرس 4: 5 كلمات",
+        "items": [
+          {
+            "text": "develop",
+            "ar": "يطوّر",
+            "ipa": "/dɪˈveləp/"
+          },
+          {
+            "text": "improve",
+            "ar": "يحسّن",
+            "ipa": "/ɪmˈpruːv/"
+          },
+          {
+            "text": "challenge",
+            "ar": "تحدّي",
+            "ipa": "/ˈtʃælɪndʒ/"
+          },
+          {
+            "text": "achieve",
+            "ar": "يحقق",
+            "ipa": "/əˈtʃiːv/"
+          },
+          {
+            "text": "schedule",
+            "ar": "جدول",
+            "ipa": "/ˈskedʒuːl/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 5,
+        "title_ar": "الدرس 5: 5 كلمات",
+        "items": [
+          {
+            "text": "thoroughly",
+            "ar": "تماماً",
+            "ipa": "/ˈθɜːrəli/"
+          },
+          {
+            "text": "rhythm",
+            "ar": "إيقاع",
+            "ipa": "/ˈrɪðəm/"
+          },
+          {
+            "text": "specific",
+            "ar": "محدد",
+            "ipa": "/spəˈsɪfɪk/"
+          },
+          {
+            "text": "vegetable",
+            "ar": "خضروات",
+            "ipa": "/ˈvedʒtəbl/"
+          },
+          {
+            "text": "Wednesday",
+            "ar": "الأربعاء",
+            "ipa": "/ˈwenzdeɪ/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 6,
+        "title_ar": "الدرس 6: 5 كلمات",
+        "items": [
+          {
+            "text": "comfortable",
+            "ar": "مريح",
+            "ipa": "/ˈkʌmftəbl/"
+          },
+          {
+            "text": "vocabulary",
+            "ar": "مفردات",
+            "ipa": "/vəˈkæbjəleri/"
+          },
+          {
+            "text": "necessary",
+            "ar": "ضروري",
+            "ipa": "/ˈnesəseri/"
+          },
+          {
+            "text": "interesting",
+            "ar": "مثير",
+            "ipa": "/ˈɪntrəstɪŋ/"
+          },
+          {
+            "text": "literature",
+            "ar": "أدب",
+            "ipa": "/ˈlɪtrətʃər/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 7,
+        "title_ar": "الدرس 7: 5 كلمات",
+        "items": [
+          {
+            "text": "encourage",
+            "ar": "يشجع",
+            "ipa": "/ɪnˈkɜːrɪdʒ/"
+          },
+          {
+            "text": "manage",
+            "ar": "يدير",
+            "ipa": "/ˈmænɪdʒ/"
+          },
+          {
+            "text": "explain",
+            "ar": "يشرح",
+            "ipa": "/ɪkˈspleɪn/"
+          },
+          {
+            "text": "describe",
+            "ar": "يصف",
+            "ipa": "/dɪˈskraɪb/"
+          },
+          {
+            "text": "discuss",
+            "ar": "يناقش",
+            "ipa": "/dɪˈskʌs/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 8,
+        "title_ar": "الدرس 8: 5 كلمات",
+        "items": [
+          {
+            "text": "compare",
+            "ar": "يقارن",
+            "ipa": "/kəmˈper/"
+          },
+          {
+            "text": "analyze",
+            "ar": "يحلل",
+            "ipa": "/ˈænəlaɪz/"
+          },
+          {
+            "text": "consider",
+            "ar": "يعتبر",
+            "ipa": "/kənˈsɪdər/"
+          },
+          {
+            "text": "recommend",
+            "ar": "يوصي",
+            "ipa": "/ˌrekəˈmend/"
+          },
+          {
+            "text": "celebrate",
+            "ar": "يحتفل",
+            "ipa": "/ˈseləbreɪt/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 9,
+        "title_ar": "الدرس 9: 5 كلمات",
+        "items": [
+          {
+            "text": "beautiful",
+            "ar": "جميل",
+            "ipa": "/ˈbjuːtɪfl/"
+          },
+          {
+            "text": "expensive",
+            "ar": "غالٍ",
+            "ipa": "/ɪkˈspensɪv/"
+          },
+          {
+            "text": "delicious",
+            "ar": "لذيذ",
+            "ipa": "/dɪˈlɪʃəs/"
+          },
+          {
+            "text": "exciting",
+            "ar": "مثير",
+            "ipa": "/ɪkˈsaɪtɪŋ/"
+          },
+          {
+            "text": "amazing",
+            "ar": "مذهل",
+            "ipa": "/əˈmeɪzɪŋ/"
+          }
+        ]
+      },
+      {
+        "lesson_num": 10,
+        "title_ar": "الدرس 10: 5 كلمات",
+        "items": [
+          {
+            "text": "definitely",
+            "ar": "بالتأكيد",
+            "ipa": "/ˈdefɪnətli/"
+          },
+          {
+            "text": "absolutely",
+            "ar": "تماماً",
+            "ipa": "/ˈæbsəluːtli/"
+          },
+          {
+            "text": "particularly",
+            "ar": "خصوصاً",
+            "ipa": "/pərˈtɪkjələrli/"
+          },
+          {
+            "text": "frequently",
+            "ar": "بشكل متكرر",
+            "ipa": "/ˈfriːkwəntli/"
+          },
+          {
+            "text": "currently",
+            "ar": "حالياً",
+            "ipa": "/ˈkɜːrəntli/"
+          }
+        ]
+      }
+    ]
+  },
+  "level_2_short": {
+    "title_ar": "المستوى 2: الجمل القصيرة",
+    "title_en": "Level 2: Short Sentences",
+    "description_ar": "50 جملة قصيرة من المواقف اليومية - ركّز على النبرة والإيقاع",
+    "voice": "en-US-AriaNeural",
+    "item_type": "short_sentence",
+    "lessons": [
+      {
+        "lesson_num": 1,
+        "title_ar": "الدرس 1: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "Nice to meet you.",
+            "ar": "تشرفت بلقائك"
+          },
+          {
+            "text": "How are you doing?",
+            "ar": "كيف حالك؟"
+          },
+          {
+            "text": "Thank you very much.",
+            "ar": "شكراً جزيلاً"
+          },
+          {
+            "text": "You're very welcome.",
+            "ar": "العفو"
+          },
+          {
+            "text": "Have a great day.",
+            "ar": "أتمنى لك يوماً رائعاً"
+          }
+        ]
+      },
+      {
+        "lesson_num": 2,
+        "title_ar": "الدرس 2: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "See you later.",
+            "ar": "أراك لاحقاً"
+          },
+          {
+            "text": "Take care of yourself.",
+            "ar": "اعتنِ بنفسك"
+          },
+          {
+            "text": "I appreciate your help.",
+            "ar": "أقدر مساعدتك"
+          },
+          {
+            "text": "The class starts soon.",
+            "ar": "الحصة تبدأ قريباً"
+          },
+          {
+            "text": "I have an exam tomorrow.",
+            "ar": "لدي امتحان غداً"
+          }
+        ]
+      },
+      {
+        "lesson_num": 3,
+        "title_ar": "الدرس 3: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "The library is closed.",
+            "ar": "المكتبة مغلقة"
+          },
+          {
+            "text": "My professor was helpful.",
+            "ar": "أستاذي كان متعاوناً"
+          },
+          {
+            "text": "I need to study tonight.",
+            "ar": "أحتاج للدراسة الليلة"
+          },
+          {
+            "text": "The lecture was interesting.",
+            "ar": "المحاضرة كانت مثيرة"
+          },
+          {
+            "text": "Where is the cafeteria?",
+            "ar": "أين الكافيتيريا؟"
+          }
+        ]
+      },
+      {
+        "lesson_num": 4,
+        "title_ar": "الدرس 4: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "I forgot my textbook.",
+            "ar": "نسيت كتابي"
+          },
+          {
+            "text": "The deadline is Friday.",
+            "ar": "الموعد النهائي الجمعة"
+          },
+          {
+            "text": "I joined a study group.",
+            "ar": "انضممت لمجموعة دراسية"
+          },
+          {
+            "text": "I usually wake up early.",
+            "ar": "عادة أستيقظ مبكراً"
+          },
+          {
+            "text": "She lives near the park.",
+            "ar": "تسكن قرب الحديقة"
+          }
+        ]
+      },
+      {
+        "lesson_num": 5,
+        "title_ar": "الدرس 5: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "We had dinner together.",
+            "ar": "تناولنا العشاء معاً"
+          },
+          {
+            "text": "The weather is nice today.",
+            "ar": "الجو لطيف اليوم"
+          },
+          {
+            "text": "I like reading books.",
+            "ar": "أحب قراءة الكتب"
+          },
+          {
+            "text": "He works at a hospital.",
+            "ar": "يعمل في مستشفى"
+          },
+          {
+            "text": "My family is from Spain.",
+            "ar": "عائلتي من إسبانيا"
+          }
+        ]
+      },
+      {
+        "lesson_num": 6,
+        "title_ar": "الدرس 6: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "I drink coffee every morning.",
+            "ar": "أشرب القهوة كل صباح"
+          },
+          {
+            "text": "The traffic was terrible.",
+            "ar": "حركة المرور كانت سيئة"
+          },
+          {
+            "text": "I lost my phone yesterday.",
+            "ar": "أضعت هاتفي البارحة"
+          },
+          {
+            "text": "I think it's a good idea.",
+            "ar": "أعتقد أنها فكرة جيدة"
+          },
+          {
+            "text": "I'm not sure about that.",
+            "ar": "لست متأكداً من ذلك"
+          }
+        ]
+      },
+      {
+        "lesson_num": 7,
+        "title_ar": "الدرس 7: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "That sounds really exciting.",
+            "ar": "يبدو مثيراً جداً"
+          },
+          {
+            "text": "I disagree with this opinion.",
+            "ar": "لا أتفق مع هذا الرأي"
+          },
+          {
+            "text": "It depends on the situation.",
+            "ar": "يعتمد على الموقف"
+          },
+          {
+            "text": "I feel a bit tired.",
+            "ar": "أشعر بتعب قليل"
+          },
+          {
+            "text": "She seems very confident.",
+            "ar": "تبدو واثقة جداً"
+          }
+        ]
+      },
+      {
+        "lesson_num": 8,
+        "title_ar": "الدرس 8: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "I'm looking forward to it.",
+            "ar": "أتطلع إليه"
+          },
+          {
+            "text": "That makes a lot of sense.",
+            "ar": "هذا منطقي جداً"
+          },
+          {
+            "text": "I completely understand you.",
+            "ar": "أفهمك تماماً"
+          },
+          {
+            "text": "Could you repeat that?",
+            "ar": "هل يمكنك إعادة ذلك؟"
+          },
+          {
+            "text": "Can you help me please?",
+            "ar": "هل يمكنك مساعدتي؟"
+          }
+        ]
+      },
+      {
+        "lesson_num": 9,
+        "title_ar": "الدرس 9: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "Please speak more slowly.",
+            "ar": "تكلم ببطء من فضلك"
+          },
+          {
+            "text": "What time is it now?",
+            "ar": "كم الساعة الآن؟"
+          },
+          {
+            "text": "Where is the nearest bank?",
+            "ar": "أين أقرب بنك؟"
+          },
+          {
+            "text": "How much does it cost?",
+            "ar": "كم يكلف؟"
+          },
+          {
+            "text": "Can I pay by card?",
+            "ar": "هل يمكن الدفع بالبطاقة؟"
+          }
+        ]
+      },
+      {
+        "lesson_num": 10,
+        "title_ar": "الدرس 10: 5 جمل قصيرة",
+        "items": [
+          {
+            "text": "I'd like a coffee please.",
+            "ar": "أريد قهوة من فضلك"
+          },
+          {
+            "text": "Is this seat available?",
+            "ar": "هل هذا المقعد متاح؟"
+          },
+          {
+            "text": "Could I borrow your pen?",
+            "ar": "هل يمكنني استعارة قلمك؟"
+          },
+          {
+            "text": "Excuse me, I'm sorry.",
+            "ar": "عذراً، أنا آسف"
+          },
+          {
+            "text": "Let me think about it.",
+            "ar": "دعني أفكر في الأمر"
+          }
+        ]
+      }
+    ]
+  },
+  "level_3_long": {
+    "title_ar": "المستوى 3: الجمل الطويلة",
+    "title_en": "Level 3: Long Sentences",
+    "description_ar": "50 جملة طويلة بمستوى TOEFL - ركّز على الكلام المتصل (connected speech)",
+    "voice": "en-US-AriaNeural",
+    "item_type": "long_sentence",
+    "lessons": [
+      {
+        "lesson_num": 1,
+        "title_ar": "الدرس 1: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "The professor explained the concept very clearly today.",
+            "ar": "الأستاذ شرح المفهوم بوضوح اليوم"
+          },
+          {
+            "text": "I'm currently writing a paper on climate change.",
+            "ar": "أكتب حالياً ورقة بحثية عن تغير المناخ"
+          },
+          {
+            "text": "The library offers many resources for research.",
+            "ar": "المكتبة توفر موارد كثيرة للبحث"
+          },
+          {
+            "text": "Studying abroad has been a wonderful experience for me.",
+            "ar": "الدراسة في الخارج كانت تجربة رائعة"
+          },
+          {
+            "text": "My favorite subject in school was always history.",
+            "ar": "مادتي المفضلة في المدرسة كانت التاريخ"
+          }
+        ]
+      },
+      {
+        "lesson_num": 2,
+        "title_ar": "الدرس 2: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Group projects help students develop teamwork skills.",
+            "ar": "المشاريع الجماعية تطور مهارات العمل الجماعي"
+          },
+          {
+            "text": "I prefer studying in the morning rather than evening.",
+            "ar": "أفضّل الدراسة صباحاً بدلاً من المساء"
+          },
+          {
+            "text": "The exam was more difficult than I expected.",
+            "ar": "الامتحان كان أصعب مما توقعت"
+          },
+          {
+            "text": "Online courses are becoming more popular every year.",
+            "ar": "الدورات الإلكترونية تزداد شعبية كل عام"
+          },
+          {
+            "text": "I joined the debate club to improve my speaking.",
+            "ar": "انضممت لنادي المناظرات لتحسين تحدثي"
+          }
+        ]
+      },
+      {
+        "lesson_num": 3,
+        "title_ar": "الدرس 3: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Reading academic articles helps expand my vocabulary.",
+            "ar": "قراءة المقالات الأكاديمية توسّع مفرداتي"
+          },
+          {
+            "text": "Time management is essential for academic success.",
+            "ar": "إدارة الوقت ضرورية للنجاح الأكاديمي"
+          },
+          {
+            "text": "Smartphones have completely changed how we communicate.",
+            "ar": "الهواتف الذكية غيرت طريقة تواصلنا تماماً"
+          },
+          {
+            "text": "Social media can be both helpful and harmful.",
+            "ar": "وسائل التواصل مفيدة وضارة في آن واحد"
+          },
+          {
+            "text": "Artificial intelligence is transforming many industries today.",
+            "ar": "الذكاء الاصطناعي يحوّل صناعات كثيرة"
+          }
+        ]
+      },
+      {
+        "lesson_num": 4,
+        "title_ar": "الدرس 4: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Working from home offers flexibility but requires discipline.",
+            "ar": "العمل من المنزل يوفر مرونة لكن يتطلب انضباطاً"
+          },
+          {
+            "text": "Online shopping saves time but lacks personal interaction.",
+            "ar": "التسوق الإلكتروني يوفر الوقت لكن يفتقر للتفاعل"
+          },
+          {
+            "text": "Renewable energy is the future of our planet.",
+            "ar": "الطاقة المتجددة هي مستقبل كوكبنا"
+          },
+          {
+            "text": "Electric vehicles are becoming more affordable every year.",
+            "ar": "السيارات الكهربائية تصبح أرخص كل عام"
+          },
+          {
+            "text": "Streaming services have replaced traditional television viewing.",
+            "ar": "خدمات البث استبدلت مشاهدة التلفاز التقليدية"
+          }
+        ]
+      },
+      {
+        "lesson_num": 5,
+        "title_ar": "الدرس 5: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Video conferencing made remote meetings easier for everyone.",
+            "ar": "اجتماعات الفيديو سهّلت اللقاءات عن بُعد"
+          },
+          {
+            "text": "Privacy concerns are growing in our digital world.",
+            "ar": "مخاوف الخصوصية تتزايد في عالمنا الرقمي"
+          },
+          {
+            "text": "Regular exercise helps maintain both physical and mental health.",
+            "ar": "الرياضة المنتظمة تحافظ على الصحة الجسدية والنفسية"
+          },
+          {
+            "text": "Eating a balanced diet is important for everyone.",
+            "ar": "الغذاء المتوازن مهم للجميع"
+          },
+          {
+            "text": "Getting enough sleep improves focus and productivity significantly.",
+            "ar": "النوم الكافي يحسّن التركيز والإنتاجية"
+          }
+        ]
+      },
+      {
+        "lesson_num": 6,
+        "title_ar": "الدرس 6: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Drinking water throughout the day keeps you healthy.",
+            "ar": "شرب الماء خلال اليوم يبقيك بصحة جيدة"
+          },
+          {
+            "text": "Stress management has become essential in modern life.",
+            "ar": "إدارة التوتر أصبحت ضرورية في الحياة العصرية"
+          },
+          {
+            "text": "Meditation can reduce anxiety and improve concentration.",
+            "ar": "التأمل يقلل القلق ويحسّن التركيز"
+          },
+          {
+            "text": "Walking in nature has many proven health benefits.",
+            "ar": "المشي في الطبيعة له فوائد صحية مثبتة"
+          },
+          {
+            "text": "A positive attitude makes daily challenges easier to handle.",
+            "ar": "الموقف الإيجابي يسهّل التعامل مع التحديات"
+          }
+        ]
+      },
+      {
+        "lesson_num": 7,
+        "title_ar": "الدرس 7: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Spending time with family strengthens emotional well-being.",
+            "ar": "قضاء الوقت مع العائلة يقوّي الصحة النفسية"
+          },
+          {
+            "text": "Outdoor activities are great for both body and mind.",
+            "ar": "النشاطات الخارجية رائعة للجسم والعقل"
+          },
+          {
+            "text": "Climate change affects every part of our world.",
+            "ar": "تغير المناخ يؤثر على كل أنحاء العالم"
+          },
+          {
+            "text": "Recycling helps reduce waste and protect the environment.",
+            "ar": "إعادة التدوير تقلل النفايات وتحمي البيئة"
+          },
+          {
+            "text": "Public transportation reduces traffic and air pollution.",
+            "ar": "النقل العام يقلل الازدحام وتلوث الهواء"
+          }
+        ]
+      },
+      {
+        "lesson_num": 8,
+        "title_ar": "الدرس 8: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Volunteering in your community creates positive social change.",
+            "ar": "التطوع في مجتمعك يخلق تغييراً إيجابياً"
+          },
+          {
+            "text": "Education is the key to solving many global problems.",
+            "ar": "التعليم مفتاح حل المشاكل العالمية الكثيرة"
+          },
+          {
+            "text": "Cultural diversity makes our communities more interesting and rich.",
+            "ar": "التنوع الثقافي يجعل مجتمعاتنا أكثر إثراءً"
+          },
+          {
+            "text": "Saving water at home benefits the whole planet.",
+            "ar": "توفير الماء في المنزل ينفع الكوكب كله"
+          },
+          {
+            "text": "Supporting local businesses strengthens the community economy.",
+            "ar": "دعم الأعمال المحلية يقوّي الاقتصاد المحلي"
+          }
+        ]
+      },
+      {
+        "lesson_num": 9,
+        "title_ar": "الدرس 9: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Plastic waste is a serious problem for marine life.",
+            "ar": "النفايات البلاستيكية مشكلة خطيرة للحياة البحرية"
+          },
+          {
+            "text": "Planting trees is one way to fight climate change.",
+            "ar": "زراعة الأشجار طريقة لمحاربة تغير المناخ"
+          },
+          {
+            "text": "I'd like to travel to many different countries someday.",
+            "ar": "أود السفر إلى دول كثيرة يوماً ما"
+          },
+          {
+            "text": "My goal is to become fluent in three languages.",
+            "ar": "هدفي أن أتقن ثلاث لغات بطلاقة"
+          },
+          {
+            "text": "I'm planning to start my own business next year.",
+            "ar": "أخطط لبدء عمل خاص بي العام القادم"
+          }
+        ]
+      },
+      {
+        "lesson_num": 10,
+        "title_ar": "الدرس 10: 5 جمل طويلة",
+        "items": [
+          {
+            "text": "Learning new skills keeps your mind active and engaged.",
+            "ar": "تعلّم مهارات جديدة يبقي عقلك نشطاً"
+          },
+          {
+            "text": "I want to make a positive difference in the world.",
+            "ar": "أريد أن أحدث فرقاً إيجابياً في العالم"
+          },
+          {
+            "text": "Setting clear goals helps me stay focused and motivated.",
+            "ar": "وضع أهداف واضحة يبقيني مركّزاً ومتحمساً"
+          },
+          {
+            "text": "I hope to graduate with honors in two years.",
+            "ar": "آمل التخرج بمرتبة الشرف خلال سنتين"
+          },
+          {
+            "text": "Working hard now will pay off in the future.",
+            "ar": "العمل بجد الآن سيؤتي ثماره مستقبلاً"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1230 @@
+{
+  "batch_id": 1,
+  "batch_name": "Daily Life",
+  "batch_name_ar": "الحياة اليومية",
+  "category": "Daily Life",
+  "topics_count": 5,
+  "questions_count": 20,
+  "topics": [
+    {
+      "topic_code": "smartphones",
+      "title_en": "Smartphones",
+      "title_ar": "الهواتف الذكية",
+      "category": "Daily Life",
+      "order_index": 1,
+      "interviewer": {
+        "avatar_id": "aria",
+        "name": "Aria",
+        "accent": "US Female",
+        "voice": "en-US-AriaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=aria&backgroundColor=b6e3f4"
+      },
+      "intro_en": "You have agreed to take part in a research study about smartphone usage. You will have a short online interview with a researcher. The researcher will ask you some questions. Please answer the interviewer's questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن استخدام الهواتف الذكية. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة. أجب عن أسئلة المُحاورة.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "test_focus": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thank you for speaking with me today. Please think back to the last time you used your phone for something important — such as contacting someone, finding your way, making a payment, or translating. Why did you use it then? What did you like about how it worked for you?",
+          "question_ar": "شكراً لحديثك معي اليوم. عُد بذاكرتك إلى آخر مرة استخدمت فيها هاتفك لشيء مهم — مثل التواصل مع شخص، أو إيجاد طريقك، أو الدفع، أو الترجمة. لماذا استخدمته حينها؟ وما الذي أعجبك في الطريقة التي عمل بها؟",
+          "audio_duration_sec": 16,
+          "key_vocab": [
+            {
+              "word": "directions",
+              "ipa": "/dəˈrekʃənz/",
+              "ar": "إرشادات الطريق"
+            },
+            {
+              "word": "translate",
+              "ipa": "/trænzˈleɪt/",
+              "ar": "يُترجم"
+            },
+            {
+              "word": "contact",
+              "ipa": "/ˈkɒntækt/",
+              "ar": "يتواصل مع"
+            },
+            {
+              "word": "useful",
+              "ipa": "/ˈjuːsfəl/",
+              "ar": "مفيد"
+            },
+            {
+              "word": "quickly",
+              "ipa": "/ˈkwɪkli/",
+              "ar": "بسرعة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Last week, I used my phone to find directions. I was in a new area and I felt lost. So I opened the map app on my phone. It showed me the way to my friend's house. I liked it because it was very fast and easy. I just typed the address and the phone did everything. Without my phone, I would be very late. That is why I think my phone is really helpful in my daily life.",
+            "word_count": 75,
+            "level": "A2-B1",
+            "structure_notes": "Simple past + simple present. Short sentences. Basic linkers (so, because, that is why)."
+          },
+          "answer_tier_90": {
+            "text": "Just last week, I used my phone for navigation when I got completely lost in an unfamiliar neighborhood. I opened a map app, typed the destination, and within seconds I had clear walking directions. What I really appreciated was how accurate and quick it was — it even suggested a shortcut. Honestly, without that tool I would have wasted at least an hour wandering around. That experience reminded me how much I rely on my smartphone for solving everyday problems efficiently.",
+            "word_count": 82,
+            "level": "B2-C1",
+            "structure_notes": "Past tenses + 'what I appreciated was', 'honestly', 'rely on'. Advanced vocabulary: navigation, unfamiliar, destination, accurate, efficiently."
+          },
+          "self_assessment": [
+            "هل ذكرت موقفاً محدداً (متى وأين)؟",
+            "هل وضحت سبب استخدام الهاتف؟",
+            "هل قلت ما الذي أعجبك تحديداً؟",
+            "هل تكلمت بطلاقة لمدة 30 ثانية على الأقل؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "test_focus": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "Everyone feels differently about phones. Some feel phones make them more connected and efficient, while others feel distracted or overwhelmed. How do you usually react to your phone in daily life? Why do you think you react that way?",
+          "question_ar": "يشعر كل شخص بشكل مختلف تجاه الهواتف. يشعر البعض أن الهواتف تجعلهم أكثر تواصلاً وكفاءة، بينما يشعر آخرون بالتشتت أو الإرهاق. كيف تتفاعل عادةً مع هاتفك في حياتك اليومية؟ ولماذا تعتقد أنك تتفاعل بهذه الطريقة؟",
+          "audio_duration_sec": 14,
+          "key_vocab": [
+            {
+              "word": "distracted",
+              "ipa": "/dɪˈstræktɪd/",
+              "ar": "مُشتّت"
+            },
+            {
+              "word": "connected",
+              "ipa": "/kəˈnektɪd/",
+              "ar": "متصل"
+            },
+            {
+              "word": "react",
+              "ipa": "/riˈækt/",
+              "ar": "يتفاعل"
+            },
+            {
+              "word": "notification",
+              "ipa": "/ˌnəʊtɪfɪˈkeɪʃən/",
+              "ar": "إشعار"
+            },
+            {
+              "word": "balance",
+              "ipa": "/ˈbæləns/",
+              "ar": "توازن"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Honestly, my phone sometimes makes me feel distracted. I check it too many times every day, even when I am working or studying. I think this is because I get many messages from family and friends. I do not want to miss anything important. But it is also bad, because I cannot focus well. I want to use my phone less in the future. I think a small break from the phone is good for the mind.",
+            "word_count": 78,
+            "level": "A2-B1",
+            "structure_notes": "Present simple + simple connectors (because, but). Honest tone."
+          },
+          "answer_tier_90": {
+            "text": "To be honest, I often feel quite distracted by my phone. I tend to check it constantly throughout the day, even during important tasks, which seriously affects my concentration. The main reason is probably the endless stream of notifications — messages, social media, news updates. I feel a strange pressure to respond immediately. Although my phone keeps me connected, I have realized I really need to set healthier limits and find a better balance between staying in touch and staying focused on what truly matters.",
+            "word_count": 86,
+            "level": "B2-C1",
+            "structure_notes": "Adverbs (constantly, seriously, probably). 'Although' clause. Advanced phrases: 'endless stream', 'healthier limits', 'staying focused'."
+          },
+          "self_assessment": [
+            "هل وصفت شعورك الحقيقي (إيجابي أو سلبي)؟",
+            "هل أعطيت سبباً واضحاً لشعورك؟",
+            "هل ذكرت مثالاً من حياتك اليومية؟",
+            "هل استخدمت 'because' أو 'so' أو رابطاً مشابهاً؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "test_focus": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe smartphones clearly make life better in the modern world. They would argue, for example, that smartphones give people instant access to information and services. Do you agree that smartphones make life better? Why or why not?",
+          "question_ar": "الآن أود معرفة رأيك. يعتقد بعض الناس أن الهواتف الذكية تجعل الحياة أفضل بشكل واضح في العالم الحديث. قد يقولون مثلاً إنها تتيح الوصول الفوري للمعلومات والخدمات. هل توافق على أن الهواتف الذكية تجعل الحياة أفضل؟ ولماذا؟",
+          "audio_duration_sec": 17,
+          "key_vocab": [
+            {
+              "word": "agree",
+              "ipa": "/əˈɡriː/",
+              "ar": "يوافق"
+            },
+            {
+              "word": "access",
+              "ipa": "/ˈækses/",
+              "ar": "وصول"
+            },
+            {
+              "word": "information",
+              "ipa": "/ˌɪnfəˈmeɪʃən/",
+              "ar": "معلومات"
+            },
+            {
+              "word": "modern",
+              "ipa": "/ˈmɒdən/",
+              "ar": "حديث"
+            },
+            {
+              "word": "benefit",
+              "ipa": "/ˈbenɪfɪt/",
+              "ar": "فائدة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I agree that smartphones make life better. The main reason is information. We can find any answer in seconds. For example, when I cook, I just search for the recipe on my phone. Also, students can learn many things online for free. In the past, this was very hard. Of course, smartphones have some bad sides too, like too much screen time. But in general, I think the good things are bigger than the bad things.",
+            "word_count": 79,
+            "level": "A2-B1",
+            "structure_notes": "Clear position (Yes, I agree). 'For example' + 'Also' + 'But in general'. Acknowledges counterargument simply."
+          },
+          "answer_tier_90": {
+            "text": "I completely agree that smartphones make modern life significantly better, mainly because they provide instant access to information and services. For instance, with just a few taps I can book a doctor's appointment, learn a new skill on YouTube, or transfer money to my family abroad. These things used to take hours, or even days. Of course, smartphones are not perfect — overuse can cause real problems. However, when used wisely, the benefits clearly outweigh the drawbacks in today's fast-paced world.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "Strong position + 'significantly', 'instant access'. Concrete examples. 'However', 'outweigh the drawbacks' — advanced concession."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك بوضوح في البداية (أوافق / لا أوافق)؟",
+            "هل قدمت سبباً رئيسياً واحداً على الأقل؟",
+            "هل أعطيت مثالاً محدداً يدعم رأيك؟",
+            "هل ربطت الأفكار بـ 'because' أو 'for example' أو 'however'؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع مستقبلي",
+          "purpose": "Speculate or evaluate a broader issue",
+          "test_focus": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools and workplaces should encourage healthier phone habits — for example, by asking people to turn off their phones during breaks or meetings? Why or why not? Please give one benefit and one drawback of this idea.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس وأماكن العمل يجب أن تشجع عادات أكثر صحية في استخدام الهاتف — مثلاً بأن تطلب من الناس إغلاق هواتفهم خلال الاستراحات أو الاجتماعات؟ ولماذا؟ من فضلك اذكر فائدة واحدة ومضرة واحدة لهذه الفكرة.",
+          "audio_duration_sec": 16,
+          "key_vocab": [
+            {
+              "word": "encourage",
+              "ipa": "/ɪnˈkʌrɪdʒ/",
+              "ar": "يشجع"
+            },
+            {
+              "word": "habit",
+              "ipa": "/ˈhæbɪt/",
+              "ar": "عادة"
+            },
+            {
+              "word": "rule",
+              "ipa": "/ruːl/",
+              "ar": "قاعدة"
+            },
+            {
+              "word": "emergency",
+              "ipa": "/ɪˈmɜːdʒənsi/",
+              "ar": "حالة طارئة"
+            },
+            {
+              "word": "productive",
+              "ipa": "/prəˈdʌktɪv/",
+              "ar": "مُنتِج"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I think this is a great idea. One big benefit is that people can focus better on their work or studies. When phones are off, the mind is quiet and ideas come faster. For example, in meetings, people listen more carefully without phones. But there is one drawback. Some people need their phones for emergencies, like sick family members. So the rule should be flexible. Maybe phones can be on silent mode, not fully off, in important cases.",
+            "word_count": 81,
+            "level": "A2-B1",
+            "structure_notes": "Clear yes/no answer. 'One benefit' + 'But there is one drawback' — directly answers both parts."
+          },
+          "answer_tier_90": {
+            "text": "Yes, I genuinely believe schools and workplaces should encourage healthier phone habits. The biggest benefit is improved focus — when people are not constantly checking their screens, they become noticeably more productive and engaged in conversations. However, one clear drawback is that strict rules might create stress, especially for parents or caregivers who need to stay reachable in emergencies. So I think the best approach is a flexible policy: phones on silent during meetings, but not completely banned. That way, both productivity and peace of mind are protected.",
+            "word_count": 90,
+            "level": "B2-C1",
+            "structure_notes": "Complex sentences with 'when', 'especially for', 'so I think'. Balanced answer (benefit + drawback + solution)."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً واضحاً (نعم / لا)؟",
+            "هل ذكرت فائدة واحدة محددة كما طلب السؤال؟",
+            "هل ذكرت مضرة واحدة محددة كما طلب السؤال؟",
+            "هل استخدمت كلمات تدل على المستقبل أو السياسة (should, could, might)؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة كاملة بمحاولتين لكل سؤال؟",
+        "هل تحسنت محاولتك الثانية بعد قراءة الإجابة المقترحة؟",
+        "هل التزمت بـ 45 ثانية تقريباً لكل إجابة؟",
+        "ما المفردة الجديدة التي تعلمتها وستستخدمها لاحقاً؟"
+      ]
+    },
+    {
+      "topic_code": "exercise",
+      "title_en": "Exercise & Fitness",
+      "title_ar": "الرياضة واللياقة",
+      "category": "Daily Life",
+      "order_index": 2,
+      "interviewer": {
+        "avatar_id": "andrew",
+        "name": "Andrew",
+        "accent": "US Male",
+        "voice": "en-US-AndrewNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=andrew&backgroundColor=c0aede"
+      },
+      "intro_en": "You have agreed to take part in a research study about exercise and physical activity. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن الرياضة والنشاط البدني. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "test_focus": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thank you for joining the study. Please think about the last time you did some kind of physical exercise. What did you do, and how did you feel afterwards?",
+          "question_ar": "شكراً لانضمامك. فكر في آخر مرة مارست نشاطاً بدنياً. ماذا فعلت؟ وكيف شعرت بعدها؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "exercise",
+              "ipa": "/ˈeksəsaɪz/",
+              "ar": "تمرين"
+            },
+            {
+              "word": "energetic",
+              "ipa": "/ˌenəˈdʒetɪk/",
+              "ar": "نشيط"
+            },
+            {
+              "word": "muscle",
+              "ipa": "/ˈmʌsəl/",
+              "ar": "عضلة"
+            },
+            {
+              "word": "tired",
+              "ipa": "/ˈtaɪəd/",
+              "ar": "متعب"
+            },
+            {
+              "word": "refreshed",
+              "ipa": "/rɪˈfreʃt/",
+              "ar": "منتعش"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Two days ago, I went for a walk in the park near my house. I walked for about thirty minutes. The weather was nice and the air was fresh. After the walk, I felt much better. My body was a little tired, but my mind was very clear and happy. I try to walk three or four times a week, because it helps me to sleep well at night.",
+            "word_count": 72,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + reason with 'because'."
+          },
+          "answer_tier_90": {
+            "text": "Just two days ago, I went for a brisk walk in a nearby park for about half an hour. The weather was pleasant, and being outdoors really lifted my mood. Afterwards, I felt physically a bit tired but mentally refreshed and surprisingly focused. I noticed that even moderate exercise makes a huge difference in how I feel for the rest of the day. That's why I try to be active several times a week.",
+            "word_count": 76,
+            "level": "B2-C1",
+            "structure_notes": "Adverbs (physically, mentally). Phrases: 'lifted my mood', 'moderate exercise'."
+          },
+          "self_assessment": [
+            "هل ذكرت نوع التمرين؟",
+            "هل ذكرت متى؟",
+            "هل وصفت شعورك بعد؟",
+            "هل استخدمت الماضي بشكل صحيح؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "test_focus": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People feel differently about exercise. Some find it enjoyable, while others find it boring or exhausting. How do you usually feel about exercise, and why?",
+          "question_ar": "يشعر الناس بشكل مختلف تجاه الرياضة. يجدها البعض ممتعة، وآخرون مملة أو مرهقة. كيف تشعر عادةً تجاه الرياضة؟ ولماذا؟",
+          "audio_duration_sec": 11,
+          "key_vocab": [
+            {
+              "word": "enjoyable",
+              "ipa": "/ɪnˈdʒɔɪəbəl/",
+              "ar": "ممتع"
+            },
+            {
+              "word": "boring",
+              "ipa": "/ˈbɔːrɪŋ/",
+              "ar": "ممل"
+            },
+            {
+              "word": "motivated",
+              "ipa": "/ˈməʊtɪveɪtɪd/",
+              "ar": "متحفز"
+            },
+            {
+              "word": "mood",
+              "ipa": "/muːd/",
+              "ar": "مزاج"
+            },
+            {
+              "word": "depend on",
+              "ipa": "/dɪˈpend ɒn/",
+              "ar": "يعتمد على"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Honestly, I have mixed feelings. Sometimes I enjoy exercise very much, especially with friends or with music. But other times, it feels like a hard job. I think this is because I am usually busy with work. When I am tired, exercise feels difficult. But when I have energy, I love to move and feel strong. So it really depends on my mood that day.",
+            "word_count": 67,
+            "level": "A2-B1",
+            "structure_notes": "Contrast 'sometimes... but other times'. Honest tone."
+          },
+          "answer_tier_90": {
+            "text": "Honestly, my feelings about exercise are pretty mixed. On good days, I find it genuinely enjoyable, especially when I work out with a friend or play upbeat music. However, on stressful days, it can feel like another obligation on my to-do list. The main reason is that motivation depends on my energy level. When I'm well-rested, exercise feels empowering. When I'm exhausted, it feels exhausting before I even start.",
+            "word_count": 72,
+            "level": "B2-C1",
+            "structure_notes": "'However' + 'genuinely', 'empowering', 'to-do list'."
+          },
+          "self_assessment": [
+            "هل وصفت شعورك بصدق؟",
+            "هل أعطيت سبباً؟",
+            "هل ذكرت مثالاً؟",
+            "هل استخدمت كلمات وصف المشاعر؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "test_focus": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that regular exercise is the most important thing for a healthy life — more important than healthy food or good sleep. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن الرياضة المنتظمة هي الأهم لحياة صحية — أهم من الطعام أو النوم. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 14,
+          "key_vocab": [
+            {
+              "word": "regular",
+              "ipa": "/ˈreɡjələ/",
+              "ar": "منتظم"
+            },
+            {
+              "word": "balance",
+              "ipa": "/ˈbæləns/",
+              "ar": "توازن"
+            },
+            {
+              "word": "nutrition",
+              "ipa": "/njuːˈtrɪʃən/",
+              "ar": "تغذية"
+            },
+            {
+              "word": "equally",
+              "ipa": "/ˈiːkwəli/",
+              "ar": "بالتساوي"
+            },
+            {
+              "word": "essential",
+              "ipa": "/ɪˈsenʃəl/",
+              "ar": "ضروري"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I do not fully agree. Exercise is very important, yes, but food and sleep are also very important. For example, if a person trains every day but eats only junk food, his body will not be strong. Also, sleep helps the body to rest. I think all three things — exercise, food, and sleep — work together. We cannot say one is more important than the others.",
+            "word_count": 70,
+            "level": "A2-B1",
+            "structure_notes": "Polite disagreement + 'for example' + 'also' + summary."
+          },
+          "answer_tier_90": {
+            "text": "I respectfully disagree with this view. While exercise is undeniably crucial, I believe nutrition and sleep are equally essential pillars of good health. For instance, someone who trains daily but eats poorly will never reach their fitness goals. Similarly, without quality sleep, the body cannot recover or build strength. In my opinion, true health comes from a balanced combination of all three — not from prioritizing one over the others.",
+            "word_count": 71,
+            "level": "B2-C1",
+            "structure_notes": "'Respectfully disagree', 'undeniably crucial', 'pillars'. Concession + counter."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك بوضوح؟",
+            "هل قدمت سبباً؟",
+            "هل أعطيت مثالاً؟",
+            "هل استخدمت روابط منطقية؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "test_focus": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools should require students to do at least one hour of physical activity every day? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس يجب أن تُلزم الطلاب بساعة نشاط بدني يومياً؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "require",
+              "ipa": "/rɪˈkwaɪə/",
+              "ar": "يُلزم"
+            },
+            {
+              "word": "concentration",
+              "ipa": "/ˌkɒnsənˈtreɪʃən/",
+              "ar": "تركيز"
+            },
+            {
+              "word": "obesity",
+              "ipa": "/əʊˈbiːsəti/",
+              "ar": "السمنة"
+            },
+            {
+              "word": "schedule",
+              "ipa": "/ˈʃedjuːl/",
+              "ar": "جدول"
+            },
+            {
+              "word": "pressure",
+              "ipa": "/ˈpreʃə/",
+              "ar": "ضغط"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I think this is a very good idea. The big benefit is health. Children today sit too much with phones and computers. One hour of activity each day can keep them strong and reduce obesity. But there is also a drawback. Some students do not like sports, and forcing them may cause stress. Also, the school schedule is already full. So I think schools should give choices, like dancing, walking, or yoga.",
+            "word_count": 73,
+            "level": "A2-B1",
+            "structure_notes": "Clear yes + 'big benefit' + 'But' + drawback + solution."
+          },
+          "answer_tier_90": {
+            "text": "Yes, I strongly support this policy. The clearest benefit is improved physical and mental health — daily activity helps reduce obesity rates and boosts concentration in class. However, one real drawback is the pressure it places on already-tight school schedules, especially for students who dislike traditional sports. My suggestion would be to offer a variety of options, like yoga, dancing, or team games, so every student finds something enjoyable rather than feeling forced.",
+            "word_count": 75,
+            "level": "B2-C1",
+            "structure_notes": "Strong stance + 'boosts concentration' + 'already-tight schedules' + practical suggestion."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً (نعم/لا)؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل استخدمت should/might/could؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "eating_habits",
+      "title_en": "Eating Habits",
+      "title_ar": "عادات الأكل",
+      "category": "Daily Life",
+      "order_index": 3,
+      "interviewer": {
+        "avatar_id": "emma",
+        "name": "Emma",
+        "accent": "UK Female",
+        "voice": "en-GB-SoniaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=emma&backgroundColor=ffd5dc"
+      },
+      "intro_en": "You have agreed to take part in a research study about eating habits. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن عادات الأكل. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "test_focus": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for taking part. Please think about a meal you really enjoyed recently. What was it, who were you with, and what made it so memorable?",
+          "question_ar": "شكراً لمشاركتك. فكر في وجبة استمتعت بها مؤخراً. ما هي؟ ومع من كنت؟ وما الذي جعلها لا تُنسى؟",
+          "audio_duration_sec": 11,
+          "key_vocab": [
+            {
+              "word": "delicious",
+              "ipa": "/dɪˈlɪʃəs/",
+              "ar": "لذيذ"
+            },
+            {
+              "word": "homemade",
+              "ipa": "/ˌhəʊmˈmeɪd/",
+              "ar": "منزلي الصنع"
+            },
+            {
+              "word": "flavor",
+              "ipa": "/ˈfleɪvə/",
+              "ar": "نكهة"
+            },
+            {
+              "word": "gathering",
+              "ipa": "/ˈɡæðərɪŋ/",
+              "ar": "تجمّع"
+            },
+            {
+              "word": "memorable",
+              "ipa": "/ˈmemərəbəl/",
+              "ar": "لا يُنسى"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Last weekend, I had a wonderful meal at my grandmother's house. She made traditional rice with chicken and vegetables. The taste was amazing — much better than restaurant food. My whole family was there, and we all ate together and laughed a lot. I think the meal was so good because of two reasons: the homemade flavor, and being with people I love. Simple food with family is the best.",
+            "word_count": 70,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + 'because of two reasons' structure."
+          },
+          "answer_tier_90": {
+            "text": "Last weekend, I had a truly unforgettable meal at my grandmother's place. She prepared a traditional rice dish with slow-cooked chicken and seasonal vegetables — the flavors were incredible. What made it really special wasn't just the food itself, but the whole atmosphere: my entire family gathered around one table, sharing stories and laughing together. I genuinely believe meals like that nourish more than just the body — they nourish relationships too.",
+            "word_count": 72,
+            "level": "B2-C1",
+            "structure_notes": "'Truly unforgettable', 'slow-cooked', 'atmosphere'. Reflective ending."
+          },
+          "self_assessment": [
+            "هل ذكرت اسم الوجبة؟",
+            "هل ذكرت مع من كنت؟",
+            "هل قلت لماذا كانت مميزة؟",
+            "هل وصفت المشاعر؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "test_focus": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have very different eating habits. Some plan their meals carefully, while others eat whatever is quick and easy. How would you describe your own eating habits, and why?",
+          "question_ar": "للناس عادات أكل مختلفة جداً. يخطط البعض لوجباته بعناية، بينما يأكل آخرون ما هو سريع وسهل. كيف تصف عادات أكلك؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "habit",
+              "ipa": "/ˈhæbɪt/",
+              "ar": "عادة"
+            },
+            {
+              "word": "plan",
+              "ipa": "/plæn/",
+              "ar": "يُخطط"
+            },
+            {
+              "word": "quick",
+              "ipa": "/kwɪk/",
+              "ar": "سريع"
+            },
+            {
+              "word": "snack",
+              "ipa": "/snæk/",
+              "ar": "وجبة خفيفة"
+            },
+            {
+              "word": "healthy",
+              "ipa": "/ˈhelθi/",
+              "ar": "صحي"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "To be honest, my eating habits are not perfect. On weekdays, I am very busy, so I often eat fast food or simple meals. I do not plan well. But on weekends, I try to cook at home and eat healthy food like fish, vegetables, and fruits. I think this is because of my schedule. When I have more time, I make better choices. I want to improve this and plan my meals every week.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Contrast weekdays vs weekends + reason 'because of my schedule'."
+          },
+          "answer_tier_90": {
+            "text": "To be honest, my eating habits are a bit inconsistent. During the busy work week, I often grab whatever's quick — sandwiches, instant noodles, or takeout. On weekends though, I genuinely enjoy cooking proper homemade meals with fresh vegetables and lean proteins. The main reason is time pressure during weekdays. I'm fully aware this isn't ideal, and I've been trying to meal-prep on Sundays to make healthier choices more consistent throughout the week.",
+            "word_count": 73,
+            "level": "B2-C1",
+            "structure_notes": "'Inconsistent', 'meal-prep', 'lean proteins'. Self-awareness + plan to improve."
+          },
+          "self_assessment": [
+            "هل وصفت عاداتك بصدق؟",
+            "هل قارنت بين أوقات/أيام مختلفة؟",
+            "هل ذكرت السبب؟",
+            "هل ذكرت مثالاً على الطعام؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "test_focus": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that home-cooked meals are always healthier and better than restaurant food. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن الطعام المطبوخ في البيت دائماً أصح وأفضل من طعام المطاعم. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "ingredient",
+              "ipa": "/ɪnˈɡriːdiənt/",
+              "ar": "مكوّن"
+            },
+            {
+              "word": "control",
+              "ipa": "/kənˈtrəʊl/",
+              "ar": "تحكّم"
+            },
+            {
+              "word": "fresh",
+              "ipa": "/freʃ/",
+              "ar": "طازج"
+            },
+            {
+              "word": "expensive",
+              "ipa": "/ɪkˈspensɪv/",
+              "ar": "غالي"
+            },
+            {
+              "word": "convenient",
+              "ipa": "/kənˈviːniənt/",
+              "ar": "مريح"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I mostly agree with this idea. When you cook at home, you choose the ingredients yourself. You can use less oil, less salt, and fresh vegetables. Restaurant food often has too much fat and sugar. Also, home cooking is cheaper. But sometimes, restaurants are good for special days or to try new tastes. So I think home cooking is better most of the time, but not always.",
+            "word_count": 70,
+            "level": "A2-B1",
+            "structure_notes": "Position + reasons + small concession 'but sometimes'."
+          },
+          "answer_tier_90": {
+            "text": "I generally agree that home-cooked meals are usually healthier than restaurant food. The biggest reason is control — at home, you decide exactly what goes into your dish, including the oil, salt, and freshness of ingredients. Restaurants often rely on heavy sauces and excess salt to enhance flavor. That said, dining out occasionally is perfectly fine and even enjoyable. So while home cooking should be the default, restaurants have their place too.",
+            "word_count": 73,
+            "level": "B2-C1",
+            "structure_notes": "'Generally agree', 'control', 'that said', 'have their place too'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل قدمت سبباً قوياً؟",
+            "هل ذكرت مثالاً؟",
+            "هل اعترفت بالرأي المخالف ولو قليلاً؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "test_focus": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think governments should put warning labels on unhealthy foods, like they do on cigarettes? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الحكومات يجب أن تضع تحذيرات على الأطعمة غير الصحية، مثل السجائر؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "warning",
+              "ipa": "/ˈwɔːnɪŋ/",
+              "ar": "تحذير"
+            },
+            {
+              "word": "label",
+              "ipa": "/ˈleɪbəl/",
+              "ar": "ملصق"
+            },
+            {
+              "word": "aware",
+              "ipa": "/əˈweə/",
+              "ar": "مُدرك"
+            },
+            {
+              "word": "freedom",
+              "ipa": "/ˈfriːdəm/",
+              "ar": "حرية"
+            },
+            {
+              "word": "industry",
+              "ipa": "/ˈɪndəstri/",
+              "ar": "صناعة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I think this is a good idea. The main benefit is that people will be more aware of what they eat. If a chocolate bar shows 'too much sugar' clearly, parents will think twice before buying it for their kids. But one drawback is that it may hurt small food companies. They may lose money and close. So the rule should be fair: clear warnings, but not too aggressive on small businesses.",
+            "word_count": 74,
+            "level": "A2-B1",
+            "structure_notes": "Yes + benefit + 'But one drawback' + balanced suggestion."
+          },
+          "answer_tier_90": {
+            "text": "Yes, I genuinely support warning labels on unhealthy foods. The main benefit is raising public awareness — clear warnings about high sugar or saturated fat would help consumers, especially parents, make more informed choices. However, one real drawback is the potential economic impact on the food industry, particularly smaller producers who may struggle to redesign packaging. So while I support the policy in principle, it should be introduced gradually with proper support for small businesses.",
+            "word_count": 76,
+            "level": "B2-C1",
+            "structure_notes": "'Genuinely support', 'informed choices', 'in principle', 'gradually'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً واضحاً؟",
+            "هل ذكرت فائدة؟",
+            "هل ذكرت مضرة؟",
+            "هل اقترحت حلاً متوازناً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "sleep",
+      "title_en": "Sleep",
+      "title_ar": "النوم",
+      "category": "Daily Life",
+      "order_index": 4,
+      "interviewer": {
+        "avatar_id": "brian",
+        "name": "Brian",
+        "accent": "UK Male",
+        "voice": "en-GB-RyanNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=brian&backgroundColor=ffdfbf"
+      },
+      "intro_en": "You have agreed to take part in a research study about sleep habits. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن عادات النوم. ستُجري مقابلة قصيرة عبر الإنترنت مع باحث، سيطرح عليك بعض الأسئلة.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "test_focus": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining. Please think about a recent night when you had a really good — or really bad — night of sleep. What happened, and how did you feel the next day?",
+          "question_ar": "شكراً لانضمامك. فكر في ليلة قريبة كان نومك فيها جيداً جداً — أو سيئاً جداً. ماذا حدث؟ وكيف شعرت في اليوم التالي؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "exhausted",
+              "ipa": "/ɪɡˈzɔːstɪd/",
+              "ar": "منهك"
+            },
+            {
+              "word": "wake up",
+              "ipa": "/weɪk ʌp/",
+              "ar": "يستيقظ"
+            },
+            {
+              "word": "deep sleep",
+              "ipa": "/diːp sliːp/",
+              "ar": "نوم عميق"
+            },
+            {
+              "word": "concentrate",
+              "ipa": "/ˈkɒnsəntreɪt/",
+              "ar": "يُركّز"
+            },
+            {
+              "word": "alarm",
+              "ipa": "/əˈlɑːm/",
+              "ar": "منبه"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Last Monday, I had a really bad night. I drank coffee in the evening, and then I could not sleep. I went to bed at midnight, but I was still awake at three in the morning. The next day, I was very tired at work. I could not concentrate well, and I drank a lot of coffee just to stay awake. After that day, I decided to stop drinking coffee after six p.m.",
+            "word_count": 73,
+            "level": "A2-B1",
+            "structure_notes": "Past simple narrative + clear cause and effect."
+          },
+          "answer_tier_90": {
+            "text": "Last Monday I had a terrible night of sleep — mostly my own fault, actually. I'd had a strong coffee around seven in the evening, and by midnight I was still wide awake, staring at the ceiling. The next morning I felt completely exhausted and struggled to concentrate at work. I basically survived on more caffeine, which obviously didn't help. That experience taught me a clear lesson: no caffeine after late afternoon. I've stuck to that rule ever since.",
+            "word_count": 79,
+            "level": "B2-C1",
+            "structure_notes": "'Wide awake', 'staring at the ceiling', 'survived on'. Lesson learned ending."
+          },
+          "self_assessment": [
+            "هل ذكرت ليلة محددة؟",
+            "هل وصفت السبب؟",
+            "هل قلت كيف شعرت في اليوم التالي؟",
+            "هل استخدمت الماضي بشكل صحيح؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "test_focus": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have very different sleep patterns. Some go to bed early and wake up early, while others prefer staying up late and sleeping in. Which pattern fits you better, and why?",
+          "question_ar": "للناس أنماط نوم مختلفة. ينام البعض مبكراً ويستيقظ مبكراً، بينما يفضل آخرون السهر والنوم متأخراً. أي نمط يناسبك أكثر؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "early bird",
+              "ipa": "/ˈɜːli bɜːd/",
+              "ar": "شخص يستيقظ مبكراً"
+            },
+            {
+              "word": "night owl",
+              "ipa": "/naɪt aʊl/",
+              "ar": "شخص يسهر"
+            },
+            {
+              "word": "productive",
+              "ipa": "/prəˈdʌktɪv/",
+              "ar": "منتج"
+            },
+            {
+              "word": "peaceful",
+              "ipa": "/ˈpiːsfəl/",
+              "ar": "هادئ"
+            },
+            {
+              "word": "lifestyle",
+              "ipa": "/ˈlaɪfstaɪl/",
+              "ar": "نمط حياة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I am definitely a night owl. I prefer to stay up late and sleep in the morning. At night, the house is quiet, and I can read, study, or watch a movie without any noise. My mind feels more active and creative late at night. I think this is because I am not a 'morning person.' In the morning, I am slow and tired. But after eleven p.m., I feel awake and ready to do things.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Clear preference + 'because' + contrast morning vs night."
+          },
+          "answer_tier_90": {
+            "text": "I'm definitely more of a night owl. I tend to stay up late and feel most productive after everyone else has gone to bed. Late at night, the house is wonderfully quiet, and I can read, write, or just think clearly without any distractions. I believe this is partly biological — I've simply never functioned well in the early morning. Mornings make me sluggish, while late evenings give me a real boost of focus and creativity.",
+            "word_count": 75,
+            "level": "B2-C1",
+            "structure_notes": "'Tend to', 'wonderfully quiet', 'sluggish', 'real boost of focus'."
+          },
+          "self_assessment": [
+            "هل اخترت نمطاً بوضوح؟",
+            "هل أعطيت سبباً؟",
+            "هل ذكرت مثالاً على ما تفعله؟",
+            "هل استخدمت كلمات مثل 'early bird' أو 'night owl'؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "test_focus": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that getting at least eight hours of sleep every night is essential for success in work or school. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن النوم 8 ساعات على الأقل كل ليلة ضروري للنجاح في العمل أو الدراسة. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "essential",
+              "ipa": "/ɪˈsenʃəl/",
+              "ar": "ضروري"
+            },
+            {
+              "word": "performance",
+              "ipa": "/pəˈfɔːməns/",
+              "ar": "أداء"
+            },
+            {
+              "word": "individual",
+              "ipa": "/ˌɪndɪˈvɪdʒuəl/",
+              "ar": "فردي"
+            },
+            {
+              "word": "vary",
+              "ipa": "/ˈveəri/",
+              "ar": "يتفاوت"
+            },
+            {
+              "word": "quality",
+              "ipa": "/ˈkwɒləti/",
+              "ar": "جودة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I mostly agree with this idea. Sleep is very important for the brain and the body. When I sleep enough, I can think clearly and work faster. But I do not think eight hours is the perfect number for everyone. Some people feel great with seven hours, and others need nine. The most important thing is quality, not just the number of hours. So yes, enough sleep is essential, but the exact number is different for each person.",
+            "word_count": 78,
+            "level": "A2-B1",
+            "structure_notes": "Partial agreement + 'but I don't think' + clear nuance."
+          },
+          "answer_tier_90": {
+            "text": "I broadly agree, though I'd add an important nuance. Adequate sleep is undoubtedly essential for cognitive performance, memory, and emotional balance. However, the magic 'eight hours' rule isn't realistic for everyone — sleep needs vary significantly from one individual to another. Some people thrive on seven hours, others genuinely need nine. What matters most, in my view, is the quality of sleep, not just the quantity. So yes, prioritize sleep, but listen to your own body.",
+            "word_count": 77,
+            "level": "B2-C1",
+            "structure_notes": "'Broadly agree', 'nuance', 'cognitive performance', 'thrive on'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل قدمت سبباً منطقياً؟",
+            "هل اعترفت بالاستثناءات؟",
+            "هل استخدمت روابط مثل 'however' أو 'but'؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "test_focus": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think schools should start later in the morning to allow students more sleep? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن المدارس يجب أن تبدأ متأخرة في الصباح لتسمح للطلاب بمزيد من النوم؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "delay",
+              "ipa": "/dɪˈleɪ/",
+              "ar": "تأخير"
+            },
+            {
+              "word": "alert",
+              "ipa": "/əˈlɜːt/",
+              "ar": "يقظ"
+            },
+            {
+              "word": "schedule",
+              "ipa": "/ˈʃedjuːl/",
+              "ar": "جدول"
+            },
+            {
+              "word": "working parents",
+              "ipa": "/ˈwɜːkɪŋ ˈpeərənts/",
+              "ar": "آباء عاملون"
+            },
+            {
+              "word": "performance",
+              "ipa": "/pəˈfɔːməns/",
+              "ar": "أداء"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Yes, I think this is a good idea. The main benefit is that students will be more awake in class. Many teenagers sleep late and wake up tired. Starting school at nine instead of seven can really help them concentrate and learn better. But there is one drawback. Many parents leave for work early, and they may not have time to drop their kids at school later. So schools need to plan transportation carefully.",
+            "word_count": 75,
+            "level": "A2-B1",
+            "structure_notes": "Yes + 'main benefit' + 'But' + drawback."
+          },
+          "answer_tier_90": {
+            "text": "Yes, I strongly support delaying school start times. The clearest benefit is improved academic performance — research consistently shows that teenagers are biologically wired to sleep later, and well-rested students concentrate far better in class. However, one practical drawback is the impact on working parents, whose schedules align with early school drop-offs. So while the policy makes sense in principle, schools would need to coordinate with families and transport services to make the change work smoothly.",
+            "word_count": 79,
+            "level": "B2-C1",
+            "structure_notes": "'Strongly support', 'biologically wired', 'in principle', 'smoothly'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً؟",
+            "هل ذكرت فائدة محددة؟",
+            "هل ذكرت مضرة محددة؟",
+            "هل استخدمت should أو might؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    },
+    {
+      "topic_code": "shopping",
+      "title_en": "Shopping",
+      "title_ar": "التسوق",
+      "category": "Daily Life",
+      "order_index": 5,
+      "interviewer": {
+        "avatar_id": "aria",
+        "name": "Aria",
+        "accent": "US Female",
+        "voice": "en-US-AriaNeural",
+        "image_url": "https://api.dicebear.com/7.x/personas/svg?seed=aria&backgroundColor=b6e3f4"
+      },
+      "intro_en": "You have agreed to take part in a research study about shopping habits. You will have a short online interview with a researcher. The researcher will ask you some questions.",
+      "intro_ar": "وافقت على المشاركة في دراسة بحثية عن عادات التسوق. ستُجري مقابلة قصيرة عبر الإنترنت مع باحثة، ستطرح عليك بعض الأسئلة.",
+      "questions": [
+        {
+          "order": 1,
+          "pattern": "Personal Recall",
+          "pattern_ar": "ذكرى شخصية",
+          "purpose": "Warm-up with a memory or life experience",
+          "test_focus": "Fluency, vocabulary range, comfort with spontaneous speech",
+          "question_en": "Thanks for joining the study. Please think about something you bought recently that you were really happy with. What was it, where did you buy it, and why were you so pleased with it?",
+          "question_ar": "شكراً لمشاركتك. فكر في شيء اشتريته مؤخراً وكنت سعيداً جداً به. ما هو؟ ومن أين اشتريته؟ ولماذا كنت سعيداً به؟",
+          "audio_duration_sec": 14,
+          "key_vocab": [
+            {
+              "word": "purchase",
+              "ipa": "/ˈpɜːtʃəs/",
+              "ar": "شراء"
+            },
+            {
+              "word": "bargain",
+              "ipa": "/ˈbɑːɡɪn/",
+              "ar": "صفقة جيدة"
+            },
+            {
+              "word": "satisfied",
+              "ipa": "/ˈsætɪsfaɪd/",
+              "ar": "راضٍ"
+            },
+            {
+              "word": "quality",
+              "ipa": "/ˈkwɒləti/",
+              "ar": "جودة"
+            },
+            {
+              "word": "discount",
+              "ipa": "/ˈdɪskaʊnt/",
+              "ar": "خصم"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Last month, I bought a pair of running shoes online. I was very happy with them. First, the price was great — there was a fifty percent discount. Second, the quality is really good. They are comfortable, light, and look nice. I wear them every day, and my feet do not hurt anymore. I think it was one of the best things I bought this year. I even told my friends about the website.",
+            "word_count": 76,
+            "level": "A2-B1",
+            "structure_notes": "Past simple + 'first... second' structure for clear reasons."
+          },
+          "answer_tier_90": {
+            "text": "Last month, I bought a pair of running shoes online, and honestly, I'm still thrilled with them. There were two main reasons. First, I got them at a fifty percent discount, which felt like a real bargain. Second, the quality genuinely exceeded my expectations — they're incredibly comfortable, lightweight, and stylish. I now wear them almost daily, and my old foot pain has completely disappeared. It's rare to feel this satisfied with an online purchase, so I'm definitely recommending the brand to my friends.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Still thrilled', 'real bargain', 'exceeded my expectations'."
+          },
+          "self_assessment": [
+            "هل ذكرت المنتج تحديداً؟",
+            "هل ذكرت مكان الشراء؟",
+            "هل قلت لماذا كنت سعيداً؟",
+            "هل استخدمت أكثر من سبب؟"
+          ]
+        },
+        {
+          "order": 2,
+          "pattern": "Emotional Reaction / Preference",
+          "pattern_ar": "رد فعل أو تفضيل",
+          "purpose": "Explore feelings or everyday behaviors",
+          "test_focus": "Pronunciation, rhythm, vocabulary precision",
+          "question_en": "People have different feelings about shopping. Some love going to malls or browsing online, while others find shopping stressful or boring. How do you usually feel about shopping, and why?",
+          "question_ar": "للناس مشاعر مختلفة تجاه التسوق. يحب البعض الذهاب إلى المولات أو التصفح عبر الإنترنت، بينما يجده آخرون مرهقاً أو مملاً. كيف تشعر عادةً تجاه التسوق؟ ولماذا؟",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "stressful",
+              "ipa": "/ˈstresfəl/",
+              "ar": "مرهق"
+            },
+            {
+              "word": "browse",
+              "ipa": "/braʊz/",
+              "ar": "يتصفح"
+            },
+            {
+              "word": "crowded",
+              "ipa": "/ˈkraʊdɪd/",
+              "ar": "مزدحم"
+            },
+            {
+              "word": "necessary",
+              "ipa": "/ˈnesəsəri/",
+              "ar": "ضروري"
+            },
+            {
+              "word": "enjoyable",
+              "ipa": "/ɪnˈdʒɔɪəbəl/",
+              "ar": "ممتع"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "Honestly, I do not really enjoy shopping. For me, it is something necessary, not fun. I find malls too crowded and noisy. I also feel tired after walking for hours. I prefer online shopping because it is faster and I can compare prices easily. But sometimes, when I am in a good mood, shopping with friends can be enjoyable. So it really depends on the day and the place.",
+            "word_count": 70,
+            "level": "A2-B1",
+            "structure_notes": "Honest preference + reasons + small exception."
+          },
+          "answer_tier_90": {
+            "text": "Honestly, I'm not really a shopping enthusiast. For me, it's more of a necessary task than a fun activity. Crowded malls make me feel overwhelmed, and I find browsing through dozens of stores genuinely exhausting. That's why I usually prefer online shopping — it's quicker, less stressful, and I can easily compare prices. However, shopping with close friends in a relaxed setting can actually be enjoyable. So it really depends on the company and the mood.",
+            "word_count": 77,
+            "level": "B2-C1",
+            "structure_notes": "'Shopping enthusiast', 'overwhelmed', 'browsing through', 'in a relaxed setting'."
+          },
+          "self_assessment": [
+            "هل وصفت شعورك بصدق؟",
+            "هل ذكرت السبب؟",
+            "هل قارنت بين أنواع التسوق؟",
+            "هل ذكرت استثناءً؟"
+          ]
+        },
+        {
+          "order": 3,
+          "pattern": "Opinion with Support",
+          "pattern_ar": "رأي مع دعم",
+          "purpose": "Take a position and justify it",
+          "test_focus": "Grammar control, idea development, coherence",
+          "question_en": "Now I'd like your opinion. Some people believe that online shopping is better than shopping in physical stores in every way. Do you agree? Why or why not?",
+          "question_ar": "الآن أريد رأيك. يعتقد البعض أن التسوق عبر الإنترنت أفضل من التسوق في المتاجر الفعلية في كل شيء. هل توافق؟ ولماذا؟",
+          "audio_duration_sec": 12,
+          "key_vocab": [
+            {
+              "word": "convenient",
+              "ipa": "/kənˈviːniənt/",
+              "ar": "مريح"
+            },
+            {
+              "word": "try on",
+              "ipa": "/traɪ ɒn/",
+              "ar": "يجرب الملابس"
+            },
+            {
+              "word": "return",
+              "ipa": "/rɪˈtɜːn/",
+              "ar": "يُرجع"
+            },
+            {
+              "word": "experience",
+              "ipa": "/ɪkˈspɪəriəns/",
+              "ar": "تجربة"
+            },
+            {
+              "word": "physical",
+              "ipa": "/ˈfɪzɪkəl/",
+              "ar": "فعلي"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "I do not fully agree. Online shopping is very convenient, yes. You can buy anything from your bed, and it is often cheaper. But it is not better in every way. For example, when you buy clothes online, you cannot try them on first. The size may be wrong, and returning items is sometimes difficult. So I think both are good, but for different things. Clothes are better in stores, and books are better online.",
+            "word_count": 77,
+            "level": "A2-B1",
+            "structure_notes": "Partial disagreement + concrete examples + 'so I think both are good, but for different things'."
+          },
+          "answer_tier_90": {
+            "text": "I respectfully disagree with the idea that online shopping is better in every way. Sure, it's incredibly convenient and often cheaper, but it has clear limitations. When buying clothes, for instance, you can't actually try them on, and returning items can be a real hassle. Physical stores also offer something online can't: the immediate experience of touching, comparing, and asking questions. In my view, the smartest approach is using both — online for predictable items and stores for things you need to see in person.",
+            "word_count": 86,
+            "level": "B2-C1",
+            "structure_notes": "'Respectfully disagree', 'a real hassle', 'predictable items', 'in person'."
+          },
+          "self_assessment": [
+            "هل أعلنت موقفك؟",
+            "هل قدمت سبباً قوياً؟",
+            "هل أعطيت مثالاً محدداً؟",
+            "هل اعترفت بالطرف الآخر؟"
+          ]
+        },
+        {
+          "order": 4,
+          "pattern": "Policy or Prediction",
+          "pattern_ar": "سياسة أو توقع",
+          "purpose": "Speculate or evaluate a broader issue",
+          "test_focus": "Complex sentence structure, logical reasoning",
+          "question_en": "One last question. Do you think governments should put taxes on online shopping to protect small local stores? Why or why not? Please give one benefit and one drawback.",
+          "question_ar": "سؤال أخير. هل تعتقد أن الحكومات يجب أن تفرض ضرائب على التسوق الإلكتروني لحماية المتاجر المحلية الصغيرة؟ ولماذا؟ اذكر فائدة ومضرة.",
+          "audio_duration_sec": 13,
+          "key_vocab": [
+            {
+              "word": "tax",
+              "ipa": "/tæks/",
+              "ar": "ضريبة"
+            },
+            {
+              "word": "protect",
+              "ipa": "/prəˈtekt/",
+              "ar": "يحمي"
+            },
+            {
+              "word": "competition",
+              "ipa": "/ˌkɒmpəˈtɪʃən/",
+              "ar": "منافسة"
+            },
+            {
+              "word": "consumer",
+              "ipa": "/kənˈsjuːmə/",
+              "ar": "مستهلك"
+            },
+            {
+              "word": "small business",
+              "ipa": "/smɔːl ˈbɪznəs/",
+              "ar": "تجارة صغيرة"
+            }
+          ],
+          "answer_tier_69": {
+            "text": "This is a difficult question. On one side, the benefit is clear: small local stores need help. Big online companies are very powerful, and many small shops are closing every year. A tax can help to save them and protect jobs. But on the other side, the drawback is that consumers will pay more. Online shopping is popular because it is cheap. If prices go up, many people will be unhappy. So I think the rule should be light, not heavy.",
+            "word_count": 82,
+            "level": "A2-B1",
+            "structure_notes": "'On one side... on the other side' clear structure."
+          },
+          "answer_tier_90": {
+            "text": "This is a genuinely tough question. On the one hand, the main benefit is protecting small local businesses, which struggle to compete with massive online retailers and risk closing down entirely. A modest tax could help level the playing field. However, the obvious drawback is that consumers would end up paying higher prices, which could hurt low-income families the most. So while I see the value, I'd suggest a small, targeted tax rather than a heavy one — protecting local shops without overburdening everyday buyers.",
+            "word_count": 84,
+            "level": "B2-C1",
+            "structure_notes": "'Genuinely tough', 'level the playing field', 'overburdening', 'targeted tax'."
+          },
+          "self_assessment": [
+            "هل اتخذت موقفاً (حتى لو متوازناً)؟",
+            "هل ذكرت فائدة؟",
+            "هل ذكرت مضرة؟",
+            "هل اقترحت حلاً متوسطاً؟"
+          ]
+        }
+      ],
+      "overall_self_assessment": [
+        "هل أكملت 4 أسئلة بمحاولتين؟",
+        "هل تحسنت المحاولة الثانية؟",
+        "هل التزمت بـ 45 ثانية؟",
+        "ما المفردة الجديدة التي تعلمتها؟"
+      ]
+    }
+  ]
+}

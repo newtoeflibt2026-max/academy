@@ -1,0 +1,100 @@
+{
+  "id": "dl_medium_05",
+  "type": "daily_reading",
+  "tier": "medium",
+  "title_en": "Apartment Water Shut-off Notice",
+  "title_ar": "إشعار قطع الماء في المبنى",
+  "topic": "Housing",
+  "duration_seconds": 300,
+  "passage": {
+    "title_en": "BUILDING MAINTENANCE NOTICE",
+    "text_en": "Dear Residents,\n\nDue to emergency pipe repairs in the basement, water service will be temporarily shut off on Sunday, March 12th, from 9:00 AM to 3:00 PM.\n\nPlease store enough water for drinking and basic needs before the shut-off. Service will resume promptly after repairs are completed.\n\nFor urgent questions on Sunday, call the building manager at ext. 205. For non-urgent matters, please wait until Monday business hours.\n\nWe apologize for the inconvenience.\n— Building Management"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "Why will the water be shut off?",
+      "prompt_ar": "لماذا سيتم قطع الماء؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Regular maintenance"
+        },
+        {
+          "id": "B",
+          "text_en": "Emergency pipe repairs"
+        },
+        {
+          "id": "C",
+          "text_en": "Cleaning the tanks"
+        },
+        {
+          "id": "D",
+          "text_en": "Installing new pipes"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "النص: 'Due to emergency pipe repairs in the basement'.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "How long will the water be off?",
+      "prompt_ar": "كم ساعة سيُقطع الماء؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "3 hours"
+        },
+        {
+          "id": "B",
+          "text_en": "5 hours"
+        },
+        {
+          "id": "C",
+          "text_en": "6 hours"
+        },
+        {
+          "id": "D",
+          "text_en": "9 hours"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "من 9:00 صباحاً إلى 3:00 مساءً = 6 ساعات.",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "What should residents do if they have questions on Sunday?",
+      "prompt_ar": "ماذا يفعل السكان إذا كان لديهم استفسارات يوم الأحد؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Call ext. 205"
+        },
+        {
+          "id": "B",
+          "text_en": "Wait until Monday"
+        },
+        {
+          "id": "C",
+          "text_en": "Email the manager"
+        },
+        {
+          "id": "D",
+          "text_en": "Visit the office immediately"
+        }
+      ],
+      "correct": "A",
+      "explanation_ar": "النص: 'For urgent questions on Sunday, call the building manager at ext. 205'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "MEDIUM"
+  }
+}

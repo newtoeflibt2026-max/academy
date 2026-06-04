@@ -1,0 +1,257 @@
+{
+  "_note": "مشروع جماعي | tier69",
+  "scenario": {
+    "code": "group_project",
+    "title_ar": "مشروع جماعي",
+    "title_en": "Group Project Coordination",
+    "scenario_text": "You are working on a group project with three other students. One member of your group has not responded to messages or attended meetings for two weeks. The project deadline is next week. Your group leader sent you an email asking for your opinion on what to do.",
+    "recipient_role": "Group Leader (peer)",
+    "target_tier": "tier69",
+    "min_words": 120,
+    "difficulty": "medium",
+    "order_index": 2,
+    "requirements": [
+      "Share your opinion about the situation",
+      "Suggest at least one specific action the group should take",
+      "Offer to help with extra work if needed"
+    ]
+  },
+  "coach_content": {
+    "step1_situation_ar": "أنت ضمن مجموعة من أربعة طلاب تعملون على مشروع جامعي. أحد أعضاء المجموعة اختفى لمدة أسبوعين (لم يرد على رسائل ولم يحضر اجتماعات). الموعد النهائي بعد أسبوع. قائد المجموعة (زميلك) أرسل لك إيميل يسأل رأيك. مهمتك: ترد بإيميل ودي لكنه احترافي يحقق ثلاثة أهداف.",
+    "step1_situation_en": "You are in a 4-student group project. One member has been missing for 2 weeks. Deadline next week. The group leader asks for your opinion.",
+    "step1_recipient_ar": "زميل في الدراسة (قائد مجموعة). شخص في نفس مستواك لكن في موقع مسؤولية. النبرة ودية لكن جدية.",
+    "step1_tone_ar": "ودية احترافية (Friendly Professional). أقل رسمية من الأستاذ لكنها واضحة ومنظمة.",
+    "step1_goals_json": [
+      {
+        "num": 1,
+        "ar": "شارك رأيك في الموقف",
+        "en": "Share your opinion"
+      },
+      {
+        "num": 2,
+        "ar": "اقترح خطوة عملية واحدة على الأقل",
+        "en": "Suggest at least one specific action"
+      },
+      {
+        "num": 3,
+        "ar": "اعرض المساعدة بعمل إضافي",
+        "en": "Offer to help with extra work"
+      }
+    ],
+    "step2_structure_json": [
+      {
+        "part": "1. Greeting",
+        "purpose_ar": "تحية ودية لزميل",
+        "example_en": "Hi Sarah,",
+        "tip_ar": "للزملاء يمكن استخدام Hi لكن Dear أكثر احترافية."
+      },
+      {
+        "part": "2. Opening",
+        "purpose_ar": "اشكره على الإيميل",
+        "example_en": "Thank you for reaching out about the group situation.",
+        "tip_ar": "ابدأ بشكر يخفف الجو ويظهر التعاون."
+      },
+      {
+        "part": "3. Body 1 - Opinion",
+        "purpose_ar": "اطرح رأيك بوضوح",
+        "example_en": "I think we should contact him one more time.",
+        "tip_ar": "استخدم I think أو In my opinion لإبداء الرأي."
+      },
+      {
+        "part": "4. Body 2 - Suggestion",
+        "purpose_ar": "اقترح حلا عمليا",
+        "example_en": "I suggest that we redistribute his tasks.",
+        "tip_ar": "I suggest that we صياغة قوية للاقتراحات."
+      },
+      {
+        "part": "5. Body 3 - Offer help",
+        "purpose_ar": "اعرض مساعدتك",
+        "example_en": "I am willing to take on additional work.",
+        "tip_ar": "I am willing to تعني مستعد لـ بنبرة كريمة."
+      },
+      {
+        "part": "6. Closing + Sign-off",
+        "purpose_ar": "اختم بإيجابية",
+        "example_en": "Let me know. Best, Ahmad",
+        "tip_ar": "Let me know دعوة للحوار."
+      }
+    ],
+    "step3_phrases_json": {
+      "greetings": [
+        {
+          "en": "Hi Sarah,",
+          "ar": "مرحبا سارة،"
+        },
+        {
+          "en": "Dear Sarah,",
+          "ar": "عزيزتي سارة،"
+        }
+      ],
+      "openings": [
+        {
+          "en": "Thank you for reaching out about the group situation.",
+          "ar": "شكرا لتواصلك بشأن وضع المجموعة."
+        },
+        {
+          "en": "I appreciate you asking for my opinion.",
+          "ar": "أقدر سؤالك عن رأيي."
+        }
+      ],
+      "opinions": [
+        {
+          "en": "In my opinion, we need to act quickly.",
+          "ar": "في رأيي يجب أن نتصرف بسرعة."
+        },
+        {
+          "en": "I think the best approach is to act now.",
+          "ar": "أعتقد أن أفضل طريقة هي التصرف الآن."
+        },
+        {
+          "en": "I believe we should inform the professor.",
+          "ar": "أؤمن أنه يجب إبلاغ الأستاذ."
+        }
+      ],
+      "suggestions": [
+        {
+          "en": "I suggest that we redistribute his tasks.",
+          "ar": "أقترح إعادة توزيع مهامه."
+        },
+        {
+          "en": "Perhaps we could send him a final message.",
+          "ar": "ربما نرسل له رسالة أخيرة."
+        },
+        {
+          "en": "We should inform the professor as soon as possible.",
+          "ar": "يجب إبلاغ الأستاذ بأسرع وقت."
+        }
+      ],
+      "offers": [
+        {
+          "en": "I am willing to take on additional work.",
+          "ar": "أنا مستعد لأخذ عمل إضافي."
+        },
+        {
+          "en": "I would be happy to help with extra tasks.",
+          "ar": "يسعدني المساعدة بالمهام الإضافية."
+        }
+      ],
+      "closings": [
+        {
+          "en": "Let me know what you think.",
+          "ar": "أخبرني برأيك."
+        },
+        {
+          "en": "Looking forward to your reply.",
+          "ar": "أتطلع لردك."
+        }
+      ],
+      "signoffs": [
+        {
+          "en": "Best,",
+          "ar": "تحياتي،"
+        },
+        {
+          "en": "Best regards,",
+          "ar": "أطيب التحيات،"
+        }
+      ]
+    },
+    "step4_model_email": "Hi Sarah,\n\nThank you for reaching out about the group situation. I have been thinking about this issue as well, and I am glad we can discuss it together before the deadline.\n\nIn my opinion, we should give him one final chance by sending a clear message explaining the urgency of the deadline. If he does not respond within 24 hours, I suggest that we redistribute his tasks among the remaining three members and inform Professor Anderson about what happened.\n\nI am willing to take on additional work to make sure we submit a high-quality project on time. Specifically, I can handle the data analysis section that he was responsible for.\n\nPlease let me know what you think, and I am ready to start as soon as we agree on a plan.\n\nBest,\nAhmad",
+    "step4_annotations_json": [
+      {
+        "line": "Hi Sarah,",
+        "comment_ar": "تحية ودية مناسبة للزميل."
+      },
+      {
+        "line": "Thank you for reaching out about the group situation.",
+        "comment_ar": "افتتاحية تظهر الاحترام والتعاون."
+      },
+      {
+        "line": "In my opinion, we should give him one final chance.",
+        "comment_ar": "رأي واضح مع تبرير منطقي (الهدف الأول)."
+      },
+      {
+        "line": "I suggest that we redistribute his tasks.",
+        "comment_ar": "اقتراح عملي محدد بصياغة قوية (الهدف الثاني)."
+      },
+      {
+        "line": "I am willing to take on additional work.",
+        "comment_ar": "عرض ملموس وليس مجرد كلام عام (الهدف الثالث)."
+      },
+      {
+        "line": "Specifically, I can handle the data analysis section.",
+        "comment_ar": "لمسة احترافية: ذكر مهمة محددة يظهر الجدية."
+      },
+      {
+        "line": "Best, Ahmad",
+        "comment_ar": "توقيع ودي مناسب للزميل."
+      }
+    ],
+    "step5_fill_template": "Hi _____,\n\nThank you for reaching out about _____. I have been thinking about this issue as well.\n\nIn my opinion, _____. If that does not work, I suggest that we _____.\n\nI am willing to _____. Specifically, I can _____.\n\nPlease let me know what you think.\n\nBest,\n_____",
+    "step5_blanks_hints_json": [
+      {
+        "blank": 1,
+        "hint_ar": "اسم قائد المجموعة",
+        "example": "Sarah"
+      },
+      {
+        "blank": 2,
+        "hint_ar": "موضوع الإيميل",
+        "example": "the group situation"
+      },
+      {
+        "blank": 3,
+        "hint_ar": "رأيك في الموقف",
+        "example": "we should give him one final chance"
+      },
+      {
+        "blank": 4,
+        "hint_ar": "خطتك البديلة",
+        "example": "redistribute his tasks"
+      },
+      {
+        "blank": 5,
+        "hint_ar": "ما المساعدة التي تعرضها",
+        "example": "take on additional work"
+      },
+      {
+        "blank": 6,
+        "hint_ar": "مهمة محددة يمكنك القيام بها",
+        "example": "handle the data analysis part"
+      },
+      {
+        "blank": 7,
+        "hint_ar": "اسمك",
+        "example": "Ahmad"
+      }
+    ],
+    "step6_checklist_json": [
+      "بدأت بتحية مناسبة للزميل",
+      "شكرته على التواصل",
+      "أبديت رأيي بوضوح بـ In my opinion",
+      "اقترحت خطوة عملية محددة",
+      "عرضت مساعدة ملموسة بمهمة محددة",
+      "استخدمت أكثر من 120 كلمة",
+      "تجنبت الاختصارات",
+      "ختمت بـ Best مع اسمي"
+    ],
+    "common_mistakes_json": [
+      {
+        "wrong": "I dont know what to do",
+        "right": "I think the best approach is to act now.",
+        "why_ar": "لا تظهر ضعفا اطرح رأيا واضحا."
+      },
+      {
+        "wrong": "Maybe we do something",
+        "right": "I suggest that we redistribute his tasks.",
+        "why_ar": "Maybe ضعيف. استخدم I suggest that we للاقتراحات القوية."
+      },
+      {
+        "wrong": "I can help if you want",
+        "right": "I am willing to take on the data analysis section.",
+        "why_ar": "كن محددا في عرض المساعدة."
+      }
+    ],
+    "video_url": null
+  }
+}

@@ -1,0 +1,594 @@
+[
+  {
+    "code": "lec_d01",
+    "voice": "F",
+    "level": "difficult",
+    "title_en": "Undergraduate Research Opportunities",
+    "title_ar": "فرص البحث للطلاب الجامعيين",
+    "topic_ar": "البحث الأكاديمي",
+    "principle_en": "Connect academic activities with professional outcomes",
+    "principle_ar": "اربط الأنشطة الأكاديمية بالنتائج المهنية",
+    "transcript_en": "Many undergraduates assume research is reserved for graduate students, but that's a misconception worth correcting. Participation in research, even at the bachelor's level, offers significant academic and professional growth. What does undergraduate research actually involve? Typically, students assist faculty members with ongoing projects — collecting data, running experiments, analyzing results, or contributing to literature reviews. Some students even co-author publications, which dramatically strengthens graduate school applications. Research opportunities span multiple disciplines. In biology, chemistry, and the social sciences, you'll find structured undergraduate research programs with applications opening each spring. The intellectual benefits are substantial: students develop analytical thinking and resolution of complex problems — skills rarely cultivated through coursework alone. The role of faculty mentors deserves emphasis. They offer instruction and direction throughout the experimental and analysis stages, but they don't complete the work for students. The expectation is partnership — you bring effort and curiosity, they provide expertise and feedback. Funding is another consideration often overlooked. Many positions are paid through research grants or work-study programs. Others are credit-bearing, meaning you earn academic credit for the time invested. Either way, your transcript shows research experience — something employers and graduate admissions committees weigh heavily. If you're interested, schedule a meeting with your department's undergraduate research coordinator. The earlier you begin, the deeper your involvement can become.",
+    "duration_sec": 130,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the primary message regarding student involvement in research?",
+        "q_ar": "ما الرسالة الأساسية بشأن مشاركة الطلاب في البحث؟",
+        "options": [
+          "Research is only available to graduate students",
+          "Research is mandatory for all students",
+          "Participation in research offers significant academic and professional growth",
+          "Only faculty members conduct experiments"
+        ],
+        "correct": 2,
+        "explanation_ar": "الجملة الافتتاحية تنفي الفكرة الخاطئة وتؤكد 'significant academic and professional growth'.",
+        "strategy_ar": "🎯 المحاضرات التصحيحية تبدأ بنفي خطأ شائع ثم تقدم الحقيقة.",
+        "elimination_ar": "A عكس النص، B مبالغ، D خارج السياق."
+      },
+      {
+        "type": "detail",
+        "q_en": "What specific intellectual skills does the speaker mention as improved through research?",
+        "q_ar": "ما المهارات الفكرية التي تتحسن بالبحث؟",
+        "options": [
+          "Public speaking and debating",
+          "Memorization and fast reading",
+          "Analytical thinking and resolution of complex problems",
+          "Creative writing and artistic design"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر صراحة: 'analytical thinking and resolution of complex problems'.",
+        "strategy_ar": "🎯 ابحث عن المهارات المذكورة حرفياً، لا تخمن.",
+        "elimination_ar": "A، B، D مهارات حقيقية لكن غير مذكورة هنا."
+      },
+      {
+        "type": "detail",
+        "q_en": "In which three fields can students find research opportunities?",
+        "q_ar": "في أي ثلاثة مجالات يجد الطلاب فرص بحث؟",
+        "options": [
+          "History, Art, and Literature",
+          "Biology, Chemistry, and Social Sciences",
+          "Economics, Law, and Engineering",
+          "Sports, Music, and Drama"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'In biology, chemistry, and the social sciences'.",
+        "strategy_ar": "🎯 القوائم المحددة من 3 عناصر = إجابات مباشرة.",
+        "elimination_ar": "كل الخيارات الأخرى لا تطابق المذكور."
+      },
+      {
+        "type": "inference",
+        "q_en": "What is the role of faculty mentors based on the lecture?",
+        "q_ar": "ما دور المرشدين من أعضاء هيئة التدريس؟",
+        "options": [
+          "They complete the experiments for the students",
+          "They are responsible for grading all assignments",
+          "They offer instruction and direction throughout the experimental and analysis stages",
+          "They provide funding for graduate studies"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'They offer instruction and direction throughout the experimental and analysis stages' + 'partnership'.",
+        "strategy_ar": "🎯 Inference: ابحث عن الفعل الذي يفعله الشخص فعلاً، ليس ما يفترضه الناس.",
+        "elimination_ar": "A عكس، B خارج السياق، D ذُكر التمويل لكن ليس عبر المرشد."
+      }
+    ]
+  },
+  {
+    "code": "lec_d02",
+    "voice": "M",
+    "level": "difficult",
+    "title_en": "Climate Change Research on Campus",
+    "title_ar": "أبحاث تغير المناخ في الحرم",
+    "topic_ar": "علوم البيئة التطبيقية",
+    "principle_en": "Link scientific research to institutional policy decisions",
+    "principle_ar": "اربط البحث العلمي بقرارات السياسة المؤسسية",
+    "transcript_en": "Our environmental science department conducts ongoing climate change research that directly informs decisions about how this campus operates. Today I'll explain what we monitor, what we've learned, and how students can contribute. The research focuses on three primary environmental factors. We measure thermal patterns — daily and seasonal temperatures across multiple campus locations. We monitor air cleanliness, analyzing pollutants and particulate matter weekly. And we track precipitation levels — both rainfall amounts and water runoff patterns. Notice that geological seismic activity is not part of this study; that's handled by a separate geology department initiative. What have we learned? Average summer temperatures on campus have risen by nearly two degrees Celsius over the past fifteen years. Air quality has fluctuated based on regional traffic patterns. And precipitation has become less predictable, with longer dry periods interrupted by heavier storms. These findings have practical consequences. The research outcomes directly influence and inform decisions about campus sustainability. For instance, the administration has launched initiatives to reduce the amount of power consumed on campus — installing energy-efficient lighting, upgrading heating systems, and expanding solar panel coverage. Student involvement is essential. We currently work with about thirty volunteers who assist with data collection and analysis. They're not paid interns or required participants — they're motivated students contributing to research that shapes their own campus environment. If you'd like to volunteer, applications open each fall.",
+    "duration_sec": 135,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the relationship between the research and campus policies?",
+        "q_ar": "ما العلاقة بين البحث وسياسات الحرم؟",
+        "options": [
+          "The research focuses only on global trends, ignoring campus needs",
+          "The research is optional and unrelated to policy",
+          "The research outcomes directly influence and inform decisions about campus sustainability",
+          "The research contradicts current campus policies"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر مباشرة: 'directly informs decisions' و 'directly influence and inform decisions about campus sustainability'.",
+        "strategy_ar": "🎯 العلاقة بين عنصرين = ابحث عن أفعال الربط (informs, influences).",
+        "elimination_ar": "A، B، D عكس النص."
+      },
+      {
+        "type": "detail",
+        "q_en": "Which factor is NOT monitored by the researchers?",
+        "q_ar": "أي عامل لا يتم رصده؟",
+        "options": [
+          "Precipitation levels",
+          "Air cleanliness/toxicity",
+          "Thermal measurements",
+          "Geological seismic activity"
+        ],
+        "correct": 3,
+        "explanation_ar": "ذُكر صراحة: 'geological seismic activity is not part of this study'.",
+        "strategy_ar": "🎯 NOT questions: ابحث عن الاستثناء بكلمات 'not', 'except', 'separate'.",
+        "elimination_ar": "A، B، C كلها ضمن العوامل الثلاثة."
+      },
+      {
+        "type": "detail",
+        "q_en": "What specific action is the campus taking based on research findings?",
+        "q_ar": "ما الإجراء المحدد الذي يتخذه الحرم بناءً على نتائج البحث؟",
+        "options": [
+          "Closing the environmental science department",
+          "Hiring more security guards",
+          "Reducing the amount of power consumed on campus",
+          "Installing more air conditioning units"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'launched initiatives to reduce the amount of power consumed' + أمثلة (LED, solar).",
+        "strategy_ar": "🎯 الإجراءات العملية = ابحث عن أفعال 'launched', 'installed'.",
+        "elimination_ar": "A عكس، B خارج، D مغرٍ لكن غير مذكور."
+      },
+      {
+        "type": "vocab",
+        "q_en": "How does the speaker describe student researchers?",
+        "q_ar": "كيف يصف المتحدث الطلاب الباحثين؟",
+        "options": [
+          "Paid Interns",
+          "Volunteers",
+          "Full-time Researchers",
+          "Required Participants"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'about thirty volunteers' + 'They're not paid interns or required participants'.",
+        "strategy_ar": "🎯 المصطلحات: ابحث عن الكلمة الإيجابية المؤكدة وانفِ المرفوضة.",
+        "elimination_ar": "A، C، D نُفيت صراحة في النص."
+      }
+    ]
+  },
+  {
+    "code": "lec_d03",
+    "voice": "F",
+    "level": "difficult",
+    "title_en": "The Cognitive Science of Learning",
+    "title_ar": "العلم المعرفي للتعلم",
+    "topic_ar": "علم النفس المعرفي",
+    "principle_en": "Distinguish scientific findings from common misconceptions",
+    "principle_ar": "ميّز النتائج العلمية عن المفاهيم الخاطئة الشائعة",
+    "transcript_en": "Most students believe they know how learning works. They reread chapters, highlight passages, and review notes the night before exams. Yet cognitive scientists have shown that many of these intuitive habits are remarkably ineffective. Today I'll discuss what the research actually says. The most important finding is the distinction between familiarity and mastery. When you reread a textbook, the material feels increasingly familiar, and your brain mistakes that comfortable recognition for genuine understanding. But on the exam, when you must retrieve information without cues, you discover the gap. What works better? Researchers consistently identify three evidence-based strategies. The first is retrieval practice — testing yourself rather than passively reviewing. Cognitive scientist Henry Roediger has demonstrated that students who quiz themselves remember material substantially longer than those who simply reread. The second is spaced repetition — distributing study sessions over time rather than cramming. The brain consolidates memories during the intervals between sessions. The third is interleaving — mixing different topics within a study session rather than mastering one before moving to the next. These methods feel harder because they force genuine effort. Counterintuitively, that's exactly why they work. Cognitive scientists describe this phenomenon as 'desirable difficulty.' Easy studying produces fluent feelings but fragile memories; effortful studying produces durable knowledge. The implication is uncomfortable but liberating: studying smarter doesn't mean studying more — it means studying in ways that align with how the brain actually encodes information.",
+    "duration_sec": 140,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the central argument of this lecture?",
+        "q_ar": "ما الحجة المركزية للمحاضرة؟",
+        "options": [
+          "Students should study more hours",
+          "Common study habits are often ineffective; evidence-based methods produce better learning",
+          "Rereading is the best study method",
+          "Cognitive science has no practical applications"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تنقد العادات الشائعة وتقدم 3 طرق علمية مثبتة.",
+        "strategy_ar": "🎯 المحاضرات النقدية = نقد + بديل علمي.",
+        "elimination_ar": "A، C، D إما عكس أو خارج."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does 'desirable difficulty' mean in this context?",
+        "q_ar": "ما معنى 'desirable difficulty'؟",
+        "options": [
+          "Difficulty that should be avoided",
+          "Difficulty that feels uncomfortable but produces durable learning",
+          "An impossible challenge",
+          "Difficulty that comes from poor teaching"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'feels harder... that's exactly why they work... produces durable knowledge'.",
+        "strategy_ar": "🎯 المصطلحات النفسية = ابحث عن التعريف الموسع في الفقرة.",
+        "elimination_ar": "A، C، D إما عكس أو غير دقيق."
+      },
+      {
+        "type": "detail",
+        "q_en": "What are the three evidence-based strategies mentioned?",
+        "q_ar": "ما الاستراتيجيات الثلاث المثبتة علمياً؟",
+        "options": [
+          "Reading, highlighting, summarizing",
+          "Retrieval practice, spaced repetition, interleaving",
+          "Memorization, repetition, copying",
+          "Group study, tutoring, online courses"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكرت بالترتيب: retrieval practice + spaced repetition + interleaving.",
+        "strategy_ar": "🎯 المصطلحات العلمية المعدّدة = دوّنها مرتبة.",
+        "elimination_ar": "A عادات سيئة، C، D خارج السياق."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about students who feel their studying is 'easy'?",
+        "q_ar": "ماذا يُستنتج عن الطلاب الذين يشعرون أن دراستهم 'سهلة'؟",
+        "options": [
+          "They are highly intelligent",
+          "Their memories of the material may be fragile despite the comfortable feeling",
+          "They will perform best on exams",
+          "They have studied enough"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'Easy studying produces fluent feelings but fragile memories'.",
+        "strategy_ar": "🎯 Inference عن المشاعر الدراسية = ابحث عن النتائج المخادعة.",
+        "elimination_ar": "A، C، D عكس النص."
+      }
+    ]
+  },
+  {
+    "code": "lec_d04",
+    "voice": "M",
+    "level": "difficult",
+    "title_en": "Renewable Energy Initiatives on Campus",
+    "title_ar": "مبادرات الطاقة المتجددة في الحرم",
+    "topic_ar": "الهندسة البيئية",
+    "principle_en": "Connect technical infrastructure to measurable outcomes",
+    "principle_ar": "اربط البنية التحتية التقنية بالنتائج القابلة للقياس",
+    "transcript_en": "Universities have increasingly become testing grounds for renewable energy technologies. Our campus is no exception. Over the past decade, we've invested in three major renewable systems, and today I want to walk you through what they are, how they perform, and what we've learned. First, solar photovoltaic arrays. We have approximately twelve thousand panels installed across rooftops and parking structures. On a sunny day, these panels supply nearly forty percent of campus electricity demand. However — and this is important — output drops dramatically during cloudy weeks. Solar is reliable but not consistent. Second, geothermal heating. Beneath the science complex, a network of underground pipes circulates water through stable subterranean temperatures, providing heating in winter and cooling in summer. Geothermal systems are expensive to install but remarkably efficient over their forty-year lifespan. Our system has reduced heating costs in that complex by roughly sixty percent. Third, a small wind turbine pilot project on the eastern field. Honestly, this has been our least successful initiative. Wind speeds in this region are too variable to justify large-scale expansion. The turbine generates only enough electricity to power a single building, and maintenance costs have exceeded projections. These mixed results illustrate an important principle: renewable energy isn't a single solution but a portfolio approach. Different technologies suit different climates, locations, and demand patterns. Engineering students interested in sustainability should study not just the technologies but the analytical frameworks for evaluating them.",
+    "duration_sec": 145,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the central point of the lecture?",
+        "q_ar": "ما النقطة المحورية؟",
+        "options": [
+          "All renewable energy projects succeed equally",
+          "Renewable energy on campus involves different technologies with mixed results, requiring careful evaluation",
+          "Solar is the only viable renewable source",
+          "The university should abandon renewable energy"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تعرض 3 أنظمة بنتائج مختلفة وتختم بـ 'portfolio approach'.",
+        "strategy_ar": "🎯 المحاضرات الموازنة = نتائج مختلطة + درس مستفاد.",
+        "elimination_ar": "A، C، D إما مطلق أو عكس."
+      },
+      {
+        "type": "detail",
+        "q_en": "What percentage of campus electricity does the solar array supply on sunny days?",
+        "q_ar": "ما نسبة الكهرباء التي توفرها الألواح الشمسية في الأيام المشمسة؟",
+        "options": [
+          "Twenty percent",
+          "Forty percent",
+          "Sixty percent",
+          "Eighty percent"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'nearly forty percent of campus electricity demand'.",
+        "strategy_ar": "🎯 النسب المئوية المحددة = دقيقة جداً.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about the wind turbine project?",
+        "q_ar": "ماذا يُستنتج عن مشروع توربينات الرياح؟",
+        "options": [
+          "It will be expanded significantly",
+          "It has been less successful and is unlikely to be expanded in the current location",
+          "It produces the most electricity on campus",
+          "It is the cheapest energy source"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'least successful initiative' + 'too variable to justify large-scale expansion'.",
+        "strategy_ar": "🎯 Inference: ابحث عن التقييم السلبي + الكلفة الزائدة.",
+        "elimination_ar": "كل الخيارات الأخرى عكس النص."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker call renewable energy a 'portfolio approach'?",
+        "q_ar": "لماذا يصف المتحدث الطاقة المتجددة بـ 'portfolio approach'؟",
+        "options": [
+          "To recommend financial investments",
+          "To emphasize that different technologies suit different conditions, like diversifying an investment portfolio",
+          "Because renewable energy requires money",
+          "To compare it to art collections"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق التالي: 'Different technologies suit different climates, locations, and demand patterns'.",
+        "strategy_ar": "🎯 الاستعارات الاقتصادية = ابحث عن التشبيه في الجملة التالية.",
+        "elimination_ar": "A، C، D تفسيرات سطحية."
+      }
+    ]
+  },
+  {
+    "code": "lec_d05",
+    "voice": "F",
+    "level": "difficult",
+    "title_en": "Foundations of Behavioral Economics",
+    "title_ar": "أسس الاقتصاد السلوكي",
+    "topic_ar": "الاقتصاد والسلوك",
+    "principle_en": "Contrast traditional models with empirical findings",
+    "principle_ar": "قارن النماذج التقليدية بالنتائج التجريبية",
+    "transcript_en": "Traditional economics assumes that humans are rational actors — that we carefully weigh costs and benefits before making decisions. Behavioral economics, a field that emerged most prominently in the late twentieth century, challenges that assumption with extensive empirical evidence. The pioneer of this field is psychologist Daniel Kahneman, who along with his colleague Amos Tversky demonstrated that human decision-making is systematically biased. Their work earned Kahneman the Nobel Prize in Economics in 2002 — notable because Kahneman is not actually an economist. Consider one classic finding: loss aversion. People feel the pain of losing one hundred dollars roughly twice as intensely as the pleasure of gaining one hundred dollars. This asymmetry, predictable across cultures, contradicts standard economic theory, which assumes equal weighting. Another key concept is the anchoring effect. When negotiating, the first number mentioned strongly influences the final agreement, even when that initial number is clearly arbitrary. Real estate agents, car dealers, and even courts have documented this phenomenon. Behavioral economics has practical applications beyond academia. Governments now design 'choice architectures' — small modifications in how options are presented — to encourage beneficial decisions. For instance, when retirement savings programs make enrollment automatic rather than opt-in, participation rates increase from roughly thirty percent to over ninety percent. The discipline raises uncomfortable questions about autonomy and manipulation. If our decisions are systematically biased, how much of what we consider 'free choice' really is free? That philosophical debate continues.",
+    "duration_sec": 150,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker's main goal?",
+        "q_ar": "ما الهدف الرئيسي؟",
+        "options": [
+          "To prove traditional economics is correct",
+          "To introduce behavioral economics and how it challenges rational-actor assumptions",
+          "To dismiss psychology as unrelated to economics",
+          "To recommend specific investment strategies"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تعرض المجال + تحدياته للنموذج التقليدي + أمثلة.",
+        "strategy_ar": "🎯 المحاضرات النقدية الأكاديمية = تعريف + نقد + أمثلة.",
+        "elimination_ar": "A عكس، C، D خارج."
+      },
+      {
+        "type": "detail",
+        "q_en": "Why is Kahneman's Nobel Prize particularly notable?",
+        "q_ar": "لماذا جائزة كانمان نوبل ملحوظة بشكل خاص؟",
+        "options": [
+          "He was very young",
+          "He is a psychologist, not an economist",
+          "He shared it with five other winners",
+          "He refused the prize"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'notable because Kahneman is not actually an economist'.",
+        "strategy_ar": "🎯 'notable because' = إجابة مباشرة على 'لماذا'.",
+        "elimination_ar": "الخيارات الأخرى مختلقة."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does 'loss aversion' refer to?",
+        "q_ar": "ما المقصود بـ 'loss aversion'؟",
+        "options": [
+          "Refusing to make any decisions",
+          "The tendency to feel losses more intensely than equivalent gains",
+          "Avoiding all financial risks",
+          "A type of investment strategy"
+        ],
+        "correct": 1,
+        "explanation_ar": "التعريف في السياق: 'pain of losing... roughly twice as intensely as the pleasure of gaining'.",
+        "strategy_ar": "🎯 المصطلحات النفسية الاقتصادية = ابحث عن الكمية المقارنة.",
+        "elimination_ar": "A، C، D تعريفات سطحية."
+      },
+      {
+        "type": "detail",
+        "q_en": "By how much does automatic enrollment increase retirement savings participation?",
+        "q_ar": "كم تزيد التسجيل التلقائي مشاركة برامج التقاعد؟",
+        "options": [
+          "From 10% to 50%",
+          "From 30% to over 90%",
+          "From 50% to 75%",
+          "From 70% to 100%"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'from roughly thirty percent to over ninety percent'.",
+        "strategy_ar": "🎯 الإحصاءات المقارنة (من X إلى Y) = دقيقة جداً.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      }
+    ]
+  },
+  {
+    "code": "lec_d06",
+    "voice": "M",
+    "level": "difficult",
+    "title_en": "The Renaissance Art Movement",
+    "title_ar": "حركة فن عصر النهضة",
+    "topic_ar": "تاريخ الفن",
+    "principle_en": "Connect historical context with stylistic innovation",
+    "principle_ar": "اربط السياق التاريخي بالابتكار الأسلوبي",
+    "transcript_en": "When we speak of the Renaissance, we refer to a cultural and intellectual movement that began in Italy in the fourteenth century and gradually spread across Europe over the next three hundred years. In art, the Renaissance represented a profound departure from medieval traditions — a shift whose influence still shapes how we perceive visual representation today. Medieval art was predominantly religious and symbolic. Figures appeared flat, perspectives were inconsistent, and human anatomy was often distorted to serve spiritual symbolism rather than realistic representation. Renaissance artists transformed this approach in three significant ways. First, they developed linear perspective — a mathematical system for representing three-dimensional space on a two-dimensional surface. The architect Filippo Brunelleschi formalized these techniques in the early fifteenth century, and painters quickly adopted them. Suddenly, paintings had depth in a way that medieval works simply did not. Second, they studied human anatomy with scientific rigor. Leonardo da Vinci's notebooks contain detailed dissection drawings that informed his celebrated paintings. This commitment to accurate anatomy produced figures that felt alive — muscles tensed, expressions nuanced, postures believable. Third, Renaissance art reintroduced classical themes from ancient Greece and Rome. While religious subjects remained common, mythology, philosophy, and secular portraits gained equal standing. Patrons commissioned works celebrating human achievement, not just divine glory. These innovations weren't merely stylistic preferences. They reflected a broader cultural conviction that human beings — their bodies, minds, and accomplishments — deserved careful attention. This worldview, called humanism, distinguished the Renaissance from the medieval period and laid intellectual foundations for modern science and philosophy.",
+    "duration_sec": 155,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the lecture mainly about?",
+        "q_ar": "عمَّ تتحدث المحاضرة بشكل رئيسي؟",
+        "options": [
+          "The biographies of Renaissance artists",
+          "How Renaissance art transformed visual representation and reflected humanist ideas",
+          "The fall of medieval Europe",
+          "Religious art throughout history"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تشرح 3 ابتكارات + ربطها بفكر النهضة الإنساني.",
+        "strategy_ar": "🎯 المحاضرات التاريخية الفنية = تحول + سبب + معنى أعمق.",
+        "elimination_ar": "A سطحي، C، D خارج."
+      },
+      {
+        "type": "detail",
+        "q_en": "Who formalized linear perspective techniques?",
+        "q_ar": "من الذي شكل تقنيات المنظور الخطي؟",
+        "options": [
+          "Leonardo da Vinci",
+          "Filippo Brunelleschi",
+          "Michelangelo",
+          "Raphael"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'The architect Filippo Brunelleschi formalized these techniques'.",
+        "strategy_ar": "🎯 الأسماء التاريخية المحددة = حفظها بدقة.",
+        "elimination_ar": "الأسماء الأخرى من العصر لكن لها أدوار مختلفة."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What is 'humanism' as described in this lecture?",
+        "q_ar": "ما 'humanism' كما وُصف في المحاضرة؟",
+        "options": [
+          "A modern political movement",
+          "A worldview holding that human beings — bodies, minds, accomplishments — deserve careful attention",
+          "A religious doctrine",
+          "A scientific theory"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'cultural conviction that human beings... deserved careful attention. This worldview, called humanism'.",
+        "strategy_ar": "🎯 المصطلحات الفلسفية = ابحث عن 'called' بعد التعريف.",
+        "elimination_ar": "A، C، D تفسيرات حديثة أو خاطئة."
+      },
+      {
+        "type": "inference",
+        "q_en": "What can be inferred about medieval art compared to Renaissance art?",
+        "q_ar": "ماذا يُستنتج عن الفن في العصور الوسطى مقارنة بفن النهضة؟",
+        "options": [
+          "Medieval art was more advanced",
+          "Medieval art prioritized spiritual symbolism over realistic representation",
+          "Medieval art used linear perspective",
+          "Medieval art focused on human anatomy"
+        ],
+        "correct": 1,
+        "explanation_ar": "ذُكر: 'distorted to serve spiritual symbolism rather than realistic representation'.",
+        "strategy_ar": "🎯 Inference بالمقارنة = ابحث عن العبارة المقارِنة بـ 'rather than'.",
+        "elimination_ar": "كل الخيارات الأخرى عكس النص."
+      }
+    ]
+  },
+  {
+    "code": "lec_d07",
+    "voice": "F",
+    "level": "difficult",
+    "title_en": "Plate Tectonics Fundamentals",
+    "title_ar": "أساسيات الصفائح التكتونية",
+    "topic_ar": "علوم الأرض",
+    "principle_en": "Connect geological processes to observable phenomena",
+    "principle_ar": "اربط العمليات الجيولوجية بالظواهر القابلة للملاحظة",
+    "transcript_en": "Plate tectonics is the unifying theory of modern geology. It explains earthquakes, volcanic eruptions, mountain formation, and the geographic distribution of fossils — phenomena that puzzled scientists for centuries. Yet plate tectonics was only widely accepted by the geological community in the 1960s, making it a remarkably recent scientific consensus. The basic premise is that Earth's outermost layer, the lithosphere, is not a single solid shell but is divided into approximately fifteen major plates. These plates float on the partially molten asthenosphere beneath them, moving at speeds of two to ten centimeters per year — comparable to how fast your fingernails grow. Three types of plate boundaries produce the geological activity we observe. At convergent boundaries, plates collide. When an oceanic plate meets a continental plate, the denser oceanic plate slides beneath the continental one — a process called subduction. This creates deep ocean trenches and volcanic mountain ranges. The Andes formed precisely this way. At divergent boundaries, plates pull apart. Magma rises from below, cooling to form new ocean floor. The Mid-Atlantic Ridge is the longest such boundary on Earth, and it actively widens the Atlantic Ocean by roughly two centimeters annually. Transform boundaries occur where plates slide horizontally past each other. The San Andreas Fault in California is the most famous example. Friction at these boundaries accumulates stress that eventually releases as earthquakes. Understanding plate tectonics has practical consequences. Predicting earthquake and volcanic risks, locating mineral deposits, and even understanding climate evolution all depend on this framework.",
+    "duration_sec": 155,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker mainly explaining?",
+        "q_ar": "عمَّ تشرح المتحدثة بشكل رئيسي؟",
+        "options": [
+          "Why earthquakes happen randomly",
+          "The fundamentals of plate tectonics and the three boundary types that explain geological activity",
+          "The history of geology as a science",
+          "How to predict volcanic eruptions"
+        ],
+        "correct": 1,
+        "explanation_ar": "المحاضرة تعرف النظرية + الفرضية + الأنواع الثلاثة + التطبيقات.",
+        "strategy_ar": "🎯 المحاضرات العلمية الموسعة = نظرية + آلية + تطبيقات.",
+        "elimination_ar": "A خاطئ (ليست عشوائية)، C، D جزئيات."
+      },
+      {
+        "type": "detail",
+        "q_en": "Approximately how many major plates exist?",
+        "q_ar": "كم عدد الصفائح الرئيسية تقريباً؟",
+        "options": [
+          "Five",
+          "Ten",
+          "Fifteen",
+          "Twenty"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر: 'approximately fifteen major plates'.",
+        "strategy_ar": "🎯 الأرقام في العلوم = دقيقة عادة.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What is 'subduction' according to the lecture?",
+        "q_ar": "ما 'subduction'؟",
+        "options": [
+          "Plates moving apart",
+          "The denser oceanic plate sliding beneath a continental plate",
+          "An earthquake occurring suddenly",
+          "Magma rising to surface"
+        ],
+        "correct": 1,
+        "explanation_ar": "التعريف المباشر: 'the denser oceanic plate slides beneath the continental one — a process called subduction'.",
+        "strategy_ar": "🎯 المصطلحات الجيولوجية = 'a process called' كمؤشر تعريفي.",
+        "elimination_ar": "A، C، D عمليات أخرى مختلفة."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker compare plate movement to fingernail growth?",
+        "q_ar": "لماذا تقارن المتحدثة حركة الصفائح بنمو الأظافر؟",
+        "options": [
+          "To suggest students measure their fingernails",
+          "To give listeners a relatable scale for understanding slow plate movement",
+          "Because both are biological processes",
+          "To recommend a science experiment"
+        ],
+        "correct": 1,
+        "explanation_ar": "التشبيه يحول الرقم المجرد (2-10 سم/سنة) إلى مرجع محسوس مألوف.",
+        "strategy_ar": "🎯 التشبيهات في المحاضرات العلمية = تبسيط للجمهور.",
+        "elimination_ar": "A، C، D تفسيرات سطحية."
+      }
+    ]
+  },
+  {
+    "code": "lec_d08",
+    "voice": "M",
+    "level": "difficult",
+    "title_en": "Ethical Issues in Artificial Intelligence",
+    "title_ar": "القضايا الأخلاقية في الذكاء الاصطناعي",
+    "topic_ar": "تكنولوجيا وأخلاق",
+    "principle_en": "Evaluate technological progress through ethical frameworks",
+    "principle_ar": "قيّم التقدم التكنولوجي عبر الأطر الأخلاقية",
+    "transcript_en": "Artificial intelligence has advanced more rapidly in the past five years than in the previous fifty. Large language models, image generators, and autonomous decision-making systems are now embedded in healthcare, finance, hiring, and criminal justice. With this progress come profound ethical questions that society is still struggling to address. Let me outline four central ethical concerns. The first is algorithmic bias. AI systems learn from historical data — and historical data often reflects past discrimination. A hiring algorithm trained on decades of male-dominated hiring decisions may systematically rank male candidates higher, even when gender isn't an explicit input. Studies have documented this pattern in real corporate systems. The second concern is accountability. When a self-driving car causes an accident, or an AI medical system misdiagnoses a patient, who bears responsibility? The programmer? The company? The user? Existing legal frameworks weren't designed for machines making consequential decisions, and adapting them is genuinely difficult. Third, transparency. Modern AI systems, particularly deep neural networks, often function as 'black boxes' — even their designers cannot fully explain why they reach specific conclusions. This opacity is troubling when AI decisions affect loan approvals, parole decisions, or medical treatments. Fourth, labor displacement. AI is automating tasks once thought uniquely human, from radiology to legal document review. Economic transitions of this scale produce both opportunity and dislocation, and managing the human cost requires policy attention now, not after the fact. None of these problems have easy solutions. But ignoring them isn't an option. As future professionals, your generation will inherit both the benefits and the burdens of these technologies.",
+    "duration_sec": 165,
+    "questions": [
+      {
+        "type": "main_idea",
+        "q_en": "What is the speaker's primary purpose?",
+        "q_ar": "ما الهدف الأساسي للمتحدث؟",
+        "options": [
+          "To advocate for banning AI",
+          "To outline the major ethical concerns raised by rapid AI development",
+          "To recommend specific AI products",
+          "To criticize all AI researchers"
+        ],
+        "correct": 1,
+        "explanation_ar": "يعرض 4 مخاوف رئيسية + ضرورة المعالجة.",
+        "strategy_ar": "🎯 محاضرات القضايا = تعداد + إلحاح.",
+        "elimination_ar": "A متطرف، C، D خارج."
+      },
+      {
+        "type": "detail",
+        "q_en": "How many central ethical concerns does the speaker outline?",
+        "q_ar": "كم مخاوف أخلاقية رئيسية حدد؟",
+        "options": [
+          "Two",
+          "Three",
+          "Four",
+          "Five"
+        ],
+        "correct": 2,
+        "explanation_ar": "ذُكر صراحة: 'four central ethical concerns' (bias, accountability, transparency, displacement).",
+        "strategy_ar": "🎯 'four central concerns' = إعلان صريح للعدد.",
+        "elimination_ar": "الأرقام الأخرى تشتيت."
+      },
+      {
+        "type": "vocab",
+        "q_en": "What does the speaker mean by 'black boxes'?",
+        "q_ar": "ما المقصود بـ 'black boxes'؟",
+        "options": [
+          "Boxes used to store AI hardware",
+          "AI systems whose internal reasoning cannot be fully explained even by their designers",
+          "Containers for sensitive data",
+          "A type of computer screen"
+        ],
+        "correct": 1,
+        "explanation_ar": "السياق: 'even their designers cannot fully explain why they reach specific conclusions'.",
+        "strategy_ar": "🎯 المصطلحات المجازية = اقرأ الجملة التفسيرية التالية.",
+        "elimination_ar": "A، C، D تفسيرات حرفية خاطئة."
+      },
+      {
+        "type": "purpose",
+        "q_en": "Why does the speaker mention that 'your generation will inherit both the benefits and the burdens'?",
+        "q_ar": "لماذا ذكر أن 'جيلكم سيرث الفوائد والأعباء'؟",
+        "options": [
+          "To frighten students",
+          "To emphasize that students bear future responsibility, motivating engagement with these issues",
+          "To recommend a specific career",
+          "To complain about previous generations"
+        ],
+        "correct": 1,
+        "explanation_ar": "الخاتمة تحفيزية تربط الطلاب بمستقبل القضية + المسؤولية.",
+        "strategy_ar": "🎯 الخواتم في المحاضرات الأخلاقية = استنفار للوعي والمسؤولية.",
+        "elimination_ar": "A، C، D عكس النبرة."
+      }
+    ]
+  }
+]

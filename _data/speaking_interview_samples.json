@@ -1,0 +1,291 @@
+{
+  "stage_info": {
+    "code": "speak_interview",
+    "title_ar": "المرحلة 3: المقابلة - Take an Interview",
+    "title_en": "Take an Interview (Task 2)",
+    "description_ar": "20 موضوع × 4 أسئلة = 80 سؤال مع تسجيل مزدوج إجباري",
+    "icon": "🎙️",
+    "duration_per_question": 45,
+    "mandatory_dual_recording": true
+  },
+  "avatars": [
+    {
+      "name": "Aria",
+      "voice": "en-US-AriaNeural",
+      "gender": "female",
+      "accent": "US",
+      "url": "https://api.dicebear.com/7.x/avataaars/svg?seed=aria&backgroundColor=b6e3f4"
+    },
+    {
+      "name": "Andrew",
+      "voice": "en-US-AndrewNeural",
+      "gender": "male",
+      "accent": "US",
+      "url": "https://api.dicebear.com/7.x/avataaars/svg?seed=andrew&backgroundColor=c0aede"
+    },
+    {
+      "name": "Emma",
+      "voice": "en-GB-SoniaNeural",
+      "gender": "female",
+      "accent": "UK",
+      "url": "https://api.dicebear.com/7.x/avataaars/svg?seed=emma&backgroundColor=ffdfbf"
+    },
+    {
+      "name": "Brian",
+      "voice": "en-GB-RyanNeural",
+      "gender": "male",
+      "accent": "UK",
+      "url": "https://api.dicebear.com/7.x/avataaars/svg?seed=brian&backgroundColor=d1d4f9"
+    }
+  ],
+  "samples": [
+    {
+      "code": "urban_life_q1",
+      "topic_code": "urban_life",
+      "topic_ar": "الحياة في المدينة",
+      "topic_en": "Urban Life",
+      "question_num": 1,
+      "pattern": "Personal Experience",
+      "pattern_ar": "تجربة شخصية",
+      "interviewer": {
+        "avatar": "Aria",
+        "voice": "en-US-AriaNeural",
+        "gender": "female",
+        "accent": "US",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=aria&backgroundColor=b6e3f4"
+      },
+      "question_en": "Tell me about a memorable experience you had while living in or visiting a big city.",
+      "question_ar": "حدّثني عن تجربة لا تُنسى مررت بها وأنت تعيش أو تزور مدينة كبيرة.",
+      "strategy_ar": "نمط 'تجربة شخصية' يتطلب: مقدمة عن الموقف → التفاصيل (من، أين، متى) → الشعور أو الأثر → الخاتمة",
+      "key_vocab": [
+        {
+          "word": "vibrant",
+          "ar": "نابض بالحياة",
+          "ipa": "/ˈvaɪbrənt/"
+        },
+        {
+          "word": "overwhelming",
+          "ar": "طاغٍ، يفوق التحمّل",
+          "ipa": "/ˌoʊvərˈwelmɪŋ/"
+        },
+        {
+          "word": "skyscraper",
+          "ar": "ناطحة سحاب",
+          "ipa": "/ˈskaɪˌskreɪpər/"
+        },
+        {
+          "word": "rush hour",
+          "ar": "ساعة الذروة",
+          "ipa": "/rʌʃ aʊər/"
+        },
+        {
+          "word": "stand out",
+          "ar": "يبرز، يميّز",
+          "ipa": "/stænd aʊt/"
+        }
+      ],
+      "answer_tier69": {
+        "text": "I remember when I visited Dubai last summer. It was my first time in such a big city. The buildings were very tall and I felt small next to them. One day, I went to the top of a big tower and I could see the whole city. There were many cars and people everywhere. The streets were busy all the time. I felt excited but also tired because there was too much noise. I think it was a good experience but I prefer quieter places for living.",
+        "word_count": 89,
+        "level_note_ar": "بسيطة، 89 كلمة، مفردات أساسية (big, tall, busy), بنية PREW واضحة. مناسبة لـ tier 59-69."
+      },
+      "answer_tier90": {
+        "text": "One experience that really stands out is my first visit to Dubai last summer. As a small-town person, the sheer scale of the city overwhelmed me. I'll never forget standing at the top of the Burj Khalifa and watching the vibrant streets below buzz like an anthill. What struck me most was the contrast between the futuristic skyscrapers and the traditional markets just blocks away. During rush hour, the energy was almost electric, though I admit it left me exhausted. That trip taught me how diverse urban life can be, and honestly, it changed how I view modern cities forever.",
+        "word_count": 102,
+        "level_note_ar": "غنية، 102 كلمة، مفردات قوية (sheer scale, overwhelmed, vibrant, buzz, anthill, futuristic), استعارات وتشبيهات. مناسبة لـ tier 90+."
+      },
+      "self_assessment_prompts_ar": [
+        "هل بدأت بـ افتتاحية واضحة (Point)؟",
+        "هل أعطيت تفاصيل محددة (وقت، مكان، أشخاص)؟",
+        "هل وصفت شعورك أو ما تعلّمته (Wrap-up)؟",
+        "هل أكملت في الـ 45 ثانية؟"
+      ]
+    },
+    {
+      "code": "remote_work_q2",
+      "topic_code": "remote_work",
+      "topic_ar": "العمل عن بُعد",
+      "topic_en": "Remote Work",
+      "question_num": 2,
+      "pattern": "Agree/Disagree",
+      "pattern_ar": "موافقة أو معارضة",
+      "interviewer": {
+        "avatar": "Andrew",
+        "voice": "en-US-AndrewNeural",
+        "gender": "male",
+        "accent": "US",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=andrew&backgroundColor=c0aede"
+      },
+      "question_en": "Some people believe working from home is more productive than working in an office. Do you agree or disagree?",
+      "question_ar": "يعتقد بعض الناس أن العمل من المنزل أكثر إنتاجية من العمل في المكتب. هل توافق أم تعارض؟",
+      "strategy_ar": "نمط 'موافقة/معارضة' يتطلب: موقف واضح → سببين → مثال محدد → خاتمة تربط بالموقف",
+      "key_vocab": [
+        {
+          "word": "productivity",
+          "ar": "إنتاجية",
+          "ipa": "/ˌproʊdʌkˈtɪvəti/"
+        },
+        {
+          "word": "commute",
+          "ar": "تنقل من وإلى العمل",
+          "ipa": "/kəˈmjuːt/"
+        },
+        {
+          "word": "distractions",
+          "ar": "تشتيتات",
+          "ipa": "/dɪˈstrækʃənz/"
+        },
+        {
+          "word": "flexibility",
+          "ar": "مرونة",
+          "ipa": "/ˌfleksəˈbɪləti/"
+        },
+        {
+          "word": "collaboration",
+          "ar": "تعاون",
+          "ipa": "/kəˌlæbəˈreɪʃən/"
+        }
+      ],
+      "answer_tier69": {
+        "text": "I agree that working from home can be more productive for many people. The main reason is that you save time from commuting. For example, my cousin works from home and he says he saves two hours every day. He uses this time to finish his work or rest. Also, at home there are fewer distractions from coworkers. You can focus on your tasks. But I think it depends on the job. Some jobs need teamwork in the office. So I agree but only for jobs that don't need much teamwork.",
+        "word_count": 94,
+        "level_note_ar": "موقف واضح، سببين، مثال شخصي، استدراك بسيط. بنية واضحة لـ tier 69."
+      },
+      "answer_tier90": {
+        "text": "I largely agree, though with some important caveats. The main argument in favor of remote work is the elimination of the daily commute, which can boost productivity by giving employees more rested hours. My cousin, for instance, recovered nearly two hours a day after switching to remote work and used that time to upskill himself. Additionally, home environments offer fewer interruptions than open-plan offices, where constant chatter drains focus. However, I do recognize that collaboration suffers when teams rarely meet face-to-face, so a hybrid model—two days in office, three at home—strikes the perfect balance for most modern workplaces.",
+        "word_count": 105,
+        "level_note_ar": "موقف نقدي متوازن، caveats، مفردات متقدمة (elimination, hybrid, upskill, open-plan, chatter), حل وسط في الخاتمة. tier 90."
+      },
+      "self_assessment_prompts_ar": [
+        "هل وضّحت موقفك من البداية (agree/disagree)؟",
+        "هل قدّمت سببين على الأقل؟",
+        "هل دعمت بمثال محدد؟",
+        "هل اعترفت بالطرف الآخر (counter-point) لإظهار النضج؟"
+      ]
+    },
+    {
+      "code": "lang_learning_q3",
+      "topic_code": "lang_learning",
+      "topic_ar": "تعلّم اللغات",
+      "topic_en": "Language Learning",
+      "question_num": 3,
+      "pattern": "Preference",
+      "pattern_ar": "تفضيل",
+      "interviewer": {
+        "avatar": "Emma",
+        "voice": "en-GB-SoniaNeural",
+        "gender": "female",
+        "accent": "UK",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=emma&backgroundColor=ffdfbf"
+      },
+      "question_en": "Do you prefer learning a new language through traditional classes or through apps like Duolingo?",
+      "question_ar": "هل تفضّل تعلّم لغة جديدة من خلال الصفوف التقليدية أم من خلال تطبيقات مثل Duolingo؟",
+      "strategy_ar": "نمط 'تفضيل' يتطلب: تفضيل واضح → سببين على الأقل → مثال → خاتمة تعزز التفضيل",
+      "key_vocab": [
+        {
+          "word": "interactive",
+          "ar": "تفاعلي",
+          "ipa": "/ˌɪntərˈæktɪv/"
+        },
+        {
+          "word": "structured",
+          "ar": "منظّم",
+          "ipa": "/ˈstrʌktʃərd/"
+        },
+        {
+          "word": "self-paced",
+          "ar": "بسرعة الفرد",
+          "ipa": "/ˌself ˈpeɪst/"
+        },
+        {
+          "word": "immerse",
+          "ar": "ينغمس",
+          "ipa": "/ɪˈmɜːrs/"
+        },
+        {
+          "word": "feedback",
+          "ar": "تغذية راجعة",
+          "ipa": "/ˈfiːdbæk/"
+        }
+      ],
+      "answer_tier69": {
+        "text": "I personally prefer learning languages through apps like Duolingo. The first reason is that apps are flexible. I can study anywhere, on the bus or before sleep. The second reason is that apps are cheaper than classes. For example, I learned Spanish using Duolingo for free. I studied 15 minutes every day and after six months I could have basic conversations. With classes, you pay a lot and you have to go at fixed times. So for me, apps are better because they save money and time.",
+        "word_count": 91,
+        "level_note_ar": "تفضيل واضح، سببان، مثال شخصي ملموس، مقارنة بسيطة. tier 69."
+      },
+      "answer_tier90": {
+        "text": "If I had to choose, I'd definitely go with apps like Duolingo, primarily for their flexibility and gamified approach. Unlike traditional classes that lock you into fixed schedules, apps let you learn at your own pace and squeeze sessions into spare moments throughout the day. Take my Spanish journey, for example—using Duolingo just fifteen minutes daily, I built conversational fluency in roughly six months, and the streak system kept me genuinely motivated. While classroom instruction does offer immediate human feedback, the cost and rigid timing make it far less practical for busy adult learners like myself.",
+        "word_count": 102,
+        "level_note_ar": "تفضيل قوي، أسلوب أدبي (Take my..., squeeze sessions, gamified, conversational fluency), اعتراف بالطرف الآخر مع تعزيز للموقف. tier 90."
+      },
+      "self_assessment_prompts_ar": [
+        "هل أعلنت تفضيلك من الجملة الأولى؟",
+        "هل قارنت بين الخيارين بوضوح؟",
+        "هل دعمت بمثال شخصي مقنع؟",
+        "هل اعترفت بالطرف الآخر باختصار قبل تأكيد تفضيلك؟"
+      ]
+    },
+    {
+      "code": "climate_change_q4",
+      "topic_code": "climate_change",
+      "topic_ar": "تغيّر المناخ",
+      "topic_en": "Climate Change",
+      "question_num": 4,
+      "pattern": "Problem-Solution",
+      "pattern_ar": "مشكلة وحل",
+      "interviewer": {
+        "avatar": "Brian",
+        "voice": "en-GB-RyanNeural",
+        "gender": "male",
+        "accent": "UK",
+        "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=brian&backgroundColor=d1d4f9"
+      },
+      "question_en": "What is one effective action individuals can take to help fight climate change in their daily lives?",
+      "question_ar": "ما هو إجراء فعّال واحد يمكن للأفراد اتخاذه لمساعدة في مكافحة تغيّر المناخ في حياتهم اليومية؟",
+      "strategy_ar": "نمط 'مشكلة-حل' يتطلب: تعريف المشكلة بإيجاز → الحل المقترح → كيف يعمل → فوائده مع مثال",
+      "key_vocab": [
+        {
+          "word": "carbon footprint",
+          "ar": "بصمة كربونية",
+          "ipa": "/ˈkɑːrbən ˈfʊtprɪnt/"
+        },
+        {
+          "word": "emissions",
+          "ar": "انبعاثات",
+          "ipa": "/ɪˈmɪʃənz/"
+        },
+        {
+          "word": "sustainable",
+          "ar": "مستدام",
+          "ipa": "/səˈsteɪnəbəl/"
+        },
+        {
+          "word": "reduce",
+          "ar": "يقلّل",
+          "ipa": "/rɪˈduːs/"
+        },
+        {
+          "word": "consumption",
+          "ar": "استهلاك",
+          "ipa": "/kənˈsʌmpʃən/"
+        }
+      ],
+      "answer_tier69": {
+        "text": "One effective action is using public transportation instead of driving alone. Cars produce a lot of pollution and this hurts the environment. If more people take buses or trains, we can reduce carbon emissions. For example, I started taking the metro to university three days a week. This saves money and also helps the planet. Another good thing is biking for short trips. It's healthy and clean. So I think individual choices about transportation can really make a difference in fighting climate change.",
+        "word_count": 88,
+        "level_note_ar": "حل واضح، تفسير بسيط، مثال شخصي، حل ثانوي مضاف. tier 69."
+      },
+      "answer_tier90": {
+        "text": "One of the most impactful actions individuals can take is significantly reducing their reliance on private cars. Transportation accounts for nearly a quarter of global carbon emissions, so shifting to public transit, cycling, or carpooling can dramatically shrink one's carbon footprint. Personally, I switched to the metro three days a week, and not only did I save money on fuel, but I also calculated that I cut my monthly emissions by almost forty percent. Small lifestyle changes like this, when adopted collectively, can drive substantial environmental progress without requiring dramatic sacrifices in our daily comfort.",
+        "word_count": 99,
+        "level_note_ar": "إحصاء (a quarter, forty percent), مفردات راقية (impactful, reliance, shrink, collectively, substantial, dramatic sacrifices), بنية متطورة. tier 90."
+      },
+      "self_assessment_prompts_ar": [
+        "هل ذكرت المشكلة باختصار في البداية؟",
+        "هل اقترحت حلاً عملياً ومحدداً؟",
+        "هل أوضحت كيف يعمل الحل أو فوائده؟",
+        "هل دعمت بمثال شخصي أو إحصاء؟"
+      ]
+    }
+  ]
+}

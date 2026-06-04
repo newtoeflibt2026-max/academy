@@ -1,0 +1,100 @@
+{
+  "id": "dl_hard_10",
+  "type": "daily_reading",
+  "tier": "hard",
+  "title_en": "Medical Procedure Consent",
+  "title_ar": "نموذج موافقة طبية",
+  "topic": "Medical",
+  "duration_seconds": 420,
+  "passage": {
+    "title_en": "MEDICAL PROCEDURE CONSENT FORM",
+    "text_en": "MEDICAL PROCEDURE CONSENT FORM — Diagnostic Endoscopy\n\nPROCEDURE OVERVIEW:\nThis minimally invasive procedure uses a flexible camera to examine internal organs. It is generally preferred over traditional exploratory surgery because it offers comparable diagnostic accuracy with significantly less invasiveness and shorter recovery time.\n\nPRE-PROCEDURE INSTRUCTIONS:\n- Fast for 8 hours before the procedure (no food or drink).\n- Blood-thinning medications must be stopped 48 hours prior, but only with   your prescribing doctor's written approval.\n- Arrange transportation home; you cannot drive for 12 hours after sedation.\n\nRECOVERY:\nMost patients resume normal activities within 24 hours. Avoid alcohol for 24 hours and heavy lifting for 48 hours. An overnight hospital stay is NOT required unless complications occur.\n\nBy signing below, you acknowledge that you understand the procedure and its alternatives."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "What must the patient do regarding blood-thinning medications?",
+      "prompt_ar": "ماذا يجب على المريض فعله بخصوص أدوية تمييع الدم؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Stop them 8 hours before"
+        },
+        {
+          "id": "B",
+          "text_en": "Stop them 48 hours before with doctor's approval"
+        },
+        {
+          "id": "C",
+          "text_en": "Continue taking them as normal"
+        },
+        {
+          "id": "D",
+          "text_en": "Stop them permanently"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "النص: 'stopped 48 hours prior, but only with your prescribing doctor's written approval'.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "Which statement about recovery is accurate?",
+      "prompt_ar": "أي عبارة عن التعافي صحيحة؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Patients can drive immediately after"
+        },
+        {
+          "id": "B",
+          "text_en": "Most resume activities within 24 hours"
+        },
+        {
+          "id": "C",
+          "text_en": "Alcohol is permitted after 12 hours"
+        },
+        {
+          "id": "D",
+          "text_en": "Patients must stay in hospital overnight"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "النص: 'Most patients resume normal activities within 24 hours'.",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "What is the main difference between this procedure and the alternative?",
+      "prompt_ar": "ما الفرق الرئيسي بين هذا الإجراء والبديل؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "Cost"
+        },
+        {
+          "id": "B",
+          "text_en": "Duration"
+        },
+        {
+          "id": "C",
+          "text_en": "Accuracy vs. invasiveness"
+        },
+        {
+          "id": "D",
+          "text_en": "Risk level"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "النص: 'comparable diagnostic accuracy with significantly less invasiveness'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "HARD"
+  }
+}

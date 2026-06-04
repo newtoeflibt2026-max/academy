@@ -1,0 +1,100 @@
+{
+  "id": "dl_medium_06",
+  "type": "daily_reading",
+  "tier": "medium",
+  "title_en": "Email from Fitness First Gym",
+  "title_ar": "بريد إلكتروني من النادي الرياضي",
+  "topic": "Fitness",
+  "duration_seconds": 300,
+  "passage": {
+    "title_en": "Changes to Your Membership",
+    "text_en": "Subject: Changes to Your Membership\n\nDear Member,\n\nStarting March 1st, we're introducing new class schedules and extended hours! Our facility will now open at 5:30 AM (previously 6:00 AM) and close at 11:00 PM on weekdays.\n\nAdditionally, all members must now reserve spots for group fitness classes through our mobile app at least 2 hours before class time. Walk-ins will only be accepted if space is available.\n\nYour current membership rate will remain unchanged for the next 12 months as a thank you for your loyalty. Questions? Reply to this email or call us at (555) 123-4567.\n\nBest regards,\nFitness First Team"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "What time will the gym open on weekdays after March 1st?",
+      "prompt_ar": "في أي ساعة سيفتح النادي أيام العمل بعد 1 مارس؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "5:30 AM"
+        },
+        {
+          "id": "B",
+          "text_en": "6:00 AM"
+        },
+        {
+          "id": "C",
+          "text_en": "11:00 PM"
+        },
+        {
+          "id": "D",
+          "text_en": "12:00 AM"
+        }
+      ],
+      "correct": "A",
+      "explanation_ar": "النص: 'open at 5:30 AM (previously 6:00 AM)'.",
+      "points": 1
+    },
+    {
+      "id": 2,
+      "type": "multiple_choice",
+      "prompt_en": "How must members reserve group fitness classes?",
+      "prompt_ar": "كيف يحجز الأعضاء حصص اللياقة الجماعية؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "By phone"
+        },
+        {
+          "id": "B",
+          "text_en": "At the front desk"
+        },
+        {
+          "id": "C",
+          "text_en": "Through the mobile app"
+        },
+        {
+          "id": "D",
+          "text_en": "By email"
+        }
+      ],
+      "correct": "C",
+      "explanation_ar": "النص: 'reserve spots ... through our mobile app'.",
+      "points": 1
+    },
+    {
+      "id": 3,
+      "type": "multiple_choice",
+      "prompt_en": "What will happen to current membership rates?",
+      "prompt_ar": "ماذا سيحدث لأسعار العضوية الحالية؟",
+      "options": [
+        {
+          "id": "A",
+          "text_en": "They will increase immediately"
+        },
+        {
+          "id": "B",
+          "text_en": "They will stay the same for 12 months"
+        },
+        {
+          "id": "C",
+          "text_en": "They will decrease"
+        },
+        {
+          "id": "D",
+          "text_en": "They will be determined later"
+        }
+      ],
+      "correct": "B",
+      "explanation_ar": "النص: 'remain unchanged for the next 12 months'.",
+      "points": 1
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.7 Daily Life",
+    "level": "MEDIUM"
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "code": "ai_future_work_tier59",
+  "title_ar": "الذكاء الاصطناعي ومستقبل العمل",
+  "title_en": "AI and the Future of Work",
+  "target_tier": "tier59",
+  "difficulty": 3,
+  "min_words": 100,
+  "time_limit_minutes": 10,
+  "topic_category": "Technology",
+  "professor_name": "Dr. Anderson",
+  "professor_title_en": "Professor of Economics",
+  "professor_avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=anderson",
+  "professor_question": "Artificial intelligence is rapidly transforming the workplace. Some experts predict that AI will eliminate millions of jobs in the coming decades, while others argue it will create new opportunities and improve productivity. Companies are increasingly using AI tools to automate tasks that were once performed by humans, ranging from customer service to data analysis. Should governments regulate the use of AI in workplaces to protect workers, or should they allow companies to adopt AI freely to maximize economic growth? What do you think? Why?",
+  "student_replies": [
+    {
+      "name": "Sarah",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=sarah",
+      "text": "I strongly believe governments should regulate AI in workplaces. Without rules, companies will replace workers with machines just to save money, leaving millions unemployed. My uncle worked at a factory for 20 years before being replaced by automated systems last year. Regulations could require companies to retrain workers or limit how fast they replace human jobs. We need to protect families and communities."
+    },
+    {
+      "name": "Michael",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=michael",
+      "text": "I disagree with Sarah. Heavy regulation will slow down innovation and make our country fall behind competitors like China. Companies should be free to adopt AI because it creates better jobs in technology fields. Yes, some jobs will disappear, but history shows new industries always emerge. Workers should adapt by learning new skills rather than expecting the government to protect outdated jobs."
+    }
+  ],
+  "model_response": "I think governments should make rules for AI in workplaces. AI is good for business, but it can hurt workers. Many people will lose jobs because of AI. This is a big problem for families. Sarah is right that we need to protect workers. My father is a taxi driver. He is afraid that self-driving cars will take his job. If we have no rules, companies will only think about money. They will not care about workers. Rules can help workers learn new jobs. The government should also give money to schools to teach AI skills. This way, workers can find new jobs. I believe rules are important for a fair society.",
+  "tier_explanation_ar": "هذا المستوى للمبتدئين (Score 3). الهدف: كتابة 100 كلمة باستخدام مفردات بسيطة وجمل قصيرة. ركّز على إعطاء رأي واضح وسبب أو سببين فقط.",
+  "phrases": {
+    "giving_opinion": [
+      {
+        "phrase": "I think that...",
+        "when_to_use_ar": "للتعبير عن الرأي - الأبسط والأكثر استخداماً"
+      },
+      {
+        "phrase": "I believe that...",
+        "when_to_use_ar": "أقوى قليلاً من I think"
+      },
+      {
+        "phrase": "In my opinion...",
+        "when_to_use_ar": "للبدء بالرأي في بداية الجملة"
+      }
+    ],
+    "giving_reasons": [
+      {
+        "phrase": "because...",
+        "when_to_use_ar": "لربط السبب بالنتيجة - الأساسي"
+      },
+      {
+        "phrase": "for example,...",
+        "when_to_use_ar": "لإعطاء مثال يدعم رأيك"
+      },
+      {
+        "phrase": "This is important because...",
+        "when_to_use_ar": "لشرح أهمية النقطة"
+      }
+    ],
+    "agreeing": [
+      {
+        "phrase": "I agree with Sarah.",
+        "when_to_use_ar": "للموافقة على رأي أحد الطلاب"
+      },
+      {
+        "phrase": "Sarah is right.",
+        "when_to_use_ar": "تعبير بسيط للموافقة"
+      }
+    ],
+    "disagreeing": [
+      {
+        "phrase": "I don't agree with Michael.",
+        "when_to_use_ar": "للاختلاف بطريقة مهذبة"
+      },
+      {
+        "phrase": "I think differently.",
+        "when_to_use_ar": "تعبير مهذب عن الاختلاف"
+      }
+    ],
+    "concluding": [
+      {
+        "phrase": "So, I believe...",
+        "when_to_use_ar": "لختام الإجابة برأي نهائي"
+      },
+      {
+        "phrase": "This is why...",
+        "when_to_use_ar": "لربط الخلاصة بالأسباب"
+      }
+    ]
+  },
+  "annotations": [
+    {
+      "label_ar": "ابدأ برأي واضح",
+      "tip_ar": "في الجملة الأولى قل رأيك مباشرة. مثال: I think governments should make rules."
+    },
+    {
+      "label_ar": "استخدم جمل قصيرة",
+      "tip_ar": "الجمل القصيرة (5-10 كلمات) أسهل وأقل أخطاء من الجمل الطويلة."
+    },
+    {
+      "label_ar": "أعطِ سببين على الأقل",
+      "tip_ar": "اذكر سببين يدعمان رأيك. مثال: AI takes jobs / Workers need help."
+    },
+    {
+      "label_ar": "اربط بزملائك",
+      "tip_ar": "اذكر اسم Sarah أو Michael مرة واحدة على الأقل (I agree with Sarah)."
+    },
+    {
+      "label_ar": "أعطِ مثال شخصي",
+      "tip_ar": "مثال من حياتك يجعل إجابتك أقوى. مثال: My father is a taxi driver."
+    },
+    {
+      "label_ar": "استخدم 'because' كثيراً",
+      "tip_ar": "كلمة because تربط السبب بالنتيجة وهي الأكثر فائدة للمبتدئين."
+    },
+    {
+      "label_ar": "تجنّب الكلمات الصعبة",
+      "tip_ar": "لا تستخدم كلمات لا تعرف إملاءها. الكلمات البسيطة أفضل."
+    },
+    {
+      "label_ar": "اكتب 100 كلمة فقط",
+      "tip_ar": "لا تحاول الكتابة أكثر من 100 كلمة - الأخطاء تزداد مع الطول."
+    },
+    {
+      "label_ar": "تحقق من الإملاء",
+      "tip_ar": "خصص آخر دقيقتين لمراجعة الكلمات الشائعة (their/there, your/you're)."
+    },
+    {
+      "label_ar": "استخدم الحرف الكبير",
+      "tip_ar": "ابدأ كل جملة بحرف كبير، وضع نقطة في النهاية."
+    },
+    {
+      "label_ar": "اختم برأيك",
+      "tip_ar": "آخر جملة يجب أن تكرر رأيك بشكل واضح."
+    },
+    {
+      "label_ar": "لا تترجم من العربية",
+      "tip_ar": "فكّر مباشرة بالإنجليزي. الترجمة تسبب أخطاء نحوية."
+    }
+  ],
+  "checklist": [
+    "أبدأت بجملة تعطي رأيي بوضوح؟",
+    "ذكرت سببين على الأقل؟",
+    "استخدمت كلمة because مرة واحدة على الأقل؟",
+    "ذكرت Sarah أو Michael؟",
+    "أعطيت مثال واحد على الأقل؟",
+    "كل جملة تبدأ بحرف كبير وتنتهي بنقطة؟",
+    "عدد الكلمات 100 على الأقل؟",
+    "راجعت الإملاء؟",
+    "أعدت ذكر رأيي في النهاية؟",
+    "جملي قصيرة وواضحة؟"
+  ],
+  "common_mistakes": [
+    {
+      "mistake_en": "I am agree with Sarah.",
+      "correct_en": "I agree with Sarah.",
+      "explanation_ar": "فعل agree لا يحتاج am/is/are قبله."
+    },
+    {
+      "mistake_en": "Government should make rule.",
+      "correct_en": "The government should make rules.",
+      "explanation_ar": "أضف 'the' قبل government، واستخدم rules (جمع)."
+    },
+    {
+      "mistake_en": "People will loses jobs.",
+      "correct_en": "People will lose jobs.",
+      "explanation_ar": "بعد will نستخدم الفعل المجرد بدون s."
+    },
+    {
+      "mistake_en": "I think AI is danger.",
+      "correct_en": "I think AI is dangerous.",
+      "explanation_ar": "danger اسم، dangerous صفة. بعد is نحتاج صفة."
+    },
+    {
+      "mistake_en": "He no have job.",
+      "correct_en": "He does not have a job.",
+      "explanation_ar": "النفي في المضارع يحتاج does not."
+    },
+    {
+      "mistake_en": "Many peoples lose jobs.",
+      "correct_en": "Many people lose jobs.",
+      "explanation_ar": "people جمع بالفعل، لا تضف s."
+    },
+    {
+      "mistake_en": "I think because AI is bad.",
+      "correct_en": "I think AI is bad because it takes jobs.",
+      "explanation_ar": "ضع because قبل السبب وليس بعد I think."
+    },
+    {
+      "mistake_en": "My father is taxi driver.",
+      "correct_en": "My father is a taxi driver.",
+      "explanation_ar": "قبل المهنة المفردة نضع 'a' أو 'an'."
+    }
+  ]
+}
