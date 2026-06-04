@@ -6,74 +6,82 @@
 <title>خطتي الدراسية | Yamen Academy</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0e27;--bg2:#151b3d;--card:#1a2150;--card2:#222a5e;--accent:#00d4ff;--accent2:#7c3aed;--gold:#fbbf24;--green:#10b981;--red:#ef4444;--txt:#e5e7eb;--muted:#94a3b8;--border:#2d3561}
+:root{
+  --bg:#f8fafc; --bg2:#eef2f7; --card:#ffffff; --card2:#fafbfd;
+  --accent:#2563eb; --accent2:#7c3aed; --gold:#d97706;
+  --green:#059669; --red:#dc2626; --txt:#1e293b; --muted:#64748b;
+  --border:#e2e8f0; --shadow:0 4px 16px rgba(15,23,42,.06); --shadow-lg:0 10px 30px rgba(15,23,42,.10)
+}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
-body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%);color:var(--txt);min-height:100vh;padding:20px;line-height:1.6}
+body{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);color:var(--txt);min-height:100vh;padding:24px;line-height:1.7;font-weight:500}
 .container{max-width:1200px;margin:0 auto}
 .loading{text-align:center;padding:60px 20px}
-.spinner{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px}
+.spinner{width:50px;height:50px;border:4px solid #e2e8f0;border-top-color:var(--accent);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 20px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.hero{background:linear-gradient(135deg,var(--card) 0%,var(--card2) 100%);border-radius:24px;padding:40px;margin-bottom:24px;border:1px solid var(--border);position:relative;overflow:hidden}
+.hero{background:linear-gradient(135deg,#ffffff 0%,#f1f5f9 100%);border-radius:24px;padding:44px;margin-bottom:24px;border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:var(--shadow-lg)}
 .hero-content{position:relative;z-index:1}
 .greeting{font-size:14px;color:var(--accent);font-weight:500;margin-bottom:8px;letter-spacing:1px}
-.student-name{font-size:36px;font-weight:900;margin-bottom:16px;color:#fff}
+.student-name{font-size:38px;font-weight:900;margin-bottom:18px;background:linear-gradient(90deg,#1e293b 0%,#2563eb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px}
 .badges{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-.badge{background:rgba(0,212,255,.1);border:1px solid var(--accent);padding:8px 16px;border-radius:50px;font-size:13px;font-weight:600;color:var(--accent)}
-.badge.gold{background:rgba(251,191,36,.1);border-color:var(--gold);color:var(--gold)}
-.badge.green{background:rgba(16,185,129,.1);border-color:var(--green);color:var(--green)}
-.badge.purple{background:rgba(124,58,237,.15);border-color:var(--accent2);color:#a78bfa}
-.badge.red{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)}
+.badge{background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.25);padding:9px 18px;border-radius:50px;font-size:13px;font-weight:600;color:var(--accent);transition:transform .15s}
+.badge.gold{background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.25);color:var(--gold)}
+.badge.green{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.25);color:var(--green)}
+.badge.purple{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.25);color:var(--accent2)}
+.badge.red{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.25);color:var(--red)}
 .countdown-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
-.countdown-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center}
-.countdown-num{font-size:42px;font-weight:900;color:var(--gold);line-height:1}
+.countdown-card{background:#ffffff;border:1px solid var(--border);border-radius:18px;padding:24px;text-align:center;box-shadow:var(--shadow)}
+.countdown-num{font-size:44px;font-weight:900;color:var(--accent);line-height:1;letter-spacing:-1px}
 .countdown-label{font-size:13px;color:var(--muted);margin-top:6px}
 .section{margin-bottom:32px}
 .section-title{font-size:22px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.section-title .icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.section-title .icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;font-weight:900;box-shadow:0 4px 10px rgba(37,99,235,.25)}
 .toefl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.toefl-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;transition:transform .2s,border-color .2s}
-.toefl-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.toefl-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;transition:all .25s;box-shadow:var(--shadow)}
+.toefl-card:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:var(--shadow-lg)}
 .toefl-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .toefl-card .name{font-size:18px;font-weight:700}
-.toefl-card .time{background:rgba(0,212,255,.1);color:var(--accent);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.toefl-card .time{background:rgba(37,99,235,.1);color:var(--accent);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700}
 .toefl-card .tasks{list-style:none;padding:0}
-.toefl-card .tasks li{padding:8px 0;font-size:14px;color:var(--muted);border-bottom:1px dashed var(--border)}
+.toefl-card .tasks li{padding:10px 0;font-size:14px;color:var(--txt);border-bottom:1px dashed var(--border);font-weight:500}
 .toefl-card .tasks li:last-child{border-bottom:0}
 .toefl-card .tasks li::before{content:"▸ ";color:var(--accent);font-weight:700}
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.skill-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow);transition:all .25s}
+.skill-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
 .skill-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .skill-name{font-size:18px;font-weight:700}
 .skill-count{font-size:24px;font-weight:900;color:var(--accent)}
 .skill-count small{font-size:14px;color:var(--muted);font-weight:500}
-.progress-bar{height:10px;background:var(--bg);border-radius:10px;overflow:hidden;margin-top:12px}
+.progress-bar{height:10px;background:#f1f5f9;border-radius:10px;overflow:hidden;margin-top:14px}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:10px;transition:width .8s ease}
 .skill-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
-.skill-tag{display:inline-block;padding:3px 10px;background:rgba(124,58,237,.15);color:#a78bfa;border-radius:10px;font-size:11px;font-weight:600;margin-top:6px}
+.skill-tag{display:inline-block;padding:4px 12px;background:rgba(124,58,237,.08);color:var(--accent2);border-radius:10px;font-size:11px;font-weight:700;margin-top:6px;border:1px solid rgba(124,58,237,.2)}
 .coming-soon{opacity:.65}
 .coming-soon .skill-count{color:var(--muted)}
-.journey{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px}
+.journey{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:32px;box-shadow:var(--shadow)}
 .journey-bar{display:flex;align-items:center;justify-content:space-between;position:relative;margin:30px 0 20px}
 .journey-bar::before{content:"";position:absolute;top:50%;left:5%;right:5%;height:3px;background:var(--border);transform:translateY(-50%);z-index:0}
 .j-step{position:relative;z-index:1;text-align:center;flex:1}
-.j-circle{width:56px;height:56px;background:var(--bg);border:3px solid var(--border);border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:var(--muted)}
-.j-circle.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent);color:#fff}
+.j-circle{width:60px;height:60px;background:#fff;border:3px solid var(--border);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:var(--muted);box-shadow:var(--shadow)}
+.j-circle.active{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.35);transform:scale(1.1)}
 .j-circle.done{background:var(--green);border-color:var(--green);color:#fff}
 .j-label{font-size:12px;color:var(--muted);font-weight:600}
 .j-step.active .j-label{color:var(--accent)}
-.reminder{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(124,58,237,.1));border:1px solid var(--accent);border-radius:18px;padding:24px;text-align:center}
-.reminder-num{font-size:48px;font-weight:900;color:var(--accent);margin:8px 0}
+.reminder{background:linear-gradient(135deg,#dbeafe 0%,#ede9fe 100%);border:1px solid rgba(37,99,235,.2);border-radius:18px;padding:32px;text-align:center;box-shadow:var(--shadow)}
+.reminder-num{font-size:56px;font-weight:900;color:var(--accent);margin:10px 0;letter-spacing:-2px}
 .reminder-text{font-size:15px;color:var(--txt);line-height:1.7}
-.reminder-text strong{color:var(--gold)}
-.scoring{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px}
+.reminder-text strong{color:var(--accent2);font-weight:700}
+.scoring{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:var(--shadow)}
 .band-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:16px}
-.band{text-align:center;padding:12px 4px;border-radius:10px;background:var(--bg);border:1px solid var(--border)}
+.band{text-align:center;padding:16px 6px;border-radius:12px;background:#f8fafc;border:1px solid var(--border);transition:all .2s}
 .band-num{font-size:18px;font-weight:900;color:var(--accent)}
 .band-cefr{font-size:11px;color:var(--muted);margin-top:4px}
 .cta-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
 .btn{padding:16px 24px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;cursor:pointer;border:none;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
-.btn-secondary{background:rgba(255,255,255,.06);color:var(--txt);border:1px solid var(--border)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.3);transition:all .2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(37,99,235,.4)}
+.btn-secondary{background:#ffffff;color:var(--txt);border:1px solid var(--border);box-shadow:var(--shadow);transition:all .2s}
+.btn-secondary:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--accent)}
 @media(max-width:640px){.student-name{font-size:26px}.countdown-num{font-size:32px}.cta-row{grid-template-columns:1fr}.band-row{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
