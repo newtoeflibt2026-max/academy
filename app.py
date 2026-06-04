@@ -5749,6 +5749,8 @@ except Exception as _e:
 def api_student_welcome_data():
     """يرجع بيانات شاملة وديناميكية لصفحة الترحيب/خطتي الدراسية."""
     try:
+        import sqlite3
+        from datetime import datetime as _dt
         student_id = request.args.get("student_id", "").strip()
         if not student_id:
             return jsonify({"error": "student_id required"}), 400
