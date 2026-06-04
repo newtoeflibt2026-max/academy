@@ -19,10 +19,105 @@ def register_admin_routes(app):
     def admin_dashboard():
         template_path = os.path.join(app.root_path, "templates", "admin_dashboard.html")
         if os.path.exists(template_path):
-            return render_template("admin_dashboard.html")
+            return render_template("admin.html")
         return "<h1>لوحة التحكم</h1><p>ملف admin_dashboard.html غير موجود في templates/</p>", 200
 
     # ─── Stats ───────────────────────────────────────────────────
+    
+    # ─── Admin CTW Page ──────────────────────────────────────────
+    @app.route("/admin/ctw")
+    def admin_ctw_view():
+        return render_template("admin_ctw.html")
+
+    # ─── Home Page ───────────────────────────────────────────────
+    
+        @app.route("/foundation")
+        def foundation_view():
+            user_id = request.args.get("user_id", "")
+            return render_template("coming_soon.html", section_name="التأسيس", user_id=user_id)
+
+        @app.route("/home")
+        def home_view():
+            user_id = request.args.get("user_id", "")
+            try: uid = int(user_id)
+            except: uid = 0
+
+            import sqlite3, os, glob
+            db_path = "/app/data/academy.db" if os.path.exists("/app/data/academy.db") else "academy.db"
+            conn = sqlite3.connect(db_path); conn.row_factory = sqlite3.Row
+
+            row = conn.execute("SELECT * FROM students WHERE user_id=?", (uid,)).fetchone()
+            student = dict(row) if row else {}
+
+            # REAL scores from DB
+            target_score = int(student.get("target_score") or 0) or 100
+            placement_score = float(student.get("placement_score") or 0)
+            mock_score = float(student.get("mock_score") or 0)
+            current_score = int(max(placement_score, mock_score))
+
+            # Sections progress
+            def count_json(folder):
+                try: return len(glob.glob(os.path.join(folder, "*.json")))
+                except: return 0
+
+            foundation_total = count_json("content/lessons") - count_json("content/lessons/speaking")
+            if foundation_total < 0: foundation_total = 5
+            reading_total   = count_json("content/reading/academic") + count_json("content/reading/daily_life") + count_json("content/reading/campus")
+            if reading_total == 0: reading_total = 22
+            writing_total   = 5 + 15 + 5
+            listening_total = 0
+            speaking_total  = count_json("content/lessons/speaking") or 6
+
+            try:
+                reading_done = conn.execute(
+                    "SELECT COUNT(DISTINCT content_id) FROM reading_attempts WHERE telegram_id=? AND status='submitted'",
+                    (uid,)
+                ).fetchone()[0]
+            except: reading_done = 0
+
+            sections = {
+                "foundation": {"done": 0, "total": max(foundation_total,1), "pct": 0},
+                "reading":    {"done": reading_done, "total": max(reading_total,1), "pct": int(reading_done*100/max(reading_total,1))},
+                "writing":    {"done": 0, "total": writing_total, "pct": 0},
+                "listening":  {"done": 0, "total": max(listening_total,1), "pct": 0},
+                "speaking":   {"done": 0, "total": max(speaking_total,1), "pct": 0},
+            }
+
+            conn.close()
+
+            student.update({
+                "name": student.get("full_name") or "طالب",
+                "user_id": uid,
+                "target_score": target_score,
+                "current_score": current_score,
+                "hearts": student.get("hearts", 5),
+                "xp": student.get("xp", 0),
+                "streak": student.get("streak", 0),
+                "level": student.get("level", "beginner"),
+            })
+
+            return render_template("home.html", student=student, sections=sections, user_id=user_id)
+
+        @app.route("/api/set-goal", methods=["POST"])
+        def api_set_goal():
+            from flask import jsonify
+            data = request.get_json(silent=True) or {}
+            uid = int(data.get("user_id") or 0)
+            target = int(data.get("target_score") or 0)
+            if uid == 0 or target < 60 or target > 120:
+                return jsonify({"ok": False, "error": "invalid"}), 400
+            import sqlite3, os
+            db = "/app/data/academy.db" if os.path.exists("/app/data/academy.db") else "academy.db"
+            conn = sqlite3.connect(db)
+            conn.execute("UPDATE students SET target_score=? WHERE user_id=?", (target, uid))
+            conn.commit(); conn.close()
+            return jsonify({"ok": True, "target_score": target})
+
+
+    # [REMOVED] /listening placeholder - now handled by routes/listening.py blueprint
+
+    # [REMOVED] /speaking placeholder - now handled by routes/speaking.py blueprint
+
     @app.route("/api/admin/stats", methods=["GET"])
     def api_stats():
         try:
@@ -388,6 +483,27 @@ def register_admin_routes(app):
             conn.commit()
             conn.close()
             return jsonify({"ok": True, "is_active": new_val})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    # ─── Reading Stats (Phase 7) ─────────────────────────────────
+    @app.route("/api/admin/reading-stats", methods=["GET"])
+    def api_admin_reading_stats():
+        import sqlite3
+        try:
+            db_path = "/app/data/academy.db" if os.path.exists("/app/data/academy.db") else "academy.db"
+            c = sqlite3.connect(db_path); c.row_factory = sqlite3.Row
+            total = c.execute("SELECT COUNT(*) FROM reading_attempts WHERE status='completed'").fetchone()[0]
+            avg_pct_row = c.execute("SELECT AVG(score*100.0/total) FROM reading_attempts WHERE status='completed' AND total>0").fetchone()
+            avg_pct = round(avg_pct_row[0], 1) if avg_pct_row[0] is not None else 0
+            by_type = []
+            for r in c.execute("SELECT content_type, COUNT(*) AS cnt, ROUND(AVG(score*100.0/total),1) AS avg_pct FROM reading_attempts WHERE status='completed' AND total>0 GROUP BY content_type"):
+                by_type.append({"type": r["content_type"], "count": r["cnt"], "avg_pct": r["avg_pct"]})
+            recent = []
+            for r in c.execute("SELECT attempt_id, student_id, content_id, content_type, score, total, ROUND(score*100.0/total) AS pct, finished_at FROM reading_attempts WHERE status='completed' AND total>0 ORDER BY attempt_id DESC LIMIT 10"):
+                recent.append(dict(r))
+            c.close()
+            return jsonify({"total_attempts": total, "avg_percentage": avg_pct, "by_type": by_type, "recent": recent})
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
