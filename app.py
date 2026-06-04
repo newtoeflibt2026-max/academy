@@ -34,6 +34,14 @@ from db import (get_db, get_all_students_db, get_student,
 
 app = Flask(__name__)
 
+try:
+    from admin_routes import register_admin_routes
+    register_admin_routes(app)
+    print("[OK] admin_routes registered")
+except Exception as _e:
+    print("[WARN] admin_routes:", _e)
+
+
 # ===== Health check (production-required) =====
 @app.route("/health")
 def _health_check():
@@ -46,7 +54,6 @@ def _health_check():
         return jsonify({"ok": True, "db": "connected", "students": cnt, "db_path": DB_PATH}), 200
     except Exception as e:
         return jsonify({"ok": False, "db": "error", "detail": str(e)}), 503
-
 
 
 # === TOEFL Writing Blueprint (Phase 2) ===
@@ -639,11 +646,6 @@ except Exception as _e:
 # ===== End Phase 13.3 =====
 
 
-
-
-
-
-
 # ===== Phase 12E-3 v2: Stage Exam enhancements =====
 def _ensure_stage_exam_v2_columns():
     """Add concept_ar, explanation_ar, trap_ar, review_lesson_id, review_lesson_title columns."""
@@ -703,10 +705,7 @@ except Exception as _e:
 # ===== End Phase 12E-3 v2 =====
 
 
-
-
-
-@app.route("/")
+@app.route("/_disabled_root")
 def index():
     from flask import render_template
     return render_template("admin_dashboard.html")
@@ -717,8 +716,8 @@ def student():
     sid = request.args.get("student_id", "") or request.args.get("user_id", "")
     return render_template("student_dashboard.html", user_id=sid, student_id=sid)
 
-@app.route("/api/admin/stats")
-def api_stats():
+@app.route("/_DUP_api_admin_stats")
+def api_stats_DISABLED():
     conn = get_db()
     try:
         total    = conn.execute("SELECT COUNT(*) FROM students").fetchone()[0]
@@ -733,8 +732,8 @@ def api_stats():
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Students Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/students")
-def api_students():
+@app.route("/_DUP_api/admin/students")
+def api_students_DUP_DISABLED():
     q = request.args.get("q","").strip()
     conn = get_db()
     try:
@@ -748,8 +747,8 @@ def api_students():
     finally:
         conn.close()
 
-@app.route("/api/admin/students/<int:uid>")
-def api_student_detail(uid):
+@app.route("/_DUP_api/admin/students/<int:uid>")
+def api_student_detail_DUP_DISABLED(uid):
     conn = get_db()
     try:
         row = conn.execute("SELECT * FROM students WHERE telegram_id=?", (uid,)).fetchone()
@@ -768,8 +767,8 @@ def api_deactivate_paid(uid):
     deactivate_paid(uid)
     return jsonify({"ok": True})
 
-@app.route("/api/admin/students/<int:uid>/toggle-active", methods=["POST"])
-def api_toggle_active(uid):
+@app.route("/_DUP_api/admin/students/<int:uid>/toggle-active", methods=["POST"])
+def api_toggle_active_DUP_DISABLED(uid):
     conn = get_db()
     try:
         row = conn.execute("SELECT is_active FROM students WHERE telegram_id=?", (uid,)).fetchone()
@@ -782,8 +781,8 @@ def api_toggle_active(uid):
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Questions Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/questions", methods=["GET"])
-def api_get_questions():
+@app.route("/_DUP_api/admin/questions", methods=["GET"])
+def api_get_questions_DUP_DISABLED():
     skill = request.args.get("skill","")
     conn = get_db()
     try:
@@ -795,8 +794,8 @@ def api_get_questions():
     finally:
         conn.close()
 
-@app.route("/api/admin/questions", methods=["POST"])
-def api_add_question():
+@app.route("/_DUP_api/admin/questions", methods=["POST"])
+def api_add_question_DUP_DISABLED():
     d = request.json or {}
     conn = get_db()
     try:
@@ -812,8 +811,8 @@ def api_add_question():
     finally:
         conn.close()
 
-@app.route("/api/admin/questions/<int:qid>", methods=["DELETE"])
-def api_delete_question(qid):
+@app.route("/_DUP_api/admin/questions/<int:qid>", methods=["DELETE"])
+def api_delete_question_DUP_DISABLED(qid):
     conn = get_db()
     try:
         conn.execute("DELETE FROM questions WHERE id=?", (qid,))
@@ -877,8 +876,8 @@ def api_delete_lesson(lid):
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Missions Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/missions", methods=["GET"])
-def api_get_missions():
+@app.route("/_DUP_api/admin/missions", methods=["GET"])
+def api_get_missions_DUP_DISABLED():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM daily_missions ORDER BY id DESC").fetchall()
@@ -886,8 +885,8 @@ def api_get_missions():
     finally:
         conn.close()
 
-@app.route("/api/admin/missions", methods=["POST"])
-def api_add_mission():
+@app.route("/_DUP_api/admin/missions", methods=["POST"])
+def api_add_mission_DUP_DISABLED():
     d = request.json or {}
     conn = get_db()
     try:
@@ -900,8 +899,8 @@ def api_add_mission():
     finally:
         conn.close()
 
-@app.route("/api/admin/missions/<int:mid>", methods=["DELETE"])
-def api_delete_mission(mid):
+@app.route("/_DUP_api/admin/missions/<int:mid>", methods=["DELETE"])
+def api_delete_mission_DUP_DISABLED(mid):
     conn = get_db()
     try:
         conn.execute("DELETE FROM daily_missions WHERE id=?", (mid,))
@@ -911,8 +910,8 @@ def api_delete_mission(mid):
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Plans Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/plans", methods=["GET"])
-def api_get_plans():
+@app.route("/_DUP_api/admin/plans", methods=["GET"])
+def api_get_plans_DUP_DISABLED():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM subscription_plans ORDER BY price").fetchall()
@@ -920,8 +919,8 @@ def api_get_plans():
     finally:
         conn.close()
 
-@app.route("/api/admin/plans", methods=["POST"])
-def api_add_plan():
+@app.route("/_DUP_api/admin/plans", methods=["POST"])
+def api_add_plan_DUP_DISABLED():
     d = request.json or {}
     conn = get_db()
     try:
@@ -937,8 +936,8 @@ def api_add_plan():
     finally:
         conn.close()
 
-@app.route("/api/admin/plans/<int:pid>", methods=["PUT"])
-def api_update_plan(pid):
+@app.route("/_DUP_api/admin/plans/<int:pid>", methods=["PUT"])
+def api_update_plan_DUP_DISABLED(pid):
     d = request.json or {}
     conn = get_db()
     try:
@@ -954,8 +953,8 @@ def api_update_plan(pid):
     finally:
         conn.close()
 
-@app.route("/api/admin/plans/<int:pid>", methods=["DELETE"])
-def api_delete_plan(pid):
+@app.route("/_DUP_api/admin/plans/<int:pid>", methods=["DELETE"])
+def api_delete_plan_DUP_DISABLED(pid):
     conn = get_db()
     try:
         conn.execute("DELETE FROM subscription_plans WHERE id=?", (pid,))
@@ -964,8 +963,8 @@ def api_delete_plan(pid):
     finally:
         conn.close()
 
-@app.route("/api/admin/plans/<int:pid>/toggle", methods=["POST"])
-def api_toggle_plan(pid):
+@app.route("/_DUP_api/admin/plans/<int:pid>/toggle", methods=["POST"])
+def api_toggle_plan_DUP_DISABLED(pid):
     conn = get_db()
     try:
         row = conn.execute("SELECT is_active FROM subscription_plans WHERE id=?", (pid,)).fetchone()
@@ -978,8 +977,8 @@ def api_toggle_plan(pid):
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Payments Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/payments", methods=["GET"])
-def api_get_payments():
+@app.route("/_DUP_api/admin/payments", methods=["GET"])
+def api_get_payments_DUP_DISABLED():
     conn = get_db()
     try:
         rows = conn.execute("""SELECT p.*, s.full_name, s.username
@@ -989,8 +988,8 @@ def api_get_payments():
     finally:
         conn.close()
 
-@app.route("/api/admin/payments/<int:pid>/verify", methods=["POST"])
-def api_verify_payment(pid):
+@app.route("/_DUP_api/admin/payments/<int:pid>/verify", methods=["POST"])
+def api_verify_payment_DUP_DISABLED(pid):
     conn = get_db()
     try:
         row = conn.execute("SELECT user_id FROM payments WHERE id=?", (pid,)).fetchone()
@@ -1003,8 +1002,8 @@ def api_verify_payment(pid):
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Settings Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/settings", methods=["GET"])
-def api_get_settings():
+@app.route("/_DUP_api/admin/settings", methods=["GET"])
+def api_get_settings_DUP_DISABLED():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM system_settings").fetchall()
@@ -1012,16 +1011,16 @@ def api_get_settings():
     finally:
         conn.close()
 
-@app.route("/api/admin/settings", methods=["POST"])
-def api_update_settings():
+@app.route("/_DUP_api/admin/settings", methods=["POST"])
+def api_update_settings_DUP_DISABLED():
     d = request.json or {}
     for key, value in d.items():
         set_setting(key, str(value))
     return jsonify({"ok": True})
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Phase settings Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/admin/phases", methods=["GET"])
-def api_get_phases():
+@app.route("/_DUP_api/admin/phases", methods=["GET"])
+def api_get_phases_DUP_DISABLED():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM phase_settings ORDER BY phase_number").fetchall()
@@ -1029,8 +1028,8 @@ def api_get_phases():
     finally:
         conn.close()
 
-@app.route("/api/admin/phases/<int:phase_num>", methods=["PUT"])
-def api_update_phase(phase_num):
+@app.route("/_DUP_api/admin/phases/<int:phase_num>", methods=["PUT"])
+def api_update_phase_DUP_DISABLED(phase_num):
     d = request.json or {}
     conn = get_db()
     try:
@@ -1104,8 +1103,8 @@ def api_student_message():
         conn.close()
 
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Public endpoints Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-@app.route("/api/public/plans", methods=["GET"])
-def api_public_plans():
+@app.route("/_DUP_api/public/plans", methods=["GET"])
+def api_public_plans_DUP_DISABLED():
     conn = get_db()
     try:
         rows = conn.execute("SELECT * FROM subscription_plans WHERE is_active=1 ORDER BY price").fetchall()
@@ -1414,7 +1413,6 @@ def api_send_message_to_student(uid):
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 
 # Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
@@ -1934,7 +1932,6 @@ def api_student_complete_lesson(lid):
         conn.close()
 
 
-
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Student Profile by ID (for student_dashboard) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 @app.route("/api/student/<int:uid>", methods=["GET"])
 def api_student_by_id(uid):
@@ -1986,8 +1983,8 @@ def api_leaderboard():
         conn.close()
 
 
-@app.route("/api/user/graduation-status", methods=["GET"])
-def api_graduation_status():
+@app.route("/_DUP_api/user/graduation-status", methods=["GET"])
+def api_graduation_status_DUP_DISABLED():
     """Returns graduation eligibility for a student."""
     sid = request.args.get("student_id", type=int)
     if not sid:
@@ -2012,13 +2009,11 @@ def api_graduation_status():
         conn.close()
 
 
-
 # Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Lesson detail page Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 @app.route("/lesson/<int:lid>")
 def lesson_page(lid):
     """Serves the full lesson page for students."""
     return render_template("lesson_view.html", lesson_id=lid)
-
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -2173,9 +2168,6 @@ def _get_next_lesson(cur, sid, skill=None):
         "cooldown_until": cooldown["until"],
         "cooldown_seconds": cooldown["seconds"],
     }
-
-
-
 
 
 # ===================== Phase 11B: Auto-Migration =====================
@@ -2589,7 +2581,6 @@ def miniapp_plans():
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 #  End of Mini App APIs
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-
 
 
 # ============ PHASE 4B: QUIZ ROUTES + APIs ============
@@ -3302,7 +3293,6 @@ def api_admin_weekly_task_action(tid):
 # ===================== End Weekly Tasks =====================
 
 
-
 @app.route("/api/admin/stages/list")
 def api_admin_stages_list_alias():
     """Alias: /api/admin/stages/list -> api_admin_stages (used by admin.html)."""
@@ -3496,12 +3486,10 @@ def api_student_weekly_task_current():
 # ===================== End Phase 11C =====================
 
 
-
 @app.route('/weekly-task')
 def page_weekly_task():
     """صفحة المهمة الأسبوعية للطالب"""
     return render_template('weekly-task.html')
-
 
 
 # ============================================================
@@ -3952,6 +3940,186 @@ def api_admin_dashboard_stats():
 
 
 
+# ============================================================
+# ADMIN PROGRESS OVERVIEW (Phase: Student Progress Display)
+# ============================================================
+@app.route("/api/admin/students/progress-overview", methods=["GET"])
+def api_admin_students_progress_overview():
+    """Returns all students with their progress % in 4 skills."""
+    try:
+        import sqlite3 as _sq
+        conn = _miniapp_db()
+        conn.row_factory = _sq.Row
+        cur = conn.cursor()
+
+        # Compute totals per skill (cached once)
+        totals = {"reading": 0, "listening": 0, "speaking": 0, "writing": 0}
+        try:
+            for tbl in ["listening_lessons","listening_choose_response","listening_conversation","listening_announcement","listening_academic_talk"]:
+                try:
+                    cur.execute(f"SELECT COUNT(*) FROM {tbl} WHERE is_active=1")
+                    totals["listening"] += cur.fetchone()[0] or 0
+                except Exception: pass
+        except Exception: pass
+        try:
+            cur.execute("SELECT COUNT(*) FROM speaking_v2_lessons")
+            totals["speaking"] = cur.fetchone()[0] or 0
+        except Exception: pass
+        try:
+            cur.execute("SELECT COUNT(*) FROM writing_lessons WHERE is_exam=0")
+            totals["writing"] = cur.fetchone()[0] or 0
+        except Exception: pass
+        try:
+            # Reading: approximate using reading_attempts distinct lessons
+            cur.execute("SELECT COUNT(DISTINCT lesson_id) FROM reading_attempts")
+            r_distinct = cur.fetchone()[0] or 0
+            totals["reading"] = max(r_distinct, 1)
+        except Exception:
+            totals["reading"] = 1
+
+        # All students
+        cur.execute("SELECT user_id, full_name, level, created_at FROM students ORDER BY rowid DESC")
+        students = [dict(r) for r in cur.fetchall()]
+
+        for s in students:
+            uid = str(s["user_id"])
+            # Listening
+            try:
+                cur.execute("SELECT COUNT(*) FROM listening_progress WHERE telegram_id=? AND status='completed'", (uid,))
+                s["listening_done"] = cur.fetchone()[0] or 0
+            except Exception: s["listening_done"] = 0
+            # Speaking
+            try:
+                cur.execute("SELECT COUNT(*) FROM speaking_v2_progress WHERE user_id=? AND status='completed'", (uid,))
+                s["speaking_done"] = cur.fetchone()[0] or 0
+            except Exception: s["speaking_done"] = 0
+            # Writing
+            try:
+                cur.execute("SELECT COUNT(*) FROM writing_progress WHERE telegram_id=? AND status='completed'", (uid,))
+                s["writing_done"] = cur.fetchone()[0] or 0
+            except Exception: s["writing_done"] = 0
+            # Reading
+            try:
+                cur.execute("SELECT COUNT(DISTINCT lesson_id) FROM reading_attempts WHERE user_id=?", (uid,))
+                s["reading_done"] = cur.fetchone()[0] or 0
+            except Exception: s["reading_done"] = 0
+
+            s["listening_total"] = totals["listening"]
+            s["speaking_total"]  = totals["speaking"]
+            s["writing_total"]   = totals["writing"]
+            s["reading_total"]   = totals["reading"]
+
+            def _pct(d, t): return int(d*100/t) if t else 0
+            s["listening_pct"] = _pct(s["listening_done"], s["listening_total"])
+            s["speaking_pct"]  = _pct(s["speaking_done"],  s["speaking_total"])
+            s["writing_pct"]   = _pct(s["writing_done"],   s["writing_total"])
+            s["reading_pct"]   = _pct(s["reading_done"],   s["reading_total"])
+            s["overall_pct"]   = int((s["listening_pct"] + s["speaking_pct"] + s["writing_pct"] + s["reading_pct"]) / 4)
+
+        conn.close()
+        return jsonify({"students": students, "totals": totals})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e), "students": []}), 500
+
+
+@app.route("/api/admin/students/<user_id>/journey-detail", methods=["GET"])
+def api_admin_student_journey_detail(user_id):
+    """Returns all completed lessons for one student (across 4 skills)."""
+    try:
+        import sqlite3 as _sq
+        conn = _miniapp_db()
+        conn.row_factory = _sq.Row
+        cur = conn.cursor()
+        uid = str(user_id)
+
+        result = {"listening": [], "speaking": [], "writing": [], "reading": []}
+
+        # Listening: join with lesson tables to get titles
+        stage_tables = {
+            1: ("listening_lessons", "title_en", "title_ar"),
+            2: ("listening_choose_response", "title_en", None),
+            3: ("listening_conversation", "title_en", "topic_ar"),
+            4: ("listening_announcement", "title_en", None),
+            5: ("listening_academic_talk", "title_en", "topic_ar"),
+        }
+        try:
+            cur.execute("SELECT stage_id, lesson_id, status, best_score, completed_at FROM listening_progress WHERE telegram_id=? AND status='completed' ORDER BY completed_at DESC", (uid,))
+            for r in cur.fetchall():
+                sid, lid = r["stage_id"], r["lesson_id"]
+                title = f"Stage {sid} - Lesson {lid}"
+                if sid in stage_tables:
+                    tbl, t_en, t_ar = stage_tables[sid]
+                    try:
+                        cur2 = conn.cursor()
+                        cur2.execute(f"SELECT {t_en} as t FROM {tbl} WHERE id=?", (lid,))
+                        rr = cur2.fetchone()
+                        if rr and rr["t"]: title = rr["t"]
+                    except Exception: pass
+                result["listening"].append({
+                    "title": title, "stage": sid, "lesson_id": lid,
+                    "score": r["best_score"] or 0, "completed_at": r["completed_at"]
+                })
+        except Exception: pass
+
+        # Speaking
+        try:
+            cur.execute("""SELECT p.lesson_id, p.score, p.completed_at, l.title_ar
+                           FROM speaking_v2_progress p
+                           LEFT JOIN speaking_v2_lessons l ON l.id=p.lesson_id
+                           WHERE p.user_id=? AND p.status='completed'
+                           ORDER BY p.completed_at DESC""", (uid,))
+            for r in cur.fetchall():
+                result["speaking"].append({
+                    "title": r["title_ar"] or f"Lesson {r['lesson_id']}",
+                    "lesson_id": r["lesson_id"],
+                    "score": r["score"] or 0,
+                    "completed_at": r["completed_at"]
+                })
+        except Exception: pass
+
+        # Writing
+        try:
+            cur.execute("""SELECT p.lesson_id, p.status, p.score, p.completed_at, l.title_ar
+                           FROM writing_progress p
+                           LEFT JOIN writing_lessons l ON l.id=p.lesson_id
+                           WHERE p.telegram_id=? AND p.status='completed'
+                           ORDER BY p.completed_at DESC""", (uid,))
+            for r in cur.fetchall():
+                result["writing"].append({
+                    "title": r["title_ar"] or f"Lesson {r['lesson_id']}",
+                    "lesson_id": r["lesson_id"],
+                    "score": r["score"] or 0,
+                    "completed_at": r["completed_at"]
+                })
+        except Exception: pass
+
+        # Reading
+        try:
+            cur.execute("""SELECT lesson_id, MAX(score) as best_score, MAX(created_at) as last_at, COUNT(*) as attempts
+                           FROM reading_attempts WHERE user_id=?
+                           GROUP BY lesson_id ORDER BY last_at DESC""", (uid,))
+            for r in cur.fetchall():
+                result["reading"].append({
+                    "title": f"Reading Lesson {r['lesson_id']}",
+                    "lesson_id": r["lesson_id"],
+                    "score": r["best_score"] or 0,
+                    "attempts": r["attempts"],
+                    "completed_at": r["last_at"]
+                })
+        except Exception: pass
+
+        # Student basic info
+        cur.execute("SELECT user_id, full_name, level, created_at FROM students WHERE user_id=?", (uid,))
+        sinfo = cur.fetchone()
+        student = dict(sinfo) if sinfo else {"user_id": uid, "full_name": "Unknown"}
+
+        conn.close()
+        return jsonify({"student": student, "progress": result})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
 
 # ============================================================
 # PHASE 12B: PATHS, GRADUATION, MASTERY LEARNING
@@ -4184,10 +4352,241 @@ def api_admin_student_journey(user_id):
         return jsonify({"error": str(e)}), 500
 
 
-
-
-
 # ═══════════════════════════════════════════════
+
+# ════════════════════════════════════════════════════════════
+# DEEP STUDENT ANALYSIS — for admin decision-making (graduation gate)
+# ════════════════════════════════════════════════════════════
+@app.route("/api/admin/students/<user_id>/deep-analysis", methods=["GET"])
+def api_admin_student_deep_analysis(user_id):
+    import sqlite3, json as _json
+    from datetime import datetime as _dt, timedelta as _td
+    try:
+        conn = _miniapp_db()
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+
+        # === Student basics ===
+        cur.execute("""SELECT user_id, full_name, current_path, level, xp_total, streak_days,
+                              graduation_unlocked, graduated, graduation_score, placement_score,
+                              last_active_date
+                       FROM students WHERE user_id=?""", (user_id,))
+        s = cur.fetchone()
+        if not s:
+            return jsonify({"ok": False, "error": "student not found"}), 404
+        student = dict(s)
+
+        # === lesson_attempts aggregate ===
+        cur.execute("""SELECT COUNT(*) AS attempts,
+                              COALESCE(SUM(total_questions),0) AS total_q,
+                              COALESCE(SUM(correct_count),0)   AS correct_q,
+                              COALESCE(AVG(score_percent),0)   AS avg_score,
+                              COALESCE(SUM(CASE WHEN passed=1 THEN 1 ELSE 0 END),0) AS passed_cnt,
+                              MAX(finished_at) AS last_at
+                       FROM lesson_attempts WHERE telegram_id=?""", (user_id,))
+        la = dict(cur.fetchone())
+
+        # Estimate time from started/finished
+        cur.execute("""SELECT started_at, finished_at FROM lesson_attempts
+                       WHERE telegram_id=? AND started_at IS NOT NULL AND finished_at IS NOT NULL""", (user_id,))
+        total_sec = 0
+        for row in cur.fetchall():
+            try:
+                st = _dt.fromisoformat(row["started_at"])
+                fn = _dt.fromisoformat(row["finished_at"])
+                diff = (fn - st).total_seconds()
+                if 0 < diff < 7200:  # ignore outliers > 2h
+                    total_sec += diff
+            except Exception:
+                pass
+
+        # === writing_attempts aggregate ===
+        cur.execute("""SELECT COUNT(*) AS attempts,
+                              COALESCE(AVG(ai_score),0) AS avg_ai,
+                              COALESCE(SUM(time_spent_sec),0) AS total_time,
+                              COALESCE(SUM(CASE WHEN is_correct=1 THEN 1 ELSE 0 END),0) AS correct
+                       FROM writing_attempts WHERE telegram_id=?""", (user_id,))
+        wa = dict(cur.fetchone())
+
+        # === reading_attempts aggregate ===
+        cur.execute("""SELECT COUNT(*) AS attempts,
+                              COALESCE(SUM(score),0) AS correct_total,
+                              COALESCE(SUM(total),0) AS q_total
+                       FROM reading_attempts WHERE student_id=?""", (user_id,))
+        ra = dict(cur.fetchone())
+
+        # === stage exams ===
+        cur.execute("""SELECT stage_id,
+                              MAX(score) AS best_score,
+                              COUNT(*)   AS attempts_count,
+                              MAX(CASE WHEN passed=1 THEN 1 ELSE 0 END) AS ever_passed,
+                              MAX(created_at) AS last_at,
+                              MAX(total_questions) AS total_q,
+                              MAX(correct_count) AS correct_q
+                       FROM stage_exam_attempts WHERE telegram_id=?
+                       GROUP BY stage_id ORDER BY stage_id""", (user_id,))
+        stage_exams = [dict(r) for r in cur.fetchall()]
+
+        # === Frequent errors (from lesson_attempts answers_json) ===
+        cur.execute("SELECT answers_json FROM lesson_attempts WHERE telegram_id=? AND answers_json IS NOT NULL", (user_id,))
+        error_counter = {}
+        question_seen = {}
+        for row in cur.fetchall():
+            try:
+                arr = _json.loads(row["answers_json"]) or []
+                for a in arr:
+                    qid = a.get("q_id") or a.get("qid") or "?"
+                    question_seen[qid] = question_seen.get(qid, 0) + 1
+                    if a.get("is_correct") is False:
+                        error_counter[qid] = error_counter.get(qid, 0) + 1
+            except Exception:
+                pass
+        frequent_errors = sorted(
+            [{"q_id": k, "wrong_count": v, "total_attempts": question_seen.get(k, v)}
+             for k, v in error_counter.items() if v >= 1],
+            key=lambda x: -x["wrong_count"]
+        )[:10]
+
+        # === Recent activity (last 30 days from lesson_attempts) ===
+        cur.execute("""SELECT DATE(finished_at) AS d,
+                              COUNT(*) AS lessons,
+                              COALESCE(SUM(total_questions),0) AS questions,
+                              COALESCE(SUM(correct_count),0)   AS correct
+                       FROM lesson_attempts
+                       WHERE telegram_id=? AND finished_at >= date('now','-30 day')
+                       GROUP BY DATE(finished_at) ORDER BY d DESC""", (user_id,))
+        recent_activity = [dict(r) for r in cur.fetchall()]
+
+        # === Listening / Speaking progress totals ===
+        def _safe_count(sql, args):
+            try:
+                cur.execute(sql, args)
+                r = cur.fetchone()
+                return r[0] if r else 0
+            except Exception:
+                return 0
+
+        listening_done = _safe_count("SELECT COUNT(*) FROM listening_progress WHERE telegram_id=? AND status='completed'", (user_id,))
+        speaking_done  = _safe_count("SELECT COUNT(*) FROM speaking_v2_progress WHERE user_id=? AND COALESCE(score,0) > 0", (user_id,))
+
+        # === Compute summary ===
+        total_q       = int(la.get("total_q") or 0)
+        correct_q     = int(la.get("correct_q") or 0)
+        wrong_q       = max(0, total_q - correct_q)
+        avg_score     = round(float(la.get("avg_score") or 0), 1)
+        accuracy_pct  = round(100.0 * correct_q / total_q, 1) if total_q else 0.0
+        avg_attempts  = round(float(la.get("attempts") or 0) / max(1, len(set())), 2) if False else 0
+        # Better avg_attempts: total_attempts / distinct lessons attempted
+        cur.execute("SELECT COUNT(DISTINCT lesson_id) FROM lesson_attempts WHERE telegram_id=?", (user_id,))
+        distinct_lessons = cur.fetchone()[0] or 1
+        avg_attempts_per_lesson = round(float(la.get("attempts") or 0) / max(1, distinct_lessons), 2)
+
+        summary = {
+            "total_attempts":          int(la.get("attempts") or 0),
+            "total_questions_answered": total_q,
+            "correct_count":            correct_q,
+            "wrong_count":              wrong_q,
+            "accuracy_pct":             accuracy_pct,
+            "avg_score":                avg_score,
+            "lessons_passed":           int(la.get("passed_cnt") or 0),
+            "distinct_lessons":         distinct_lessons,
+            "avg_attempts_per_lesson":  avg_attempts_per_lesson,
+            "total_time_minutes":       round(total_sec / 60.0, 1),
+            "last_active":              la.get("last_at") or student.get("last_active_date") or "—"
+        }
+
+        skills = {
+            "listening": {
+                "completed_lessons": listening_done,
+                "note": "تفاصيل في تبويب التقدم"
+            },
+            "speaking": {
+                "completed_items": speaking_done,
+                "note": "اختياري — مقياس ذاتي"
+            },
+            "writing": {
+                "attempts":   int(wa.get("attempts") or 0),
+                "correct":    int(wa.get("correct") or 0),
+                "avg_ai_score": round(float(wa.get("avg_ai") or 0), 1),
+                "total_time_minutes": round(float(wa.get("total_time") or 0) / 60.0, 1)
+            },
+            "reading": {
+                "attempts":      int(ra.get("attempts") or 0),
+                "correct_total": int(ra.get("correct_total") or 0),
+                "q_total":       int(ra.get("q_total") or 0),
+                "accuracy_pct":  round(100.0 * int(ra.get("correct_total") or 0) / max(1, int(ra.get("q_total") or 0)), 1) if (ra.get("q_total") or 0) else 0
+            }
+        }
+
+        # === Graduation readiness criteria ===
+        # Check last activity within 30 days
+        recent_active = False
+        try:
+            last_str = summary["last_active"]
+            if last_str and last_str != "—":
+                last_dt = _dt.fromisoformat(last_str.replace("T"," ").split(".")[0])
+                recent_active = (_dt.now() - last_dt).days <= 30
+        except Exception:
+            pass
+
+        # Count passed stage exams
+        passed_stage_exams = sum(1 for e in stage_exams if e.get("ever_passed"))
+
+        criteria = [
+            {"label": "نسبة الإجابات الصحيحة ≥ 75%",
+             "passed": accuracy_pct >= 75,
+             "actual": f"{accuracy_pct}%"},
+            {"label": "اجتاز ≥ 5 دروس",
+             "passed": int(la.get("passed_cnt") or 0) >= 5,
+             "actual": f"{la.get('passed_cnt') or 0} درس"},
+            {"label": "متوسط الدرجات ≥ 70%",
+             "passed": avg_score >= 70,
+             "actual": f"{avg_score}%"},
+            {"label": "اجتاز امتحان مرحلة واحدة على الأقل",
+             "passed": passed_stage_exams >= 1,
+             "actual": f"{passed_stage_exams} امتحان"},
+            {"label": "نشاط حديث (آخر 30 يوم)",
+             "passed": recent_active,
+             "actual": summary["last_active"]},
+            {"label": "معدل المحاولات معقول (≤ 3 لكل درس)",
+             "passed": avg_attempts_per_lesson <= 3.0 and avg_attempts_per_lesson > 0,
+             "actual": f"{avg_attempts_per_lesson}"},
+        ]
+        passed_count = sum(1 for c in criteria if c["passed"])
+        readiness_score = round(100.0 * passed_count / len(criteria), 0)
+        if readiness_score >= 80:
+            verdict = "ready"; verdict_ar = "🟢 جاهز للتخرج"
+        elif readiness_score >= 50:
+            verdict = "needs_review"; verdict_ar = "🟡 يحتاج مراجعة"
+        else:
+            verdict = "not_ready"; verdict_ar = "🔴 غير جاهز"
+
+        graduation_readiness = {
+            "score":      readiness_score,
+            "verdict":    verdict,
+            "verdict_ar": verdict_ar,
+            "criteria":   criteria,
+            "passed_count":  passed_count,
+            "total_criteria": len(criteria),
+            "currently_unlocked": bool(student.get("graduation_unlocked"))
+        }
+
+        conn.close()
+        return jsonify({
+            "ok": True,
+            "student": student,
+            "summary": summary,
+            "skills": skills,
+            "stage_exams": stage_exams,
+            "frequent_errors": frequent_errors,
+            "recent_activity": recent_activity,
+            "graduation_readiness": graduation_readiness
+        })
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
 # Phase 12D — Admin Lessons/Questions Management
 # ═══════════════════════════════════════════════
 def _ensure_lesson_columns():
@@ -4441,8 +4840,6 @@ def api_admin_stages_delete_v2(sid):
         return jsonify({"ok":True,"success":True})
     except Exception as e:
         return jsonify({"ok":False,"success":False,"error":str(e)}),500
-
-
 
 
 # ═══════════════════════════════════════════════
@@ -5203,7 +5600,6 @@ def page_stage_exam(sid):
 # ===== End Phase 12E-3 v2 route =====
 
 
-
 # ===== Phase 13.2d HOTFIX: ensure difficulty column =====
 def _ensure_difficulty_column():
     try:
@@ -5236,7 +5632,6 @@ try:
 except Exception as _e:
     print(f"[startup] difficulty migration error: {_e}")
 # ===== End Phase 13.2d HOTFIX =====
-
 
 
 def _migrate_ctw_columns():
@@ -5276,7 +5671,6 @@ except Exception as _e:
     print(f"WARN: {_e}")
 
 
-
 @app.route("/api/reading-daily-life", methods=["GET"])
 def api_reading_daily_life():
     """Returns all daily-life reading passages for lesson_view.html"""
@@ -5287,6 +5681,52 @@ def api_reading_daily_life():
     finally:
         conn.close()
 
+
+# ============================================================
+# Phase 5.7: Admin Dashboard
+# ============================================================
+
+
+
+@app.route("/api/admin/reading-stats", methods=["GET"])
+def api_admin_reading_stats_v2():
+    import sqlite3, os as _os
+    try:
+        db_path = "/app/data/academy.db" if _os.path.exists("/app/data/academy.db") else "academy.db"
+        conn = sqlite3.connect(db_path); conn.row_factory = sqlite3.Row
+        total = conn.execute("SELECT COUNT(*) FROM reading_attempts WHERE status='completed'").fetchone()[0]
+        row = conn.execute("SELECT AVG(score*100.0/total) FROM reading_attempts WHERE status='completed' AND total>0").fetchone()
+        avg_pct = round(row[0], 1) if row[0] is not None else 0
+        by_type = []
+        for r in conn.execute("SELECT content_type, COUNT(*) AS cnt, ROUND(AVG(score*100.0/total),1) AS avg_pct FROM reading_attempts WHERE status='completed' AND total>0 GROUP BY content_type"):
+            by_type.append({"type": r["content_type"], "count": r["cnt"], "avg_pct": r["avg_pct"]})
+        recent = []
+        for r in conn.execute("SELECT attempt_id, student_id, content_id, content_type, score, total, ROUND(score*100.0/total) AS pct, finished_at FROM reading_attempts WHERE status='completed' AND total>0 ORDER BY attempt_id DESC LIMIT 10"):
+            recent.append(dict(r))
+        conn.close()
+        from flask import jsonify as _jsf
+        return _jsf({"total_attempts": total, "avg_percentage": avg_pct, "by_type": by_type, "recent": recent})
+    except Exception as e:
+        from flask import jsonify as _jsf
+        return _jsf({"error": str(e)}), 500
+
+
+
+# === TOEFL Listening Blueprint (Phase 8) ===
+try:
+    from routes.listening import listening_bp
+    app.register_blueprint(listening_bp)
+    print("[Listening] Blueprint registered: /listening, /api/listening/*")
+except Exception as _e:
+    print(f"[Listening] Blueprint registration failed: {_e}")
+
+# === TOEFL Speaking Blueprint (Phase 9) ===
+try:
+    from routes.speaking import speaking_bp
+    app.register_blueprint(speaking_bp)
+    print("[Speaking] Blueprint registered: /speaking, /api/speaking/*")
+except Exception as _e:
+    print(f"[Speaking] Blueprint registration failed: {_e}")
 
 if __name__ == "__main__":
     import os as _os
@@ -5351,8 +5791,6 @@ def _ensure_stages_columns():
         print(f"[Phase12F] ERROR: {e}")
 
 _ensure_stages_columns()
-
-
 
 
 # ============================================================
@@ -5468,10 +5906,24 @@ def admin_questions_page():
     return render_template("admin_questions.html")
 # End Admin Questions CRUD
 
-@app.route("/admin")
+@app.route("/_disabled_admin_old")
 def admin_page():
-    from flask import render_template
-    return render_template("admin.html")
+    from flask import render_template, request, abort
+    ADMIN_IDS = [5572314718]  # hardcoded; replace with config import if needed
+    try:
+        uid_raw = request.args.get("user_id") or request.cookies.get("user_id") or ""
+        uid = int(str(uid_raw).strip()) if str(uid_raw).strip().isdigit() else 0
+    except Exception:
+        uid = 0
+    # السماح: ADMIN_IDS من config، أو 12345 للتطوير المحلي
+    allowed = set(ADMIN_IDS) | {12345}
+    if uid not in allowed:
+        return ("<h2 style=\"font-family:sans-serif;padding:40px;text-align:center\">"
+                "🔒 صلاحية مطلوبة"
+                "<p>user_id=" + str(uid) + " غير مصرح له بالدخول.</p>"
+                "<p>المدراء المسموح لهم: " + ", ".join(str(x) for x in sorted(allowed)) + "</p>"
+                "</h2>"), 403
+    return render_template("admin_dashboard.html")
 
 @app.route("/api/admin/placement-questions", methods=["GET"])
 def api_admin_placement_list():
@@ -5637,7 +6089,6 @@ def admin_set_stage_count(sid):
     except Exception as e:
         import traceback
         return jsonify({"ok": False, "error": str(e), "trace": traceback.format_exc()}), 500
-
 
 
 # ===================== CTW Admin CRUD =====================
