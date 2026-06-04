@@ -5902,6 +5902,61 @@ def page_welcome():
     return render_template("welcome.html")
 
 
+
+# ============================================================
+# TEMPORARY MIGRATION ENDPOINT - REMOVE AFTER USE
+# ============================================================
+@app.route("/api/admin/migrate-reading-tables", methods=["POST", "GET"])
+def _migrate_reading_tables():
+    import sqlite3
+    from db import DB_PATH
+    secret = request.args.get("key", "") or request.headers.get("X-Migrate-Key", "")
+    if secret != "yamen_migrate_2026_xyz":
+        return jsonify({"error": "forbidden"}), 403
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        created = []
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS reading_attempts (
+            attempt_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER,
+            content_id TEXT,
+            content_type TEXT,
+            started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            finished_at TIMESTAMP,
+            score INTEGER DEFAULT 0,
+            total INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'in_progress',
+            submit_reason TEXT
+        )""")
+        created.append("reading_attempts")
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS reading_answers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            attempt_id INTEGER,
+            question_index INTEGER,
+            answer TEXT,
+            is_correct INTEGER DEFAULT 0,
+            answered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )""")
+        created.append("reading_answers")
+
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_ra_student ON reading_attempts(student_id)")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_ra_status ON reading_attempts(status)")
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_ra_content ON reading_attempts(content_id)")
+
+        conn.commit()
+        # Verify
+        tables = [r[0] for r in cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'reading%'").fetchall()]
+        conn.close()
+        return jsonify({"status": "ok", "created": created, "reading_tables_now": tables, "db_path": DB_PATH})
+    except Exception as e:
+        import traceback
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
