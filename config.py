@@ -25,7 +25,6 @@ class Settings:
         from db import DB_PATH
     except ImportError:
         DB_PATH = os.environ.get("DB_PATH") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
-    DATABASE_PATH = DB_PATH  # alias for legacy modules
     WEBHOOK_HOST = os.environ.get("WEBHOOK_HOST", "http://localhost:8080")
     GROUP_LINK   = os.environ.get("GROUP_LINK", "https://t.me/yamen_academy")
     ADMIN_IDS    = [
@@ -37,7 +36,3 @@ class Settings:
     FORCE_SUB_CHANNELS = os.environ.get("FORCE_SUB_CHANNELS", "")
 
 settings = Settings()
-
-# Module-level exports for legacy compatibility
-DB_PATH = Settings.DB_PATH
-DATABASE_PATH = Settings.DB_PATH
