@@ -4259,7 +4259,7 @@ def api_admin_path_update(path):
 @app.route("/api/admin/students/<user_id>/graduation/unlock", methods=["POST"])
 def api_admin_unlock_graduation(user_id):
     try:
-        data = request.get_json(force=True) or {}
+        data = request.get_json(silent=True) or {}
         admin_id = (data.get("admin_id") or "admin").strip()
         conn = _miniapp_db(); cur = conn.cursor()
         cur.execute("UPDATE students SET graduation_unlocked=1, graduation_unlocked_by=?, graduation_unlocked_at=datetime('now') WHERE user_id=?", (admin_id, user_id))
@@ -4283,7 +4283,7 @@ def api_admin_lock_graduation(user_id):
 @app.route("/api/admin/students/<user_id>/path/change", methods=["POST"])
 def api_admin_change_student_path(user_id):
     try:
-        data = request.get_json(force=True) or {}
+        data = request.get_json(silent=True) or {}
         new_path = (data.get("path") or "").strip()
         if not new_path: return jsonify({"error": "path required"}), 400
         conn = _miniapp_db(); cur = conn.cursor()
