@@ -331,3 +331,19 @@ def format_cooldown_time(seconds: int) -> str:
     days = hours // 24
     hrs = hours % 24
     return f"{days} يوم و{hrs} ساعة" if hrs else f"{days} يوم"
+
+
+def get_student_lesson_stats(telegram_id, lesson_id):
+    """Stub: returns simple stats dict for a student/lesson."""
+    try:
+        import sqlite3, os
+        db = os.environ.get("DB_PATH", "academy.db")
+        con = sqlite3.connect(db)
+        cur = con.cursor()
+        cur.execute("SELECT COUNT(*) FROM lesson_attempts WHERE telegram_id=? AND lesson_id=?",
+                    (str(telegram_id), lesson_id))
+        attempts = cur.fetchone()[0] or 0
+        con.close()
+        return {"attempts": attempts, "best_score": 0, "passed": False}
+    except Exception as e:
+        return {"attempts": 0, "best_score": 0, "passed": False, "error": str(e)}

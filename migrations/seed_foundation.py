@@ -5,6 +5,42 @@ Foundation Seed - يُشغَّل تلقائياً عند بدء التطبيق.
 """
 import sqlite3, json, os
 
+
+def ensure_mini_lessons(cur):
+    """Create mini_lessons table if missing (required by STARTUP GUARD)."""
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='mini_lessons'")
+    if cur.fetchone():
+        print("[seed_foundation] mini_lessons exists, skip")
+        return
+    cur.execute("""
+        CREATE TABLE mini_lessons (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            section TEXT NOT NULL,
+            unit_number INTEGER NOT NULL,
+            lesson_number INTEGER NOT NULL,
+            title_ar TEXT NOT NULL,
+            subtitle_ar TEXT,
+            lesson_type TEXT,
+            content_table TEXT,
+            content_id_start INTEGER,
+            content_id_end INTEGER,
+            quiz_pass_score INTEGER DEFAULT 80,
+            xp_reward INTEGER DEFAULT 10,
+            required_tier INTEGER DEFAULT 0,
+            order_index INTEGER DEFAULT 0,
+            is_active INTEGER DEFAULT 1,
+            linked_lesson_id INTEGER,
+            media_type TEXT,
+            media_url TEXT,
+            media_caption_ar TEXT,
+            intro_text_ar TEXT,
+            passage_en TEXT,
+            min_correct INTEGER DEFAULT 4
+        )
+    """)
+    print("[seed_foundation] mini_lessons CREATED")
+
+
 def _db_path():
     return os.environ.get("DB_PATH") or os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "academy.db")
@@ -28,6 +64,8 @@ def run():
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
+    ensure_mini_lessons(cur)
+    conn.commit()
 
     # ===== 1) ALTER TABLES =====
     print("[seed_foundation] altering tables...")
