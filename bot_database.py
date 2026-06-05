@@ -137,9 +137,15 @@ def deactivate_paid(student_id):
     sid = _norm_sid(student_id)
     conn = get_db()
     conn.execute(f"UPDATE students SET is_paid=0, subscription_type='free' WHERE {_student_where()}", (sid, sid))
+    # تعطيل أي اشتراك نشط
+    try:
+        conn.execute("UPDATE subscriptions SET is_active=0 WHERE user_id=? OR telegram_id=?", (sid, str(sid)))
+    except Exception as e:
+        print(f"[deactivate_paid] subscriptions update error: {e}")
     conn.commit()
     conn.close()
     return True
+
 
 
 def get_students_count():

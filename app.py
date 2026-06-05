@@ -1286,7 +1286,6 @@ def api_student_profile():
 
 @app.route("/api/admin/payments/<int:pid>/approve", methods=["POST"])
 def api_approve_payment(pid):
-    from datetime import datetime
     conn = get_db()
     try:
         pay = conn.execute("SELECT * FROM payments WHERE id=?", (pid,)).fetchone()
@@ -1294,48 +1293,98 @@ def api_approve_payment(pid):
             return jsonify({"error": "Payment not found"}), 404
         pay = dict(pay)
         uid = pay.get("user_id") or pay.get("telegram_id")
-        plan_id = pay.get("plan_id", 1)
+        plan_name = pay.get("plan_name") or pay.get("plan_key") or "paid"
+        plan_id = pay.get("plan_id")
 
-        # Ã˜ÂªÃ™ÂÃ˜Â¹Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨
+        # جلب مدة الباقة من subscription_plans
+        days = 30
+        plan_label = plan_name
+        if plan_id:
+            prow = conn.execute(
+                "SELECT duration_days, name FROM subscription_plans WHERE id=?",
+                (plan_id,)
+            ).fetchone()
+            if prow:
+                days = int(prow["duration_days"] or 30)
+                plan_label = prow["name"] or plan_name
+
+        from datetime import datetime as _dt, timedelta as _td
+        start_date = _dt.now()
+        end_date = start_date + _td(days=days)
+        start_str = start_date.strftime("%Y-%m-%d %H:%M:%S")
+        end_str = end_date.strftime("%Y-%m-%d %H:%M:%S")
+        end_date_only = end_date.strftime("%Y-%m-%d")
+
+        # 1) تحديث الدفعة
+        conn.execute(
+            "UPDATE payments SET status='approved', verified_at=? WHERE id=?",
+            (start_str, pid)
+        )
+
+        # 2) تحديث الطالب
         conn.execute("""
-            UPDATE students SET is_paid=1, is_active=1,
-            subscription_type='paid',
-            last_activity=?
+            UPDATE students
+            SET is_paid=1,
+                is_active=1,
+                subscription_type=?,
+                package_end=?,
+                subscription_started_at=?
             WHERE user_id=? OR telegram_id=?
-        """, (datetime.now().isoformat(), uid, str(uid)))
+        """, (plan_label, end_date_only, start_str, uid, str(uid)))
 
-        # Ã˜ÂªÃ˜Â­Ã˜Â¯Ã™Å Ã˜Â« Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â© Ã˜Â§Ã™â€žÃ˜Â¯Ã™ÂÃ˜Â¹
+        # 3) إلغاء الاشتراكات السابقة النشطة
         conn.execute("""
-            UPDATE payments SET status='approved', verified_at=?
-            WHERE id=?
-        """, (datetime.now().isoformat(), pid))
+            UPDATE subscriptions SET is_active=0
+            WHERE (user_id=? OR telegram_id=?) AND is_active=1
+        """, (uid, str(uid)))
+
+        # 4) إنشاء سجل اشتراك جديد
+        conn.execute("""
+            INSERT INTO subscriptions (user_id, telegram_id, plan_name, start_date, end_date, is_active)
+            VALUES (?, ?, ?, ?, ?, 1)
+        """, (uid, str(uid), plan_label, start_str, end_str))
 
         conn.commit()
 
-        # Ã˜Â¥Ã˜Â´Ã˜Â¹Ã˜Â§Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨ Ã˜Â¹Ã˜Â¨Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â¨Ã™Ë†Ã˜Âª
+        # 5) إشعار الطالب على Telegram
         try:
-            import asyncio, os
+            import asyncio
             from aiogram import Bot
             from aiogram.client.default import DefaultBotProperties
             from aiogram.enums import ParseMode
             token = os.environ.get("BOT_TOKEN", "")
             if token and uid:
+                msg = (
+                    "✅ <b>تم تفعيل اشتراكك بنجاح!</b>\n\n"
+                    f"📦 الباقة: <b>{plan_label}</b>\n"
+                    f"📅 المدة: {days} يوم\n"
+                    f"⏰ تنتهي في: <b>{end_date_only}</b>\n\n"
+                    "🎓 يمكنك الآن الوصول إلى جميع الدروس.\n"
+                    "بالتوفيق في رحلتك! 🚀"
+                )
                 async def notify():
                     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-                    await bot.send_message(
-                        chat_id=int(uid),
-                        text="Ã¢Å“â€¦ <b>Ã˜ÂªÃ™â€¦ Ã˜ÂªÃ™ÂÃ˜Â¹Ã™Å Ã™â€ž Ã˜Â§Ã˜Â´Ã˜ÂªÃ˜Â±Ã˜Â§Ã™Æ’Ã™Æ’!</b>\n\nÃ™â€¦Ã˜Â±Ã˜Â­Ã˜Â¨Ã˜Â§Ã™â€¹ Ã˜Â¨Ã™Æ’ Ã™ÂÃ™Å  Ã˜Â£Ã™Æ’Ã˜Â§Ã˜Â¯Ã™Å Ã™â€¦Ã™Å Ã˜Â© Ã™Å Ã˜Â§Ã™â€¦Ã™â€  Ã™â€žÃ™â€žÃ˜ÂªÃ™Ë†Ã™ÂÃ™â€ž Ã°Å¸Å½â€œ\nÃ˜Â§Ã˜Â¨Ã˜Â¯Ã˜Â£ Ã˜Â±Ã˜Â­Ã™â€žÃ˜ÂªÃ™Æ’ Ã˜Â§Ã™â€žÃ˜ÂªÃ˜Â¹Ã™â€žÃ™Å Ã™â€¦Ã™Å Ã˜Â© Ã˜Â§Ã™â€žÃ˜Â¢Ã™â€ !"
-                    )
-                    await bot.session.close()
+                    try:
+                        await bot.send_message(chat_id=int(uid), text=msg)
+                    finally:
+                        await bot.session.close()
                 asyncio.run(notify())
         except Exception as e:
-            print(f"Bot notify error: {e}")
+            print(f"[approve_payment] Bot notify error: {e}")
 
-        return jsonify({"ok": True, "message": "Ã˜ÂªÃ™â€¦ Ã˜ÂªÃ™ÂÃ˜Â¹Ã™Å Ã™â€ž Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨"})
+        return jsonify({
+            "ok": True,
+            "message": "تمت الموافقة وتفعيل الاشتراك",
+            "end_date": end_date_only,
+            "days": days
+        })
     except Exception as e:
+        import traceback; traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+
+
 
 
 @app.route("/api/admin/payments/<int:pid>/reject", methods=["POST"])
@@ -1351,30 +1400,36 @@ def api_reject_payment(pid):
         conn.execute("UPDATE payments SET status='rejected' WHERE id=?", (pid,))
         conn.commit()
 
-        # Ã˜Â¥Ã˜Â´Ã˜Â¹Ã˜Â§Ã˜Â± Ã˜Â§Ã™â€žÃ˜Â·Ã˜Â§Ã™â€žÃ˜Â¨
+        # إشعار الطالب
         try:
-            import asyncio, os
+            import asyncio
             from aiogram import Bot
             from aiogram.client.default import DefaultBotProperties
             from aiogram.enums import ParseMode
             token = os.environ.get("BOT_TOKEN", "")
             if token and uid:
+                msg = (
+                    "❌ <b>تم رفض طلب الاشتراك</b>\n\n"
+                    "يُرجى التواصل مع الإدارة لمزيد من المعلومات."
+                )
                 async def notify():
                     bot = Bot(token=token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-                    await bot.send_message(
-                        chat_id=int(uid),
-                        text="Ã¢ÂÅ’ <b>Ã˜ÂªÃ™â€¦ Ã˜Â±Ã™ÂÃ˜Â¶ Ã˜Â·Ã™â€žÃ˜Â¨ Ã˜Â§Ã™â€žÃ˜Â§Ã˜Â´Ã˜ÂªÃ˜Â±Ã˜Â§Ã™Æ’</b>\n\nÃ™Å Ã˜Â±Ã˜Â¬Ã™â€° Ã˜Â§Ã™â€žÃ˜ÂªÃ™Ë†Ã˜Â§Ã˜ÂµÃ™â€ž Ã™â€¦Ã˜Â¹ Ã˜Â§Ã™â€žÃ˜Â£Ã˜Â¯Ã™â€¦Ã™â€  Ã™â€žÃ™â€žÃ™â€¦Ã˜Â²Ã™Å Ã˜Â¯ Ã™â€¦Ã™â€  Ã˜Â§Ã™â€žÃ™â€¦Ã˜Â¹Ã™â€žÃ™Ë†Ã™â€¦Ã˜Â§Ã˜Âª."
-                    )
-                    await bot.session.close()
+                    try:
+                        await bot.send_message(chat_id=int(uid), text=msg)
+                    finally:
+                        await bot.session.close()
                 asyncio.run(notify())
         except Exception as e:
-            print(f"Bot notify error: {e}")
+            print(f"[reject_payment] Bot notify error: {e}")
 
-        return jsonify({"ok": True, "message": "Ã˜ÂªÃ™â€¦ Ã˜Â±Ã™ÂÃ˜Â¶ Ã˜Â§Ã™â€žÃ˜Â·Ã™â€žÃ˜Â¨"})
+        return jsonify({"ok": True, "message": "تم رفض الطلب"})
     except Exception as e:
+        import traceback; traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     finally:
         conn.close()
+
+
 
 
 @app.route("/api/admin/students/<int:uid>/delete", methods=["DELETE"])
