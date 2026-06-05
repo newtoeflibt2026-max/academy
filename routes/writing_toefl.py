@@ -134,10 +134,8 @@ def writing_lesson_page(lesson_id):
         qs.append(qd)
 
     # Also fetch sentence_building exercises tied to this lesson
-    sb_rows = c.execute(
-        "SELECT * FROM sentence_building_exercises WHERE lesson_id=? AND is_exam=0 AND is_active=1 ORDER BY order_index",
-        (lesson_id,)
-    ).fetchall()
+    # sentence_building_exercises has no lesson_id column; skip for now
+    sb_rows = []
 
     for sb in sb_rows:
         sd = dict(sb)

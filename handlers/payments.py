@@ -326,3 +326,63 @@ async def admin_reject(cb: CallbackQuery):
         pass
 
     await cb.answer("تم الرفض وإبلاغ الطالب.")
+
+
+# ============================================================
+#  Admin inline callbacks: approve / reject payments from chat
+# ============================================================
+from aiogram import F as _F
+from aiogram.types import CallbackQuery as _CBQ
+import urllib.request as _urlreq
+import json as _json
+from config import settings as _stg
+
+def _admin_only(uid):
+    try:
+        return int(uid) in (_stg.ADMIN_IDS or [])
+    except Exception:
+        return False
+
+@router.callback_query(_F.data.startswith("pay_approve:"))
+async def _cb_pay_approve(cb: _CBQ):
+    if not _admin_only(cb.from_user.id):
+        await cb.answer("غير مصرح", show_alert=True); return
+    pid = cb.data.split(":",1)[1]
+    try:
+        req = _urlreq.Request(
+            f"http://127.0.0.1:8080/api/admin/payments/{pid}/approve",
+            data=b"{}", headers={"Content-Type":"application/json"}, method="POST"
+        )
+        resp = _json.loads(_urlreq.urlopen(req, timeout=15).read().decode())
+    except Exception as e:
+        await cb.answer(f"خطأ: {e}", show_alert=True); return
+    if resp.get("ok"):
+        await cb.message.edit_caption(
+            (cb.message.caption or "") + "\n\n✅ <b>تمت الموافقة</b>",
+            reply_markup=None
+        )
+        await cb.answer("تمت الموافقة ✅")
+    else:
+        await cb.answer(f"فشل: {resp.get('error','?')}", show_alert=True)
+
+@router.callback_query(_F.data.startswith("pay_reject:"))
+async def _cb_pay_reject(cb: _CBQ):
+    if not _admin_only(cb.from_user.id):
+        await cb.answer("غير مصرح", show_alert=True); return
+    pid = cb.data.split(":",1)[1]
+    try:
+        req = _urlreq.Request(
+            f"http://127.0.0.1:8080/api/admin/payments/{pid}/reject",
+            data=b"{}", headers={"Content-Type":"application/json"}, method="POST"
+        )
+        resp = _json.loads(_urlreq.urlopen(req, timeout=15).read().decode())
+    except Exception as e:
+        await cb.answer(f"خطأ: {e}", show_alert=True); return
+    if resp.get("ok"):
+        await cb.message.edit_caption(
+            (cb.message.caption or "") + "\n\n❌ <b>تم الرفض</b>",
+            reply_markup=None
+        )
+        await cb.answer("تم الرفض")
+    else:
+        await cb.answer(f"فشل: {resp.get('error','?')}", show_alert=True)

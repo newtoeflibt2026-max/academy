@@ -97,33 +97,22 @@ def kb_start_placement(user_id):
 
 
 def get_main_keyboard(is_paid=False, user_id=0):
-    portal_url = f"{settings.WEBHOOK_HOST}/student?student_id={user_id}"
+    base = settings.WEBHOOK_HOST.rstrip("/")
+    def wa(path):
+        sep = "&" if "?" in path else "?"
+        return WebAppInfo(url=f"{base}{path}{sep}user_id={user_id}&student_id={user_id}")
     buttons = [
-        [InlineKeyboardButton(text="🌐 افتح بوابة الطالب", web_app=WebAppInfo(url=portal_url))],
-        [
-            InlineKeyboardButton(text="📚 دروسي", callback_data="menu_lessons"),
-            InlineKeyboardButton(text="🎯 مهامي اليومية", callback_data="menu_missions"),
-        ],
-        [
-            InlineKeyboardButton(text="📊 تقدمي", callback_data="menu_progress"),
-            InlineKeyboardButton(text="🏆 المتصدرون", callback_data="menu_leaderboard"),
-        ],
-        [
-            InlineKeyboardButton(text="✍️ تدريب الكتابة", callback_data="menu_writing"),
-            InlineKeyboardButton(text="🎧 تدريب الاستماع", callback_data="menu_listening"),
-        ],
-        [InlineKeyboardButton(text="💳 الباقات والاشتراك", callback_data="menu_subscriptions")],
+        [InlineKeyboardButton(text="🛠️ التأسيس الشامل", web_app=wa("/foundation"))],
+        [InlineKeyboardButton(text="🔖 دفتر أخطائي", web_app=wa("/mistakes"))],
+        [InlineKeyboardButton(text="📖 القراءة", web_app=wa("/reading/")),
+         InlineKeyboardButton(text="🎧 الاستماع", web_app=wa("/listening"))],
+        [InlineKeyboardButton(text="✍️ الكتابة", web_app=wa("/writing")),
+         InlineKeyboardButton(text="🗣️ المحادثة", web_app=wa("/speaking"))],
+        [InlineKeyboardButton(text="🏠 الرئيسية", web_app=wa("/home")),
+         InlineKeyboardButton(text="📊 لوحتي", web_app=wa("/student"))],
+        [InlineKeyboardButton(text="💳 الباقات والاشتراك", web_app=wa("/miniapp/plans"))],
     ]
-    if is_paid:
-        buttons.append([
-            InlineKeyboardButton(text="📝 Mock Exam", callback_data="menu_mock"),
-            InlineKeyboardButton(text="🎓 التخرج", callback_data="menu_graduation"),
-        ])
-    else:
-        buttons.append([InlineKeyboardButton(text="🔒 Mock Exam (مدفوع)", callback_data="locked_feature")])
-    buttons.append([InlineKeyboardButton(text="⚙️ إعداداتي", callback_data="menu_settings")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
-
 
 @router.message(CommandStart())
 async def cmd_start(message: types.Message):
@@ -187,7 +176,7 @@ async def cmd_start(message: types.Message):
         f"⭐ XP: {xp} | 🔥 Streak: {streak} | 📈 {level_ar}\n"
         f"🎯 الهدف: <b>{target}</b> | المسار: {path_ar}\n"
     )
-    await message.answer(text, reply_markup=get_main_keyboard(is_paid))
+    await message.answer(text, reply_markup=get_main_keyboard(is_paid, user_id=user_id))
 
 
 @router.callback_query(F.data == "track:toefl")
@@ -268,7 +257,7 @@ async def cmd_menu(message: types.Message):
     user_id = message.from_user.id
     student = get_student(user_id) or {}
     is_paid = bool(student.get("is_paid", 0))
-    await message.answer("📋 القائمة الرئيسية:", reply_markup=get_main_keyboard(is_paid))
+    await message.answer("📋 القائمة الرئيسية:", reply_markup=get_main_keyboard(is_paid, user_id=user_id))
 
 
 @router.callback_query(F.data == "locked_feature")

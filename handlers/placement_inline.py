@@ -366,4 +366,4 @@ async def cb_back_menu(callback: types.CallbackQuery):
         f"🎯 الهدف: <b>{target}</b> | المسار: {path_ar}"
     )
     await callback.answer()
-    await callback.message.edit_text(text, reply_markup=get_main_keyboard(is_paid))
+    await callback.message.edit_text(text, reply_markup=get_main_keyboard(is_paid, user_id=user_id))

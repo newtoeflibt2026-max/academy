@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أسئلة الدرس</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; }
+.container { max-width: 720px; margin: 0 auto; }
+.quiz-card { background: #fff; border-radius: 18px; padding: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.progress { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 13px; color: #718096; }
+.progress-bar { background: #edf2f7; height: 8px; border-radius: 4px; overflow: hidden; margin: 8px 0 18px; }
+.progress-fill { background: linear-gradient(90deg,#4299e1,#667eea); height: 100%; transition: width 0.4s; }
+.qnum { font-size: 13px; color: #a0aec0; margin-bottom: 8px; }
+.question { font-size: 18px; color: #2d3748; line-height: 1.6; margin-bottom: 16px; font-weight: 600; }
+.question-en { direction: ltr; text-align: left; background: #f7fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-family: Arial, sans-serif; }
+.btn-trans-q { background: transparent; border: 1px solid #667eea; color: #667eea; padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; margin-bottom: 14px; }
+.translation { display: none; background: #ebf8ff; padding: 10px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; color: #2c5282; }
+.translation.show { display: block; }
+
+.question-en-only { direction: ltr; text-align: left; font-family: 'Segoe UI', Arial, sans-serif; background: #f0f7ff; padding: 14px; border-radius: 10px; border-right: 4px solid #4299e1; }
+.opt-en { direction: ltr; text-align: left; font-family: 'Segoe UI', Arial, sans-serif; }
+.fill-input { direction: ltr; text-align: left; }
+
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt { background: #f7fafc; padding: 14px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; font-size: 15px; transition: 0.2s; }
+.opt:hover { background: #edf2f7; }
+.opt.selected { border-color: #4299e1; background: #ebf8ff; }
+.opt.correct { border-color: #48bb78; background: #c6f6d5; color: #22543d; }
+.opt.wrong { border-color: #f56565; background: #fed7d7; color: #742a2a; }
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.feedback { margin-top: 16px; padding: 14px; border-radius: 10px; display: none; font-size: 14px; line-height: 1.7; }
+.feedback.show { display: block; }
+.feedback.ok { background: #c6f6d5; color: #22543d; border-right: 4px solid #48bb78; }
+.feedback.bad { background: #fed7d7; color: #742a2a; border-right: 4px solid #f56565; }
+.feedback h4 { margin-bottom: 6px; font-size: 15px; }
+.btn-next { background: linear-gradient(135deg,#4299e1,#667eea); color: #fff; border: none; padding: 13px; width: 100%; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 14px; display: none; }
+.btn-next.show { display: block; }
+.fill-input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; direction: ltr; text-align: left; font-family: Arial; }
+.fill-input:focus { border-color: #4299e1; outline: none; }
+.btn-submit-fill { background: #4299e1; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 10px; font-size: 15px; cursor: pointer; margin-top: 10px; }
+.result-card { background: #fff; border-radius: 18px; padding: 28px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: none; }
+.result-card.show { display: block; }
+.result-icon { font-size: 64px; margin-bottom: 12px; }
+.result-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.result-score { font-size: 42px; font-weight: 700; color: #667eea; margin: 10px 0; }
+.result-msg { font-size: 15px; color: #4a5568; margin-bottom: 18px; line-height: 1.6; }
+.result-btn { background: linear-gradient(135deg,#48bb78,#38a169); color: #fff; border: none; padding: 13px 26px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin: 6px; }
+.result-btn.secondary { background: #edf2f7; color: #4a5568; }
+
+/* FORCE LTR for English content */
+.question, .question-en, .question-en-only {
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: 'Segoe UI', Arial, sans-serif !important;
+  unicode-bidi: embed;
+}
+.opt {
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: 'Segoe UI', Arial, sans-serif !important;
+  unicode-bidi: embed;
+}
+.fill-input {
+  direction: ltr !important;
+  text-align: left !important;
+}
+.feedback {
+  direction: rtl;
+  text-align: right;
+}
+.feedback h4, .feedback div { direction: rtl; text-align: right; }
+
+
+.full-sentence {
+  direction: ltr !important;
+  text-align: left !important;
+  font-family: 'Segoe UI', Arial, sans-serif !important;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin: 10px 0;
+  unicode-bidi: embed;
+}
+.full-sentence.correct { background: #d4f4dd; color: #1a5f2e; border-right: 4px solid #38a169; }
+.full-sentence.wrong { background: #ffe0e0; color: #7a1f1f; border-right: 4px solid #c53030; text-decoration: line-through; opacity: 0.85; }
+.sentence-label { font-size: 12px; color: #4a5568; margin-bottom: 4px; font-weight: 500; direction: rtl; text-align: right; }
+
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="quiz-card" id="quizCard">
+    <button id="btnBackTop" style="background:#edf2f7;color:#4a5568;border:none;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;margin-bottom:10px;" onclick="location.href='/foundation/lesson/{{ lesson.id }}?user_id={{ user_id }}'">↩️ رجوع للدرس</button>
+    <div class="progress"><span id="qIndex">السؤال 1 من {{ total }}</span><span>المجموعة {{ set_number }}</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="pFill" style="width:0%"></div></div>
+    <div id="qBody"></div>
+  </div>
+  <div class="result-card" id="resultCard">
+    <div class="result-icon" id="rIcon"></div>
+    <div class="result-title" id="rTitle"></div>
+    <div class="result-score" id="rScore"></div>
+    <div class="result-msg" id="rMsg"></div>
+    <div id="rButtons"></div>
+  </div>
+</div>
+<script>
+const QS = {{ questions_json|safe }};
+const LESSON_ID = {{ lesson.id }};
+const STAGE_ID = {{ lesson.stage_id }};
+const SET_NUMBER = {{ set_number }};
+const USER_ID = "{{ user_id }}";
+const TOTAL = QS.length;
+let idx = 0, correct = 0, answers = [];
+
+
+function buildFullSentence(qText, answerLetter, options){
+  // أوجد قيمة الخيار من الحرف
+  const idx = ['A','B','C','D'].indexOf(answerLetter);
+  let val = idx >= 0 && options[idx] !== undefined ? String(options[idx]) : answerLetter;
+  // استبدل أول ___ بالقيمة (أو ____ أو ___)
+  let sentence = String(qText || '');
+  if(sentence.indexOf('___') >= 0){
+    sentence = sentence.replace(/_{2,}/, val);
+  } else {
+    // إذا ما في فراغ، نعرض الإجابة فقط
+    sentence = val;
+  }
+  return sentence;
+}
+
+function renderQ(){
+  const q = QS[idx];
+  document.getElementById('qIndex').textContent = `السؤال ${idx+1} من ${TOTAL}`;
+  document.getElementById('pFill').style.width = ((idx/TOTAL)*100) + '%';
+  let html = `<div class="qnum">سؤال #${q.id}</div>`;
+  // كشف اللغة: إذا كان النص فيه حروف إنجليزية أكثر من 50% نعرضه LTR
+  const qText = q.question_ar || q.question || "";
+  const enRatio = (qText.match(/[A-Za-z]/g) || []).length / Math.max(qText.length, 1);
+  if(enRatio > 0.3){
+    html += `<div class="question-en-only">${qText}</div>`;
+  } else {
+    html += `<div class="question">${qText}</div>`;
+  }
+  if(q.question_en && q.question_en !== qText){
+    html += `<div class="question-en-only">${q.question_en}</div>`;
+  }
+  if(q.translation_ar){
+    html += `<button class="btn-trans-q" onclick="document.getElementById('tr${idx}').classList.toggle('show')">🌐 ترجمة السؤال</button>`;
+    html += `<div class="translation" id="tr${idx}">${q.translation_ar}</div>`;
+  }
+  if(q.q_type === 'mcq' || !q.q_type){
+    html += '<div class="options">';
+    (q.options || []).forEach((opt, i) => {
+      const letter = ['A','B','C','D'][i];
+      const optStr = String(opt);
+      const isEn = (optStr.match(/[A-Za-z]/g) || []).length / Math.max(optStr.length,1) > 0.3;
+      const cls = isEn ? 'opt opt-en' : 'opt';
+      html += `<div class="${cls}" data-letter="${letter}" onclick="selectOpt(this,'${letter}')">${letter}. ${optStr}</div>`;
+    });
+    html += '</div>';
+  } else if(q.q_type === 'fill'){
+    html += `<input type="text" class="fill-input" id="fillIn" placeholder="اكتب الإجابة...">`;
+    html += `<button class="btn-submit-fill" onclick="submitFill()">إرسال</button>`;
+  }
+  html += '<div class="feedback" id="fb"></div>';
+  html += '<button class="btn-next" id="btnNext" onclick="nextQ()">التالي ◀</button>';
+  document.getElementById('qBody').innerHTML = html;
+}
+
+function selectOpt(el, letter){
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  setTimeout(()=>checkAnswer(letter), 250);
+}
+function submitFill(){
+  const v = document.getElementById('fillIn').value.trim();
+  if(!v) return;
+  checkAnswer(v);
+}
+function checkAnswer(userAns){
+  const q = QS[idx];
+  const isCorrect = String(userAns).toLowerCase().trim() === String(q.correct_answer).toLowerCase().trim();
+  document.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('disabled');
+    if(o.dataset.letter === q.correct_answer) o.classList.add('correct');
+    if(o.dataset.letter === userAns && !isCorrect) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb');
+  fb.classList.add('show');
+  if(isCorrect){
+    correct++;
+    fb.classList.add('ok');
+    const fullCorrect = buildFullSentence(q.question_ar || q.question || '', q.correct_answer, q.options || []);
+    fb.innerHTML = `<h4>✅ إجابة صحيحة!</h4>
+      <div class="sentence-label">الجملة كاملة:</div>
+      <div class="full-sentence correct">${fullCorrect}</div>
+      <div style="margin-top:8px">${q.explanation_ar || q.explanation || ''}</div>`;
+  } else {
+    fb.classList.add('bad');
+    const fullCorrectB = buildFullSentence(q.question_ar || q.question || '', q.correct_answer, q.options || []);
+    const fullWrongB = buildFullSentence(q.question_ar || q.question || '', userAns, q.options || []);
+    fb.innerHTML = `<h4>❌ إجابة خاطئة</h4>
+      <div class="sentence-label">إجابتك:</div>
+      <div class="full-sentence wrong">${fullWrongB}</div>
+      <div class="sentence-label">الصحيح:</div>
+      <div class="full-sentence correct">${fullCorrectB}</div>
+      <div style="margin-top:8px">${q.explanation_ar || q.explanation || ''}</div>`;
+  }
+  answers.push({question_id: q.id, user_answer: userAns, correct: isCorrect});
+  // أرسل للسيرفر (تسجيل في error_bank عند الخطأ)
+  fetch('/api/foundation/quiz/answer', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      user_id: USER_ID, lesson_id: LESSON_ID, question_id: q.id,
+      user_answer: String(userAns), correct: isCorrect,
+      correct_answer: q.correct_answer, explanation_ar: q.explanation_ar || q.explanation || '',
+      concept_ar: q.concept_ar || ''
+    })
+  }).catch(()=>{});
+  document.getElementById('btnNext').classList.add('show');
+  if(idx === TOTAL-1) document.getElementById('btnNext').textContent = 'إنهاء وعرض النتيجة 🏁';
+}
+function nextQ(){
+  if(idx < TOTAL-1){ idx++; if(TOTAL===0){document.getElementById("qBody").innerHTML="<div style=\"padding:30px;text-align:center;color:#718096;font-size:15px\">⚠️ لا توجد أسئلة محمّلة لهذه المجموعة بعد.<br><br><button onclick=\"location.href='/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}'\" style=\"background:#4299e1;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer\">↩️ العودة للمرحلة</button></div>";}else{renderQ();} }
+  else { finishQuiz(); }
+}
+function finishQuiz(){
+  const score = Math.round((correct/TOTAL)*100);
+  fetch('/api/foundation/quiz/finish', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({user_id: USER_ID, lesson_id: LESSON_ID, set_number: SET_NUMBER, correct: correct, total: TOTAL, score: score, answers: answers})
+  }).then(r=>r.json()).then(showResult).catch(()=>{
+    showResult({passed: score>=70, score: score, xp_awarded: 0, next_action: 'stage', message: 'تعذّر الحفظ'});
+  });
+}
+function showResult(res){
+  document.getElementById('quizCard').style.display = 'none';
+  const card = document.getElementById('resultCard');
+  card.classList.add('show');
+  if(res.passed){
+    document.getElementById('rIcon').textContent = '🎉';
+    document.getElementById('rTitle').textContent = 'أحسنت!';
+  } else {
+    document.getElementById('rIcon').textContent = '📚';
+    document.getElementById('rTitle').textContent = 'تحتاج مراجعة';
+  }
+  document.getElementById('rScore').textContent = res.score + '%';
+  document.getElementById('rMsg').innerHTML = (res.message || '') + (res.xp_awarded ? `<br>+${res.xp_awarded} XP` : '');
+  let btnHtml = '';
+  if(res.next_action === 'next_set'){
+    btnHtml = `<button class="result-btn" onclick="location.href='/foundation/lesson/${LESSON_ID}?user_id=${USER_ID}'">🔄 راجع الدرس وأعد المحاولة</button>`;
+  } else if(res.next_action === 'cooldown'){
+    btnHtml = `<button class="result-btn secondary" onclick="location.href='/foundation/stage/${STAGE_ID}?user_id=${USER_ID}'">↩️ ارجع للمرحلة</button>`;
+  } else {
+    btnHtml = `<button class="result-btn" onclick="location.href='/foundation/stage/${STAGE_ID}?user_id=${USER_ID}'">▶️ الدرس التالي</button>`;
+    btnHtml += `<button class="result-btn secondary" onclick="location.href='/mistakes?user_id=${USER_ID}'">🔖 أخطائي</button>`;
+  }
+  document.getElementById('rButtons').innerHTML = btnHtml;
+}
+if(TOTAL===0){document.getElementById("qBody").innerHTML="<div style=\"padding:30px;text-align:center;color:#718096;font-size:15px\">⚠️ لا توجد أسئلة محمّلة لهذه المجموعة بعد.<br><br><button onclick=\"location.href='/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}'\" style=\"background:#4299e1;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer\">↩️ العودة للمرحلة</button></div>";}else{renderQ();}
+if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
+</script>
+</body>
+</html>

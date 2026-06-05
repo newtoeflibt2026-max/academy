@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دفتر أخطائي</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gradient(135deg,#f093fb 0%,#f5576c 100%); min-height: 100vh; padding: 16px; }
+.container { max-width: 720px; margin: 0 auto; }
+.header { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 20px; margin-bottom: 14px; text-align: center; }
+.header h1 { font-size: 24px; color: #4a5568; }
+.header p { color: #718096; font-size: 13px; margin-top: 4px; }
+.stats { display: flex; justify-content: space-around; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+.stat { text-align: center; }
+.stat .v { font-size: 20px; font-weight: bold; color: #f5576c; }
+.stat .l { font-size: 11px; color: #718096; }
+.mistake-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.mistake-meta { font-size: 11px; color: #a0aec0; margin-bottom: 6px; }
+.mistake-q { font-size: 15px; color: #2d3748; margin-bottom: 8px; font-weight: 600; }
+.mistake-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+.mistake-row .label { color: #718096; min-width: 80px; }
+.mistake-row .wrong { color: #e53e3e; font-weight: 600; }
+.mistake-row .right { color: #38a169; font-weight: 600; }
+.mistake-exp { background: #fef5e7; padding: 10px; border-radius: 8px; font-size: 13px; color: #7d6608; margin-top: 8px; }
+.retry-btn { background: linear-gradient(135deg,#4299e1,#667eea); color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; margin-top: 10px; }
+.mastered-badge { display: inline-block; background: #c6f6d5; color: #22543d; padding: 3px 8px; border-radius: 12px; font-size: 11px; margin-right: 6px; }
+.empty { background: #fff; border-radius: 14px; padding: 40px; text-align: center; color: #718096; }
+.btn-back { display: block; width: 100%; padding: 12px; background: #fff; color: #4a5568; border: none; border-radius: 12px; margin-top: 14px; font-size: 14px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🔖 دفتر أخطائي</h1>
+    <p>راجع أخطاءك ثلاث مرات صحيحة لإتقانها</p>
+    <div class="stats">
+      <div class="stat"><div class="v">{{ stats.total }}</div><div class="l">إجمالي</div></div>
+      <div class="stat"><div class="v">{{ stats.active }}</div><div class="l">نشطة</div></div>
+      <div class="stat"><div class="v">{{ stats.mastered }}</div><div class="l">متقنة ✅</div></div>
+    </div>
+  </div>
+  {% if mistakes %}
+    {% for m in mistakes %}
+    <div class="mistake-card">
+      <div class="mistake-meta">{{ m.created_at }} {% if m.is_mastered %}<span class="mastered-badge">✅ متقن</span>{% endif %}</div>
+      <div class="mistake-q">{{ m.question_text }}</div>
+      <div class="mistake-row"><span class="label">إجابتك:</span><span class="wrong">{{ m.wrong_answer }}</span></div>
+      <div class="mistake-row"><span class="label">الصحيح:</span><span class="right">{{ m.correct_answer }}</span></div>
+      {% if m.explanation_ar %}<div class="mistake-exp">💡 {{ m.explanation_ar }}</div>{% endif %}
+      <div class="mistake-meta" style="margin-top:8px">صحيح متتالٍ: {{ m.times_correct_after }}/3</div>
+      {% if not m.is_mastered %}<button class="retry-btn" onclick="retry({{ m.id }})">🔄 جرّب مرة أخرى</button>{% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">🎉 لا توجد أخطاء حالياً<br><small>أنت في طريقك للإتقان!</small></div>
+  {% endif %}
+  <button class="btn-back" onclick="location.href='/foundation?user_id={{ user_id }}'">↩️ التأسيس</button>
+</div>
+<script>
+function retry(id){
+  const ans = prompt('اكتب إجابتك الصحيحة:');
+  if(!ans) return;
+  fetch('/api/mistakes/'+id+'/retry', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({user_id:"{{ user_id }}", user_answer: ans})
+  }).then(r=>r.json()).then(res=>{
+    alert(res.correct ? '✅ صحيح! '+(res.mastered?'🎉 أتقنت هذا الخطأ!':'تبقى '+(3-res.times_correct_after)+' محاولات صحيحة') : '❌ خاطئ. الصحيح: '+res.correct_answer);
+    location.reload();
+  });
+}
+if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
+</script>
+</body>
+</html>

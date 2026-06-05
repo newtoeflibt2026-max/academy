@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>التأسيس الشامل</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; color: #2d3748; }
+.container { max-width: 720px; margin: 0 auto; }
+.header { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 20px; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); text-align: center; }
+.header h1 { font-size: 26px; color: #4a5568; margin-bottom: 6px; }
+.header p { color: #718096; font-size: 14px; }
+.stats { display: flex; justify-content: space-around; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+.stat { text-align: center; }
+.stat .v { font-size: 22px; font-weight: bold; color: #667eea; }
+.stat .l { font-size: 11px; color: #718096; }
+.stage-card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 14px; transition: all 0.25s; cursor: pointer; }
+.stage-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.stage-card.locked { opacity: 0.55; cursor: not-allowed; background: #f7fafc; }
+.stage-card.completed { border-right: 5px solid #48bb78; }
+.stage-card.current { border-right: 5px solid #4299e1; background: linear-gradient(90deg,#ebf8ff,#fff); }
+.stage-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; background: #edf2f7; }
+.stage-card.current .stage-icon { background: #bee3f8; }
+.stage-card.completed .stage-icon { background: #c6f6d5; }
+.stage-body { flex: 1; }
+.stage-title { font-size: 17px; font-weight: 600; color: #2d3748; margin-bottom: 4px; }
+.stage-desc { font-size: 13px; color: #718096; margin-bottom: 8px; }
+.progress-bar { background: #edf2f7; height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: linear-gradient(90deg,#4299e1,#667eea); height: 100%; transition: width 0.5s; }
+.stage-meta { font-size: 12px; color: #a0aec0; margin-top: 4px; }
+.lock-badge { font-size: 22px; }
+.btn-back { position: fixed; bottom: 20px; right: 20px; background: #fff; color: #4a5568; border: none; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🛠️ التأسيس الشامل</h1>
+    <p>الطريق إلى 59/120 يبدأ من هنا</p>
+    <div class="stats">
+      <div class="stat"><div class="v">{{ stats.completed_lessons }}</div><div class="l">دروس مكتملة</div></div>
+      <div class="stat"><div class="v">{{ stats.total_xp }}</div><div class="l">نقاط XP</div></div>
+      <div class="stat"><div class="v">{{ stats.mistakes_count }}</div><div class="l">في دفتر الأخطاء</div></div>
+    </div>
+  </div>
+  {% for st in stages %}
+  <div class="stage-card {{ st.css_class }}" {% if not st.locked %}onclick="location.href='/foundation/stage/{{ st.id }}?user_id={{ user_id }}'"{% endif %}>
+    <div class="stage-icon">{{ st.icon }}</div>
+    <div class="stage-body">
+      <div class="stage-title">{{ st.code }} — {{ st.name_ar }}</div>
+      <div class="stage-desc">{{ st.desc_ar }}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width: {{ st.progress_pct }}%"></div></div>
+      <div class="stage-meta">{{ st.completed }}/{{ st.total }} دروس · {{ st.progress_pct }}%</div>
+    </div>
+    {% if st.locked %}<div class="lock-badge">🔒</div>{% elif st.css_class == 'completed' %}<div class="lock-badge">✅</div>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+<button class="btn-back" onclick="if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.close()}else{history.back()}">↩️ رجوع</button>
+<script>if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}</script>
+</body>
+</html>

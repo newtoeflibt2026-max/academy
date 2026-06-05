@@ -1,3 +1,15 @@
+import os
+if os.environ.get("DISABLE_BOT", "").strip() in ("1","true","yes","on"):
+    print("[main] DISABLE_BOT=1 -> bot polling disabled (Flask only)")
+    import sys
+    # شغّل Flask فقط بدون البوت
+    try:
+        from app import app
+        app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=False)
+    except Exception as _e:
+        print(f"[main] flask error: {_e}")
+    sys.exit(0)
+
 # -*- coding: utf-8 -*-
 """
 main.py — Telegram bot worker (separated from Flask web).

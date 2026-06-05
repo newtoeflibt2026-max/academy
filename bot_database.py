@@ -59,18 +59,27 @@ def init_bot_db():
 
 def create_student(user_id, full_name=None, username="", level="beginner", telegram_id=None, **extra):
     sid = _norm_sid(telegram_id or user_id)
+    uid = int(user_id)
+    fn = full_name or "طالب"
+    un = username or ""
+    lv = level or "beginner"
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(
-        """
-        INSERT OR REPLACE INTO students
-        (user_id, telegram_id, full_name, username, level, is_active, created_at, name)
-        VALUES (?, ?, COALESCE(?, full_name), ?, ?, 1, COALESCE((SELECT created_at FROM students WHERE user_id=?), CURRENT_TIMESTAMP), COALESCE(?, 'طالب'))
-        """,
-        (int(user_id), sid, full_name, username or "", level or "beginner", int(user_id), full_name or "طالب"),
-    )
+    # هل الطالب موجود؟
+    existing = cur.execute("SELECT user_id FROM students WHERE user_id=?", (uid,)).fetchone()
+    if existing:
+        # تحديث فقط الحقول الأساسية بدون لمس created_at
+        cur.execute(
+            "UPDATE students SET telegram_id=?, full_name=COALESCE(NULLIF(?,''), full_name), username=?, level=COALESCE(level, ?), name=COALESCE(name, ?), is_active=1 WHERE user_id=?",
+            (sid, fn, un, lv, fn, uid)
+        )
+    else:
+        cur.execute(
+            "INSERT INTO students (user_id, telegram_id, full_name, username, level, is_active, created_at, name) VALUES (?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP, ?)",
+            (uid, sid, fn, un, lv, fn)
+        )
     conn.commit()
-    row = cur.execute("SELECT * FROM students WHERE user_id=?", (int(user_id),)).fetchone()
+    row = cur.execute("SELECT * FROM students WHERE user_id=?", (uid,)).fetchone()
     conn.close()
     return dict(row) if row else None
 

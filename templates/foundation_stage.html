@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ stage.code }} - دروس</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; }
+.container { max-width: 720px; margin: 0 auto; }
+.header { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 20px; margin-bottom: 16px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.header h1 { font-size: 22px; color: #4a5568; margin-bottom: 4px; }
+.header p { color: #718096; font-size: 13px; }
+.lesson-card { background: #fff; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; }
+.lesson-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+.lesson-card.locked { opacity: 0.5; cursor: not-allowed; }
+.lesson-card.done { border-right: 4px solid #48bb78; }
+.lesson-num { width: 44px; height: 44px; border-radius: 50%; background: #edf2f7; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #4a5568; flex-shrink: 0; }
+.lesson-card.done .lesson-num { background: #c6f6d5; color: #22543d; }
+.lesson-body { flex: 1; }
+.lesson-title { font-size: 15px; font-weight: 600; color: #2d3748; }
+.lesson-meta { font-size: 12px; color: #a0aec0; margin-top: 2px; }
+.lesson-icon { font-size: 20px; }
+.gatekeeper { background: linear-gradient(135deg,#f6ad55,#ed8936); color: #fff; border-radius: 14px; padding: 18px; margin-top: 18px; text-align: center; cursor: pointer; box-shadow: 0 6px 18px rgba(237,137,54,0.4); }
+.gatekeeper.locked { opacity: 0.5; cursor: not-allowed; }
+.gatekeeper h3 { font-size: 18px; margin-bottom: 6px; }
+.gatekeeper p { font-size: 13px; opacity: 0.95; }
+.btn-back { display: block; width: 100%; padding: 12px; background: #fff; color: #4a5568; border: none; border-radius: 12px; margin-top: 14px; font-size: 14px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>{{ stage.code }} — {{ stage.name_ar }}</h1>
+    <p>{{ stage.desc_ar }}</p>
+  </div>
+  {% for L in lessons %}
+  <div class="lesson-card {{ L.css_class }}" {% if not L.locked %}onclick="location.href='/foundation/lesson/{{ L.id }}?user_id={{ user_id }}'"{% endif %}>
+    <div class="lesson-num">{{ loop.index }}</div>
+    <div class="lesson-body">
+      <div class="lesson-title">{{ L.title_ar }}</div>
+      <div class="lesson-meta">{{ L.xp_reward }} XP · {{ L.skill }} · {% if L.done %}مكتمل ✅{% elif L.locked %}مقفل 🔒{% else %}متاح{% endif %}</div>
+    </div>
+    <div class="lesson-icon">{% if L.done %}✅{% elif L.locked %}🔒{% else %}📖{% endif %}</div>
+  </div>
+  {% endfor %}
+  <div class="gatekeeper {% if not gk_unlocked %}locked{% endif %}" {% if gk_unlocked %}onclick="location.href='/foundation/gatekeeper/{{ stage.id }}?user_id={{ user_id }}'"{% endif %}>
+    <h3>🎯 امتحان نهاية المرحلة</h3>
+    <p>{% if gk_unlocked %}اجتزت جميع الدروس — حان وقت الامتحان!{% else %}أكمل كل الدروس أولاً لفتح الامتحان{% endif %}</p>
+  </div>
+  <button class="btn-back" onclick="location.href='/foundation?user_id={{ user_id }}'">↩️ العودة للمراحل</button>
+</div>
+<script>if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}</script>
+</body>
+</html>

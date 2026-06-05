@@ -1,0 +1,406 @@
+# -*- coding: utf-8 -*-
+"""
+Foundation Path Routes - مسار التأسيس الشامل
+المراحل F1-F6 مع نظام مجموعات الأسئلة (set 1/2/3) ودفتر الأخطاء.
+"""
+import sqlite3, json, os
+from flask import Blueprint, request, render_template, jsonify, redirect
+
+foundation_bp = Blueprint("foundation", __name__)
+
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "academy.db")
+
+FOUNDATION_CODES = ["F1", "F2", "F3", "F4", "F5", "F6"]
+STAGE_ICONS = {"F1": "📝", "F2": "📚", "F3": "🔨", "F4": "📖", "F5": "🎧", "F6": "✍️"}
+STAGE_DESCS = {
+    "F1": "أساسيات القواعد - الضمائر، الأفعال، الأزمنة",
+    "F2": "مفردات أساسية + إملاء (400 كلمة عالية التكرار)",
+    "F3": "بناء الجملة - من البسيط إلى المركب",
+    "F4": "القراءة التأسيسية - الفكرة والتفاصيل",
+    "F5": "الاستماع التأسيسي - أرقام، حوارات، محاضرات قصيرة",
+    "F6": "الإنتاج - كتابة الإيميل والتحدث",
+}
+
+XP_SET1 = 25
+XP_SET2 = 15
+XP_SET3 = 10
+XP_MISTAKE_RETRY = 5
+PASS_PCT = 70
+
+
+def db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def get_user_id(req):
+    uid = req.args.get("user_id") or req.args.get("student_id") or "0"
+    try:
+        return int(uid)
+    except:
+        return 0
+
+
+# =========================================================
+# 1) GET /foundation - صفحة المراحل
+# =========================================================
+@foundation_bp.route("/foundation")
+def foundation_home():
+    user_id = get_user_id(request)
+    conn = db(); cur = conn.cursor()
+
+    # المراحل F1-F6
+    cur.execute("SELECT id, code, name_ar FROM stages WHERE code IN ('F1','F2','F3','F4','F5','F6') ORDER BY code")
+    raw_stages = cur.fetchall()
+
+    stages = []
+    prev_passed = True  # F1 always open
+    for s in raw_stages:
+        # عدد دروس المرحلة
+        cur.execute("SELECT COUNT(*) FROM lessons WHERE stage_id=? AND is_active=1", (s["id"],))
+        total = cur.fetchone()[0]
+        # دروس مكتملة
+        cur.execute("""SELECT COUNT(DISTINCT lesson_id) FROM lesson_attempts
+                       WHERE telegram_id=? AND lesson_id IN (SELECT id FROM lessons WHERE stage_id=?) AND passed=1""",
+                    (str(user_id), s["id"]))
+        completed = cur.fetchone()[0]
+        # هل اجتاز الـ gatekeeper؟
+        cur.execute("SELECT gatekeeper_passed FROM stage_progress WHERE student_id=? AND stage_id=?", (user_id, s["id"]))
+        gp = cur.fetchone()
+        gk_passed = bool(gp and gp["gatekeeper_passed"])
+
+        pct = int((completed / total) * 100) if total else 0
+        locked = not prev_passed
+        css = "locked" if locked else ("completed" if gk_passed else "current")
+        stages.append({
+            "id": s["id"], "code": s["code"], "name_ar": s["name_ar"],
+            "desc_ar": STAGE_DESCS.get(s["code"], ""),
+            "icon": STAGE_ICONS.get(s["code"], "📂"),
+            "total": total, "completed": completed, "progress_pct": pct,
+            "locked": locked, "css_class": css,
+        })
+        prev_passed = gk_passed
+
+    # إحصائيات عامة
+    cur.execute("""SELECT COUNT(DISTINCT lesson_id) FROM lesson_attempts WHERE telegram_id=? AND passed=1""", (str(user_id),))
+    cl = cur.fetchone()[0]
+    cur.execute("SELECT COALESCE(SUM(xp),0) FROM students WHERE telegram_id=?", (user_id,))
+    xp_row = cur.fetchone()
+    total_xp = xp_row[0] if xp_row else 0
+    cur.execute("SELECT COUNT(*) FROM error_bank WHERE user_id=? AND COALESCE(is_mastered,0)=0", (user_id,))
+    mc = cur.fetchone()[0]
+    conn.close()
+
+    return render_template("foundation.html",
+        stages=stages, user_id=user_id,
+        stats={"completed_lessons": cl, "total_xp": total_xp, "mistakes_count": mc})
+
+
+# =========================================================
+# 2) GET /foundation/stage/<id> - دروس المرحلة
+# =========================================================
+@foundation_bp.route("/foundation/stage/<int:stage_id>")
+def foundation_stage(stage_id):
+    user_id = get_user_id(request)
+    conn = db(); cur = conn.cursor()
+    cur.execute("SELECT id, code, name_ar FROM stages WHERE id=?", (stage_id,))
+    s = cur.fetchone()
+    if not s:
+        conn.close()
+        return "Stage not found", 404
+    stage = {"id": s["id"], "code": s["code"], "name_ar": s["name_ar"], "desc_ar": STAGE_DESCS.get(s["code"], "")}
+
+    cur.execute("""SELECT id, title_ar, title, skill, xp_reward, order_index
+                   FROM lessons WHERE stage_id=? AND is_active=1 ORDER BY order_index, id""", (stage_id,))
+    raw = cur.fetchall()
+
+    lessons = []
+    prev_done = True
+    for L in raw:
+        cur.execute("SELECT MAX(passed) FROM lesson_attempts WHERE telegram_id=? AND lesson_id=?", (str(user_id), L["id"]))
+        d = cur.fetchone()[0]
+        done = bool(d)
+        locked = not prev_done
+        lessons.append({
+            "id": L["id"], "title_ar": L["title_ar"] or L["title"],
+            "skill": L["skill"] or "grammar", "xp_reward": L["xp_reward"] or 20,
+            "done": done, "locked": locked,
+            "css_class": "done" if done else ("locked" if locked else "current"),
+        })
+        prev_done = done
+
+    gk_unlocked = all(L["done"] for L in lessons) and len(lessons) > 0
+    conn.close()
+    return render_template("foundation_stage.html", stage=stage, lessons=lessons, gk_unlocked=gk_unlocked, user_id=user_id)
+
+
+# =========================================================
+# 3) GET /foundation/lesson/<id> - شرح الدرس + ابدأ
+# =========================================================
+@foundation_bp.route("/foundation/lesson/<int:lesson_id>")
+def foundation_lesson(lesson_id):
+    user_id = get_user_id(request)
+    conn = db(); cur = conn.cursor()
+    cur.execute("""SELECT id, stage_id, title, title_ar, content, skill, xp_reward, timer_minutes, explanation_json
+                   FROM lessons WHERE id=?""", (lesson_id,))
+    L = cur.fetchone()
+    if not L:
+        conn.close()
+        return "Lesson not found", 404
+
+    # تحديد set التالي
+    cur.execute("""SELECT MAX(set_number) FROM lesson_attempts WHERE telegram_id=? AND lesson_id=?""",
+                (str(user_id), lesson_id))
+    last_set = cur.fetchone()[0] or 0
+    cur.execute("""SELECT passed FROM lesson_attempts WHERE telegram_id=? AND lesson_id=? ORDER BY id DESC LIMIT 1""",
+                (str(user_id), lesson_id))
+    last_row = cur.fetchone()
+    next_set = 1
+    if last_row and not last_row["passed"]:
+        next_set = min(last_set + 1, 3)
+    elif last_row and last_row["passed"]:
+        next_set = 1  # الدرس مكتمل، إعادة من البداية إذا أراد
+
+    # استخراج الأمثلة من explanation_json
+    examples = []
+    content_html = L["content"] or ""
+    try:
+        if L["explanation_json"]:
+            ej = json.loads(L["explanation_json"])
+            examples = ej.get("examples", [])
+            if ej.get("content_html"):
+                content_html = ej["content_html"]
+    except:
+        pass
+
+    lesson = {
+        "id": L["id"], "stage_id": L["stage_id"],
+        "title_ar": L["title_ar"] or L["title"],
+        "content_html": content_html,
+        "skill": L["skill"] or "grammar",
+        "xp_reward": L["xp_reward"] or 25,
+        "timer_minutes": L["timer_minutes"] or 10,
+    }
+    conn.close()
+    return render_template("foundation_lesson.html", lesson=lesson, examples=examples, next_set=next_set, user_id=user_id)
+
+
+# =========================================================
+# 4) GET /foundation/quiz/<id>?set=N - الأسئلة
+# =========================================================
+@foundation_bp.route("/foundation/quiz/<int:lesson_id>")
+def foundation_quiz(lesson_id):
+    user_id = get_user_id(request)
+    try:
+        set_number = int(request.args.get("set", "1"))
+    except:
+        set_number = 1
+    set_number = max(1, min(set_number, 3))
+
+    conn = db(); cur = conn.cursor()
+    cur.execute("SELECT id, stage_id, title_ar, title FROM lessons WHERE id=?", (lesson_id,))
+    L = cur.fetchone()
+    if not L:
+        conn.close()
+        return "Lesson not found", 404
+
+    cur.execute("""SELECT id, q_type, question, options_json, correct_answer, explanation,
+                          explanation_ar, translation_ar, concept
+                   FROM lesson_questions
+                   WHERE lesson_id=? AND COALESCE(set_number,1)=?
+                   ORDER BY order_num, id""", (lesson_id, set_number))
+    rows = cur.fetchall()
+
+    # احتياطي: لو set N فارغ، استخدم set 1
+    if not rows and set_number > 1:
+        cur.execute("""SELECT id, q_type, question, options_json, correct_answer, explanation,
+                              explanation_ar, translation_ar, concept
+                       FROM lesson_questions WHERE lesson_id=? AND COALESCE(set_number,1)=1
+                       ORDER BY order_num, id""", (lesson_id,))
+        rows = cur.fetchall()
+
+    questions = []
+    for r in rows:
+        try:
+            opts = json.loads(r["options_json"]) if r["options_json"] else []
+        except:
+            opts = []
+        questions.append({
+            "id": r["id"],
+            "q_type": r["q_type"] or "mcq",
+            "question": r["question"] or "",
+            "question_ar": r["question"] or "",
+            "question_en": "",
+            "options": opts,
+            "correct_answer": r["correct_answer"] or "",
+            "explanation": r["explanation"] or "",
+            "explanation_ar": r["explanation_ar"] or r["explanation"] or "",
+            "translation_ar": r["translation_ar"] or "",
+            "concept_ar": r["concept"] or "",
+        })
+    conn.close()
+
+    lesson = {"id": L["id"], "stage_id": L["stage_id"], "title_ar": L["title_ar"] or L["title"]}
+    return render_template("foundation_quiz.html",
+        lesson=lesson, questions_json=json.dumps(questions, ensure_ascii=False),
+        total=len(questions), set_number=set_number, user_id=user_id)
+
+
+# =========================================================
+# 5) POST /api/foundation/quiz/answer - تسجيل إجابة
+# =========================================================
+@foundation_bp.route("/api/foundation/quiz/answer", methods=["POST"])
+def api_quiz_answer():
+    data = request.get_json(silent=True) or {}
+    try:
+        user_id = int(data.get("user_id", 0))
+    except:
+        user_id = 0
+    lesson_id = int(data.get("lesson_id", 0) or 0)
+    question_id = int(data.get("question_id", 0) or 0)
+    is_correct = bool(data.get("correct", False))
+    user_answer = str(data.get("user_answer", ""))[:200]
+    correct_answer = str(data.get("correct_answer", ""))[:200]
+    explanation_ar = str(data.get("explanation_ar", ""))[:1000]
+    concept_ar = str(data.get("concept_ar", ""))[:200]
+
+    if not user_id or not question_id:
+        return jsonify({"ok": False, "error": "missing data"}), 400
+
+    if not is_correct:
+        conn = db(); cur = conn.cursor()
+        # سجّل في error_bank فقط إذا غير موجود (لتجنّب التكرار)
+        cur.execute("""SELECT id FROM error_bank WHERE user_id=? AND question_id=? AND COALESCE(is_mastered,0)=0""",
+                    (user_id, question_id))
+        existing = cur.fetchone()
+        if not existing:
+            cur.execute("""INSERT INTO error_bank
+                (user_id, question_id, error_type, wrong_answer, correct_answer, created_at,
+                 lesson_id, times_retried, times_correct_after, is_mastered, explanation_ar, concept_ar)
+                VALUES (?, ?, 'quiz', ?, ?, datetime('now'), ?, 0, 0, 0, ?, ?)""",
+                (user_id, question_id, user_answer, correct_answer, lesson_id, explanation_ar, concept_ar))
+        conn.commit(); conn.close()
+    return jsonify({"ok": True})
+
+
+# =========================================================
+# 6) POST /api/foundation/quiz/finish - إنهاء وحساب النتيجة
+# =========================================================
+@foundation_bp.route("/api/foundation/quiz/finish", methods=["POST"])
+def api_quiz_finish():
+    data = request.get_json(silent=True) or {}
+    try:
+        user_id = int(data.get("user_id", 0))
+    except:
+        user_id = 0
+    lesson_id = int(data.get("lesson_id", 0) or 0)
+    set_number = int(data.get("set_number", 1) or 1)
+    correct = int(data.get("correct", 0) or 0)
+    total = int(data.get("total", 0) or 0)
+    score = int(data.get("score", 0) or 0)
+    answers_json = json.dumps(data.get("answers", []), ensure_ascii=False)
+
+    passed = score >= PASS_PCT
+    xp_awarded = 0
+    next_action = "stage"
+    message = ""
+
+    conn = db(); cur = conn.cursor()
+    # سجّل المحاولة
+    cur.execute("""INSERT INTO lesson_attempts
+        (telegram_id, lesson_id, started_at, finished_at, correct_count, total_questions, passed, score_percent, answers_json, set_number)
+        VALUES (?, ?, datetime('now'), datetime('now'), ?, ?, ?, ?, ?, ?)""",
+        (str(user_id), lesson_id, correct, total, 1 if passed else 0, score, answers_json, set_number))
+
+    if passed:
+        if set_number == 1: xp_awarded = XP_SET1
+        elif set_number == 2: xp_awarded = XP_SET2
+        else: xp_awarded = XP_SET3
+        # امنح XP
+        try:
+            cur.execute("UPDATE students SET xp = COALESCE(xp,0) + ? WHERE telegram_id=?", (xp_awarded, user_id))
+        except: pass
+        message = f"🎉 ممتاز! نجحت بنسبة {score}% (set {set_number}). +{xp_awarded} XP"
+        next_action = "stage"
+    else:
+        if set_number < 3:
+            next_action = "next_set"
+            message = f"⚠️ حصلت على {score}%. راجع الدرس جيداً ثم جرّب مجموعة جديدة (set {set_number+1})."
+        else:
+            next_action = "cooldown"
+            message = f"📚 حصلت على {score}% في set 3. خذ استراحة وارجع لاحقاً مع تركيز أعلى."
+
+    conn.commit(); conn.close()
+    return jsonify({
+        "ok": True, "passed": passed, "score": score,
+        "xp_awarded": xp_awarded, "next_action": next_action, "message": message,
+    })
+
+
+# =========================================================
+# 7) GET /mistakes - دفتر الأخطاء
+# =========================================================
+@foundation_bp.route("/mistakes")
+def mistakes_page():
+    user_id = get_user_id(request)
+    conn = db(); cur = conn.cursor()
+    cur.execute("""SELECT eb.id, eb.question_id, eb.wrong_answer, eb.correct_answer,
+                          eb.created_at, COALESCE(eb.times_correct_after,0) AS times_correct_after,
+                          COALESCE(eb.is_mastered,0) AS is_mastered,
+                          eb.explanation_ar, lq.question AS question_text
+                   FROM error_bank eb
+                   LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
+                   WHERE eb.user_id=?
+                   ORDER BY eb.is_mastered ASC, eb.created_at DESC LIMIT 100""", (user_id,))
+    rows = cur.fetchall()
+    mistakes = [dict(r) for r in rows]
+    for m in mistakes:
+        if not m.get("question_text"):
+            m["question_text"] = "(السؤال غير متوفر)"
+    cur.execute("SELECT COUNT(*) FROM error_bank WHERE user_id=?", (user_id,))
+    total = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*) FROM error_bank WHERE user_id=? AND COALESCE(is_mastered,0)=1", (user_id,))
+    mastered = cur.fetchone()[0]
+    conn.close()
+    return render_template("mistakes.html",
+        mistakes=mistakes, user_id=user_id,
+        stats={"total": total, "mastered": mastered, "active": total - mastered})
+
+
+# =========================================================
+# 8) POST /api/mistakes/<id>/retry - مراجعة خطأ
+# =========================================================
+@foundation_bp.route("/api/mistakes/<int:mid>/retry", methods=["POST"])
+def api_mistake_retry(mid):
+    data = request.get_json(silent=True) or {}
+    try:
+        user_id = int(data.get("user_id", 0))
+    except:
+        user_id = 0
+    user_answer = str(data.get("user_answer", "")).strip()
+
+    conn = db(); cur = conn.cursor()
+    cur.execute("""SELECT eb.id, eb.user_id, eb.correct_answer, eb.times_correct_after, eb.is_mastered
+                   FROM error_bank eb WHERE eb.id=? AND eb.user_id=?""", (mid, user_id))
+    row = cur.fetchone()
+    if not row:
+        conn.close()
+        return jsonify({"ok": False, "error": "not found"}), 404
+
+    is_correct = user_answer.lower() == str(row["correct_answer"]).lower().strip()
+    new_count = (row["times_correct_after"] or 0) + (1 if is_correct else 0)
+    mastered = 1 if new_count >= 3 else 0
+    cur.execute("""UPDATE error_bank SET times_retried = COALESCE(times_retried,0)+1,
+                   times_correct_after=?, is_mastered=? WHERE id=?""",
+                (new_count, mastered, mid))
+    if is_correct:
+        try:
+            cur.execute("UPDATE students SET xp = COALESCE(xp,0) + ? WHERE telegram_id=?", (XP_MISTAKE_RETRY, user_id))
+        except: pass
+    conn.commit(); conn.close()
+    return jsonify({
+        "ok": True, "correct": is_correct, "correct_answer": row["correct_answer"],
+        "times_correct_after": new_count, "mastered": bool(mastered),
+        "xp_awarded": XP_MISTAKE_RETRY if is_correct else 0,
+    })

@@ -34,6 +34,17 @@ from db import (get_db, get_all_students_db, get_student,
 
 app = Flask(__name__)
 
+from routes.foundation import foundation_bp
+app.register_blueprint(foundation_bp)
+
+# Seed foundation content (idempotent)
+try:
+    from migrations.seed_foundation import run as _seed_foundation
+    _seed_foundation()
+except Exception as _e:
+    print(f"[seed_foundation] WARN: {_e}")
+
+
 try:
     from admin_routes import register_admin_routes
     register_admin_routes(app)
@@ -1352,7 +1363,8 @@ def api_approve_payment(pid):
             from aiogram import Bot
             from aiogram.client.default import DefaultBotProperties
             from aiogram.enums import ParseMode
-            token = os.environ.get("BOT_TOKEN", "")
+            from config import settings as _stg
+            token = _stg.BOT_TOKEN or os.environ.get("BOT_TOKEN", "")
             if token and uid:
                 msg = (
                     "✅ <b>تم تفعيل اشتراكك بنجاح!</b>\n\n"
@@ -1406,7 +1418,8 @@ def api_reject_payment(pid):
             from aiogram import Bot
             from aiogram.client.default import DefaultBotProperties
             from aiogram.enums import ParseMode
-            token = os.environ.get("BOT_TOKEN", "")
+            from config import settings as _stg
+            token = _stg.BOT_TOKEN or os.environ.get("BOT_TOKEN", "")
             if token and uid:
                 msg = (
                     "❌ <b>تم رفض طلب الاشتراك</b>\n\n"
@@ -1457,7 +1470,8 @@ def api_send_message_to_student(uid):
         from aiogram import Bot
         from aiogram.client.default import DefaultBotProperties
         from aiogram.enums import ParseMode
-        token = os.environ.get("BOT_TOKEN", "")
+        from config import settings as _stg
+        token = _stg.BOT_TOKEN or os.environ.get("BOT_TOKEN", "")
         if not token:
             return jsonify({"error": "BOT_TOKEN Ã˜ÂºÃ™Å Ã˜Â± Ã™â€¦Ã˜Â¶Ã˜Â¨Ã™Ë†Ã˜Â·"}), 500
         async def send():
@@ -2940,6 +2954,46 @@ def api_payment_submit():
         new_id = cur.lastrowid
         conn.commit()
         conn.close()
+        # ===== NOTIFY ADMIN ON TELEGRAM =====
+        try:
+            from config import settings as _stg
+            import asyncio as _aio
+            from aiogram import Bot as _Bot
+            from aiogram.client.default import DefaultBotProperties as _DBP
+            from aiogram.enums import ParseMode as _PM
+            from aiogram.types import InlineKeyboardMarkup as _IKM, InlineKeyboardButton as _IKB, FSInputFile as _FSI
+            _tok = _stg.BOT_TOKEN
+            _admins = _stg.ADMIN_IDS or []
+            if _tok and _admins:
+                _caption = (
+                    "ð³ <b>إيصال دفع جديد</b>\n\n"
+                    f"ð¤ الطالب: <code>{sid}</code>\n"
+                    f"ð الاسم: {sender_name or '-'}\n"
+                    f"ð± الهاتف: {sender_phone or '-'}\n"
+                    f"ð¦ الباقة: <b>{plan['name_ar']}</b>\n"
+                    f"ð° المبلغ: {plan['price']} {plan['currency']}\n"
+                    f"ð رقم الدفعة: <code>#{new_id}</code>\n\n"
+                    "اضغط أحد الأزرار للمراجعة ð"
+                )
+                _kb = _IKM(inline_keyboard=[[
+                    _IKB(text="✅ موافقة", callback_data=f"pay_approve:{new_id}"),
+                    _IKB(text="❌ رفض", callback_data=f"pay_reject:{new_id}"),
+                ]])
+                async def _notify_admins():
+                    _bot = _Bot(token=_tok, default=_DBP(parse_mode=_PM.HTML))
+                    try:
+                        for _aid in _admins:
+                            try:
+                                _photo = _FSI(fpath)
+                                await _bot.send_photo(chat_id=int(_aid), photo=_photo, caption=_caption, reply_markup=_kb)
+                            except Exception as _e:
+                                print(f"[payment_submit] notify admin failed: {_e}")
+                    finally:
+                        await _bot.session.close()
+                _aio.run(_notify_admins())
+        except Exception as _e:
+            print(f"[payment_submit] admin notify error: {_e}")
+        # ===== END NOTIFY =====
         return _jsonify({"ok": True, "payment_id": new_id, "message": "تم استلام إثبات الدفع، سيتم مراجعته قريباً"})
     except Exception as e:
         return _jsonify({"error": str(e)}), 500
@@ -3854,44 +3908,72 @@ def api_admin_lesson_question_delete(qid):
 # ============================================================
 @app.route("/api/admin/students/list", methods=["GET"])
 def api_admin_students_list():
+    """قائمة الطلاب الموسعة - تُرجع كل الحقول للوحة الأدمن"""
     try:
-        import sqlite3
-        conn = _miniapp_db()
-        conn.row_factory = sqlite3.Row
-        cur = conn.cursor()
+        import sqlite3, traceback
         q = (request.args.get("q") or "").strip()
         level = (request.args.get("level") or "").strip()
         page = int(request.args.get("page") or 1)
         per_page = int(request.args.get("per_page") or 50)
         offset = (page - 1) * per_page
-        where, params = [], []
+
+        conn = sqlite3.connect(DB_PATH, timeout=30.0)
+        conn.row_factory = sqlite3.Row
+
+        sql = """
+        SELECT user_id, full_name, name, username, telegram_id,
+               level, current_path, placement_path, path_type, track,
+               placement_done, placement_score,
+               xp, total_xp, xp_total, grammar_xp, vocabulary_xp,
+               is_paid, is_active, subscription_type, package_end,
+               subscription_started_at, subscription_locked_until,
+               streak, streak_days, target_band, current_band,
+               target_score, days_left, hearts, hearts_unlimited,
+               free_plan_used, free_plan_used_at, free_week_number,
+               graduated, graduation_score, certificate_url,
+               completed_lessons, missions_completed, stages_passed,
+               created_at, last_active, last_active_date, last_activity
+        FROM students WHERE 1=1
+        """
+        params = []
         if q:
-            where.append("(CAST(user_id AS TEXT) LIKE ? OR full_name LIKE ?)")
-            params.extend(["%" + q + "%", "%" + q + "%"])
+            sql += " AND (CAST(user_id AS TEXT) LIKE ? OR full_name LIKE ? OR name LIKE ? OR username LIKE ? OR CAST(telegram_id AS TEXT) LIKE ?)"
+            qp = f"%{q}%"
+            params.extend([qp, qp, qp, qp, qp])
         if level:
-            where.append("level=?"); params.append(level)
-        where_sql = ("WHERE " + " AND ".join(where)) if where else ""
-        cur.execute("SELECT COUNT(*) FROM students " + where_sql, params)
-        total = cur.fetchone()[0]
-        cur.execute("PRAGMA table_info(students)")
-        cols = [r[1] for r in cur.fetchall()]
-        select_cols = "user_id"
-        for c in ["full_name","level","placement_done","placement_score","placement_path","free_plan_used","free_plan_used_at","free_week_number","created_at"]:
-            if c in cols: select_cols += ", " + c
-        cur.execute("SELECT " + select_cols + " FROM students " + where_sql + " ORDER BY rowid DESC LIMIT ? OFFSET ?", params + [per_page, offset])
-        rows = [dict(r) for r in cur.fetchall()]
+            sql += " AND level = ?"
+            params.append(level)
+        sql += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
+        params.extend([per_page, offset])
+
+        rows = conn.execute(sql, params).fetchall()
+        students = []
         for r in rows:
-            try:
-                cur.execute("SELECT plan_name, end_date, is_active FROM subscriptions WHERE user_id=? AND is_active=1 ORDER BY id DESC LIMIT 1", (r["user_id"],))
-                sub = cur.fetchone()
-                r["subscription"] = dict(sub) if sub else None
-            except Exception:
-                r["subscription"] = None
+            d = dict(r)
+            xp_val = max(d.get("xp") or 0, d.get("total_xp") or 0, d.get("xp_total") or 0)
+            d["xp"] = xp_val
+            d["total_xp"] = xp_val
+            d["xp_total"] = xp_val
+            d["path"] = d.get("current_path") or d.get("placement_path") or "foundation"
+            d["subscription"] = {
+                "is_paid": bool(d.get("is_paid")),
+                "type": d.get("subscription_type") or "free",
+                "end": d.get("package_end")
+            } if (d.get("is_paid") or d.get("subscription_type")) else None
+            students.append(d)
         conn.close()
-        return jsonify({"students": rows, "total": total, "page": page, "per_page": per_page})
+
+        return jsonify({
+            "ok": True,
+            "students": students,
+            "total": len(students),
+            "page": page,
+            "per_page": per_page
+        })
     except Exception as e:
-        import traceback; traceback.print_exc()
-        return jsonify({"error": str(e), "students": []}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({"ok": False, "error": str(e), "students": []}), 500
 
 
 @app.route("/api/admin/students/<user_id>/update", methods=["POST", "PUT"])
@@ -4338,15 +4420,34 @@ def api_admin_lock_graduation(user_id):
 @app.route("/api/admin/students/<user_id>/path/change", methods=["POST"])
 def api_admin_change_student_path(user_id):
     try:
+        import sqlite3
         data = request.get_json(silent=True) or {}
         new_path = (data.get("new_path") or data.get("path") or "").strip()
-        if not new_path: return jsonify({"error": "path required"}), 400
-        conn = _miniapp_db(); cur = conn.cursor()
-        cur.execute("UPDATE students SET current_path=? WHERE user_id=?", (new_path, user_id))
-        conn.commit(); conn.close()
-        return jsonify({"ok": True})
+        if not new_path:
+            return jsonify({"error": "path required"}), 400
+
+        uid_int = int(user_id) if str(user_id).isdigit() else user_id
+
+        # اتصال مباشر بدون autocommit لضمان الحفظ
+        conn = sqlite3.connect(DB_PATH, timeout=30.0)
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE students SET current_path=?, path_type=? WHERE user_id=? OR telegram_id=?",
+                (new_path, new_path, uid_int, str(user_id))
+            )
+            rows = cur.rowcount
+            conn.commit()
+        finally:
+            conn.close()
+
+        if rows == 0:
+            return jsonify({"error": "student not found", "user_id": user_id}), 404
+        return jsonify({"ok": True, "rows": rows, "new_path": new_path})
     except Exception as e:
+        import traceback; traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
 
 
 @app.route("/api/admin/students/<user_id>/progress/reset", methods=["POST"])
