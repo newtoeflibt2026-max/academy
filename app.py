@@ -6113,11 +6113,6 @@ def _migrate_reading_tables():
         import traceback
         return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
 
-if __name__ == "__main__":
-    import os as _os
-    _port = int(_os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=_port, debug=False)
-
 
 # ===================== Phase 9: Admin + Placement Questions CRUD =====================
 
@@ -6642,3 +6637,9 @@ def api_admin_ctw_delete(qid):
         conn.close()
 # ===================== End CTW Admin CRUD =====================
 
+
+if __name__ == "__main__":
+    import os as _os
+    _port = int(_os.environ.get("PORT", 8080))
+    print(f"[app] Flask starting on 0.0.0.0:{_port}")
+    app.run(host="0.0.0.0", port=_port, debug=False)
