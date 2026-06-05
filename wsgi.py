@@ -1,28 +1,62 @@
-# -*- coding: utf-8 -*-
-"""
-wsgi.py — Production entry point for gunicorn / Railway web service.
-Usage: gunicorn -w 2 -b 0.0.0.0:$PORT wsgi:app
-"""
-import os
 
-# Ensure DB_PATH is set BEFORE importing app (so all modules see same value)
-if not os.environ.get("DB_PATH"):
-    if os.path.isdir("/app/data"):
-        os.environ["DB_PATH"] = "/app/data/academy.db"
-    else:
-        os.environ["DB_PATH"] = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "academy.db"
-        )
+# ─── Phase Settings ──────────────────────────────────────
+@app.route("/api/admin/phase-settings", methods=["GET"])
+def api_phase_settings():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM phase_settings ORDER BY phase_number").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
 
-# Optional: ensure DB seeded
-try:
-    from init_db import ensure_db
-    ensure_db()
-except Exception as _e:
-    print(f"[wsgi] init_db skipped: {_e}")
+@app.route("/api/admin/phase-settings/<int:pid>", methods=["PUT"])
+def api_update_phase_setting(pid):
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""UPDATE phase_settings SET
+            phase_name=?, min_xp=?, min_streak=?,
+            min_quiz_score=?, min_attendance_days=?, description=?
+            WHERE phase_number=?""",
+            (d.get("phase_name",""), int(d.get("min_xp",0)),
+             int(d.get("min_streak",0)), float(d.get("min_quiz_score",0)),
+             int(d.get("min_attendance_days",0)), d.get("description",""), pid))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
 
-from app import app  # noqa: E402
+# ─── Grading Rules ───────────────────────────────────────
+@app.route("/api/admin/grading-rules", methods=["GET"])
+def api_get_grading_rules():
+    conn = get_db()
+    try:
+        rows = conn.execute("SELECT * FROM essay_grading_rules ORDER BY id").fetchall()
+        return jsonify([dict(r) for r in rows])
+    finally:
+        conn.close()
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port, debug=False)
+@app.route("/api/admin/grading-rules", methods=["POST"])
+def api_add_grading_rule():
+    d = request.json or {}
+    conn = get_db()
+    try:
+        conn.execute("""INSERT INTO essay_grading_rules
+            (criteria, max_score, description)
+            VALUES (?,?,?)""",
+            (d.get("criteria",""), int(d.get("max_score",10)),
+             d.get("description","")))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
+
+@app.route("/api/admin/grading-rules/<int:rid>", methods=["DELETE"])
+def api_delete_grading_rule(rid):
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM essay_grading_rules WHERE id=?", (rid,))
+        conn.commit()
+        return jsonify({"ok": True})
+    finally:
+        conn.close()
