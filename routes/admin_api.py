@@ -105,71 +105,39 @@ def admin_stats():
 # ================================================================
 @admin_api_bp.route("/students", methods=["GET"])
 def admin_students():
-    """قائمة الطلاب مع حالة التفعيل والاشتراك (frontend-compatible)."""
+    """قائمة الطلاب مع حالة التفعيل والـ placement."""
     _, auth_err = _verify_admin()
     if auth_err:
         return auth_err
 
     try:
-        from flask import request
-        q = (request.args.get("q") or "").strip()
-
         db = _get_db()
-        if q:
-            like = f"%{q}%"
-            rows = db.execute("""
-                SELECT user_id, telegram_id, full_name, name, username,
-                       level, is_active, is_paid, subscription_type,
-                       package_end, xp, total_xp, streak, streak_days,
-                       created_at, placement_done
-                FROM students
-                WHERE full_name LIKE ?
-                   OR name LIKE ?
-                   OR username LIKE ?
-                   OR CAST(user_id AS TEXT) LIKE ?
-                   OR telegram_id LIKE ?
-                ORDER BY created_at DESC
-                LIMIT 500
-            """, (like, like, like, like, like)).fetchall()
-        else:
-            rows = db.execute("""
-                SELECT user_id, telegram_id, full_name, name, username,
-                       level, is_active, is_paid, subscription_type,
-                       package_end, xp, total_xp, streak, streak_days,
-                       created_at, placement_done
-                FROM students
-                ORDER BY created_at DESC
-                LIMIT 500
-            """).fetchall()
+        rows = db.execute("""
+            SELECT s.student_id, s.full_name, s.is_active,
+                   p.band, p.level, p.path
+            FROM students s
+            LEFT JOIN placement_results p ON p.student_id = s.student_id
+               AND p.id = (
+                   SELECT MAX(id) FROM placement_results WHERE student_id = s.student_id
+               )
+            ORDER BY s.student_id
+        """).fetchall()
         db.close()
 
         students = []
         for r in rows:
-            d = dict(r)
             students.append({
-                "user_id":           d.get("user_id"),
-                "telegram_id":       d.get("telegram_id"),
-                "full_name":         d.get("full_name") or d.get("name") or "",
-                "name":              d.get("name") or "",
-                "username":          d.get("username") or "",
-                "level":             d.get("level") or "beginner",
-                "is_active":         bool(d.get("is_active")),
-                "is_paid":           bool(d.get("is_paid")),
-                "subscription_type": d.get("subscription_type") or "free",
-                "package_end":       d.get("package_end"),
-                "xp":                d.get("xp") or d.get("total_xp") or 0,
-                "streak":            d.get("streak") or d.get("streak_days") or 0,
-                "created_at":        d.get("created_at"),
-                "placement_done":    bool(d.get("placement_done")),
+                "student_id": r["student_id"],
+                "full_name": r["full_name"],
+                "is_active": bool(r["is_active"]),
+                "band": r["band"],
+                "level": r["level"],
+                "path": r["path"],
             })
-
-        # frontend يقرأ d.students مباشرة، لذا نعيد المفتاح بهذا الاسم
-        from flask import jsonify
-        return jsonify({"ok": True, "students": students, "total": len(students)})
+        return _success(data=students)
     except Exception:
         traceback.print_exc()
         return _error("Internal error loading students", 500)
-
 
 
 # ================================================================
