@@ -82,6 +82,8 @@ def run():
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     ensure_mini_lessons(cur)
+    ensure_stages(cur)
+    conn.commit()
     conn.commit()
 
     # ===== 1) ALTER TABLES =====
