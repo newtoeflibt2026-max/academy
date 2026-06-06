@@ -65,7 +65,8 @@ def listening_track_page():
     total_all = 0; done_all = 0
     for s in stages:
         try:
-            s["total"] = c.execute(f"SELECT COUNT(*) FROM {s["table"]} WHERE {s["where"]}").fetchone()[0] or 0
+            _tbl = s["table"]; _whr = s["where"]
+            s["total"] = c.execute(f"SELECT COUNT(*) FROM {_tbl} WHERE {_whr}").fetchone()[0] or 0
         except Exception:
             s["total"] = 0
         # progress (best-effort, if table exists)
