@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -6,40 +6,56 @@
 <title>{{ lesson.title_ar }}</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; }
 .container { max-width: 720px; margin: 0 auto; }
-.lesson-card { background: #fff; border-radius: 18px; padding: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.lesson-card { background: #fff; border-radius: 18px; padding: 22px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
 .lesson-title { font-size: 22px; color: #2d3748; margin-bottom: 6px; font-weight: 700; }
 .lesson-sub { font-size: 13px; color: #718096; margin-bottom: 18px; }
 .tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #edf2f7; }
-.tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600; color: #a0aec0; border-bottom: 3px solid transparent; transition: 0.2s; font-size: 14px; }
+.tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600;
+  color: #a0aec0; border-bottom: 3px solid transparent; font-size: 14px; }
 .tab.active { color: #667eea; border-bottom-color: #667eea; }
 .tab-content { display: none; }
-.tab-content.active { display: block; }
-.explanation { font-size: 16px; line-height: 1.9; color: #2d3748; }
-.explanation h3 { color: #4a5568; margin: 14px 0 8px; font-size: 17px; }
-.explanation p { margin-bottom: 10px; }
-.explanation ul { padding-right: 22px; margin-bottom: 10px; }
-.explanation li { margin-bottom: 6px; }
-.explanation table { width: 100%; border-collapse: collapse; margin: 12px 0; background: #f7fafc; border-radius: 8px; overflow: hidden; }
-.explanation th, .explanation td { padding: 10px; border: 1px solid #e2e8f0; text-align: center; }
-.explanation th { background: #667eea; color: #fff; }
-.tip { background: #fef5e7; border-right: 4px solid #f39c12; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px; color: #7d6608; }
-.warn { background: #fef2f2; border-right: 4px solid #e53e3e; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 14px; color: #742a2a; }
-.example { background: #ebf8ff; padding: 14px; border-radius: 10px; margin-bottom: 10px; border-right: 4px solid #4299e1; }
-.example .en { font-size: 16px; color: #2c5282; font-weight: 600; margin-bottom: 4px; direction: ltr; text-align: left; }
-.example .ar { font-size: 14px; color: #4a5568; display: none; margin-top: 6px; }
+.tab-content.active { display: block; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to {opacity:1; transform:translateY(0);} }
+
+.explanation { font-size: 16px; line-height: 1.95; color: #2d3748; }
+.explanation p { margin: 10px 0; }
+.explanation .rule-list { padding-right: 0; list-style: none; }
+.explanation .rule-list li { background:#f8f9fa; padding:12px 14px; border-radius:10px;
+  margin-bottom:10px; border-right:4px solid #667eea; }
+.explanation .rule-list li b { color:#5a4cad; display:inline-block; margin-left:6px; }
+.explanation .rule-list li span { color:#2c3e50; font-weight:500; }
+
+.example { background: linear-gradient(135deg,#fff5ef,#ffe8d6); padding: 14px;
+  border-radius: 12px; margin-bottom: 10px; border-right: 4px solid #ff6b35; }
+.example .en { font-size: 16px; color: #2c5282; font-weight: 600;
+  direction: ltr; text-align: left; unicode-bidi: plaintext; }
+.example .ar { font-size: 14px; color: #4a5568; display: none; margin-top: 8px;
+  padding-top: 8px; border-top: 1px dashed #cbd5e0; }
 .example.show .ar { display: block; }
-.btn-trans { background: transparent; border: 1px solid #4299e1; color: #4299e1; padding: 4px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; margin-top: 6px; }
-.btn-start { background: linear-gradient(135deg,#48bb78,#38a169); color: #fff; border: none; padding: 14px; width: 100%; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 18px; box-shadow: 0 6px 18px rgba(72,187,120,0.4); }
-.btn-back { display: block; width: 100%; padding: 11px; background: #edf2f7; color: #4a5568; border: none; border-radius: 10px; margin-top: 10px; font-size: 14px; cursor: pointer; }
-.set-info { background: #fff5f5; border-right: 4px solid #f56565; padding: 12px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; color: #742a2a; }
+.btn-trans { background: transparent; border: 1.5px solid #ff6b35; color: #ff6b35;
+  padding: 5px 14px; border-radius: 20px; font-size: 12px; cursor: pointer;
+  margin-top: 8px; font-weight: 600; }
+.empty-ex { text-align:center; padding:30px; color:#999; font-size:14px; }
+
+.btn-start { background: linear-gradient(135deg,#48bb78,#38a169); color: #fff;
+  border: none; padding: 14px; width: 100%; border-radius: 12px; font-size: 17px;
+  font-weight: 700; cursor: pointer; margin-top: 18px;
+  box-shadow: 0 6px 18px rgba(72,187,120,0.4); }
+.btn-back { display: block; width: 100%; padding: 11px; background: #edf2f7;
+  color: #4a5568; border: none; border-radius: 10px; margin-top: 10px;
+  font-size: 14px; cursor: pointer; }
+.set-info { background: #fff5f5; border-right: 4px solid #f56565; padding: 12px;
+  border-radius: 8px; margin-bottom: 14px; font-size: 14px; color: #742a2a; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="lesson-card">
-    <div class="lesson-title">{{ lesson.title_ar }}</div>
+    <div class="lesson-title" dir="auto">{{ lesson.title_ar }}</div>
     <div class="lesson-sub">{{ lesson.skill }} · {{ lesson.xp_reward }} XP · {{ lesson.timer_minutes }} دقيقة</div>
     {% if next_set > 1 %}
     <div class="set-info">⚠️ هذه إعادة المحاولة. راجع الشرح جيداً ثم ابدأ بمجموعة أسئلة جديدة (set {{ next_set }}).</div>
@@ -52,15 +68,19 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gr
       <div class="explanation">{{ lesson.content_html|safe }}</div>
     </div>
     <div class="tab-content">
-      {% for ex in examples %}
-      <div class="example" id="ex{{ loop.index }}">
-        <div class="en">{{ ex.en }}</div>
-        <div class="ar">🇸🇦 {{ ex.ar }}</div>
-        <button class="btn-trans" onclick="toggleTrans({{ loop.index }})">🌐 ترجمة</button>
-      </div>
-      {% endfor %}
+      {% if examples %}
+        {% for ex in examples %}
+        <div class="example" id="ex{{ loop.index }}">
+          <div class="en">{{ ex.en }}</div>
+          {% if ex.ar %}<div class="ar">🇸🇦 {{ ex.ar }}</div>{% endif %}
+          {% if ex.ar %}<button class="btn-trans" onclick="toggleTrans({{ loop.index }})">🌐 إظهار الترجمة</button>{% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-ex">لا توجد أمثلة منفصلة. راجع الشرح فهو يحتوي على أمثلة.</div>
+      {% endif %}
     </div>
-    <button class="btn-start" onclick="location.href='/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}&set={{ next_set }}'">▶️ ابدأ الأسئلة (8 أسئلة)</button>
+    <button class="btn-start" onclick="location.href='/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}&set={{ next_set }}'">▶️ ابدأ الأسئلة ({{ q_count }} أسئلة)</button>
     <button class="btn-back" onclick="location.href='/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}'">↩️ رجوع</button>
   </div>
 </div>
@@ -69,7 +89,12 @@ function showTab(i){
   document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('active', idx===i));
   document.querySelectorAll('.tab-content').forEach((c,idx)=>c.classList.toggle('active', idx===i));
 }
-function toggleTrans(i){ document.getElementById('ex'+i).classList.toggle('show'); }
+function toggleTrans(i){
+  const el = document.getElementById('ex'+i);
+  el.classList.toggle('show');
+  const btn = el.querySelector('.btn-trans');
+  if (btn) btn.textContent = el.classList.contains('show') ? '🙈 إخفاء الترجمة' : '🌐 إظهار الترجمة';
+}
 if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
 </script>
 </body>
