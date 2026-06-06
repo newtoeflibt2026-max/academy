@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>???????? ????</title>
+<style>body{font-family:Tahoma;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:16px;padding:40px;max-width:500px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.icon{font-size:64px;margin-bottom:20px}h2{color:#2d3748;margin-bottom:12px}p{color:#666;margin-bottom:24px;line-height:1.6}
+.btn{display:inline-block;padding:14px 28px;background:#4a5568;color:#fff;border-radius:10px;text-decoration:none}
+.progress{background:#e2e8f0;height:12px;border-radius:6px;overflow:hidden;margin:20px 0}
+.fill{background:linear-gradient(90deg,#48bb78,#38a169);height:100%}
+</style></head><body>
+<div class="card">
+  <div class="icon">??</div>
+  <h2>?????? {{ stage.code }} ????</h2>
+  <p>??? ????? ???? ???? <b>{{ stage.name_ar }}</b> ??? ??? ?????? ????? ???????.</p>
+  <div class="progress"><div class="fill" style="width:{{ (done/total*100)|round if total else 0 }}%"></div></div>
+  <p><b>{{ done }}</b> ?? <b>{{ total }}</b> ???? ??????</p>
+  <a class="btn" href="/foundation/stage/{{ stage.id }}?user_id={{ user_id }}">?????? ?????? ??????</a>
+</div></body></html>

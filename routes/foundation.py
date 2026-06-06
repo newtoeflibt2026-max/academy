@@ -407,3 +407,126 @@ def api_mistake_retry(mid):
         "times_correct_after": new_count, "mastered": bool(mastered),
         "xp_awarded": XP_MISTAKE_RETRY if is_correct else 0,
     })
+
+
+# ============================================================
+# GATEKEEPER - ?????? ????? ???????
+# ============================================================
+import random as _random
+
+@foundation_bp.route("/foundation/gatekeeper/<int:stage_id>")
+def gatekeeper_start(stage_id):
+    user_id = get_user_id(request)
+    conn = db(); cur = conn.cursor()
+
+    # ???? ?? ???????
+    cur.execute("SELECT id, code, name_ar FROM stages WHERE id=?", (stage_id,))
+    st = cur.fetchone()
+    if not st:
+        conn.close()
+        return "Stage not found", 404
+
+    # ???? ?? ?????? ???? ???? ???????
+    cur.execute("SELECT COUNT(*) FROM lessons WHERE stage_id=? AND is_active=1", (stage_id,))
+    total_lessons = cur.fetchone()[0]
+    cur.execute("""SELECT COUNT(DISTINCT lesson_id) FROM lesson_attempts
+                   WHERE telegram_id=? AND passed=1
+                   AND lesson_id IN (SELECT id FROM lessons WHERE stage_id=?)""",
+                (str(user_id), stage_id))
+    done_lessons = cur.fetchone()[0]
+
+    if total_lessons == 0 or done_lessons < total_lessons:
+        conn.close()
+        return render_template("gatekeeper_locked.html",
+            stage={"id": st["id"], "code": st["code"], "name_ar": st["name_ar"]},
+            done=done_lessons, total=total_lessons, user_id=user_id)
+
+    # ???? 10 ????? ??????? ?? ????? ???? ???????
+    cur.execute("""SELECT id, question, options_json, correct_answer, explanation_ar, explanation, translation_ar
+                   FROM lesson_questions
+                   WHERE lesson_id IN (SELECT id FROM lessons WHERE stage_id=? AND is_active=1)
+                   AND question IS NOT NULL AND question != ''
+                   ORDER BY RANDOM() LIMIT 10""", (stage_id,))
+    raw = cur.fetchall()
+    conn.close()
+
+    if not raw:
+        return f"<h2>?? ???? ????? ????? ??????? {st['code']}</h2><a href='/foundation?user_id={user_id}'>????</a>", 200
+
+    import json as _json
+    questions = []
+    for q in raw:
+        opts = []
+        try:
+            opts = _json.loads(q["options_json"]) if q["options_json"] else []
+        except Exception:
+            opts = []
+        questions.append({
+            "id": q["id"],
+            "question": q["question"],
+            "options": opts,
+            "correct": q["correct_answer"],
+            "explanation": q["explanation_ar"] or q["explanation"] or "",
+            "translation": q["translation_ar"] or "",
+        })
+
+    return render_template("gatekeeper.html",
+        stage={"id": st["id"], "code": st["code"], "name_ar": st["name_ar"]},
+        questions=questions, user_id=user_id, pass_threshold=80)
+
+
+@foundation_bp.route("/foundation/gatekeeper/<int:stage_id>/submit", methods=["POST"])
+def gatekeeper_submit(stage_id):
+    user_id = get_user_id(request)
+    data = request.get_json(silent=True) or {}
+    answers = data.get("answers", {})  # {qid: "A"/"B"/...}
+
+    conn = db(); cur = conn.cursor()
+    qids = [int(k) for k in answers.keys() if str(k).isdigit()]
+    if not qids:
+        conn.close()
+        return jsonify({"ok": False, "error": "no answers"}), 400
+
+    placeholders = ",".join(["?"] * len(qids))
+    cur.execute(f"SELECT id, correct_answer FROM lesson_questions WHERE id IN ({placeholders})", qids)
+    correct_map = {r["id"]: (r["correct_answer"] or "").strip() for r in cur.fetchall()}
+
+    correct = 0
+    total = len(qids)
+    details = []
+    for qid in qids:
+        user_ans = (answers.get(str(qid)) or "").strip()
+        right = correct_map.get(qid, "")
+        is_right = user_ans.upper() == right.upper()
+        if is_right: correct += 1
+        details.append({"qid": qid, "user": user_ans, "correct": right, "is_correct": is_right})
+
+    score_pct = int((correct / total) * 100) if total else 0
+    passed = 1 if score_pct >= 80 else 0
+
+    # ??? ?? stage_progress
+    cur.execute("SELECT id, gatekeeper_attempts, gatekeeper_best_score FROM stage_progress WHERE student_id=? AND stage_id=?",
+                (user_id, stage_id))
+    sp = cur.fetchone()
+    if sp:
+        new_attempts = (sp["gatekeeper_attempts"] or 0) + 1
+        new_best = max(sp["gatekeeper_best_score"] or 0, score_pct)
+        cur.execute("""UPDATE stage_progress SET gatekeeper_attempts=?, gatekeeper_best_score=?,
+                       gatekeeper_passed=CASE WHEN ?>=80 THEN 1 ELSE gatekeeper_passed END,
+                       completed_at=CASE WHEN ?>=80 THEN CURRENT_TIMESTAMP ELSE completed_at END
+                       WHERE id=?""",
+                    (new_attempts, new_best, score_pct, score_pct, sp["id"]))
+    else:
+        cur.execute("""INSERT INTO stage_progress (student_id, stage_id, status, gatekeeper_attempts,
+                       gatekeeper_best_score, gatekeeper_passed, started_at, completed_at)
+                       VALUES (?, ?, 'in_progress', 1, ?, ?, CURRENT_TIMESTAMP,
+                       CASE WHEN ?>=80 THEN CURRENT_TIMESTAMP ELSE NULL END)""",
+                    (user_id, stage_id, score_pct, passed, score_pct))
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "ok": True, "score_pct": score_pct, "correct": correct, "total": total,
+        "passed": bool(passed), "details": details
+    })
+

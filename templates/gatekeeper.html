@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>?????? {{ stage.code }}</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Tahoma', sans-serif; background: linear-gradient(135deg,#667eea,#764ba2); min-height:100vh; padding:20px; }
+.container { max-width: 720px; margin: 0 auto; }
+.header { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,.15); }
+.header h1 { font-size: 22px; color: #333; margin-bottom: 8px; }
+.header .meta { color: #666; font-size: 14px; }
+.progress { background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+.progress-fill { background: linear-gradient(90deg,#f6ad55,#ed8936); height: 100%; transition: width .3s; }
+.card { background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.q-num { color: #ed8936; font-weight: bold; margin-bottom: 8px; }
+.q-text { font-size: 18px; color: #2d3748; margin-bottom: 20px; line-height: 1.6; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt { background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 14px; cursor: pointer; transition: all .2s; font-size: 15px; }
+.opt:hover { background: #edf2f7; border-color: #cbd5e0; }
+.opt.selected { background: #fed7aa; border-color: #ed8936; }
+.opt.correct { background: #c6f6d5; border-color: #38a169; }
+.opt.wrong { background: #fed7d7; border-color: #e53e3e; }
+.btn { background: linear-gradient(135deg,#ed8936,#dd6b20); color: #fff; border: none; padding: 14px 30px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 12px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.result { text-align: center; padding: 30px; }
+.result h2 { font-size: 28px; margin-bottom: 16px; }
+.result.pass h2 { color: #38a169; }
+.result.fail h2 { color: #e53e3e; }
+.score-big { font-size: 64px; font-weight: bold; margin: 16px 0; }
+.back-btn { display: inline-block; margin-top: 16px; padding: 12px 24px; background: #4a5568; color: #fff; border-radius: 10px; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>?? ?????? {{ stage.code }} ? {{ stage.name_ar }}</h1>
+    <div class="meta">??? ?????? ??? {{ pass_threshold }}% ??? ????? ?????? ???? ??????? ???????</div>
+    <div class="progress"><div class="progress-fill" id="pbar" style="width: 0%"></div></div>
+    <div class="meta" style="margin-top:8px;">?????? <span id="qcur">1</span> ?? <span id="qtot">{{ questions|length }}</span></div>
+  </div>
+
+  <div id="quizArea"></div>
+  <div id="resultArea" style="display:none;"></div>
+</div>
+
+<script>
+const QUESTIONS = {{ questions|tojson }};
+const STAGE_ID = {{ stage.id }};
+const USER_ID = "{{ user_id }}";
+const PASS = {{ pass_threshold }};
+let idx = 0;
+let answers = {};
+
+function letterFromIdx(i) { return ["A","B","C","D","E","F"][i] || String.fromCharCode(65+i); }
+
+function render() {
+  if (idx >= QUESTIONS.length) return showFinal();
+  const q = QUESTIONS[idx];
+  document.getElementById("qcur").textContent = idx + 1;
+  document.getElementById("pbar").style.width = ((idx)/QUESTIONS.length*100) + "%";
+
+  let html = '<div class="card"><div class="q-num">???? ' + (idx+1) + '</div>';
+  html += '<div class="q-text">' + (q.question || "?") + '</div>';
+  html += '<div class="options">';
+  (q.options || []).forEach((opt, i) => {
+    const letter = letterFromIdx(i);
+    const text = (typeof opt === "string") ? opt : (opt.text || opt.label || JSON.stringify(opt));
+    html += '<div class="opt" data-letter="' + letter + '" onclick="pick(this,\'' + letter + '\')">' +
+            '<b>' + letter + '.</b> ' + text + '</div>';
+  });
+  html += '</div>';
+  html += '<button class="btn" id="nextBtn" disabled onclick="next()">' +
+          (idx === QUESTIONS.length-1 ? '????? ???? ???????' : '?????? ??????') + '</button>';
+  html += '</div>';
+  document.getElementById("quizArea").innerHTML = html;
+}
+
+function pick(el, letter) {
+  document.querySelectorAll(".opt").forEach(o => o.classList.remove("selected"));
+  el.classList.add("selected");
+  answers[QUESTIONS[idx].id] = letter;
+  document.getElementById("nextBtn").disabled = false;
+}
+
+function next() {
+  idx++;
+  render();
+}
+
+async function showFinal() {
+  document.getElementById("pbar").style.width = "100%";
+  document.getElementById("quizArea").style.display = "none";
+  const res = document.getElementById("resultArea");
+  res.style.display = "block";
+  res.innerHTML = '<div class="card result"><h2>? ???? ???????...</h2></div>';
+
+  try {
+    const r = await fetch("/foundation/gatekeeper/" + STAGE_ID + "/submit?user_id=" + USER_ID, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({answers: answers})
+    });
+    const data = await r.json();
+    if (!data.ok) throw new Error(data.error || "submit failed");
+    const passed = data.passed;
+    const cls = passed ? "pass" : "fail";
+    const emoji = passed ? "??" : "??";
+    const msg = passed ? "?????! ????? ???????? ????? ?????? ??????? ???????." : "?? ??? ???? ?????? " + PASS + "%. ???? ??? ???? ??? ?????? ??????.";
+    res.innerHTML = '<div class="card result ' + cls + '">' +
+      '<h2>' + emoji + ' ' + (passed ? '????!' : '?? ????') + '</h2>' +
+      '<div class="score-big">' + data.score_pct + '%</div>' +
+      '<div>' + data.correct + ' ?? ' + data.total + ' ????? ?????</div>' +
+      '<div style="margin-top:12px;color:#666;">' + msg + '</div>' +
+      '<a class="back-btn" href="/foundation?user_id=' + USER_ID + '">?????? ?????? ???????</a>' +
+      '</div>';
+  } catch (e) {
+    res.innerHTML = '<div class="card result fail"><h2>? ???</h2><div>' + e.message + '</div>' +
+      '<a class="back-btn" href="/foundation?user_id=' + USER_ID + '">??????</a></div>';
+  }
+}
+
+render();
+</script>
+</body>
+</html>
