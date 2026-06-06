@@ -41,6 +41,23 @@ def ensure_mini_lessons(cur):
     print("[seed_foundation] mini_lessons CREATED")
 
 
+def ensure_stages(cur):
+    cur.execute("CREATE TABLE IF NOT EXISTS stages (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    track TEXT NOT NULL,\n    code TEXT NOT NULL UNIQUE,\n    name_ar TEXT NOT NULL,\n    name_en TEXT NOT NULL,\n    description TEXT,\n    section_name TEXT,\n    order_num REAL NOT NULL DEFAULT 0,\n    gatekeeper_threshold INTEGER DEFAULT 70,\n    is_active INTEGER DEFAULT 1,\n    is_locked_future INTEGER DEFAULT 0,\n    created_at TEXT DEFAULT CURRENT_TIMESTAMP\n, order_index INTEGER DEFAULT 0, path TEXT DEFAULT 'foundation', min_score REAL DEFAULT 70, exam_questions_count INTEGER DEFAULT 10)")
+    cur.execute("SELECT COUNT(*) FROM stages WHERE code LIKE 'F%'")
+    if cur.fetchone()[0] >= 4:
+        print("[seed_foundation] stages F-rows already present")
+        return
+    rows_data = [
+        (1, 'foundation', 'F1', 'التأسيس - أساسيات القواعد', 'Foundation - Basic Grammar', 'أزمنة، أفعال مساعدة، تركيب الجمل البسيطة', 'grammar', 1.0, 70, 1, 0, '2026-05-20 19:50:51', 1, 'foundation', 70.0, 10),
+        (2, 'foundation', 'F2', 'التأسيس - مفردات أساسية', 'Foundation - Core Vocabulary', '500 كلمة الأكثر شيوعاً في TOEFL', 'vocabulary', 2.0, 70, 1, 0, '2026-05-20 19:50:51', 2, 'foundation', 70.0, 10),
+        (3, 'foundation', 'F3', 'التأسيس - قواعد متقدمة', 'Foundation - Advanced Grammar', 'Conditionals, Passive, Reported Speech', 'grammar', 3.0, 70, 1, 0, '2026-05-20 19:50:51', 3, 'foundation', 70.0, 10),
+        (4, 'foundation', 'F4', 'التأسيس - قراءة وفهم تمهيدي', 'Foundation - Pre-Reading', 'جمل قصيرة وفقرات تمهيدية', 'reading', 4.0, 70, 1, 0, '2026-05-20 19:50:51', 4, 'foundation', 70.0, 10),
+    ]
+    for row in rows_data:
+        cur.execute("INSERT OR IGNORE INTO stages (id,track,code,name_ar,name_en,description,section_name,order_num,gatekeeper_threshold,is_active,is_locked_future,created_at,order_index,path,min_score,exam_questions_count) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", row)
+    print(f"[seed_foundation] stages seeded ({len(rows_data)} rows)")
+
+
 def _db_path():
     return os.environ.get("DB_PATH") or os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "academy.db")
