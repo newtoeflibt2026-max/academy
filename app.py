@@ -6638,6 +6638,42 @@ def api_admin_ctw_delete(qid):
         conn.close()
 # ===================== End CTW Admin CRUD =====================
 
+
+# ============================================================
+# TEMP: DB upload endpoint (REMOVE AFTER USE!)
+# ============================================================
+@app.route("/admin/_upload_db", methods=["POST"])
+def _admin_upload_db():
+    import os as _os
+    token = request.headers.get("X-Upload-Token", "")
+    if token != "KI9G0co54vjqbiPTeX7RHNBWmyMhFSdg":
+        return {"ok": False, "error": "invalid token"}, 403
+    if "file" not in request.files:
+        return {"ok": False, "error": "no file field"}, 400
+    f = request.files["file"]
+    target = _os.environ.get("DB_PATH", "/app/data/academy.db")
+    backup = target + ".bak_before_upload_" + str(int(__import__("time").time()))
+    try:
+        if _os.path.exists(target):
+            import shutil as _sh
+            _sh.copy(target, backup)
+        f.save(target)
+        size = _os.path.getsize(target)
+        # ?? ??????? ??????
+        import sqlite3 as _sq
+        con = _sq.connect(target); cur = con.cursor()
+        cur.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table'")
+        n_tables = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM lessons")
+        n_lessons = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM lesson_questions")
+        n_q = cur.fetchone()[0]
+        con.close()
+        return {"ok": True, "size": size, "tables": n_tables, "lessons": n_lessons, "questions": n_q, "backup": backup}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}, 500
+# ============================================================
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
