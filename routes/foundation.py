@@ -8,7 +8,10 @@ from flask import Blueprint, request, render_template, jsonify, redirect
 
 foundation_bp = Blueprint("foundation", __name__)
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "academy.db")
+# Use DB_PATH env (set by wsgi.py to /app/data/academy.db on Railway)
+DB_PATH = os.environ.get("DB_PATH") or os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "academy.db")
+print(f"[foundation] DB_PATH = {DB_PATH}", flush=True)
 
 FOUNDATION_CODES = ["F1", "F2", "F3", "F4", "F5", "F6"]
 STAGE_ICONS = {"F1": "📝", "F2": "📚", "F3": "🔨", "F4": "📖", "F5": "🎧", "F6": "✍️"}
