@@ -138,10 +138,12 @@ def view_stage(stage_id):
     counts = {"easy": 0, "medium": 0, "hard": 0, "all": 0}
     if s["has_tier"]:
         for tier_num, key in [(1, "easy"), (2, "medium"), (3, "hard")]:
-            counts[key] = cur.execute(f"SELECT COUNT(*) FROM {s["table"]} WHERE is_active=1 AND tier=?", (tier_num,)).fetchone()[0]
+            _tbl = s["table"]
+            counts[key] = cur.execute(f"SELECT COUNT(*) FROM {_tbl} WHERE is_active=1 AND tier=?", (tier_num,)).fetchone()[0]
         counts["all"] = counts["easy"] + counts["medium"] + counts["hard"]
     else:
-        counts["all"] = cur.execute(f"SELECT COUNT(*) FROM {s["table"]} WHERE is_active=1").fetchone()[0]
+        _tbl2 = s["table"]
+        counts["all"] = cur.execute(f"SELECT COUNT(*) FROM {_tbl2} WHERE is_active=1").fetchone()[0]
     where = "is_active=1"
     params = []
     if s["has_tier"] and level in ("easy", "medium", "hard"):
