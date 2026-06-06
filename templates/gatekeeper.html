@@ -224,6 +224,11 @@ function render() {
   document.getElementById("quizArea").innerHTML = html;
 }
 
+function selectOption(qid, letter, el) {
+  // alias for inline onclick from rendered options
+  return pick(el, letter);
+}
+
 function pick(el, letter) {
   document.querySelectorAll(".opt").forEach(o => o.classList.remove("selected"));
   el.classList.add("selected");
