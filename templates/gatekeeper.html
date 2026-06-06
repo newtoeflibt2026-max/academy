@@ -134,6 +134,17 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
+
+<style>
+/* Auto-direction for question/option text (English shows LTR, Arabic shows RTL) */
+.q-text, .opt-text, .question-text, .option-text, .gk-question, .gk-option,
+.choice-text, .answer-text, [data-bidi="auto"] {
+    unicode-bidi: plaintext !important;
+    text-align: start !important;
+}
+/* Force LTR if content is pure English */
+.ltr-content { direction: ltr !important; text-align: left !important; }
+</style>
 </head>
 <body>
 <div class="container">
@@ -158,6 +169,21 @@
 </div>
 
 <script>
+
+function normalizeOptions(opts) {
+  if (!opts) return [];
+  if (Array.isArray(opts)) {
+    return opts.map((v, i) => ({ key: String.fromCharCode(65+i), text: String(typeof v==='object' ? (v.text||v.label||JSON.stringify(v)) : v) }));
+  }
+  if (typeof opts === 'object') {
+    return Object.keys(opts).sort().map(k => ({ key: k, text: String(opts[k]) }));
+  }
+  return [];
+}
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 const QUESTIONS = {{ questions|tojson }};
 const STAGE_ID = {{ stage.id }};
 const USER_ID = "{{ user_id }}";
@@ -182,13 +208,13 @@ function render() {
   html += '<div class="q-text">' + escapeHtml(q.question || "—") + '</div>';
   html += '<div class="options">';
   const userPick = answers[q.id];
-  (q.options || []).forEach((opt, i) => {
-    const letter = letterFromIdx(i);
-    const text = (typeof opt === "string") ? opt : (opt.text || opt.label || JSON.stringify(opt));
-    const sel = (userPick === letter) ? " selected" : "";
-    html += '<div class="opt' + sel + '" onclick="pick(this,\'' + letter + '\')">' +
-            '<div class="opt-letter">' + letter + '</div>' +
-            '<div class="opt-text">' + escapeHtml(text) + '</div></div>';
+  normalizeOptions(q.options).forEach((o) => {
+    const key = o.key;
+    const text = o.text;
+    html += `<div class="opt" data-key="${escapeHtml(key)}" onclick="selectOption(${q.id}, '${escapeHtml(key)}', this)" dir="auto">
+      <span class="opt-letter">${escapeHtml(key)}</span>
+      <span class="opt-text" dir="auto">${escapeHtml(text)}</span>
+    </div>`;
   });
   html += '</div>';
   const lastQ = idx === QUESTIONS.length - 1;
