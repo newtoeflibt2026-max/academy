@@ -9,98 +9,58 @@
 body {
   font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 16px;
-  color: #333;
-  direction: rtl;
+  min-height: 100vh; padding: 16px; color: #333; direction: rtl;
 }
 .container { max-width: 720px; margin: 0 auto; }
-.header {
-  background: white; border-radius: 20px; padding: 20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2); margin-bottom: 16px;
-}
-.header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; flex-wrap: wrap; }
-.badge {
-  background: linear-gradient(135deg, #ff6b35, #f7931e);
-  color: white; padding: 6px 14px; border-radius: 20px;
-  font-weight: bold; font-size: 14px;
-}
+.header { background: white; border-radius: 20px; padding: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2); margin-bottom: 16px; }
+.header-top { display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; gap: 10px; flex-wrap: wrap; }
+.badge { background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 14px; }
 .title { font-size: 18px; font-weight: bold; color: #2c3e50; flex: 1; text-align: center; }
-.back-btn {
-  background: #f0f0f0; color: #555; text-decoration: none;
-  padding: 6px 14px; border-radius: 20px; font-size: 13px;
-}
+.back-btn { background: #f0f0f0; color: #555; text-decoration: none;
+  padding: 6px 14px; border-radius: 20px; font-size: 13px; }
 .back-btn:hover { background: #e0e0e0; }
-.progress-wrap {
-  background: #f0f0f0; border-radius: 20px; height: 10px;
-  overflow: hidden; position: relative;
-}
-.progress-bar {
-  height: 100%; background: linear-gradient(90deg, #ff6b35, #f7931e);
-  border-radius: 20px; transition: width 0.4s ease; width: 0%;
-}
-.progress-text {
-  text-align: center; margin-top: 8px; font-size: 14px; color: #666; font-weight: 600;
-}
-.question-card {
-  background: white; border-radius: 20px; padding: 24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-  animation: slideIn 0.4s ease;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.question-text {
-  font-size: 19px; font-weight: 600; color: #2c3e50;
-  margin-bottom: 22px; line-height: 1.7;
-  padding: 16px; background: #f8f9fa; border-radius: 12px;
-  border-right: 4px solid #ff6b35;
-}
+.progress-wrap { background: #f0f0f0; border-radius: 20px; height: 10px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #ff6b35, #f7931e);
+  border-radius: 20px; transition: width 0.4s ease; width: 0%; }
+.progress-text { text-align: center; margin-top: 8px; font-size: 14px; color: #666; font-weight: 600; }
+.question-card { background: white; border-radius: 20px; padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2); animation: slideIn 0.4s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.question-text { font-size: 19px; font-weight: 600; color: #2c3e50;
+  margin-bottom: 22px; line-height: 1.7; padding: 16px; background: #f8f9fa;
+  border-radius: 12px; border-right: 4px solid #ff6b35; unicode-bidi: plaintext; }
 .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.option {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; background: #f8f9fa;
-  border: 2px solid #e0e0e0; border-radius: 12px;
-  cursor: pointer; transition: all 0.2s;
-  font-size: 16px;
-}
-.option:hover { background: #fff5ef; border-color: #ff6b35; transform: translateX(-4px); }
+.option { display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; background: #f8f9fa; border: 2px solid #e0e0e0;
+  border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 16px; }
+.option:hover { background: #fff5ef; border-color: #ff6b35; }
 .option.selected { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-color: #764ba2; }
 .option.correct { background: linear-gradient(135deg, #56ab2f, #a8e063); color: white; border-color: #56ab2f; }
 .option.wrong   { background: linear-gradient(135deg, #ee0979, #ff6a00); color: white; border-color: #ee0979; }
-.option-letter {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; background: white; color: #764ba2;
-  border-radius: 50%; font-weight: bold; flex-shrink: 0;
-  border: 2px solid #764ba2;
-}
-.option.selected .option-letter,
-.option.correct .option-letter,
-.option.wrong .option-letter { background: white; color: #2c3e50; border-color: white; }
-.option-text { flex: 1; }
-.feedback {
-  padding: 14px; border-radius: 12px; margin-bottom: 16px;
-  font-size: 14px; line-height: 1.6; display: none;
-}
+.option-letter { display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; background: white; color: #764ba2; border-radius: 50%;
+  font-weight: bold; flex-shrink: 0; border: 2px solid #764ba2; }
+.option.selected .option-letter, .option.correct .option-letter, .option.wrong .option-letter {
+  background: white; color: #2c3e50; border-color: white; }
+.option-text { flex: 1; unicode-bidi: plaintext; }
+.feedback { padding: 14px; border-radius: 12px; margin-bottom: 16px;
+  font-size: 14px; line-height: 1.6; display: none; unicode-bidi: plaintext; }
 .feedback.show { display: block; animation: slideIn 0.3s ease; }
 .feedback.ok  { background: #e8f5e9; color: #2e7d32; border-right: 4px solid #2e7d32; }
 .feedback.bad { background: #ffebee; color: #c62828; border-right: 4px solid #c62828; }
-.next-btn {
-  width: 100%; padding: 14px;
-  background: linear-gradient(135deg, #ff6b35, #f7931e);
-  color: white; border: none; border-radius: 12px;
-  font-size: 17px; font-weight: bold; cursor: pointer;
-  transition: transform 0.2s;
-}
+.next-btn { width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border: none;
+  border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer; }
 .next-btn:hover:not(:disabled) { transform: translateY(-2px); }
 .next-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.result-card { background: white; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-.result-circle {
-  width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 20px;
+.result-card { background: white; border-radius: 20px; padding: 30px;
+  text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+.result-circle { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 20px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px; font-weight: bold; color: white;
-}
+  font-size: 36px; font-weight: bold; color: white; }
 .result-circle.pass { background: linear-gradient(135deg, #56ab2f, #a8e063); }
 .result-circle.fail { background: linear-gradient(135deg, #ee0979, #ff6a00); }
 .result-title { font-size: 22px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
@@ -110,18 +70,13 @@ body {
 .stat-val { font-size: 24px; font-weight: bold; color: #2c3e50; }
 .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
 .result-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.btn {
-  flex: 1; min-width: 140px; padding: 12px;
-  border-radius: 12px; font-weight: bold; cursor: pointer; text-decoration: none;
-  text-align: center; border: none; font-size: 15px;
-}
+.btn { flex: 1; min-width: 140px; padding: 12px; border-radius: 12px;
+  font-weight: bold; cursor: pointer; text-decoration: none; text-align: center;
+  border: none; font-size: 15px; }
 .btn-primary { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; }
 .btn-secondary { background: #f0f0f0; color: #333; }
-.empty {
-  background: white; border-radius: 20px; padding: 40px;
-  text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-}
-.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty { background: white; border-radius: 20px; padding: 40px; text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
 </style>
 </head>
 <body>
@@ -129,7 +84,7 @@ body {
   <div class="header">
     <div class="header-top">
       <a href="/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}" class="back-btn">→ رجوع للدرس</a>
-      <div class="title">{{ lesson.title_ar }}</div>
+      <div class="title" dir="auto">{{ lesson.title_ar }}</div>
       <span class="badge">المجموعة {{ set_number }}</span>
     </div>
     <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
@@ -139,16 +94,14 @@ body {
   <div id="quizArea">
     {% if total == 0 %}
     <div class="empty">
-      <div class="empty-icon">📭</div>
       <h2>لا توجد أسئلة في هذه المجموعة</h2>
-      <p style="margin: 12px 0; color:#666;">جرّب مجموعة أخرى أو ارجع للدرس.</p>
-      <a href="/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}" class="btn btn-primary" style="display:inline-block; max-width:200px;">رجوع</a>
+      <a href="/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}" class="btn btn-primary" style="display:inline-block; max-width:200px; margin-top:14px;">رجوع</a>
     </div>
     {% else %}
     <div class="question-card" id="questionCard">
-      <div class="question-text" id="questionText">...</div>
+      <div class="question-text" id="questionText" dir="auto">...</div>
       <div class="options" id="optionsBox"></div>
-      <div class="feedback" id="feedback"></div>
+      <div class="feedback" id="feedback" dir="auto"></div>
       <button class="next-btn" id="nextBtn" disabled>تحقق من الإجابة</button>
     </div>
     {% endif %}
@@ -161,39 +114,26 @@ const TOTAL = QUESTIONS.length;
 const LESSON_ID = {{ lesson.id }};
 const STAGE_ID = {{ lesson.stage_id }};
 const USER_ID = "{{ user_id }}";
+const SET_N = {{ set_number }};
 
-let idx = 0;
-let selected = null;
-let checked = false;
-let correctCount = 0;
-let wrongCount = 0;
+let idx = 0, selected = null, checked = false;
+let correctCount = 0, wrongCount = 0;
 
-function escapeHtml(s){
-  return String(s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function normalizeOptions(opts) {
-  // يدعم dict {A:..,B:..} أو list [..]
   if (!opts) return [];
-  if (Array.isArray(opts)) {
-    return opts.map((v, i) => ({ key: String.fromCharCode(65+i), text: String(v) }));
-  }
-  if (typeof opts === 'object') {
-    return Object.keys(opts).sort().map(k => ({ key: k, text: String(opts[k]) }));
-  }
+  if (Array.isArray(opts)) return opts.map((v,i)=>({key:String.fromCharCode(65+i), text:String(v)}));
+  if (typeof opts === 'object') return Object.keys(opts).sort().map(k=>({key:k, text:String(opts[k])}));
   return [];
 }
 
 function render() {
   if (TOTAL === 0) return;
   const q = QUESTIONS[idx];
-  selected = null;
-  checked = false;
-
+  selected = null; checked = false;
   document.getElementById('progressBar').style.width = ((idx)/TOTAL*100) + '%';
   document.getElementById('progressText').textContent = `السؤال ${idx+1} من ${TOTAL}`;
   document.getElementById('questionText').textContent = q.question || q.question_ar || '';
-
   const opts = normalizeOptions(q.options);
   const box = document.getElementById('optionsBox');
   box.innerHTML = '';
@@ -201,18 +141,15 @@ function render() {
     const el = document.createElement('div');
     el.className = 'option';
     el.dataset.key = o.key;
-    el.innerHTML = `<span class="option-letter">${escapeHtml(o.key)}</span><span class="option-text">${escapeHtml(o.text)}</span>`;
+    el.setAttribute('dir', 'auto');
+    el.innerHTML = `<span class="option-letter">${escapeHtml(o.key)}</span><span class="option-text" dir="auto">${escapeHtml(o.text)}</span>`;
     el.onclick = () => selectOption(o.key, el);
     box.appendChild(el);
   });
-
   const fb = document.getElementById('feedback');
-  fb.className = 'feedback';
-  fb.innerHTML = '';
-
+  fb.className = 'feedback'; fb.innerHTML = '';
   const btn = document.getElementById('nextBtn');
-  btn.disabled = true;
-  btn.textContent = 'تحقق من الإجابة';
+  btn.disabled = true; btn.textContent = 'تحقق من الإجابة';
 }
 
 function selectOption(key, el) {
@@ -228,25 +165,17 @@ function checkAnswer() {
   const correct = String(q.correct_answer||'').trim().toUpperCase();
   const picked = String(selected||'').trim().toUpperCase();
   const isOk = picked === correct;
-
   document.querySelectorAll('.option').forEach(o => {
     const k = o.dataset.key.toUpperCase();
     o.style.pointerEvents = 'none';
     if (k === correct) o.classList.add('correct');
     else if (k === picked) o.classList.add('wrong');
   });
-
   const fb = document.getElementById('feedback');
-  if (isOk) {
-    correctCount++;
-    fb.className = 'feedback ok show';
-    fb.innerHTML = '✅ <b>إجابة صحيحة!</b>' + (q.explanation_ar ? '<br>'+escapeHtml(q.explanation_ar) : '');
-  } else {
-    wrongCount++;
-    fb.className = 'feedback bad show';
-    fb.innerHTML = `❌ <b>الإجابة الصحيحة:</b> ${escapeHtml(correct)}` + (q.explanation_ar ? '<br>'+escapeHtml(q.explanation_ar) : '');
-  }
-
+  if (isOk) { correctCount++; fb.className = 'feedback ok show';
+    fb.innerHTML = '✅ <b>إجابة صحيحة!</b>' + (q.explanation_ar ? '<br>'+escapeHtml(q.explanation_ar) : ''); }
+  else { wrongCount++; fb.className = 'feedback bad show';
+    fb.innerHTML = `❌ <b>الإجابة الصحيحة:</b> ${escapeHtml(correct)}` + (q.explanation_ar ? '<br>'+escapeHtml(q.explanation_ar) : ''); }
   checked = true;
   const btn = document.getElementById('nextBtn');
   btn.disabled = false;
@@ -256,35 +185,46 @@ function checkAnswer() {
 function nextOrFinish() {
   if (!checked) { checkAnswer(); return; }
   if (idx+1 >= TOTAL) { showResult(); return; }
-  idx++;
-  render();
+  idx++; render();
 }
 
-function showResult() {
+async function showResult() {
   const pct = Math.round(correctCount / TOTAL * 100);
   const pass = pct >= 70;
   document.getElementById('progressBar').style.width = '100%';
   document.getElementById('progressText').textContent = `اكتمل ${TOTAL} من ${TOTAL}`;
+
+  // أرسل النتيجة للسيرفر واحصل على next_lesson_id
+  let nextLessonId = null;
+  try {
+    const resp = await fetch(`/foundation/quiz/${LESSON_ID}/submit`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: USER_ID, score: pct, correct: correctCount, total: TOTAL, set_number: SET_N})
+    });
+    const j = await resp.json();
+    nextLessonId = j.next_lesson_id;
+  } catch(e) {}
+
+  const nextBtn = (pass && nextLessonId)
+    ? `<a class="btn btn-primary" href="/foundation/lesson/${nextLessonId}?user_id=${USER_ID}">الدرس التالي ←</a>`
+    : (pass
+        ? `<a class="btn btn-primary" href="/foundation/stage/${STAGE_ID}?user_id=${USER_ID}">إنهاء المرحلة 🎯</a>`
+        : `<button class="btn btn-primary" onclick="location.reload()">إعادة المحاولة</button>`);
+
+  const backBtn = `<a class="btn btn-secondary" href="/foundation/stage/${STAGE_ID}?user_id=${USER_ID}">قائمة الدروس</a>`;
+
   document.getElementById('quizArea').innerHTML = `
     <div class="result-card">
       <div class="result-circle ${pass?'pass':'fail'}">${pct}%</div>
       <div class="result-title">${pass?'أحسنت! 🎉':'حاول مرة أخرى'}</div>
-      <div class="result-msg">${pass?'لقد أتقنت هذا الدرس':'تحتاج المزيد من التدريب'}</div>
+      <div class="result-msg">${pass?'تم فتح الدرس التالي':'تحتاج 70% أو أكثر للنجاح'}</div>
       <div class="result-stats">
         <div class="stat"><div class="stat-val" style="color:#56ab2f">${correctCount}</div><div class="stat-lbl">صحيحة</div></div>
         <div class="stat"><div class="stat-val" style="color:#ee0979">${wrongCount}</div><div class="stat-lbl">خاطئة</div></div>
         <div class="stat"><div class="stat-val">${TOTAL}</div><div class="stat-lbl">الإجمالي</div></div>
       </div>
-      <div class="result-actions">
-        <button class="btn btn-secondary" onclick="location.reload()">إعادة المحاولة</button>
-        <a class="btn btn-primary" href="/foundation/stage/${STAGE_ID}?user_id=${USER_ID}">العودة للدرس</a>
-      </div>
+      <div class="result-actions">${backBtn}${nextBtn}</div>
     </div>`;
-  // سجّل المحاولة
-  fetch(`/foundation/quiz/${LESSON_ID}/submit`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({user_id: USER_ID, score: pct, correct: correctCount, total: TOTAL})
-  }).catch(()=>{});
 }
 
 if (TOTAL > 0) {

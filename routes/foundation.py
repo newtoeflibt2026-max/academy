@@ -530,3 +530,57 @@ def gatekeeper_submit(stage_id):
         "passed": bool(passed), "details": details
     })
 
+# =========================================================
+# POST /foundation/quiz/<lesson_id>/submit - ??? ??????? + ????? ??????
+# =========================================================
+@foundation_bp.route("/foundation/quiz/<int:lesson_id>/submit", methods=["POST"])
+def foundation_quiz_submit(lesson_id):
+    from flask import jsonify
+    data = request.get_json(silent=True) or {}
+    user_id = str(data.get("user_id") or get_user_id(request) or "")
+    try:
+        score   = float(data.get("score", 0))
+        correct = int(data.get("correct", 0))
+        total   = int(data.get("total", 0))
+        set_n   = int(data.get("set_number", 1))
+    except Exception:
+        score, correct, total, set_n = 0.0, 0, 0, 1
+    passed = 1 if score >= 70 else 0
+
+    conn = db(); cur = conn.cursor()
+    # ???? ????????
+    now = __import__("datetime").datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    cur.execute("""INSERT INTO lesson_attempts
+                   (telegram_id, lesson_id, started_at, finished_at,
+                    correct_count, total_questions, passed, score_percent, set_number)
+                   VALUES (?,?,?,?,?,?,?,?,?)""",
+                (user_id, lesson_id, now, now, correct, total, passed, score, set_n))
+
+    # ???? XP ??? ??????
+    if passed:
+        try:
+            cur.execute("UPDATE students SET xp = COALESCE(xp,0) + 20 WHERE telegram_id=?", (user_id,))
+        except Exception:
+            pass
+
+    # ???? ????? ?????? ?? ??? ???????
+    next_lesson_id = None
+    cur.execute("SELECT stage_id, order_index FROM lessons WHERE id=?", (lesson_id,))
+    cur_lesson = cur.fetchone()
+    if cur_lesson:
+        cur.execute("""SELECT id FROM lessons
+                       WHERE stage_id=? AND is_active=1
+                         AND (order_index > ? OR (order_index = ? AND id > ?))
+                       ORDER BY order_index, id LIMIT 1""",
+                    (cur_lesson["stage_id"], cur_lesson["order_index"] or 0,
+                     cur_lesson["order_index"] or 0, lesson_id))
+        nxt = cur.fetchone()
+        if nxt:
+            next_lesson_id = nxt["id"]
+
+    conn.commit(); conn.close()
+    return jsonify({
+        "ok": True, "passed": bool(passed), "score": score,
+        "next_lesson_id": next_lesson_id, "stage_id": cur_lesson["stage_id"] if cur_lesson else None
+    })
+
