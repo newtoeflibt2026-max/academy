@@ -6674,6 +6674,15 @@ def _admin_upload_db():
         return {"ok": False, "error": str(e)}, 500
 # ============================================================
 
+
+# === Telegram webhook (single-service mode) ===
+try:
+    from bot_webhook import webhook_bp
+    app.register_blueprint(webhook_bp)
+    print("[app] telegram webhook blueprint registered")
+except Exception as e:
+    print(f"[app] webhook blueprint skipped: {e}")
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))

@@ -93,3 +93,11 @@ print("[wsgi] Flask app imported successfully", flush=True)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
+
+# === Auto-register Telegram webhook on Railway startup ===
+try:
+    from bot_webhook import register_webhook_with_telegram
+    register_webhook_with_telegram()
+except Exception as _wh_err:
+    print(f"[wsgi] webhook setup skipped: {_wh_err}")
+
