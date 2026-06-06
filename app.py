@@ -14,6 +14,12 @@ def _resolve_db_path():
 DB_PATH = _resolve_db_path()
 os.environ["DB_PATH"] = DB_PATH  # ensure ALL submodules see the same path
 
+try:
+    from migrations.seed_foundation import run as _seed_foundation
+    _seed_foundation()
+except Exception as _e:
+    print(f"[seed_foundation] WARN: {_e}")
+
 # ===== ROOT-FIX STARTUP GUARD =====
 try:
     from db import verify_integrity as _verify_db
@@ -38,11 +44,6 @@ from routes.foundation import foundation_bp
 app.register_blueprint(foundation_bp)
 
 # Seed foundation content (idempotent)
-try:
-    from migrations.seed_foundation import run as _seed_foundation
-    _seed_foundation()
-except Exception as _e:
-    print(f"[seed_foundation] WARN: {_e}")
 
 
 try:
