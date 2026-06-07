@@ -2967,13 +2967,13 @@ def api_payment_submit():
             _admins = _stg.ADMIN_IDS or []
             if _tok and _admins:
                 _caption = (
-                    "ð³ <b>إيصال دفع جديد</b>\n\n"
-                    f"ð¤ الطالب: <code>{sid}</code>\n"
-                    f"ð الاسم: {sender_name or '-'}\n"
-                    f"ð± الهاتف: {sender_phone or '-'}\n"
-                    f"ð¦ الباقة: <b>{plan['name_ar']}</b>\n"
-                    f"ð° المبلغ: {plan['price']} {plan['currency']}\n"
-                    f"ð رقم الدفعة: <code>#{new_id}</code>\n\n"
+                    "💳 <b>إيصال دفع جديد</b>\n\n"
+                    f"👤 الطالب: <code>{sid}</code>\n"
+                    f"📛 الاسم: {sender_name or '-'}\n"
+                    f"📱 الهاتف: {sender_phone or '-'}\n"
+                    f"📦 الباقة: <b>{plan['name_ar']}</b>\n"
+                    f"💰 المبلغ: {plan['price']} {plan['currency']}\n"
+                    f"🆔 رقم الدفعة: <code>#{new_id}</code>\n\n"
                     "اضغط أحد الأزرار للمراجعة ð"
                 )
                 _kb = _IKM(inline_keyboard=[[
