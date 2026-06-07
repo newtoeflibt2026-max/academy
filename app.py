@@ -2977,8 +2977,8 @@ def api_payment_submit():
                     "اضغط أحد الأزرار للمراجعة ð"
                 )
                 _kb = _IKM(inline_keyboard=[[
-                    _IKB(text="✅ موافقة", callback_data=f"pay_approve:{new_id}"),
-                    _IKB(text="❌ رفض", callback_data=f"pay_reject:{new_id}"),
+                    _IKB(text="✅ موافقة", callback_data=f"admin_approve:{sid}:{pid}:{new_id}"),
+                    _IKB(text="❌ رفض", callback_data=f"admin_reject:{sid}:{new_id}"),
                 ]])
                 async def _notify_admins():
                     _bot = _Bot(token=_tok, default=_DBP(parse_mode=_PM.HTML))
