@@ -216,19 +216,15 @@ async function loadPlan(){
     if(sub && sub.has_active_subscription){
       const planName = (sub.subscription && sub.subscription.plan_name) || 'باقة نشطة';
       const endDate = (sub.subscription && sub.subscription.end_date) ? sub.subscription.end_date.split(' ')[0] : '';
-      document.getElementById('planCard').innerHTML = 
-        '<div style="text-align:center;padding:20px">' +
-        '<div style="font-size:54px;margin-bottom:12px">✅</div>' +
-        '<h2 style="color:#10b981;margin-bottom:10px;font-size:20px">لديك اشتراك نشط بالفعل</h2>' +
-        '<p style="color:#cbd5e1;font-size:14px;line-height:1.7;margin-bottom:14px">' + planName + '</p>' +
-        (endDate ? '<p style="color:#94a3b8;font-size:13px;margin-bottom:18px">صالح حتى: <strong style="color:#fbbf24">' + endDate + '</strong></p>' : '') +
-        '<button class="submit-btn" onclick="goBack()" style="max-width:280px;margin:0 auto;display:block">🎓 العودة للوحة التعلم</button>' +
-        '</div>';
-      // إخفاء أقسام الدفع والتفعيل
-      document.getElementById('freeSection').classList.add('hidden');
-      document.getElementById('paidSection').classList.add('hidden');
-      return;
-    }
+      const _info = document.createElement('div');
+      _info.style.cssText = 'background:linear-gradient(135deg,#1e40af,#3730a3);border:1px solid #6366f1;border-radius:14px;padding:14px;margin:12px 0;text-align:center;color:#fff';
+      _info.innerHTML = '<div style="font-size:28px;margin-bottom:6px">ℹ️</div>' +
+        '<h3 style="font-size:15px;margin-bottom:6px">لديك اشتراك حالي: ' + planName + '</h3>' +
+        (endDate ? '<p style="color:#c7d2fe;font-size:13px;margin-bottom:6px">صالح حتى: <strong style="color:#fbbf24">' + endDate + '</strong></p>' : '') +
+        '<p style="color:#e0e7ff;font-size:13px;line-height:1.6">✅ يمكنك الترقية. الباقة الجديدة ستُفعّل بعد موافقة الأدمن.</p>';
+      const _card = document.getElementById('planCard');
+      if(_card && _card.parentNode) _card.parentNode.insertBefore(_info, _card);
+    
   }
   
   // 2) محاولة جلب الباقة
