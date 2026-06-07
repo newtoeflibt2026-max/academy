@@ -371,9 +371,17 @@ def mistakes_page():
     for m in mistakes:
         if not m.get("question_text"):
             m["question_text"] = "(السؤال غير متوفر)"
-    cur.execute("SELECT COUNT(*) FROM error_bank WHERE user_id=?", (user_id,))
+    cur.execute("""SELECT COUNT(*) FROM error_bank eb
+                     LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
+                     LEFT JOIN questions q ON q.id = eb.question_id
+                     WHERE eb.user_id=?
+                       AND (lq.question IS NOT NULL OR q.question_text IS NOT NULL)""", (user_id,))
     total = cur.fetchone()[0]
-    cur.execute("SELECT COUNT(*) FROM error_bank WHERE user_id=? AND COALESCE(is_mastered,0)=1", (user_id,))
+    cur.execute("""SELECT COUNT(*) FROM error_bank eb
+                     LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
+                     LEFT JOIN questions q ON q.id = eb.question_id
+                     WHERE eb.user_id=? AND COALESCE(eb.is_mastered,0)=1
+                       AND (lq.question IS NOT NULL OR q.question_text IS NOT NULL)""", (user_id,))
     mastered = cur.fetchone()[0]
     conn.close()
     return render_template("mistakes.html",
