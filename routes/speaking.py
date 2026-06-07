@@ -8,6 +8,7 @@ Pattern mirrors routes/listening.py for consistency.
 """
 import os, json, sqlite3
 from flask import Blueprint, render_template, request, jsonify
+from subscription_helpers import require_section_access
 
 speaking_bp = Blueprint("speaking", __name__)
 
@@ -81,6 +82,7 @@ def _get_lesson_states(conn, tg_id, stage_id):
 # PAGE: Speaking Hub
 # ═══════════════════════════════════════════════════════════
 @speaking_bp.route("/speaking")
+@require_section_access("speaking")
 def speaking_hub():
     tg_id = _get_tg_id()
     conn = _db(); c = conn.cursor()
@@ -111,6 +113,7 @@ def speaking_hub():
 # PAGE: Stage detail
 # ═══════════════════════════════════════════════════════════
 @speaking_bp.route("/speaking/stage/<int:stage_id>")
+@require_section_access("speaking")
 def speaking_stage(stage_id):
     tg_id = _get_tg_id()
     conn = _db(); c = conn.cursor()
@@ -131,6 +134,7 @@ def speaking_stage(stage_id):
 # PAGE: Lesson (training screen)
 # ═══════════════════════════════════════════════════════════
 @speaking_bp.route("/speaking/lesson/<int:lesson_id>")
+@require_section_access("speaking")
 def speaking_lesson(lesson_id):
     tg_id = _get_tg_id()
     conn = _db(); c = conn.cursor()

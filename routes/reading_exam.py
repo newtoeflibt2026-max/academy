@@ -14,6 +14,7 @@ reading_bp = Blueprint("reading_exam", __name__, url_prefix="/reading")
 
 # Import DB_PATH from single source of truth (db.py)
 from db import DB_PATH
+from subscription_helpers import require_section_access
 
 
 def _db():
@@ -52,6 +53,7 @@ def _student_id():
 # 1) LIST: GET /reading/
 # ============================================================
 @reading_bp.route("/")
+@require_section_access("reading")
 def list_content():
     all_items = cl.load_all()
     sid = _student_id()
@@ -123,6 +125,7 @@ def list_content():
 # 2) START: GET /reading/start/<content_id>
 # ============================================================
 @reading_bp.route("/start/<content_id>")
+@require_section_access("reading")
 def start(content_id):
     content = cl.get_by_id(content_id)
     if not content:
@@ -157,6 +160,7 @@ def start(content_id):
 # 3) EXAM SCREEN: GET /reading/exam/<attempt_id>
 # ============================================================
 @reading_bp.route("/exam/<int:attempt_id>")
+@require_section_access("reading")
 def exam_screen(attempt_id):
     conn = _db()
     row = conn.execute("SELECT * FROM reading_attempts WHERE attempt_id=?",
@@ -267,6 +271,7 @@ def submit():
 # 5) RESULT: GET /reading/result/<attempt_id>
 # ============================================================
 @reading_bp.route("/result/<int:attempt_id>")
+@require_section_access("reading")
 def result(attempt_id):
     conn = _db()
     att = conn.execute("SELECT * FROM reading_attempts WHERE attempt_id=?",
@@ -352,6 +357,7 @@ def result(attempt_id):
 # ============================================================
 
 @reading_bp.route("/cw/learn")
+@require_section_access("reading")
 def cw_learn():
     """Learning page for Complete Words skill (read once)."""
     tg_id = _get_tg_id()
@@ -359,6 +365,7 @@ def cw_learn():
 
 
 @reading_bp.route("/cw/exam/<content_id>")
+@require_section_access("reading")
 def cw_exam(content_id):
     """Exam screen for complete_words items."""
     tg_id = _get_tg_id()
@@ -479,6 +486,7 @@ _CW_RESULT_CACHE = {}
 
 
 @reading_bp.route("/cw/result/<int:attempt_id>")
+@require_section_access("reading")
 def cw_result(attempt_id):
     """Result page for complete_words."""
     tg_id = _get_tg_id()
@@ -526,11 +534,13 @@ def cw_result(attempt_id):
 # Phase 5.7: DAILY LIFE READING ROUTES
 # ============================================================
 @reading_bp.route("/dl/learn")
+@require_section_access("reading")
 def dl_learn():
     return render_template("reading/dl_learn.html", user_id=_get_tg_id())
 
 
 @reading_bp.route("/dl/exam/<content_id>")
+@require_section_access("reading")
 def dl_exam(content_id):
     content = cl.get_by_id(content_id)
     if not content or content.get("type") != "daily_reading":
@@ -629,6 +639,7 @@ def dl_submit():
 
 
 @reading_bp.route("/dl/result/<int:attempt_id>")
+@require_section_access("reading")
 def dl_result(attempt_id):
     import sqlite3
     conn = sqlite3.connect("academy.db", timeout=30.0)

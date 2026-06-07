@@ -6,6 +6,7 @@ Routes for: track overview, stages, lessons, exams, AI grading
 """
 import os, json, sqlite3, time
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from subscription_helpers import require_section_access
 
 writing_bp = Blueprint("writing_toefl", __name__)
 
@@ -28,6 +29,7 @@ def _get_tg_id():
 # PAGE: Writing Track Overview (الصفحة الرئيسية للمسار)
 # ═══════════════════════════════════════════════════════════
 @writing_bp.route("/writing")
+@require_section_access("writing")
 def writing_track_page():
     tg_id = _get_tg_id()
     conn = _db()
@@ -60,6 +62,7 @@ def writing_track_page():
 # PAGE: Stage detail (الدروس داخل المرحلة)
 # ═══════════════════════════════════════════════════════════
 @writing_bp.route("/writing/stage/<int:stage_id>")
+@require_section_access("writing")
 def view_stage(stage_id):
     tg_id = request.args.get("user_id") or _get_tg_id()
     conn = _db(); c = conn.cursor()
@@ -109,6 +112,7 @@ def view_stage(stage_id):
 
 
 @writing_bp.route("/writing/lesson/<int:lesson_id>")
+@require_section_access("writing")
 def writing_lesson_page(lesson_id):
     tg_id = _get_tg_id()
     conn = _db()
@@ -424,6 +428,7 @@ def fromjson_filter(s):
 
 
 @writing_bp.route("/writing/stage/<int:stage_id>/exam")
+@require_section_access("writing")
 def view_stage_exam(stage_id):
     """Render stage exam page (reuses lesson template)."""
     tg_id = request.args.get("user_id") or _get_tg_id()
@@ -597,6 +602,7 @@ def api_writing_progress(user_id):
 # Phase 3: Email Task Routes
 # ============================================================
 @writing_bp.route("/writing/email", methods=["GET"])
+@require_section_access("writing")
 def view_email_list():
     """قائمة سيناريوهات الإيميل المتاحة حسب tier الطالب."""
     tg_id = _get_tg_id()
@@ -630,6 +636,7 @@ def view_email_list():
 
 
 @writing_bp.route("/writing/email/<int:scenario_id>", methods=["GET"])
+@require_section_access("writing")
 def view_email_task(scenario_id):
     """صفحة كتابة إيميل واحد مع تايمر 7 دقائق."""
     tg_id = _get_tg_id()
@@ -836,6 +843,7 @@ def api_admin_review():
 
 
 @writing_bp.route("/writing/my-corrections", methods=["GET"])
+@require_section_access("writing")
 def view_my_corrections():
     """صفحة الطالب لعرض تصحيحاته السابقة."""
     tg_id = _get_tg_id()
@@ -972,6 +980,7 @@ def _disc_safe_json(value, default):
         return default
 
 @writing_bp.route("/writing/discussion/list")
+@require_section_access("writing")
 def list_discussions():
     """List all academic discussion scenarios"""
     from flask import render_template, request
@@ -993,6 +1002,7 @@ def list_discussions():
 
 
 @writing_bp.route("/writing/discussion/<int:scenario_id>/exam")
+@require_section_access("writing")
 def view_discussion_exam(scenario_id):
     """TOEFL-like exam screen for academic discussion"""
     from flask import render_template, request, abort
@@ -1031,6 +1041,7 @@ def view_discussion_exam(scenario_id):
 
 @writing_bp.route("/writing/discussion/<int:scenario_id>/coach")
 @writing_bp.route("/writing/discussion/<int:scenario_id>/coach/<int:step>")
+@require_section_access("writing")
 def view_discussion_coach(scenario_id, step=1):
     """6-step coach for academic discussion"""
     from flask import render_template, request, abort
@@ -1136,6 +1147,7 @@ def _user_unlocked_tiers(user_id):
     return unlocked, stats
 
 @writing_bp.route("/writing/sentence-building")
+@require_section_access("writing")
 def sb_home():
     """Landing page: foundation lessons + tier selection"""
     from flask import request, render_template
@@ -1184,6 +1196,7 @@ def sb_home():
                           user_id=user_id)
 
 @writing_bp.route("/writing/sentence-building/practice/<tier>")
+@require_section_access("writing")
 def sb_practice_list(tier):
     """List of exercises for a specific tier"""
     from flask import request, render_template, abort, redirect, url_for
@@ -1213,6 +1226,7 @@ def sb_practice_list(tier):
     return render_template("toefl_writing/sb_practice_list.html", exercises=rows, user_id=user_id, tier=tier)
 
 @writing_bp.route("/writing/sentence-building/exercise/<int:exercise_id>")
+@require_section_access("writing")
 def sb_exercise(exercise_id):
     """Show a single interactive exercise"""
     from flask import request, render_template, abort

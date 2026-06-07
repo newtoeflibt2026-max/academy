@@ -6,6 +6,7 @@ Pattern mirrors routes/writing_toefl.py for consistency.
 """
 import os, json, sqlite3, time
 from flask import Blueprint, render_template, request, jsonify, redirect
+from subscription_helpers import require_section_access
 
 listening_bp = Blueprint("listening", __name__)
 
@@ -50,6 +51,7 @@ def _threshold_for_tier(tier):
 # PAGE: Listening Track Overview
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening")
+@require_section_access("listening")
 def listening_track_page():
     user_id = request.args.get("user_id") or _get_tg_id()
     conn = _db(); c = conn.cursor()
@@ -121,6 +123,7 @@ def listening_track_page():
 # PAGE: Stage detail
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening/stage/<int:stage_id>")
+@require_section_access("listening")
 def view_stage(stage_id):
     tg_id = request.args.get("user_id") or _get_tg_id()
     STAGES = {
@@ -251,6 +254,7 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: l
 # PAGE: Lesson detail (theory OR practice with clips/questions)
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening/lesson/<int:lesson_id>")
+@require_section_access("listening")
 def view_lesson(lesson_id):
     user_id = request.args.get("user_id") or _get_tg_id()
     stage_id = int(request.args.get("stage", 1))
@@ -1008,6 +1012,7 @@ def api_mastery_next_attempt(lesson_id):
 # VIEW: Mastery lesson page (renders mastery_lesson.html)
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening/mastery/<int:lesson_id>")
+@require_section_access("listening")
 def view_mastery_lesson(lesson_id):
     tg_id = _get_tg_id()
     conn = _db(); c = conn.cursor()

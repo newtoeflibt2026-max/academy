@@ -5,6 +5,7 @@ Foundation Path Routes - مسار التأسيس الشامل
 """
 import sqlite3, json, os
 from flask import Blueprint, request, render_template, jsonify, redirect
+from subscription_helpers import require_section_access
 
 foundation_bp = Blueprint("foundation", __name__)
 
@@ -49,6 +50,7 @@ def get_user_id(req):
 # 1) GET /foundation - صفحة المراحل
 # =========================================================
 @foundation_bp.route("/foundation")
+@require_section_access("foundation")
 def foundation_home():
     user_id = get_user_id(request)
     conn = db(); cur = conn.cursor()
@@ -104,6 +106,7 @@ def foundation_home():
 # 2) GET /foundation/stage/<id> - دروس المرحلة
 # =========================================================
 @foundation_bp.route("/foundation/stage/<int:stage_id>")
+@require_section_access("foundation")
 def foundation_stage(stage_id):
     user_id = get_user_id(request)
     conn = db(); cur = conn.cursor()
@@ -142,6 +145,7 @@ def foundation_stage(stage_id):
 # 3) GET /foundation/lesson/<id> - شرح الدرس + ابدأ
 # =========================================================
 @foundation_bp.route("/foundation/lesson/<int:lesson_id>")
+@require_section_access("foundation")
 def foundation_lesson(lesson_id):
     user_id = get_user_id(request)
     conn = db(); cur = conn.cursor()
@@ -193,6 +197,7 @@ def foundation_lesson(lesson_id):
 # 4) GET /foundation/quiz/<id>?set=N - الأسئلة
 # =========================================================
 @foundation_bp.route("/foundation/quiz/<int:lesson_id>")
+@require_section_access("foundation")
 def foundation_quiz(lesson_id):
     user_id = get_user_id(request)
     try:
@@ -415,6 +420,7 @@ def api_mistake_retry(mid):
 import random as _random
 
 @foundation_bp.route("/foundation/gatekeeper/<int:stage_id>")
+@require_section_access("foundation")
 def gatekeeper_start(stage_id):
     user_id = get_user_id(request)
     conn = db(); cur = conn.cursor()

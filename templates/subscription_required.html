@@ -1,0 +1,67 @@
+﻿<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اشتراك مطلوب — {{ section_ar }}</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Cairo',sans-serif;
+       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+       color:#fff;min-height:100vh;display:flex;align-items:center;
+       justify-content:center;padding:20px}
+  .card{background:rgba(255,255,255,0.12);backdrop-filter:blur(14px);
+        max-width:480px;width:100%;padding:40px 30px;border-radius:24px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center;
+        border:1px solid rgba(255,255,255,0.2)}
+  .icon{font-size:80px;margin-bottom:16px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  h1{font-size:26px;margin-bottom:12px;font-weight:800}
+  .section-name{color:#fbbf24;font-size:30px;font-weight:800;margin:8px 0 20px}
+  p{font-size:16px;line-height:1.7;opacity:0.95;margin-bottom:8px}
+  .features{background:rgba(0,0,0,0.2);border-radius:14px;padding:16px 20px;
+            margin:24px 0;text-align:right}
+  .features li{list-style:none;padding:6px 0;font-size:14px}
+  .btn{display:inline-block;background:linear-gradient(135deg,#f59e0b,#d97706);
+       color:#fff;padding:16px 36px;border-radius:14px;text-decoration:none;
+       font-weight:bold;font-size:17px;margin-top:8px;
+       box-shadow:0 6px 20px rgba(245,158,11,0.4);transition:transform 0.2s}
+  .btn:active{transform:scale(0.97)}
+  .btn-secondary{background:rgba(255,255,255,0.15);box-shadow:none;margin-top:12px}
+  .hint{font-size:13px;opacity:0.7;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">🔒</div>
+  <h1>قسم مغلق</h1>
+  <div class="section-name">{{ section_ar }}</div>
+  <p>هذا القسم متاح للمشتركين فقط.</p>
+  <p>اختر الباقة المناسبة لك من البوت لتفعيل الوصول.</p>
+
+  <div class="features">
+    <li>✅ كل دروس القسم</li>
+    <li>✅ كل التدريبات والاختبارات</li>
+    <li>✅ بنك الأخطاء الشخصي</li>
+    <li>✅ امتحان نهاية القسم</li>
+  </div>
+
+  <a class="btn" href="https://t.me/YamenAcademyBot?start=subscribe">
+    🛒 اختيار باقة الآن
+  </a>
+  <br>
+  <a class="btn btn-secondary" href="javascript:Telegram.WebApp.close()">
+    إغلاق
+  </a>
+
+  <p class="hint">إذا كان عندك اشتراك فعّال ولا يفتح، تواصل مع الإدارة.</p>
+</div>
+<script>
+  if (window.Telegram?.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  }
+</script>
+</body>
+</html>
