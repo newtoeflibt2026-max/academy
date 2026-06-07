@@ -356,10 +356,15 @@ def mistakes_page():
     cur.execute("""SELECT eb.id, eb.question_id, eb.wrong_answer, eb.correct_answer,
                           eb.created_at, COALESCE(eb.times_correct_after,0) AS times_correct_after,
                           COALESCE(eb.is_mastered,0) AS is_mastered,
-                          eb.explanation_ar, lq.question AS question_text
+                          eb.explanation_ar,
+                          COALESCE(lq.question, q.question_text) AS question_text,
+                          lq.options_json AS lq_opts,
+                          q.option_a AS qa, q.option_b AS qb, q.option_c AS qc, q.option_d AS qd
                    FROM error_bank eb
                    LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
+                   LEFT JOIN questions q ON q.id = eb.question_id
                    WHERE eb.user_id=?
+                     AND (lq.question IS NOT NULL OR q.question_text IS NOT NULL)
                    ORDER BY eb.is_mastered ASC, eb.created_at DESC LIMIT 100""", (user_id,))
     rows = cur.fetchall()
     mistakes = [dict(r) for r in rows]
