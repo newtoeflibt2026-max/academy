@@ -6694,10 +6694,15 @@ def _run_packages_migration():
     import os, sqlite3, datetime
     from flask import request, jsonify
 
-    token = request.args.get("token", "")
-    expected = os.environ.get("MIGRATION_TOKEN", "")
-    if not expected or token != expected:
-        return jsonify({"error": "unauthorized"}), 403
+    # تحقق من admin_id
+    admin_id = request.args.get("admin_id", "")
+    admin_ids = [a.strip() for a in os.environ.get("ADMIN_IDS","").split(",") if a.strip()]
+    if not admin_id or admin_id not in admin_ids:
+        return jsonify({
+            "error": "unauthorized",
+            "hint": "use ?admin_id=<your_telegram_id>",
+            "admin_ids_count": len(admin_ids)
+        }), 403
 
     db = os.environ.get("DB_PATH", "academy.db")
     log = []
