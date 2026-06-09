@@ -27,6 +27,16 @@ try:
 except Exception as _e:
     print(f"[wsgi] init_db skipped: {_e}", flush=True)
 
+
+# 2.4) Schema Migration - يضمن وجود كل الأعمدة المطلوبة
+try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from migrations.ensure_schema import ensure_schema
+    ensure_schema()
+    print("[wsgi] schema migration applied", flush=True)
+except Exception as _e:
+    print(f"[wsgi] schema migration skipped: {_e}", flush=True)
+
 # 2.5) F3 Migration - يضيف F3 + next_review دون مساس ببيانات الطلاب
 try:
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
