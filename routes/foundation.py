@@ -56,7 +56,7 @@ def foundation_home():
     conn = db(); cur = conn.cursor()
 
     # المراحل F1-F6
-    cur.execute("SELECT id, code, name_ar FROM stages WHERE code IN ('F1','F2','F3','F4') ORDER BY code")
+    cur.execute("SELECT id, code, name_ar FROM stages WHERE code IN ('F1','F2','F3','F4') AND is_active=1 ORDER BY code")
     raw_stages = cur.fetchall()
 
     stages = []
