@@ -171,11 +171,13 @@ def foundation_lesson(lesson_id):
 
     # استخراج الأمثلة من explanation_json
     examples = []
+    vocabulary = []
     content_html = L["content"] or ""
     try:
         if L["explanation_json"]:
             ej = json.loads(L["explanation_json"])
-            examples = ej.get("examples", [])
+            examples = ej.get("examples", []) or []
+            vocabulary = ej.get("vocabulary", []) or ej.get("vocab", []) or []
             if ej.get("content_html"):
                 content_html = ej["content_html"]
     except:
@@ -190,7 +192,7 @@ def foundation_lesson(lesson_id):
         "timer_minutes": L["timer_minutes"] or 10,
     }
     conn.close()
-    return render_template("foundation_lesson.html", lesson=lesson, examples=examples, next_set=next_set, user_id=user_id)
+    return render_template("foundation_lesson.html", lesson=lesson, examples=examples, next_set=next_set, user_id=user_id, vocabulary=vocabulary)
 
 
 # =========================================================
@@ -214,7 +216,9 @@ def foundation_quiz(lesson_id):
         return "Lesson not found", 404
 
     cur.execute("""SELECT id, q_type, question, options_json, correct_answer, explanation,
-                          explanation_ar, translation_ar, concept
+                          explanation_ar, translation_ar, concept, tip,
+                          why_a, why_b, why_c, why_d,
+                          scrambled_words, expected_answer, blanks_json, passage_text, passage_ref
                    FROM lesson_questions
                    WHERE lesson_id=? AND COALESCE(set_number,1)=?
                    ORDER BY order_num, id""", (lesson_id, set_number))
@@ -223,35 +227,84 @@ def foundation_quiz(lesson_id):
     # احتياطي: لو set N فارغ، استخدم set 1
     if not rows and set_number > 1:
         cur.execute("""SELECT id, q_type, question, options_json, correct_answer, explanation,
-                              explanation_ar, translation_ar, concept
+                              explanation_ar, translation_ar, concept, tip,
+                              why_a, why_b, why_c, why_d,
+                              scrambled_words, expected_answer, blanks_json, passage_text, passage_ref
                        FROM lesson_questions WHERE lesson_id=? AND COALESCE(set_number,1)=1
                        ORDER BY order_num, id""", (lesson_id,))
         rows = cur.fetchall()
 
     questions = []
     for r in rows:
+        # options: قد تكون dict {"A":"x","B":"y"} أو list ["x","y"]
+        opts_raw = r["options_json"]
+        opts_list = []
         try:
-            opts = json.loads(r["options_json"]) if r["options_json"] else []
+            parsed = json.loads(opts_raw) if opts_raw else []
+            if isinstance(parsed, dict):
+                for LK in ["A","B","C","D","E"]:
+                    if LK in parsed:
+                        opts_list.append(parsed[LK])
+            elif isinstance(parsed, list):
+                opts_list = parsed
         except:
-            opts = []
+            opts_list = []
+
+        # scrambled_words
+        sw = []
+        try:
+            sw_raw = r["scrambled_words"] if "scrambled_words" in r.keys() else None
+            if sw_raw:
+                sw = json.loads(sw_raw)
+        except:
+            sw = []
+
+        # blanks
+        blanks = []
+        try:
+            b_raw = r["blanks_json"] if "blanks_json" in r.keys() else None
+            if b_raw:
+                blanks = json.loads(b_raw)
+        except:
+            blanks = []
+
+        passage = ""
+        try:
+            passage = (r["passage_text"] if "passage_text" in r.keys() else "") or ""
+        except:
+            passage = ""
+
         questions.append({
             "id": r["id"],
             "q_type": r["q_type"] or "mcq",
+            "question_text": r["question"] or "",
             "question": r["question"] or "",
-            "question_ar": r["question"] or "",
-            "question_en": "",
-            "options": opts,
+            "options": opts_list,
             "correct_answer": r["correct_answer"] or "",
             "explanation": r["explanation"] or "",
             "explanation_ar": r["explanation_ar"] or r["explanation"] or "",
             "translation_ar": r["translation_ar"] or "",
             "concept_ar": r["concept"] or "",
+            "tip": (r["tip"] if "tip" in r.keys() else "") or "",
+            "why_a": (r["why_a"] if "why_a" in r.keys() else "") or "",
+            "why_b": (r["why_b"] if "why_b" in r.keys() else "") or "",
+            "why_c": (r["why_c"] if "why_c" in r.keys() else "") or "",
+            "why_d": (r["why_d"] if "why_d" in r.keys() else "") or "",
+            "scrambled_words": sw,
+            "expected_answer": (r["expected_answer"] if "expected_answer" in r.keys() else "") or "",
+            "blanks": blanks,
+            "passage": passage,
         })
     conn.close()
 
-    lesson = {"id": L["id"], "stage_id": L["stage_id"], "title_ar": L["title_ar"] or L["title"]}
+    # L قد تكون tuple أو Row — نتعامل مع الحالتين
+    try:
+        l_id = L["id"]; l_stage = L["stage_id"]; l_title_ar = L["title_ar"]; l_title = L["title"]
+    except (TypeError, IndexError):
+        l_id, l_stage, l_title_ar, l_title = L[0], L[1], L[2], L[3]
+    lesson = {"id": l_id, "stage_id": l_stage, "title_ar": l_title_ar or l_title}
     return render_template("foundation_quiz.html",
-        lesson=lesson, questions_json=json.dumps(questions, ensure_ascii=False),
+        lesson=lesson, questions=questions, questions_json=json.dumps(questions, ensure_ascii=False),
         total=len(questions), set_number=set_number, user_id=user_id)
 
 
@@ -320,6 +373,43 @@ def api_quiz_finish():
         (telegram_id, lesson_id, started_at, finished_at, correct_count, total_questions, passed, score_percent, answers_json, set_number)
         VALUES (?, ?, datetime('now'), datetime('now'), ?, ?, ?, ?, ?, ?)""",
         (str(user_id), lesson_id, correct, total, 1 if passed else 0, score, answers_json, set_number))
+
+    # === 🆕 تسجيل الأخطاء في error_bank مع التكرار الذكي ===
+    wrong_answers = data.get("wrong_answers", []) or []
+    saved_errors = 0
+    for wa in wrong_answers:
+        try:
+            qid = int(wa.get("question_id", 0) or 0)
+            if not qid: continue
+            ua = str(wa.get("user_answer", "") or "")[:200]
+            ca = str(wa.get("correct_answer", "") or "")[:200]
+            
+            # هل السؤال موجود في البنك مسبقاً وغير مُتقن؟
+            cur.execute("""SELECT id, times_retried, times_correct_after, is_mastered 
+                           FROM error_bank 
+                           WHERE user_id=? AND question_id=? AND COALESCE(is_mastered,0)=0""",
+                        (user_id, qid))
+            existing = cur.fetchone()
+            
+            if existing:
+                # موجود → أعد ضبط next_review +2 أيام، وصفّر times_correct_after
+                cur.execute("""UPDATE error_bank 
+                               SET wrong_answer=?, correct_answer=?, 
+                                   next_review=date('now','+2 days'),
+                                   times_correct_after=0,
+                                   last_reviewed_at=datetime('now')
+                               WHERE id=?""",
+                            (ua, ca, existing[0]))
+            else:
+                # جديد → أدخل سجل جديد
+                cur.execute("""INSERT INTO error_bank
+                    (user_id, question_id, error_type, wrong_answer, correct_answer, created_at,
+                     lesson_id, times_retried, times_correct_after, is_mastered, next_review)
+                    VALUES (?, ?, 'foundation_exam', ?, ?, datetime('now'), ?, 0, 0, 0, date('now','+2 days'))""",
+                    (user_id, qid, ua, ca, lesson_id))
+            saved_errors += 1
+        except Exception as e:
+            print(f"[error_bank] skip qid={wa}: {e}")
 
     if passed:
         if set_number == 1: xp_awarded = XP_SET1
@@ -602,4 +692,68 @@ def foundation_quiz_submit(lesson_id):
         "ok": True, "passed": bool(passed), "score": score,
         "next_lesson_id": next_lesson_id, "stage_id": cur_lesson["stage_id"] if cur_lesson else None
     })
+
+
+# ============ بوابة التأسيس - الامتحان الرسمي ============
+@foundation_bp.route("/foundation/exam/<int:lesson_id>")
+@require_section_access("foundation")
+def foundation_exam(lesson_id):
+    """امتحان رسمي للدرس 70 (بوابة التأسيس) - بدون كشف إجابات أثناء الاختبار"""
+    user_id = get_user_id(request)
+    
+    conn = db(); cur = conn.cursor()
+    cur.execute("SELECT id, stage_id, title_ar, title FROM lessons WHERE id=?", (lesson_id,))
+    L = cur.fetchone()
+    if not L:
+        conn.close()
+        return "Lesson not found", 404
+    
+    cur.execute("""SELECT id, q_type, question, options_json, correct_answer,
+                          why_a, why_b, why_c, why_d, tip
+                   FROM lesson_questions
+                   WHERE lesson_id=? AND COALESCE(set_number,1)=1
+                   ORDER BY order_num, id""", (lesson_id,))
+    rows = cur.fetchall()
+    
+    import json as _json
+    questions = []
+    for r in rows:
+        opts_raw = r["options_json"]
+        opts_list = []
+        try:
+            parsed = _json.loads(opts_raw) if opts_raw else []
+            if isinstance(parsed, dict):
+                for LK in ["A","B","C","D","E"]:
+                    if LK in parsed:
+                        opts_list.append({"letter": LK, "text": parsed[LK]})
+            elif isinstance(parsed, list):
+                letters = ["A","B","C","D","E"]
+                for i, t in enumerate(parsed):
+                    opts_list.append({"letter": letters[i], "text": t})
+        except:
+            opts_list = []
+        
+        questions.append({
+            "id": r["id"],
+            "question_text": r["question"] or "",
+            "options": opts_list,
+            "correct_answer": r["correct_answer"] or "",
+            "why_a": r["why_a"] or "",
+            "why_b": r["why_b"] or "",
+            "why_c": r["why_c"] or "",
+            "why_d": r["why_d"] or "",
+            "tip": r["tip"] or "",
+        })
+    
+    conn.close()
+    
+    lesson_dict = {"id": L["id"], "stage_id": L["stage_id"], 
+                   "title": L["title"], "title_ar": L["title_ar"]}
+    
+    return render_template("foundation_exam.html",
+                           lesson=lesson_dict,
+                           questions=questions,
+                           questions_json=_json.dumps(questions, ensure_ascii=False),
+                           user_id=user_id,
+                           exam_minutes=15)
 

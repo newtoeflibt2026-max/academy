@@ -1,101 +1,136 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ lesson.title_ar }}</title>
+<title>{{ lesson.title_ar or lesson.title }}</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-  background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; }
-.container { max-width: 720px; margin: 0 auto; }
-.lesson-card { background: #fff; border-radius: 18px; padding: 22px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-.lesson-title { font-size: 22px; color: #2d3748; margin-bottom: 6px; font-weight: 700; }
-.lesson-sub { font-size: 13px; color: #718096; margin-bottom: 18px; }
-.tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #edf2f7; }
-.tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: 600;
-  color: #a0aec0; border-bottom: 3px solid transparent; font-size: 14px; }
-.tab.active { color: #667eea; border-bottom-color: #667eea; }
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(6px);} to {opacity:1; transform:translateY(0);} }
-
-.explanation { font-size: 16px; line-height: 1.95; color: #2d3748; }
-.explanation p { margin: 10px 0; }
-.explanation .rule-list { padding-right: 0; list-style: none; }
-.explanation .rule-list li { background:#f8f9fa; padding:12px 14px; border-radius:10px;
-  margin-bottom:10px; border-right:4px solid #667eea; }
-.explanation .rule-list li b { color:#5a4cad; display:inline-block; margin-left:6px; }
-.explanation .rule-list li span { color:#2c3e50; font-weight:500; }
-
-.example { background: linear-gradient(135deg,#fff5ef,#ffe8d6); padding: 14px;
-  border-radius: 12px; margin-bottom: 10px; border-right: 4px solid #ff6b35; }
-.example .en { font-size: 16px; color: #2c5282; font-weight: 600;
-  direction: ltr; text-align: left; unicode-bidi: plaintext; }
-.example .ar { font-size: 14px; color: #4a5568; display: none; margin-top: 8px;
-  padding-top: 8px; border-top: 1px dashed #cbd5e0; }
-.example.show .ar { display: block; }
-.btn-trans { background: transparent; border: 1.5px solid #ff6b35; color: #ff6b35;
-  padding: 5px 14px; border-radius: 20px; font-size: 12px; cursor: pointer;
-  margin-top: 8px; font-weight: 600; }
-.empty-ex { text-align:center; padding:30px; color:#999; font-size:14px; }
-
-.btn-start { background: linear-gradient(135deg,#48bb78,#38a169); color: #fff;
-  border: none; padding: 14px; width: 100%; border-radius: 12px; font-size: 17px;
-  font-weight: 700; cursor: pointer; margin-top: 18px;
-  box-shadow: 0 6px 18px rgba(72,187,120,0.4); }
-.btn-back { display: block; width: 100%; padding: 11px; background: #edf2f7;
-  color: #4a5568; border: none; border-radius: 10px; margin-top: 10px;
-  font-size: 14px; cursor: pointer; }
-.set-info { background: #fff5f5; border-right: 4px solid #f56565; padding: 12px;
-  border-radius: 8px; margin-bottom: 14px; font-size: 14px; color: #742a2a; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e293b;line-height:1.8}
+.progress-top{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,#3b82f6,#10b981);width:0%;z-index:100;transition:width .2s}
+.topbar{background:#fff;padding:14px 24px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:50}
+.topbar .left{display:flex;align-items:center;gap:14px}
+.back-btn{background:#f1f5f9;color:#475569;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px}
+.back-btn:hover{background:#e2e8f0}
+.topbar h1{font-size:17px;color:#0f172a;font-weight:700}
+.start-btn{background:#3b82f6;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 2px 6px rgba(59,130,246,.3)}
+.start-btn:hover{background:#2563eb}
+.meta{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;display:flex;gap:24px;font-size:13px;color:#64748b;flex-wrap:wrap}
+.layout{max-width:900px;margin:0 auto;padding:24px}
+.content-area{background:#fff;border-radius:14px;padding:36px 40px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.content-area h2{font-size:24px;color:#0f172a;margin:28px 0 14px;font-weight:700;padding-bottom:8px;border-bottom:2px solid #f1f5f9}
+.content-area h3{font-size:20px;color:#1e293b;margin:24px 0 12px;font-weight:700}
+.content-area h4{font-size:17px;color:#334155;margin:20px 0 10px;font-weight:700}
+.content-area p{margin-bottom:14px;color:#334155;font-size:15.5px;line-height:1.9}
+.content-area ul,.content-area ol{margin:14px 24px;color:#334155}
+.content-area li{margin-bottom:8px;line-height:1.9}
+.content-area strong{color:#0f172a;font-weight:700}
+.content-area code,.content-area .en{font-family:'Consolas','Courier New',monospace;background:#f1f5f9;padding:2px 8px;border-radius:4px;color:#1e40af;font-size:14px;direction:ltr;display:inline-block;unicode-bidi:isolate}
+.content-area table{width:100%;border-collapse:collapse;margin:18px 0;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.content-area th{background:#eff6ff;color:#1d4ed8;padding:12px;font-weight:700;text-align:right;font-size:14px}
+.content-area td{padding:12px;border-top:1px solid #f1f5f9;color:#334155;font-size:14px}
+.content-area td:nth-child(2),.content-area td:nth-child(3){direction:ltr;text-align:left;unicode-bidi:isolate}
+.content-area blockquote{background:#fef3c7;border-right:4px solid #f59e0b;padding:14px 18px;margin:14px 0;border-radius:8px;color:#78350f}
+.examples-section,.vocab-section{margin:32px 0;padding:24px;background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0}
+.section-title{font-size:20px;color:#0f172a;margin-bottom:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.ex-grid{display:grid;gap:12px}
+.ex-card{background:#fff;border-radius:10px;padding:14px 18px;border-right:4px solid #3b82f6;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.ex-card .en{display:block;direction:ltr;text-align:left;font-family:'Segoe UI',Arial;background:transparent;color:#0f172a;font-weight:600;font-size:15px;margin-bottom:6px;padding:0}
+.ex-card .ar{display:block;color:#64748b;font-size:14px;line-height:1.7}
+.ex-card .note{display:block;margin-top:6px;font-size:12px;color:#0891b2;font-style:italic}
+.vocab-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.vocab-card{background:#fff;border-radius:10px;padding:14px 18px;border-right:4px solid #10b981;box-shadow:0 1px 3px rgba(0,0,0,.04);display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.vocab-card .word-en{direction:ltr;text-align:left;font-weight:700;color:#065f46;font-size:16px}
+.vocab-card .ipa{direction:ltr;text-align:left;color:#0891b2;font-size:13px;font-family:'Consolas',monospace}
+.vocab-card .meaning{color:#1e293b;font-size:14px}
+.vocab-card .example-en{grid-column:1/-1;direction:ltr;text-align:left;background:#f0fdf4;padding:8px 12px;border-radius:6px;color:#065f46;font-size:13px;margin-top:6px}
+.final-cta{display:flex;justify-content:center;margin:36px 0 12px}
+.final-cta a{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:16px 40px;border-radius:12px;text-decoration:none;font-weight:700;font-size:17px;box-shadow:0 4px 14px rgba(16,185,129,.35)}
+.final-cta a:hover{transform:translateY(-2px)}
+@media (max-width:900px){.content-area{padding:24px 20px}.vocab-card{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="lesson-card">
-    <div class="lesson-title" dir="auto">{{ lesson.title_ar }}</div>
-    <div class="lesson-sub">{{ lesson.skill }} · {{ lesson.xp_reward }} XP · {{ lesson.timer_minutes }} دقيقة</div>
-    {% if next_set > 1 %}
-    <div class="set-info">⚠️ هذه إعادة المحاولة. راجع الشرح جيداً ثم ابدأ بمجموعة أسئلة جديدة (set {{ next_set }}).</div>
-    {% endif %}
-    <div class="tabs">
-      <div class="tab active" onclick="showTab(0)">📖 الشرح</div>
-      <div class="tab" onclick="showTab(1)">💡 أمثلة</div>
-    </div>
-    <div class="tab-content active">
-      <div class="explanation">{{ lesson.content_html|safe }}</div>
-    </div>
-    <div class="tab-content">
-      {% if examples %}
+<div class="progress-top" id="ptop"></div>
+
+<div class="topbar">
+  <div class="left">
+    <a href="/foundation" class="back-btn">← العودة</a>
+    <h1>📚 {{ lesson.title_ar or lesson.title }}</h1>
+  </div>
+  <a href="/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}" class="start-btn">🚀 ابدأ التمرين</a>
+</div>
+
+<div class="meta">
+  <span>⏱️ {{ lesson.timer_minutes or 25 }} دقيقة</span>
+  <span>⭐ {{ lesson.xp_reward or 40 }} XP</span>
+  <span>🎯 {{ lesson.skill or 'grammar' }}</span>
+  {% if examples %}<span>📖 {{ examples|length }} أمثلة</span>{% endif %}
+  {% if vocabulary %}<span>📚 {{ vocabulary|length }} مفردات</span>{% endif %}
+</div>
+
+<div class="layout">
+  <main class="content-area" id="content">
+    {{ lesson.content_html | safe }}
+
+    {% if examples and examples|length > 0 %}
+    <section class="examples-section">
+      <h3 class="section-title">📖 أمثلة تطبيقية ({{ examples|length }})</h3>
+      <div class="ex-grid">
         {% for ex in examples %}
-        <div class="example" id="ex{{ loop.index }}">
-          <div class="en">{{ ex.en }}</div>
-          {% if ex.ar %}<div class="ar">🇸🇦 {{ ex.ar }}</div>{% endif %}
-          {% if ex.ar %}<button class="btn-trans" onclick="toggleTrans({{ loop.index }})">🌐 إظهار الترجمة</button>{% endif %}
+        <div class="ex-card">
+          <span class="en">{{ ex.en }}</span>
+          <span class="ar">{{ ex.ar }}</span>
+          {% if ex.note %}<span class="note">💡 {{ ex.note }}</span>{% endif %}
         </div>
         {% endfor %}
-      {% else %}
-        <div class="empty-ex">لا توجد أمثلة منفصلة. راجع الشرح فهو يحتوي على أمثلة.</div>
-      {% endif %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if vocabulary and vocabulary|length > 0 %}
+    <section class="vocab-section">
+      <h3 class="section-title">📚 مفردات TOEFL ({{ vocabulary|length }})</h3>
+      <div class="vocab-grid">
+        {% for v in vocabulary %}
+        <div class="vocab-card">
+          <div>
+            <div class="word-en">{{ v.word or v.en }}</div>
+            {% if v.ipa %}<div class="ipa">{{ v.ipa }}</div>{% endif %}
+          </div>
+          <div class="meaning">{{ v.meaning_ar or v.ar or '' }}</div>
+          {% if v.example_en or v.example %}
+          <div class="example-en">{{ v.example_en or v.example }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <div class="final-cta">
+      <a href="/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}">🎯 جاهز؟ ابدأ التمرين الآن ←</a>
     </div>
-    <button class="btn-start" onclick="location.href='/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}&set={{ next_set }}'">▶️ ابدأ الأسئلة ({{ q_count }} أسئلة)</button>
-    <button class="btn-back" onclick="location.href='/foundation/stage/{{ lesson.stage_id }}?user_id={{ user_id }}'">↩️ رجوع</button>
-  </div>
+  </main>
 </div>
+
 <script>
-function showTab(i){
-  document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('active', idx===i));
-  document.querySelectorAll('.tab-content').forEach((c,idx)=>c.classList.toggle('active', idx===i));
+// محاذاة LTR للفقرات الإنجليزية
+document.querySelectorAll('.content-area p, .content-area li').forEach(el=>{
+  const txt = el.textContent.trim();
+  if(/^[A-Za-z]/.test(txt) && txt.length > 0){
+    el.style.direction = 'ltr';
+    el.style.textAlign = 'left';
+    el.style.unicodeBidi = 'isolate';
+  }
+});
+// progress bar
+function onScroll(){
+  const sc = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('ptop').style.width = Math.min(100, (sc/docH*100)) + '%';
 }
-function toggleTrans(i){
-  const el = document.getElementById('ex'+i);
-  el.classList.toggle('show');
-  const btn = el.querySelector('.btn-trans');
-  if (btn) btn.textContent = el.classList.contains('show') ? '🙈 إخفاء الترجمة' : '🌐 إظهار الترجمة';
-}
-if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
+window.addEventListener('scroll', onScroll);
 </script>
 </body>
 </html>

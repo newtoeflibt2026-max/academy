@@ -40,6 +40,14 @@ from db import (get_db, get_all_students_db, get_student,
 
 app = Flask(__name__)
 
+@app.after_request
+def _no_cache(resp):
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
+    return resp
+
+
 from routes.foundation import foundation_bp
 app.register_blueprint(foundation_bp)
 

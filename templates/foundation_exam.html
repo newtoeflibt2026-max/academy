@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚪 بوابة التأسيس - الامتحان الرسمي</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+    min-height: 100vh;
+    color: #1f2937;
+    padding: 20px;
+  }
+  .exam-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+  }
+  /* === Header === */
+  .exam-header {
+    background: linear-gradient(135deg, #1e40af, #3730a3);
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .exam-title { font-size: 20px; font-weight: bold; }
+  .exam-title small { display:block; font-size:13px; opacity:0.85; font-weight:normal; margin-top:3px; }
+  .timer {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    min-width: 130px;
+    text-align: center;
+  }
+  .timer.warning { background: #f59e0b; border-color: #fbbf24; animation: pulse 1s infinite; }
+  .timer.danger { background: #dc2626; border-color: #ef4444; animation: pulse 0.5s infinite; }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  
+  /* === Progress === */
+  .progress-bar-bg {
+    background: #e5e7eb;
+    height: 8px;
+    position: relative;
+  }
+  .progress-bar {
+    background: linear-gradient(90deg, #10b981, #059669);
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    padding: 12px 30px;
+    background: #f8fafc;
+    font-size: 15px;
+    color: #475569;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  /* === Question === */
+  .question-area { padding: 30px; min-height: 350px; }
+  .q-badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  .q-text {
+    font-size: 20px;
+    line-height: 1.7;
+    color: #111827;
+    margin-bottom: 25px;
+    direction: ltr;
+    text-align: left;
+    background: #f8fafc;
+    padding: 18px 22px;
+    border-radius: 12px;
+    border-right: 5px solid #3b82f6;
+  }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    direction: ltr;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+  }
+  .option:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    transform: translateX(-3px);
+  }
+  .option.selected {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    box-shadow: 0 5px 15px rgba(59,130,246,0.2);
+  }
+  .opt-letter {
+    background: #f1f5f9;
+    color: #475569;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .option.selected .opt-letter {
+    background: #3b82f6;
+    color: white;
+  }
+  
+  /* === Footer === */
+  .exam-footer {
+    padding: 20px 30px;
+    background: #f8fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e2e8f0;
+  }
+  .btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-next {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    box-shadow: 0 5px 15px rgba(59,130,246,0.3);
+  }
+  .btn-next:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59,130,246,0.4); }
+  .btn-next:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+  .btn-finish {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-shadow: 0 5px 15px rgba(16,185,129,0.3);
+  }
+  .btn-finish:hover { transform: translateY(-2px); }
+  .info-text { color: #64748b; font-size: 14px; }
+  
+  /* === Final Screen === */
+  .final-screen {
+    padding: 40px 30px;
+    text-align: center;
+  }
+  .final-screen.pass { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
+  .final-screen.fail { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+  .final-icon { font-size: 80px; margin-bottom: 15px; }
+  .final-title { font-size: 30px; font-weight: bold; margin-bottom: 15px; }
+  .final-title.pass { color: #065f46; }
+  .final-title.fail { color: #78350f; }
+  .score-display {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+  .score-percent {
+    font-size: 60px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  .score-percent.pass { color: #10b981; }
+  .score-percent.fail { color: #f59e0b; }
+  .score-detail { font-size: 18px; color: #475569; }
+  
+  /* === Start Screen === */
+  .start-screen {
+    padding: 50px 30px;
+    text-align: center;
+  }
+  .start-screen h1 { font-size: 32px; color: #1e3a8a; margin-bottom: 15px; }
+  .rules-box {
+    background: #fffbeb;
+    border: 2px solid #f59e0b;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px auto;
+    max-width: 600px;
+    text-align: right;
+  }
+  .rules-box h3 { color: #78350f; margin-bottom: 15px; }
+  .rules-box ul { padding-right: 25px; line-height: 2; color: #451a03; }
+  .start-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 18px 50px;
+    border: none;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(239,68,68,0.3);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(239,68,68,0.4); }
+  
+  /* === Reading Next === */
+  .reading-next {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 20px;
+    text-align: right;
+    border-right: 6px solid #3b82f6;
+  }
+  .reading-next h2 { color: #1e3a8a; margin-bottom: 15px; }
+  .reading-next h3 { color: #1e40af; margin: 15px 0 10px; font-size: 17px; }
+  .task-card {
+    background: white;
+    padding: 14px;
+    border-radius: 10px;
+    margin: 8px 0;
+    border-right: 4px solid #10b981;
+    font-size: 14px;
+  }
+  .task-card.t2 { border-right-color: #f59e0b; }
+  .task-card.t3 { border-right-color: #8b5cf6; }
+  .task-card b { display: block; margin-bottom: 5px; }
+  .reading-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #ec4899, #db2777);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 15px;
+    box-shadow: 0 8px 20px rgba(236,72,153,0.3);
+  }
+</style>
+</head>
+<body>
+
+<div class="exam-container">
+
+  <!-- شاشة البدء -->
+  <div id="startScreen" class="start-screen">
+    <h1>🚪 بوابة التأسيس</h1>
+    <p style="font-size:17px; color:#475569; margin-bottom:10px;">{{ lesson.title_ar }}</p>
+    
+    <div class="rules-box">
+      <h3>⚠️ قواعد الامتحان الرسمي</h3>
+      <ul>
+        <li>⏱️ مدة الاختبار: <b>15 دقيقة</b> (سينتهي تلقائياً)</li>
+        <li>📝 عدد الأسئلة: <b>{{ questions|length }} سؤال</b></li>
+        <li>❌ <b>لا تظهر</b> الإجابات الصحيحة أثناء الاختبار</li>
+        <li>🚫 <b>لا يمكن</b> الرجوع للأسئلة السابقة</li>
+        <li>✅ شرط النجاح: <b>75% فأكثر</b> (10/14)</li>
+        <li>🏆 عند النجاح: تُفتح بوابة قسم القراءة</li>
+      </ul>
+    </div>
+    
+    <p style="color:#dc2626; font-weight:bold; margin:20px 0;">
+      ⚠️ تأكد من جاهزيتك التامة قبل البدء — لا يوجد إيقاف مؤقت
+    </p>
+    
+    <button class="start-btn" onclick="startExam()">🚀 ابدأ الامتحان الآن</button>
+  </div>
+
+  <!-- شاشة الامتحان -->
+  <div id="examScreen" style="display:none;">
+    <div class="exam-header">
+      <div class="exam-title">
+        🚪 الامتحان الرسمي
+        
+      </div>
+      <div id="timer" class="timer">15:00</div>
+    </div>
+    
+    <div class="progress-bar-bg">
+      <div id="progress" class="progress-bar"></div>
+    </div>
+    <div class="progress-text">
+      السؤال <span id="qNum">1</span> من <span id="qTotal">{{ questions|length }}</span>
+    </div>
+    
+    <div class="question-area">
+      
+      <div id="qText" class="q-text"></div>
+      <div id="options" class="options"></div>
+    </div>
+    
+    <div class="exam-footer">
+      <span class="info-text">💡 اختر إجابتك ثم اضغط «التالي»</span>
+      <button id="nextBtn" class="btn btn-next" onclick="nextQuestion()" disabled>التالي ←</button>
+    </div>
+  </div>
+
+  <!-- شاشة النتيجة -->
+  <div id="finalScreen" style="display:none;"></div>
+
+</div>
+
+<script>
+const QUESTIONS = {{ questions_json|safe }};
+const EXAM_MINUTES = {{ exam_minutes }};
+const USER_ID = "{{ user_id }}";
+const LESSON_ID = {{ lesson.id }};
+
+let currentIdx = 0;
+let selectedAnswers = {};  // {0: 'A', 1: 'B', ...}
+let timerInterval = null;
+let timeLeft = EXAM_MINUTES * 60;
+let examStarted = false;
+
+function startExam() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('examScreen').style.display = 'block';
+  examStarted = true;
+  renderQuestion();
+  startTimer();
+  
+  // منع الخروج
+  window.addEventListener('beforeunload', function(e) {
+    if (examStarted) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      finishExam(true);
+    }
+  }, 1000);
+}
+
+function updTimer() { updateTimerDisplay(); }
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  const display = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const timerEl = document.getElementById('timer');
+  timerEl.textContent = display;
+  timerEl.classList.remove('warning', 'danger');
+  if (timeLeft <= 30) timerEl.classList.add('danger');
+  else if (timeLeft <= 120) timerEl.classList.add('warning');
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentIdx];
+  document.getElementById('qNum').textContent = currentIdx + 1;
+  document.getElementById('progress').style.width = ((currentIdx / QUESTIONS.length) * 100) + '%';
+  document.getElementById('qText').innerHTML = q.question_text || '';
+  
+  const optsHtml = q.options.map(opt => `
+    <div class="option" data-letter="${opt.letter}" onclick="selectOption('${opt.letter}', this)">
+      <span class="opt-letter">${opt.letter}</span>
+      <span>${opt.text}</span>
+    </div>
+  `).join('');
+  document.getElementById('options').innerHTML = optsHtml;
+  
+  // إذا الإجابة محفوظة (لا يحدث في امتحان بدون رجوع، لكن احتياط)
+  if (selectedAnswers[currentIdx]) {
+    const el = document.querySelector(`.option[data-letter="${selectedAnswers[currentIdx]}"]`);
+    if (el) el.classList.add('selected');
+    document.getElementById('nextBtn').disabled = false;
+  } else {
+    document.getElementById('nextBtn').disabled = true;
+  }
+  
+  // زر إنهاء في آخر سؤال
+  const btn = document.getElementById('nextBtn');
+  if (currentIdx === QUESTIONS.length - 1) {
+    btn.textContent = '🏁 إنهاء الامتحان';
+    btn.classList.remove('btn-next');
+    btn.classList.add('btn-finish');
+  } else {
+    btn.textContent = 'التالي ←';
+    btn.classList.add('btn-next');
+    btn.classList.remove('btn-finish');
+  }
+}
+
+function selectOption(letter, el) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAnswers[currentIdx] = letter;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  if (currentIdx === QUESTIONS.length - 1) {
+    finishExam(false);
+    return;
+  }
+  currentIdx++;
+  renderQuestion();
+}
+
+function finishExam(byTimeout) {
+  examStarted = false;
+  if (timerInterval) clearInterval(timerInterval);
+  
+  // احسب النتيجة
+  let correct = 0;
+  QUESTIONS.forEach((q, i) => {
+    if (selectedAnswers[i] === q.correct_answer) correct++;
+  });
+  const total = QUESTIONS.length;
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 75;
+  
+  // أرسل النتيجة للسيرفر (اختياري - لتخزين)
+  try {
+    fetch('/api/foundation/quiz/finish', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        lesson_id: LESSON_ID,
+        score: correct,
+        total: total,
+        percentage: pct,
+        is_gate_exam: true,
+        user_id: USER_ID,
+        wrong_answers: QUESTIONS.map((q, i) => ({
+          question_id: q.id,
+          user_answer: selectedAnswers[i] || null,
+          correct_answer: q.correct_answer,
+          is_correct: selectedAnswers[i] === q.correct_answer
+        })).filter(a => !a.is_correct)
+      })
+    }).catch(()=>{});
+  } catch(e) {}
+  
+  showResult(correct, total, pct, passed, byTimeout);
+}
+
+function showResult(correct, total, pct, passed, byTimeout) {
+  document.getElementById('examScreen').style.display = 'none';
+  const finalEl = document.getElementById('finalScreen');
+  finalEl.style.display = 'block';
+  finalEl.className = 'final-screen ' + (passed ? 'pass' : 'fail');
+  
+  const timeoutMsg = byTimeout ? '<p style="color:#dc2626; font-weight:bold; margin-bottom:15px;">⏰ انتهى الوقت!</p>' : '';
+  
+  if (passed) {
+    finalEl.innerHTML = `
+      ${timeoutMsg}
+      <div class="final-icon">🏆</div>
+      <h1 class="final-title pass">🎉 مبروك! لقد عبرت البوابة</h1>
+      <div class="score-display">
+        <div class="score-detail">نتيجتك النهائية</div>
+        <div class="score-percent pass">${pct}%</div>
+        <div class="score-detail">${correct} صحيحة من ${total}</div>
+      </div>
+      
+      <div class="reading-next">
+        <h2>📖 المحطة التالية: قسم القراءة (TOEFL iBT 2026)</h2>
+        <p style="font-size:14px; background:white; padding:10px; border-radius:8px;">
+          🌐 <b>وفق المصدر الرسمي ETS.org:</b> منذ 21 يناير 2026، تم تجديد قسم القراءة بالكامل ليكون أقصر وأذكى وأكثر تفاعلية.
+        </p>
+        
+        <h3>📊 بنية الاختبار الجديدة</h3>
+        <ul style="line-height:2; color:#1e40af;">
+          <li>⏱️ <b>المدة:</b> ~30 دقيقة</li>
+          <li>📝 <b>الأسئلة:</b> حتى 50 سؤال</li>
+          <li>📊 <b>الدرجة:</b> من 1 إلى 6</li>
+          <li>📚 <b>النصوص:</b> قصيرة ومركّزة (لا تحتاج معرفة مسبقة)</li>
+        </ul>
+        
+        <h3>🎯 المهام الثلاث (Task Types — ETS Official)</h3>
+        
+        <div class="task-card">
+          <b style="color:#065f46;">1️⃣ Complete the Words — إكمال الكلمات</b>
+          تكمل كلمات ناقصة في نص قصير. يقيس <b>المفردات وفهم المعنى من السياق</b>.
+        </div>
+        
+        <div class="task-card t2">
+          <b style="color:#78350f;">2️⃣ Read in Daily Life — قراءة الحياة اليومية</b>
+          نصوص يومية: <b>إشعارات، إيميلات، رسائل قصيرة</b>. الأسئلة عن الفكرة الرئيسية والتفاصيل والمعنى الضمني.
+        </div>
+        
+        <div class="task-card t3">
+          <b style="color:#5b21b6;">3️⃣ Read an Academic Passage — النص الأكاديمي</b>
+          نص أكاديمي قصير مشابه للجامعة. أسئلة عن <b>الأفكار الرئيسية، التفاصيل الداعمة، والمفردات الأكاديمية</b>.
+        </div>
+        
+        <div style="text-align:center; margin-top:20px;">
+          <a href="/reading/start?user_id=${USER_ID}" class="reading-btn">🚀 ابدأ قسم القراءة الآن</a>
+        </div>
+      </div>
+    `;
+  } else {
+    finalEl.innerHTML = `
+      ${timeoutMsg}
+      <div class="final-icon">💪</div>
+      <h1 class="final-title fail">قريب جداً! حاول مرة أخرى</h1>
+      <div class="score-display">
+        <div class="score-detail">نتيجتك</div>
+        <div class="score-percent fail">${pct}%</div>
+        <div class="score-detail">${correct} صحيحة من ${total}</div>
+        <div style="color:#dc2626; margin-top:10px; font-weight:bold;">المطلوب: 75% فأكثر</div>
+      </div>
+
+      <div style="background:#fef3c7; border:2px solid #f59e0b; border-radius:12px; padding:18px; margin:20px 0; text-align:right;">
+        <h3 style="color:#92400e; margin:0 0 10px 0; font-size:17px;">📋 خطّتك للنجاح في المحاولة القادمة:</h3>
+        <ol style="color:#78350f; font-size:15px; line-height:2; margin:0; padding-right:25px;">
+          <li><b>افتح بنك أخطائك</b> — راجع الأسئلة الـ${total - correct} التي أخطأت فيها وافهم لماذا</li>
+          <li><b>عُد للدروس الضعيفة</b> — راجع الدرس المرتبط بكل خطأ</li>
+          <li><b>أعد الامتحان</b> — عندما تشعر بالاستعداد التام</li>
+        </ol>
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:25px;">
+        <a href="/mistakes?user_id=${USER_ID}" style="background:linear-gradient(135deg,#f59e0b,#d97706); color:white; padding:16px 28px; border-radius:12px; text-decoration:none; font-weight:bold; font-size:15px; box-shadow:0 4px 12px rgba(245,158,11,0.4);">🔖 بنك أخطائي (${total - correct})</a>
+        <a href="/foundation?user_id=${USER_ID}" style="background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; padding:16px 28px; border-radius:12px; text-decoration:none; font-weight:bold; font-size:15px; box-shadow:0 4px 12px rgba(59,130,246,0.4);">📚 العودة للدروس</a>
+        <a href="/foundation/exam/70?user_id=${USER_ID}" style="background:linear-gradient(135deg,#dc2626,#b91c1c); color:white; padding:16px 28px; border-radius:12px; text-decoration:none; font-weight:bold; font-size:15px; box-shadow:0 4px 12px rgba(220,38,38,0.4);">🔄 إعادة الامتحان</a>
+      </div>
+    `;
+  }
+}
+</script>
+</body>
+</html>

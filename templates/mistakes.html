@@ -44,7 +44,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gr
     {% for m in mistakes %}
     <div class="mistake-card">
       <div class="mistake-meta">{{ m.created_at }} {% if m.is_mastered %}<span class="mastered-badge">✅ متقن</span>{% endif %}</div>
-      <div class="mistake-q">{{ m.question_text }}</div>
+      <div class="mistake-q">{{ m.question_text|safe }}</div>
       <div class="mistake-row"><span class="label">إجابتك:</span><span class="wrong">{{ m.wrong_answer }}</span></div>
       <div class="mistake-row"><span class="label">الصحيح:</span><span class="right">{{ m.correct_answer }}</span></div>
       {% if m.explanation_ar %}<div class="mistake-exp">💡 {{ m.explanation_ar }}</div>{% endif %}
