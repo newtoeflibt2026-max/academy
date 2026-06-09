@@ -61,6 +61,15 @@ try:
 except Exception as _e:
     print(f"[wsgi] show_f1_f2 migration failed: {_e}")
 
+
+# 2.7) Hide F4 (not built yet)
+try:
+    from migrations.hide_f4 import hide_f4
+    hide_f4()
+    print("[wsgi] hide_f4 migration applied")
+except Exception as _e:
+    print(f"[wsgi] hide_f4 migration failed: {_e}")
+
 from app import app  # noqa: E402
 print("[wsgi] Flask app imported successfully", flush=True)
 
