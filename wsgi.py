@@ -27,6 +27,16 @@ try:
 except Exception as _e:
     print(f"[wsgi] init_db skipped: {_e}", flush=True)
 
+# 2.5) F3 Migration - يضيف F3 + next_review دون مساس ببيانات الطلاب
+try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from migrations.apply_f3 import apply_f3_migration
+    apply_f3_migration()
+    print("[wsgi] F3 migration applied", flush=True)
+except Exception as _e:
+    print(f"[wsgi] F3 migration skipped: {_e}", flush=True)
+
+
 # 3) BOOTSTRAP: ensure stages table exists + F1-F4 seeded
 def _bootstrap_stages():
     try:
