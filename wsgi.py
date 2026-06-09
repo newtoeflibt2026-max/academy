@@ -45,6 +45,14 @@ try:
     print("[wsgi] F3 migration applied", flush=True)
 except Exception as _e:
     print(f"[wsgi] F3 migration skipped: {_e}", flush=True)
+# 2.6) Admin Subscriptions - يفعّل اشتراك للأدمنز
+try:
+    from migrations.ensure_admin_subscriptions import ensure_admin_subscriptions
+    ensure_admin_subscriptions()
+    print("[wsgi] admin subscriptions applied", flush=True)
+except Exception as _e:
+    print(f"[wsgi] admin subscriptions skipped: {_e}", flush=True)
+
 
 
 # 3) BOOTSTRAP: ensure stages table exists + F1-F4 seeded
