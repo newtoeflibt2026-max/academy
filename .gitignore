@@ -56,3 +56,5 @@ _tmp_*.py
 !README.md
 !LAUNCH_README.md
 !PROJECT_MAP.md
+# Allow main database upload
+!academy.db
