@@ -45,6 +45,15 @@ try:
     print("[wsgi] F3 migration applied", flush=True)
 except Exception as _e:
     print(f"[wsgi] F3 migration skipped: {_e}", flush=True)
+
+# 2.5b) F1 Migration - يضيف/يحدّث دروس F1 الكاملة (5 دروس + 70 سؤال)
+try:
+    from migrations.apply_f1 import apply_f1_migration
+    apply_f1_migration()
+    print("[wsgi] F1 migration applied", flush=True)
+except Exception as _e:
+    print(f"[wsgi] F1 migration skipped: {_e}", flush=True)
+
 # 2.6) Admin Subscriptions - يفعّل اشتراك للأدمنز
 try:
     from migrations.ensure_admin_subscriptions import ensure_admin_subscriptions
