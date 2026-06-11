@@ -58,7 +58,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e
     <a href="/foundation" class="back-btn">← العودة</a>
     <h1>📚 {{ lesson.title_ar or lesson.title }}</h1>
   </div>
-  <a href="/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}" class="start-btn">🚀 ابدأ التمرين</a>
+  <a href="{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}/foundation/exam/{{ lesson.id }}{% else %}/foundation/quiz/{{ lesson.id }}{% endif %}?user_id={{ user_id }}" class="start-btn">{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}🚪 ابدأ الامتحان{% else %}🚀 ابدأ التمرين{% endif %}</a>
 </div>
 
 <div class="meta">
@@ -109,7 +109,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e
     {% endif %}
 
     <div class="final-cta">
-      <a href="/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}">🎯 جاهز؟ ابدأ التمرين الآن ←</a>
+      <a href="{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}/foundation/exam/{{ lesson.id }}{% else %}/foundation/quiz/{{ lesson.id }}{% endif %}?user_id={{ user_id }}">{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}🚪 جاهز؟ ابدأ الامتحان الآن ←{% else %}🎯 جاهز؟ ابدأ التمرين الآن ←{% endif %}</a>
     </div>
   </main>
 </div>
