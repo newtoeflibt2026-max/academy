@@ -14,6 +14,42 @@ def _resolve_db_path():
 DB_PATH = _resolve_db_path()
 os.environ["DB_PATH"] = DB_PATH  # ensure ALL submodules see the same path
 
+# ===== AUTO_SYNC_DB_FROM_REPO: copy repo academy.db to Volume if newer =====
+def _auto_sync_db_from_repo():
+    import shutil, datetime
+    try:
+        repo_db = os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
+        target_db = DB_PATH
+        if repo_db == target_db:
+            return  # same file, nothing to do
+        if not os.path.exists(repo_db):
+            print(f"[AUTO_SYNC] repo db not found: {repo_db}")
+            return
+        repo_size = os.path.getsize(repo_db)
+        repo_mtime = os.path.getmtime(repo_db)
+        if os.path.exists(target_db):
+            tgt_size = os.path.getsize(target_db)
+            tgt_mtime = os.path.getmtime(target_db)
+            # only overwrite if repo file is newer
+            if repo_mtime <= tgt_mtime:
+                print(f"[AUTO_SYNC] target db is up-to-date (target_mtime>=repo_mtime). Skip.")
+                return
+            # backup current target
+            ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            bak = f"{target_db}.bak_autosync_{ts}"
+            shutil.copy2(target_db, bak)
+            print(f"[AUTO_SYNC] backed up volume db -> {bak} ({tgt_size} bytes)")
+        else:
+            os.makedirs(os.path.dirname(target_db), exist_ok=True)
+        shutil.copy2(repo_db, target_db)
+        print(f"[AUTO_SYNC] copied repo db ({repo_size} bytes) -> {target_db}")
+    except Exception as e:
+        print(f"[AUTO_SYNC] error: {e}")
+
+_auto_sync_db_from_repo()
+# ===== END AUTO_SYNC_DB_FROM_REPO =====
+
+
 try:
     from migrations.seed_foundation import run as _seed_foundation
     _seed_foundation()
