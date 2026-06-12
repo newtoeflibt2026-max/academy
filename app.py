@@ -79,6 +79,8 @@ from db import (get_db, get_all_students_db, get_student,
 try:
     from migrations.add_reading_lessons_r13_r32 import run as _run_r_mig
     _run_r_mig()
+    from migrations.fix_reading_order import run as _run_fix_order
+    _run_fix_order()
 except Exception as _e:
     print(f"[migration] R-13/R-32 error: {_e}")
 # ===================================================
