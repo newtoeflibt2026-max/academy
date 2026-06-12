@@ -6887,6 +6887,40 @@ def _debug_activate_full():
         "student": {"telegram_id": s[0], "full_name": s[1], "is_paid": s[2]} if s else None
     })
 
+
+@app.route("/debug/find-tid")
+def _debug_find_tid():
+    from flask import request, jsonify
+    if request.args.get("admin_id", type=int) != 5572314718:
+        return jsonify({"error":"forbidden"}), 403
+    tid = request.args.get("tid")
+    if not tid:
+        return jsonify({"error":"tid required"}), 400
+    import sqlite3, os
+    db = os.environ.get("DB_PATH","/app/data/academy.db")
+    con = sqlite3.connect(db); cur = con.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = [r[0] for r in cur.fetchall()]
+    found = {}
+    for t in tables:
+        try:
+            cur.execute(f"PRAGMA table_info({t})")
+            cols = [r[1] for r in cur.fetchall()]
+            id_cols = [c for c in cols if "telegram" in c.lower() or c in ("user_id","tid","tg_id","chat_id")]
+            for c in id_cols:
+                try:
+                    cur.execute(f"SELECT COUNT(*) FROM {t} WHERE CAST({c} AS TEXT) = ?", (tid,))
+                    n = cur.fetchone()[0]
+                    if n > 0:
+                        cur.execute(f"SELECT * FROM {t} WHERE CAST({c} AS TEXT) = ? LIMIT 3", (tid,))
+                        rows = cur.fetchall()
+                        found[f"{t}.{c}"] = {"count": n, "sample": [list(r) for r in rows], "cols": cols}
+                except Exception as e:
+                    pass
+        except: pass
+    con.close()
+    return jsonify({"tid": tid, "found_in": found, "tables_scanned": len(tables)})
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
