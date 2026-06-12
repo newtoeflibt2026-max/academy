@@ -6844,6 +6844,49 @@ def _debug_fix_paid_sync():
         "db_path": db
     })
 
+
+@app.route("/debug/activate-full")
+def _debug_activate_full():
+    from flask import request, jsonify
+    from datetime import datetime, timedelta
+    if request.args.get("admin_id", type=int) != 5572314718:
+        return jsonify({"error":"forbidden"}), 403
+    tid = request.args.get("tid", type=int)
+    if not tid:
+        return jsonify({"error":"tid required"}), 400
+    days = request.args.get("days", default=180, type=int)
+    plan = request.args.get("plan", default="foundation_full")
+    import sqlite3, os
+    db = os.environ.get("DB_PATH","/app/data/academy.db")
+    con = sqlite3.connect(db); cur = con.cursor()
+    start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    end = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
+    # deactivate any old active subs
+    cur.execute("UPDATE subscriptions SET is_active=0 WHERE (telegram_id=? OR user_id=?) AND is_active=1", (str(tid), tid))
+    # insert new
+    cur.execute("""INSERT INTO subscriptions
+                   (user_id, telegram_id, plan_name, start_date, end_date, is_active)
+                   VALUES (?, ?, ?, ?, ?, 1)""",
+                (tid, str(tid), plan, start, end))
+    sub_id = cur.lastrowid
+    # mark as paid
+    cur.execute("UPDATE students SET is_paid=1 WHERE telegram_id=?", (tid,))
+    paid_rows = cur.rowcount
+    # verify
+    cur.execute("SELECT telegram_id, full_name, is_paid FROM students WHERE telegram_id=?", (tid,))
+    s = cur.fetchone()
+    con.commit()
+    con.close()
+    return jsonify({
+        "ok": True,
+        "subscription_id": sub_id,
+        "plan": plan,
+        "start": start,
+        "end": end,
+        "students_updated": paid_rows,
+        "student": {"telegram_id": s[0], "full_name": s[1], "is_paid": s[2]} if s else None
+    })
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
