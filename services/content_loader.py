@@ -143,6 +143,19 @@ def list_by_type(content_type: str, tier: Optional[str] = None) -> List[dict]:
             "word_count": item.get("passage", {}).get("word_count", 0),
             "topic": item.get("passage", {}).get("topic", "")
         })
+        # === Academic Reading (ar_*) ===
+        ar_dir = os.path.join(base_dir, "academic_reading")
+        if os.path.isdir(ar_dir):
+            for fn in sorted(os.listdir(ar_dir)):
+                if fn.endswith(".json") and not fn.endswith(".bak"):
+                    try:
+                        with open(os.path.join(ar_dir, fn), "r", encoding="utf-8") as f:
+                            d = json.load(f)
+                        d["type"] = "academic_reading"
+                        items[d["id"]] = d
+                    except Exception as e:
+                        print(f"[content_loader] error loading {fn}: {e}")
+
     return items
 
 

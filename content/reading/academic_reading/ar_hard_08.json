@@ -1,0 +1,88 @@
+{
+  "id": "ar_hard_08",
+  "tier": "hard",
+  "title_en": "Coral Bleaching",
+  "topic": "marine_biology",
+  "duration_seconds": 480,
+  "passage": "Coral reefs are among the most biologically diverse ecosystems on Earth, supporting roughly a quarter of all marine species despite covering less than one percent of the ocean floor. The vibrant colors of healthy coral come not from the coral itself but from microscopic algae called zooxanthellae that live within coral tissues. These algae provide coral with most of its nutrients through photosynthesis, while the coral provides shelter and essential compounds in return.\n\nWhen ocean temperatures rise even slightly above normal, this delicate partnership breaks down. The coral expels the algae, losing both its color and its main food source. This process, known as coral bleaching, leaves the coral white and weakened. If conditions return to normal quickly, the algae may return and the coral can recover. However, if elevated temperatures persist, the coral starves and eventually dies.\n\nClimate change has dramatically increased the frequency and severity of bleaching events. The Great Barrier Reef, for instance, has experienced mass bleaching multiple times within just one decade — an unprecedented rate that scientists warn the reef cannot sustain. Some researchers are now developing 'heat-resistant' coral strains in laboratories, while others focus on reducing local stressors such as pollution and overfishing. Although these efforts may help, most experts agree that the long-term survival of coral reefs depends on global action to slow ocean warming.",
+  "highlights": [
+    "biologically diverse",
+    "marine species",
+    "zooxanthellae",
+    "photosynthesis",
+    "delicate partnership",
+    "expels",
+    "coral bleaching",
+    "starves",
+    "unprecedented rate",
+    "heat-resistant",
+    "local stressors"
+  ],
+  "questions": [
+    {
+      "q": "What is the main purpose of the passage?",
+      "options": {
+        "A": "To explain how coral reefs are formed.",
+        "B": "To describe the causes and consequences of coral bleaching.",
+        "C": "To compare coral reefs in different oceans.",
+        "D": "To promote tourism to the Great Barrier Reef."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الهدف الرئيسي للنص هو شرح أسباب ابيضاض المرجان ونتائجه."
+    },
+    {
+      "q": "According to the passage, what gives healthy coral its color?",
+      "options": {
+        "A": "The minerals it absorbs from seawater.",
+        "B": "Microscopic algae living inside coral tissues.",
+        "C": "The species of fish surrounding it.",
+        "D": "Natural pigments produced by coral cells."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن الألوان تأتي من طحالب مجهرية تُسمى zooxanthellae."
+    },
+    {
+      "q": "The word 'expels' in the passage is closest in meaning to:",
+      "options": {
+        "A": "absorbs",
+        "B": "feeds",
+        "C": "removes",
+        "D": "duplicates"
+      },
+      "correct": "C",
+      "type": "vocabulary",
+      "explanation_ar": "expels = يطرد/يخرج. أقرب كلمة removes."
+    },
+    {
+      "q": "What can be inferred about coral reefs from the passage?",
+      "options": {
+        "A": "They are unlikely to survive without major global action.",
+        "B": "They thrive best in warm tropical waters above normal temperature.",
+        "C": "Heat-resistant coral strains have already solved the problem.",
+        "D": "They will recover naturally without human intervention."
+      },
+      "correct": "A",
+      "type": "inference",
+      "explanation_ar": "الفقرة الأخيرة تذكر أن البقاء طويل الأمد يعتمد على العمل العالمي لإبطاء احترار المحيطات."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a strategy to protect coral reefs?",
+      "options": {
+        "A": "Developing heat-resistant coral strains",
+        "B": "Reducing pollution",
+        "C": "Banning all fishing activities completely",
+        "D": "Slowing ocean warming through global action"
+      },
+      "correct": "C",
+      "type": "negative_factual",
+      "explanation_ar": "النص يذكر تقليل الإفراط في الصيد، لا الحظر التام لكل أنشطة الصيد."
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.8 Academic Reading",
+    "level": "HARD",
+    "type": "academic_reading"
+  }
+}

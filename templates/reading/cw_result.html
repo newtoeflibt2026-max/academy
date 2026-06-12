@@ -118,5 +118,43 @@
 
 </main>
 
+
+<script>
+/* PWA-BACK START — يحفظ المصدر ويعيد الطالب إليه */
+(function(){
+  // عند تحميل صفحة التمرين، احفظ الـ referrer إذا كان من /foundation/
+  try {
+    var ref = document.referrer || '';
+    if (ref && ref.indexOf('/foundation/') !== -1) {
+      sessionStorage.setItem('yamen_back_url', ref);
+    }
+  } catch(e){}
+
+  // وفّر دالة عالمية تعيد المسار الصحيح للعودة
+  window.yamenBackUrl = function(fallbackUserId){
+    try {
+      var saved = sessionStorage.getItem('yamen_back_url');
+      if (saved) return saved;
+    } catch(e){}
+    var uid = fallbackUserId || (window.USER_ID || '');
+    return '/foundation/stage/5?user_id=' + encodeURIComponent(uid);
+  };
+
+  // اعترض أي رابط/زر مكتوب فيه /reading/?user_id= وحوّله للمسار الذكي
+  document.addEventListener('DOMContentLoaded', function(){
+    var nodes = document.querySelectorAll('a[href*="/reading/?user_id"], a[href="/reading/"], button[onclick*="/reading/?user_id"]');
+    nodes.forEach(function(el){
+      var smart = window.yamenBackUrl();
+      if (el.tagName === 'A') {
+        el.setAttribute('href', smart);
+      } else {
+        el.setAttribute('onclick', "window.location.href='" + smart + "'");
+      }
+    });
+  });
+})();
+/* PWA-BACK END */
+</script>
+
 </body>
 </html>

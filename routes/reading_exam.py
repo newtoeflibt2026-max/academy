@@ -1,4 +1,69 @@
 import sqlite3
+
+# ── AUTO-UNLOCK START ─────────────────────────────────────────
+_CW_NEXT = {
+    "cw_easy_01":(22,23),"cw_easy_02":(23,24),"cw_easy_03":(24,25),
+    "cw_medium_04":(25,26),"cw_medium_05":(26,27),"cw_medium_06":(27,28),
+    "cw_medium_07":(28,29),"cw_hard_08":(29,30),"cw_hard_09":(30,31),
+    "cw_hard_10":(30,91),
+}
+_DL_NEXT = {
+    "dl_easy_01":(92,93),"dl_easy_02":(93,94),"dl_easy_03":(94,95),
+    "dl_easy_04":(95,96),"dl_medium_05":(96,97),"dl_medium_06":(97,98),
+    "dl_medium_07":(98,99),"dl_hard_08":(99,100),"dl_hard_09":(100,101),
+    "dl_hard_10":(101,None),
+}
+
+_AR_NEXT = {
+    "ar_easy_01":   (103, 104),
+    "ar_easy_02":   (104, 105),
+    "ar_easy_03":   (105, 106),
+    "ar_medium_04": (106, 107),
+    "ar_medium_05": (107, 108),
+    "ar_medium_06": (108, 109),
+    "ar_hard_07":   (109, 110),
+    "ar_hard_08":   (110, None),
+}
+
+
+def _record_progress_and_unlock(student_id, content_id, score, total, kind):
+    """يسجل التقدم في student_progress ويفتح الدرس التالي عند pct>=70"""
+    try:
+        if not student_id or not total:
+            return None
+        pct = round((score or 0) * 100 / total)
+        mapping = _AR_NEXT if kind == "ar" else (_DL_NEXT if kind == "dl" else _CW_NEXT)
+        if content_id not in mapping:
+            return None
+        cur_lesson_id, next_lesson_id = mapping[content_id]
+        import sqlite3 as _sq, os as _os
+        _db_path = _os.path.join(_os.path.dirname(__file__), "..", "academy.db")
+        _db_path = _os.path.abspath(_db_path)
+        _con = _sq.connect(_db_path)
+        _cur = _con.cursor()
+        # سجل التقدم
+        _cur.execute("""
+            INSERT INTO student_progress(user_id, lesson_id, status, score, best_score, attempts, started_at, completed_at)
+            VALUES (?, ?, ?, ?, ?, 1, datetime('now'), datetime('now'))
+            ON CONFLICT(user_id, lesson_id) DO UPDATE SET
+                status=CASE WHEN ?>=70 THEN 'completed' ELSE status END,
+                best_score=MAX(COALESCE(best_score,0), ?),
+                attempts=COALESCE(attempts,0)+1,
+                completed_at=CASE WHEN ?>=70 THEN datetime('now') ELSE completed_at END
+        """, (student_id, cur_lesson_id,
+              'completed' if pct >= 70 else 'in_progress',
+              pct, pct, pct, pct, pct))
+        # افتح الدرس التالي إذا نجح
+        if pct >= 70 and next_lesson_id:
+            _cur.execute("UPDATE lessons SET is_locked=0 WHERE id=? AND is_locked=1", (next_lesson_id,))
+        _con.commit()
+        _con.close()
+        return {"pct": pct, "next_unlocked": (pct >= 70 and next_lesson_id is not None), "next_id": next_lesson_id}
+    except Exception as _e:
+        print(f"[auto-unlock] error: {_e}")
+        return None
+# ── AUTO-UNLOCK END ───────────────────────────────────────────
+
 # -*- coding: utf-8 -*-
 """
 TOEFL Reading - Flask Blueprint
@@ -470,6 +535,12 @@ def cw_submit():
             "time_spent": time_spent
         }
 
+        # AUTO-UNLOCK CW
+        try:
+            _record_progress_and_unlock(student_id=tg_id, content_id=content_id, score=correct, total=total, kind="cw")
+        except Exception as _eu:
+            print(f"[cw auto-unlock] {_eu}")
+
         return jsonify({
             "redirect": f"/reading/cw/result/{attempt_id}?user_id={tg_id}",
             "score": percentage,
@@ -623,6 +694,12 @@ def dl_submit():
         finally:
             conn.close()
 
+        # AUTO-UNLOCK DL
+        try:
+            _record_progress_and_unlock(student_id=sid, content_id=content_id, score=score, total=len(questions), kind="dl")
+        except Exception as _eu:
+            print(f"[dl auto-unlock] {_eu}")
+
         return jsonify({
             "ok": True,
             "attempt_id": attempt_id,
@@ -658,4 +735,166 @@ def dl_result(attempt_id):
     return render_template("reading/dl_result.html",
                            attempt=attempt, item=content, pct=pct,
                            user_id=_get_tg_id())
+
+
+# ═══════════════════════════════════════════════════════════
+# Academic Reading (AR) Routes - Task 3
+# ═══════════════════════════════════════════════════════════
+
+@reading_bp.route("/reading/ar/learn")
+def ar_learn():
+    user_id = request.args.get("user_id", "")
+    return render_template("reading/ar_learn.html", user_id=user_id)
+
+@reading_bp.route("/reading/ar/exam/<content_id>")
+def ar_exam(content_id):
+    user_id = request.args.get("user_id", "")
+    items = load_all()
+    content = items.get(content_id)
+    if not content or content.get("type") != "academic_reading":
+        return "Content not found", 404
+
+    # إنشاء attempt جديد
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("""INSERT INTO reading_attempts
+        (student_id, content_id, content_type, started_at, total, status)
+        VALUES (?, ?, ?, ?, ?, 'in_progress')""",
+        (int(user_id) if user_id else 0, content_id, "academic_reading",
+         datetime.now().isoformat(), len(content.get("questions", []))))
+    attempt_id = cur.lastrowid
+    conn.commit()
+    conn.close()
+
+    # إنشاء passage_html مع تظليل الكلمات المهمة
+    passage = content.get("passage", "")
+    passage_html = passage.replace("\n\n", "</p><p>").replace("\n", "<br>")
+    passage_html = "<p>" + passage_html + "</p>"
+    for hl in content.get("highlights", []):
+        # case-insensitive replacement
+        import re as _re
+        pattern = _re.compile(_re.escape(hl), _re.IGNORECASE)
+        passage_html = pattern.sub(lambda m: f'<span class="highlight">{m.group(0)}</span>', passage_html, count=1)
+
+    return render_template("reading/ar_exam.html",
+                           content=content,
+                           passage_html=passage_html,
+                           attempt_id=attempt_id,
+                           user_id=user_id)
+
+@reading_bp.route("/reading/ar/submit", methods=["POST"])
+def ar_submit():
+    data = request.get_json() or {}
+    attempt_id = data.get("attempt_id")
+    content_id = data.get("content_id")
+    answers = data.get("answers", {})
+    sid = data.get("user_id") or 0
+    try:
+        sid = int(sid)
+    except:
+        sid = 0
+
+    items = load_all()
+    content = items.get(content_id)
+    if not content:
+        return jsonify({"error": "content not found"}), 404
+
+    questions = content.get("questions", [])
+    total = len(questions)
+    score = 0
+    detailed = []
+
+    for idx, q in enumerate(questions):
+        ua = answers.get(str(idx)) or answers.get(idx)
+        correct = q.get("correct")
+        is_correct = (ua == correct)
+        if is_correct:
+            score += 1
+        detailed.append({
+            "q": q.get("q"),
+            "user_answer": ua,
+            "user_text": q.get("options", {}).get(ua, "") if ua else "",
+            "correct": correct,
+            "correct_text": q.get("options", {}).get(correct, ""),
+            "is_correct": is_correct,
+            "explanation_ar": q.get("explanation_ar", ""),
+            "type": q.get("type", "")
+        })
+
+    pct = round((score / total) * 100) if total > 0 else 0
+    xp_earned = score * 5
+
+    # حفظ النتيجة
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("""UPDATE reading_attempts
+        SET score=?, finished_at=?, status='completed', submit_reason=?
+        WHERE attempt_id=?""",
+        (score, datetime.now().isoformat(), data.get("submit_reason", "user"), attempt_id))
+
+    # حفظ الأخطاء
+    for d in detailed:
+        if not d["is_correct"] and sid:
+            try:
+                cur.execute("""INSERT INTO error_bank
+                    (user_id, question_id, error_type, wrong_answer, correct_answer, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?)""",
+                    (sid, f"{content_id}_q{detailed.index(d)}", d["type"],
+                     d["user_answer"] or "", d["correct"], datetime.now().isoformat()))
+            except:
+                pass
+
+    # XP log
+    if sid and xp_earned:
+        try:
+            cur.execute("""INSERT INTO xp_log (user_id, source, amount, created_at)
+                VALUES (?, 'academic_reading', ?, ?)""",
+                (sid, xp_earned, datetime.now().isoformat()))
+        except:
+            pass
+
+    conn.commit()
+    conn.close()
+
+    # حفظ في الكاش
+    _AR_RESULT_CACHE[attempt_id] = {
+        "detailed": detailed,
+        "content": content,
+        "score": score,
+        "total": total,
+        "pct": pct,
+        "xp_earned": xp_earned
+    }
+
+    # Auto-unlock
+    try:
+        _record_progress_and_unlock(sid, content_id, pct, kind="ar")
+    except Exception as e:
+        print(f"[ar_submit] unlock error: {e}")
+
+    return jsonify({
+        "attempt_id": attempt_id,
+        "score": score,
+        "total": total,
+        "pct": pct,
+        "xp_earned": xp_earned,
+        "redirect": f"/reading/ar/result/{attempt_id}?user_id={sid}"
+    })
+
+_AR_RESULT_CACHE = {}
+
+@reading_bp.route("/reading/ar/result/<int:attempt_id>")
+def ar_result(attempt_id):
+    user_id = request.args.get("user_id", "")
+    cached = _AR_RESULT_CACHE.get(attempt_id)
+    if not cached:
+        return "Result expired", 404
+    return render_template("reading/ar_result.html",
+                           content=cached["content"],
+                           score=cached["score"],
+                           total=cached["total"],
+                           pct=cached["pct"],
+                           xp_earned=cached["xp_earned"],
+                           detailed=cached["detailed"],
+                           user_id=user_id)
 

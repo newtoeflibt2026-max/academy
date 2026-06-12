@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ content.title_en }} — Academic Reading</title>
+<link rel="manifest" href="/static/manifest.json">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif; background:#f3f4f6; color:#1f2937; }
+  .topbar { background:linear-gradient(135deg,#1e3a8a,#1e40af); color:#fff; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,.15); position:sticky; top:0; z-index:100; }
+  .topbar h1 { margin:0; font-size:1.1em; }
+  .topbar .meta { display:flex; gap:15px; align-items:center; font-size:.95em; }
+  .timer { background:rgba(255,255,255,.2); padding:6px 14px; border-radius:8px; font-weight:bold; font-variant-numeric: tabular-nums; }
+  .timer.warning { background:#dc2626; animation:pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity:.6; } }
+  .close-x { background:rgba(255,255,255,.15); border:0; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.2em; }
+  .close-x:hover { background:rgba(255,255,255,.3); }
+  .level-badge { background:#fbbf24; color:#451a03; padding:4px 10px; border-radius:6px; font-size:.8em; font-weight:bold; }
+  .level-badge.easy { background:#86efac; color:#14532d; }
+  .level-badge.medium { background:#fbbf24; color:#451a03; }
+  .level-badge.hard { background:#fca5a5; color:#7f1d1d; }
+
+  .layout { display:grid; grid-template-columns: 1fr 1fr; gap:0; min-height: calc(100vh - 60px); }
+  @media (max-width:900px){ .layout { grid-template-columns:1fr; } }
+
+  /* النص (يمين) */
+  .passage-panel { background:#fff; padding:30px 35px; border-left:1px solid #e5e7eb; overflow-y:auto; max-height: calc(100vh - 60px); position:sticky; top:60px; }
+  .passage-panel h2 { color:#1e40af; margin:0 0 20px; font-size:1.4em; border-bottom:2px solid #dbeafe; padding-bottom:10px; }
+  .passage-text { font-family: 'Georgia', serif; font-size:1.05em; line-height:1.9; color:#374151; direction:ltr; text-align:left; }
+  .passage-text p { margin: 0 0 15px; }
+  .highlight { background:#fef08a; padding:1px 3px; border-radius:3px; font-weight:600; cursor:help; transition:.2s; }
+  .highlight:hover { background:#fde047; }
+
+  /* الأسئلة (يسار) */
+  .questions-panel { padding:25px 30px; overflow-y:auto; max-height: calc(100vh - 60px); }
+  .q-nav { background:#fff; padding:12px 15px; border-radius:10px; margin-bottom:20px; display:flex; gap:8px; flex-wrap:wrap; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .q-nav button { width:36px; height:36px; border-radius:8px; border:2px solid #d1d5db; background:#fff; cursor:pointer; font-weight:bold; transition:.2s; }
+  .q-nav button.answered { background:#3b82f6; color:#fff; border-color:#3b82f6; }
+  .q-nav button.current { box-shadow:0 0 0 3px #fbbf24; }
+  .q-nav button:hover { transform:translateY(-2px); }
+
+  .question-card { background:#fff; padding:25px 28px; border-radius:14px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-bottom:20px; }
+  .q-header { display:flex; justify-content:space-between; margin-bottom:15px; }
+  .q-number { background:#1e40af; color:#fff; padding:4px 12px; border-radius:6px; font-weight:bold; font-size:.9em; }
+  .q-type { background:#e0e7ff; color:#3730a3; padding:4px 10px; border-radius:6px; font-size:.8em; }
+  .q-text { font-size:1.08em; line-height:1.7; margin-bottom:18px; direction:ltr; text-align:left; font-weight:500; }
+  .options { display:flex; flex-direction:column; gap:10px; }
+  .option { display:flex; align-items:flex-start; gap:12px; padding:12px 15px; background:#f9fafb; border:2px solid #e5e7eb; border-radius:10px; cursor:pointer; transition:.2s; direction:ltr; text-align:left; }
+  .option:hover { background:#eff6ff; border-color:#93c5fd; }
+  .option.selected { background:#dbeafe; border-color:#3b82f6; }
+  .option-key { width:30px; height:30px; min-width:30px; border-radius:50%; background:#fff; border:2px solid #d1d5db; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#475569; }
+  .option.selected .option-key { background:#3b82f6; color:#fff; border-color:#3b82f6; }
+  .option-text { flex:1; font-size:1em; line-height:1.5; }
+
+  .actions { display:flex; gap:12px; justify-content:space-between; margin-top:25px; padding:20px; background:#fff; border-radius:14px; }
+  .btn { padding:14px 28px; border:0; border-radius:10px; font-size:1em; font-weight:bold; cursor:pointer; transition:.2s; }
+  .btn-nav { background:#e5e7eb; color:#374151; }
+  .btn-nav:hover { background:#d1d5db; }
+  .btn-submit { background:linear-gradient(135deg,#059669,#047857); color:#fff; padding:14px 40px; }
+  .btn-submit:hover { transform:translateY(-2px); box-shadow:0 6px 14px rgba(5,150,105,.4); }
+
+  /* Modal */
+  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .modal-backdrop.show { display:flex; }
+  .modal { background:#fff; border-radius:16px; padding:30px; max-width:450px; width:90%; text-align:center; }
+  .modal h3 { margin:0 0 15px; color:#1e40af; }
+  .modal p { color:#4b5563; margin:15px 0; line-height:1.7; }
+  .modal-btns { display:flex; gap:10px; justify-content:center; margin-top:20px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div style="display:flex; gap:12px; align-items:center;">
+    <button class="close-x" onclick="confirmExit()">✕</button>
+    <h1>📖 {{ content.title_en }}</h1>
+    <span class="level-badge {{ content.tier }}">{{ content.tier|upper }}</span>
+  </div>
+  <div class="meta">
+    <span id="progress-text">0/{{ content.questions|length }}</span>
+    <span class="timer" id="timer">--:--</span>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- النص يبقى ظاهراً على اليمين -->
+  <div class="passage-panel">
+    <h2>{{ content.title_en }}</h2>
+    <div class="passage-text" id="passage">{{ passage_html|safe }}</div>
+  </div>
+
+  <!-- الأسئلة على اليسار -->
+  <div class="questions-panel">
+    <div class="q-nav" id="q-nav"></div>
+
+    {% for q in content.questions %}
+    <div class="question-card" id="qc-{{ loop.index0 }}">
+      <div class="q-header">
+        <span class="q-number">Question {{ loop.index }} / {{ content.questions|length }}</span>
+        <span class="q-type">{{ q.type|replace('_',' ')|title }}</span>
+      </div>
+      <div class="q-text">{{ q.q }}</div>
+      <div class="options">
+        {% for key, val in q.options.items() %}
+        <label class="option" data-q="{{ loop.index0 }}" data-key="{{ key }}" onclick="selectAns({{ outer_loop.index0 }}, '{{ key }}')">
+          <span class="option-key">{{ key }}</span>
+          <span class="option-text">{{ val }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% set outer_loop = loop %}
+    {% endfor %}
+
+    <div class="actions">
+      <button class="btn btn-nav" onclick="confirmExit()">← العودة</button>
+      <button class="btn btn-submit" onclick="confirmSubmit()">📤 إرسال الإجابات</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Exit -->
+<div class="modal-backdrop" id="modal-exit">
+  <div class="modal">
+    <h3>⚠️ الخروج من التمرين</h3>
+    <p>إذا خرجت الآن، لن تُحفظ إجاباتك. هل أنت متأكد؟</p>
+    <div class="modal-btns">
+      <button class="btn btn-submit" onclick="doExit()">نعم، اخرج</button>
+      <button class="btn btn-nav" onclick="closeModal('modal-exit')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Submit -->
+<div class="modal-backdrop" id="modal-submit">
+  <div class="modal">
+    <h3>📤 إرسال الإجابات</h3>
+    <p id="submit-msg"></p>
+    <div class="modal-btns">
+      <button class="btn btn-submit" onclick="doSubmit()">نعم، أرسل</button>
+      <button class="btn btn-nav" onclick="closeModal('modal-submit')">مراجعة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.USER_ID = {{ user_id|tojson }};
+  const CONTENT_ID = {{ content.id|tojson }};
+  const ATTEMPT_ID = {{ attempt_id|tojson }};
+  const TOTAL_Q = {{ content.questions|length }};
+  const DURATION = {{ content.duration_seconds }};
+  const answers = {};
+
+  // Timer
+  let remaining = DURATION;
+  const timerEl = document.getElementById('timer');
+  function fmt(s){ const m=Math.floor(s/60); const x=s%60; return String(m).padStart(2,'0')+':'+String(x).padStart(2,'0'); }
+  timerEl.textContent = fmt(remaining);
+  const timerInt = setInterval(()=>{
+    remaining--;
+    timerEl.textContent = fmt(remaining);
+    if(remaining<=60) timerEl.classList.add('warning');
+    if(remaining<=0){ clearInterval(timerInt); doSubmit('timeout'); }
+  }, 1000);
+
+  // Build q-nav
+  const qnav = document.getElementById('q-nav');
+  for(let i=0;i<TOTAL_Q;i++){
+    const b = document.createElement('button');
+    b.textContent = i+1;
+    b.id = 'qn-'+i;
+    b.onclick = ()=> document.getElementById('qc-'+i).scrollIntoView({behavior:'smooth', block:'start'});
+    qnav.appendChild(b);
+  }
+
+  function selectAns(qIdx, key){
+    answers[qIdx] = key;
+    document.querySelectorAll('#qc-'+qIdx+' .option').forEach(o=>{
+      o.classList.toggle('selected', o.dataset.key===key);
+    });
+    document.getElementById('qn-'+qIdx).classList.add('answered');
+    document.getElementById('progress-text').textContent = Object.keys(answers).length + '/' + TOTAL_Q;
+  }
+
+  function openModal(id){ document.getElementById(id).classList.add('show'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+  function confirmExit(){ openModal('modal-exit'); }
+  function doExit(){
+    const back = sessionStorage.getItem('reading_lesson_url') || '/foundation';
+    location.href = back;
+  }
+
+  function confirmSubmit(){
+    const left = TOTAL_Q - Object.keys(answers).length;
+    const msg = left>0 ? `لديك ${left} سؤال غير مُجاب من أصل ${TOTAL_Q}. هل تريد الإرسال؟` : `أجبت على جميع الأسئلة (${TOTAL_Q}/${TOTAL_Q}). جاهز للتقييم؟`;
+    document.getElementById('submit-msg').textContent = msg;
+    openModal('modal-submit');
+  }
+
+  async function doSubmit(reason){
+    clearInterval(timerInt);
+    closeModal('modal-submit');
+    const payload = {
+      attempt_id: ATTEMPT_ID,
+      content_id: CONTENT_ID,
+      answers: answers,
+      submit_reason: reason || 'user',
+      user_id: window.USER_ID
+    };
+    try {
+      const res = await fetch('/reading/ar/submit', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if(data.redirect) location.href = data.redirect;
+    } catch(e) {
+      alert('خطأ في الإرسال: ' + e.message);
+    }
+  }
+</script>
+</body>
+</html>

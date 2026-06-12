@@ -58,3 +58,25 @@ _tmp_*.py
 !PROJECT_MAP.md
 # Allow main database upload
 !academy.db
+# Backups
+*.bak
+*.bak_*
+academy.db.bak*
+academy.db.backup*
+*.backup_*
+
+# Temporary diagnostic scripts
+_*.py
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env.local
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>غير متصل — أكاديمية يامن</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,Segoe UI,Tahoma,sans-serif;background:#f8fafc;color:#0f172a;
+       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{max-width:480px;background:#fff;border-radius:20px;padding:36px 28px;
+        box-shadow:0 10px 30px rgba(2,6,23,.08);text-align:center;border:1px solid #e2e8f0}
+  .icon{font-size:64px;margin-bottom:16px}
+  h1{font-size:24px;color:#0369a1;margin-bottom:12px}
+  p{color:#475569;line-height:1.7;margin-bottom:10px;font-size:15px}
+  .tip{background:#e0f2fe;border:1px solid #7dd3fc;border-radius:12px;
+       padding:14px 16px;margin:20px 0;font-size:14px;color:#0c4a6e;text-align:right}
+  .btn{display:inline-block;background:#0ea5e9;color:#fff;padding:12px 28px;
+       border-radius:10px;text-decoration:none;font-weight:700;margin-top:12px;
+       border:none;cursor:pointer;font-size:15px}
+  .btn:hover{background:#0284c7}
+  .small{font-size:13px;color:#94a3b8;margin-top:18px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">📡</div>
+    <h1>لا يوجد اتصال بالإنترنت</h1>
+    <p>لكن لا تقلق — الدروس التي زرتها سابقاً متاحة للمراجعة الآن.</p>
+    <div class="tip">
+      <strong>💡 ما يعمل بدون إنترنت:</strong><br>
+      ✅ مراجعة الدروس النظرية التي فتحتها من قبل<br>
+      ✅ قراءة شرح COACH وجداول الفخاخ<br>
+      ❌ التمارين التفاعلية تحتاج اتصالاً
+    </div>
+    <p>تقدّمك محفوظ — عند عودة الإنترنت، أكمل من حيث توقفت.</p>
+    <button class="btn" onclick="location.reload()">🔄 حاول مجدداً</button>
+    <a class="btn" href="/foundation" style="background:#64748b;margin-right:8px">📚 الدروس المحفوظة</a>
+    <div class="small">أكاديمية يامن — Yamen Academy</div>
+  </div>
+<script>
+  window.addEventListener('online', () => location.reload());
+</script>
+</body>
+</html>

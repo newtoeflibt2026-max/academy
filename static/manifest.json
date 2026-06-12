@@ -1,1 +1,27 @@
-{"name":"Yamen Academy","short_name":"Yamen","start_url":"/","display":"standalone","theme_color":"#1a365d","background_color":"#0e1f3d","icons":[]}
+{
+  "name": "أكاديمية يامن — Yamen Academy",
+  "short_name": "Yamen",
+  "description": "منصة تعليم TOEFL — مراجعة الدروس متاحة بدون إنترنت",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "theme_color": "#0ea5e9",
+  "background_color": "#f8fafc",
+  "icons": [
+    {
+      "src": "/static/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

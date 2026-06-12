@@ -1,0 +1,86 @@
+{
+  "id": "ar_medium_04",
+  "tier": "medium",
+  "title_en": "Urban Trees",
+  "topic": "environment",
+  "duration_seconds": 420,
+  "passage": "Trees have long played a key role in urban areas that would otherwise be dominated by asphalt and concrete. They are often planted along roads to provide shade that helps residents cope with high temperatures. The deep roots of mature trees can reduce erosion in cities by stabilizing soil, while their leaves and branches improve air quality by absorbing carbon dioxide and harmful pollutants.\n\nBut the benefits of trees extend far beyond the impacts they have on physical health and the natural environment. In fact, they have also been found to have important social and psychological effects. Recent studies indicate that residents of neighborhoods with thriving greenery experience lower levels of stress and enjoy better mental health. In addition, the presence of abundant plant life has been linked to increased community engagement and even to lower crime rates.\n\nUnfortunately, the long-term survival of urban trees is being impacted by rapid development. Construction projects often damage their fragile root systems. Even when builders are careful to avoid physical damage to trees, they might still inadvertently cut off their access to water and nutrients. These issues can be compounded by global climate change, which causes extreme weather shifts that trees are often unable to adapt to.",
+  "highlights": [
+    "asphalt",
+    "concrete",
+    "erosion",
+    "pollutants",
+    "thriving greenery",
+    "community engagement",
+    "fragile root systems",
+    "compounded",
+    "adapt"
+  ],
+  "questions": [
+    {
+      "q": "According to the passage, what is one way urban trees contribute to public health?",
+      "options": {
+        "A": "By reducing temperatures near roads",
+        "B": "By preventing erosion on farmland",
+        "C": "By removing pollutants from the air",
+        "D": "By displacing concrete and asphalt"
+      },
+      "correct": "C",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن أوراق وفروع الأشجار تحسّن جودة الهواء بامتصاص ثاني أكسيد الكربون والملوثات الضارة."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a social or psychological benefit of trees?",
+      "options": {
+        "A": "Reduced crime rates",
+        "B": "Lower stress levels",
+        "C": "Higher income levels",
+        "D": "More community involvement"
+      },
+      "correct": "C",
+      "type": "negative_factual",
+      "explanation_ar": "الفقرة الثانية تذكر تقليل التوتر، انخراط المجتمع، وانخفاض الجريمة. الدخل لم يُذكر."
+    },
+    {
+      "q": "Why does the author discuss construction projects?",
+      "options": {
+        "A": "To explain why cities need more parks",
+        "B": "To show how urban development can unintentionally harm trees",
+        "C": "To demonstrate how tree coverage can be increased",
+        "D": "To highlight the effect of global warming on trees"
+      },
+      "correct": "B",
+      "type": "rhetorical",
+      "explanation_ar": "الكاتب يذكر مشاريع البناء ليُظهر كيف يمكن للتطوير الحضري أن يضر بالأشجار دون قصد."
+    },
+    {
+      "q": "The word 'compounded' in the passage is closest in meaning to:",
+      "options": {
+        "A": "repeated",
+        "B": "created",
+        "C": "intensified",
+        "D": "limited"
+      },
+      "correct": "C",
+      "type": "vocabulary",
+      "explanation_ar": "compounded = مُضاعَف/مُكثَّف. أقرب كلمة intensified."
+    },
+    {
+      "q": "What can be inferred about urban trees from the passage?",
+      "options": {
+        "A": "They are easy to replace once damaged.",
+        "B": "They face multiple threats from both human activity and climate change.",
+        "C": "They are mainly decorative and have few practical uses.",
+        "D": "They thrive better in cities than in forests."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "الفقرة الأخيرة توضح أن الأشجار تواجه أضرار من البناء وتغير المناخ معاً."
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.8 Academic Reading",
+    "level": "MEDIUM",
+    "type": "academic_reading"
+  }
+}

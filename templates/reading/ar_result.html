@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>النتيجة — Academic Reading</title>
+<style>
+  body { margin:0; font-family:'Cairo',sans-serif; background:#f3f4f6; padding:30px; }
+  .container { max-width:800px; margin:0 auto; }
+  .score-card { background:#fff; padding:40px; border-radius:16px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,.08); margin-bottom:25px; }
+  .score-big { font-size:5em; font-weight:bold; margin:20px 0; }
+  .pass { color:#059669; }
+  .fail { color:#dc2626; }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin:25px 0; }
+  .stat { background:#f9fafb; padding:15px; border-radius:10px; }
+  .stat .num { font-size:1.8em; font-weight:bold; color:#1e40af; }
+  .stat .lbl { font-size:.9em; color:#6b7280; }
+  .review-card { background:#fff; padding:25px; border-radius:14px; margin-bottom:15px; box-shadow:0 2px 10px rgba(0,0,0,.06); }
+  .review-card.correct { border-right:4px solid #059669; }
+  .review-card.wrong { border-right:4px solid #dc2626; }
+  .review-card h4 { margin:0 0 10px; }
+  .review-card .your { color:#dc2626; }
+  .review-card .right { color:#059669; }
+  .review-card .expl { background:#fef3c7; padding:12px; border-radius:8px; margin-top:10px; }
+  .actions { text-align:center; margin-top:30px; }
+  .btn { display:inline-block; padding:14px 30px; margin:5px; border-radius:10px; text-decoration:none; font-weight:bold; }
+  .btn-blue { background:#3b82f6; color:#fff; }
+  .btn-gray { background:#e5e7eb; color:#374151; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="score-card">
+    <h2 style="margin:0;color:#1e40af;">{{ content.title_en }}</h2>
+    <div class="score-big {{ 'pass' if pct >= 70 else 'fail' }}">{{ pct }}%</div>
+    <div style="font-size:1.2em;color:#4b5563;">{{ score }} / {{ total }}</div>
+    {% if pct >= 70 %}
+      <div style="font-size:1.3em;color:#059669;margin-top:15px;">✅ نجحت! الدرس التالي مفتوح الآن.</div>
+    {% else %}
+      <div style="font-size:1.3em;color:#dc2626;margin-top:15px;">❌ تحتاج 70% على الأقل. أعد المحاولة.</div>
+    {% endif %}
+    <div class="stats">
+      <div class="stat"><div class="num">{{ score }}</div><div class="lbl">إجابات صحيحة</div></div>
+      <div class="stat"><div class="num">{{ total - score }}</div><div class="lbl">إجابات خاطئة</div></div>
+      <div class="stat"><div class="num">{{ xp_earned }}</div><div class="lbl">XP مكتسبة</div></div>
+    </div>
+  </div>
+
+  <h3>📋 مراجعة الإجابات</h3>
+  {% for r in detailed %}
+  <div class="review-card {{ 'correct' if r.is_correct else 'wrong' }}">
+    <h4>Q{{ loop.index }}: {{ r.q }}</h4>
+    <div>إجابتك: <span class="{{ 'right' if r.is_correct else 'your' }}">{{ r.user_answer or '—' }} — {{ r.user_text or 'لم تُجب' }}</span></div>
+    {% if not r.is_correct %}
+    <div>الصحيحة: <span class="right">{{ r.correct }} — {{ r.correct_text }}</span></div>
+    {% endif %}
+    {% if r.explanation_ar %}
+    <div class="expl">💡 {{ r.explanation_ar }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="actions">
+    <a href="javascript:history.back()" class="btn btn-blue">📚 العودة للقائمة</a>
+    <a href="/reading/ar/exam/{{ content.id }}?user_id={{ user_id }}" class="btn btn-gray">🔄 إعادة المحاولة</a>
+  </div>
+</div>
+
+<script>
+  // العودة الذكية
+  document.querySelectorAll('a.btn-blue').forEach(a=>{
+    a.onclick = (e)=>{
+      e.preventDefault();
+      const back = sessionStorage.getItem('reading_lesson_url') || '/foundation';
+      location.href = back;
+    };
+  });
+</script>
+</body>
+</html>

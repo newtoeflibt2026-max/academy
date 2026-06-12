@@ -149,7 +149,7 @@ def foundation_stage(stage_id):
 def foundation_lesson(lesson_id):
     user_id = get_user_id(request)
     conn = db(); cur = conn.cursor()
-    cur.execute("""SELECT id, stage_id, title, title_ar, content, skill, xp_reward, timer_minutes, explanation_json
+    cur.execute("""SELECT id, stage_id, title, title_ar, content, skill, xp_reward, timer_minutes, explanation_json, lesson_code
                    FROM lessons WHERE id=?""", (lesson_id,))
     L = cur.fetchone()
     if not L:
@@ -190,6 +190,7 @@ def foundation_lesson(lesson_id):
         "skill": L["skill"] or "grammar",
         "xp_reward": L["xp_reward"] or 25,
         "timer_minutes": L["timer_minutes"] or 10,
+        "lesson_code": L["lesson_code"],
     }
     conn.close()
     return render_template("foundation_lesson.html", lesson=lesson, examples=examples, next_set=next_set, user_id=user_id, vocabulary=vocabulary)

@@ -49,8 +49,39 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e
 .final-cta a:hover{transform:translateY(-2px)}
 @media (max-width:900px){.content-area{padding:24px 20px}.vocab-card{grid-template-columns:1fr}}
 </style>
+  <!-- PWA OFFLINE START -->
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#0ea5e9">
+  <link rel="icon" type="image/svg+xml" href="/static/icon-192.svg">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/static/sw.js')
+          .then(function(reg){ console.log('[PWA] SW registered:', reg.scope); })
+          .catch(function(err){ console.warn('[PWA] SW failed:', err); });
+      });
+      window.addEventListener('online',  function(){ document.body.classList.remove('is-offline'); });
+      window.addEventListener('offline', function(){ document.body.classList.add('is-offline'); });
+    }
+  </script>
+  <style>
+    .pwa-net-badge{position:fixed;top:10px;left:10px;z-index:9999;font-size:12px;
+      padding:4px 10px;border-radius:12px;font-family:sans-serif;display:none}
+    body.is-offline .pwa-net-badge{display:inline-block;background:#fee2e2;color:#991b1b;
+      border:1px solid #fca5a5}
+  </style>
+  <!-- PWA OFFLINE END -->
+
+<style>
+  /* إخفاء أزرار 'ابدأ التمرين' للدروس النظرية */
+  a.start-btn[href="#hide"], .final-cta a[href="#hide"], a[href*="#hide"] {
+    display: none !important;
+  }
+  .final-cta:has(a[href="#hide"]) { display: none !important; }
+</style>
 </head>
 <body>
+<div class="pwa-net-badge">🔴 غير متصل — وضع المراجعة</div>
 <div class="progress-top" id="ptop"></div>
 
 <div class="topbar">
@@ -58,7 +89,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e
     <a href="/foundation" class="back-btn">← العودة</a>
     <h1>📚 {{ lesson.title_ar or lesson.title }}</h1>
   </div>
-  <a href="{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}/foundation/exam/{{ lesson.id }}{% else %}/foundation/quiz/{{ lesson.id }}{% endif %}?user_id={{ user_id }}" class="start-btn">{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}🚪 ابدأ الامتحان{% else %}🚀 ابدأ التمرين{% endif %}</a>
+  {% if not (lesson.lesson_code and lesson.lesson_code.startswith('R-')) %}<a class="start-btn" href="/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}">ابدأ التمرين</a>{% endif %}
 </div>
 
 <div class="meta">
@@ -108,9 +139,11 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e
     </section>
     {% endif %}
 
-    <div class="final-cta">
-      <a href="{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}/foundation/exam/{{ lesson.id }}{% else %}/foundation/quiz/{{ lesson.id }}{% endif %}?user_id={{ user_id }}">{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}🚪 جاهز؟ ابدأ الامتحان الآن ←{% else %}🎯 جاهز؟ ابدأ التمرين الآن ←{% endif %}</a>
+    {% if not (lesson.lesson_code and lesson.lesson_code.startswith('R-')) %}{% if not (lesson.lesson_code and lesson.lesson_code.startswith('R-')) %}
+      <div class="final-cta">
+      <a href="{% set _code = lesson.lesson_code or '' %}{% set _cw_map = {'R-04':'cw_easy_01','R-05':'cw_easy_02','R-06':'cw_easy_03','R-07':'cw_medium_04','R-08':'cw_medium_05','R-09':'cw_medium_06','R-10':'cw_medium_07','R-11':'cw_hard_08','R-12':'cw_hard_09'} %}{% set _dl_map = {'R-14':'dl_easy_01','R-15':'dl_easy_02','R-16':'dl_easy_03','R-17':'dl_easy_04','R-18':'dl_medium_05','R-19':'dl_medium_06','R-20':'dl_medium_07','R-21':'dl_hard_08','R-22':'dl_hard_09','R-23':'dl_hard_10'} %}{% if _code in ['R-01','R-02','R-03','R-13'] %}#hide{% elif _code in _cw_map %}/reading/cw/exam/{{ _cw_map[_code] }}?user_id={{ user_id }}{% elif _code in _dl_map %}/reading/dl/exam/{{ _dl_map[_code] }}?user_id={{ user_id }}{% elif _code and _code.endswith('-EXAM') %}/foundation/exam/{{ lesson.id }}?user_id={{ user_id }}{% else %}/foundation/quiz/{{ lesson.id }}?user_id={{ user_id }}{% endif %}">{% if lesson.lesson_code and lesson.lesson_code.endswith('-EXAM') %}🚪 جاهز؟ ابدأ الامتحان الآن ←{% else %}🎯 جاهز؟ ابدأ التمرين الآن ←{% endif %}</a>
     </div>
+      {% endif %}{% endif %}
   </main>
 </div>
 

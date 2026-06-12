@@ -1,0 +1,63 @@
+{
+  "id": "ar_easy_03",
+  "tier": "easy",
+  "title_en": "Music and the Brain",
+  "topic": "neuroscience",
+  "duration_seconds": 360,
+  "passage": "Listening to music affects the human brain in remarkable ways. When we hear a familiar song, multiple brain regions activate at once, including those linked to memory, emotion, and motor control. This explains why we often tap our feet or feel strong emotions while listening, even without consciously deciding to react.\n\nMusic therapy has emerged as a valuable tool in medicine. Patients recovering from strokes sometimes regain speech faster when therapy includes singing exercises, because the brain's musical pathways can compensate for damaged language areas. Similarly, individuals with dementia who can no longer recognize loved ones often still remember the songs of their youth. These observations suggest that musical memory is deeply embedded and surprisingly resilient compared to other forms of memory.",
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "options": {
+        "A": "Music affects the brain in powerful ways and can be used therapeutically.",
+        "B": "Only classical music has measurable effects on the brain.",
+        "C": "Music therapy has replaced traditional medicine.",
+        "D": "Most people cannot remember songs from their childhood."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الموضوع الرئيسي هو تأثير الموسيقى على الدماغ واستخدامها علاجياً."
+    },
+    {
+      "q": "According to the passage, what happens when we hear a familiar song?",
+      "options": {
+        "A": "Only the language area of the brain activates.",
+        "B": "Several brain regions activate simultaneously.",
+        "C": "The brain temporarily stops processing emotions.",
+        "D": "Motor control areas shut down."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن مناطق متعددة من الدماغ تنشط في الوقت نفسه."
+    },
+    {
+      "q": "The word 'resilient' in the passage is closest in meaning to:",
+      "options": {
+        "A": "fragile",
+        "B": "forgotten",
+        "C": "durable",
+        "D": "expensive"
+      },
+      "correct": "C",
+      "type": "vocabulary",
+      "explanation_ar": "resilient = صامد/قوي/متين. أقرب كلمة هي durable."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a benefit of music?",
+      "options": {
+        "A": "Helping stroke patients regain speech.",
+        "B": "Activating memory in dementia patients.",
+        "C": "Improving physical strength in athletes.",
+        "D": "Triggering emotional responses."
+      },
+      "correct": "C",
+      "type": "negative_factual",
+      "explanation_ar": "الفقرة لم تذكر تحسين قوة الرياضيين الجسدية."
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.8 Academic Reading",
+    "level": "EASY",
+    "type": "academic_reading"
+  }
+}

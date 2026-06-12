@@ -43,7 +43,7 @@
   /* ───── Progress bar ───── */
   .progress-wrap { background: #1e293b; padding: 0 24px 12px; }
   .progress-bar { background: rgba(255,255,255,.15); height: 6px; border-radius: 999px; overflow: hidden; }
-  .progress-fill { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; width: 0%; transition: width .3s ease; }
+  .progress-fill { background: linear-gradient(90deg, #475569, #64748b); height: 100%; width: 0%; transition: width .3s ease; }
 
   /* ───── Main container ───── */
   .container { max-width: 900px; margin: 24px auto; padding: 0 20px; }
@@ -87,8 +87,8 @@
     background: #eef2ff; transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(79,70,229,.15);
   }
-  .blank-input.filled { color: #059669; border-bottom-color: #10b981; }
-  .blank-input.correct { background: #d1fae5 !important; color: #065f46 !important; border-bottom-color: #10b981 !important; }
+  .blank-input.filled { color: #334155; border-bottom-color: #475569; }
+  .blank-input.correct { background: #f1f5f9 !important; color: #065f46 !important; border-bottom-color: #475569 !important; }
   .blank-input.wrong   { background: #fee2e2 !important; color: #991b1b !important; border-bottom-color: #ef4444 !important; animation: shake .4s; }
   @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
@@ -159,12 +159,29 @@
   .modal-icon.warning { background: #fef3c7; color: #d97706; }
   .modal-icon.danger  { background: #fee2e2; color: #dc2626; }
   .modal-icon.info    { background: #dbeafe; color: #2563eb; }
-  .modal-icon.success { background: #d1fae5; color: #059669; }
+  .modal-icon.success { background: #f1f5f9; color: #334155; }
 
   .modal h3 { font-size: 1.25rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
   .modal p  { color: #64748b; font-size: .95rem; line-height: 1.6; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .modal-actions .btn { flex: 1; min-width: 120px; justify-content: center; }
+</style>
+
+<style>
+  /* PWA-fix: prefix letters must NOT look green (= correct) */
+  .word-prefix, .prefix, .prefilled, .letter-shown,
+  .word .prefix, .blank .prefix, [data-prefix="1"] {
+    color: #475569 !important;            /* slate-600 محايد */
+    background: transparent !important;
+    border-color: #cbd5e1 !important;
+  }
+  /* نتيجة صحيحة فقط (بعد التحقق) تبقى خضراء */
+  .correct, .is-correct, [data-state="correct"] {
+    color: #16a34a !important;
+  }
+  .wrong, .is-wrong, [data-state="wrong"] {
+    color: #dc2626 !important;
+  }
 </style>
 </head>
 <body>
@@ -475,5 +492,43 @@ async function doSubmit() {
 // Initial progress
 updateProgress();
 </script>
+
+<script>
+/* PWA-BACK START — يحفظ المصدر ويعيد الطالب إليه */
+(function(){
+  // عند تحميل صفحة التمرين، احفظ الـ referrer إذا كان من /foundation/
+  try {
+    var ref = document.referrer || '';
+    if (ref && ref.indexOf('/foundation/') !== -1) {
+      sessionStorage.setItem('yamen_back_url', ref);
+    }
+  } catch(e){}
+
+  // وفّر دالة عالمية تعيد المسار الصحيح للعودة
+  window.yamenBackUrl = function(fallbackUserId){
+    try {
+      var saved = sessionStorage.getItem('yamen_back_url');
+      if (saved) return saved;
+    } catch(e){}
+    var uid = fallbackUserId || (window.USER_ID || '');
+    return '/foundation/stage/5?user_id=' + encodeURIComponent(uid);
+  };
+
+  // اعترض أي رابط/زر مكتوب فيه /reading/?user_id= وحوّله للمسار الذكي
+  document.addEventListener('DOMContentLoaded', function(){
+    var nodes = document.querySelectorAll('a[href*="/reading/?user_id"], a[href="/reading/"], button[onclick*="/reading/?user_id"]');
+    nodes.forEach(function(el){
+      var smart = window.yamenBackUrl();
+      if (el.tagName === 'A') {
+        el.setAttribute('href', smart);
+      } else {
+        el.setAttribute('onclick', "window.location.href='" + smart + "'");
+      }
+    });
+  });
+})();
+/* PWA-BACK END */
+</script>
+
 </body>
 </html>
