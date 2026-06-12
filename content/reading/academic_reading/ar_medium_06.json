@@ -4,7 +4,11 @@
   "title_en": "Choice Overload",
   "topic": "psychology",
   "duration_seconds": 420,
-  "passage": "Modern shoppers face an unprecedented variety of products. A single supermarket may offer dozens of brands of cereal, hundreds of types of beverages, and an overwhelming selection of household goods. While consumers often claim to enjoy having many options, psychological research suggests that too much choice can actually reduce satisfaction and increase anxiety.\n\nThis phenomenon, sometimes called 'choice overload,' was famously demonstrated in a study comparing two displays of jam in a grocery store. Shoppers were more likely to stop and taste at the display with 24 varieties, but those who saw only 6 varieties were ten times more likely to actually purchase a jar. Researchers concluded that too many options made consumers anxious about making the wrong decision, leading many to leave without buying anything.\n\nChoice overload affects more than shopping. It can influence career decisions, healthcare choices, and even relationships. Some experts recommend that businesses and institutions simplify their offerings to help people decide more confidently. However, others argue that complete elimination of choice would limit personal freedom and innovation, suggesting that the best approach may be to provide guidance rather than restriction.",
+  "passage": {
+    "text_en": "Modern shoppers face an unprecedented variety of products. A single supermarket may offer dozens of brands of cereal, hundreds of types of beverages, and an overwhelming selection of household goods. While consumers often claim to enjoy having many options, psychological research suggests that too much choice can actually reduce satisfaction and increase anxiety.\n\nThis phenomenon, sometimes called 'choice overload,' was famously demonstrated in a study comparing two displays of jam in a grocery store. Shoppers were more likely to stop and taste at the display with 24 varieties, but those who saw only 6 varieties were ten times more likely to actually purchase a jar. Researchers concluded that too many options made consumers anxious about making the wrong decision, leading many to leave without buying anything.\n\nChoice overload affects more than shopping. It can influence career decisions, healthcare choices, and even relationships. Some experts recommend that businesses and institutions simplify their offerings to help people decide more confidently. However, others argue that complete elimination of choice would limit personal freedom and innovation, suggesting that the best approach may be to provide guidance rather than restriction.",
+    "word_count": 185,
+    "topic": "psychology"
+  },
   "highlights": [
     "unprecedented variety",
     "overwhelming selection",
@@ -82,5 +86,7 @@
     "source": "Phase 5.8 Academic Reading",
     "level": "MEDIUM",
     "type": "academic_reading"
-  }
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 6: زيادة الخيارات"
 }

@@ -4,7 +4,11 @@
   "title_en": "Urban Trees",
   "topic": "environment",
   "duration_seconds": 420,
-  "passage": "Trees have long played a key role in urban areas that would otherwise be dominated by asphalt and concrete. They are often planted along roads to provide shade that helps residents cope with high temperatures. The deep roots of mature trees can reduce erosion in cities by stabilizing soil, while their leaves and branches improve air quality by absorbing carbon dioxide and harmful pollutants.\n\nBut the benefits of trees extend far beyond the impacts they have on physical health and the natural environment. In fact, they have also been found to have important social and psychological effects. Recent studies indicate that residents of neighborhoods with thriving greenery experience lower levels of stress and enjoy better mental health. In addition, the presence of abundant plant life has been linked to increased community engagement and even to lower crime rates.\n\nUnfortunately, the long-term survival of urban trees is being impacted by rapid development. Construction projects often damage their fragile root systems. Even when builders are careful to avoid physical damage to trees, they might still inadvertently cut off their access to water and nutrients. These issues can be compounded by global climate change, which causes extreme weather shifts that trees are often unable to adapt to.",
+  "passage": {
+    "text_en": "Trees have long played a key role in urban areas that would otherwise be dominated by asphalt and concrete. They are often planted along roads to provide shade that helps residents cope with high temperatures. The deep roots of mature trees can reduce erosion in cities by stabilizing soil, while their leaves and branches improve air quality by absorbing carbon dioxide and harmful pollutants.\n\nBut the benefits of trees extend far beyond the impacts they have on physical health and the natural environment. In fact, they have also been found to have important social and psychological effects. Recent studies indicate that residents of neighborhoods with thriving greenery experience lower levels of stress and enjoy better mental health. In addition, the presence of abundant plant life has been linked to increased community engagement and even to lower crime rates.\n\nUnfortunately, the long-term survival of urban trees is being impacted by rapid development. Construction projects often damage their fragile root systems. Even when builders are careful to avoid physical damage to trees, they might still inadvertently cut off their access to water and nutrients. These issues can be compounded by global climate change, which causes extreme weather shifts that trees are often unable to adapt to.",
+    "word_count": 204,
+    "topic": "environment"
+  },
   "highlights": [
     "asphalt",
     "concrete",
@@ -82,5 +86,7 @@
     "source": "Phase 5.8 Academic Reading",
     "level": "MEDIUM",
     "type": "academic_reading"
-  }
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 4: أشجار المدن"
 }

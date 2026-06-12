@@ -4,7 +4,11 @@
   "title_en": "Urban Bees",
   "topic": "biology",
   "duration_seconds": 360,
-  "passage": "Bees play a surprisingly important role in modern cities. Although many people associate bees only with rural farms, urban beekeeping has grown rapidly in recent decades. Rooftop hives and small garden colonies now thrive in many large cities, where bees pollinate flowers in parks, balconies, and community gardens. This pollination supports urban biodiversity and helps both wild and cultivated plants reproduce.\n\nCity environments can actually offer certain advantages to bees. Unlike farmland, which is often treated with pesticides, urban green spaces tend to contain a wider variety of flowering plants and fewer harmful chemicals. As a result, urban bees sometimes produce more honey than their rural counterparts. However, they also face unique challenges, including air pollution and limited nesting space.",
+  "passage": {
+    "text_en": "Bees play a surprisingly important role in modern cities. Although many people associate bees only with rural farms, urban beekeeping has grown rapidly in recent decades. Rooftop hives and small garden colonies now thrive in many large cities, where bees pollinate flowers in parks, balconies, and community gardens. This pollination supports urban biodiversity and helps both wild and cultivated plants reproduce.\n\nCity environments can actually offer certain advantages to bees. Unlike farmland, which is often treated with pesticides, urban green spaces tend to contain a wider variety of flowering plants and fewer harmful chemicals. As a result, urban bees sometimes produce more honey than their rural counterparts. However, they also face unique challenges, including air pollution and limited nesting space.",
+    "word_count": 120,
+    "topic": "biology"
+  },
   "questions": [
     {
       "q": "What is the main idea of the passage?",
@@ -59,5 +63,7 @@
     "source": "Phase 5.8 Academic Reading",
     "level": "EASY",
     "type": "academic_reading"
-  }
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 1: نحل المدن"
 }

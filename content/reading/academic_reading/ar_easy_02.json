@@ -4,7 +4,11 @@
   "title_en": "Sleep and Memory",
   "topic": "psychology",
   "duration_seconds": 360,
-  "passage": "Sleep plays a crucial role in how the human brain processes and stores information. During the day, we encounter countless experiences and learn new facts, but most of these are stored only temporarily. It is during sleep, particularly in deep stages, that the brain organizes these experiences and transfers them into long-term memory.\n\nResearchers have found that students who sleep for at least seven hours after studying tend to perform better on tests than those who stay up late reviewing material. This is because sleep deprivation interferes with a process called memory consolidation. Without adequate rest, even repeated studying may have limited benefit. Sleep also supports creativity and problem-solving, as the brain continues working on unsolved problems while we rest.",
+  "passage": {
+    "text_en": "Sleep plays a crucial role in how the human brain processes and stores information. During the day, we encounter countless experiences and learn new facts, but most of these are stored only temporarily. It is during sleep, particularly in deep stages, that the brain organizes these experiences and transfers them into long-term memory.\n\nResearchers have found that students who sleep for at least seven hours after studying tend to perform better on tests than those who stay up late reviewing material. This is because sleep deprivation interferes with a process called memory consolidation. Without adequate rest, even repeated studying may have limited benefit. Sleep also supports creativity and problem-solving, as the brain continues working on unsolved problems while we rest.",
+    "word_count": 120,
+    "topic": "psychology"
+  },
   "questions": [
     {
       "q": "What is the passage mainly about?",
@@ -59,5 +63,7 @@
     "source": "Phase 5.8 Academic Reading",
     "level": "EASY",
     "type": "academic_reading"
-  }
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 2: النوم والذاكرة"
 }

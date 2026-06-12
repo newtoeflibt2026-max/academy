@@ -4,7 +4,11 @@
   "title_en": "Music and the Brain",
   "topic": "neuroscience",
   "duration_seconds": 360,
-  "passage": "Listening to music affects the human brain in remarkable ways. When we hear a familiar song, multiple brain regions activate at once, including those linked to memory, emotion, and motor control. This explains why we often tap our feet or feel strong emotions while listening, even without consciously deciding to react.\n\nMusic therapy has emerged as a valuable tool in medicine. Patients recovering from strokes sometimes regain speech faster when therapy includes singing exercises, because the brain's musical pathways can compensate for damaged language areas. Similarly, individuals with dementia who can no longer recognize loved ones often still remember the songs of their youth. These observations suggest that musical memory is deeply embedded and surprisingly resilient compared to other forms of memory.",
+  "passage": {
+    "text_en": "Listening to music affects the human brain in remarkable ways. When we hear a familiar song, multiple brain regions activate at once, including those linked to memory, emotion, and motor control. This explains why we often tap our feet or feel strong emotions while listening, even without consciously deciding to react.\n\nMusic therapy has emerged as a valuable tool in medicine. Patients recovering from strokes sometimes regain speech faster when therapy includes singing exercises, because the brain's musical pathways can compensate for damaged language areas. Similarly, individuals with dementia who can no longer recognize loved ones often still remember the songs of their youth. These observations suggest that musical memory is deeply embedded and surprisingly resilient compared to other forms of memory.",
+    "word_count": 122,
+    "topic": "neuroscience"
+  },
   "questions": [
     {
       "q": "What is the main idea of the passage?",
@@ -59,5 +63,7 @@
     "source": "Phase 5.8 Academic Reading",
     "level": "EASY",
     "type": "academic_reading"
-  }
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 3: الموسيقى والدماغ"
 }

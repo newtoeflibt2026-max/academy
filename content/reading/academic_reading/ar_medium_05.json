@@ -4,7 +4,11 @@
   "title_en": "Sports and Social Integration",
   "topic": "sociology",
   "duration_seconds": 420,
-  "passage": "Sports have long served as more than just entertainment or physical exercise; they often play a powerful role in bringing diverse communities together. In many countries, local sports clubs and recreational leagues attract members from different ethnic, religious, and economic backgrounds. The shared experience of teamwork, competition, and celebration creates bonds that might not form in other social settings.\n\nResearchers studying immigrant communities have observed that participation in sports often accelerates social integration. New arrivals who join local teams tend to learn the language faster and build broader social networks compared to those who remain isolated. Sports also provide a relatively neutral environment where cultural differences become less significant than shared goals and team performance.\n\nHowever, sports can also reinforce divisions when access is unequal. Expensive equipment, club fees, and transportation costs can exclude lower-income families. Some communities have addressed this problem by funding free programs and providing equipment, recognizing that the social benefits of sports extend far beyond athletic skill. When designed inclusively, sports programs can become valuable tools for strengthening community ties.",
+  "passage": {
+    "text_en": "Sports have long served as more than just entertainment or physical exercise; they often play a powerful role in bringing diverse communities together. In many countries, local sports clubs and recreational leagues attract members from different ethnic, religious, and economic backgrounds. The shared experience of teamwork, competition, and celebration creates bonds that might not form in other social settings.\n\nResearchers studying immigrant communities have observed that participation in sports often accelerates social integration. New arrivals who join local teams tend to learn the language faster and build broader social networks compared to those who remain isolated. Sports also provide a relatively neutral environment where cultural differences become less significant than shared goals and team performance.\n\nHowever, sports can also reinforce divisions when access is unequal. Expensive equipment, club fees, and transportation costs can exclude lower-income families. Some communities have addressed this problem by funding free programs and providing equipment, recognizing that the social benefits of sports extend far beyond athletic skill. When designed inclusively, sports programs can become valuable tools for strengthening community ties.",
+    "word_count": 174,
+    "topic": "sociology"
+  },
   "highlights": [
     "entertainment",
     "diverse communities",
@@ -82,5 +86,7 @@
     "source": "Phase 5.8 Academic Reading",
     "level": "MEDIUM",
     "type": "academic_reading"
-  }
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 5: الرياضة والاندماج"
 }
