@@ -81,6 +81,8 @@ try:
     _run_r_mig()
     from migrations.fix_reading_order import run as _run_fix_order
     _run_fix_order()
+    from migrations.fill_r01_r24_content import run as _run_fill_r01_r24
+    _run_fill_r01_r24()
 except Exception as _e:
     print(f"[migration] R-13/R-32 error: {_e}")
 # ===================================================
