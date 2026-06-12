@@ -83,6 +83,8 @@ try:
     _run_fix_order()
     from migrations.fill_r01_r24_content import run as _run_fill_r01_r24
     _run_fill_r01_r24()
+    from migrations.sync_paid_with_subs import run as _run_sync_paid
+    _run_sync_paid()
 except Exception as _e:
     print(f"[migration] R-13/R-32 error: {_e}")
 # ===================================================

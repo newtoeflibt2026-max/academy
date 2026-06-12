@@ -121,60 +121,25 @@ async def cmd_start(message: types.Message):
     full_name = message.from_user.full_name or ""
 
     create_student(user_id, username=username, full_name=full_name)
-    student = get_student(user_id)
+    student = get_student(user_id) or {}
     streak = update_streak(user_id)
-    setup = _get_student_setup(user_id)
-
-    if not setup.get("track"):
-        text = (
-            f"مرحباً بك يا <b>{full_name}</b> في أكاديمية يامن! 🎓\n\n"
-            "🚀 <b>اختر المسار الذي تريد التحضير له:</b>\n\n"
-            "🎯 <b>TOEFL iBT الدولي</b> — متاح الآن\n"
-            "🔒 IELTS و SAT و GRE — قريباً جداً\n\n"
-            "ابدأ بالنقر على المسار الذي يناسبك 👇"
-        )
-        await message.answer(text, reply_markup=kb_choose_track())
-        return
-
-    if not setup.get("target_score"):
-        text = (
-            f"👋 أهلاً بعودتك يا <b>{full_name}</b>!\n\n"
-            "🎯 <b>ما هي العلامة المستهدفة في TOEFL iBT؟</b>\n\n"
-            "اختر هدفك وسيُحدد لك بوابة التخرج تلقائياً:\n"
-            "• هدف 59 يعني بوابة تخرج 69 في الموك\n"
-            "• هدف 69 يعني بوابة تخرج 79 في الموك\n"
-            "• هدف 90 يعني بوابة تخرج 100 في الموك"
-        )
-        await message.answer(text, reply_markup=kb_choose_target())
-        return
-
-    if not setup.get("placement_done"):
-        target = setup.get("target_score", 0)
-        text = (
-            f"🎯 المسار: <b>TOEFL iBT</b> | الهدف: <b>{target}</b>\n\n"
-            "🔬 <b>اختبار تحديد المستوى</b>\n"
-            "10 أسئلة سريعة تُحدد ما إذا كنت تحتاج للتأسيس أم تبدأ بالتوفل مباشرة.\n\n"
-            "• نتيجة أقل من 50 بالمئة تعني مسار التأسيس (قواعد + مفردات) ثم TOEFL\n"
-            "• نتيجة 50 بالمئة فأكثر تعني البدء بـ TOEFL مباشرة\n\n"
-            "اضغط الزر التالي لبدء الاختبار 👇"
-        )
-        await message.answer(text, reply_markup=kb_start_placement(user_id))
-        return
+    setup = _get_student_setup(user_id) or {}
 
     welcome_msg = get_setting("bot_welcome_message", "أهلاً بك في أكاديمية يامن! 🎓")
-    is_paid = bool(student.get("is_paid", 0)) if student else False
-    xp = student.get("xp", 0) if student else 0
-    level = student.get("level", "beginner") if student else "beginner"
-    target = setup.get("target_score", 0)
-    path = setup.get("placement_path") or "toefl"
-    path_ar = "🛠️ تأسيس + TOEFL" if path == "foundation" else "🎯 TOEFL مباشر"
+    is_paid = bool(student.get("is_paid", 0))
+    xp = student.get("xp", 0)
+    level = student.get("level", "beginner")
+    target = setup.get("target_score") or 0
+    target_txt = f"<b>{target}</b>" if target else "<i>غير محدد</i>"
     level_ar = {"beginner":"مبتدئ 🔵","intermediate":"متوسط 🟡","advanced":"متقدم 🟢"}.get(level, level)
+    paid_badge = "👑 مشترك" if is_paid else "🆓 مجاني"
 
     text = (
         f"{welcome_msg}\n\n"
-        f"👤 <b>{full_name}</b>\n"
+        f"👤 <b>{full_name}</b> | {paid_badge}\n"
         f"⭐ XP: {xp} | 🔥 Streak: {streak} | 📈 {level_ar}\n"
-        f"🎯 الهدف: <b>{target}</b> | المسار: {path_ar}\n"
+        f"🎯 الهدف: {target_txt}\n\n"
+        "اختر من القائمة 👇"
     )
     await message.answer(text, reply_markup=get_main_keyboard(is_paid, user_id=user_id))
 
