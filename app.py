@@ -6748,6 +6748,38 @@ except Exception as e:
 # ════════════════════════════════════════════════
 # Temporary migration endpoint (REMOVE AFTER USE)
 # ════════════════════════════════════════════════
+
+# === Debug endpoint (admin only) ===
+@app.route("/debug/student-status")
+def _debug_student_status():
+    from flask import request, jsonify
+    admin_id = request.args.get("admin_id", type=int)
+    if admin_id != 5572314718:
+        return jsonify({"error": "forbidden"}), 403
+    tid = request.args.get("tid", type=int)
+    if not tid:
+        return jsonify({"error": "tid required"}), 400
+    import sqlite3, os
+    db = os.environ.get("DB_PATH","/app/data/academy.db")
+    con = sqlite3.connect(db); con.row_factory = sqlite3.Row
+    cur = con.cursor()
+    cur.execute("SELECT telegram_id, full_name, is_paid, track, target_score, placement_done FROM students WHERE telegram_id=?", (tid,))
+    s = cur.fetchone()
+    cur.execute("SELECT id, plan_name, is_active, start_date, end_date FROM subscriptions WHERE telegram_id=? OR user_id=? ORDER BY id DESC", (str(tid), tid))
+    subs = [dict(r) for r in cur.fetchall()]
+    cur.execute("SELECT id, plan_name, status, amount, verified_at FROM payments WHERE telegram_id=? ORDER BY id DESC LIMIT 5", (str(tid),))
+    pays = [dict(r) for r in cur.fetchall()]
+    cur.execute("SELECT name FROM sqlite_master WHERE type='trigger' AND name LIKE 'trg_sub_%'")
+    triggers = [r[0] for r in cur.fetchall()]
+    con.close()
+    return jsonify({
+        "student": dict(s) if s else None,
+        "subscriptions": subs,
+        "payments": pays,
+        "triggers": triggers,
+        "db_path": db
+    })
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
