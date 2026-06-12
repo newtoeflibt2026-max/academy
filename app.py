@@ -6780,6 +6780,70 @@ def _debug_student_status():
         "db_path": db
     })
 
+
+@app.route("/debug/fix-paid-sync")
+def _debug_fix_paid_sync():
+    from flask import request, jsonify
+    if request.args.get("admin_id", type=int) != 5572314718:
+        return jsonify({"error":"forbidden"}), 403
+    import sqlite3, os
+    db = os.environ.get("DB_PATH","/app/data/academy.db")
+    con = sqlite3.connect(db); cur = con.cursor()
+    # 1) sync existing
+    cur.execute("""
+        UPDATE students SET is_paid = 1
+         WHERE telegram_id IN (
+            SELECT CAST(telegram_id AS INTEGER) FROM subscriptions
+             WHERE is_active = 1
+               AND (end_date IS NULL OR date(end_date) >= date('now'))
+         )
+    """)
+    synced = cur.rowcount
+    # 2) install triggers
+    cur.execute("DROP TRIGGER IF EXISTS trg_sub_insert_set_paid")
+    cur.execute("""
+        CREATE TRIGGER trg_sub_insert_set_paid
+        AFTER INSERT ON subscriptions
+        WHEN NEW.is_active = 1
+        BEGIN
+            UPDATE students SET is_paid = 1
+             WHERE telegram_id = CAST(NEW.telegram_id AS INTEGER)
+                OR telegram_id = NEW.user_id;
+        END
+    """)
+    cur.execute("DROP TRIGGER IF EXISTS trg_sub_update_set_paid")
+    cur.execute("""
+        CREATE TRIGGER trg_sub_update_set_paid
+        AFTER UPDATE OF is_active ON subscriptions
+        WHEN NEW.is_active = 1
+        BEGIN
+            UPDATE students SET is_paid = 1
+             WHERE telegram_id = CAST(NEW.telegram_id AS INTEGER)
+                OR telegram_id = NEW.user_id;
+        END
+    """)
+    # 3) also sync from approved payments (Aseel case)
+    cur.execute("""
+        UPDATE students SET is_paid = 1
+         WHERE telegram_id IN (
+            SELECT CAST(telegram_id AS INTEGER) FROM payments
+             WHERE status = 'approved'
+         )
+    """)
+    synced_pay = cur.rowcount
+    # 4) collect triggers
+    cur.execute("SELECT name FROM sqlite_master WHERE type='trigger' AND name LIKE 'trg_sub_%'")
+    triggers = [r[0] for r in cur.fetchall()]
+    con.commit()
+    con.close()
+    return jsonify({
+        "ok": True,
+        "synced_from_subs": synced,
+        "synced_from_payments": synced_pay,
+        "triggers": triggers,
+        "db_path": db
+    })
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
