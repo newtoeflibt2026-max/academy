@@ -74,6 +74,16 @@ from db import (get_db, get_all_students_db, get_student,
                 activate_paid, deactivate_paid, update_student,
                 get_setting, set_setting)
 
+
+# === Auto-migration: Reading lessons R-13 to R-32 ===
+try:
+    from migrations.add_reading_lessons_r13_r32 import run as _run_r_mig
+    _run_r_mig()
+except Exception as _e:
+    print(f"[migration] R-13/R-32 error: {_e}")
+# ===================================================
+
+
 app = Flask(__name__)
 
 @app.after_request
