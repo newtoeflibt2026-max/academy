@@ -184,6 +184,33 @@ body {
 .card-btn.retry { background: var(--success); }
 .card-btn.retry:hover { background: #059669; }
 
+
+.theory-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid #f59e0b; border-radius: 20px; padding: 20px;
+  margin-bottom: 18px; display: flex; align-items: center; gap: 16px;
+  text-decoration: none; color: var(--text);
+  transition: all 0.3s; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.2);
+}
+.theory-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(245,158,11,0.3); }
+.theory-icon {
+  width: 60px; height: 60px; border-radius: 14px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+.theory-info { flex: 1; }
+.theory-badge {
+  display: inline-block; background: #f59e0b; color: #fff;
+  padding: 3px 10px; border-radius: 8px; font-size: 11px;
+  font-weight: 700; margin-bottom: 6px;
+}
+.theory-title { font-size: 17px; font-weight: 800; color: #78350f; margin-bottom: 4px; }
+.theory-desc { font-size: 13px; color: #92400e; }
+.theory-arrow { font-size: 24px; color: #d97706; font-weight: 900; }
+
 /* EMPTY STATE */
 .empty {
   text-align: center; padding: 60px 20px;
@@ -224,28 +251,7 @@ body {
         <div class="stat-label">قراءات أنجزتها</div>
         <div class="stat-value">{{ stats.completed }} / {{ stats.total_content }}</div>
       </div>
-    <!-- === شريط الدروس النظرية === -->
-    <div class="theory-bar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0;padding:16px;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:12px;border:2px solid #0ea5e9">
-      <div style="text-align:center;grid-column:1/-1;font-weight:700;color:#0c4a6e;font-size:16px;margin-bottom:4px">📚 ابدأ بالدروس النظرية قبل التمارين</div>
-      <a href="/foundation/lesson/19?user_id={{ user_id }}" style="display:block;padding:14px;background:white;border-radius:10px;text-decoration:none;color:#0c4a6e;text-align:center;border:1px solid #bae6fd;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size:24px">📘</div>
-        <div style="font-weight:700;margin-top:4px">نظرية Complete the Words</div>
-        <div style="font-size:12px;color:#64748b;margin-top:2px">R-01 → R-02 → R-03</div>
-      </a>
-      <a href="/foundation/lesson/91?user_id={{ user_id }}" style="display:block;padding:14px;background:white;border-radius:10px;text-decoration:none;color:#0c4a6e;text-align:center;border:1px solid #bae6fd;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size:24px">📗</div>
-        <div style="font-weight:700;margin-top:4px">نظرية Daily Life Reading</div>
-        <div style="font-size:12px;color:#64748b;margin-top:2px">R-13</div>
-      </a>
-      <a href="/foundation/lesson/102?user_id={{ user_id }}" style="display:block;padding:14px;background:white;border-radius:10px;text-decoration:none;color:#0c4a6e;text-align:center;border:1px solid #bae6fd;transition:transform .15s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size:24px">📕</div>
-        <div style="font-weight:700;margin-top:4px">نظرية Academic Reading</div>
-        <div style="font-size:12px;color:#64748b;margin-top:2px">R-24</div>
-      </a>
-    </div>
-    <!-- === نهاية شريط الدروس النظرية === -->
-
-      <div class="stat-item">
+<div class="stat-item">
         <div class="stat-label">متوسط درجاتك</div>
         <div class="stat-value">{{ stats.avg_score }}%</div>
         <div class="progress-bar"><div class="progress-fill" style="width: {{ stats.avg_score }}%"></div></div>
@@ -275,6 +281,24 @@ body {
 
   {% for type_key, items in items_by_type.items() %}
   <div class="section {% if loop.first %}active{% endif %}" data-section="{{ type_key }}">
+    {% set theory_map = {
+      "complete_words":   {"id": 19,  "icon": "📘", "title": "نظرية إكمال الكلمات",     "desc": "تعلّم القاعدة قبل التمارين • R-01 → R-02 → R-03"},
+      "daily_reading":    {"id": 91,  "icon": "📗", "title": "نظرية القراءة اليومية",   "desc": "استراتيجيات قراءة النصوص اليومية • R-13"},
+      "academic_reading": {"id": 102, "icon": "📕", "title": "نظرية القراءة الأكاديمية", "desc": "أساسيات القراءة الأكاديمية • R-24"}
+    } %}
+    {% if type_key in theory_map %}
+    {% set t = theory_map[type_key] %}
+    <a href="/foundation/lesson/{{ t.id }}?user_id={{ user_id }}" class="theory-card">
+      <div class="theory-icon">{{ t.icon }}</div>
+      <div class="theory-info">
+        <span class="theory-badge">📚 ابدأ هنا — درس نظري</span>
+        <div class="theory-title">{{ t.title }}</div>
+        <div class="theory-desc">{{ t.desc }}</div>
+      </div>
+      <div class="theory-arrow">←</div>
+    </a>
+    {% endif %}
+
     {% if items %}
     <div class="grid">
       {% for it in items %}
