@@ -421,6 +421,15 @@
     }
 
     function formatContent(text) {
+      if (!text) return "";
+      // === HTML PASSTHROUGH FIX ===
+      // If the content already contains HTML tags (style, div, p, h1-6, table, etc.),
+      // render it as HTML directly instead of escaping/formatting as plain text.
+      var s = String(text);
+      if (/<\s*(style|div|p|h[1-6]|table|ul|ol|li|span|section|article|br|strong|em|img|a|blockquote|code|pre)\b/i.test(s)) {
+        return s;
+      }
+
       if (!text) return '<p>لا يوجد محتوى متاح حالياً.</p>';
       // Wrap English words/phrases in .english span
       let html = escapeHtml(text);

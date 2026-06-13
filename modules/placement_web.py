@@ -43,30 +43,50 @@ def placement_page():
 
 @placement_bp.route("/api/placement/questions")
 def placement_questions_api():
+    """Balanced selection: 5 grammar + 5 vocabulary + 5 reading
+    Each group: 2 easy + 2 medium + 1 hard"""
     try:
         conn = _db()
-        rows = conn.execute("""
-            SELECT id, question_text, option_a, option_b, option_c, option_d,
-                   skill, difficulty
-            FROM placement_questions
-            WHERE is_active=1
-            ORDER BY RANDOM()
-            LIMIT 15
-        """).fetchall()
-        conn.close()
         out = []
-        for r in rows:
-            out.append({
-                "id": r["id"],
-                "question": r["question_text"],
-                "question_text": r["question_text"],
-                "option_a": r["option_a"],
-                "option_b": r["option_b"],
-                "option_c": r["option_c"],
-                "option_d": r["option_d"],
-                "skill": r["skill"] or "",
-                "difficulty": r["difficulty"] or "medium",
-            })
+        for skill in ("grammar", "vocabulary", "reading"):
+            for diff, n in (("easy",2),("medium",2),("hard",1)):
+                rows = conn.execute("""
+                    SELECT id, question_text, option_a, option_b, option_c, option_d, skill, difficulty
+                    FROM placement_questions
+                    WHERE is_active=1 AND skill=? AND difficulty=?
+                    ORDER BY RANDOM() LIMIT ?
+                """, (skill, diff, n)).fetchall()
+                for r in rows:
+                    out.append({
+                        "id": r["id"],
+                        "question": r["question_text"],
+                        "question_text": r["question_text"],
+                        "option_a": r["option_a"],
+                        "option_b": r["option_b"],
+                        "option_c": r["option_c"],
+                        "option_d": r["option_d"],
+                        "skill": r["skill"] or "",
+                        "difficulty": r["difficulty"] or "medium",
+                    })
+        # Fallback: if any group short, fill from same skill
+        if len(out) < 15:
+            need = 15 - len(out)
+            existing_ids = [q["id"] for q in out]
+            placeholders = ",".join("?"*len(existing_ids)) if existing_ids else "0"
+            extra = conn.execute(f"""
+                SELECT id, question_text, option_a, option_b, option_c, option_d, skill, difficulty
+                FROM placement_questions
+                WHERE is_active=1 AND id NOT IN ({placeholders})
+                ORDER BY RANDOM() LIMIT ?
+            """, (*existing_ids, need)).fetchall()
+            for r in extra:
+                out.append({
+                    "id": r["id"], "question": r["question_text"], "question_text": r["question_text"],
+                    "option_a": r["option_a"], "option_b": r["option_b"],
+                    "option_c": r["option_c"], "option_d": r["option_d"],
+                    "skill": r["skill"] or "", "difficulty": r["difficulty"] or "medium",
+                })
+        conn.close()
         return jsonify(out)
     except Exception as e:
         traceback.print_exc()
@@ -121,17 +141,17 @@ def placement_submit():
         target    = _target_from_score(pct)
 
         # Ensure student row exists
-        conn.execute("INSERT OR IGNORE INTO students (telegram_id) VALUES (?)", (sid,))
+        conn.execute("INSERT OR IGNORE INTO students (telegram_id) VALUES (?)", (str(sid),))
 
-        # Save into students table (the columns that actually exist)
+        # Save into students table (CAST to handle TEXT vs INT telegram_id)
         conn.execute("""
             UPDATE students
                SET placement_done = 1,
                    placement_score = ?,
                    placement_path = ?,
                    level = ?,
-                   target_score = COALESCE(target_score, ?)
-             WHERE telegram_id = ?
+                   target_score = CASE WHEN COALESCE(target_score,0)=0 THEN ? ELSE target_score END
+             WHERE CAST(telegram_id AS INTEGER) = ?
         """, (pct, path, path, target, sid))
         conn.commit()
         conn.close()
@@ -157,7 +177,7 @@ def placement_status(student_id):
     try:
         conn = _db()
         row = conn.execute(
-            "SELECT placement_done, placement_score, placement_path, level, target_score FROM students WHERE telegram_id=?",
+            "SELECT placement_done, placement_score, placement_path, level, target_score FROM students WHERE CAST(telegram_id AS INTEGER)=?",
             (student_id,)
         ).fetchone()
         conn.close()

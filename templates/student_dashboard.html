@@ -661,6 +661,28 @@ body { padding-bottom: 90px; }
   .student-name { font-size: 17px; }
   .hero-title { font-size: 15px; }
 }
+
+/* === My Study Plan Card === */
+.plan-card-wrap{margin:16px 12px 20px;}
+.plan-card{background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 50%,#f5f3ff 100%);
+  border:1.5px solid rgba(14,165,233,.25);border-radius:20px;padding:20px;
+  box-shadow:0 8px 24px rgba(14,165,233,.08);position:relative;overflow:hidden;}
+.plan-card::before{content:"";position:absolute;top:-40px;right:-40px;width:140px;height:140px;
+  background:radial-gradient(circle,rgba(167,139,250,.25),transparent 70%);border-radius:50%;}
+.plan-card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;position:relative;z-index:1;}
+.plan-card-icon{font-size:28px;}
+.plan-card-title{font-size:18px;font-weight:800;color:#0f172a;}
+.plan-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;position:relative;z-index:1;}
+.plan-stat{background:rgba(255,255,255,.7);backdrop-filter:blur(8px);border-radius:12px;padding:10px 8px;text-align:center;border:1px solid rgba(14,165,233,.15);}
+.plan-stat-label{font-size:11px;color:#64748b;margin-bottom:4px;}
+.plan-stat-value{font-size:15px;font-weight:800;color:#0ea5e9;}
+.plan-cta{display:flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,#0ea5e9 0%,#a78bfa 100%);color:#fff;
+  padding:13px 18px;border-radius:14px;text-decoration:none;font-weight:700;font-size:15px;
+  box-shadow:0 6px 18px rgba(14,165,233,.35);transition:transform .2s,box-shadow .2s;
+  position:relative;z-index:1;}
+.plan-cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(14,165,233,.45);}
+
 </style>
 </head>
 <body>
@@ -718,6 +740,33 @@ body { padding-bottom: 90px; }
     </div>
   </div>
 </div>
+
+
+<!-- ═══ MY STUDY PLAN CARD ═══ -->
+<div class="plan-card-wrap">
+  <div class="plan-card fade-up">
+    <div class="plan-card-header">
+      <span class="plan-card-icon">📋</span>
+      <span class="plan-card-title">خطتي الدراسية الكاملة</span>
+    </div>
+    <div class="plan-card-stats">
+      <div class="plan-stat">
+        <div class="plan-stat-label">مستواي</div>
+        <div class="plan-stat-value" id="planLevel">—</div>
+      </div>
+      <div class="plan-stat">
+        <div class="plan-stat-label">درجتي</div>
+        <div class="plan-stat-value" id="planScore">—</div>
+      </div>
+      <div class="plan-stat">
+        <div class="plan-stat-label">مساري</div>
+        <div class="plan-stat-value" id="planPath">—</div>
+      </div>
+    </div>
+    <a class="plan-cta" id="planCTA" href="#">📊 افتح خطتي الكاملة ←</a>
+  </div>
+</div>
+<!-- ═══ END PLAN CARD ═══ -->
 
 <!-- ═══ STATS ROW ═══ -->
 <div class="stats-row">
@@ -1356,28 +1405,31 @@ function handlePlacementMode() {
 //  Phase 3 — Open lesson page
 // ═══════════════════════════════════════════════════════════
 async function openFirstAvailableLesson() {
-  if (!studentId) return;
-  try {
-    const r = await fetch(`/api/miniapp/lessons?student_id=${studentId || window.__resolveStudentId() || ''}`);
-    const data = await r.json();
-    if (data.error) { alert(data.error); return; }
-    
-    // Find first available lesson
-    for (const stage of (data.stages || [])) {
-      for (const lesson of (stage.lessons || [])) {
-        if (lesson.status === 'available') {
-          if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-          window.location.href = `/miniapp/lesson/${lesson.id}?student_id=${studentId || window.__resolveStudentId() || ''}`;
-          return;
-        }
+  // Smart routing: ask backend for the next lesson on the student's learning path
+  var uid = (new URLSearchParams(location.search)).get('student_id')
+         || (new URLSearchParams(location.search)).get('user_id')
+         || (window.studentId || '');
+  if (!uid) { alert('لم يتم العثور على معرّف الطالب'); return; }
+  var btn = document.querySelector('.dm-btn');
+  if (btn) { btn.textContent = '... جاري التحميل'; btn.disabled = true; }
+  fetch('/api/student/next-lesson?user_id=' + encodeURIComponent(uid))
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d && d.ok && d.lesson && d.lesson.url) {
+        window.location.href = d.lesson.url;
+      } else if (d && d.finished) {
+        alert('🎉 ' + (d.message || 'أكملت كل الدروس المتاحة!'));
+        if (btn) { btn.textContent = 'ابدأ الآن ←'; btn.disabled = false; }
+      } else {
+        alert('تعذّر تحديد الدرس التالي. حاول لاحقاً.');
+        if (btn) { btn.textContent = 'ابدأ الآن ←'; btn.disabled = false; }
       }
-    }
-    
-    // All completed
-    alert('🎉 أحسنت! أكملت جميع الدروس المتاحة. سيتم فتح المرحلة التالية قريباً.');
-  } catch (e) {
-    console.error('openFirstAvailableLesson error:', e);
-  }
+    })
+    .catch(function(e){
+      console.error('next-lesson error', e);
+      alert('خطأ في الاتصال. تأكد من الإنترنت.');
+      if (btn) { btn.textContent = 'ابدأ الآن ←'; btn.disabled = false; }
+    });
 }
 
 function openLesson(lessonId) {
@@ -1471,6 +1523,64 @@ async function openSkillLessons(skillName) {
     handleDeepLink();
   }
 })();
+
+/* === Fill Study Plan Card === */
+function fillPlanCard(data){
+  try{
+    var s = data.student || data || {};
+    var lvl = s.level || s.placement_path || '—';
+    var sc  = (s.placement_score!=null) ? (Math.round(s.placement_score*10)/10)+'%' : '—';
+    var pth = s.placement_path || s.path || '—';
+    var pathMap = {'beginner':'مبتدئ','foundation':'تأسيسي','intermediate':'متوسط','advanced':'متقدم'};
+    var levelMap = {'A1':'A1','A2':'A2','B1':'B1','B2':'B2','C1':'C1','C2':'C2','beginner':'مبتدئ','intermediate':'متوسط','advanced':'متقدم'};
+    var elL=document.getElementById('planLevel'); if(elL) elL.textContent = levelMap[lvl]||lvl;
+    var elS=document.getElementById('planScore'); if(elS) elS.textContent = sc;
+    var elP=document.getElementById('planPath');  if(elP) elP.textContent = pathMap[pth]||pth;
+    var cta=document.getElementById('planCTA');
+    if(cta){
+      var uid = s.telegram_id || s.user_id || (new URLSearchParams(location.search)).get('student_id') || (new URLSearchParams(location.search)).get('user_id');
+      if(uid) cta.href = '/welcome?user_id=' + uid;
+    }
+  }catch(e){console.warn('fillPlanCard',e);}
+}
+
+
+/* === Auto-fill Today's Lesson card from smart next-lesson API === */
+(function(){
+  function fillTodayLesson(){
+    var uid = (new URLSearchParams(location.search)).get('student_id')
+           || (new URLSearchParams(location.search)).get('user_id');
+    if (!uid) return;
+    fetch('/api/student/next-lesson?user_id=' + encodeURIComponent(uid))
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d || !d.ok) return;
+        if (d.finished) {
+          var t = document.getElementById('dmDesc');
+          if (t) t.textContent = '🎉 أكملت كل الدروس! استمر في المراجعة.';
+          return;
+        }
+        var L = d.lesson || {};
+        var skillMap = {'foundation':'تأسيس','reading':'قراءة','listening':'استماع','writing':'كتابة','speaking':'محادثة'};
+        var skillLabel = skillMap[L.skill] || L.skill || '';
+        var desc = document.getElementById('dmDesc');
+        if (desc) desc.textContent = (L.code ? '['+L.code+'] ' : '') + (L.title || 'الدرس التالي') + (skillLabel ? ' • ' + skillLabel : '');
+        var titleEl = document.getElementById('dmTitle');
+        if (titleEl && L.title) titleEl.textContent = L.title;
+        if (d.stats) {
+          var prog = document.getElementById('dmProgress');
+          if (prog) prog.textContent = d.stats.completed + ' / ' + d.stats.total;
+        }
+      })
+      .catch(function(e){ console.warn('fillTodayLesson',e); });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fillTodayLesson);
+  } else {
+    fillTodayLesson();
+  }
+})();
+
 </script>
 
 </body>

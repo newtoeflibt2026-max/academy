@@ -5866,7 +5866,7 @@ except Exception as _e:
 def _migrate_ctw_columns():
     try:
         import sqlite3
-        conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db") if "DB_PATH" in globals() else get_db()
         cur = conn.cursor()
         cur.execute("PRAGMA table_info(stage_exam_questions)")
         cols = [r[1] for r in cur.fetchall()]
@@ -5972,7 +5972,7 @@ def api_student_welcome_data():
         if not student_id:
             return jsonify({"error": "student_id required"}), 400
 
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
 
@@ -6113,6 +6113,79 @@ def api_student_welcome_data():
         return jsonify({"error": str(e)}), 500
 
 
+
+# ============================================================
+# ONBOARDING ROUTES - smart routing for new students
+# ============================================================
+@app.route("/onboarding/check", methods=["GET"])
+def onboarding_check():
+    """Smart router: directs student to next required step."""
+    from flask import redirect
+    import sqlite3
+    uid = request.args.get("user_id", type=int) or request.args.get("student_id", type=int)
+    if not uid:
+        return redirect("/")
+    try:
+        from db import DB_PATH
+        db = DB_PATH
+    except Exception:
+        db = "academy.db"
+        if not os.path.exists(db):
+            for c in ("/app/data/academy.db", "/app/academy.db"):
+                if os.path.exists(c): db = c; break
+    con = sqlite3.connect(db)
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+    cur.execute("INSERT OR IGNORE INTO students (telegram_id) VALUES (?)", (uid,))
+    con.commit()
+    row = cur.execute(
+        "SELECT target_score, placement_done FROM students WHERE CAST(telegram_id AS INTEGER)=?",
+        (uid,)
+    ).fetchone()
+    con.close()
+    target = (row["target_score"] if row else 0) or 0
+    done = (row["placement_done"] if row else 0) or 0
+    if not target or target == 0:
+        return redirect(f"/onboarding/target?user_id={uid}")
+    if not done:
+        return redirect(f"/placement?user_id={uid}&student_id={uid}")
+    return redirect(f"/welcome?user_id={uid}")
+
+@app.route("/onboarding/target", methods=["GET"])
+def onboarding_target_page():
+    return render_template("onboarding_target.html")
+
+@app.route("/api/onboarding/target", methods=["POST"])
+def api_onboarding_target():
+    import sqlite3
+    data = request.get_json(force=True, silent=True) or {}
+    try:
+        uid = int(data.get("user_id") or 0)
+        ts = int(data.get("target_score") or 0)
+    except Exception:
+        return jsonify({"ok": False, "error": "invalid input types"}), 400
+    if not uid or ts not in (59, 69, 79, 90):
+        return jsonify({"ok": False, "error": "invalid input"}), 400
+    try:
+        from db import DB_PATH
+        db = DB_PATH
+    except Exception:
+        db = "academy.db"
+        if not os.path.exists(db):
+            for c in ("/app/data/academy.db", "/app/academy.db"):
+                if os.path.exists(c): db = c; break
+    con = sqlite3.connect(db)
+    cur = con.cursor()
+    # Ensure row exists (telegram_id may be TEXT in this DB)
+    cur.execute("INSERT OR IGNORE INTO students (telegram_id) VALUES (?)", (str(uid),))
+    # Update using CAST to handle TEXT vs INT column type
+    cur.execute("UPDATE students SET target_score=? WHERE CAST(telegram_id AS INTEGER)=?", (ts, uid))
+    rows = cur.rowcount
+    con.commit()
+    con.close()
+    return jsonify({"ok": True, "target_score": ts, "rows_updated": rows})
+
+
 @app.route("/welcome", methods=["GET"])
 def page_welcome():
     """صفحة الترحيب/خطتي الدراسية."""
@@ -6131,7 +6204,7 @@ def _migrate_reading_tables():
     if secret != "yamen_migrate_2026_xyz":
         return jsonify({"error": "forbidden"}), 403
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
         cur = conn.cursor()
         created = []
 
@@ -6370,7 +6443,7 @@ def admin_page():
 def api_admin_placement_list():
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH); conn.row_factory = sqlite3.Row
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db"); conn.row_factory = sqlite3.Row
         rows = conn.execute("SELECT * FROM placement_questions ORDER BY id DESC").fetchall()
         conn.close()
         return _jsonify({"questions": [dict(r) for r in rows]})
@@ -6382,7 +6455,7 @@ def api_admin_placement_create():
     import sqlite3
     try:
         d = _request.get_json(force=True) or {}
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
         conn.execute("""
             INSERT INTO placement_questions
             (question_text, option_a, option_b, option_c, option_d, correct_option, skill, skill_type, difficulty, is_active)
@@ -6403,7 +6476,7 @@ def api_admin_placement_update(qid):
     import sqlite3
     try:
         d = _request.get_json(force=True) or {}
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
         conn.execute("""
             UPDATE placement_questions
             SET question_text=?, option_a=?, option_b=?, option_c=?, option_d=?,
@@ -6424,7 +6497,7 @@ def api_admin_placement_update(qid):
 def api_admin_placement_delete(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
         conn.execute("DELETE FROM placement_questions WHERE id=?", (qid,))
         conn.commit(); conn.close()
         return _jsonify({"ok": True})
@@ -6435,7 +6508,7 @@ def api_admin_placement_delete(qid):
 def api_admin_placement_toggle(qid):
     import sqlite3
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
         row = conn.execute("SELECT is_active FROM placement_questions WHERE id=?", (qid,)).fetchone()
         if not row: return _jsonify({"error": "not found"}), 404
         new_val = 0 if row[0] == 1 else 1
@@ -6454,7 +6527,7 @@ def admin_import_ctw():
         data = request.get_json(force=True)
         stage_id = int(data.get("stage_id", 6))
         passages = data.get("passages", [])
-        conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db") if "DB_PATH" in globals() else get_db()
         cur = conn.cursor()
         # discover which columns actually exist
         cur.execute("PRAGMA table_info(stage_exam_questions)")
@@ -6499,7 +6572,7 @@ def admin_set_stage_count(sid):
         from flask import request, jsonify
         import sqlite3
         cnt = int(request.args.get("count", 3))
-        conn = sqlite3.connect(DB_PATH) if "DB_PATH" in globals() else get_db()
+        conn = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db") if "DB_PATH" in globals() else get_db()
         cur = conn.cursor()
         # Check if stage exists
         cur.execute("SELECT id, exam_questions_count FROM stages WHERE id=?", (sid,))
@@ -6920,6 +6993,114 @@ def _debug_find_tid():
         except: pass
     con.close()
     return jsonify({"tid": tid, "found_in": found, "tables_scanned": len(tables)})
+
+
+
+# ===== SMART LESSON PATH API (added by _build_lesson_path.py) =====
+@app.route("/api/student/next-lesson", methods=["GET"])
+def api_student_next_lesson():
+    import sqlite3, os
+    """Return the next lesson a student should open.
+    Order: Foundation (F1->F2->F3 sorted by lesson_code) then Reading (R-01->R-32 sorted by order_index).
+    Skips grammar entirely. Returns first lesson with no completion record OR with status in_progress."""
+    try:
+        uid = int(request.args.get('user_id') or request.args.get('student_id') or 0)
+    except Exception:
+        return jsonify({"ok": False, "error": "invalid user_id"}), 400
+    if not uid:
+        return jsonify({"ok": False, "error": "missing user_id"}), 400
+
+    con = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+
+    # Build ordered lesson list: foundation first (by code), then reading (by order_index)
+    cur.execute("""
+        SELECT id, lesson_code, title_ar, title, skill, stage, section_name, order_index
+        FROM lessons
+        WHERE is_active=1
+          AND (
+                (skill='foundation' OR lesson_code LIKE 'F%')
+             OR (skill='reading' AND lesson_code LIKE 'R-%')
+          )
+        ORDER BY
+          CASE
+            WHEN skill='foundation' OR lesson_code LIKE 'F%' THEN 1
+            WHEN skill='reading' THEN 2
+            ELSE 9
+          END,
+          lesson_code COLLATE NOCASE,
+          COALESCE(order_index, 0)
+    """)
+    all_lessons = [dict(r) for r in cur.fetchall()]
+
+    # Get completed lesson ids for this student
+    cur.execute("""
+        SELECT lesson_id FROM student_lesson_progress
+        WHERE student_id=? AND status='completed'
+    """, (uid,))
+    completed_ids = {r['lesson_id'] for r in cur.fetchall()}
+
+    # Pick first non-completed lesson
+    next_lesson = None
+    for L in all_lessons:
+        if L['id'] not in completed_ids:
+            next_lesson = L
+            break
+
+    # Stats
+    total = len(all_lessons)
+    done = sum(1 for L in all_lessons if L['id'] in completed_ids)
+    con.close()
+
+    if not next_lesson:
+        return jsonify({
+            "ok": True, "finished": True,
+            "stats": {"completed": done, "total": total},
+            "message": "أكملت كل الدروس المتاحة! 🎉"
+        })
+
+    return jsonify({
+        "ok": True,
+        "lesson": {
+            "id": next_lesson['id'],
+            "code": next_lesson['lesson_code'],
+            "title": next_lesson['title_ar'] or next_lesson['title'],
+            "skill": next_lesson['skill'],
+            "stage": next_lesson['stage'],
+            "section": next_lesson['section_name'],
+            "url": f"/miniapp/lesson/{next_lesson['id']}?student_id={uid}"
+        },
+        "stats": {"completed": done, "total": total}
+    })
+
+
+@app.route("/api/student/complete-lesson-v2", methods=["POST"])
+def api_student_complete_lesson_v2():
+    import sqlite3, os
+    """Mark a lesson as completed for a student."""
+    data = request.get_json(force=True, silent=True) or {}
+    try:
+        uid = int(data.get('user_id') or data.get('student_id') or 0)
+        lid = int(data.get('lesson_id') or 0)
+    except Exception:
+        return jsonify({"ok": False, "error": "invalid input"}), 400
+    if not uid or not lid:
+        return jsonify({"ok": False, "error": "missing user_id or lesson_id"}), 400
+
+    score = float(data.get('score') or 100)
+    con = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
+    cur = con.cursor()
+    cur.execute("""
+        INSERT INTO student_lesson_progress (student_id, lesson_id, status, score, completed_at)
+        VALUES (?, ?, 'completed', ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(student_id, lesson_id) DO UPDATE SET
+            status='completed', score=excluded.score, completed_at=CURRENT_TIMESTAMP
+    """, (uid, lid, score))
+    con.commit()
+    con.close()
+    return jsonify({"ok": True, "lesson_id": lid, "status": "completed"})
+# ===== END SMART LESSON PATH API =====
 
 if __name__ == "__main__":
     import os as _os

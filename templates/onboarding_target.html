@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختر هدفك - أكاديمية يامن</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal','Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px;color:#fff}
+.container{max-width:600px;margin:0 auto}
+.header{text-align:center;margin-bottom:30px;padding-top:20px}
+.header h1{font-size:28px;margin-bottom:10px}
+.header p{font-size:16px;opacity:.9}
+.step{background:rgba(255,255,255,.15);border-radius:12px;padding:12px;margin-bottom:20px;text-align:center;font-size:14px;backdrop-filter:blur(10px)}
+.step b{color:#ffd700}
+.card{background:#fff;color:#333;border-radius:16px;padding:24px;margin-bottom:16px;cursor:pointer;transition:all .3s;border:3px solid transparent;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.card.selected{border-color:#ffd700;background:linear-gradient(135deg,#fff8e1 0%,#fff 100%)}
+.card .badge{position:absolute;top:12px;left:12px;background:#ff6b35;color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+.card .score{font-size:42px;font-weight:bold;color:#667eea;margin-bottom:8px}
+.card .title{font-size:18px;font-weight:bold;margin-bottom:6px;color:#222}
+.card .desc{font-size:14px;color:#666;line-height:1.6}
+.card.gold .score{color:#ffa500}
+.card.silver .score{color:#667eea}
+.card.bronze .score{color:#8e44ad}
+.btn{display:block;width:100%;padding:16px;background:#ffd700;color:#222;border:none;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:20px;transition:all .3s}
+.btn:hover:not(:disabled){background:#ffed4e;transform:translateY(-2px)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.note{text-align:center;margin-top:20px;font-size:13px;opacity:.85}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🎯 اختر هدفك أولاً</h1>
+    <p>قبل أن نبدأ، حدّد العلامة التي تريد تحقيقها في TOEFL</p>
+  </div>
+  <div class="step"><b>الخطوة 1 من 3</b> · اختر الهدف ← امتحان تحديد المستوى ← خطتك الدراسية</div>
+
+  <div class="card gold" data-score="90">
+    <div class="badge">🥇 الأعلى</div>
+    <div class="score">90</div>
+    <div class="title">كليات الهندسة والطب واللغات</div>
+    <div class="desc">للمتفوقين الذين يستهدفون أرقى الجامعات والتخصصات المتنافسة</div>
+  </div>
+
+  <div class="card silver" data-score="69">
+    <div class="badge">⭐ الأكثر طلباً</div>
+    <div class="score">69</div>
+    <div class="title">إدارة الأعمال والتخصصات العلمية والطبية</div>
+    <div class="desc">المسار الأنسب لمعظم الطلاب — متوازن وعملي</div>
+  </div>
+
+  <div class="card bronze" data-score="59">
+    <div class="score">59</div>
+    <div class="title">باقي التخصصات</div>
+    <div class="desc">الحد الأدنى المقبول في معظم الجامعات</div>
+  </div>
+
+  <button class="btn" id="nextBtn" disabled>ابدأ امتحان تحديد المستوى ←</button>
+  <div class="note">⏱️ الامتحان 15 سؤال · 10 دقائق · لا يمكن إعادته</div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const userId = params.get('user_id') || params.get('student_id') || '';
+let selected = null;
+
+document.querySelectorAll('.card').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.card').forEach(x => x.classList.remove('selected'));
+    c.classList.add('selected');
+    selected = parseInt(c.dataset.score);
+    document.getElementById('nextBtn').disabled = false;
+  });
+});
+
+document.getElementById('nextBtn').addEventListener('click', async () => {
+  if (!selected || !userId) { alert('يرجى اختيار هدف أولاً'); return; }
+  const btn = document.getElementById('nextBtn');
+  btn.disabled = true;
+  btn.textContent = 'جاري الحفظ...';
+  try {
+    const r = await fetch('/api/onboarding/target', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ user_id: parseInt(userId), target_score: selected })
+    });
+    const data = await r.json();
+    if (data.ok) {
+      location.href = '/placement?user_id=' + userId + '&student_id=' + userId;
+    } else {
+      alert('خطأ: ' + (data.error || 'حاول مرة أخرى'));
+      btn.disabled = false;
+      btn.textContent = 'ابدأ امتحان تحديد المستوى ←';
+    }
+  } catch(e) {
+    alert('خطأ في الاتصال');
+    btn.disabled = false;
+    btn.textContent = 'ابدأ امتحان تحديد المستوى ←';
+  }
+});
+</script>
+</body>
+</html>
