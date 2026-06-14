@@ -7051,6 +7051,18 @@ def api_student_next_lesson():
     # Stats
     total = len(all_lessons)
     done = sum(1 for L in all_lessons if L['id'] in completed_ids)
+
+    # Check if the picked lesson has practice questions
+    _has_questions = False
+    if next_lesson:
+        try:
+            _qcnt = cur.execute(
+                "SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=?",
+                (next_lesson['id'],)
+            ).fetchone()[0]
+            _has_questions = (_qcnt > 0)
+        except Exception:
+            _has_questions = False
     con.close()
 
     if not next_lesson:
@@ -7069,7 +7081,7 @@ def api_student_next_lesson():
             "skill": next_lesson['skill'],
             "stage": next_lesson['stage'],
             "section": next_lesson['section_name'],
-            "url": f"/miniapp/lesson/{next_lesson['id']}?student_id={uid}"
+            "url": (f"/miniapp/quiz/{next_lesson['id']}?student_id={uid}" if _has_questions else f"/miniapp/lesson/{next_lesson['id']}?student_id={uid}")
         },
         "stats": {"completed": done, "total": total}
     })
