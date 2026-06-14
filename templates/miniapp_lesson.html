@@ -359,7 +359,52 @@
       color: var(--gray-500);
     }
     .empty-state-icon { font-size: 40px; margin-bottom: 8px; opacity: 0.6; }
-  </style>
+  
+/* === Complete Lesson Button === */
+.complete-lesson-wrap{
+  margin:32px 16px 80px;
+  padding:24px;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(102,126,234,.3);
+}
+.complete-lesson-wrap h3{
+  color:#fff;
+  margin:0 0 8px;
+  font-size:18px;
+  font-weight:700;
+}
+.complete-lesson-wrap p{
+  color:rgba(255,255,255,.9);
+  margin:0 0 18px;
+  font-size:14px;
+}
+.complete-lesson-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:#fff;
+  color:#667eea;
+  border:none;
+  padding:14px 32px;
+  border-radius:50px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  transition:transform .15s, box-shadow .15s;
+  font-family:inherit;
+}
+.complete-lesson-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+.complete-lesson-btn:active{ transform:translateY(0); }
+.complete-lesson-btn.loading{ opacity:.6; cursor:wait; }
+.complete-lesson-btn .arrow{ font-size:20px; }
+
+</style>
 </head>
 <body>
   <header class="nav-header">
@@ -617,5 +662,16 @@
 
     loadLesson();
   </script>
+
+<!-- Complete Lesson Button -->
+<div class="complete-lesson-wrap" id="completeLessonWrap" style="display:none">
+  <h3>🎯 هل أنهيت قراءة الدرس؟</h3>
+  <p>اضغط على الزر لحفظ تقدّمك والانتقال للدرس التالي</p>
+  <button class="complete-lesson-btn" id="completeLessonBtn" onclick="completeLessonAndNext()">
+    <span>فهمت، الدرس التالي</span>
+    <span class="arrow">←</span>
+  </button>
+</div>
+
 </body>
 </html>

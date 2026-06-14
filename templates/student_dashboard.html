@@ -683,6 +683,22 @@ body { padding-bottom: 90px; }
   position:relative;z-index:1;}
 .plan-cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(14,165,233,.45);}
 
+
+/* === Lesson status styles === */
+.lesson-item.completed{ background:linear-gradient(90deg,#e8f5e9,#fff); border-left:4px solid #4caf50; }
+.lesson-item.completed .lesson-title{ color:#2e7d32; }
+.lesson-item.current{ background:linear-gradient(90deg,#ede7f6,#fff); border-left:4px solid #7c4dff; box-shadow:0 4px 12px rgba(124,77,255,.15); }
+.lesson-item.current .lesson-title{ color:#4527a0; font-weight:700; }
+.lesson-item.locked{ opacity:.55; cursor:not-allowed; background:#fafafa; }
+.lesson-item.locked .lesson-title{ color:#888; }
+.lesson-status-badge{
+  font-size:11px; padding:3px 8px; border-radius:10px;
+  font-weight:700; margin-right:6px;
+}
+.lesson-status-badge.completed{ background:#c8e6c9; color:#2e7d32; }
+.lesson-status-badge.current{ background:#d1c4e9; color:#4527a0; }
+.lesson-status-badge.locked{ background:#eee; color:#999; }
+
 </style>
 </head>
 <body>
@@ -799,7 +815,7 @@ body { padding-bottom: 90px; }
   <div class="section">
     <div class="section-title"><span class="emoji">🎯</span> مهمة اليوم</div>
   </div>
-  <div class="daily-mission fade-up" id="dailyMission" onclick="startDailyLesson()">
+  <div class="daily-mission fade-up" id="dailyMission" onclick="openFirstAvailableLesson()">
     <div class="dm-label">📚 الدرس اليومي</div>
     <div class="dm-title" id="dmTitle">جاري التحميل...</div>
     <div class="dm-desc" id="dmDesc">سيتم تحديد درسك التالي قريباً</div>
@@ -827,37 +843,7 @@ body { padding-bottom: 90px; }
         <span id="readingPct">0%</span>
       </div>
     </div>
-    <div class="skill-card listening" onclick="openSkill('listening')">
-      <div class="skill-icon-wrap">🎧</div>
-      <div class="skill-name">الاستماع</div>
-      <div class="skill-name-en">Listening</div>
-      <div class="skill-progress-bar"><div class="skill-progress-fill" id="listeningFill" style="width:0%"></div></div>
-      <div class="skill-meta">
-        <span id="listeningCount">0 / 0 دروس</span>
-        <span id="listeningPct">0%</span>
-      </div>
-    </div>
-    <div class="skill-card writing" onclick="openSkill('writing')">
-      <div class="skill-icon-wrap">✍️</div>
-      <div class="skill-name">الكتابة</div>
-      <div class="skill-name-en">Writing</div>
-      <div class="skill-progress-bar"><div class="skill-progress-fill" id="writingFill" style="width:0%"></div></div>
-      <div class="skill-meta">
-        <span id="writingCount">0 / 0 دروس</span>
-        <span id="writingPct">0%</span>
-      </div>
-    </div>
-    <div class="skill-card speaking" onclick="openSkill('speaking')">
-      <div class="skill-icon-wrap">🎤</div>
-      <div class="skill-name">المحادثة</div>
-      <div class="skill-name-en">Speaking</div>
-      <div class="skill-progress-bar"><div class="skill-progress-fill" id="speakingFill" style="width:0%"></div></div>
-      <div class="skill-meta">
-        <span id="speakingCount">0 / 0 دروس</span>
-        <span id="speakingPct">0%</span>
-      </div>
-    </div>
-  </div>
+    
 
   <!-- Supporting Libraries -->
   <div class="section">
@@ -1116,48 +1102,61 @@ async function loadStudent() {
 let allLessons = [];
 
 async function loadLessons() {
-  const data = await api('/api/lessons');
-  if (!data || !data.lessons) return;
-  allLessons = data.lessons;
+  // Use the unified dashboard API for accurate student progress
+  const uid = (window.studentId || window.__resolveStudentId && window.__resolveStudentId()
+               || (new URLSearchParams(location.search)).get('student_id')
+               || (new URLSearchParams(location.search)).get('user_id') || '');
+  if (!uid) return;
 
-  // Group by skill
-  const skills = { reading: [], listening: [], writing: [], speaking: [], grammar: [], vocab: [] };
-  allLessons.forEach(l => {
-    const s = (l.skill_type || l.skill || 'reading').toLowerCase();
-    if (skills[s]) skills[s].push(l);
-    else if (s.includes('grammar')) skills.grammar.push(l);
-    else if (s.includes('vocab')) skills.vocab.push(l);
-    else skills.reading.push(l);
-  });
+  try {
+    const r = await fetch('/api/student/dashboard?user_id=' + encodeURIComponent(uid));
+    const data = await r.json();
+    if (!data || !data.ok) { console.warn('[dashboard]', data); return; }
 
-  // Update counts (assume 12 total per main skill as target)
-  ['reading','listening','writing','speaking'].forEach(s => {
-    const lessons = skills[s];
-    const total = Math.max(lessons.length, 12);
-    const done = lessons.filter(l => l.completed).length;
-    const pct = total ? Math.round((done / total) * 100) : 0;
-    const countEl = document.getElementById(s + 'Count');
-    const pctEl = document.getElementById(s + 'Pct');
-    const fillEl = document.getElementById(s + 'Fill');
-    if (countEl) countEl.textContent = `${done} / ${total} دروس`;
-    if (pctEl) pctEl.textContent = pct + '%';
-    if (fillEl) setTimeout(() => fillEl.style.width = Math.max(pct, lessons.length > 0 ? 5 : 0) + '%', 300);
-  });
+    // Store globally
+    window.__dashboardData = data;
+    allLessons = data.lessons || [];
 
-  document.getElementById('grammarCount').textContent = skills.grammar.length;
-  document.getElementById('vocabCount').textContent = skills.vocab.length;
+    // ---- Update stats cards (XP, Streak, Completed) ----
+    const p = data.profile || {};
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setText('statXP', p.xp || 0);
+    setText('xpValue', p.xp || 0);
+    setText('streakValue', p.streak || 0);
+    setText('statStreak', p.streak || 0);
+    setText('completedValue', (data.stats && data.stats.overall && data.stats.overall.completed) || p.completed_lessons || 0);
+    setText('statCompleted', (data.stats && data.stats.overall && data.stats.overall.completed) || 0);
 
-  // Daily mission = first incomplete lesson
-  const next = allLessons.find(l => !l.completed) || allLessons[0];
-  if (next) {
-    document.getElementById('dmTitle').textContent = next.title || 'درس جديد بانتظارك';
-    document.getElementById('dmDesc').textContent = next.description || `استمر في تطوير مهاراتك في ${next.skill_type || 'TOEFL'}`;
-    document.getElementById('dmTime').textContent = next.timer_minutes || 15;
-    document.getElementById('dmXP').textContent = next.xp_reward || 20;
-    document.getElementById('dailyMission').dataset.lessonId = next.id;
+    // ---- Per-skill progress bars ----
+    const stats = data.stats || {};
+    ['reading','listening','writing','speaking'].forEach(s => {
+      const st = stats[s] || {completed:0, total:0, percent:0};
+      const countEl = document.getElementById(s + 'Count');
+      const pctEl = document.getElementById(s + 'Pct');
+      const fillEl = document.getElementById(s + 'Fill');
+      if (countEl) countEl.textContent = (st.completed) + ' / ' + (st.total) + ' دروس';
+      if (pctEl) pctEl.textContent = (st.percent || 0) + '%';
+      if (fillEl) setTimeout(() => fillEl.style.width = (st.percent || 0) + '%', 200);
+    });
+    // Foundation count (if a dedicated element exists)
+    const fEl = document.getElementById('foundationCount');
+    if (fEl && stats.foundation) fEl.textContent = stats.foundation.completed + ' / ' + stats.foundation.total;
+
+    // ---- Daily mission card ----
+    const nx = data.next_lesson;
+    if (nx) {
+      setText('dmTitle', nx.title || 'تابع من حيث وصلت');
+      setText('dmDesc', '[' + (nx.code || '') + '] ' + (nx.skill === 'foundation' ? 'التأسيس' : 'القراءة'));
+      setText('dmTime', nx.minutes || 15);
+      setText('dmXP', nx.xp || 20);
+      const dm = document.getElementById('dailyMission');
+      if (dm) dm.dataset.lessonUrl = nx.url;
+    }
+
+    return allLessons;
+  } catch (e) {
+    console.error('[loadLessons]', e);
   }
-
-  return allLessons;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1253,6 +1252,7 @@ function openSkill(skill) {
 function renderLessonsList(filter) {
   const titleMap = {
     'all': '📚 جميع الدروس',
+    'foundation': '🚪 التأسيس',
     'reading': '📖 الفهم القرائي',
     'listening': '🎧 الاستماع',
     'writing': '✍️ الكتابة',
@@ -1260,40 +1260,70 @@ function renderLessonsList(filter) {
     'grammar': '📝 القواعد',
     'vocab': '🔤 المفردات'
   };
-  const iconMap = { reading:'📖', listening:'🎧', writing:'✍️', speaking:'🎤', grammar:'📝', vocab:'🔤' };
-  document.getElementById('lessonsViewTitle').innerHTML =
-    `<span class="emoji">${titleMap[filter].split(' ')[0]}</span> ${titleMap[filter].split(' ').slice(1).join(' ')}`;
+  const iconMap = { reading:'📖', listening:'🎧', writing:'✍️', speaking:'🎤', foundation:'🚪', grammar:'📝', vocab:'🔤' };
+  const titleEl = document.getElementById('lessonsViewTitle');
+  if (titleEl) {
+    const t = titleMap[filter] || titleMap['all'];
+    titleEl.innerHTML = '<span class="emoji">' + t.split(' ')[0] + '</span> ' + t.split(' ').slice(1).join(' ');
+  }
 
-  let list = allLessons;
-  if (filter !== 'all') {
-    list = allLessons.filter(l => {
-      const s = (l.skill_type || l.skill || '').toLowerCase();
-      return s === filter || (filter === 'vocab' && s.includes('vocab')) || (filter === 'grammar' && s.includes('grammar'));
+  let list = (allLessons || []);
+  if (filter && filter !== 'all') {
+    list = list.filter(l => {
+      const s = (l.skill || '').toLowerCase();
+      const code = (l.code || '').toLowerCase();
+      if (filter === 'foundation') return s === 'foundation' || code.startsWith('f');
+      if (filter === 'reading') return s === 'reading' || code.startsWith('r-');
+      return s === filter;
     });
   }
 
   const container = document.getElementById('lessonsList');
+  if (!container) return;
   if (list.length === 0) {
-    container.innerHTML = `<div class="empty-state"><span class="emoji">📭</span><div>لا توجد دروس في هذا القسم بعد<br><small>سيتم إضافتها قريباً</small></div></div>`;
+    container.innerHTML = '<div class="empty-state"><span class="emoji">📭</span><div>لا توجد دروس في هذا القسم بعد<br><small>سيتم إضافتها قريباً</small></div></div>';
     return;
   }
 
   container.innerHTML = list.map(l => {
-    const skill = (l.skill_type || l.skill || 'reading').toLowerCase();
+    const skill = (l.skill || 'reading').toLowerCase();
     const icon = iconMap[skill] || '📖';
-    const completed = l.completed ? ' completed' : '';
-    return `<div class="lesson-item${completed}" onclick="openLesson(${l.id})">
-      <div class="lesson-icon-box">${l.completed ? '✅' : icon}</div>
-      <div class="lesson-info">
-        <div class="lesson-title">${l.title || 'درس'}</div>
-        <div class="lesson-meta">
-          <span>${l.lesson_code || ''}</span>
-          ${l.timer_minutes ? '<span>⏱️ ' + l.timer_minutes + ' د</span>' : ''}
-        </div>
-      </div>
-      <div class="lesson-xp">+${l.xp_reward || 20} XP</div>
-    </div>`;
+    const st = l.status || 'locked';
+    const badgeMap = {
+      completed: '<span class="lesson-status-badge completed">✓ مكتمل</span>',
+      current:   '<span class="lesson-status-badge current">▶ تابع من هنا</span>',
+      in_progress:'<span class="lesson-status-badge current">⏳ قيد التقدم</span>',
+      locked:    '<span class="lesson-status-badge locked">🔒 مقفل</span>'
+    };
+    const iconShow = st === 'completed' ? '✅' : (st === 'current' || st === 'in_progress' ? '▶️' : (st === 'locked' ? '🔒' : icon));
+    return '<div class="lesson-item ' + st + '" onclick="openLessonSmart(' + l.id + ', \'' + st + '\')">'
+         + '  <div class="lesson-icon-box">' + iconShow + '</div>'
+         + '  <div class="lesson-info">'
+         + '    <div class="lesson-title">' + (l.title || 'درس') + ' ' + (badgeMap[st] || '') + '</div>'
+         + '    <div class="lesson-meta">'
+         + '      <span>' + (l.code || '') + '</span>'
+         + '      <span>⏱️ ' + (l.minutes || 15) + ' د</span>'
+         + '    </div>'
+         + '  </div>'
+         + '  <div class="lesson-xp">+' + (l.xp || 20) + ' XP</div>'
+         + '</div>';
   }).join('');
+}
+
+// Smart lesson opener: uses pre-computed url from dashboard data
+function openLessonSmart(lessonId, status) {
+  if (status === 'locked') {
+    alert('🔒 أكمل الدروس السابقة أولاً لفتح هذا الدرس');
+    return;
+  }
+  const lessons = (window.__dashboardData && window.__dashboardData.lessons) || [];
+  const L = lessons.find(x => x.id === lessonId);
+  if (L && L.url) {
+    window.location.href = L.url;
+  } else {
+    const uid = (new URLSearchParams(location.search)).get('student_id') || window.studentId || '';
+    window.location.href = '/miniapp/lesson/' + lessonId + '?student_id=' + uid;
+  }
 }
 
 function openLesson(id) {

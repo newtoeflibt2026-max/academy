@@ -240,7 +240,7 @@ body {
         <div class="brand-sub">TOEFL Mastery Platform</div>
       </div>
     </div>
-    <a href="/student?student_id={{ user_id }}" class="back-btn">← لوحة الطالب</a>
+    <a href="/home?user_id={{ user_id }}" class="back-btn">← لوحة الطالب</a>
   </header>
 
   <section class="hero">
@@ -281,24 +281,6 @@ body {
 
   {% for type_key, items in items_by_type.items() %}
   <div class="section {% if loop.first %}active{% endif %}" data-section="{{ type_key }}">
-    {% set theory_map = {
-      "complete_words":   {"id": 19,  "icon": "📘", "title": "نظرية إكمال الكلمات",     "desc": "تعلّم القاعدة قبل التمارين • R-01 → R-02 → R-03"},
-      "daily_reading":    {"id": 91,  "icon": "📗", "title": "نظرية القراءة اليومية",   "desc": "استراتيجيات قراءة النصوص اليومية • R-13"},
-      "academic_reading": {"id": 102, "icon": "📕", "title": "نظرية القراءة الأكاديمية", "desc": "أساسيات القراءة الأكاديمية • R-24"}
-    } %}
-    {% if type_key in theory_map %}
-    {% set t = theory_map[type_key] %}
-    <a href="/foundation/lesson/{{ t.id }}?user_id={{ user_id }}" class="theory-card">
-      <div class="theory-icon">{{ t.icon }}</div>
-      <div class="theory-info">
-        <span class="theory-badge">📚 ابدأ هنا — درس نظري</span>
-        <div class="theory-title">{{ t.title }}</div>
-        <div class="theory-desc">{{ t.desc }}</div>
-      </div>
-      <div class="theory-arrow">←</div>
-    </a>
-    {% endif %}
-
     {% if items %}
     <div class="grid">
       {% for it in items %}

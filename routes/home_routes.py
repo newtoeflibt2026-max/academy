@@ -211,6 +211,11 @@ def _build_content_html(row):
 
 @home_bp.route("/home")
 def home():
+    # DAY1_REDIRECT: unified dashboard
+    from flask import redirect, request
+    uid = request.args.get("user_id") or request.args.get("student_id") or ""
+    return redirect("/student?student_id=" + str(uid))
+
     user_id = request.args.get("user_id")
     if not user_id: return "user_id required", 400
     student = _get_student(user_id)

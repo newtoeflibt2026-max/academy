@@ -7114,6 +7114,185 @@ def api_student_complete_lesson_v2():
     return jsonify({"ok": True, "lesson_id": lid, "status": "completed"})
 # ===== END SMART LESSON PATH API =====
 
+
+# ===== SMART DASHBOARD API =====
+@app.route("/api/student/dashboard")
+def api_student_dashboard():
+    import sqlite3, os
+    """Return everything the /student page needs in one call:
+       - student profile (xp, streak, completed_lessons, level, rank)
+       - full lesson list (Foundation F* + Reading R-*) with status
+       - per-skill stats (completed/total, percent)
+       - next lesson (with smart URL: quiz if has questions else lesson page)
+    """
+    try:
+        uid_raw = request.args.get('user_id') or request.args.get('student_id') or ''
+        uid = str(uid_raw).strip()
+    except Exception:
+        return jsonify({"ok": False, "error": "invalid user_id"}), 400
+    if not uid:
+        return jsonify({"ok": False, "error": "missing user_id"}), 400
+
+    db_path = globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db"
+    con = sqlite3.connect(db_path)
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+
+    # ---- Student profile (lookup by telegram_id OR user_id) ----
+    stu = cur.execute("""
+        SELECT user_id, telegram_id, name, xp_total, total_xp, xp,
+               streak_days, streak, completed_lessons, level, current_stage_id
+        FROM students
+        WHERE telegram_id=? OR CAST(user_id AS TEXT)=?
+        LIMIT 1
+    """, (uid, uid)).fetchone()
+
+    profile = {}
+    student_user_id = None
+    if stu:
+        student_user_id = stu['user_id']
+        profile = {
+            "name": stu['name'] or 'طالب',
+            "xp": stu['xp_total'] or stu['total_xp'] or stu['xp'] or 0,
+            "streak": stu['streak_days'] or stu['streak'] or 0,
+            "completed_lessons": stu['completed_lessons'] or 0,
+            "level": stu['level'] or '',
+        }
+    else:
+        profile = {"name": "زائر", "xp": 0, "streak": 0, "completed_lessons": 0, "level": ""}
+
+    # ---- All Foundation + Reading lessons (ordered) ----
+    cur.execute("""
+        SELECT id, lesson_code, title_ar, title, skill, stage, section_name,
+               order_index, xp_reward, timer_minutes
+        FROM lessons
+        WHERE is_active=1
+          AND (
+                (skill='foundation' OR lesson_code LIKE 'F%')
+             OR (skill='reading' AND lesson_code LIKE 'R-%')
+          )
+        ORDER BY
+          CASE
+            WHEN skill='foundation' OR lesson_code LIKE 'F%' THEN 1
+            WHEN skill='reading' THEN 2
+            ELSE 9
+          END,
+          lesson_code COLLATE NOCASE,
+          COALESCE(order_index, 0)
+    """)
+    all_lessons = [dict(r) for r in cur.fetchall()]
+
+    # ---- Completed lesson IDs ----
+    completed_ids = set()
+    in_progress_ids = set()
+    try:
+        cur.execute("SELECT lesson_id, status FROM student_lesson_progress WHERE student_id=?",
+                    (student_user_id or 0,))
+        for r in cur.fetchall():
+            if r['status'] == 'completed':
+                completed_ids.add(r['lesson_id'])
+            elif r['status'] == 'in_progress':
+                in_progress_ids.add(r['lesson_id'])
+    except Exception:
+        pass
+
+    # ---- Question counts (so we know which lessons have practice) ----
+    has_q = {}
+    try:
+        for r in cur.execute("SELECT lesson_id, COUNT(*) as cnt FROM lesson_questions GROUP BY lesson_id").fetchall():
+            has_q[r['lesson_id']] = r['cnt']
+    except Exception:
+        pass
+
+    # ---- Build lesson list with status ----
+    next_lesson = None
+    enriched = []
+    found_next = False
+    for L in all_lessons:
+        lid = L['id']
+        if lid in completed_ids:
+            status = 'completed'
+        elif lid in in_progress_ids:
+            status = 'in_progress'
+        elif not found_next:
+            status = 'current'
+            found_next = True
+            if not next_lesson:
+                next_lesson = L
+        else:
+            status = 'locked'
+
+        qcnt = has_q.get(lid, 0)
+        if qcnt > 0:
+            url = "/miniapp/quiz/%d?student_id=%s" % (lid, uid)
+        else:
+            url = "/miniapp/lesson/%d?student_id=%s" % (lid, uid)
+
+        enriched.append({
+            "id": lid,
+            "code": L['lesson_code'],
+            "title": L['title_ar'] or L['title'] or '',
+            "skill": L['skill'] or 'reading',
+            "stage": L['stage'] or 1,
+            "section": L['section_name'],
+            "xp": L['xp_reward'] or 20,
+            "minutes": L['timer_minutes'] or 15,
+            "status": status,
+            "has_questions": qcnt > 0,
+            "url": url,
+        })
+
+    if not next_lesson and enriched:
+        # Everything completed — pick last
+        next_lesson = all_lessons[-1] if all_lessons else None
+
+    # ---- Per-skill stats ----
+    def skill_stats(items):
+        total = len(items)
+        done = sum(1 for x in items if x['status'] == 'completed')
+        pct = round(done * 100 / total) if total else 0
+        return {"completed": done, "total": total, "percent": pct}
+
+    foundation_items = [e for e in enriched if (e['code'] or '').startswith('F')]
+    reading_items = [e for e in enriched if (e['code'] or '').startswith('R-')]
+
+    stats = {
+        "foundation": skill_stats(foundation_items),
+        "reading": skill_stats(reading_items),
+        "listening": {"completed": 0, "total": 0, "percent": 0},
+        "writing": {"completed": 0, "total": 0, "percent": 0},
+        "speaking": {"completed": 0, "total": 0, "percent": 0},
+        "overall": skill_stats(enriched),
+    }
+
+    # ---- Next lesson detail ----
+    next_data = None
+    if next_lesson:
+        lid = next_lesson['id']
+        qcnt = has_q.get(lid, 0)
+        url = ("/miniapp/quiz/%d?student_id=%s" % (lid, uid)) if qcnt > 0 else ("/miniapp/lesson/%d?student_id=%s" % (lid, uid))
+        next_data = {
+            "id": lid,
+            "code": next_lesson['lesson_code'],
+            "title": next_lesson['title_ar'] or next_lesson['title'],
+            "skill": next_lesson['skill'],
+            "minutes": next_lesson['timer_minutes'] or 15,
+            "xp": next_lesson['xp_reward'] or 20,
+            "has_questions": qcnt > 0,
+            "url": url,
+        }
+
+    con.close()
+    return jsonify({
+        "ok": True,
+        "profile": profile,
+        "lessons": enriched,
+        "stats": stats,
+        "next_lesson": next_data,
+    })
+# ===== END SMART DASHBOARD API =====
+
+
 if __name__ == "__main__":
     import os as _os
     _port = int(_os.environ.get("PORT", 8080))
