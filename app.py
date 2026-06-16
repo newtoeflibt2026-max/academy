@@ -7592,3 +7592,28 @@ if __name__ == "__main__":
     print(f"[app] Flask starting on 0.0.0.0:{_port}")
     app.run(host="0.0.0.0", port=_port, debug=False)
 
+
+# ===== ضبط الـ webhook تلقائياً عند الإقلاع =====
+def auto_set_webhook():
+    import os, urllib.request, urllib.parse, json
+    token = os.environ.get("BOT_TOKEN", "")
+    host = os.environ.get("WEBHOOK_HOST", "https://yamenacademyapp.up.railway.app").rstrip("/")
+    secret = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "yamen-webhook-secret-2026")
+    if not token:
+        print("[webhook] BOT_TOKEN غير موجود")
+        return
+    try:
+        wh_url = host + "/telegram-webhook"
+        params = urllib.parse.urlencode({"url": wh_url, "secret_token": secret})
+        api = "https://api.telegram.org/bot" + token + "/setWebhook?" + params
+        with urllib.request.urlopen(api, timeout=15) as r:
+            res = json.loads(r.read().decode("utf-8"))
+        print("[webhook] تم الضبط على " + wh_url if res.get("ok") else "[webhook] فشل: " + str(res.get("description")))
+    except Exception as e:
+        print("[webhook] خطأ: " + str(e))
+
+try:
+    auto_set_webhook()
+except Exception as _e:
+    print("[webhook] تخطّي: " + str(_e))
+
