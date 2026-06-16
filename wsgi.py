@@ -86,10 +86,29 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
 
-# === Auto-register Telegram webhook on Railway startup ===
-try:
-    from bot_webhook import register_webhook_with_telegram
-    register_webhook_with_telegram()
-except Exception as _wh_err:
-    print(f"[wsgi] webhook setup skipped: {_wh_err}")
+# === Auto-register Telegram webhook (direct, runs under gunicorn import) ===
+def _force_set_webhook():
+    import os, json, urllib.request, urllib.parse
+    token = os.environ.get("BOT_TOKEN", "")
+    if not token:
+        print("[wsgi-wh] BOT_TOKEN missing - skip", flush=True)
+        return
+    host = os.environ.get("WEBHOOK_HOST", "https://yamenacademyapp.up.railway.app").rstrip("/")
+    secret = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "yamen-webhook-secret-2026")
+    wh = host + "/telegram-webhook"
+    qs = urllib.parse.urlencode({"url": wh, "secret_token": secret, "drop_pending_updates": "true"})
+    api = "https://api.telegram.org/bot" + token + "/setWebhook?" + qs
+    try:
+        with urllib.request.urlopen(api, timeout=15) as r:
+            res = json.loads(r.read().decode("utf-8"))
+        if res.get("ok"):
+            print("[wsgi-wh] OK webhook set -> " + wh, flush=True)
+        else:
+            print("[wsgi-wh] FAIL: " + str(res.get("description")), flush=True)
+    except Exception as e:
+        print("[wsgi-wh] ERROR: " + str(e), flush=True)
 
+try:
+    _force_set_webhook()
+except Exception as _e:
+    print("[wsgi-wh] outer error: " + str(_e), flush=True)
