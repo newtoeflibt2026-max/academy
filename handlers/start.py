@@ -116,6 +116,9 @@ def get_main_keyboard(is_paid=False, user_id=0):
 
 @router.message(CommandStart())
 async def cmd_start(message: types.Message):
+    user_id = message.from_user.id
+    username = message.from_user.username or ""
+    full_name = message.from_user.full_name or ""
 
     # Onboarding gate: if student missed target or placement, show big button
     try:
@@ -144,9 +147,6 @@ async def cmd_start(message: types.Message):
             reply_markup=_kb
         )
         return
-    user_id = message.from_user.id
-    username = message.from_user.username or ""
-    full_name = message.from_user.full_name or ""
 
     create_student(user_id, username=username, full_name=full_name)
     student = get_student(user_id) or {}
