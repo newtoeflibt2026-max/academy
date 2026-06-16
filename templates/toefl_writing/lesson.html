@@ -34,6 +34,10 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 .fb-line{margin-top:8px;font-size:14px;line-height:1.7}
 .fb-line.en{direction:ltr;text-align:left;font-family:'Segoe UI',sans-serif;background:#fff;padding:8px 12px;border-radius:6px;border:1px solid #e2e8f0}
 .fb-label{color:#667eea;font-weight:bold}
+.mcq-options{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.mcq-opt{padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;cursor:pointer;text-align:right;font-size:15px;transition:.15s}
+.mcq-opt:hover{border-color:#94a3b8}
+.mcq-opt.selected{border-color:#6366f1;background:#eef2ff;font-weight:bold}
 </style>
 </head>
 <body>
@@ -75,8 +79,15 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
      data-explanation="{{ q.explanation_ar|e }}"
      data-error="{{ q.common_error_ar|e }}"
      data-hint="{{ q.hint_ar|e }}">
-<h3><span class="q-num">{{ loop.index }}.</span> Rearrange the words to form a correct English sentence:</h3>
+<h3><span class="q-num">{{ loop.index }}.</span>
+{% if q.q_type == 'mcq' %}{{ q.question_ar or q.question_en }}{% else %}Rearrange the words to form a correct English sentence:{% endif %}</h3>
 
+{% if q.q_type == 'mcq' %}
+{% set opts = q.options_json|fromjson if q.options_json else [] %}
+<div class="mcq-options">
+{% for opt in opts %}<button type="button" class="mcq-opt" onclick="pickMcq(this)">{{ opt }}</button>
+{% endfor %}</div>
+{% endif %}
 {% if q.q_type == 'sentence_order' %}
 {% set words = q.scrambled_words|fromjson if q.scrambled_words else [] %}
 <div class="scrambled" data-words='{{ q.scrambled_words|safe }}'>
@@ -127,13 +138,26 @@ function pickWord(el){
   updateSubmitState();
 }
 
+
+function pickMcq(el){
+  const q = el.closest('.question');
+  q.querySelectorAll('.mcq-opt').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  q.dataset.selected = el.textContent.trim();
+  updateSubmitState();
+}
+
 function collectAnswers(){
   const answers = {};
   document.querySelectorAll('.question').forEach(q => {
     const qid = q.dataset.qid;
-    const chips = q.querySelectorAll('.answer-area .word-chip');
-    const words = Array.from(chips).map(c => c.textContent.trim());
-    answers[qid] = JSON.stringify(words);
+    if(q.dataset.qtype === 'mcq'){
+      answers[qid] = JSON.stringify(q.dataset.selected ? [q.dataset.selected] : []);
+    } else {
+      const chips = q.querySelectorAll('.answer-area .word-chip');
+      const words = Array.from(chips).map(c => c.textContent.trim());
+      answers[qid] = JSON.stringify(words);
+    }
   });
   return answers;
 }
