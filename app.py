@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+import sys as _sys, io as _io
+try:
+    _sys.stdout = _io.TextIOWrapper(_sys.stdout.buffer, encoding='utf-8', errors='replace')
+    _sys.stderr = _io.TextIOWrapper(_sys.stderr.buffer, encoding='utf-8', errors='replace')
+except Exception:
+    pass
+
 from flask import Flask, jsonify, render_template, request
 
 import os
@@ -92,11 +99,19 @@ except Exception as _e:
 
 app = Flask(__name__)
 
+app.json.ensure_ascii = False  # ??? ??????? ????? ?? JSON
+
 @app.after_request
 def _no_cache(resp):
     resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     resp.headers['Pragma'] = 'no-cache'
     resp.headers['Expires'] = '0'
+    # فرض charset=utf-8 على استجابات JSON حتى تظهر العربية سليمة
+    try:
+        if resp.mimetype == 'application/json':
+            resp.headers['Content-Type'] = 'application/json; charset=utf-8'
+    except Exception:
+        pass
     return resp
 
 
@@ -2975,6 +2990,116 @@ from flask import send_from_directory as _send_from_directory
 ZAIN_CASH_NUMBER = "0798919150"
 UPLOAD_FOLDER = _os10.path.join(_os10.path.dirname(_os10.path.abspath(__file__)), "static", "uploads", "payments")
 _os10.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+# === API 1 (v2): قائمة الدروس بالمسار الصحيح + الحالات الأربع (مرحلة-بمرحلة) ===
+# مصدر الحقيقة للتقدّم: student_progress (user_id, lesson_id, status)
+# الترتيب: stages.order_num ثم lessons.order_index. يقرأ DB ديناميكياً فقط.
+@app.route("/api/miniapp/lessons/v2")
+def api_miniapp_lessons_v2():
+    import sqlite3, time
+    from datetime import datetime
+    sid = _request.args.get("student_id", "").strip()
+    if not sid:
+        return _jsonify({"error": "student_id required"}), 400
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # المراحل بالترتيب الرسمي
+    cur.execute("""SELECT id, code, track, section_name AS skill_type, name_ar, order_num
+                   FROM stages WHERE is_active=1 ORDER BY order_num, id""")
+    stages = cur.fetchall()
+
+    # الدروس النشطة بترتيبها
+    cur.execute("""SELECT id, title, lesson_code, stage_id, skill_type, section_name AS section,
+                          COALESCE(xp_reward,0) xp_reward,
+                          COALESCE(order_index,0) order_index,
+                          (SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=lessons.id) qc
+                   FROM lessons WHERE is_active=1""")
+    lessons = [dict(r) for r in cur.fetchall()]
+
+    # تقدّم الطالب من student_progress (مصدر حقيقة وحيد)
+    completed = set()
+    cur.execute("SELECT lesson_id, status FROM student_progress WHERE CAST(user_id AS TEXT)=?", (str(sid),))
+    for r in cur.fetchall():
+        if (r["status"] or "").lower() == "completed":
+            completed.add(r["lesson_id"])
+
+    # cooldown من quiz_attempts_cooldown
+    cooldown = {}
+    try:
+        now = datetime.now()
+        cur.execute("SELECT lesson_id, next_attempt_at FROM quiz_attempts_cooldown WHERE CAST(telegram_id AS TEXT)=?", (str(sid),))
+        for r in cur.fetchall():
+            nx = r["next_attempt_at"]
+            if not nx:
+                continue
+            try:
+                dt = datetime.fromisoformat(str(nx).replace("T", " ").split(".")[0])
+                rem = (dt - now).total_seconds()
+                if rem > 0:
+                    cooldown[r["lesson_id"]] = int(rem)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    conn.close()
+
+    # جمّع الدروس حسب stage_id
+    by_stage = {}
+    for ls in lessons:
+        by_stage.setdefault(ls["stage_id"], []).append(ls)
+    for sid_k in by_stage:
+        by_stage[sid_k].sort(key=lambda x: (x["order_index"], x["id"]))
+
+    result_stages = []
+    prev_stage_done = True  # المرحلة الأولى مفتوحة دائماً
+    for st in stages:
+        st_lessons = by_stage.get(st["id"], [])
+        out_lessons = []
+        available_assigned = False
+        stage_all_done = True
+        for ls in st_lessons:
+            lid = ls["id"]
+            if lid in completed:
+                status, reason = "completed", ""
+            elif lid in cooldown:
+                status, reason = "in_cooldown", "ينتظر انتهاء فترة التهدئة"
+                stage_all_done = False
+            elif not prev_stage_done:
+                status, reason = "locked", "أكمل المرحلة السابقة أولاً"
+                stage_all_done = False
+            elif not available_assigned:
+                status, reason = "available", ""
+                available_assigned = True
+                stage_all_done = False
+            else:
+                status, reason = "locked", "أكمل الدرس السابق أولاً"
+                stage_all_done = False
+            out_lessons.append({
+                "id": lid, "title": ls["title"], "lesson_code": ls["lesson_code"],
+                "stage_id": ls["stage_id"], "stage_code": st["code"],
+                "skill_type": ls["skill_type"] or st["skill_type"],
+                "section": ls["section"], "xp_reward": ls["xp_reward"],
+                "questions_count": ls["qc"], "status": status, "reason": reason,
+                "cooldown_seconds_remaining": cooldown.get(lid, 0),
+            })
+        if st_lessons:
+            result_stages.append({
+                "stage_id": st["id"], "stage_code": st["code"],
+                "track": st["track"], "skill_type": st["skill_type"],
+                "name_ar": st["name_ar"], "order_num": st["order_num"],
+                "lessons": out_lessons,
+            })
+        # المرحلة التالية تُفتح فقط إذا اكتملت كل دروس هذه المرحلة
+        if st_lessons:
+            prev_stage_done = stage_all_done
+
+    return _jsonify({"student_id": sid, "stages": result_stages})
+
 
 @app.route("/payment/<int:plan_id>")
 def payment_page(plan_id):
@@ -7291,6 +7416,174 @@ def api_student_dashboard():
         "next_lesson": next_data,
     })
 # ===== END SMART DASHBOARD API =====
+
+
+
+# ===== STUDENT JOURNEY API (Day 2) =====
+@app.route("/api/student/journey")
+def api_student_journey():
+    """Return focused view: current lesson, next 3, phase progress."""
+    import sqlite3, os
+    uid = str(request.args.get('user_id') or request.args.get('student_id') or '').strip()
+    if not uid:
+        return jsonify({"ok": False, "error": "missing user_id"}), 400
+
+    db_path = globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db"
+    con = sqlite3.connect(db_path)
+    con.row_factory = sqlite3.Row
+    cur = con.cursor()
+
+    # Student lookup
+    stu = cur.execute("""
+        SELECT user_id, telegram_id, name, xp_total, streak_days
+        FROM students WHERE telegram_id=? OR CAST(user_id AS TEXT)=? LIMIT 1
+    """, (uid, uid)).fetchone()
+    student_uid = stu['user_id'] if stu else 0
+
+    # All Foundation + Reading lessons ordered
+    cur.execute("""
+        SELECT id, lesson_code, title_ar, title, skill, xp_reward, timer_minutes
+        FROM lessons
+        WHERE is_active=1 AND (
+            (skill='foundation' OR lesson_code LIKE 'F%')
+            OR (skill='reading' AND lesson_code LIKE 'R-%')
+        )
+        ORDER BY
+          CASE WHEN lesson_code LIKE 'F%' THEN 1 WHEN lesson_code LIKE 'R-%' THEN 2 ELSE 9 END,
+          lesson_code COLLATE NOCASE
+    """)
+    lessons = [dict(r) for r in cur.fetchall()]
+
+    # Completed lessons
+    completed_ids = set()
+    try:
+        for r in cur.execute("SELECT lesson_id FROM student_lesson_progress WHERE student_id=? AND status='completed'", (student_uid,)).fetchall():
+            completed_ids.add(r['lesson_id'])
+    except Exception:
+        pass
+
+    # Question counts
+    has_q = {}
+    try:
+        for r in cur.execute("SELECT lesson_id, COUNT(*) c FROM lesson_questions GROUP BY lesson_id").fetchall():
+            has_q[r['lesson_id']] = r['c']
+    except Exception:
+        pass
+
+    def url_for(L):
+        lid = L['id']
+        return ("/miniapp/quiz/%d?student_id=%s" % (lid, uid)) if has_q.get(lid, 0) > 0 else ("/miniapp/lesson/%d?student_id=%s" % (lid, uid))
+
+    # Phase classification
+    def phase_of(code):
+        if not code: return 'reading'
+        if code.startswith('F1'): return 'F1'
+        if code.startswith('F2'): return 'F2'
+        if code.startswith('F3'): return 'F3'
+        if code.startswith('R-'): return 'reading'
+        return 'reading'
+
+    PHASE_LABELS = {
+        'F1': 'التأسيس - المرحلة 1 (القواعد والمفردات الأساسية)',
+        'F2': 'التأسيس - المرحلة 2 (المفردات الموسعة)',
+        'F3': 'التأسيس - المرحلة 3 (القواعد المتقدمة)',
+        'reading': 'القراءة الأكاديمية (TOEFL Reading)',
+    }
+    PHASE_ORDER = ['F1', 'F2', 'F3', 'reading']
+
+    # Find current lesson (first not-completed in order)
+    current = None
+    current_idx = -1
+    for i, L in enumerate(lessons):
+        if L['id'] not in completed_ids:
+            current = L
+            current_idx = i
+            break
+
+    # Next 3 lessons after current
+    upcoming = []
+    if current_idx >= 0:
+        for L in lessons[current_idx+1:current_idx+4]:
+            upcoming.append({
+                "id": L['id'],
+                "code": L['lesson_code'],
+                "title": L['title_ar'] or L['title'],
+                "minutes": L['timer_minutes'] or 15,
+                "xp": L['xp_reward'] or 20,
+            })
+
+    # Recent completed (last 3)
+    recent = []
+    if completed_ids:
+        completed_lessons = [L for L in lessons if L['id'] in completed_ids]
+        for L in completed_lessons[-3:]:
+            recent.append({
+                "id": L['id'],
+                "code": L['lesson_code'],
+                "title": L['title_ar'] or L['title'],
+            })
+
+    # Phase progress
+    phase_stats = {}
+    for p in PHASE_ORDER:
+        items = [L for L in lessons if phase_of(L['lesson_code']) == p]
+        done = sum(1 for L in items if L['id'] in completed_ids)
+        phase_stats[p] = {
+            "label": PHASE_LABELS[p],
+            "completed": done,
+            "total": len(items),
+            "percent": round(done*100/len(items)) if items else 0,
+        }
+
+    # Current phase
+    current_phase = phase_of(current['lesson_code']) if current else 'reading'
+
+    # Just completed phase? (for celebration)
+    just_completed_phase = None
+    if current and current_idx > 0:
+        prev = lessons[current_idx - 1]
+        prev_phase = phase_of(prev['lesson_code'])
+        if prev_phase != current_phase and phase_stats[prev_phase]['percent'] == 100:
+            just_completed_phase = prev_phase
+
+    # Current lesson detail
+    current_data = None
+    if current:
+        current_data = {
+            "id": current['id'],
+            "code": current['lesson_code'],
+            "title": current['title_ar'] or current['title'],
+            "skill": current['skill'],
+            "minutes": current['timer_minutes'] or 15,
+            "xp": current['xp_reward'] or 20,
+            "has_questions": has_q.get(current['id'], 0) > 0,
+            "url": url_for(current),
+            "phase": current_phase,
+            "phase_label": PHASE_LABELS[current_phase],
+        }
+    else:
+        # All done!
+        current_data = None
+
+    con.close()
+    return jsonify({
+        "ok": True,
+        "profile": {
+            "name": stu['name'] if stu else 'طالب',
+            "xp": (stu['xp_total'] if stu else 0) or 0,
+            "streak": (stu['streak_days'] if stu else 0) or 0,
+        },
+        "current": current_data,
+        "upcoming": upcoming,
+        "recent": recent,
+        "phases": phase_stats,
+        "phase_order": PHASE_ORDER,
+        "current_phase": current_phase,
+        "just_completed_phase": just_completed_phase,
+        "total_completed": len(completed_ids),
+        "total_lessons": len(lessons),
+    })
+# ===== END JOURNEY API =====
 
 
 if __name__ == "__main__":
