@@ -158,6 +158,21 @@ def writing_lesson_page(lesson_id):
             "order_index": sd.get("order_index", 99),
         })
 
+    # === practice link (email/discussion) matched to student tier ===
+    practice_url = None
+    try:
+        if lesson["is_exam"] == 0 and lesson["stage_id"] in (3, 4):
+            trow = c.execute("SELECT tier FROM student_writing_target WHERE telegram_id=?", (tg_id,)).fetchone()
+            tier = (trow["tier"] if trow else None) or "tier59"
+            if lesson["stage_id"] == 3:
+                sc = c.execute("SELECT id FROM writing_email_scenarios WHERE is_active=1 AND target_tier=? ORDER BY order_index LIMIT 1", (tier,)).fetchone() or c.execute("SELECT id FROM writing_email_scenarios WHERE is_active=1 ORDER BY order_index LIMIT 1").fetchone()
+                if sc: practice_url = "/writing/email/" + str(sc["id"]) + "?user_id=" + str(tg_id)
+            else:
+                sc = c.execute("SELECT id FROM writing_discussion_scenarios WHERE is_active=1 AND target_tier=? ORDER BY order_index LIMIT 1", (tier,)).fetchone() or c.execute("SELECT id FROM writing_discussion_scenarios WHERE is_active=1 ORDER BY order_index LIMIT 1").fetchone()
+                if sc: practice_url = "/writing/discussion/" + str(sc["id"]) + "/exam?user_id=" + str(tg_id)
+    except Exception as _e:
+        practice_url = None
+
     stage = c.execute("SELECT * FROM writing_stages WHERE id=?", (lesson["stage_id"],)).fetchone()
     conn.close()
     return render_template("toefl_writing/lesson.html",
@@ -165,7 +180,8 @@ def writing_lesson_page(lesson_id):
         stage=dict(stage) if stage else None,
         questions=qs,
         user_id=tg_id,
-        is_exam=False
+        is_exam=False,
+        practice_url=practice_url
     )
 
 
@@ -668,6 +684,27 @@ def view_email_task(scenario_id):
                            user_id=tg_id)
 
 
+
+def _prune_attempts(conn, telegram_id, task_label):
+    """????? ???? ?????? + ???? ???????? ??? ????/??? ????? ???? ??????."""
+    try:
+        cur = conn.cursor()
+        rows = cur.execute(
+            "SELECT id FROM writing_attempts WHERE telegram_id=? "
+            "AND answer_json LIKE ? ORDER BY id ASC",
+            (str(telegram_id), '%"task": "' + task_label + '"%')
+        ).fetchall()
+        ids = [r[0] for r in rows]
+        if len(ids) <= 3:
+            return
+        keep = {ids[0], ids[-1], ids[-2]}   # ?????? + ??? ??????
+        to_del = [i for i in ids if i not in keep]
+        if to_del:
+            cur.executemany("DELETE FROM writing_attempts WHERE id=?",
+                            [(i,) for i in to_del])
+    except Exception:
+        pass
+
 @writing_bp.route("/api/writing/email/submit", methods=["POST"])
 def api_email_submit():
     """استلام إيميل الطالب، محاولة تصحيح AI، حفظ النتيجة."""
@@ -712,7 +749,7 @@ def api_email_submit():
         ai_available = False
 
     # حدد إذا نحتاج مراجعة يدوية
-    needs_admin = (not ai_available) or request_admin or (student_tier == "tier90" and request_admin)
+    needs_admin = False  # ?????? ?????? ??????? - ??????? ??? Gemini
 
     # إذا كان AI متاح: نعرض النتيجة فوراً
     if ai_available:
@@ -725,7 +762,7 @@ def api_email_submit():
              answer_json, is_correct, ai_score, ai_band, ai_feedback_json, time_spent_sec)
             VALUES (?, NULL, 3, NULL, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            tg_id, email_text, json.dumps({"scenario_id": scenario_id}, ensure_ascii=False),
+            tg_id, email_text, json.dumps({"scenario_id": scenario_id, "task": "email"}, ensure_ascii=False),
             1 if score >= 3 else 0, score, ai_result.get("band_label",""),
             json.dumps(ai_result, ensure_ascii=False), time_spent
         ))
@@ -752,6 +789,9 @@ def api_email_submit():
         VALUES (?, ?, CURRENT_TIMESTAMP)
     """, (tg_id, scenario_id))
 
+    if ai_available:
+        _prune_attempts(conn, tg_id, "email")
+        conn.commit()
     conn.commit()
 
     response = {
@@ -772,6 +812,12 @@ def api_email_submit():
         response["improvements"] = ai_result.get("improvements", [])
         response["errors"] = ai_result.get("errors", [])
         response["feedback_ar"] = ai_result.get("feedback_ar", "")
+        response["display"] = ai_result.get("display", "")
+        response["score6"] = ai_result.get("score6", 0)
+        response["score120"] = ai_result.get("score120", 0)
+        response["gemini_prompt"] = ai_result.get("gemini_prompt", "")
+        response["gemini_url"] = ai_result.get("gemini_url", "")
+        response["is_estimate"] = True
         response["passed"] = ai_result.get("score", 0) >= 3
     else:
         response["message_ar"] = "تم استلام إجابتك ✅ سيقوم المدرّس بمراجعتها خلال 24 ساعة."
@@ -1314,4 +1360,66 @@ def sb_progress(user_id):
 # ============================================================
 # END SENTENCE BUILDING ROUTES
 # ============================================================
+
+
+@writing_bp.route("/api/writing/gemini-score", methods=["POST"])
+def api_gemini_score():
+    """يحفظ درجة الطالب من Gemini ويعيد مقارنة بتطوره."""
+    from flask import request, jsonify
+    import sqlite3
+    try:
+        d = request.get_json(silent=True) or {}
+        tg = str(d.get("user_id") or d.get("student_id") or "").strip()
+        task = (d.get("task_type") or "email").strip()
+        sid = d.get("scenario_id")
+        score6 = float(d.get("score6") or 0)
+        if not tg:
+            return jsonify({"ok": False, "error": "user_id required"}), 400
+        if score6 < 0 or score6 > 6:
+            return jsonify({"ok": False, "error": "score must be 0-6"}), 400
+        score120 = round((score6 - 1.0) / 5.0 * 120) if score6 >= 1 else 0
+        if score120 < 0: score120 = 0
+
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute("""INSERT INTO gemini_self_scores
+            (telegram_id, task_type, scenario_id, score6, score120)
+            VALUES (?,?,?,?,?)""", (tg, task, sid, score6, score120))
+        conn.commit()
+
+        # سياسة الاحتفاظ: أول محاولة + آخر محاولتين لكل مهمة
+        cur.execute("""SELECT id FROM gemini_self_scores
+            WHERE telegram_id=? AND task_type=? ORDER BY id ASC""", (tg, task))
+        ids = [r[0] for r in cur.fetchall()]
+        if len(ids) > 3:
+            keep = {ids[0], ids[-1], ids[-2]}
+            for rid in ids:
+                if rid not in keep:
+                    cur.execute("DELETE FROM gemini_self_scores WHERE id=?", (rid,))
+            conn.commit()
+
+        # جلب أول وآخر للمقارنة
+        cur.execute("""SELECT score6, score120 FROM gemini_self_scores
+            WHERE telegram_id=? AND task_type=? ORDER BY id ASC""", (tg, task))
+        rows = cur.fetchall()
+        conn.close()
+
+        first6 = rows[0][0]
+        prev6 = rows[-2][0] if len(rows) >= 2 else None
+        msg = f"تم حفظ درجتك: {score6:g} / 6 (\u2248 {score120} / 120)."
+        if len(rows) == 1:
+            msg += " هذه أول محاولة لك. اكتب أكثر لنتابع تطورك."
+        else:
+            diff = score6 - first6
+            if diff > 0:
+                msg += f" أول محاولة كانت {first6:g}/6 \u2014 تحسنت بمقدار +{diff:g} نقطة. \U0001F4C8 ممتاز!"
+            elif diff < 0:
+                msg += f" أول محاولة كانت {first6:g}/6 \u2014 انخفضت {abs(diff):g} نقطة. واصل التدريب."
+            else:
+                msg += f" نفس مستوى أول محاولة ({first6:g}/6). حاول التطوير أكثر."
+
+        return jsonify({"ok": True, "score6": score6, "score120": score120,
+                        "message_ar": msg, "history": [{"s6": r[0], "s120": r[1]} for r in rows]})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
 

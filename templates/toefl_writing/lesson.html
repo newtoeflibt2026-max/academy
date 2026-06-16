@@ -55,6 +55,10 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 <h1>{{ lesson.title_ar }}</h1>
 <div class="meta">⏱ {{ lesson.duration_min }} دقائق</div>
 <div class="content">{{ lesson.content_html|safe }}</div>
+{% if practice_url %}
+<a href="{{ practice_url }}" style="display:block;text-align:center;margin:20px 0;padding:16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-weight:bold;text-decoration:none;font-size:16px">🚀 ابدأ التدريب الفعلي (تصحيح فوري بالذكاء الاصطناعي)</a>
+{% endif %}
+
 {% if not questions or questions|length == 0 %}
 <div style="text-align:center;margin:25px 0;">
   <button onclick="finishReadingLesson()" id="finish-reading-btn"
