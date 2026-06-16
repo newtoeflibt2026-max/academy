@@ -117,33 +117,33 @@ def get_main_keyboard(is_paid=False, user_id=0):
 @router.message(CommandStart())
 async def cmd_start(message: types.Message):
 
-        # Onboarding gate: if student missed target or placement, show big button
-        try:
-            import sqlite3 as _sq, os as _os
-            _db = _os.environ.get("DB_PATH") or "/app/data/academy.db"
-            if not _os.path.exists(_db): _db = "academy.db"
-            _c = _sq.connect(_db); _c.row_factory = _sq.Row
-            _r = _c.execute("SELECT target_score, placement_done FROM students WHERE telegram_id=?", (user_id,)).fetchone()
-            _c.close()
-            _need_onboard = (not _r) or (not (_r["target_score"] or 0)) or (not (_r["placement_done"] or 0))
-        except Exception:
-            _need_onboard = False
-        if _need_onboard:
-            from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
-            _host = os.environ.get("WEBHOOK_HOST", "https://yamenacademyapp.up.railway.app").rstrip("/")
-            _kb = InlineKeyboardMarkup(inline_keyboard=[[
-                InlineKeyboardButton(text="🚀 ابدأ من هنا — حدد هدفك واختبر مستواك",
-                                     web_app=WebAppInfo(url=f"{_host}/onboarding/check?user_id={user_id}"))
-            ]])
-            await message.answer(
-                "👋 أهلاً بك في أكاديمية يامن!\n\n"
-                "قبل البدء، نحتاج خطوتين سريعتين:\n"
-                "1️⃣ اختيار هدفك (90 / 69 / 59)\n"
-                "2️⃣ امتحان تحديد المستوى (15 سؤال · 10 دقائق)\n\n"
-                "اضغط الزر بالأسفل للبدء 👇",
-                reply_markup=_kb
-            )
-            return
+    # Onboarding gate: if student missed target or placement, show big button
+    try:
+        import sqlite3 as _sq, os as _os
+        _db = _os.environ.get("DB_PATH") or "/app/data/academy.db"
+        if not _os.path.exists(_db): _db = "academy.db"
+        _c = _sq.connect(_db); _c.row_factory = _sq.Row
+        _r = _c.execute("SELECT target_score, placement_done FROM students WHERE telegram_id=?", (user_id,)).fetchone()
+        _c.close()
+        _need_onboard = (not _r) or (not (_r["target_score"] or 0)) or (not (_r["placement_done"] or 0))
+    except Exception:
+        _need_onboard = False
+    if _need_onboard:
+        from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+        _host = os.environ.get("WEBHOOK_HOST", "https://yamenacademyapp.up.railway.app").rstrip("/")
+        _kb = InlineKeyboardMarkup(inline_keyboard=[[
+            InlineKeyboardButton(text="🚀 ابدأ من هنا — حدد هدفك واختبر مستواك",
+                                 web_app=WebAppInfo(url=f"{_host}/onboarding/check?user_id={user_id}"))
+        ]])
+        await message.answer(
+            "👋 أهلاً بك في أكاديمية يامن!\n\n"
+            "قبل البدء، نحتاج خطوتين سريعتين:\n"
+            "1️⃣ اختيار هدفك (90 / 69 / 59)\n"
+            "2️⃣ امتحان تحديد المستوى (15 سؤال · 10 دقائق)\n\n"
+            "اضغط الزر بالأسفل للبدء 👇",
+            reply_markup=_kb
+        )
+        return
     user_id = message.from_user.id
     username = message.from_user.username or ""
     full_name = message.from_user.full_name or ""
