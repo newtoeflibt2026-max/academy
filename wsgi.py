@@ -112,3 +112,38 @@ try:
     _force_set_webhook()
 except Exception as _e:
     print("[wsgi-wh] outer error: " + str(_e), flush=True)
+
+
+# === Webhook self-healing guardian (runs forever in background) ===
+def _webhook_guardian():
+    import os, time, json, urllib.request, urllib.parse
+    token = os.environ.get("BOT_TOKEN", "")
+    if not token:
+        print("[guardian] BOT_TOKEN missing - guardian disabled", flush=True)
+        return
+    host = os.environ.get("WEBHOOK_HOST", "https://yamenacademyapp.up.railway.app").rstrip("/")
+    secret = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "yamen-webhook-secret-2026")
+    want = host + "/telegram-webhook"
+    api = "https://api.telegram.org/bot" + token
+    time.sleep(20)  # let app finish booting
+    while True:
+        try:
+            with urllib.request.urlopen(api + "/getWebhookInfo", timeout=15) as r:
+                info = json.loads(r.read().decode("utf-8")).get("result", {})
+            cur = info.get("url", "")
+            if cur != want:
+                qs = urllib.parse.urlencode({"url": want, "secret_token": secret,
+                    "allowed_updates": json.dumps(["message","callback_query","pre_checkout_query"])})
+                with urllib.request.urlopen(api + "/setWebhook?" + qs, timeout=15) as r2:
+                    res = json.loads(r2.read().decode("utf-8"))
+                print("[guardian] webhook re-set -> " + want + " ok=" + str(res.get("ok")), flush=True)
+        except Exception as e:
+            print("[guardian] check error: " + str(e), flush=True)
+        time.sleep(180)  # re-check every 3 minutes
+
+try:
+    import threading
+    threading.Thread(target=_webhook_guardian, daemon=True).start()
+    print("[guardian] started", flush=True)
+except Exception as _ge:
+    print("[guardian] failed to start: " + str(_ge), flush=True)
