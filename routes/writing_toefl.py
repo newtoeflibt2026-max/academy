@@ -501,7 +501,13 @@ def api_stage_exam_submit(stage_id):
         is_correct = False
 
         if q["q_type"] == "mcq":
-            is_correct = student_ans.lower() == (q["correct_answer"] or "").strip().lower()
+            _ua = student_ans
+            try:
+                _p = json.loads(student_ans) if student_ans.startswith("[") else student_ans
+                _ua = _p[0] if isinstance(_p,list) and _p else str(_p)
+            except Exception:
+                _ua = student_ans
+            is_correct = str(_ua).strip().lower() == (q["correct_answer"] or "").strip().lower()
         elif q["q_type"] == "sentence_order":
             from ai.toefl_grader import grade_sentence_order
             try:

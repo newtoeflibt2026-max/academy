@@ -1,4 +1,26 @@
 
+## 2026-06-17 - Day 3 (part 3): stage exam MCQ fix -> unlocking works
+
+### Fixed (stage unlock blocker)
+- Stage exam MCQ grading had SAME json-array bug as lessons (line ~504)
+- Browser sends ["answer"], correct_answer is plain text -> all MCQ marked wrong -> never reach 80%
+- Result: exam never 'completed' -> next stage stayed locked (dynamic lock logic depends on completion)
+- Fix: parse json array, take first element before compare (api_stage_exam_submit)
+
+### How unlocking works (documented)
+- writing_stages lock is DYNAMIC (computed in /writing/stage route lines 96-107), NOT a stored flag
+- A lesson unlocks when previous lesson status='completed'
+- Stage exam unlocks when ALL non-exam lessons completed
+- Passing exam (>=80%) writes writing_progress status='completed' -> unlocks next
+
+### Note
+- Stage exam questions use is_exam=1 (correct); inventory '0 exercises' is expected (counts is_exam=0 only)
+
+### Files
+- routes/writing_toefl.py (backup: .bak_fixexam_*)
+
+---
+
 ## 2026-06-17 - Day 3 (part 2): grading logic + is_exam data fix
 
 ### Fixed (grading)
