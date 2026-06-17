@@ -699,6 +699,198 @@ body { padding-bottom: 90px; }
 .lesson-status-badge.current{ background:#d1c4e9; color:#4527a0; }
 .lesson-status-badge.locked{ background:#eee; color:#999; }
 
+
+/* === DAY2 Focused Journey === */
+.journey-hero{
+  margin:16px; padding:28px 24px;
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  border-radius:24px; color:#fff;
+  box-shadow:0 12px 40px rgba(102,126,234,.35);
+  position:relative; overflow:hidden;
+}
+.journey-hero::before{
+  content:''; position:absolute; top:-50%; right:-20%;
+  width:300px; height:300px; border-radius:50%;
+  background:rgba(255,255,255,.08);
+}
+.journey-phase{
+  font-size:12px; font-weight:700; opacity:.85;
+  letter-spacing:.5px; margin-bottom:6px;
+}
+.journey-label{
+  font-size:14px; opacity:.9; margin-bottom:14px;
+}
+.journey-title{
+  font-size:24px; font-weight:800; line-height:1.4;
+  margin-bottom:8px;
+}
+.journey-code{
+  display:inline-block; font-size:11px; font-weight:700;
+  background:rgba(255,255,255,.2); padding:3px 10px;
+  border-radius:12px; margin-bottom:14px;
+}
+.journey-meta{
+  display:flex; gap:16px; font-size:13px;
+  margin-bottom:20px; opacity:.92;
+}
+.journey-cta{
+  display:flex; align-items:center; justify-content:center;
+  gap:8px; background:#fff; color:#5e3a9e;
+  border:none; padding:16px 32px; border-radius:50px;
+  font-size:16px; font-weight:800; cursor:pointer;
+  width:100%; box-shadow:0 6px 16px rgba(0,0,0,.15);
+  transition:transform .15s, box-shadow .15s;
+  font-family:inherit;
+}
+.journey-cta:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.25); }
+.journey-cta:active{ transform:translateY(0); }
+
+.phase-progress{
+  margin:0 16px 20px; padding:18px;
+  background:#fff; border-radius:18px;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+.phase-progress h4{
+  margin:0 0 12px; font-size:14px; color:#666; font-weight:700;
+}
+.phase-row{
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:10px;
+}
+.phase-name{
+  font-size:13px; font-weight:700; color:#333; min-width:60px;
+}
+.phase-bar{
+  flex:1; height:8px; background:#f0f0f5; border-radius:4px;
+  overflow:hidden; position:relative;
+}
+.phase-fill{
+  height:100%; background:linear-gradient(90deg,#667eea,#764ba2);
+  border-radius:4px; transition:width .8s ease;
+}
+.phase-fill.done{ background:linear-gradient(90deg,#4caf50,#66bb6a); }
+.phase-count{
+  font-size:12px; color:#888; font-weight:700; min-width:50px; text-align:left;
+}
+
+.upcoming-section{
+  margin:0 16px 20px;
+}
+.upcoming-section h4{
+  font-size:14px; color:#666; font-weight:700;
+  margin:0 0 10px;
+}
+.upcoming-item{
+  background:#fff; border-radius:14px; padding:14px 16px;
+  margin-bottom:8px; display:flex; align-items:center;
+  gap:12px; box-shadow:0 2px 8px rgba(0,0,0,.04);
+  border-right:3px solid #ddd;
+}
+.upcoming-num{
+  width:32px; height:32px; border-radius:50%;
+  background:#f0f0f5; color:#888;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:14px; flex-shrink:0;
+}
+.upcoming-info{ flex:1; min-width:0; }
+.upcoming-title{
+  font-size:14px; font-weight:700; color:#333;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.upcoming-meta{ font-size:11px; color:#999; margin-top:2px; }
+
+.celebration{
+  margin:16px; padding:24px;
+  background:linear-gradient(135deg,#ff9800,#f57c00);
+  border-radius:20px; color:#fff; text-align:center;
+  box-shadow:0 8px 24px rgba(255,152,0,.35);
+}
+.celebration h2{ margin:0 0 8px; font-size:22px; font-weight:800; }
+.celebration p{ margin:0; opacity:.95; font-size:14px; }
+
+.journey-finished{
+  margin:16px; padding:32px 24px;
+  background:linear-gradient(135deg,#4caf50,#66bb6a);
+  border-radius:24px; color:#fff; text-align:center;
+}
+.journey-finished h2{ font-size:24px; margin:8px 0; }
+
+
+/* ═══ DAY2 POLISH - Professional 8pt Grid ═══ */
+#journeyContainer{ max-width:720px; margin:16px auto; padding:0 16px; }
+.journey-hero{
+  background:linear-gradient(135deg,#7c3aed 0%,#5b21b6 100%);
+  color:#fff; border-radius:20px; padding:24px; margin-bottom:16px;
+  box-shadow:0 8px 24px rgba(124,58,237,.25);
+  text-align:center;
+}
+.journey-phase{ font-size:13px; opacity:.85; margin-bottom:8px; font-weight:600; }
+.journey-label{ font-size:12px; opacity:.75; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+.journey-title{ font-size:22px; font-weight:800; margin:8px 0; line-height:1.4; }
+.journey-code{ font-size:13px; opacity:.7; margin-bottom:16px; font-family:monospace; }
+.journey-meta{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:20px; font-size:13px; }
+.journey-meta span{ background:rgba(255,255,255,.15); padding:6px 12px; border-radius:20px; }
+.journey-cta{
+  background:#fff; color:#5b21b6; border:none; padding:14px 32px;
+  border-radius:12px; font-size:16px; font-weight:700; cursor:pointer;
+  font-family:inherit; box-shadow:0 4px 12px rgba(0,0,0,.15);
+  transition:transform .15s;
+}
+.journey-cta:hover{ transform:translateY(-2px); }
+.journey-cta:active{ transform:translateY(0); }
+
+.phase-progress{
+  background:#fff; border-radius:16px; padding:20px; margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.phase-progress h4{ margin:0 0 16px; font-size:15px; color:#374151; font-weight:700; }
+.phase-row{ margin-bottom:12px; }
+.phase-row:last-child{ margin-bottom:0; }
+.phase-row-header{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px; color:#4b5563; }
+.phase-row-name{ font-weight:600; }
+.phase-row-count{ color:#6b7280; }
+.phase-bar{ height:8px; background:#e5e7eb; border-radius:4px; overflow:hidden; }
+.phase-bar-fill{ height:100%; background:linear-gradient(90deg,#10b981,#059669); border-radius:4px; transition:width .5s; }
+.phase-row.done .phase-bar-fill{ background:linear-gradient(90deg,#10b981,#047857); }
+
+.upcoming-section{
+  background:#fff; border-radius:16px; padding:20px; margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.upcoming-section h4{ margin:0 0 12px; font-size:15px; color:#374151; font-weight:700; }
+.upcoming-item{
+  display:flex; align-items:center; gap:12px; padding:12px;
+  background:#f9fafb; border-radius:10px; margin-bottom:8px;
+  border:1px solid #f3f4f6;
+}
+.upcoming-item:last-child{ margin-bottom:0; }
+.upcoming-icon{ width:36px; height:36px; border-radius:50%; background:#ede9fe; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.upcoming-info{ flex:1; min-width:0; }
+.upcoming-title{ font-size:14px; font-weight:600; color:#1f2937; margin-bottom:2px; }
+.upcoming-meta{ font-size:12px; color:#6b7280; }
+.upcoming-lock{ font-size:18px; opacity:.4; }
+
+.celebration{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#fff;
+  border-radius:16px; padding:24px; text-align:center; margin-bottom:16px;
+  box-shadow:0 8px 24px rgba(251,191,36,.3);
+}
+.celebration h2{ margin:0 0 8px; font-size:24px; }
+.celebration p{ margin:0; font-size:14px; opacity:.95; }
+
+.journey-finished{
+  background:linear-gradient(135deg,#10b981,#059669); color:#fff;
+  border-radius:20px; padding:32px 24px; text-align:center; margin-bottom:16px;
+}
+.journey-finished h2{ margin:0 0 12px; font-size:28px; }
+
+@media (max-width:480px){
+  .journey-title{ font-size:19px; }
+  .journey-cta{ width:100%; padding:14px; }
+  .journey-meta{ gap:8px; }
+}
+/* ═══ END DAY2 POLISH ═══ */
+
 </style>
 </head>
 <body>
@@ -779,7 +971,7 @@ body { padding-bottom: 90px; }
         <div class="plan-stat-value" id="planPath">—</div>
       </div>
     </div>
-    <a class="plan-cta" id="planCTA" href="#">📊 افتح خطتي الكاملة ←</a>
+    <a class="plan-cta" id="planCTA" href="#" onclick="event.preventDefault();scrollToJourney();return false;">📊 افتح خطتي الكاملة ←</a>
   </div>
 </div>
 <!-- ═══ END PLAN CARD ═══ -->
@@ -811,20 +1003,11 @@ body { padding-bottom: 90px; }
 <!-- ═══ MAIN VIEW (HOME) ═══ -->
 <div class="view active" id="viewHome">
 
-  <!-- Daily Mission -->
-  <div class="section">
-    <div class="section-title"><span class="emoji">🎯</span> مهمة اليوم</div>
-  </div>
-  <div class="daily-mission fade-up" id="dailyMission" onclick="openFirstAvailableLesson()">
-    <div class="dm-label">📚 الدرس اليومي</div>
-    <div class="dm-title" id="dmTitle">جاري التحميل...</div>
-    <div class="dm-desc" id="dmDesc">سيتم تحديد درسك التالي قريباً</div>
-    <div class="dm-row">
-      <div class="dm-meta">
-        <span>⏱️ <span id="dmTime">15</span> دقيقة</span>
-        <span>⚡ +<span id="dmXP">20</span> XP</span>
-      </div>
-      <button class="dm-btn" onclick="openFirstAvailableLesson()">ابدأ الآن ←</button>
+  <!-- Daily Mission (DAY2 Focused) -->
+  <div id="journeyContainer">
+    <div class="loading" style="margin:40px auto;text-align:center">
+      <div class="spinner"></div>
+      <div style="margin-top:12px;color:#888">جاري تحميل خطتك...</div>
     </div>
   </div>
 
@@ -843,6 +1026,17 @@ body { padding-bottom: 90px; }
         <span id="readingPct">0%</span>
       </div>
     </div>
+    <div class="skill-card writing" onclick="openSkill('writing')">
+      <div class="skill-icon-wrap">✍️</div>
+      <div class="skill-name">الكتابة</div>
+      <div class="skill-name-en">Writing</div>
+      <div class="skill-progress-bar"><div class="skill-progress-fill" id="writingFill" style="width:0%"></div></div>
+      <div class="skill-meta">
+        <span id="writingCount">0 / 0 دروس</span>
+        <span id="writingPct">0%</span>
+      </div>
+    </div>
+
     
 
   <!-- Supporting Libraries -->
@@ -1423,6 +1617,8 @@ function handlePlacementMode() {
 // Init
 // ═══════════════════════════════════════════════════════════
 (async function init() {
+  try{ loadJourney(); }catch(e){ console.error("loadJourney",e); }
+
   await Promise.all([
     loadStudent(),
     loadLessons(),
@@ -1610,6 +1806,112 @@ function fillPlanCard(data){
     fillTodayLesson();
   }
 })();
+
+
+// ===== DAY2: Focused Journey =====
+
+function scrollToJourney(){
+  var el = document.getElementById('journeyContainer');
+  if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
+  else { var s = document.querySelector('.journey-hero'); if(s) s.scrollIntoView({behavior:'smooth'}); }
+}
+
+async function loadJourney() {
+  const uid = (new URLSearchParams(location.search)).get('student_id')
+           || (new URLSearchParams(location.search)).get('user_id')
+           || window.studentId || '';
+  if (!uid) return;
+
+  const container = document.getElementById('journeyContainer');
+  if (!container) return;
+
+  try {
+    const r = await fetch('/api/student/journey?user_id=' + encodeURIComponent(uid));
+    const d = await r.json();
+    if (!d || !d.ok) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:#888">تعذّر تحميل خطتك</div>';
+      return;
+    }
+
+    let html = '';
+
+    // Celebration if just completed a phase
+    if (d.just_completed_phase) {
+      const phaseLabel = (d.phases[d.just_completed_phase] || {}).label || d.just_completed_phase;
+      html += '<div class="celebration">'
+           +   '<h2>🎉 أحسنت!</h2>'
+           +   '<p>أكملت ' + phaseLabel + '<br>الآن انتقلت إلى المرحلة التالية</p>'
+           + '</div>';
+    }
+
+    // Current lesson hero (the BIG card)
+    if (d.current) {
+      const c = d.current;
+      html += '<div class="journey-hero">'
+           +   '<div class="journey-phase">📍 ' + (c.phase_label || '') + '</div>'
+           +   '<div class="journey-label">درسك الآن</div>'
+           +   '<div class="journey-title">' + c.title + '</div>'
+           +   '<div class="journey-code">' + c.code + '</div>'
+           +   '<div class="journey-meta">'
+           +     '<span>⏱️ ' + c.minutes + ' دقيقة</span>'
+           +     '<span>⚡ +' + c.xp + ' XP</span>'
+           +     (c.has_questions ? '<span>📝 تمارين تفاعلية</span>' : '<span>📖 درس نظري</span>')
+           +   '</div>'
+           +   '<button class="journey-cta" onclick="window.location.href=\'' + c.url + '\'">'
+           +     'ابدأ الدرس ←'
+           +   '</button>'
+           + '</div>';
+    } else {
+      // All lessons done
+      html += '<div class="journey-finished">'
+           +   '<h2>🏆 مبروك!</h2>'
+           +   '<p>أكملت كل دروس البرنامج (' + d.total_completed + ' درس).<br>أنت جاهز لامتحان TOEFL iBT!</p>'
+           + '</div>';
+    }
+
+    // Phase progress
+    html += '<div class="phase-progress">'
+         +   '<h4>📊 رحلتك العامة (' + d.total_completed + ' / ' + d.total_lessons + ')</h4>';
+    d.phase_order.forEach(p => {
+      const ph = d.phases[p];
+      if (!ph || ph.total === 0) return;
+      const isDone = ph.percent === 100;
+      const shortName = p === 'reading' ? 'القراءة' : p;
+      html +=   '<div class="phase-row">'
+           +     '<span class="phase-name">' + shortName + '</span>'
+           +     '<div class="phase-bar"><div class="phase-fill ' + (isDone?'done':'') + '" style="width:' + ph.percent + '%"></div></div>'
+           +     '<span class="phase-count">' + ph.completed + '/' + ph.total + '</span>'
+           +   '</div>';
+    });
+    html += '</div>';
+
+    // Upcoming 3
+    if (d.upcoming && d.upcoming.length > 0) {
+      html += '<div class="upcoming-section">'
+           +   '<h4>📅 الدروس القادمة</h4>';
+      d.upcoming.forEach((u, i) => {
+        html += '<div class="upcoming-item">'
+             +   '<div class="upcoming-num">' + (i+2) + '</div>'
+             +   '<div class="upcoming-info">'
+             +     '<div class="upcoming-title">' + u.title + '</div>'
+             +     '<div class="upcoming-meta">' + u.code + ' • ⏱️ ' + u.minutes + ' د • +' + u.xp + ' XP</div>'
+             +   '</div>'
+             + '</div>';
+      });
+      html += '</div>';
+    }
+
+    container.innerHTML = html;
+  } catch (e) {
+    console.error('[loadJourney]', e);
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:#888">حدث خطأ في التحميل</div>';
+  }
+}
+
+// Auto-load on page ready
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(loadJourney, 100);
+});
 
 </script>
 
