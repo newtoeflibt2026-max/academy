@@ -1,4 +1,27 @@
 
+## 2026-06-17 - Day 3 (part 2): grading logic + is_exam data fix
+
+### Fixed (grading)
+- MCQ answers always marked WRONG: browser sends JSON array '["answer"]' but correct_answer stored as plain text
+- sentence_order needs words joined with spaces, MCQ needs first element
+- Fix in api_lesson_submit: detect q_type -> sentence_order = join words, else = first element
+
+### Fixed (data: writing_questions)
+- Stage 2 exercises (ids 23-42, lessons 5-11) were wrongly is_exam=1
+- Effect: total_available query (is_exam=0) found 0 -> lessons auto-completed at 100% with NO exercises shown
+- Fix: UPDATE is_exam=0 for the 20 sentence_order rows (lessons 5-11)
+
+### KNOWN REMAINING (next)
+- Email lesson page shows "manual review 24h" instead of Gemini copy-paste UI (api/writing/email/submit)
+- Email/discussion scenarios not varying ('new scenario' returns same topic)
+- 8 duplicate questions in stages 3-5 (ids on lessons 18,24,29) to remove
+
+### Files
+- routes/writing_toefl.py (backup: .bak_fixall_*)
+- academy.db (backup: .bak_fixexam_*)
+
+---
+
 ## 2026-06-17 - Day 3: Writing curriculum + 500 fix
 
 ### Built (days prior, now documented)

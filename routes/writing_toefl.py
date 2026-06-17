@@ -286,7 +286,18 @@ def api_lesson_submit(lesson_id):
             q = c.execute("SELECT * FROM writing_questions WHERE id=?", (qid,)).fetchone()
             if q:
                 correct_answer = q["correct_answer"] or ""
-                user_sentence = str(user_ans)
+                try:
+                    _parsed = _json.loads(user_ans) if isinstance(user_ans,str) else user_ans
+                    if isinstance(_parsed,list):
+                        if (q["q_type"] if "q_type" in q.keys() else "") == "sentence_order":
+                            user_sentence = " ".join(str(w) for w in _parsed).strip()
+                        else:
+                            user_sentence = str(_parsed[0]) if _parsed else ""
+                    else:
+                        user_sentence = str(_parsed)
+                    user_sentence = _parsed[0] if isinstance(_parsed,list) and _parsed else str(_parsed)
+                except Exception:
+                    user_sentence = str(user_ans)
                 is_correct = _norm(user_sentence) == _norm(correct_answer)
                 explanation_ar = (q["explanation_ar"] if "explanation_ar" in q.keys() else "") or ""
 
