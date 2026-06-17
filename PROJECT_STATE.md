@@ -1,5 +1,5 @@
 # Yamen Academy - Project State
-Last updated: 2026-06-14
+Last updated: 2026-06-17
 
 ## Mission
 TOEFL iBT prep for Arabic-speaking students.
@@ -13,7 +13,8 @@ TOEFL iBT prep for Arabic-speaking students.
 ## CONTENT (current)
 - Foundation: 50 lessons (F1, F2, F3) - has questions
 - Reading: 32 lessons (R-01 to R-32) - mixed theory + practice
-- Listening / Writing / Speaking: NOT BUILT (hidden from UI)
+- Listening / Speaking: NOT BUILT (hidden from UI)
+- Writing: BUILT (5 stages, 30 lessons, 70 questions) - routes/writing_toefl.py
 
 ## F1-EXAM
 Placement test. 20 Q. >=70% skips Foundation, goes to Reading.
@@ -31,3 +32,11 @@ Placement test. 20 Q. >=70% skips Foundation, goes to Reading.
 
 ## FOR AI ASSISTANTS
 Read this file + CHANGELOG.md before any change.
+
+
+## DAY 2 - Focused Journey (added 2026-06-14)
+- New API: /api/student/journey - phase-aware focused view
+- Dashboard now shows ONLY: current lesson (big card) + 3 upcoming + phase progress
+- 4 phases: F1, F2, F3, reading
+- Celebration message when student completes a phase
+- Old long lesson list is hidden by default (still accessible via /student lessons tab)

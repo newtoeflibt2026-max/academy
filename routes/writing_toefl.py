@@ -202,7 +202,7 @@ def api_lesson_submit(lesson_id):
 
     # Count available exercises in BOTH tables
     wq_count = c.execute("SELECT COUNT(*) FROM writing_questions WHERE lesson_id=? AND is_exam=0", (lesson_id,)).fetchone()[0]
-    sb_count = c.execute("SELECT COUNT(*) FROM sentence_building_exercises WHERE lesson_id=? AND is_exam=0 AND is_active=1", (lesson_id,)).fetchone()[0]
+    sb_count = 0  # sentence_building_exercises has no lesson_id; handled by separate tier route
     total_available = wq_count + sb_count
 
     # CASE A: Reading-only lesson (no exercises) -> auto-complete
