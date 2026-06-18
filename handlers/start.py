@@ -114,7 +114,7 @@ def get_main_keyboard(is_paid=False, user_id=0):
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-@router.message(CommandStart())
+@router.message(CommandStart(ignore_case=True))
 async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     username = message.from_user.username or ""
