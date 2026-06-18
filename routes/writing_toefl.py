@@ -245,7 +245,7 @@ def api_lesson_submit(lesson_id):
     else: threshold = 65
 
     def _norm(s):
-        return _re.sub(r"[.!?,]+", "", str(s).strip().lower())
+        return _re.sub(r"\s+", " ", _re.sub(r"[.!?,]+", " ", str(s).lower())).strip()
 
     feedback = []
     correct_count = 0
@@ -295,7 +295,6 @@ def api_lesson_submit(lesson_id):
                             user_sentence = str(_parsed[0]) if _parsed else ""
                     else:
                         user_sentence = str(_parsed)
-                    user_sentence = _parsed[0] if isinstance(_parsed,list) and _parsed else str(_parsed)
                 except Exception:
                     user_sentence = str(user_ans)
                 is_correct = _norm(user_sentence) == _norm(correct_answer)
@@ -1448,4 +1447,3 @@ def api_gemini_score():
                         "message_ar": msg, "history": [{"s6": r[0], "s120": r[1]} for r in rows]})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
-
