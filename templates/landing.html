@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أكاديمية يامن | احصل على 90+ في TOEFL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1020; --card:#121a33; --line:#1f2a4a;
+  --p1:#6d5dfc; --p2:#8b7bff; --acc:#22d3a8; --wa:#25D366;
+  --txt:#eef1ff; --mut:#9aa3c7;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 30px;border-radius:14px;font-weight:800;font-size:17px;transition:.25s;cursor:pointer;border:none}
+.btn-tg{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;box-shadow:0 10px 30px rgba(109,93,252,.4)}
+.btn-tg:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(109,93,252,.55)}
+.btn-wa{background:var(--wa);color:#fff;box-shadow:0 10px 30px rgba(37,211,102,.35)}
+.btn-wa:hover{transform:translateY(-3px)}
+.btn-ghost{background:transparent;border:2px solid var(--line);color:var(--txt)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,16,32,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-weight:900;font-size:22px;display:flex;align-items:center;gap:8px}
+.logo span{color:var(--acc)}
+.nav-cta{padding:10px 20px;font-size:15px}
+
+/* HERO */
+.hero{position:relative;padding:90px 0 80px;text-align:center;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(900px 500px at 50% -10%,rgba(109,93,252,.35),transparent 60%);z-index:0}
+.hero>*{position:relative;z-index:1}
+.badge{display:inline-block;background:rgba(34,211,168,.12);color:var(--acc);border:1px solid rgba(34,211,168,.3);padding:7px 16px;border-radius:50px;font-weight:700;font-size:14px;margin-bottom:24px}
+.hero h1{font-size:clamp(34px,6vw,60px);font-weight:900;line-height:1.2;margin-bottom:18px}
+.hero h1 b{background:linear-gradient(135deg,var(--acc),var(--p2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:clamp(16px,2.4vw,21px);color:var(--mut);max-width:680px;margin:0 auto 34px;line-height:1.9}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.trust{margin-top:28px;color:var(--mut);font-size:14px}
+.stars{color:#ffc83d;letter-spacing:2px;font-size:18px}
+
+/* STATS */
+.stats{background:var(--card);border-block:1px solid var(--line);padding:46px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.stat h3{font-size:clamp(28px,4vw,42px);font-weight:900;color:var(--acc)}
+.stat p{color:var(--mut);font-size:15px;margin-top:6px}
+
+/* SECTION */
+section{padding:80px 0}
+.sec-head{text-align:center;max-width:680px;margin:0 auto 54px}
+.sec-head .tag{color:var(--p2);font-weight:800;letter-spacing:1px;font-size:14px}
+.sec-head h2{font-size:clamp(26px,4vw,40px);font-weight:900;margin:10px 0 14px}
+.sec-head p{color:var(--mut);font-size:17px;line-height:1.9}
+
+/* FEATURES */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px 26px;transition:.25s}
+.card:hover{transform:translateY(-6px);border-color:var(--p1)}
+.card .ico{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:linear-gradient(135deg,rgba(109,93,252,.2),rgba(34,211,168,.15));margin-bottom:18px}
+.card h4{font-size:20px;font-weight:800;margin-bottom:10px}
+.card p{color:var(--mut);line-height:1.85;font-size:15px}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 24px;position:relative}
+.step .num{position:absolute;top:-18px;inset-inline-start:24px;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--p1),var(--p2));display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:0 8px 20px rgba(109,93,252,.4)}
+.step h4{font-size:18px;font-weight:800;margin:14px 0 8px}
+.step p{color:var(--mut);font-size:14.5px;line-height:1.8}
+
+/* WHY90 */
+.why{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:50px 40px}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.why ul{list-style:none;display:flex;flex-direction:column;gap:16px}
+.why li{display:flex;gap:12px;align-items:flex-start;font-size:16.5px;line-height:1.7}
+.why li::before{content:"✓";color:var(--acc);font-weight:900;background:rgba(34,211,168,.12);width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+.score-box{text-align:center;background:linear-gradient(135deg,rgba(109,93,252,.18),rgba(34,211,168,.12));border:1px solid var(--line);border-radius:22px;padding:40px}
+.score-box .big{font-size:84px;font-weight:900;background:linear-gradient(135deg,var(--acc),var(--p2));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.score-box .lbl{color:var(--mut);margin-top:8px;font-size:17px}
+
+/* TESTIMONIALS */
+.tcards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 24px}
+.tcard .stars{font-size:15px;margin-bottom:14px}
+.tcard p{color:#dfe3ff;line-height:1.9;font-size:15.5px;margin-bottom:18px}
+.tcard .who{display:flex;align-items:center;gap:12px}
+.tcard .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--acc));display:grid;place-items:center;font-weight:900}
+.tcard .who b{display:block;font-size:15px}
+.tcard .who small{color:var(--mut)}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,var(--p1),#4a3ce0);border-radius:28px;padding:60px 40px;text-align:center;box-shadow:0 24px 60px rgba(109,93,252,.4)}
+.cta h2{font-size:clamp(26px,4vw,38px);font-weight:900;margin-bottom:14px}
+.cta p{color:rgba(255,255,255,.9);font-size:18px;margin-bottom:30px}
+.cta .btn-tg{background:#fff;color:var(--p1)}
+.cta .btn-wa{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)}
+
+footer{padding:40px 0;text-align:center;color:var(--mut);border-top:1px solid var(--line);margin-top:60px}
+
+/* FLOATING WHATSAPP */
+.float-wa{position:fixed;bottom:24px;inset-inline-end:24px;z-index:99;width:60px;height:60px;border-radius:50%;background:var(--wa);display:grid;place-items:center;font-size:30px;box-shadow:0 10px 30px rgba(37,211,102,.5);transition:.25s}
+.float-wa:hover{transform:scale(1.1)}
+
+@media(max-width:860px){
+  .stats-grid,.cards,.steps,.tcards{grid-template-columns:1fr 1fr}
+  .why-grid{grid-template-columns:1fr}
+  .nav-cta{display:none}
+}
+@media(max-width:560px){
+  .stats-grid,.cards,.steps,.tcards{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <div class="logo">أكاديمية <span>يامن</span></div>
+    <a href="https://t.me/YamenAcademy_Bot" class="btn btn-tg nav-cta">ابدأ الآن في البوت</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="badge">🎯 منصة إعداد TOEFL داخل تيليجرام</div>
+    <h1>طريقك المضمون إلى <b>90+</b> في اختبار TOEFL</h1>
+    <p>تدرّب على المهارات الأربع داخل بوت ذكي خطوة بخطوة — تأسيس، كتابة، قراءة، استماع ومحادثة، مع تصحيح فوري واختبارات محاكية. كل ما تحتاجه في مكان واحد.</p>
+    <div class="hero-btns">
+      <a href="https://t.me/YamenAcademy_Bot" class="btn btn-tg">🚀 ابدأ مجانًا في البوت</a>
+      <a href="https://wa.me/962798919150" class="btn btn-wa">💬 تواصل عبر واتساب</a>
+    </div>
+    <div class="trust">
+      <span class="stars">★★★★★</span><br>
+      موثوق من آلاف الطلاب العرب
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><h3>+79,000</h3><p>طالب مسجّل</p></div>
+    <div class="stat"><h3>+27</h3><p>خبير لغة إنجليزية</p></div>
+    <div class="stat"><h3>6</h3><p>مهارات متكاملة</p></div>
+    <div class="stat"><h3>90+</h3><p>هدف الدرجة</p></div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="tag">لماذا يامن</div>
+      <h2>منهج صُمّم خصيصًا للطالب العربي</h2>
+      <p>لسنا مجرد دروس — بل نظام متكامل يأخذ بيدك من الصفر حتى الدرجة العالية بأسلوب عملي ومباشر.</p>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="ico">🧱</div><h4>تأسيس قوي</h4><p>نبدأ من بناء الجملة والقواعد الأساسية لتنطلق بثقة قبل الدخول في المهارات المتقدمة.</p></div>
+      <div class="card"><div class="ico">⚡</div><h4>تصحيح فوري</h4><p>تمارين تفاعلية مع تغذية راجعة لحظية تشرح لك خطأك وكيف تتجنبه في الاختبار الحقيقي.</p></div>
+      <div class="card"><div class="ico">🎯</div><h4>مسارات حسب هدفك</h4><p>محتوى متدرّج لأهداف 59+، 69+، و90+ — تتدرّب على مستواك وترتقي خطوة بخطوة.</p></div>
+      <div class="card"><div class="ico">📝</div><h4>اختبارات محاكية</h4><p>Mock Exams على نمط TOEFL iBT الحقيقي لتقيس مستواك وتعرف نقاط ضعفك قبل الاختبار.</p></div>
+      <div class="card"><div class="ico">📊</div><h4>تتبّع إنجازك</h4><p>لوحة إنجازات تُظهر تقدّمك في كل قسم وكم تبقّى لإكمال الدورة كاملة.</p></div>
+      <div class="card"><div class="ico">📱</div><h4>كله داخل تيليجرام</h4><p>لا تطبيقات معقّدة ولا تسجيلات طويلة — افتح البوت وابدأ التعلّم فورًا من هاتفك.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="tag">كيف يعمل</div>
+      <h2>رحلتك نحو 90+ في 3 خطوات</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h4>افتح البوت</h4><p>اضغط زر البدء في تيليجرام واختر مسارك. اختبار تحديد مستوى يضعك في المكان الصحيح.</p></div>
+      <div class="step"><div class="num">2</div><h4>تدرّب يوميًا</h4><p>دروس قصيرة وتمارين عملية في المهارات الأربع، مع تصحيح فوري يرفع مستواك بسرعة.</p></div>
+      <div class="step"><div class="num">3</div><h4>اختبر وحقّق هدفك</h4><p>خُض الاختبارات المحاكية، تابع إنجازك، وادخل اختبار TOEFL الحقيقي وأنت جاهز لـ 90+.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="why">
+      <div class="why-grid">
+        <div>
+          <div class="tag" style="color:var(--p2);font-weight:800">لماذا 90+ تحديدًا</div>
+          <h2 style="font-size:30px;font-weight:900;margin:10px 0 22px">الدرجة التي تفتح كل الأبواب</h2>
+          <ul>
+            <li>تأهّلك لأقوى الجامعات والمنح الدراسية حول العالم.</li>
+            <li>تثبت إتقانك الأكاديمي للغة الإنجليزية بثقة.</li>
+            <li>تمنحك أفضلية في القبول والوظائف الدولية.</li>
+            <li>منهجنا مبني خصيصًا للوصول إلى هذا المستوى لا أقل.</li>
+          </ul>
+        </div>
+        <div class="score-box">
+          <div class="big">90+</div>
+          <div class="lbl">هدفنا الذي نعمل من أجله معك</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="tag">آراء الطلاب</div>
+      <h2>قصص نجاح حقيقية</h2>
+    </div>
+    <div class="tcards">
+      <div class="tcard"><div class="stars" style="color:#ffc83d">★★★★★</div><p>"المنهج منظّم جدًا والتصحيح الفوري ساعدني أفهم أخطائي بسرعة. أخيرًا تجاوزت حاجز الـ 90."</p><div class="who"><div class="av">أ</div><div><b>أحمد</b><small>طالب TOEFL</small></div></div></div>
+      <div class="tcard"><div class="stars" style="color:#ffc83d">★★★★★</div><p>"أفضل شيء أنه كله داخل تيليجرام، أتدرّب في أي وقت ومن أي مكان. التأسيس كان نقطة التحول."</p><div class="who"><div class="av">س</div><div><b>سارة</b><small>طالبة جامعية</small></div></div></div>
+      <div class="tcard"><div class="stars" style="color:#ffc83d">★★★★★</div><p>"الاختبارات المحاكية قريبة جدًا من الاختبار الحقيقي. دخلت يوم الامتحان واثقًا تمامًا."</p><div class="who"><div class="av">م</div><div><b>محمد</b><small>طالب دراسات عليا</small></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <h2>جاهز لتبدأ رحلتك نحو 90+؟</h2>
+      <p>انضم لآلاف الطلاب وابدأ التعلّم اليوم — مجانًا داخل البوت.</p>
+      <div class="hero-btns">
+        <a href="https://t.me/YamenAcademy_Bot" class="btn btn-tg">🚀 ابدأ الآن في تيليجرام</a>
+        <a href="https://wa.me/962798919150" class="btn btn-wa">💬 استفسر عبر واتساب</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    أكاديمية يامن — إعداد TOEFL الاحترافي &nbsp;·&nbsp; جميع الحقوق محفوظة © 2026
+  </div>
+</footer>
+
+<a href="https://wa.me/962798919150" class="float-wa" title="واتساب">💬</a>
+
+</body>
+</html>
