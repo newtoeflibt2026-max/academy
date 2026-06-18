@@ -123,8 +123,7 @@ async def cmd_start(message: types.Message):
     # Onboarding gate: if student missed target or placement, show big button
     try:
         import sqlite3 as _sq, os as _os
-        _db = _os.environ.get("DB_PATH") or "/app/data/academy.db"
-        if not _os.path.exists(_db): _db = "academy.db"
+        _db = DB_PATH
         _c = _sq.connect(_db); _c.row_factory = _sq.Row
         _r = _c.execute("SELECT target_score, placement_done FROM students WHERE telegram_id=?", (user_id,)).fetchone()
         _c.close()
@@ -148,10 +147,25 @@ async def cmd_start(message: types.Message):
         )
         return
 
-    create_student(user_id, username=username, full_name=full_name)
-    student = get_student(user_id) or {}
-    streak = update_streak(user_id)
-    setup = _get_student_setup(user_id) or {}
+    try:
+        create_student(user_id, username=username, full_name=full_name)
+    except Exception as _e:
+        logger.error(f"[start] create_student failed: {_e}")
+    try:
+        student = get_student(user_id) or {}
+    except Exception as _e:
+        logger.error(f"[start] get_student failed: {_e}")
+        student = {}
+    try:
+        streak = update_streak(user_id)
+    except Exception as _e:
+        logger.error(f"[start] update_streak failed: {_e}")
+        streak = 0
+    try:
+        setup = _get_student_setup(user_id) or {}
+    except Exception as _e:
+        logger.error(f"[start] setup failed: {_e}")
+        setup = {}
 
     welcome_msg = get_setting("bot_welcome_message", "أهلاً بك في أكاديمية يامن! 🎓")
     is_paid = bool(student.get("is_paid", 0))
@@ -169,7 +183,11 @@ async def cmd_start(message: types.Message):
         f"🎯 الهدف: {target_txt}\n\n"
         "اختر من القائمة 👇"
     )
-    await message.answer(text, reply_markup=get_main_keyboard(is_paid, user_id=user_id))
+    try:
+        await message.answer(text, reply_markup=get_main_keyboard(is_paid, user_id=user_id))
+    except Exception as _e:
+        logger.error(f"[start] send menu failed: {_e}")
+        await message.answer("????? ?? ?? ???????? ????! ??\n?????? ??????? ??????? ?????.", reply_markup=get_main_keyboard(False, user_id=user_id))
 
 
 @router.callback_query(F.data == "track:toefl")
