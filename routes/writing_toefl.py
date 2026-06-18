@@ -491,6 +491,12 @@ def api_stage_exam_submit(stage_id):
     questions = c.execute("""SELECT * FROM writing_questions
         WHERE lesson_id=? ORDER BY order_index""", (exam["id"],)).fetchall()
 
+    if not questions:
+        conn.close()
+        return jsonify({"success": False, "error": "?? ???? ????? ???? ????????"}), 400
+    if not questions:
+        conn.close()
+        return jsonify({"success": False, "error": "?? ???? ????? ???? ????????"}), 400
     correct = 0
     total = len(questions)
     feedback = []
@@ -521,9 +527,10 @@ def api_stage_exam_submit(stage_id):
         feedback.append({
             "question_id": q["id"],
             "is_correct": is_correct,
-            "your_answer": student_ans,
+            "user_answer": student_ans,
             "correct_answer": q["correct_answer"],
-            "explanation": q["explanation_ar"]
+            "explanation_ar": q["explanation_ar"],
+            "strategy_ar": q["strategy_ar"] if "strategy_ar" in q.keys() else None,
         })
 
         c.execute("""INSERT INTO writing_attempts
@@ -571,6 +578,8 @@ def api_stage_exam_submit(stage_id):
         "threshold": 80,
         "feedback": feedback,
         "next_stage_id": next_stage_id if passed else None,
+        "next_lesson_id": None,
+        "stage_exam_id": None,
         "is_exam": True
     })
 

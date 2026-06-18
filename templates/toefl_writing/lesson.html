@@ -59,7 +59,7 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 <a href="{{ practice_url }}" style="display:block;text-align:center;margin:20px 0;padding:16px;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:12px;font-weight:bold;text-decoration:none;font-size:16px">🚀 ابدأ التدريب الفعلي (تصحيح فوري بالذكاء الاصطناعي)</a>
 {% endif %}
 
-{% if not questions or questions|length == 0 %}
+{% if (not questions or questions|length == 0) and not is_exam %}
 <div style="text-align:center;margin:25px 0;">
   <button onclick="finishReadingLesson()" id="finish-reading-btn"
           style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:16px 40px;font-size:17px;font-weight:700;border-radius:12px;cursor:pointer;box-shadow:0 6px 18px rgba(16,185,129,0.35);">
@@ -69,6 +69,9 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 {% endif %}
 </div>
 
+{% if is_exam and (not questions or questions|length == 0) %}
+  <div style='padding:24px;text-align:center;color:#b91c1c'>?? ?? ???? ????? ???? ???????? ??????. ????? ?? ???????.</div>
+{% endif %}
 {% if questions %}
 <div class="quiz-card" id="quiz">
 <h2>📝 Practice Exercises ({{ questions|length }})</h2>
@@ -115,7 +118,9 @@ body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;paddin
 <script>
 const LESSON_ID = {{ lesson.id }};
 const USER_ID = "{{ user_id }}";
-const SUBMIT_URL = `/api/writing/lesson/${LESSON_ID}/submit`;
+const IS_EXAM = {{ 'true' if is_exam else 'false' }};
+  const STAGE_ID = {{ stage.id if stage else lesson.stage_id }};
+  const SUBMIT_URL = IS_EXAM ? `/api/writing/stage/${STAGE_ID}/exam/submit` : `/api/writing/lesson/${LESSON_ID}/submit`;
 
 function pickWord(el){
   // If chip is already used, ignore
@@ -192,10 +197,13 @@ function buildFeedback(data){
 
 function buildNextButton(data){
   if(data.passed){
+    if(data.next_stage_id){
+      return `<a href="/writing/stage/${data.next_stage_id}?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">\ud83d\ude80 \u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0627\u0644\u062a\u0627\u0644\u064a\u0629 \u2190</a>`;
+    }
     if(data.next_lesson_id){
       return `<a href="/writing/lesson/${data.next_lesson_id}?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">✅ Next Lesson →</a>`;
     } else if(data.stage_exam_id){
-      return `<a href="/writing/lesson/${data.stage_exam_id}?user_id=${USER_ID}" class="btn-primary" style="background:#8b5cf6">🎯 Start Stage Exam</a>`;
+      return `<a href="/writing/stage/${data.stage_id}/exam?user_id=${USER_ID}" class="btn-primary" style="background:#8b5cf6">🎯 Start Stage Exam</a>`;
     } else {
       return `<a href="/writing/stage/${data.stage_id || '{{ stage.id }}'}?user_id=${USER_ID}" class="btn-primary" style="background:#10b981">✅ Back to Stage</a>`;
     }
