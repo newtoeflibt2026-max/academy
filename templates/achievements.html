@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إنجازاتي</title>
+<style>
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f1f5f9;margin:0;padding:16px;color:#0f172a}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:22px;text-align:center;margin:10px 0 4px}
+.overall{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:16px;padding:20px;text-align:center;margin-bottom:18px}
+.overall .big{font-size:38px;font-weight:bold}
+.overall .bar{background:rgba(255,255,255,.25);border-radius:10px;height:12px;margin-top:10px;overflow:hidden}
+.overall .fill{background:#fff;height:100%}
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.row{display:flex;align-items:center;gap:12px}
+.ic{font-size:26px}
+.name{font-weight:bold;font-size:16px;flex:1}
+.cnt{font-size:13px;color:#64748b}
+.bar{background:#e2e8f0;border-radius:10px;height:14px;margin-top:10px;overflow:hidden}
+.fill{height:100%;border-radius:10px;transition:width .4s}
+.rem{font-size:13px;color:#475569;margin-top:8px}
+.btn{display:block;text-align:center;margin-top:10px;padding:11px;border-radius:10px;color:#fff;text-decoration:none;font-weight:bold}
+.soon{background:#f8fafc;border:1px dashed #cbd5e0;color:#94a3b8;text-align:center;margin-top:10px;padding:11px;border-radius:10px;font-weight:bold}
+.done-badge{color:#16a34a;font-weight:bold;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 إنجازاتي</h1>
+  <div class="overall">
+    <div>إكمال الدورة</div>
+    <div class="big">{{ overall }}%</div>
+    <div class="bar"><div class="fill" style="width:{{ overall }}%"></div></div>
+    <div style="margin-top:8px;font-size:13px">أنجزت {{ tot_done }} من {{ tot_all }} (الأقسام المتاحة)</div>
+  </div>
+
+  {% for s in sections %}
+  <div class="card">
+    <div class="row">
+      <span class="ic">{{ s.icon }}</span>
+      <span class="name">{{ s.name }}</span>
+      {% if s.total %}<span class="cnt">{{ s.done }}/{{ s.total }}</span>{% endif %}
+    </div>
+    {% if s.total %}
+    <div class="bar"><div class="fill" style="width:{{ s.percent }}%;background:{{ s.color }}"></div></div>
+    {% if s.remaining == 0 and s.enabled %}
+      <div class="rem"><span class="done-badge">✅ أكملت هذا القسم!</span></div>
+    {% else %}
+      <div class="rem">تبقّى لك <b>{{ s.remaining }}</b> لإكمال القسم</div>
+    {% endif %}
+    {% endif %}
+    {% if s.enabled %}
+      <a class="btn" style="background:{{ s.color }}" href="{{ s.url }}">ادخل القسم ←</a>
+    {% else %}
+      <div class="soon">🔒 قريبًا</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+</body>
+</html>

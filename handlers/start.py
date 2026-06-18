@@ -108,8 +108,8 @@ def get_main_keyboard(is_paid=False, user_id=0):
          InlineKeyboardButton(text="🎧 الاستماع", web_app=wa("/listening"))],
         [InlineKeyboardButton(text="✍️ الكتابة", web_app=wa("/writing")),
          InlineKeyboardButton(text="🗣️ المحادثة", web_app=wa("/speaking"))],
-        [InlineKeyboardButton(text="🏠 الرئيسية", web_app=wa("/home")),
-         InlineKeyboardButton(text="📊 لوحتي", web_app=wa("/student"))],
+        [InlineKeyboardButton(text="🏠 الرئيسية", web_app=wa("/achievements")),
+         InlineKeyboardButton(text="📊 لوحتي", web_app=wa("/achievements"))],
         [InlineKeyboardButton(text="💳 الباقات والاشتراك", web_app=wa("/miniapp/plans"))],
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)

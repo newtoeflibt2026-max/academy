@@ -163,6 +163,8 @@ except Exception as _e:
 try:
     from routes.home_routes import home_bp
     app.register_blueprint(home_bp)
+    from routes.achievements import achievements_bp
+    app.register_blueprint(achievements_bp)
     print('[Home] home_bp registered: /home, /api/hearts/*')
 except Exception as _e:
     print(f'[Home] home_bp registration failed: {_e}')
