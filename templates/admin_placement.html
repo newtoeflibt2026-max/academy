@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتائج اختبار تحديد المستوى</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:#0f1424;color:#eef1ff;padding:30px}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:26px;margin-bottom:6px}
+.sub{color:#9aa3c7;margin-bottom:24px}
+.cards{display:flex;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.kpi{background:#1a2342;border:1px solid #28335c;border-radius:14px;padding:18px 26px;flex:1;min-width:160px}
+.kpi b{font-size:30px;color:#22d3a8;display:block}
+.kpi span{color:#9aa3c7;font-size:14px}
+table{width:100%;border-collapse:collapse;background:#161e38;border-radius:14px;overflow:hidden}
+th,td{padding:13px 14px;text-align:right;border-bottom:1px solid #28335c}
+th{background:#1f2a4a;color:#c9d2ff;font-size:14px}
+td{font-size:14.5px}
+tr:hover td{background:#1c264a}
+.badge{padding:4px 12px;border-radius:50px;font-size:13px;font-weight:700}
+.adv{background:rgba(34,211,168,.15);color:#22d3a8}
+.beg{background:rgba(255,170,60,.15);color:#ffaa3c}
+.score{font-weight:800;font-size:16px}
+.tg{display:inline-block;background:rgba(40,150,255,.15);color:#4aa8ff;padding:5px 12px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none}
+.tg:hover{background:rgba(40,150,255,.3)}
+.muted{color:#6b7497}
+.empty{text-align:center;color:#9aa3c7;padding:40px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 نتائج اختبار تحديد المستوى</h1>
+  <div class="sub">جميع الطلاب الذين أكملوا اختبار تحديد المستوى</div>
+  <div class="cards">
+    <div class="kpi"><b>{{ total }}</b><span>طالب أكمل الاختبار</span></div>
+    <div class="kpi"><b>{{ avg }}%</b><span>متوسط الدرجات</span></div>
+  </div>
+  {% if students %}
+  <table>
+    <thead><tr>
+      <th>#</th><th>الاسم</th><th>الدرجة</th><th>المسار</th><th>المستوى</th>
+      <th>الهاتف</th><th>تواصل</th>
+    </tr></thead>
+    <tbody>
+    {% for s in students %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ s.display_name }}</td>
+        <td><span class="score">{{ s.placement_score }}%</span></td>
+        <td><span class="badge {{ 'adv' if s.placement_score and s.placement_score>=60 else 'beg' }}">{{ s.placement_path or "—" }}</span></td>
+        <td>{{ s.level or "—" }}</td>
+        <td>{% if s.phone %}{{ s.phone }}{% else %}<span class="muted">—</span>{% endif %}</td>
+        <td>
+          {% if s.username %}
+            <a class="tg" href="https://t.me/{{ s.username }}" target="_blank">💬 مراسلة</a>
+          {% else %}
+            <span class="muted">ID: {{ s.telegram_id }}</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">لا توجد نتائج بعد.</div>
+  {% endif %}
+</div>
+</body>
+</html>
