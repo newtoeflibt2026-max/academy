@@ -1,4 +1,4 @@
-﻿import os, sqlite3
+import os, sqlite3
 from flask import Blueprint, render_template, request, abort
 
 placement_admin_bp = Blueprint("placement_admin", __name__)

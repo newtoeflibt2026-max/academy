@@ -145,6 +145,163 @@ def _extract_json(text):
                 pass
     return None
 
+# ============================================================
+# INTERNAL GRADER v3 - مصحح داخلي محسن (ETS 2026 - تقديري)
+# rubric للمهمة 0-5، يحول 1-6 + معادلة 120، يكشف التكرار والحشو
+# + يبني برومبت تدريب Gemini احترافي
+# ============================================================
+import re as _r
+_GEMINI_URL = "https://gemini.google.com/app"
+_CONNECTORS = ["because","however","therefore","although","moreover","furthermore",
+ "in addition","for example","for instance","on the other hand","as a result",
+ "first","second","finally","in conclusion","while","whereas","since","thus","also"]
+_FILLER = ["very","really","just","actually","basically","thing","things","stuff"]
+
+def _ets_scales(task5):
+    """يحول درجة المهمة (0-5) إلى مقياس ETS الجديد 1-6 (نصف نقطة) + معادلة 0-120."""
+    sec30 = round((task5 / 5.0) * 30)
+    raw6 = 1.0 + (sec30 / 30.0) * 5.0
+    band6 = round(raw6 * 2) / 2.0
+    band6 = max(1.0, min(6.0, band6))
+    eq120 = round((band6 - 1.0) / 5.0 * 120)
+    disp = f"{band6:g} / 6 (\u2248 {eq120} / 120)"
+    return band6, eq120, sec30, disp
+
+def _build_gemini_prompt(task_label, question, context, student_text):
+    if isinstance(context, list):
+        ctx = (chr(10)).join('- ' + str(c) for c in context if c).strip()
+    else:
+        ctx = str(context or '').strip()
+    NL = chr(10)
+    parts = []
+    parts.append('دورك: أنت مدرب خبير ودقيق لمهارة TOEFL iBT Writing (صيغة 2026)، تساعدني على تطوير كتابتي وتتابع معي في نفس المحادثة.')
+    parts.append('')
+    parts.append('== نوع المهمة ==')
+    parts.append(task_label)
+    parts.append('')
+    parts.append('== السؤال/الموضوع ==')
+    parts.append(question)
+    parts.append('')
+    if ctx:
+        parts.append('== متطلبات المهمة ==')
+        parts.append(ctx)
+        parts.append('')
+    parts.append('== إجابتي ==')
+    parts.append(student_text)
+    parts.append('')
+    parts.append('== المطلوب منك بالضبط (أجب بالعربية بشكل منظم وواضح) ==')
+    parts.append('1) صحح إجابتي وفق معايير ETS الرسمية: تطور الفكرة وتنظيمها، الاستخدام اللغوي والمفردات، القواعد والإملاء، مدى تلبية المهمة.')
+    parts.append('2) أعطني درجة المهمة من 0 إلى 5، ثم حولها لمقياس 1-6 (نصف نقطة) ومعادلة 120، بالصيغة: X / 6 (\u2248 Y / 120).')
+    parts.append('3) حدد أهم 3-5 أخطاء فعلية/نقاط ضعف عندي مع أمثلة من نصي.')
+    parts.append('4) أعطني أقوى نقطة عندي (لأبني عليها).')
+    parts.append('5) صمم لي مهمة تدريبية صغيرة تعالج أهم نقطة ضعف، ثم اطلب مني أن أكتب محاولتي وألصقها هنا لتتابع تطوري.')
+    parts.append('6) قدم فقرة نموذجية قصيرة كمثال على المستوى الأعلى.')
+    parts.append('')
+    parts.append('ملاحظة مهمة جدا: المهمة التدريبية الجديدة (السؤال والمطلوب من الطالب) اكتبها بالانجليزية فقط لانها تحاكي امتحان TOEFL الحقيقي. اما الشرح والتصحيح والملاحظات والتقييم فبالعربية.')
+    parts.append('في نهاية ردك اطلب مني أن ألصق محاولتي القادمة في نفس المحادثة لتستمر بمتابعتي وتقييم تقدمي خطوة بخطوة.')
+    return NL.join(parts)
+
+def _grade_internal(student_text, context_terms=None, task_type="email",
+                    min_words=100, question="", task_label=""):
+    """مصحح داخلي تقديري (غير رسمي للتدريب). الدرجة النهائية للطالب."""
+    context_terms = context_terms or []
+    text = (student_text or "").strip()
+    words = [w for w in _r.split(r"\s+", text) if w]
+    wc = len(words)
+    lower = text.lower()
+    norm = [w.lower().strip('.,!?;:"\'()') for w in words if w.strip('.,!?;:"\'()')]
+
+    label = task_label or ("TOEFL Writing - Write an Email" if task_type=="email"
+                           else "TOEFL Writing - Academic Discussion")
+    gp = _build_gemini_prompt(label, question or "(لا يوجد سؤال في القاعدة)",
+                              context_terms, text)
+    base = {"gemini_prompt": gp, "gemini_url": _GEMINI_URL, "is_estimate": True}
+
+    if wc < 20:
+        b6,eq,_,disp = _ets_scales(0)
+        return {**base,"score":0,"score6":b6,"score120":eq,"display":disp,
+            "band_label":"ضعيف","word_count":wc,"errors":[],"strengths":[],
+            "improvements":["النص قصير جدا. اكتب 100 كلمة على الأقل."],
+            "feedback_ar":f"النص قصير جدا ({wc} كلمة) للتقييم.","ai_available":True}
+
+    pts = 0.0; strengths=[]; improvements=[]
+
+    ratio = wc/max(min_words,1)
+    if ratio>=1.0: pts+=20; strengths.append("طول مناسب للمهمة")
+    elif ratio>=0.7: pts+=14; improvements.append(f"قريب من الحد ({min_words}+ كلمة). زد قليلا.")
+    else: pts+=10*ratio; improvements.append(f"النص أقصر من المطلوب ({min_words}+ كلمة وليس {wc}).")
+
+    terms=[t.lower() for t in context_terms if t and len(str(t))>3]
+    if terms:
+        kws=set()
+        for t in terms:
+            for w in _r.split(r"\s+", t):
+                w=w.strip('.,!?;:"\'()').lower()
+                if len(w)>4: kws.add(w)
+        hit=sum(1 for k in kws if k in lower)
+        cov=hit/max(len(kws),1)
+        pts+=25*min(cov*1.5,1.0)
+        if cov>=0.4: strengths.append("تناول عناصر المهمة المطلوبة")
+        else: improvements.append("تأكد من تغطية كل نقاط/متطلبات المهمة.")
+    else: pts+=18
+
+    sents=[s for s in _r.split(r"[.!?]+", text) if s.strip()]
+    ns=len(sents)
+    if ns>=5: pts+=10; strengths.append("تنظيم جيد للجمل والأفكار")
+    elif ns>=3: pts+=7
+    else: pts+=3; improvements.append("قسم أفكارك إلى جمل أكثر.")
+    if task_type=="email":
+        if any(g in lower for g in ["dear","hello","hi ","greetings"]): pts+=5
+        else: improvements.append("ابدأ بتحية رسمية (Dear ...).")
+        if any(c in lower for c in ["regards","sincerely","thank you","best ","yours"]): pts+=5
+        else: improvements.append("اختم بخاتمة رسمية (Best regards ...).")
+    else:
+        pts += 10 if (ns>=6 or "\n" in text) else 5
+
+    uniq=len(set(norm)); total=max(len(norm),1)
+    diversity=uniq/total
+    from collections import Counter
+    cnt=Counter(w for w in norm if len(w)>3 and w not in _FILLER and w not in _CONNECTORS)
+    over=sum(v-3 for v in cnt.values() if v>3)
+    rep_penalty=min(over*1.5, 12)
+    pts += 12*min(diversity/0.55,1.0)
+    if diversity>=0.55 and over==0: strengths.append("تنوع جيد في المفردات بلا تكرار")
+    elif over>0: improvements.append("قلل تكرار الكلمات وتنويع المفردات مطلوب.")
+    conn=sum(1 for c in _CONNECTORS if c in lower)
+    if conn>=3: pts+=8; strengths.append("استخدام جيد لأدوات الربط")
+    elif conn>=1: pts+=5
+    else: improvements.append("استخدم أدوات ربط (however, because, therefore).")
+
+    filler_ratio=sum(1 for w in norm if w in _FILLER)/total
+    if filler_ratio>0.12:
+        pts-=8; improvements.append("قلل كلمات الحشو (very, really, just, things).")
+    clean_sents=[_r.sub(r"\s+"," ",s.strip().lower()) for s in sents if len(s.strip())>10]
+    if len(clean_sents)!=len(set(clean_sents)):
+        pts-=8; improvements.append("هناك جمل مكررة حرفيا في نصك.")
+    pts -= rep_penalty
+
+    score100=max(0,min(100,round(pts)))
+    task5=round(score100/100*5*2)/2.0
+
+    if task5>=4.5: band="ممتاز"
+    elif task5>=3.5: band="جيد جدا"
+    elif task5>=2.5: band="جيد"
+    elif task5>=1.5: band="مقبول"
+    else: band="ضعيف"
+
+    b6,eq120,sec30,disp=_ets_scales(task5)
+    if not strengths: strengths.append("محاولة جادة في الكتابة")
+    if not improvements: improvements.append("راجع نصك مع Gemini لرفع المستوى.")
+
+    return {**base,
+        "score": task5, "score6": b6, "score120": eq120, "section30": sec30,
+        "display": disp, "band_label": band, "word_count": wc, "errors": [],
+        "strengths": strengths[:4], "improvements": improvements[:4],
+        "feedback_ar": (f"تقدير تدريبي تقريبي: {disp} \u2014 {band}. عدد الكلمات {wc}. "
+                        "هذا تقدير داخلي للتدريب وليس درجة الامتحان. انسخ البرومبت "
+                        "أدناه وصححه على Gemini للحصول على تصحيح احترافي وخطة تدريب."),
+        "ai_available": True}
+
 def _fallback_grade(student_text, task_type="email"):
     """Simple offline grader when Gemini fails."""
     words = student_text.split()
@@ -225,11 +382,7 @@ def grade_email(scenario, requirements, student_email):
         }
     req_str = "\n".join([f"- {r}" for r in requirements]) if isinstance(requirements, list) else str(requirements)
     prompt = EMAIL_PROMPT.format(scenario=scenario, requirements=req_str) + f"\n\nبريد الطالب:\n{student_email}"
-    text = _call_gemini(prompt, max_tokens=1500)
-    result = _extract_json(text)
-    if not result:
-        return _fallback_grade(student_email, "email")
-    result["ai_available"] = True
+    return _grade_internal(student_email, context_terms=requirements, task_type="email", min_words=100, question=scenario)
     return result
 
 def grade_discussion(professor_question, student1, student2, student_response):
@@ -250,11 +403,7 @@ def grade_discussion(professor_question, student1, student2, student_response):
         student1=student1,
         student2=student2
     ) + f"\n\nرد الطالب:\n{student_response}"
-    text = _call_gemini(prompt, max_tokens=1500)
-    result = _extract_json(text)
-    if not result:
-        return _fallback_grade(student_response, "discussion")
-    result["ai_available"] = True
+    return _grade_internal(student_response, context_terms=[student1, student2], task_type="discussion", min_words=100, question=professor_question)
     return result
 
 # ═══════════════════════════════════════════════════════════

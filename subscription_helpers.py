@@ -253,12 +253,15 @@ def require_section_access(section):
         def wrapped(*args, **kwargs):
             # استخراج user_id
             user_id = (request.args.get("user_id")
+                       or request.args.get("student_id")
                        or request.form.get("user_id")
-                       or (request.get_json(silent=True) or {}).get("user_id"))
+                       or request.form.get("student_id")
+                       or (request.get_json(silent=True) or {}).get("user_id")
+                       or (request.get_json(silent=True) or {}).get("student_id"))
 
             if not user_id:
                 # حاول من kwargs (المسارات التي تحتوي على <user_id>)
-                user_id = kwargs.get("user_id")
+                user_id = kwargs.get("user_id") or kwargs.get("student_id")
 
             if not user_id:
                 return render_locked_page(section, reason="no_user")
