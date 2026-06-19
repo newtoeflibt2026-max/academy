@@ -247,6 +247,38 @@ def api_lesson_submit(lesson_id):
     def _norm(s):
         return _re.sub(r"\s+", " ", _re.sub(r"[.!?,]+", " ", str(s).lower())).strip()
 
+    def _accepts(user_s, correct_s, q_row):
+        """???? ??????? ??? ????? ??????? ?? ?? ???? ????? ?? ????? ???? and/or."""
+        nu = _norm(user_s)
+        if nu == _norm(correct_s):
+            return True
+        # ????? ?????? ?? accepted_answers
+        try:
+            keys = q_row.keys()
+        except Exception:
+            keys = []
+        if "accepted_answers" in keys and q_row["accepted_answers"]:
+            try:
+                for alt in _json.loads(q_row["accepted_answers"]):
+                    if nu == _norm(alt):
+                        return True
+            except Exception:
+                pass
+        # ????? ?????? ?????? ??????? ??? and / or  (X A and B Y == X B and A Y)
+        cw = _norm(correct_s).split()
+        uw = nu.split()
+        if len(cw) == len(uw) and len(cw) >= 3:
+            for conj in ("and", "or"):
+                if conj in cw:
+                    i = cw.index(conj)
+                    if 0 < i < len(cw) - 1:
+                        sw = cw[:]
+                        sw[i-1], sw[i+1] = sw[i+1], sw[i-1]
+                        if uw == sw:
+                            return True
+        return False
+
+
     feedback = []
     correct_count = 0
 
@@ -279,7 +311,7 @@ def api_lesson_submit(lesson_id):
                 except:
                     user_sentence = str(user_ans)
                 if user_sentence:
-                    is_correct = _norm(user_sentence) == _norm(correct_answer)
+                    is_correct = _accepts(user_sentence, correct_answer, sb)
         else:
             try: qid = int(qid_str)
             except: continue
@@ -297,7 +329,7 @@ def api_lesson_submit(lesson_id):
                         user_sentence = str(_parsed)
                 except Exception:
                     user_sentence = str(user_ans)
-                is_correct = _norm(user_sentence) == _norm(correct_answer)
+                is_correct = _accepts(user_sentence, correct_answer, q)
                 explanation_ar = (q["explanation_ar"] if "explanation_ar" in q.keys() else "") or ""
 
         if is_correct:
