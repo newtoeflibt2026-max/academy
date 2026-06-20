@@ -691,14 +691,25 @@ def view_email_list():
         (tg_id,)
     ).fetchone()
     tier = tier_row[0] if tier_row else "tier59"
-    # جلب السيناريوهات المناسبة
-    scenarios = c.execute("""
-        SELECT id, code, title_ar, title_en, scenario_text, recipient_role,
-               requirements_json, target_tier, min_words, difficulty, order_index
-        FROM writing_email_scenarios
-        WHERE is_active=1 AND (target_tier=? OR target_tier='all')
-        ORDER BY order_index
-    """, (tier,)).fetchall()
+    # الأدمن يرى كل السيناريوهات (تجاوز فلتر tier)
+    _admin_ids = [a.strip() for a in (os.environ.get("ADMIN_IDS") or "").split(",") if a.strip()]
+    _is_admin = str(tg_id) in _admin_ids
+    if _is_admin:
+        scenarios = c.execute("""
+            SELECT id, code, title_ar, title_en, scenario_text, recipient_role,
+                   requirements_json, target_tier, min_words, difficulty, order_index
+            FROM writing_email_scenarios
+            WHERE is_active=1
+            ORDER BY order_index
+        """).fetchall()
+    else:
+        scenarios = c.execute("""
+            SELECT id, code, title_ar, title_en, scenario_text, recipient_role,
+                   requirements_json, target_tier, min_words, difficulty, order_index
+            FROM writing_email_scenarios
+            WHERE is_active=1 AND (target_tier=? OR target_tier='all')
+            ORDER BY order_index
+        """, (tier,)).fetchall()
     # تحويل لقواميس
     scenarios_list = []
     for s in scenarios:
