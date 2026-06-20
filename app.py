@@ -42,6 +42,26 @@ DB_PATH = _resolve_db_path()
 
 os.environ["DB_PATH"] = DB_PATH  # ensure ALL submodules see the same path
 
+# ===== ensure relative "academy.db" -> volume DB (symlink) =====
+def _ensure_db_symlink():
+    try:
+        rel = os.path.join(os.path.dirname(os.path.abspath(__file__)), "academy.db")
+        if os.path.abspath(rel) == os.path.abspath(DB_PATH):
+            return
+        if os.path.islink(rel) and os.path.realpath(rel) == os.path.realpath(DB_PATH):
+            return
+        if os.path.exists(rel) or os.path.islink(rel):
+            try:
+                os.remove(rel)
+            except Exception:
+                pass
+        os.symlink(DB_PATH, rel)
+        print("[DB_SYMLINK] linked", rel, "->", DB_PATH)
+    except Exception as e:
+        print("[DB_SYMLINK] error:", e)
+_ensure_db_symlink()
+
+
 
 
 # ===== AUTO_SYNC_DB_FROM_REPO: copy repo academy.db to Volume if newer =====
