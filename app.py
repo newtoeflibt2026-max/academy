@@ -14281,8 +14281,8 @@ def _debug_find_tid():
 
 @app.route("/api/student/next-lesson", methods=["GET"])
 def api_student_next_lesson():
-    import sqlite3, os
-    """Return the next lesson based on the student's subscription_section and placement_path."""
+    import sqlite3, os, sys
+    """Guided journey: foundation(F%) -> reading(R-%) from lessons table, then handoff to listening/writing/speaking by package."""
     try:
         uid = int(request.args.get('user_id') or request.args.get('student_id') or 0)
     except Exception:
@@ -14294,39 +14294,24 @@ def api_student_next_lesson():
     con.row_factory = sqlite3.Row
     cur = con.cursor()
 
-    # Read subscription + placement to decide allowed sections
-    cur.execute("SELECT subscription_section, placement_path FROM students WHERE user_id=?", (str(uid),))
-    _srow = cur.fetchone()
-    _sub = (_srow["subscription_section"] if _srow else "") or ""
-    _path = (_srow["placement_path"] if _srow else "") or ""
-    _ORDER = ["foundation", "reading", "listening", "writing", "speaking"]
-    if _sub in ("full", "emergency"):
-        _allowed = list(_ORDER)
-    elif _sub in ("reading", "listening", "writing", "speaking"):
-        _allowed = [_sub]
-    elif _sub == "foundation":
-        _allowed = ["foundation"]
+    cur.execute("SELECT placement_path FROM students WHERE user_id=?", (str(uid),))
+    _r = cur.fetchone()
+    _path = (_r["placement_path"] if _r else "") or ""
+    _include_foundation = (_path == "" or _path == "foundation")
+
+    # Build ordered list from lessons table by code: F% then R-%
+    if _include_foundation:
+        cur.execute("SELECT id, lesson_code, title_ar, title, skill, stage, section_name FROM lessons "
+                    "WHERE is_active=1 AND (lesson_code LIKE 'F%' OR lesson_code LIKE 'R-%') "
+                    "ORDER BY (CASE WHEN lesson_code LIKE 'F%' THEN 1 ELSE 2 END), lesson_code COLLATE NOCASE")
     else:
-        _allowed = ["foundation", "reading"]
-    if _path and _path != "foundation" and "foundation" in _allowed:
-        _allowed = [s for s in _allowed if s != "foundation"]
-
-    # Build ordered lesson list across allowed sections
-    _ph = ",".join("?" for _ in _allowed)
-    cur.execute(
-        "SELECT id, lesson_code, title_ar, title, skill, stage, section_name, order_index "
-        "FROM lessons WHERE is_active=1 AND skill IN (" + _ph + ")",
-        tuple(_allowed)
-    )
-    _rank = {s: i for i, s in enumerate(_allowed)}
+        cur.execute("SELECT id, lesson_code, title_ar, title, skill, stage, section_name FROM lessons "
+                    "WHERE is_active=1 AND lesson_code LIKE 'R-%' ORDER BY lesson_code COLLATE NOCASE")
     all_lessons = [dict(r) for r in cur.fetchall()]
-    all_lessons.sort(key=lambda L: (_rank.get(L.get("skill"), 99), (L.get("lesson_code") or ""), L.get("order_index") or 0))
 
-    # Completed lesson ids
     cur.execute("SELECT lesson_id FROM student_progress WHERE user_id=? AND status='completed'", (str(uid),))
     completed_ids = {r["lesson_id"] for r in cur.fetchall()}
 
-    # First non-completed lesson
     next_lesson = None
     for L in all_lessons:
         if L["id"] not in completed_ids:
@@ -14336,21 +14321,48 @@ def api_student_next_lesson():
     total = len(all_lessons)
     done = sum(1 for L in all_lessons if L["id"] in completed_ids)
 
-    _has_questions = False
-    if next_lesson:
+    # Helper: access check using subscription_helpers
+    def _can(section):
         try:
-            _qcnt = cur.execute("SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=?", (next_lesson["id"],)).fetchone()[0]
-            _has_questions = (_qcnt > 0)
+            if "/app" not in sys.path:
+                sys.path.insert(0, "/app")
+            import subscription_helpers as sh
+            return bool(sh.has_access(str(uid), section))
         except Exception:
-            _has_questions = False
-    con.close()
+            return False
 
+    # If foundation+reading finished -> guide to next paid section
     if not next_lesson:
-        return jsonify({
-            "ok": True, "finished": True,
-            "stats": {"completed": done, "total": total},
-            "message": "أكملت كل الدروس المتاحة! 🎉"
-        })
+        con.close()
+        for sec, label, emoji, url in [
+            ("listening", "الاستماع", "🎧", "/listening"),
+            ("writing", "الكتابة", "✍️", "/writing"),
+            ("speaking", "المحادثة", "🗣️", "/speaking"),
+        ]:
+            if _can(sec):
+                return jsonify({
+                    "ok": True, "section_handoff": True, "next_section": sec,
+                    "stats": {"completed": done, "total": total},
+                    "message": "🎉 أحسنت! حان وقت " + label + " " + emoji,
+                    "url": url + "?user_id=" + str(uid)
+                })
+            else:
+                return jsonify({
+                    "ok": True, "locked_section": True, "next_section": sec,
+                    "stats": {"completed": done, "total": total},
+                    "message": "🔒 قسم " + label + " غير مفتوح في باقتك — سجّل الآن واحصل على خصم!",
+                    "url": "/miniapp/plans?student_id=" + str(uid)
+                })
+        return jsonify({"ok": True, "finished": True, "stats": {"completed": done, "total": total},
+                        "message": "🎉 أكملت كل الأقسام المتاحة!"})
+
+    _has_questions = False
+    try:
+        _qcnt = cur.execute("SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=?", (next_lesson["id"],)).fetchone()[0]
+        _has_questions = (_qcnt > 0)
+    except Exception:
+        _has_questions = False
+    con.close()
 
     return jsonify({
         "ok": True,
