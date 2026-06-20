@@ -1,4 +1,4 @@
-﻿"""
+"""
 subscription_helpers.py — Wave 6 (Sections-based Packages)
 ─────────────────────────────────────────────────────────────
 دوال مركزية لفحص صلاحية وصول الطالب لكل قسم.
@@ -119,8 +119,6 @@ def has_access(user_id, section):
     فحص رئيسي: هل يستطيع الطالب الوصول لقسم معيّن؟
     section ∈ {reading, listening, writing, speaking, foundation, mock}
     """
-    # TEMPORARY BYPASS - emergency unlock for existing students
-    return True
     # الأدمن دائماً مسموح
     admin_ids = (os.environ.get("ADMIN_IDS") or "").split(",")
     if str(user_id) in [a.strip() for a in admin_ids if a.strip()]:
