@@ -14337,11 +14337,9 @@ def api_student_next_lesson():
 
     cur.execute("""
 
-        SELECT lesson_id FROM student_lesson_progress
-
-        WHERE student_id=? AND status='completed'
-
-    """, (uid,))
+        SELECT lesson_id FROM student_progress
+        WHERE user_id=? AND status='completed'
+    """, (str(uid),))
 
     completed_ids = {r['lesson_id'] for r in cur.fetchall()}
 
