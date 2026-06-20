@@ -14260,181 +14260,91 @@ def _debug_find_tid():
 # ===== SMART LESSON PATH API (added by _build_lesson_path.py) =====
 
 @app.route("/api/student/next-lesson", methods=["GET"])
-
 def api_student_next_lesson():
-
     import sqlite3, os
-
-    """Return the next lesson a student should open.
-
-    Order: Foundation (F1->F2->F3 sorted by lesson_code) then Reading (R-01->R-32 sorted by order_index).
-
-    Skips grammar entirely. Returns first lesson with no completion record OR with status in_progress."""
-
+    """Return the next lesson based on the student's subscription_section and placement_path."""
     try:
-
         uid = int(request.args.get('user_id') or request.args.get('student_id') or 0)
-
     except Exception:
-
         return jsonify({"ok": False, "error": "invalid user_id"}), 400
-
     if not uid:
-
         return jsonify({"ok": False, "error": "missing user_id"}), 400
 
-
-
     con = sqlite3.connect(globals().get("DB_PATH") or os.environ.get("DB_PATH") or "academy.db")
-
     con.row_factory = sqlite3.Row
-
     cur = con.cursor()
 
+    # Read subscription + placement to decide allowed sections
+    cur.execute("SELECT subscription_section, placement_path FROM students WHERE user_id=?", (str(uid),))
+    _srow = cur.fetchone()
+    _sub = (_srow["subscription_section"] if _srow else "") or ""
+    _path = (_srow["placement_path"] if _srow else "") or ""
+    _ORDER = ["foundation", "reading", "listening", "writing", "speaking"]
+    if _sub in ("full", "emergency"):
+        _allowed = list(_ORDER)
+    elif _sub in ("reading", "listening", "writing", "speaking"):
+        _allowed = [_sub]
+    elif _sub == "foundation":
+        _allowed = ["foundation"]
+    else:
+        _allowed = ["foundation", "reading"]
+    if _path and _path != "foundation" and "foundation" in _allowed:
+        _allowed = [s for s in _allowed if s != "foundation"]
 
-
-    # Build ordered lesson list: foundation first (by code), then reading (by order_index)
-
-    cur.execute("""
-
-        SELECT id, lesson_code, title_ar, title, skill, stage, section_name, order_index
-
-        FROM lessons
-
-        WHERE is_active=1
-
-          AND (
-
-                (skill='foundation' OR lesson_code LIKE 'F%')
-
-             OR (skill='reading' AND lesson_code LIKE 'R-%')
-
-          )
-
-        ORDER BY
-
-          CASE
-
-            WHEN skill='foundation' OR lesson_code LIKE 'F%' THEN 1
-
-            WHEN skill='reading' THEN 2
-
-            ELSE 9
-
-          END,
-
-          lesson_code COLLATE NOCASE,
-
-          COALESCE(order_index, 0)
-
-    """)
-
+    # Build ordered lesson list across allowed sections
+    _ph = ",".join("?" for _ in _allowed)
+    cur.execute(
+        "SELECT id, lesson_code, title_ar, title, skill, stage, section_name, order_index "
+        "FROM lessons WHERE is_active=1 AND skill IN (" + _ph + ")",
+        tuple(_allowed)
+    )
+    _rank = {s: i for i, s in enumerate(_allowed)}
     all_lessons = [dict(r) for r in cur.fetchall()]
+    all_lessons.sort(key=lambda L: (_rank.get(L.get("skill"), 99), (L.get("lesson_code") or ""), L.get("order_index") or 0))
 
+    # Completed lesson ids
+    cur.execute("SELECT lesson_id FROM student_progress WHERE user_id=? AND status='completed'", (str(uid),))
+    completed_ids = {r["lesson_id"] for r in cur.fetchall()}
 
-
-    # Get completed lesson ids for this student
-
-    cur.execute("""
-
-        SELECT lesson_id FROM student_progress
-        WHERE user_id=? AND status='completed'
-    """, (str(uid),))
-
-    completed_ids = {r['lesson_id'] for r in cur.fetchall()}
-
-
-
-    # Pick first non-completed lesson
-
+    # First non-completed lesson
     next_lesson = None
-
     for L in all_lessons:
-
-        if L['id'] not in completed_ids:
-
+        if L["id"] not in completed_ids:
             next_lesson = L
-
             break
 
-
-
-    # Stats
-
     total = len(all_lessons)
-
-    done = sum(1 for L in all_lessons if L['id'] in completed_ids)
-
-
-
-    # Check if the picked lesson has practice questions
+    done = sum(1 for L in all_lessons if L["id"] in completed_ids)
 
     _has_questions = False
-
     if next_lesson:
-
         try:
-
-            _qcnt = cur.execute(
-
-                "SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=?",
-
-                (next_lesson['id'],)
-
-            ).fetchone()[0]
-
+            _qcnt = cur.execute("SELECT COUNT(*) FROM lesson_questions WHERE lesson_id=?", (next_lesson["id"],)).fetchone()[0]
             _has_questions = (_qcnt > 0)
-
         except Exception:
-
             _has_questions = False
-
     con.close()
 
-
-
     if not next_lesson:
-
         return jsonify({
-
             "ok": True, "finished": True,
-
             "stats": {"completed": done, "total": total},
-
             "message": "أكملت كل الدروس المتاحة! 🎉"
-
         })
 
-
-
     return jsonify({
-
         "ok": True,
-
         "lesson": {
-
-            "id": next_lesson['id'],
-
-            "code": next_lesson['lesson_code'],
-
-            "title": next_lesson['title_ar'] or next_lesson['title'],
-
-            "skill": next_lesson['skill'],
-
-            "stage": next_lesson['stage'],
-
-            "section": next_lesson['section_name'],
-
-            "url": (f"/miniapp/quiz/{next_lesson['id']}?student_id={uid}" if _has_questions else f"/miniapp/lesson/{next_lesson['id']}?student_id={uid}")
-
+            "id": next_lesson["id"],
+            "code": next_lesson["lesson_code"],
+            "title": next_lesson["title_ar"] or next_lesson["title"],
+            "skill": next_lesson["skill"],
+            "stage": next_lesson["stage"],
+            "section": next_lesson["section_name"],
+            "url": ("/miniapp/quiz/%s?student_id=%s" % (next_lesson["id"], uid)) if _has_questions else ("/miniapp/lesson/%s?student_id=%s" % (next_lesson["id"], uid))
         },
-
         "stats": {"completed": done, "total": total}
-
     })
-
-
-
 
 
 @app.route("/api/student/complete-lesson-v2", methods=["POST"])
