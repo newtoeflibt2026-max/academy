@@ -48,7 +48,7 @@ body{font-family:'Cairo','Segoe UI',sans-serif;background:linear-gradient(135deg
   </div>
   <div class="stages">
     {% for s in stages %}
-      {% set is_locked = s.is_locked == 1 and s.done_count == 0 and s.order_index > 1 %}
+      {% set is_locked = (not is_admin) and s.is_locked == 1 and s.done_count == 0 and s.order_index > 1 %}
       {% set is_done = s.lesson_count > 0 and s.done_count == s.lesson_count %}
       {% if is_locked %}
       <div class="stage locked">

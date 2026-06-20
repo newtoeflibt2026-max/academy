@@ -55,8 +55,10 @@ def writing_track_page():
         stages_list.append(sd)
 
     conn.close()
+    _admin_ids = [a.strip() for a in (os.environ.get("ADMIN_IDS") or "").split(",") if a.strip()]
+    _is_admin = str(tg_id) in _admin_ids
     return render_template("toefl_writing/track.html",
-        track=dict(track), stages=stages_list, user_id=tg_id)
+        track=dict(track), stages=stages_list, user_id=tg_id, is_admin=_is_admin)
 
 # ═══════════════════════════════════════════════════════════
 # PAGE: Stage detail (الدروس داخل المرحلة)
