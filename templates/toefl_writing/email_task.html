@@ -211,7 +211,7 @@ function showResult(data) {
             + '<textarea id="gemini-prompt-box" readonly dir="rtl" style="width:100%;height:140px;font-size:13px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;background:#fff;resize:vertical">' + (data.gemini_prompt || "") + '</textarea>'
             + '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">'
             + '<button type="button" onclick="copyGeminiPrompt()" style="flex:1;min-width:150px;padding:12px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-weight:bold;cursor:pointer">نسخ طلب التصحيح</button>'
-            + '<a href="' + (data.gemini_url || "https://gemini.google.com/app") + '" target="_blank" rel="noopener" style="flex:1;min-width:150px;padding:12px;border-radius:8px;background:#059669;color:#fff;font-weight:bold;text-align:center;text-decoration:none">افتح Gemini وابدأ التدريب</a>'
+            + '<button type="button" onclick="openGemini(\'' + (data.gemini_url || "https://gemini.google.com/app") + '\')" style="flex:1;min-width:150px;padding:12px;border:none;border-radius:8px;background:#059669;color:#fff;font-weight:bold;cursor:pointer">افتح Gemini وابدأ التدريب</button>'
             + '</div></div>';
           html += '<div id="gscore-box" style="background:#fffbeb;border:2px solid #fde68a;border-radius:12px;padding:16px;margin-top:14px">'
             + '<div style="font-size:13px;color:#92400e;margin-bottom:8px;font-weight:bold">بعد أن يصححك Gemini، أدخل الدرجة التي أعطاها لك (من 6) لنتابع تطورك:</div>'
@@ -272,6 +272,16 @@ window.addEventListener('beforeunload', (e) => {
   }
 });
 
+    function openGemini(url) {
+      url = url || "https://gemini.google.com/app";
+      try {
+        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
+          Telegram.WebApp.openLink(url, { try_instant_view: false });
+          return;
+        }
+      } catch (e) {}
+      window.open(url, "_blank", "noopener");
+    }
     function copyGeminiPrompt() {
       const box = document.getElementById('gemini-prompt-box');
       if (!box) return;
