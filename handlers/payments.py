@@ -269,18 +269,81 @@ async def admin_approve(cb: CallbackQuery):
     except Exception as e:
         logger.warning(f"notify student: {e}")
 
-    # تحديث رسالة الأدمن
+    # تحديث رسالة الأدمن + إظهار زر إلغاء الاشتراك
     try:
         new_caption = (cb.message.caption or "") + \
                       f"\n\n✅ <b>تم التفعيل بواسطة {cb.from_user.full_name}</b>"
+        _cancel_kb = InlineKeyboardBuilder()
+        _cancel_kb.button(text="🚫 إلغاء الاشتراك",
+                          callback_data=f"admin_cancel:{uid}:{payment_id}")
+        _cancel_kb.adjust(1)
         if cb.message.caption:
-            await cb.message.edit_caption(caption=new_caption, parse_mode="HTML")
+            await cb.message.edit_caption(caption=new_caption, parse_mode="HTML",
+                                          reply_markup=_cancel_kb.as_markup())
         else:
-            await cb.message.edit_text(new_caption, parse_mode="HTML")
+            await cb.message.edit_text(new_caption, parse_mode="HTML",
+                                       reply_markup=_cancel_kb.as_markup())
     except Exception:
         pass
 
     await cb.answer("✅ تم تفعيل الاشتراك وإبلاغ الطالب!")
+
+
+# ══ إلغاء الاشتراك (بعد الموافقة) ═════════════
+@router.callback_query(F.data.startswith("admin_cancel:"))
+async def admin_cancel(cb: CallbackQuery):
+    if cb.from_user.id not in ADMIN_IDS:
+        await cb.answer("❌ غير مصرح", show_alert=True)
+        return
+
+    parts      = cb.data.split(":")
+    uid        = int(parts[1])
+    payment_id = int(parts[2]) if len(parts) > 2 else 0
+
+    # إلغاء عبر دالة النظام الموحدة + ضبط is_active=0
+    try:
+        from bot_database import deactivate_paid
+        deactivate_paid(uid)
+    except Exception as e:
+        logger.warning(f"deactivate_paid: {e}")
+
+    conn = get_db()
+    try:
+        conn.execute(
+            "UPDATE students SET is_paid=0, is_active=0 WHERE telegram_id=?", (uid,))
+        if payment_id:
+            conn.execute(
+                "UPDATE payments SET status='cancelled' WHERE id=?", (payment_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+    # إبلاغ الطالب
+    try:
+        bot = Bot(token=BOT_TOKEN,
+                  default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+        await bot.send_message(
+            uid,
+            "⚠️ <b>تم إلغاء اشتراكك.</b>\n\n"
+            "للاستفسار يرجى التواصل مع الأدمن.\n"
+            f"📱 {ADMIN_PHONE}"
+        )
+        await bot.session.close()
+    except Exception as e:
+        logger.warning(f"cancel notify: {e}")
+
+    # تحديث رسالة الأدمن
+    try:
+        new_text = (cb.message.caption or cb.message.text or "") + \
+                   f"\n\n🚫 <b>تم إلغاء الاشتراك بواسطة {cb.from_user.full_name}</b>"
+        if cb.message.caption:
+            await cb.message.edit_caption(caption=new_text, parse_mode="HTML")
+        else:
+            await cb.message.edit_text(new_text, parse_mode="HTML")
+    except Exception:
+        pass
+
+    await cb.answer("🚫 تم إلغاء الاشتراك وإبلاغ الطالب!")
 
 
 # ══ رفض الأدمن ═══════════════════════════════
