@@ -1917,6 +1917,23 @@ async function loadJourney() {
 
 // Auto-load on page ready
 document.addEventListener('DOMContentLoaded', function(){
+      // PLAN_CARD_AUTOHIDE_DOM: أخفِ بطاقة الخطة إذا كانت كل قيمها فارغة (يعمل دائماً)
+      try {
+        var _checkPlanCard = function(){
+          var card = document.querySelector('.plan-card');
+          if(!card) return;
+          var vals = card.querySelectorAll('.plan-stat-value');
+          var hasData = false;
+          vals.forEach(function(el){
+            var v = (el.textContent || '').trim();
+            if(v && v !== '—' && v !== '-' && v !== '0' && v !== '0%') hasData = true;
+          });
+          card.style.display = hasData ? '' : 'none';
+        };
+        _checkPlanCard();
+        // أعد الفحص بعد ثانية لإتاحة وصول بيانات الـ API
+        setTimeout(_checkPlanCard, 1500);
+      } catch(e) { console.warn('planCardAutoHide', e); }
   setTimeout(loadJourney, 100);
 });
 
