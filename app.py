@@ -14334,11 +14334,13 @@ def api_student_next_lesson():
     # If foundation+reading finished -> guide to next paid section
     if not next_lesson:
         con.close()
-        for sec, label, emoji, url in [
+        _sections = [
             ("listening", "الاستماع", "🎧", "/listening"),
             ("writing", "الكتابة", "✍️", "/writing"),
             ("speaking", "المحادثة", "🗣️", "/speaking"),
-        ]:
+        ]
+        # 1) ابحث عن أول قسم مشترك به الطالب فعلاً ووجّهه إليه
+        for sec, label, emoji, url in _sections:
             if _can(sec):
                 return jsonify({
                     "ok": True, "section_handoff": True, "next_section": sec,
@@ -14346,15 +14348,13 @@ def api_student_next_lesson():
                     "message": "🎉 أحسنت! حان وقت " + label + " " + emoji,
                     "url": url + "?user_id=" + str(uid)
                 })
-            else:
-                return jsonify({
-                    "ok": True, "locked_section": True, "next_section": sec,
-                    "stats": {"completed": done, "total": total},
-                    "message": "🔒 قسم " + label + " غير مفتوح في باقتك — سجّل الآن واحصل على خصم!",
-                    "url": "/miniapp/plans?student_id=" + str(uid)
-                })
-        return jsonify({"ok": True, "finished": True, "stats": {"completed": done, "total": total},
-                        "message": "🎉 أكملت كل الأقسام المتاحة!"})
+        # 2) لا يوجد أي قسم إضافي مشترك به -> اعرض الترقية
+        return jsonify({
+            "ok": True, "locked_section": True, "next_section": None,
+            "stats": {"completed": done, "total": total},
+            "message": "🔒 لإكمال رحلتك افتح أقسام الاستماع/الكتابة/المحادثة — سجّل الآن واحصل على خصم!",
+            "url": "/miniapp/plans?student_id=" + str(uid)
+        })
 
     _has_questions = False
     try:
