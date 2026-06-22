@@ -1762,6 +1762,13 @@ function fillPlanCard(data){
     var elL=document.getElementById('planLevel'); if(elL) elL.textContent = levelMap[lvl]||lvl;
     var elS=document.getElementById('planScore'); if(elS) elS.textContent = sc;
     var elP=document.getElementById('planPath');  if(elP) elP.textContent = pathMap[pth]||pth;
+      // PLAN_CARD_AUTOHIDE: أخفِ بطاقة الخطة إذا كانت كل البيانات فارغة
+      try {
+        var _empty = function(v){ return v==null || v==='' || v==='—' || v==='-'; };
+        var _hasData = !(_empty(lvl) && _empty(pth) && (s.placement_score==null));
+        var _card = document.querySelector('.plan-card');
+        if (_card) { _card.style.display = _hasData ? '' : 'none'; }
+      } catch(e) {}
     var cta=document.getElementById('planCTA');
     if(cta){
       var uid = s.telegram_id || s.user_id || (new URLSearchParams(location.search)).get('student_id') || (new URLSearchParams(location.search)).get('user_id');
