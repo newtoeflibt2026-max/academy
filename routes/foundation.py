@@ -444,7 +444,7 @@ def api_quiz_finish():
 def mistakes_page():
     user_id = get_user_id(request)
     conn = db(); cur = conn.cursor()
-    cur.execute("""SELECT eb.id, eb.question_id, eb.wrong_answer, eb.correct_answer,
+    cur.execute("""SELECT eb.id, eb.question_id, eb.error_type, eb.wrong_answer, eb.correct_answer,
                           eb.created_at, COALESCE(eb.times_correct_after,0) AS times_correct_after,
                           COALESCE(eb.is_mastered,0) AS is_mastered,
                           eb.explanation_ar,
@@ -454,25 +454,24 @@ def mistakes_page():
                    FROM error_bank eb
                    LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
                    LEFT JOIN questions q ON q.id = eb.question_id
-                   WHERE eb.user_id=?
-                     AND (lq.question IS NOT NULL OR q.question_text IS NOT NULL)
+                   WHERE eb.user_id=?  -- MISTAKES_SHOW_ALL
                    ORDER BY eb.is_mastered ASC, eb.created_at DESC LIMIT 100""", (user_id,))
     rows = cur.fetchall()
     mistakes = [dict(r) for r in rows]
     for m in mistakes:
         if not m.get("question_text"):
-            m["question_text"] = "(السؤال غير متوفر)"
+            _et = (m.get("error_type") or "").strip()
+            if _et.startswith("daily_reading"):
+                m["question_text"] = "\u0633\u0624\u0627\u0644 \u0642\u0631\u0627\u0621\u0629 \u064a\u0648\u0645\u064a\u0629"
+            elif _et:
+                m["question_text"] = "\u062a\u0645\u0631\u064a\u0646: " + _et
+            else:
+                m["question_text"] = "(\u0627\u0644\u0633\u0624\u0627\u0644 \u063a\u064a\u0631 \u0645\u062a\u0648\u0641\u0631)"
     cur.execute("""SELECT COUNT(*) FROM error_bank eb
-                     LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
-                     LEFT JOIN questions q ON q.id = eb.question_id
-                     WHERE eb.user_id=?
-                       AND (lq.question IS NOT NULL OR q.question_text IS NOT NULL)""", (user_id,))
+                     WHERE eb.user_id=?""", (user_id,))
     total = cur.fetchone()[0]
     cur.execute("""SELECT COUNT(*) FROM error_bank eb
-                     LEFT JOIN lesson_questions lq ON lq.id = eb.question_id
-                     LEFT JOIN questions q ON q.id = eb.question_id
-                     WHERE eb.user_id=? AND COALESCE(eb.is_mastered,0)=1
-                       AND (lq.question IS NOT NULL OR q.question_text IS NOT NULL)""", (user_id,))
+                     WHERE eb.user_id=? AND COALESCE(eb.is_mastered,0)=1""", (user_id,))
     mastered = cur.fetchone()[0]
     conn.close()
     return render_template("mistakes.html",
