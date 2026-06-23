@@ -1541,3 +1541,86 @@ def view_email_guide():
         start_url=start_url
     )
 
+
+# DISCUSSION_SUBMIT_ROUTE: تصحيح المناقشة عبر Gemini
+@writing_bp.route("/api/writing/discussion/submit", methods=["POST"])
+def api_discussion_submit():
+    """استلام رد المناقشة، استدعاء Gemini، إعادة البرومبت والدرجة."""
+    data = request.get_json(force=True, silent=True) or {}
+    tg_id = data.get("user_id") or _get_tg_id()
+    scenario_id = data.get("scenario_id")
+    response_text = (data.get("response_text") or "").strip()
+    time_spent = int(data.get("time_spent_sec") or 0)
+
+    if not scenario_id or not response_text:
+        return jsonify({"success": False, "error": "Missing data"}), 400
+
+    conn = _db(); c = conn.cursor()
+    sc = c.execute("""
+        SELECT professor_question_en, min_words
+        FROM writing_discussion_scenarios WHERE id=?
+    """, (scenario_id,)).fetchone()
+    if not sc:
+        conn.close()
+        return jsonify({"success": False, "error": "Scenario not found"}), 404
+
+    professor_q = sc[0] or ""
+    min_words = sc[1] or 100
+
+    reps = c.execute("""
+        SELECT reply_text_en FROM discussion_student_replies
+        WHERE scenario_id=? ORDER BY order_index
+    """, (scenario_id,)).fetchall()
+    student1 = reps[0][0] if len(reps) > 0 else ""
+    student2 = reps[1][0] if len(reps) > 1 else ""
+
+    word_count = len([w for w in response_text.split() if w.strip()])
+
+    ai_result = None; ai_available = False
+    try:
+        from ai.toefl_grader import grade_discussion
+        ai_result = grade_discussion(professor_q, student1, student2, response_text)
+        ai_available = bool(ai_result.get("ai_available"))
+    except Exception as e:
+        ai_result = {"ai_available": False, "error": str(e)}
+
+    if ai_available:
+        score = ai_result.get("score", 0)
+        c.execute("""
+            INSERT INTO writing_attempts
+            (telegram_id, question_id, stage_id, lesson_id, answer_text,
+             answer_json, is_correct, ai_score, ai_band, ai_feedback_json, time_spent_sec)
+            VALUES (?, NULL, 3, NULL, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            tg_id, response_text,
+            json.dumps({"scenario_id": scenario_id, "task": "discussion"}, ensure_ascii=False),
+            1 if score >= 3 else 0, score, ai_result.get("band_label", ""),
+            json.dumps(ai_result, ensure_ascii=False), time_spent
+        ))
+        try:
+            _prune_attempts(conn, tg_id, "discussion")
+        except Exception:
+            pass
+        conn.commit()
+    conn.close()
+
+    response = {
+        "success": True,
+        "ai_available": ai_available,
+        "word_count": word_count,
+        "min_words_required": min_words,
+    }
+    if ai_available:
+        response["score"] = ai_result.get("score", 0)
+        response["max_score"] = 5
+        response["band_label"] = ai_result.get("band_label", "")
+        response["display"] = ai_result.get("display", "")
+        response["errors"] = ai_result.get("errors", [])
+        response["gemini_prompt"] = ai_result.get("gemini_prompt", "")
+        response["gemini_url"] = ai_result.get("gemini_url", "")
+        response["passed"] = ai_result.get("score", 0) >= 3
+    else:
+        response["message_ar"] = "تم استلام إجابتك."
+        response["passed"] = None
+    return jsonify(response)
+
