@@ -133,7 +133,7 @@ def foundation_stage(stage_id):
         cur.execute("SELECT MAX(passed) FROM lesson_attempts WHERE telegram_id=? AND lesson_id=?", (str(user_id), L["id"]))
         d = cur.fetchone()[0]
         done = bool(d)
-        locked = not prev_done
+        locked = False if _is_admin_fnd(user_id) else (not prev_done)  # ADMIN_UNLOCK_FND_LESSONS
         lessons.append({
             "id": L["id"], "title_ar": L["title_ar"] or L["title"],
             "skill": L["skill"] or "grammar", "xp_reward": L["xp_reward"] or 20,
@@ -142,7 +142,7 @@ def foundation_stage(stage_id):
         })
         prev_done = done
 
-    gk_unlocked = all(L["done"] for L in lessons) and len(lessons) > 0
+    gk_unlocked = _is_admin_fnd(user_id) or (all(L["done"] for L in lessons) and len(lessons) > 0)
     conn.close()
     return render_template("foundation_stage.html", stage=stage, lessons=lessons, gk_unlocked=gk_unlocked, user_id=user_id)
 
