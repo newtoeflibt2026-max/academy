@@ -38,6 +38,12 @@ def db():
     return conn
 
 
+def _is_admin_fnd(uid):  # ADMIN_UNLOCK_FND
+    import os as _os
+    ids = (_os.environ.get("ADMIN_IDS") or "").split(",")
+    return str(uid) in [a.strip() for a in ids if a.strip()]
+
+
 def get_user_id(req):
     uid = req.args.get("user_id") or req.args.get("student_id") or "0"
     try:
@@ -76,7 +82,7 @@ def foundation_home():
         gk_passed = bool(gp and gp["gatekeeper_passed"])
 
         pct = int((completed / total) * 100) if total else 0
-        locked = not prev_passed
+        locked = False if _is_admin_fnd(user_id) else (not prev_passed)
         css = "locked" if locked else ("completed" if gk_passed else "current")
         stages.append({
             "id": s["id"], "code": s["code"], "name_ar": s["name_ar"],
