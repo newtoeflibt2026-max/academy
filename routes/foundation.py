@@ -473,6 +473,27 @@ def mistakes_page():
                 m["question_text"] = "\u062a\u0645\u0631\u064a\u0646: " + _et
             else:
                 m["question_text"] = "(\u0627\u0644\u0633\u0624\u0627\u0644 \u063a\u064a\u0631 \u0645\u062a\u0648\u0641\u0631)"
+    # MERGE_LISTENING_ERRORS: دمج أخطاء الاستماع من student_error_bank
+    try:
+        cur.execute("""SELECT id, question_id, error_count, last_attempted
+                       FROM student_error_bank
+                       WHERE telegram_id=?
+                       ORDER BY last_attempted DESC LIMIT 50""", (str(user_id),))
+        for _r in cur.fetchall():
+            _d = dict(_r)
+            mistakes.append({
+                "id": "L" + str(_d["id"]),
+                "question_id": _d.get("question_id"),
+                "error_type": "listening",
+                "wrong_answer": "", "correct_answer": "",
+                "created_at": _d.get("last_attempted"),
+                "times_correct_after": 0, "is_mastered": 0,
+                "explanation_ar": "",
+                "question_text": "\u0633\u0624\u0627\u0644 \u0627\u0633\u062a\u0645\u0627\u0639 (\u062e\u0637\u0623 " + str(_d.get("error_count") or 1) + " \u0645\u0631\u0629)",
+            })
+    except Exception as _e:
+        print("[MERGE_LISTENING_ERRORS] skip:", _e)
+
     cur.execute("""SELECT COUNT(*) FROM error_bank eb
                      WHERE eb.user_id=?""", (user_id,))
     total = cur.fetchone()[0]
