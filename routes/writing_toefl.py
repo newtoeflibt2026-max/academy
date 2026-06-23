@@ -1209,6 +1209,27 @@ def view_discussion_coach(scenario_id, step=1):
             "tier69_explanation": cr.get("tier69_explanation", ""),
             "tier90_explanation": cr.get("tier90_explanation", ""),
         }
+        # TIER_AWARE_COACH: اختيار الشرح والنموذج حسب مستوى الطالب
+        import sqlite3 as _sq3
+        _uid = request.args.get("user_id", "guest")
+        _t = "tier59"
+        try:
+            _c2 = _sq3.connect(db); _c2.row_factory = _sq3.Row
+            _tr = _c2.execute("SELECT tier FROM student_writing_target WHERE telegram_id=?", (str(_uid),)).fetchone()
+            _c2.close()
+            _t = (_tr["tier"] if _tr and _tr["tier"] else None) or "tier59"
+        except Exception:
+            _t = "tier59"
+        if _t == "tier90":
+            coach["tier_explanation"] = cr.get("tier90_explanation", "")
+            coach["tier_model"] = cr.get("step5_model_response", "")
+        elif _t == "tier69":
+            coach["tier_explanation"] = cr.get("tier69_explanation", "")
+            coach["tier_model"] = cr.get("model_69", "")
+        else:
+            coach["tier_explanation"] = cr.get("tier59_explanation", "")
+            coach["tier_model"] = cr.get("model_59", "")
+        coach["tier_label"] = {"tier59": "المبتدئ (Score 3)", "tier69": "المتوسط (Score 4)", "tier90": "المتقدم (Score 5)"}.get(_t, "المبتدئ (Score 3)")
     
     user_id = request.args.get("user_id", "guest")
     return render_template(

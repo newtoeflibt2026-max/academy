@@ -215,8 +215,16 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
       {% endif %}
 
     {% elif step == 5 %}
-      <h2>📖 الخطوة 5: النموذج الإجابي (Score 5)</h2>
-      <div class="model-text">{{ coach.model_response }}</div>
+      <!-- TIER_AWARE_MODEL: معيار ونموذج حسب مستوى الطالب -->
+      <h2>📖 الخطوة 5: النموذج الإجابي</h2>
+      {% if coach.tier_label %}
+      <div style="background:#ebf8ff;border:1px solid #90cdf4;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+        <div style="font-weight:bold;color:#2b6cb0;margin-bottom:6px;">🎯 مستواك: {{ coach.tier_label }}</div>
+        <div style="color:#2d3748;line-height:1.8;">{{ coach.tier_explanation }}</div>
+      </div>
+      {% endif %}
+      <h3 style="color:#2c5282;">✍️ النموذج المناسب لمستواك:</h3>
+      <div class="model-text">{{ coach.tier_model or coach.model_response }}</div>
       <h3 style="margin-top:24px;color:#2c5282;">📝 الشرح التفصيلي:</h3>
       {% for a in coach.annotations %}
         <div class="annotation">
