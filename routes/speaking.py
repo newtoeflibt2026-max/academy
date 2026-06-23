@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 TOEFL Speaking Track - Flask Blueprint (v2)
 Routes for: hub, stages, lessons, attempt API, progress.
@@ -59,6 +59,7 @@ def _get_lesson_states(conn, tg_id, stage_id):
     prog_map = {p["lesson_id"]: dict(p) for p in prog}
 
     result = []
+    _admin = _is_admin(tg_id)  # ADMIN_UNLOCK_ALL: الأدمن يرى كل الدروس متاحة
     prev_passed = True
     for l in lessons:
         d = dict(l)
@@ -67,6 +68,9 @@ def _get_lesson_states(conn, tg_id, stage_id):
             d["status"] = "completed"
             d["score"] = p["score"]
             prev_passed = True
+        elif _admin:
+            d["status"] = "available"
+            d["score"] = p["score"] if p else 0
         elif prev_passed:
             d["status"] = "available"
             d["score"] = p["score"] if p else 0
