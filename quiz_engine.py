@@ -57,7 +57,7 @@ def get_required_streak(target_score: int) -> int:
 def get_student_target(telegram_id) -> int:
     """يجلب target_score للطالب (مع تطبيع id)."""
     sid = str(telegram_id) if telegram_id is not None else ""
-    if not sid:
+    if not sid or sid in ("0", "999", "12345") or not sid.isdigit():  # RECORD_MISTAKE_GUARD
         return 69
     conn = _db()
     try:
@@ -215,11 +215,16 @@ def record_mistake(telegram_id, question_id: int, wrong_answer: str,
         # error_bank is best-effort
         try:
             uid_int = int(sid) if sid.isdigit() else 0
-            conn.execute("""
-                INSERT INTO error_bank
-                    (user_id, question_id, error_type, wrong_answer, correct_answer)
-                VALUES (?, ?, 'quiz', ?, ?)
-            """, (uid_int, int(question_id), wrong_answer or "", correct_answer or ""))
+            _dup = conn.execute(
+                "SELECT id FROM error_bank WHERE user_id=? AND question_id=? AND wrong_answer=? AND COALESCE(is_mastered,0)=0",
+                (uid_int, int(question_id), wrong_answer or "")
+            ).fetchone()
+            if not _dup:  # تجنّب التكرار
+                conn.execute("""
+                    INSERT INTO error_bank
+                        (user_id, question_id, error_type, wrong_answer, correct_answer)
+                    VALUES (?, ?, 'quiz', ?, ?)
+                """, (uid_int, int(question_id), wrong_answer or "", correct_answer or ""))
         except Exception as e:
             logger.warning(f"error_bank insert skipped: {e}")
         conn.commit()

@@ -63,7 +63,7 @@ function retry(id){
   if(!ans) return;
   fetch('/api/mistakes/'+id+'/retry', {
     method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({user_id:"{{ user_id }}", user_answer: ans})
+    body: JSON.stringify({user_id: (new URLSearchParams(location.search).get("user_id")||"{{ user_id }}"), user_answer: ans})
   }).then(r=>r.json()).then(res=>{
     alert(res.correct ? '✅ صحيح! '+(res.mastered?'🎉 أتقنت هذا الخطأ!':'تبقى '+(3-res.times_correct_after)+' محاولات صحيحة') : '❌ خاطئ. الصحيح: '+res.correct_answer);
     location.reload();
