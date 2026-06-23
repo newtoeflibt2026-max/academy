@@ -40,6 +40,13 @@
     <h1>✉️ المرحلة 3: كتابة الإيميل</h1>
     <p>اختر سيناريو ابدأ التدريب - 7 دقائق لكل إيميل</p>
     <span class="tier-badge">مستواك: {{ tier }}</span>
+    <!-- EMAIL_GUIDE_BUTTON -->
+    <div style="margin-top:14px;">
+      <a href="/writing/email/guide?user_id={{ user_id }}"
+         style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.95);color:#5a4ba0;padding:11px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.12);">
+         <span style="font-size:18px;">📘</span><span>دليل كتابة الإيميل &mdash; اقرأه أولاً</span>
+      </a>
+    </div>
   </div>
 
   {% if scenarios %}

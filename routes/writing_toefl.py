@@ -1529,3 +1529,15 @@ def view_discussion_guide():
         start_url=start_url
     )
 
+
+# EMAIL_GUIDE_ROUTE: صفحة دليل كتابة الإيميل
+@writing_bp.route("/writing/email/guide")
+def view_email_guide():
+    user_id = request.args.get("user_id", "guest")
+    start_url = "/writing/email/1/coach?user_id=" + str(user_id)
+    return render_template(
+        "toefl_writing/email_guide.html",
+        user_id=user_id,
+        start_url=start_url
+    )
+
