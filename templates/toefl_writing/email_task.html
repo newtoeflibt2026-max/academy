@@ -273,12 +273,26 @@ window.addEventListener('beforeunload', (e) => {
 });
 
     function openGemini(url) {
-      url = url || "https://gemini.google.com/app";
-      try {
-        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
-          Telegram.WebApp.openLink(url, { try_instant_view: false });
-          return;
-        }
+  url = url || "https://gemini.google.com/app";
+  // محاولة Telegram أولاً (داخل البوت)
+  try {
+    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
+      Telegram.WebApp.openLink(url, { try_instant_view: false });
+      return;
+    }
+  } catch (e) {}
+  // الطريقة الأكثر موثوقية في المتصفح: إنشاء رابط والنقر عليه
+  try {
+    var a = document.createElement('a');
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return;
+  } catch (e) {}
+  // بديل أخير
+  window.open(url, '_blank');
+}
       } catch (e) {}
       window.open(url, "_blank", "noopener");
     }
