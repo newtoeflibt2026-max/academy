@@ -1516,3 +1516,16 @@ def api_gemini_score():
                         "message_ar": msg, "history": [{"s6": r[0], "s120": r[1]} for r in rows]})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
+
+
+# DISCUSSION_GUIDE_ROUTE: صفحة دليل المناقشة الأكاديمية
+@writing_bp.route("/writing/discussion/guide")
+def view_discussion_guide():
+    user_id = request.args.get("user_id", "guest")
+    start_url = "/writing/discussion/1/coach?user_id=" + str(user_id)
+    return render_template(
+        "toefl_writing/discussion_guide.html",
+        user_id=user_id,
+        start_url=start_url
+    )
+

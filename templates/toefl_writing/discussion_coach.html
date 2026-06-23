@@ -85,6 +85,11 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
      <span style="font-size:18px;">←</span>
      <span>رجوع</span>
   </a>
+  <a href="/writing/discussion/guide?user_id={{ request.args.get('user_id','') or user_id or '' }}"
+     style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;margin-right:8px;background:#667eea;border:2px solid #667eea;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-family:Arial,sans-serif;">
+     <span>📘</span><span>الدليل</span>
+  </a>
+  <!-- GUIDE_BUTTON -->
 </div>
 <!-- /BACK BUTTON -->
 
