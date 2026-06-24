@@ -95,27 +95,56 @@ async def select_plan(cb: CallbackQuery, state: FSMContext):
     name_ar = plan.get("name_ar", "باقة")
     uid     = cb.from_user.id
 
-    # ── باقة مجانية: تفعيل فوري ──────────────
+        # ── باقة مجانية: تتطلب موافقة الأدمن (لا تفعيل فوري) ──
     if price == 0:
+        username  = cb.from_user.username or "بدون يوزرنيم"
+        full_name = cb.from_user.full_name or ""
         conn = get_db()
         try:
             conn.execute(
-            """UPDATE students SET is_paid=1, is_active=1, subscription_type='مجانية', package_end=date('now','+7 days') WHERE telegram_id=?""", (uid,))
-            conn.execute(
-                """INSERT OR IGNORE INTO payments
-                   (user_id,plan_id,amount,currency,status,notes)
-                   VALUES (?,?,0,'JOD','verified','باقة مجانية - تفعيل تلقائي')""",
-                (uid, pid))
+                """INSERT INTO payments
+                   (user_id,plan_id,amount,currency,status,proof_file,notes)
+                   VALUES (?,?,0,'JOD','pending','',?)""",
+                (uid, pid, f"{full_name} @{username} (باقة مجانية)"))
+            payment_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
             conn.commit()
         finally:
             conn.close()
 
-        kb = InlineKeyboardBuilder()
-        kb.button(text="🚀 ابدأ التعلم الآن", callback_data="menu_main")
+        # إشعار الأدمن بطلب الباقة المجانية
+        if BOT_TOKEN and ADMIN_IDS:
+            try:
+                bot = Bot(token=BOT_TOKEN,
+                          default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+                admin_text = (
+                    f"🎁 <b>طلب باقة مجانية جديد!</b>\n\n"
+                    f"👤 {full_name} (@{username})\n"
+                    f"🆔 <code>{uid}</code>\n"
+                    f"📦 الباقة: <b>{name_ar}</b>\n"
+                    f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+                )
+                kb_admin = InlineKeyboardBuilder()
+                kb_admin.button(text="✅ موافقة وتفعيل",
+                                callback_data=f"admin_approve:{uid}:{pid}:{payment_id}")
+                kb_admin.button(text="❌ رفض",
+                                callback_data=f"admin_reject:{uid}:{payment_id}")
+                kb_admin.adjust(1)
+                for admin_id in ADMIN_IDS:
+                    try:
+                        await bot.send_message(admin_id, admin_text,
+                                               reply_markup=kb_admin.as_markup())
+                    except Exception as e:
+                        logger.warning(f"notify admin {admin_id}: {e}")
+                await bot.session.close()
+            except Exception as e:
+                logger.error(f"free plan admin notify: {e}")
+
         await cb.message.answer(
-            f"🎁 <b>تم تفعيل {name_ar} مجاناً!</b>\n\n"
-            f"✅ حسابك نشط — ابدأ رحلتك الآن!",
-            reply_markup=kb.as_markup(), parse_mode="HTML"
+            f"✅ <b>تم استلام طلبك للباقة المجانية!</b>\n\n"
+            f"🔍 جاري مراجعة طلبك من قبل الأدمن.\n"
+            f"📲 ستصلك رسالة تأكيد قريباً.\n\n"
+            f"شكراً لانضمامك لأكاديمية يامن! 🎓",
+            parse_mode="HTML"
         )
         return
 
@@ -237,15 +266,18 @@ async def admin_approve(cb: CallbackQuery):
 
     conn = get_db()
     try:
-        plan = conn.execute(
+                plan = conn.execute(
             "SELECT * FROM subscription_plans WHERE id=?", (plan_id,)).fetchone()
         plan = dict(plan) if plan else {}
         days     = plan.get("duration_days", 30)
         name_ar  = plan.get("name_ar", "الباقة")
+        section  = (plan.get("section_code") or "").strip()
         end_date = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
 
         conn.execute(
-            "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, package_end=? WHERE telegram_id=?", (name_ar, end_date, uid))
+            "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, subscription_section=?, package_end=? WHERE telegram_id=?",
+            (name_ar, section, end_date, uid))
+
         conn.execute(
             "UPDATE payments SET status='verified', verified_at=CURRENT_TIMESTAMP WHERE id=?",
             (payment_id,))
