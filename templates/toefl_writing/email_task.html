@@ -272,32 +272,8 @@ window.addEventListener('beforeunload', (e) => {
   }
 });
 
-    function openGemini(url) {
-  url = url || "https://gemini.google.com/app";
-  try {
-    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
-      Telegram.WebApp.openLink(url, { try_instant_view: false });
-      return;
-    }
-  } catch (e) {}
-  // فتح بسيط بدون قيود تسبب الحجب
-  var w = window.open(url, "_blank");
-  if (!w) {
-    // إن حُجبت النافذة، انتقل في نفس التبويب
-    alert("اسمح بالنوافذ المنبثقة، أو سننقلك الآن إلى Gemini.");
-    window.location.href = url;
-  }
-}
-  } catch (e) {}
-  // الطريقة الأكثر موثوقية في المتصفح: إنشاء رابط والنقر عليه
-  try {
-    var a = document.createElement('a');
-    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    return;
-  } catch (e) {}
+    
+   catch (e) {}
   // بديل أخير
   window.open(url, '_blank');
 }
@@ -339,6 +315,18 @@ window.addEventListener('beforeunload', (e) => {
         if (data.ok) { msg.style.color='#166534'; msg.textContent = data.message_ar; }
         else { msg.style.color='#b91c1c'; msg.textContent = data.error || 'تعذر الحفظ.'; }
       } catch(e) { msg.style.color='#b91c1c'; msg.textContent='تعذر الاتصال بالخادم.'; }
+    }
+
+
+    function openGemini(url) {
+      url = url || "https://gemini.google.com/app";
+      try {
+        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
+          Telegram.WebApp.openLink(url, { try_instant_view: false });
+          return;
+        }
+      } catch (e) {}
+      window.open(url, "_blank");
     }
 
 </script>
