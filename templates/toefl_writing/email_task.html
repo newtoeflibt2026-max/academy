@@ -319,15 +319,9 @@ window.addEventListener('beforeunload', (e) => {
 
 
     function openGemini(url) {
-      url = url || "https://gemini.google.com/app";
-      try {
-        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
-          Telegram.WebApp.openLink(url, { try_instant_view: false });
-          return;
-        }
-      } catch (e) {}
-      window.open(url, "_blank");
-    }
+  url = url || "https://gemini.google.com/app";
+  window.open(url, "_blank");
+}
 
 </script>
 
