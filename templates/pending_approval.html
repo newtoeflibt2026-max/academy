@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طلبك قيد المراجعة</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 460px;
+      width: 100%;
+      padding: 45px 35px;
+      text-align: center;
+    }
+    .icon {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .status-badge {
+      display: inline-block;
+      background: #fff3cd;
+      color: #856404;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 15px;
+      margin: 18px 0;
+    }
+    .note {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 22px;
+      font-size: 14px;
+      color: #555;
+    }
+    .refresh-btn {
+      display: inline-block;
+      margin-top: 25px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      text-decoration: none;
+      padding: 13px 35px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">⏳</div>
+    <h1>طلبك قيد المراجعة</h1>
+    <div class="status-badge">⏱️ بانتظار موافقة الإدارة</div>
+    <p>شكراً لتسجيلك! تم استلام طلبك بنجاح.</p>
+    <p>سيقوم فريق الإدارة بمراجعة اشتراكك وتفعيله في أقرب وقت ممكن.</p>
+    <div class="note">
+      💡 بمجرد الموافقة على اشتراكك، ستتمكن من الدخول إلى لوحة الطالب والبدء بدروسك مباشرة.
+    </div>
+    <button class="refresh-btn" onclick="location.reload()">🔄 تحديث الحالة</button>
+  </div>
+</body>
+</html>
