@@ -174,7 +174,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
 {% if step == 5 %}<div class="card">
 <h2>✨ الخطوة 5: نموذج إيميل كامل</h2>
 {% if coach.model_email %}<div class="model-email" id="email-model">{{ coach.model_email }}</div>
-{% if coach.model_email_ar %}<div style="margin-top:12px;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:14px;direction:rtl;text-align:right;line-height:1.9;color:#44337a;white-space:pre-wrap;">🌐 <strong>الترجمة العربية:</strong>\n{{ coach.model_email_ar }}</div>{% endif %}
+{% if coach.model_email_ar %}<div style="margin-top:12px;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:14px;direction:rtl;text-align:right;line-height:1.9;color:#44337a;white-space:pre-wrap;">🌐 <strong>الترجمة العربية:</strong><br>{{ coach.model_email_ar }}</div>{% endif %}
 {% else %}<p style="color:#a0aec0">النموذج قيد الإعداد.</p>{% endif %}
 {% if coach.annotations %}<h3>🔍 تحليل النموذج سطرًا بسطر:</h3>
 {% for note in coach.annotations %}
