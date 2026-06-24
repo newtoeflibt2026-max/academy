@@ -48,9 +48,31 @@ def writing_track_page():
         ORDER BY s.order_index
     """, (tg_id, track["id"])).fetchall()
 
+    # REAL_PROGRESS: حساب تقدّم مرحلتي الإيميل(3) والمناقشة(4) من محاولات الطالب الفعلية
+    import json as _json
+    _email_done = set(); _disc_done = set()
+    try:
+        _att = c.execute("SELECT answer_json FROM writing_attempts WHERE telegram_id=?", (str(tg_id),)).fetchall()
+        for _a in _att:
+            try:
+                _j = _json.loads(_a["answer_json"] or "{}")
+                _sc = _j.get("scenario_id"); _tk = _j.get("task")
+                if _sc and _tk == "email": _email_done.add(_sc)
+                elif _sc and _tk == "discussion": _disc_done.add(_sc)
+            except Exception:
+                pass
+    except Exception:
+        pass
+    _email_total = c.execute("SELECT COUNT(*) FROM writing_email_scenarios").fetchone()[0] or 1
+    _disc_total = c.execute("SELECT COUNT(*) FROM writing_discussion_scenarios WHERE is_active=1").fetchone()[0] or 1
+
     stages_list = []
     for s in stages:
         sd = dict(s)
+        if sd.get("order_index") == 3:
+            sd["done_count"] = len(_email_done); sd["lesson_count"] = _email_total
+        elif sd.get("order_index") == 4:
+            sd["done_count"] = len(_disc_done); sd["lesson_count"] = _disc_total
         sd["progress_pct"] = int((sd["done_count"] / sd["lesson_count"]) * 100) if sd["lesson_count"] else 0
         stages_list.append(sd)
 
