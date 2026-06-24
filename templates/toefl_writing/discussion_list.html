@@ -58,8 +58,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
         <span class="tier-badge tier-{{ s.target_tier }}">{{ s.target_tier|upper }}</span>
         <span class="difficulty-stars">{% for i in range(s.difficulty) %}★{% endfor %}{% for i in range(5 - s.difficulty) %}☆{% endfor %}</span>
       </div>
-      <div class="card-title">{{ s.title_ar }}</div>
-      <div class="card-title-en">{{ s.title_en }}</div>
+      <div class="card-title">{{ s.title_en }}</div>
+      <div class="card-title-en">{{ s.title_ar }}</div>
       <div class="card-meta">
         <span>⏱️ {{ (s.time_limit_seconds // 60) }} دق</span>
         <span>✍️ {{ s.min_words }}+ كلمة</span>

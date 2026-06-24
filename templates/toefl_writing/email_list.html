@@ -57,7 +57,7 @@
   {% if scenarios %}
     {% for s in scenarios %}
     <div class="card">
-      <h3 class="card-title">{{ s.title_ar }} <span style="color:#64748b;font-size:14px;">({{ s.title_en }})</span></h3>
+      <h3 class="card-title">{{ s.title_en }} <span style="color:#64748b;font-size:13px;font-weight:normal;">- {{ s.title_ar }}</span></h3>
       <div class="card-meta">
         <span class="meta-item">📝 الحد الأدنى: {{ s.min_words }} كلمة</span>
         <span class="meta-item difficulty-{{ s.difficulty }}">⚡ صعوبة: {{ s.difficulty }}</span>
