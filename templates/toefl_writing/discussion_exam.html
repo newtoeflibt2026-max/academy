@@ -261,11 +261,6 @@ function showDiscussionResult(data) {
   host.scrollIntoView({behavior:'smooth'});
 }
 
-
-   catch (e) {}
-  // بديل أخير
-  window.open(url, '_blank');
-}
 function copyGeminiPromptD() {
   const box = document.getElementById('gemini-prompt-box'); if (!box) return;
   const ans = (document.getElementById('response') || {}).value || '';
