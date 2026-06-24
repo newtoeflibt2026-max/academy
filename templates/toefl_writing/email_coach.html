@@ -95,8 +95,8 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
 </div>
 {% if step == 1 %}<div class="card">
 <h2>🎬 الخطوة 1: افهم الموقف</h2>
-<div class="scenario-box"><strong>الموقف بالعربية:</strong><p>{{ coach.situation_ar }}</p></div>
 <div class="scenario-box"><strong>The Situation (English):</strong><div class="english-text">{{ coach.situation_en }}</div></div>
+<div class="scenario-box"><strong>الترجمة بالعربية:</strong><p>{{ coach.situation_ar }}</p></div>
 <div class="hint-box"><strong>📨 إلى من ترسل؟</strong> {{ coach.recipient_ar }}<br><strong>🎭 النبرة:</strong> {{ coach.tone_ar }}</div>
 {% if coach.coach_tip_1 %}<div class="hint-box"><strong>💡 نصيحة المدرب:</strong><p>{{ coach.coach_tip_1 }}</p></div>{% endif %}
 </div>{% endif %}
