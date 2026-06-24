@@ -173,7 +173,9 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
 {% endif %}
 {% if step == 5 %}<div class="card">
 <h2>✨ الخطوة 5: نموذج إيميل كامل</h2>
-{% if coach.model_email %}<div class="model-email">{{ coach.model_email }}</div>
+{% if coach.model_email %}<div class="model-email" id="email-model">{{ coach.model_email }}</div>
+<button type="button" onclick="translateEmailModel()" style="margin-top:10px;padding:10px 18px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-weight:bold;cursor:pointer">🌐 ترجمة النموذج</button>
+<script>function translateEmailModel(){var t=document.getElementById("email-model").textContent.trim();if(!t)return;window.open("https://translate.google.com/?sl=en&tl=ar&op=translate&text="+encodeURIComponent(t),"_blank");}</script>
 {% else %}<p style="color:#a0aec0">النموذج قيد الإعداد.</p>{% endif %}
 {% if coach.annotations %}<h3>🔍 تحليل النموذج سطرًا بسطر:</h3>
 {% for note in coach.annotations %}
