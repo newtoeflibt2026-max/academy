@@ -1232,9 +1232,9 @@ def view_discussion_coach(scenario_id, step=1):
         coach["tier_label"] = {"tier59": "المبتدئ (Score 3)", "tier69": "المتوسط (Score 4)", "tier90": "المتقدم (Score 5)"}.get(_t, "المبتدئ (Score 3)")
         coach["current_tier"] = _t
         coach["all_models"] = {
-            "tier59": {"model": cr.get("model_59",""), "exp": cr.get("tier59_explanation",""), "label": "المبتدئ (Score 3)"},
-            "tier69": {"model": cr.get("model_69",""), "exp": cr.get("tier69_explanation",""), "label": "المتوسط (Score 4)"},
-            "tier90": {"model": cr.get("step5_model_response",""), "exp": cr.get("tier90_explanation",""), "label": "المتقدم (Score 5)"},
+            "tier59": {"model": cr.get("model_59",""), "model_ar": cr.get("model_59_ar","") or "", "exp": cr.get("tier59_explanation",""), "label": "المبتدئ (Score 3)"},
+            "tier69": {"model": cr.get("model_69",""), "model_ar": cr.get("model_69_ar","") or "", "exp": cr.get("tier69_explanation",""), "label": "المتوسط (Score 4)"},
+            "tier90": {"model": cr.get("step5_model_response",""), "model_ar": cr.get("model_90_ar","") or "", "exp": cr.get("tier90_explanation",""), "label": "المتقدم (Score 5)"},
         }
     
     user_id = request.args.get("user_id", "guest")
