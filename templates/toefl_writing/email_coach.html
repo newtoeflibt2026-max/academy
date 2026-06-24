@@ -155,11 +155,11 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
         {% for item in items %}
           <div class="phrase-card" style="background:#f7fafc;padding:12px;margin:10px 0;border-right:4px solid #4299e1;border-radius:6px;">
             <div style="font-family:'Consolas','Courier New',monospace;font-size:15px;color:#1a202c;direction:ltr;text-align:left;font-weight:500;">
-              {{ item.phrase }}
+              {{ item.en or item.phrase }}
             </div>
-            {% if item.when_to_use_ar %}
+            {% if item.ar or item.when_to_use_ar %}
               <div style="font-size:13px;color:#4a5568;margin-top:8px;direction:rtl;text-align:right;">
-                💡 {{ item.when_to_use_ar }}
+                💡 {{ item.ar or item.when_to_use_ar }}
               </div>
             {% endif %}
           </div>
@@ -174,8 +174,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
 {% if step == 5 %}<div class="card">
 <h2>✨ الخطوة 5: نموذج إيميل كامل</h2>
 {% if coach.model_email %}<div class="model-email" id="email-model">{{ coach.model_email }}</div>
-<button type="button" onclick="translateEmailModel()" style="margin-top:10px;padding:10px 18px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-weight:bold;cursor:pointer">🌐 ترجمة النموذج</button>
-<script>function translateEmailModel(){var t=document.getElementById("email-model").textContent.trim();if(!t)return;window.open("https://translate.google.com/?sl=en&tl=ar&op=translate&text="+encodeURIComponent(t),"_blank");}</script>
+{% if coach.model_email_ar %}<div style="margin-top:12px;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:14px;direction:rtl;text-align:right;line-height:1.9;color:#44337a;white-space:pre-wrap;">🌐 <strong>الترجمة العربية:</strong>\n{{ coach.model_email_ar }}</div>{% endif %}
 {% else %}<p style="color:#a0aec0">النموذج قيد الإعداد.</p>{% endif %}
 {% if coach.annotations %}<h3>🔍 تحليل النموذج سطرًا بسطر:</h3>
 {% for note in coach.annotations %}

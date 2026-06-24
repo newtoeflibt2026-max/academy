@@ -1073,6 +1073,7 @@ def view_email_coach(scenario_id, step=1):
             "structure": _safe_json(cr.get("step2_structure_json"), []),
             "phrases": _safe_json(cr.get("step3_phrases_json"), []),
             "model_email": cr.get("step4_model_email") or "",
+            "model_email_ar": cr.get("step4_model_email_ar") or "",
             "annotations": _safe_json(cr.get("step4_annotations_json"), []),
             "fill_template": cr.get("step5_fill_template") or "",
             "blanks_hints": _safe_json(cr.get("step5_blanks_hints_json"), []),
