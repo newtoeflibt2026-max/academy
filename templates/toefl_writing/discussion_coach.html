@@ -228,8 +228,40 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
         <div style="color:#2d3748;line-height:1.8;">{{ coach.tier_explanation }}</div>
       </div>
       {% endif %}
+      <!-- TIER_SWITCHER: أزرار تبديل المستوى -->
+      {% if coach.all_models %}
+      <div style="display:flex;gap:8px;margin:14px 0;flex-wrap:wrap">
+        <button type="button" class="tierbtn" data-tier="tier59" onclick="switchTier('tier59')" style="flex:1;min-width:90px;padding:10px;border-radius:8px;border:2px solid #cbd5e1;background:#fff;color:#475569;font-weight:bold;cursor:pointer">Score 3</button>
+        <button type="button" class="tierbtn" data-tier="tier69" onclick="switchTier('tier69')" style="flex:1;min-width:90px;padding:10px;border-radius:8px;border:2px solid #cbd5e1;background:#fff;color:#475569;font-weight:bold;cursor:pointer">Score 4</button>
+        <button type="button" class="tierbtn" data-tier="tier90" onclick="switchTier('tier90')" style="flex:1;min-width:90px;padding:10px;border-radius:8px;border:2px solid #cbd5e1;background:#fff;color:#475569;font-weight:bold;cursor:pointer">Score 5</button>
+      </div>
+      <div id="tier-exp" style="background:#ebf8ff;border:1px solid #90cdf4;border-radius:8px;padding:12px 14px;margin-bottom:10px;color:#2d3748;line-height:1.8"></div>
+      {% endif %}
       <h3 style="color:#2c5282;">✍️ النموذج المناسب لمستواك:</h3>
-      <div class="model-text">{{ coach.tier_model or coach.model_response }}</div>
+      <div class="model-text" id="tier-model">{{ coach.tier_model or coach.model_response }}</div>
+      <button type="button" onclick="translateModel()" style="margin-top:10px;padding:10px 18px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-weight:bold;cursor:pointer">🌐 ترجمة النموذج</button>
+      {% if coach.all_models %}
+      <script>
+      var ALL_MODELS = {{ coach.all_models | tojson }};
+      var CUR_TIER = "{{ coach.current_tier or 'tier59' }}";
+      function switchTier(t){
+        if(!ALL_MODELS[t]) return;
+        document.getElementById('tier-model').textContent = ALL_MODELS[t].model || '';
+        document.getElementById('tier-exp').innerHTML = '<b>🎯 '+ALL_MODELS[t].label+'</b><br>'+(ALL_MODELS[t].exp||'');
+        document.querySelectorAll('.tierbtn').forEach(function(b){
+          if(b.dataset.tier===t){b.style.background='#4299e1';b.style.color='#fff';b.style.borderColor='#4299e1';}
+          else{b.style.background='#fff';b.style.color='#475569';b.style.borderColor='#cbd5e1';}
+        });
+      }
+      function translateModel(){
+        var txt = document.getElementById('tier-model').textContent.trim();
+        if(!txt) return;
+        var url = "https://translate.google.com/?sl=en&tl=ar&op=translate&text="+encodeURIComponent(txt);
+        window.open(url, "_blank");
+      }
+      switchTier(CUR_TIER);
+      </script>
+      {% endif %}
       <h3 style="margin-top:24px;color:#2c5282;">📝 الشرح التفصيلي:</h3>
       {% for a in coach.annotations %}
         <div class="annotation">
