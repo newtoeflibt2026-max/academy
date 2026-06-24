@@ -173,7 +173,31 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f0f4f8; 
 {% endif %}
 {% if step == 5 %}<div class="card">
 <h2>✨ الخطوة 5: نموذج إيميل كامل</h2>
-{% if coach.model_email %}<div class="model-email" id="email-model">{{ coach.model_email }}</div>
+{% if coach.all_models and coach.all_models.tier90.model %}
+<div style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap">
+  <button type="button" class="etierbtn" data-tier="tier59" onclick="switchEmailTier('tier59')" style="padding:8px 16px;border:2px solid #4299e1;border-radius:20px;background:#4299e1;color:#fff;font-weight:bold;cursor:pointer">المبتدئ (Score 3)</button>
+  <button type="button" class="etierbtn" data-tier="tier69" onclick="switchEmailTier('tier69')" style="padding:8px 16px;border:2px solid #cbd5e1;border-radius:20px;background:#fff;color:#475569;font-weight:bold;cursor:pointer">المتوسط (Score 4)</button>
+  <button type="button" class="etierbtn" data-tier="tier90" onclick="switchEmailTier('tier90')" style="padding:8px 16px;border:2px solid #cbd5e1;border-radius:20px;background:#fff;color:#475569;font-weight:bold;cursor:pointer">المتقدم (Score 5)</button>
+</div>
+<div id="etier-exp" style="background:#ebf8ff;border:1px solid #90cdf4;border-radius:8px;padding:12px 14px;margin-bottom:12px;color:#2d3748;line-height:1.8;white-space:pre-wrap;direction:rtl;text-align:right;"></div>
+<div class="model-email" id="email-model">{{ coach.model_email }}</div>
+<div id="email-model-ar" style="margin-top:12px;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:14px;direction:rtl;text-align:right;line-height:1.9;color:#44337a;white-space:pre-wrap;"></div>
+<script>
+var E_MODELS = {{ coach.all_models | tojson }};
+function switchEmailTier(t){
+  if(!E_MODELS[t]) return;
+  document.getElementById('email-model').textContent = E_MODELS[t].model || '';
+  var ar = document.getElementById('email-model-ar');
+  ar.innerHTML = (E_MODELS[t].model_ar) ? ('🌐 <strong>الترجمة العربية:</strong><br>'+E_MODELS[t].model_ar) : '';
+  document.getElementById('etier-exp').textContent = E_MODELS[t].exp || '';
+  document.querySelectorAll('.etierbtn').forEach(function(b){
+    if(b.dataset.tier===t){b.style.background='#4299e1';b.style.color='#fff';b.style.borderColor='#4299e1';}
+    else{b.style.background='#fff';b.style.color='#475569';b.style.borderColor='#cbd5e1';}
+  });
+}
+switchEmailTier('tier59');
+</script>
+{% elif coach.model_email %}<div class="model-email" id="email-model">{{ coach.model_email }}</div>
 {% if coach.model_email_ar %}<div style="margin-top:12px;background:#faf5ff;border:1px solid #d6bcfa;border-radius:8px;padding:14px;direction:rtl;text-align:right;line-height:1.9;color:#44337a;white-space:pre-wrap;">🌐 <strong>الترجمة العربية:</strong><br>{{ coach.model_email_ar }}</div>{% endif %}
 {% else %}<p style="color:#a0aec0">النموذج قيد الإعداد.</p>{% endif %}
 {% if coach.annotations %}<h3>🔍 تحليل النموذج سطرًا بسطر:</h3>

@@ -1074,6 +1074,11 @@ def view_email_coach(scenario_id, step=1):
             "phrases": _safe_json(cr.get("step3_phrases_json"), []),
             "model_email": cr.get("step4_model_email") or "",
             "model_email_ar": cr.get("step4_model_email_ar") or "",
+            "all_models": {
+                "tier59": {"model": cr.get("email_model_59","") or cr.get("step4_model_email","") or "", "model_ar": cr.get("email_model_59_ar","") or "", "exp": cr.get("email_tier59_exp","") or "", "label": "المبتدئ (Score 3)"},
+                "tier69": {"model": cr.get("email_model_69","") or "", "model_ar": cr.get("email_model_69_ar","") or "", "exp": cr.get("email_tier69_exp","") or "", "label": "المتوسط (Score 4)"},
+                "tier90": {"model": cr.get("email_model_90","") or "", "model_ar": cr.get("email_model_90_ar","") or "", "exp": cr.get("email_tier90_exp","") or "", "label": "المتقدم (Score 5)"},
+            },
             "annotations": _safe_json(cr.get("step4_annotations_json"), []),
             "fill_template": cr.get("step5_fill_template") or "",
             "blanks_hints": _safe_json(cr.get("step5_blanks_hints_json"), []),
