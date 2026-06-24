@@ -263,12 +263,20 @@ function showDiscussionResult(data) {
 
 function openGeminiD(url) {
   url = url || "https://gemini.google.com/app";
-  // محاولة Telegram أولاً (داخل البوت)
   try {
     if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
       Telegram.WebApp.openLink(url, { try_instant_view: false });
       return;
     }
+  } catch (e) {}
+  // فتح بسيط بدون قيود تسبب الحجب
+  var w = window.open(url, "_blank");
+  if (!w) {
+    // إن حُجبت النافذة، انتقل في نفس التبويب
+    alert("اسمح بالنوافذ المنبثقة، أو سننقلك الآن إلى Gemini.");
+    window.location.href = url;
+  }
+}
   } catch (e) {}
   // الطريقة الأكثر موثوقية في المتصفح: إنشاء رابط والنقر عليه
   try {
