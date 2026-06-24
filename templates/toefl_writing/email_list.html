@@ -22,6 +22,11 @@
   .btn { display:inline-block; background:#4f46e5; color:#fff; padding:10px 20px; border-radius:8px; text-decoration:none; font-weight:bold; }
   .btn:hover { background:#4338ca; }
   .empty { text-align:center; padding:40px; background:#fff; border-radius:14px; color:#64748b; }
+.card-actions { display:flex; gap:10px; margin-top:14px; }
+.btn-primary { flex:1; padding:10px 14px; border-radius:8px; text-decoration:none; text-align:center; font-weight:600; font-size:14px; background:#4299e1; color:#fff; border:none; cursor:pointer; transition:all .2s; }
+.btn-primary:hover { background:#3182ce; }
+.btn-secondary { flex:1; padding:10px 14px; border-radius:8px; text-decoration:none; text-align:center; font-weight:600; font-size:14px; background:#ed8936; color:#fff; border:none; cursor:pointer; transition:all .2s; }
+.btn-secondary:hover { background:#dd6b20; }
 </style>
 </head>
 <body>
@@ -59,7 +64,10 @@
         <span class="meta-item">👤 المُرسَل إليه: {{ s.recipient_role }}</span>
         <span class="meta-item">🎯 {{ s.target_tier }}</span>
       </div>
-      <a class="btn" href="/writing/email/{{ s.id }}?user_id={{ user_id }}">ابدأ الكتابة ←</a>
+      <div class="card-actions">
+        <a href="/writing/email/{{ s.id }}/coach/1?user_id={{ user_id }}" class="btn btn-secondary">🎓 تدريب</a>
+        <a href="/writing/email/{{ s.id }}?user_id={{ user_id }}" class="btn btn-primary">📝 امتحان</a>
+      </div>
     </div>
     {% endfor %}
   {% else %}
