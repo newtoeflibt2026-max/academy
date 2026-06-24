@@ -1624,12 +1624,29 @@ def index():
 
 
 @app.route("/student")
-
 def student():
 
     from flask import render_template, request
+    import os
 
     sid = request.args.get("student_id", "") or request.args.get("user_id", "")
+
+    # بوابة الموافقة: المدير يتجاوزها دائماً
+    admin_ids = [a.strip() for a in (os.environ.get("ADMIN_IDS") or "").split(",") if a.strip()]
+    is_admin = str(sid) in admin_ids
+
+    if sid and not is_admin:
+        try:
+            from subscription_helpers import get_active_subscription
+            sub = get_active_subscription(sid)
+        except Exception:
+            sub = None
+        if not sub:
+            # لا يوجد اشتراك نشط -> اعرض صفحة الانتظار بدل لوحة الطالب
+            return render_template("pending_approval.html", user_id=sid, student_id=sid)
+
+    return render_template("student_dashboard.html", user_id=sid, student_id=sid)
+
 
     return render_template("student_dashboard.html", user_id=sid, student_id=sid)
 
