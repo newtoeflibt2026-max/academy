@@ -274,82 +274,9 @@ window.addEventListener('beforeunload', (e) => {
 
     function openGemini(url) {
   url = url || "https://gemini.google.com/app";
-  try {
-    if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openLink) {
-      Telegram.WebApp.openLink(url, { try_instant_view: false });
-      return;
-    }
-  } catch (e) {}
-  // فتح بسيط بدون قيود تسبب الحجب
-  var w = window.open(url, "_blank");
-  if (!w) {
-    // إن حُجبت النافذة، انتقل في نفس التبويب
-    alert("اسمح بالنوافذ المنبثقة، أو سننقلك الآن إلى Gemini.");
-    window.location.href = url;
-  }
-}
-  } catch (e) {}
-  // الطريقة الأكثر موثوقية في المتصفح: إنشاء رابط والنقر عليه
-  try {
-    var a = document.createElement('a');
-    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    return;
-  } catch (e) {}
-  // بديل أخير
-  window.open(url, '_blank');
-}
-      } catch (e) {}
-      window.open(url, "_blank", "noopener");
-    }
-    function copyGeminiPrompt() {
-      const box = document.getElementById('gemini-prompt-box');
-      if (!box) return;
-      const studentAns = (document.getElementById('email-text') || {}).value || '';
-      let full = box.value;
-      // تأكد أن إجابة الطالب الحالية مدمجة في النص المنسوخ
-      if (studentAns.trim() && full.indexOf(studentAns.trim().substring(0, 30)) === -1) {
-        full += '\n\n== إجابتي (للنسخ) ==\n' + studentAns;
-      }
-      try {
-        navigator.clipboard.writeText(full);
-        alert('\u2705 تم نسخ الطلب! الصقه الآن في Gemini.');
-      } catch(e) {
-        document.execCommand('copy');
-        alert('\u2705 تم نسخ الطلب!');
-      }
-    }
-
-
-    async function saveGeminiScore() {
-      const inp = document.getElementById('gscore-input');
-      const msg = document.getElementById('gscore-msg');
-      const v = parseFloat(inp.value);
-      if (isNaN(v) || v < 0 || v > 6) { msg.style.color='#b91c1c'; msg.textContent='أدخل درجة صحيحة من 0 إلى 6.'; return; }
-      const urlp = new URLSearchParams(window.location.search);
-      const uid = urlp.get('user_id') || urlp.get('student_id') || '';
-      try {
-        const r = await fetch('/api/writing/gemini-score', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({user_id: uid, task_type:'email', score6: v})
-        });
-        const data = await r.json();
-        if (data.ok) { msg.style.color='#166534'; msg.textContent = data.message_ar; }
-        else { msg.style.color='#b91c1c'; msg.textContent = data.error || 'تعذر الحفظ.'; }
-      } catch(e) { msg.style.color='#b91c1c'; msg.textContent='تعذر الاتصال بالخادم.'; }
-    }
-
-<<<<<<< HEAD
-
-    function openGemini(url) {
-  url = url || "https://gemini.google.com/app";
   window.open(url, "_blank");
 }
 
-=======
->>>>>>> 8cbf46650d0d6af3445084212a805324991af9d6
 </script>
 
 </body>
