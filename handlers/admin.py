@@ -146,7 +146,7 @@ async def cb_pick(cb: types.CallbackQuery):
 
     conn = sqlite3.connect(settings.DB_PATH); conn.row_factory = sqlite3.Row
     r = conn.execute(
-        "SELECT telegram_id, full_name, subscription_type, subscription_section, is_paid, package_end "
+        "SELECT telegram_id, full_name, name, username, subscription_type, subscription_section, is_paid, package_end "
         "FROM students WHERE telegram_id=?", (tid,)).fetchone()
     conn.close()
     if not r:
