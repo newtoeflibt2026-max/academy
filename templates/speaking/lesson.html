@@ -511,15 +511,9 @@ function revealTranscript(){
      + '<div dir="ltr" style="font-size:17px;color:#0f172a;font-family:Georgia,serif">' + (said ? esc(said) : '<span style="color:#94a3b8">لم يتم التعرّف على كلامك (جرّب Chrome واسمح بالمايك)</span>') + '</div>'
      + '</div>';
   if(txtEn) h += '<button class="replay" onclick="speak('+JSON.stringify(txtEn).replace(/"/g,'&quot;')+')">🔊 استمع مرة أخيرة للمقارنة</button>';
-  // Gemini prompt block
-  const prompt = buildGeminiPrompt(it, said);
-  h += '<div style="background:#fff;border:2px dashed #c4b5fd;border-radius:12px;padding:14px;margin-top:14px">'
-     + '<div style="font-size:13px;color:#5b21b6;margin-bottom:8px;line-height:1.7">📝 لتقييم احترافي وفق معايير TOEFL 2026: انسخ الطلب وافتح Gemini والصقه.</div>'
-     + '<textarea id="sp-gemini-box" readonly dir="ltr" style="width:100%;height:120px;font-size:12px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;background:#fafafa;resize:vertical">' + esc(prompt) + '</textarea>'
-     + '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">'
-     + '<button type="button" onclick="copySpPrompt()" style="flex:1;min-width:130px;padding:11px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-weight:bold;cursor:pointer">📋 نسخ الطلب</button>'
-     + '<button type="button" onclick="openSpGemini()" style="flex:1;min-width:130px;padding:11px;border:none;border-radius:8px;background:#059669;color:#fff;font-weight:bold;cursor:pointer">🚀 افتح Gemini</button>'
-     + '</div></div>';
+  // store this item's response for the end-of-lesson combined evaluation
+  if(!state.responses) state.responses = [];
+  state.responses[state.idx] = { target: txtEn, said: said };
   t.innerHTML = h;
   t.style.display = 'block';
   state.revealed = true;
@@ -579,7 +573,69 @@ function nextItem(){
   }
 }
 
+function buildCombinedPrompt(){
+  const isInterview = (STAGE_ID === 3);
+  const resp = state.responses || [];
+  let body = "";
+  for (let i = 0; i < resp.length; i++){
+    const r = resp[i] || {};
+    body += String.fromCharCode(10) + "Item " + (i+1) + ":" + String.fromCharCode(10)
+         + "  Target: \"" + (r.target||"") + "\"" + String.fromCharCode(10)
+         + "  Student said: \"" + (r.said||"(no transcript)") + "\"" + String.fromCharCode(10);
+  }
+  if (isInterview){
+    return "You are a strict TOEFL iBT 2026 Speaking examiner for the 'Take an Interview' task. "
+      + "Below are the interview questions and the student's auto-transcribed spoken answers (may contain small transcription errors)." + String.fromCharCode(10)
+      + body + String.fromCharCode(10)
+      + "For EACH item give: a score 0-5 (official TOEFL 2026 interview rubric). "
+      + "Then give overall feedback IN ARABIC on fluency, grammar, vocabulary, and pronunciation, "
+      + "list the 3 most important things to improve, provide one model band-5 answer in English for the weakest item, "
+      + "and suggest 2 daily speaking drills. Be encouraging but honest.";
+  } else {
+    return "You are a strict TOEFL iBT 2026 Speaking examiner for the 'Listen and Repeat' task. "
+      + "Below are the target sentences and the student's auto-transcribed repetitions (may contain small transcription errors)." + String.fromCharCode(10)
+      + body + String.fromCharCode(10)
+      + "For EACH item give: a score 0-5 (5 = exact intelligible repetition). "
+      + "Then IN ARABIC list the exact words mispronounced or missed across all items, "
+      + "give phonetic tips for the hardest words, point out the student's recurring pronunciation weakness, "
+      + "and suggest one focused pronunciation drill. Be concise and practical.";
+  }
+}
+
+function showFinalEvaluation(){
+  const resp = state.responses || [];
+  const hasAny = resp.some(r => r && (r.said||"").trim());
+  const prompt = buildCombinedPrompt();
+  const wrap = document.getElementById('content') || document.body;
+  let h = '<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,.08);max-width:640px;margin:20px auto">'
+    + '<div style="text-align:center;font-size:46px">🎯</div>'
+    + '<h2 style="text-align:center;color:#059669;margin:8px 0">أنهيت التدريب الصوتي!</h2>'
+    + '<div style="font-size:14px;color:#475569;text-align:center;line-height:1.8;margin-bottom:14px">الآن احصل على تقييم شامل لكل إجاباتك دفعة واحدة: انسخ الطلب وافتح Gemini المجاني والصقه.</div>'
+    + '<textarea id="sp-final-box" readonly dir="ltr" style="width:100%;height:200px;font-size:12px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;background:#fafafa;resize:vertical">' + esc(prompt) + '</textarea>'
+    + '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">'
+    + '<button type="button" onclick="copyFinalPrompt()" style="flex:1;min-width:140px;padding:13px;border:none;border-radius:10px;background:#7c3aed;color:#fff;font-weight:bold;cursor:pointer;font-size:15px">📋 نسخ الطلب</button>'
+    + '<button type="button" onclick="window.open(\'https://gemini.google.com/app\',\'_blank\')" style="flex:1;min-width:140px;padding:13px;border:none;border-radius:10px;background:#059669;color:#fff;font-weight:bold;cursor:pointer;font-size:15px">🚀 افتح Gemini</button>'
+    + '</div>'
+    + '<button type="button" onclick="doCompleteLesson()" style="width:100%;margin-top:10px;padding:13px;border:none;border-radius:10px;background:#0a2a66;color:#fff;font-weight:bold;cursor:pointer;font-size:15px">✅ تم — إنهاء الدرس</button>';
+  if(!hasAny){
+    h += '<div style="font-size:12px;color:#b91c1c;text-align:center;margin-top:10px">⚠️ لم يتم التعرّف على صوتك — استخدم Chrome واسمح بالمايك في المرة القادمة.</div>';
+  }
+  h += '</div>';
+  wrap.innerHTML = h;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function copyFinalPrompt(){
+  const box = document.getElementById('sp-final-box');
+  if(!box) return;
+  try { navigator.clipboard.writeText(box.value); alert('✅ تم نسخ الطلب! الصقه في Gemini.'); }
+  catch(e){ box.select(); document.execCommand('copy'); alert('✅ تم النسخ'); }
+}
+
 function finishLesson(){
+  showFinalEvaluation();
+}
+
+function doCompleteLesson(){
   var total = (state.items && state.items.length) ? state.items.length : 1;
   var correct = total;
   fetch('/api/speaking/lesson/'+LESSON_ID+'/complete',{
