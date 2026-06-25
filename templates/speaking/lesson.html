@@ -415,8 +415,27 @@ async function toggleRecord(){
       document.getElementById('nextBtn').style.display = 'block';
       document.getElementById('skipBtn').style.display = 'block';
       stopRecordTimer();
+      try { if (state.sttRecognition) state.sttRecognition.stop(); } catch(e){}
     };
     state.mediaRecorder.start();
+    // === Speech-to-text (free, in-browser) ===
+    state.sttText = "";
+    try {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        state.sttRecognition = new SR();
+        state.sttRecognition.lang = "en-US";
+        state.sttRecognition.continuous = true;
+        state.sttRecognition.interimResults = false;
+        state.sttRecognition.onresult = function(ev){
+          for (let i = ev.resultIndex; i < ev.results.length; i++){
+            if (ev.results[i].isFinal) state.sttText += ev.results[i][0].transcript + " ";
+          }
+        };
+        state.sttRecognition.onerror = function(){};
+        state.sttRecognition.start();
+      }
+    } catch(e){ console.warn("STT not available", e); }
     btn.classList.add('recording');
     btn.textContent = '⏹ إيقاف التسجيل';
     // Timer only for Task 2 (Interview = stage 3 or question type)
@@ -455,20 +474,67 @@ function stopRecordTimer(){
   if(recordTimerId){ clearInterval(recordTimerId); recordTimerId = null; }
 }
 
+function buildGeminiPrompt(it, said){
+  const isInterview = (STAGE_ID === 3) || (it && it.item_type === 'question');
+  const target = it.text_en || it.question_en || '';
+  if (isInterview){
+    return "You are a strict TOEFL iBT 2026 Speaking examiner for the 'Take an Interview' task. "
+      + "The interview question was:" + String.fromCharCode(10) + "\"" + target + "\"" + String.fromCharCode(10)
+      + "The student answered (auto-transcribed from voice, may have small errors):" + String.fromCharCode(10) + "\"" + (said||"(no transcript)") + "\"" + String.fromCharCode(10) + String.fromCharCode(10)
+      + "Give: 1) a score 0-5 with the official TOEFL 2026 interview rubric, "
+      + "2) feedback in Arabic on fluency, grammar, vocabulary, and pronunciation, "
+      + "3) a model band-5 answer in English, "
+      + "4) two concrete drills to improve. Be encouraging but honest.";
+  } else {
+    return "You are a strict TOEFL iBT 2026 Speaking examiner for the 'Listen and Repeat' task. "
+      + "The target sentence to repeat exactly was:" + String.fromCharCode(10) + "\"" + target + "\"" + String.fromCharCode(10)
+      + "The student repeated (auto-transcribed from voice, may have small errors):" + String.fromCharCode(10) + "\"" + (said||"(no transcript)") + "\"" + String.fromCharCode(10) + String.fromCharCode(10)
+      + "Give: 1) a score 0-5 (5=exact intelligible repetition), "
+      + "2) list in Arabic the exact words mispronounced or missed, "
+      + "3) phonetic tips in Arabic for the hardest words, "
+      + "4) one short pronunciation drill. Be concise.";
+  }
+}
+
 function revealTranscript(){
   const it = state.items[state.idx];
   const txtEn = it.text_en || it.question_en || '';
   const txtAr = it.text_ar || it.question_ar || '';
+  const said = (state.sttText || '').trim();
   const t = document.getElementById('transcript');
   let h = '';
   if(txtEn) h += '<div class="text-en">'+esc(txtEn)+'</div>';
   if(txtAr) h += '<div class="text-ar">'+esc(txtAr)+'</div>';
+  // what the browser heard from the student
+  h += '<div style="background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:14px;margin:10px 0">'
+     + '<div style="font-size:13px;color:#1e40af;font-weight:bold;margin-bottom:6px">🎙️ ما سمعه المتصفّح منك:</div>'
+     + '<div dir="ltr" style="font-size:17px;color:#0f172a;font-family:Georgia,serif">' + (said ? esc(said) : '<span style="color:#94a3b8">لم يتم التعرّف على كلامك (جرّب Chrome واسمح بالمايك)</span>') + '</div>'
+     + '</div>';
   if(txtEn) h += '<button class="replay" onclick="speak('+JSON.stringify(txtEn).replace(/"/g,'&quot;')+')">🔊 استمع مرة أخيرة للمقارنة</button>';
+  // Gemini prompt block
+  const prompt = buildGeminiPrompt(it, said);
+  h += '<div style="background:#fff;border:2px dashed #c4b5fd;border-radius:12px;padding:14px;margin-top:14px">'
+     + '<div style="font-size:13px;color:#5b21b6;margin-bottom:8px;line-height:1.7">📝 لتقييم احترافي وفق معايير TOEFL 2026: انسخ الطلب وافتح Gemini والصقه.</div>'
+     + '<textarea id="sp-gemini-box" readonly dir="ltr" style="width:100%;height:120px;font-size:12px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;background:#fafafa;resize:vertical">' + esc(prompt) + '</textarea>'
+     + '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">'
+     + '<button type="button" onclick="copySpPrompt()" style="flex:1;min-width:130px;padding:11px;border:none;border-radius:8px;background:#7c3aed;color:#fff;font-weight:bold;cursor:pointer">📋 نسخ الطلب</button>'
+     + '<button type="button" onclick="openSpGemini()" style="flex:1;min-width:130px;padding:11px;border:none;border-radius:8px;background:#059669;color:#fff;font-weight:bold;cursor:pointer">🚀 افتح Gemini</button>'
+     + '</div></div>';
   t.innerHTML = h;
   t.style.display = 'block';
   state.revealed = true;
   document.getElementById('nextBtn').style.display = 'block';
   t.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function copySpPrompt(){
+  const box = document.getElementById('sp-gemini-box');
+  if(!box) return;
+  try { navigator.clipboard.writeText(box.value); alert('✅ تم نسخ الطلب! الصقه في Gemini.'); }
+  catch(e){ box.select(); document.execCommand('copy'); alert('✅ تم النسخ'); }
+}
+function openSpGemini(){
+  window.open("https://gemini.google.com/app", "_blank");
 }
 
 
