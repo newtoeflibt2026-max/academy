@@ -176,12 +176,93 @@ async def cb_activate_menu(cb: types.CallbackQuery):
         await cb.answer("⛔", show_alert=True); return
     await cb.answer()
     tid = cb.data.split(":")[1]
+    _MULTI_SEC.setdefault(tid, set())
+    sel = _MULTI_SEC[tid]
     kb = InlineKeyboardBuilder()
     for code, label, days in SECTIONS:
-        kb.button(text=label, callback_data=f"adm_setsec:{tid}:{code}")
+        mark = "✅ " if code in sel else ""
+        kb.button(text=f"{mark}{label}", callback_data=f"adm_multisec:{tid}:{code}")
+    kb.button(text="🔓 Full", callback_data=f"adm_multisec:{tid}:__full__")
+    kb.button(text="✔️ تأكيد", callback_data=f"adm_confirmsec:{tid}")
     kb.button(text="◀️ رجوع", callback_data=f"adm_pick:{tid}")
-    kb.adjust(2)
-    await cb.message.answer("🔑 اختر القسم لتفعيله:", reply_markup=kb.as_markup())
+    kb.adjust(2, 2, 1, 1)
+    chosen = "، ".join(sorted(sel)) if sel else "لا شيء"
+    _t = "🔑 اختر الأقسام ثم تأكيد" + NL + "المختار: <b>" + chosen + "</b>"
+    await cb.message.answer(_t, reply_markup=kb.as_markup(), parse_mode="HTML")
+
+
+_MULTI_SEC = {}
+
+@router.callback_query(F.data.startswith("adm_multisec:"))
+async def cb_multisec(cb: types.CallbackQuery):
+    if not _is_admin(cb.from_user.id):
+        await cb.answer("⛔", show_alert=True); return
+    parts = cb.data.split(":")
+    tid, code = parts[1], parts[2]
+    sel = _MULTI_SEC.setdefault(tid, set())
+    if code == "__full__":
+        sel.clear(); sel.add("__full__")
+    else:
+        sel.discard("__full__")
+        if code in sel: sel.discard(code)
+        else: sel.add(code)
+    await cb.answer()
+    kb = InlineKeyboardBuilder()
+    for c, label, days in SECTIONS:
+        mark = "✅ " if c in sel else ""
+        kb.button(text=f"{mark}{label}", callback_data=f"adm_multisec:{tid}:{c}")
+    fullmark = "✅ " if "__full__" in sel else ""
+    kb.button(text=f"{fullmark}🔓 Full", callback_data=f"adm_multisec:{tid}:__full__")
+    kb.button(text="✔️ تأكيد", callback_data=f"adm_confirmsec:{tid}")
+    kb.button(text="◀️ رجوع", callback_data=f"adm_pick:{tid}")
+    kb.adjust(2, 2, 1, 1)
+    chosen = "Full Access" if "__full__" in sel else ("، ".join(sorted(sel)) if sel else "لا شيء")
+    _t = "🔑 اختر الأقسام ثم تأكيد" + NL + "المختار: <b>" + chosen + "</b>"
+    try:
+        await cb.message.edit_text(_t, reply_markup=kb.as_markup(), parse_mode="HTML")
+    except Exception:
+        pass
+
+
+@router.callback_query(F.data.startswith("adm_confirmsec:"))
+async def cb_confirmsec(cb: types.CallbackQuery):
+    if not _is_admin(cb.from_user.id):
+        await cb.answer("⛔", show_alert=True); return
+    tid = cb.data.split(":")[1]
+    sel = _MULTI_SEC.get(tid, set())
+    if not sel:
+        await cb.answer("⚠️ اختر قسماً", show_alert=True); return
+    if "__full__" in sel:
+        section_value = "full"; label = "Full Access"
+    else:
+        section_value = ",".join(sorted(sel))
+        labels = []
+        for code in sorted(sel):
+            for c, l, d in SECTIONS:
+                if c == code: labels.append(l); break
+        label = "، ".join(labels) if labels else section_value
+    end_date = (datetime.now() + timedelta(days=45)).strftime("%Y-%m-%d")
+    conn = sqlite3.connect(settings.DB_PATH)
+    conn.execute(
+        "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, "
+        "subscription_section=?, package_end=? WHERE telegram_id=?",
+        (label, section_value, end_date, tid))
+    conn.commit(); conn.close()
+    _MULTI_SEC.pop(tid, None)
+    notify = "تم إرسال إشعار ✅"
+    try:
+        _m = "🎉 <b>تم تفعيل اشتراكك!</b>" + NL + NL + "📦 الأقسام: <b>" + label + "</b>" + NL + "📅 ينتهي: <b>" + end_date + "</b>" + NL + NL + "✨ اكتب /start 🚀"
+        await cb.bot.send_message(int(tid), _m, parse_mode="HTML")
+    except Exception as e:
+        notify = "⚠️ لم يصل الإشعار: " + str(e)
+    from aiogram.utils.keyboard import InlineKeyboardBuilder as _IKB
+    _kb = _IKB()
+    _kb.button(text="📚 وصول منتظم", callback_data=f"adm_mode:{tid}:sequential")
+    _kb.button(text="🔓 وصول كامل", callback_data=f"adm_mode:{tid}:full")
+    _kb.adjust(1)
+    await cb.answer("✅ تم التفعيل", show_alert=True)
+    _r = "✅ تم تفعيل <b>" + label + "</b> للطالب <code>" + tid + "</code>." + NL + notify + NL + NL + "⚙️ اختر نمط الوصول:"
+    await cb.message.answer(_r, reply_markup=_kb.as_markup(), parse_mode="HTML")
 
 
 @router.callback_query(F.data.startswith("adm_setsec:"))
