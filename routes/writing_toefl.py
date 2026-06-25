@@ -104,10 +104,6 @@ def view_stage(stage_id):
         conn.close()
         from flask import redirect
         return redirect("/writing/discussion/list?user_id=" + str(tg_id or ""))
-    if stage_id == 5:
-        conn.close()
-        from flask import redirect
-        return redirect("/writing?user_id=" + str(tg_id or "") + "&msg=mastery_soon")
 
     lessons = c.execute("""SELECT * FROM writing_lessons
         WHERE stage_id=? ORDER BY order_index""", (stage_id,)).fetchall()
