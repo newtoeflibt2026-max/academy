@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نتيجة الامتحان الشامل</title>
+<style>
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fb;margin:0;padding:20px;color:#1a202c}
+.container{max-width:760px;margin:0 auto}
+.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.06);margin-bottom:18px}
+h1{color:#667eea;margin:0 0 8px;font-size:22px}
+.sub{color:#64748b;font-size:14px;margin-bottom:14px;line-height:1.7}
+textarea{width:100%;height:220px;font-size:13px;border:1px solid #cbd5e1;border-radius:10px;padding:12px;background:#fff;resize:vertical;box-sizing:border-box}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{flex:1;min-width:150px;padding:14px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;font-size:15px;text-decoration:none;text-align:center;display:inline-block}
+.b1{background:#4f46e5;color:#fff}.b2{background:#059669;color:#fff}
+.score-box{background:#fffbeb;border:2px solid #fde68a;border-radius:12px;padding:18px;margin-top:16px}
+.score-box .lbl{font-size:14px;color:#92400e;font-weight:bold;margin-bottom:10px}
+.score-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=number]{flex:1;min-width:120px;padding:11px;border:1px solid #d6b45f;border-radius:8px;font-size:14px}
+.save{padding:11px 20px;border:none;border-radius:8px;background:#d97706;color:#fff;font-weight:bold;cursor:pointer}
+#msg{margin-top:10px;font-size:13px;color:#166534}
+.back{display:inline-block;background:#fff;border:2px solid #667eea;color:#667eea;padding:10px 18px;border-radius:10px;font-weight:600;text-decoration:none;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="container">
+<a class="back" href="/writing?user_id={{ user_id }}">← رجوع</a>
+<div class="card">
+<h1>🏁 نتيجة الامتحان الشامل</h1>
+<div class="sub">أكملت المهمتين. انسخ برومبت التصحيح أدناه (يشمل السؤالين وإجابتيك) والصقه في Gemini لتحصل على تصحيح المهمتين معًا + درجتك + خطة التحسين.</div>
+<textarea id="prompt-box" readonly>{{ prompt }}</textarea>
+<div class="btns">
+<button class="btn b1" onclick="copyP()">📋 نسخ برومبت التصحيح</button>
+<a class="btn b2" href="{{ gemini_url }}" target="_blank">🚀 افتح Gemini</a>
+</div>
+</div>
+<div class="card">
+<div class="score-box">
+<div class="lbl">بعد أن يصححك Gemini، أدخل درجتك الإجمالية (من 6) لأبقى على اطلاع بتقدمك:</div>
+<div class="score-row">
+<input id="sc" type="number" min="0" max="6" step="0.5" placeholder="مثال: 4.5">
+<button class="save" onclick="saveSc()">حفظ درجتي</button>
+</div>
+<div id="msg"></div>
+</div>
+</div>
+</div>
+<script>
+const UID = "{{ user_id }}";
+function copyP(){
+  const b=document.getElementById('prompt-box');
+  b.select();
+  try{navigator.clipboard.writeText(b.value);alert('✅ تم النسخ! الصقه في Gemini.');}
+  catch(e){document.execCommand('copy');alert('✅ تم النسخ!');}
+}
+async function saveSc(){
+  const v=parseFloat(document.getElementById('sc').value);
+  const m=document.getElementById('msg');
+  if(isNaN(v)||v<0||v>6){m.style.color='#b91c1c';m.textContent='أدخل درجة من 0 إلى 6.';return;}
+  try{
+    const r=await fetch('/api/writing/gemini-score',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:UID,task_type:'mock_exam',score6:v})});
+    const d=await r.json();
+    if(d.ok){m.style.color='#166534';m.textContent=d.message_ar||'تم حفظ درجتك ✅';}
+    else{m.style.color='#b91c1c';m.textContent=d.error||'تعذر الحفظ.';}
+  }catch(e){m.style.color='#b91c1c';m.textContent='تعذر الاتصال.';}
+}
+</script>
+</body>
+</html>

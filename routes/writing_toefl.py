@@ -484,6 +484,88 @@ def api_grade_discussion():
 # ═══════════════════════════════════════════════════════════
 # API: Health check
 # ═══════════════════════════════════════════════════════════
+@writing_bp.route("/writing/mock-exam")
+@require_section_access("writing")
+def mock_exam_start():
+    """الامتحان الشامل: إيميل عشوائي ثم نقاش عشوائي - نفس شاشات الامتحان الحقيقي."""
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    em = c.execute("SELECT id FROM writing_email_scenarios WHERE is_active=1 ORDER BY RANDOM() LIMIT 1").fetchone()
+    conn.close()
+    if not em:
+        return "No email scenarios available", 404
+    return redirect(f"/writing/email/{em[0]}?user_id={tg_id}&mock=1")
+
+
+@writing_bp.route("/writing/mock-exam/discussion")
+@require_section_access("writing")
+def mock_exam_discussion():
+    """الجزء الثاني من الامتحان الشامل: نقاش عشوائي."""
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    ds = c.execute("SELECT id FROM writing_discussion_scenarios WHERE is_active=1 ORDER BY RANDOM() LIMIT 1").fetchone()
+    conn.close()
+    if not ds:
+        return "No discussion scenarios available", 404
+    return redirect(f"/writing/discussion/{ds[0]}/exam?user_id={tg_id}&mock=1")
+
+
+@writing_bp.route("/writing/mock-exam/result")
+@require_section_access("writing")
+def mock_exam_result():
+    """شاشة النتيجة الموحّدة: تجمع آخر إيميل + آخر نقاش في برومبت Gemini واحد."""
+    import json as _json
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    def _last(task):
+        return c.execute(
+            "SELECT answer_text, answer_json FROM writing_attempts "
+            "WHERE telegram_id=? AND answer_json LIKE ? ORDER BY id DESC LIMIT 1",
+            (str(tg_id), '%"task": "' + task + '"%')
+        ).fetchone()
+    em = _last("email")
+    ds = _last("discussion")
+    email_ans = em[0] if em else ""
+    disc_ans = ds[0] if ds else ""
+    # جلب نص السؤالين من answer_json (scenario_id)
+    email_q = disc_q = ""
+    try:
+        if em and em[1]:
+            sid = _json.loads(em[1]).get("scenario_id")
+            r = c.execute("SELECT scenario_text FROM writing_email_scenarios WHERE id=?", (sid,)).fetchone()
+            email_q = r[0] if r else ""
+    except Exception: pass
+    try:
+        if ds and ds[1]:
+            sid = _json.loads(ds[1]).get("scenario_id")
+            r = c.execute("SELECT professor_question_en FROM writing_discussion_scenarios WHERE id=?", (sid,)).fetchone()
+            disc_q = r[0] if r else ""
+    except Exception: pass
+    conn.close()
+    NL = chr(10)
+    prompt = NL.join([
+        "دورك: أنت مدرب خبير ودقيق لمهارة TOEFL iBT Writing (صيغة 2026). صحّح لي المهمتين التاليتين من امتحان كامل.",
+        "",
+        "===== المهمة 1: Write an Email =====",
+        "== السؤال ==", email_q or "(غير متوفر)",
+        "== إجابتي ==", email_ans or "(لا توجد إجابة)",
+        "",
+        "===== المهمة 2: Academic Discussion =====",
+        "== السؤال ==", disc_q or "(غير متوفر)",
+        "== إجابتي ==", disc_ans or "(لا توجد إجابة)",
+        "",
+        "== المطلوب منك (أجب بالعربية) ==",
+        "1) صحّح كل مهمة على حدة وفق معايير ETS.",
+        "2) أعطِ درجة لكل مهمة من 6 (≈ /120)، ثم المتوسط الإجمالي.",
+        "3) أهم 3-5 أخطاء مع أمثلة من نصي.",
+        "4) خطة واضحة لرفع درجتي في المرة القادمة.",
+        "5) فقرة نموذجية قصيرة لكل مهمة على المستوى الأعلى.",
+    ])
+    return render_template("toefl_writing/mock_result.html",
+        prompt=prompt, gemini_url="https://gemini.google.com/app",
+        user_id=tg_id, has_email=bool(email_ans), has_disc=bool(disc_ans))
+
+
 @writing_bp.route("/api/writing/health")
 def api_health():
     conn = _db()

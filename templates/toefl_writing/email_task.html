@@ -250,11 +250,19 @@ function showResult(data) {
         <p style="font-size:13px; color:#64748b;">رقم الطلب: #${data.queue_id || '-'}</p>
       </div>`;
   }
-  html += `
+  var _isMock = new URLSearchParams(window.location.search).get("mock") === "1";
+  if (_isMock) {
+    html += `
+    <div style="text-align:center; margin-top:20px;">
+      <a href="/writing/mock-exam/discussion?user_id=${USER_ID}" class="btn btn-primary" style="text-decoration:none; display:inline-block; font-size:16px;">➡️ التالي: مهمة النقاش الأكاديمي</a>
+    </div>`;
+  } else {
+    html += `
     <div style="text-align:center; margin-top:20px;">
       <a href="/writing/email?user_id=${USER_ID}" class="btn btn-primary" style="text-decoration:none; display:inline-block;">سيناريو جديد</a>
       <a href="/writing/my-corrections?user_id=${USER_ID}" class="btn btn-secondary" style="text-decoration:none; display:inline-block; margin-right:10px;">تصحيحاتي</a>
     </div>`;
+  }
   content.innerHTML = html;
   card.classList.add('show');
   card.scrollIntoView({behavior:'smooth'});
