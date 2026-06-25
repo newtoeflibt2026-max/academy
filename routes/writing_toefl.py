@@ -484,6 +484,10 @@ def api_grade_discussion():
 # ═══════════════════════════════════════════════════════════
 # API: Health check
 # ═══════════════════════════════════════════════════════════
+@writing_bp.route("/writing/landing")
+def writing_landing():
+    return render_template("toefl_writing/landing.html")
+
 @writing_bp.route("/writing/mock-exam")
 @require_section_access("writing")
 def mock_exam_start():
