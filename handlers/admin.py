@@ -207,7 +207,14 @@ async def cb_setsec(cb: types.CallbackQuery):
         await cb.bot.send_message(int(tid), f"🎉 <b>تم تفعيل اشتراكك!</b>\n\n📦 القسم: <b>{label}</b>\n📅 ينتهي في: <b>{end_date}</b>\n\n✨ اكتب /start وابدأ التعلم الآن! 🚀", parse_mode="HTML")
     except Exception as e:
         notify_status = f"⚠️ لم يصل الإشعار للطالب: {e}"
+    from aiogram.utils.keyboard import InlineKeyboardBuilder as _IKB
+    _kb = _IKB()
+    _kb.button(text="📚 وصول منتظم (بالترتيب)", callback_data=f"adm_mode:{tid}:sequential")
+    _kb.button(text="🔓 وصول كامل (كل الدروس)", callback_data=f"adm_mode:{tid}:full")
+    _kb.adjust(1)
     await cb.answer("✅ تم التفعيل", show_alert=True)
+    await cb.message.answer(f"✅ تم تفعيل قسم <b>{label}</b> للطالب <code>{tid}</code>.\n{notify_status}\n\n⚙️ اختر نمط الوصول:", reply_markup=_kb.as_markup(), parse_mode="HTML")
+    return
     await cb.message.answer(f"✅ تم تفعيل قسم <b>{label}</b> للطالب <code>{tid}</code> حتى {end_date}.\n{notify_status}", parse_mode="HTML")
 
 
@@ -262,3 +269,20 @@ async def cb_del_ok(cb: types.CallbackQuery):
     await cb.message.answer(
         f"🗑️ تم حذف الطالب <code>{tid}</code> نهائياً.\n\nمن الجداول:\n{summary}",
         parse_mode="HTML")
+
+
+@router.callback_query(F.data.startswith("adm_mode:"))
+async def cb_setmode(cb: types.CallbackQuery):
+    if not _is_admin(cb.from_user.id):
+        await cb.answer("⛔", show_alert=True); return
+    parts = cb.data.split(":")
+    tid, mode = parts[1], parts[2]
+    conn = sqlite3.connect(settings.DB_PATH)
+    conn.execute("UPDATE students SET access_mode=? WHERE telegram_id=?", (mode, tid))
+    conn.commit(); conn.close()
+    if mode == "full":
+        msg = "🔓 تم فتح جميع الدروس للطالب (وصول كامل)."
+    else:
+        msg = "📚 الطالب يمشي بالترتيب (وصول منتظم)."
+    await cb.answer("✅ تم الحفظ", show_alert=True)
+    await cb.message.answer(f"{msg}\n<code>{tid}</code>", parse_mode="HTML")
