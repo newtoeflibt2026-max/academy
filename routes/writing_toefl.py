@@ -487,7 +487,30 @@ def api_grade_discussion():
 @writing_bp.route("/writing/mock-exam")
 @require_section_access("writing")
 def mock_exam_start():
-    """الامتحان الشامل: إيميل عشوائي ثم نقاش عشوائي - نفس شاشات الامتحان الحقيقي."""
+    """Section 1 of the full exam: Build a Sentence (10 random items, timer 6:50)."""
+    import json as _json
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db(); c = conn.cursor()
+    rows = c.execute("SELECT id, context_en, correct_sentence, scrambled_json, is_question FROM build_a_sentence_2026 WHERE is_active=1 ORDER BY RANDOM() LIMIT 10").fetchall()
+    conn.close()
+    items = []
+    for r in rows:
+        try:
+            words = _json.loads(r[3]) if r[3] else r[2].replace("?","").replace(".","").replace(",","").split()
+        except Exception:
+            words = r[2].replace("?","").replace(".","").replace(",","").split()
+        items.append({"id": r[0], "context": r[1], "answer": r[2], "words": words, "is_question": r[4]})
+    if not items:
+        return "No sentence items available", 404
+    return render_template("toefl_writing/mock_sentence.html",
+                           items=items, items_json=_json.dumps(items, ensure_ascii=False),
+                           timer_seconds=410, user_id=tg_id)
+
+
+@writing_bp.route("/writing/mock-exam/email")
+@require_section_access("writing")
+def mock_exam_email():
+    """Section 2 of the full exam: random Email task."""
     tg_id = request.args.get("user_id") or _get_tg_id()
     conn = _db(); c = conn.cursor()
     em = c.execute("SELECT id FROM writing_email_scenarios WHERE is_active=1 ORDER BY RANDOM() LIMIT 1").fetchone()
