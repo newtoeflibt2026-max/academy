@@ -137,9 +137,12 @@ def has_access(user_id, section):
         st = get_student(user_id)
         return _free_allows(section, st.get("placement_score") if st else None)
 
-    # الباقات النوعية
+    # الباقات النوعية — تدعم عدة أقسام مفصولة بفاصلة (مثل: writing,reading)
     allowed_sections = SECTION_MAP.get(section, [])
-    return sub["section"] in allowed_sections
+    student_sections = [x.strip() for x in str(sub["section"]).split(",") if x.strip()]
+    if "full" in student_sections:
+        return True
+    return any(ss in allowed_sections for ss in student_sections)
 
 
 # Backward compatibility
