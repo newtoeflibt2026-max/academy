@@ -6066,6 +6066,14 @@ def api_miniapp_lessons_v2():
 
 
 
+    # نمط الوصول: full = كل الدروس مفتوحة | sequential = بالترتيب
+    full_access = False
+    try:
+        _am = cur.execute("SELECT access_mode FROM students WHERE telegram_id=?", (str(sid),)).fetchone()
+        full_access = bool(_am and (_am["access_mode"] or "").strip() == "full")
+    except Exception:
+        full_access = False
+
     # المراحل بالترتيب الرسمي
 
     cur.execute("""SELECT id, code, track, section_name AS skill_type, name_ar, order_num
@@ -6190,7 +6198,7 @@ def api_miniapp_lessons_v2():
 
                 stage_all_done = False
 
-            elif not prev_stage_done:
+            elif not prev_stage_done and not full_access:
 
                 status, reason = "locked", "أكمل المرحلة السابقة أولاً"
 
@@ -6203,6 +6211,10 @@ def api_miniapp_lessons_v2():
                 available_assigned = True
 
                 stage_all_done = False
+
+            elif full_access:
+
+                status, reason = "available", ""
 
             else:
 
