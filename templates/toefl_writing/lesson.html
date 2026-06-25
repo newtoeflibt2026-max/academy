@@ -320,5 +320,18 @@ window.addEventListener('DOMContentLoaded', function(){
   if(document.getElementById('submit-btn')) updateSubmitState();
 });
 </script>
+<script>
+// inject user_id into mock-exam links inside content_html
+(function(){
+  try{
+    document.querySelectorAll('a[href*="/writing/mock-exam"]').forEach(function(a){
+      var href = a.getAttribute('href');
+      if(href && href.indexOf('user_id=')===-1){
+        a.setAttribute('href', href + (href.indexOf('?')===-1?'?':'&') + 'user_id=' + USER_ID);
+      }
+    });
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
