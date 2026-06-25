@@ -112,7 +112,7 @@ async def _show_students(target, page, edit=False):
         sec  = r["subscription_section"] or "—"
         paid = "✅" if r["is_paid"] else "⏳"
         text += f"{paid} <b>{name}</b>\n   🆔 <code>{tid}</code> | قسم: {sec}\n\n"
-        kb.button(text=f"⚙️ {name[:18]}", callback_data=f"adm_pick:{tid}")
+        btn_label = (r["full_name"] or r["username"] or (r["name"] if r["name"] not in (None,"","طالب") else None) or str(tid)); kb.button(text=f"⚙️ {btn_label[:20]}", callback_data=f"adm_pick:{tid}")
     kb.adjust(1)
 
     # أزرار التنقل
