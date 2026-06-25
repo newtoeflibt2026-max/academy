@@ -262,6 +262,12 @@ def require_section_access(section):
                 user_id = kwargs.get("user_id") or kwargs.get("student_id")
 
             if not user_id:
+                user_id = (request.cookies.get("user_id")
+                           or request.headers.get("X-User-Id"))
+                if user_id == "guest":
+                    user_id = None
+
+            if not user_id:
                 return render_locked_page(section, reason="no_user")
 
             if not has_access(user_id, section):
