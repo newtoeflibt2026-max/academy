@@ -93,7 +93,7 @@ async def cb_students(cb: types.CallbackQuery):
 async def _show_students(target, page, edit=False):
     conn = sqlite3.connect(settings.DB_PATH); conn.row_factory = sqlite3.Row
     rows = conn.execute(
-        "SELECT telegram_id, full_name, subscription_type, subscription_section, is_paid "
+        "SELECT telegram_id, full_name, name, username, subscription_type, subscription_section, is_paid "
         "FROM students ORDER BY rowid DESC").fetchall()
     conn.close()
 
@@ -108,7 +108,7 @@ async def _show_students(target, page, edit=False):
         text += "لا يوجد طلاب."
     for r in chunk:
         tid  = r["telegram_id"]
-        name = r["full_name"] or "بلا اسم"
+        name = (r["full_name"] or r["username"] or (r["name"] if r["name"] not in (None,"","طالب") else None) or f"👤 {r['telegram_id']}")
         sec  = r["subscription_section"] or "—"
         paid = "✅" if r["is_paid"] else "⏳"
         text += f"{paid} <b>{name}</b>\n   🆔 <code>{tid}</code> | قسم: {sec}\n\n"
@@ -152,7 +152,7 @@ async def cb_pick(cb: types.CallbackQuery):
     if not r:
         await cb.message.answer("❌ الطالب غير موجود."); return
 
-    name = r["full_name"] or "بلا اسم"
+    name = (r["full_name"] or r["username"] or (r["name"] if r["name"] not in (None,"","طالب") else None) or f"👤 {r['telegram_id']}")
     text = (f"👤 <b>{name}</b>\n"
             f"🆔 <code>{tid}</code>\n"
             f"📦 النوع: {r['subscription_type'] or '—'}\n"
