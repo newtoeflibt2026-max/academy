@@ -467,6 +467,64 @@ function customPrompt(title, message, opts){
 }
 </script>
 
+
+<div id="secModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:24px;max-width:420px;width:90%;font-family:sans-serif">
+    <h3 style="margin:0 0 14px">تفعيل أقسام للطالب</h3>
+    <div style="margin-bottom:12px">
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="reading"> القراءة</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="listening"> الاستماع</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="writing"> الكتابة</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="speaking"> المحادثة</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="foundation"> التأسيس</label>
+    </div>
+    <label style="display:block;margin:6px 0;font-weight:bold"><input type="checkbox" id="secFull"> Full Access (كل الأقسام)</label>
+    <div style="margin:12px 0">
+      <label>المدة:</label>
+      <select id="secMonths" style="padding:6px;border-radius:6px">
+        <option value="1">شهر</option>
+        <option value="3" selected>3 أشهر</option>
+        <option value="6">6 أشهر</option>
+        <option value="12">سنة</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-success" onclick="doActivateSections()">تفعيل</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('secModal').style.display='none'">إلغاء</button>
+    </div>
+  </div>
+</div>
+<script>
+var _secUid = null;
+function openSections(uid){
+  _secUid = uid;
+  document.querySelectorAll('.secChk').forEach(c => c.checked=false);
+  document.getElementById('secFull').checked = false;
+  document.getElementById('secMonths').value = '3';
+  document.getElementById('secModal').style.display = 'flex';
+}
+async function doActivateSections(){
+  var months = document.getElementById('secMonths').value;
+  var sections;
+  if (document.getElementById('secFull').checked){
+    sections = 'full';
+  } else {
+    var arr = [];
+    document.querySelectorAll('.secChk:checked').forEach(c => arr.push(c.value));
+    if (arr.length === 0){ toast('اختر قسماً واحداً على الأقل','error'); return; }
+    sections = arr.join(',');
+  }
+  try{
+    var r = await fetch('/api/admin/students/'+_secUid+'/activate-sections', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({sections:sections, months:parseInt(months)})
+    });
+    var j = await r.json();
+    if (j.ok){ toast(j.message||'تم التفعيل','success'); document.getElementById('secModal').style.display='none'; loadStudents(); }
+    else { toast(j.error||'خطأ','error'); }
+  }catch(e){ toast('خطأ في الاتصال','error'); }
+}
+</script>
 </body>
 <script>
 const API = "";
@@ -922,6 +980,7 @@ async function loadStudents(){
         <button class="btn btn-sm" onclick="changeStudentPath('${s.user_id}','${s.current_path||'foundation'}')" title="تغيير المسار">⚡</button>
         <button class="btn btn-sm btn-ghost" onclick="grantXP('${s.user_id}')" title="منحه XP">💎</button>
         <button class="btn btn-sm btn-ghost" onclick="resetProgress('${s.user_id}')" title="إعادة تعيين">🔄</button>
+        <button class="btn btn-sm btn-success" onclick="openSections('${s.user_id}')" title="تفعيل أقسام">✅</button>
         <button class="btn btn-sm btn-danger" onclick="deleteStudent('${s.user_id}')">🗑️</button>
       </td></tr>`).join('')}</tbody></table>`;
   }catch(e){ toast('خطأ','error'); }

@@ -161,6 +161,36 @@ def register_admin_routes(app):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
+    @app.route("/api/admin/students/<int:uid>/activate-sections", methods=["POST"])
+    def api_activate_sections(uid):
+        try:
+            import sqlite3, os
+            from datetime import datetime, timedelta
+            data = request.get_json(force=True) or {}
+            sections = (data.get("sections") or "").strip()
+            months = int(data.get("months") or 3)
+            if not sections:
+                return jsonify({"error": "no sections"}), 400
+            db = "/app/data/academy.db" if os.path.exists("/app/data/academy.db") else "academy.db"
+            conn = sqlite3.connect(db)
+            end_date = (datetime.now() + timedelta(days=30*months)).strftime("%Y-%m-%d")
+            start_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            plan_label = "full" if sections == "full" else sections
+            conn.execute("""
+                UPDATE students
+                SET is_paid=1, is_active=1,
+                    subscription_type=?,
+                    subscription_section=?,
+                    package_end=?,
+                    subscription_started_at=?
+                WHERE user_id=? OR telegram_id=?
+            """, (plan_label, sections, end_date, start_str, uid, str(uid)))
+            conn.commit()
+            conn.close()
+            return jsonify({"ok": True, "message": "تم التفعيل: " + sections + " لمدة " + str(months) + " أشهر"})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
     @app.route("/api/admin/students/<int:uid>/deactivate", methods=["POST"])
     def api_deactivate(uid):
         try:
