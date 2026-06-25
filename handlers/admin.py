@@ -11,6 +11,7 @@ from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from datetime import datetime, timedelta
 from config import settings
+NL = chr(10)
 
 router = Router(name="admin")
 
