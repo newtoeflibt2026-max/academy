@@ -202,10 +202,13 @@ async def cb_setsec(cb: types.CallbackQuery):
         "subscription_section=?, package_end=? WHERE telegram_id=?",
         (label, code, end_date, tid))
     conn.commit(); conn.close()
+    notify_status = "تم إرسال إشعار للطالب ✅"
+    try:
+        await cb.bot.send_message(int(tid), f"🎉 <b>تم تفعيل اشتراكك!</b>\n\n📦 القسم: <b>{label}</b>\n📅 ينتهي في: <b>{end_date}</b>\n\n✨ اكتب /start وابدأ التعلم الآن! 🚀", parse_mode="HTML")
+    except Exception as e:
+        notify_status = f"⚠️ لم يصل الإشعار للطالب: {e}"
     await cb.answer("✅ تم التفعيل", show_alert=True)
-    await cb.message.answer(
-        f"✅ تم تفعيل قسم <b>{label}</b> للطالب <code>{tid}</code> حتى {end_date}.",
-        parse_mode="HTML")
+    await cb.message.answer(f"✅ تم تفعيل قسم <b>{label}</b> للطالب <code>{tid}</code> حتى {end_date}.\n{notify_status}", parse_mode="HTML")
 
 
 # ══ إيقاف ═════════════════════════════════════
