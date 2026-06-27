@@ -65,7 +65,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gr
   {% else %}
     <div class="empty">🎉 لا توجد أخطاء حالياً<br><small>أنت في طريقك للإتقان!</small></div>
   {% endif %}
-  <button class="btn-back" onclick="location.href='/foundation?user_id={{ user_id }}'">↩️ التأسيس</button>
+  <button class="btn-back" onclick="if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.close();}else{history.back();}">↩️ العودة للبوت</button>
 </div>
 <script>
 function delManual(id){
