@@ -148,7 +148,7 @@ def writing_lesson_page(lesson_id):
 
     # Fetch any MCQ questions from writing_questions
     questions = c.execute(
-        "SELECT * FROM writing_questions WHERE lesson_id=? AND is_exam=0 ORDER BY order_index",
+        "SELECT * FROM writing_questions WHERE lesson_id=? ORDER BY order_index" if lesson["is_exam"] else "SELECT * FROM writing_questions WHERE lesson_id=? AND is_exam=0 ORDER BY order_index",
         (lesson_id,)
     ).fetchall()
 
