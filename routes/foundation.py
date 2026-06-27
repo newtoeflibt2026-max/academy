@@ -446,6 +446,39 @@ def api_quiz_finish():
 # =========================================================
 # 7) GET /mistakes - دفتر الأخطاء
 # =========================================================
+@foundation_bp.route("/api/mistakes/add", methods=["POST"])
+def api_mistakes_add():
+    from flask import request, jsonify
+    data = request.get_json(silent=True) or {}
+    user_id = str(data.get("user_id") or "")
+    word = (data.get("word") or "").strip()
+    meaning = (data.get("meaning") or "").strip()
+    kind = (data.get("kind") or "meaning").strip()
+    if not user_id or not word or not meaning:
+        return jsonify({"success": False, "error": "missing fields"}), 400
+    conn = db(); cur = conn.cursor()
+    cur.execute("""CREATE TABLE IF NOT EXISTS manual_mistakes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT, word TEXT, meaning TEXT, kind TEXT,
+        is_mastered INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP)""")
+    cur.execute("INSERT INTO manual_mistakes (user_id, word, meaning, kind) VALUES (?,?,?,?)",
+                (user_id, word, meaning, kind))
+    conn.commit(); conn.close()
+    return jsonify({"success": True})
+
+
+@foundation_bp.route("/api/mistakes/manual/<int:mid>/delete", methods=["POST"])
+def api_mistakes_manual_delete(mid):
+    from flask import request, jsonify
+    data = request.get_json(silent=True) or {}
+    user_id = str(data.get("user_id") or "")
+    conn = db(); cur = conn.cursor()
+    cur.execute("DELETE FROM manual_mistakes WHERE id=? AND user_id=?", (mid, user_id))
+    conn.commit(); conn.close()
+    return jsonify({"success": True})
+
+
 @foundation_bp.route("/mistakes")
 def mistakes_page():
     user_id = get_user_id(request)
@@ -493,6 +526,65 @@ def mistakes_page():
             })
     except Exception as _e:
         print("[MERGE_LISTENING_ERRORS] skip:", _e)
+
+    # MERGE_WRITING_ERRORS: دمج أخطاء الكتابة من writing_attempts
+    try:
+        import json as _wjson
+        cur.execute("""SELECT answer_json FROM writing_attempts
+                       WHERE telegram_id=? AND answer_json IS NOT NULL
+                       ORDER BY rowid DESC LIMIT 50""", (str(user_id),))
+        _seen_w = set()
+        for _wr in cur.fetchall():
+            try:
+                _wd = _wjson.loads(_wr["answer_json"])
+            except Exception:
+                continue
+            for _mw in (_wd.get("mistakes") or []):
+                _k = (_mw.get("user_answer",""), _mw.get("correct_answer",""))
+                if _k in _seen_w:
+                    continue
+                _seen_w.add(_k)
+                mistakes.append({
+                    "id": "W" + str(len(_seen_w)),
+                    "question_id": _mw.get("qid"),
+                    "error_type": "writing",
+                    "wrong_answer": _mw.get("user_answer",""),
+                    "correct_answer": _mw.get("correct_answer",""),
+                    "created_at": None,
+                    "times_correct_after": 0, "is_mastered": 0,
+                    "explanation_ar": _mw.get("explanation_ar","") or _mw.get("strategy_ar","") or _mw.get("rule_applied",""),
+                    "question_text": _mw.get("question_ar") or "سؤال كتابة",
+                })
+    except Exception as _e:
+        print("[MERGE_WRITING_ERRORS] skip:", _e)
+
+    # MERGE_MANUAL_MISTAKES: كلمات أضافها الطالب يدوياً
+    try:
+        cur.execute("""CREATE TABLE IF NOT EXISTS manual_mistakes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT, word TEXT, meaning TEXT, kind TEXT,
+            is_mastered INTEGER DEFAULT 0,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP)""")
+        cur.execute("""SELECT id, word, meaning, kind, created_at
+                       FROM manual_mistakes WHERE user_id=?
+                       ORDER BY created_at DESC LIMIT 200""", (str(user_id),))
+        for _mr in cur.fetchall():
+            _md = dict(_mr)
+            _kind_lbl = "إملاء" if _md.get("kind") == "spelling" else "معنى"
+            mistakes.insert(0, {
+                "id": "M" + str(_md["id"]),
+                "manual_id": _md["id"],
+                "question_id": None,
+                "error_type": "manual",
+                "wrong_answer": _md.get("word",""),
+                "correct_answer": _md.get("meaning",""),
+                "created_at": _md.get("created_at"),
+                "times_correct_after": 0, "is_mastered": 0,
+                "explanation_ar": "أضفتها بنفسك (" + _kind_lbl + ")",
+                "question_text": "📌 " + _md.get("word",""),
+            })
+    except Exception as _e:
+        print("[MERGE_MANUAL_MISTAKES] skip:", _e)
 
     cur.execute("""SELECT COUNT(*) FROM error_bank eb
                      WHERE eb.user_id=?""", (user_id,))

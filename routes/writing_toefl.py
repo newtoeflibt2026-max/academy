@@ -208,6 +208,35 @@ def writing_lesson_page(lesson_id):
     )
 
 
+@writing_bp.route("/writing/my-mistakes")
+@require_section_access("writing")
+def writing_my_mistakes():
+    import json as _json
+    tg_id = request.args.get("user_id") or _get_tg_id()
+    conn = _db()
+    c = conn.cursor()
+    rows = c.execute(
+        "SELECT answer_json FROM writing_attempts WHERE telegram_id=? AND answer_json IS NOT NULL ORDER BY rowid DESC",
+        (str(tg_id),)
+    ).fetchall()
+    conn.close()
+    seen = set()
+    mistakes = []
+    for r in rows:
+        try:
+            d = _json.loads(r["answer_json"])
+        except Exception:
+            continue
+        for m in (d.get("mistakes") or []):
+            key = (m.get("user_answer",""), m.get("correct_answer",""))
+            if key in seen:
+                continue
+            seen.add(key)
+            mistakes.append(m)
+    return render_template("toefl_writing/my_mistakes.html",
+        mistakes=mistakes, user_id=tg_id, total=len(mistakes))
+
+
 @writing_bp.route("/api/writing/lesson/<int:lesson_id>/submit", methods=["POST"])
 def api_lesson_submit(lesson_id):
     from flask import request, jsonify
@@ -403,6 +432,25 @@ def api_lesson_submit(lesson_id):
             exm = c.execute("SELECT id FROM writing_lessons WHERE stage_id=? AND is_exam=1 LIMIT 1",
                             (lesson["stage_id"],)).fetchone()
             if exm: stage_exam_id = exm["id"]
+
+    # === SAVE MISTAKES for later review ===
+    try:
+        wrong = [f for f in feedback if not f.get("is_correct")]
+        if wrong and user_id:
+            import json as __json
+            payload = __json.dumps({
+                "lesson_id": lesson_id,
+                "stage_id": lesson["stage_id"],
+                "score": score,
+                "mistakes": wrong,
+            }, ensure_ascii=False)
+            c.execute(
+                "INSERT INTO writing_attempts (telegram_id, answer_json) VALUES (?, ?)",
+                (user_id, payload)
+            )
+            conn.commit()
+    except Exception as _e:
+        pass
 
     conn.close()
     return jsonify({
