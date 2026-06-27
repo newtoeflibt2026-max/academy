@@ -59,7 +59,7 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gr
       <div class="mistake-row"><span class="label">الصحيح:</span><span class="right">{{ m.correct_answer }}</span></div>
       {% if m.explanation_ar %}<div class="mistake-exp">💡 {{ m.explanation_ar }}</div>{% endif %}
       <div class="mistake-meta" style="margin-top:8px">صحيح متتالٍ: {{ m.times_correct_after }}/3</div>
-      {% if not m.is_mastered %}<button class="retry-btn" onclick="retry({{ m.id }})">🔄 جرّب مرة أخرى</button>{% endif %}
+      {% if m.error_type == "manual" %}<button class="retry-btn" style="background:linear-gradient(135deg,#ef4444,#dc2626)" onclick="delManual({{ m.manual_id }})">🗑️ حذف</button>{% elif m.id is number and not m.is_mastered %}<button class="retry-btn" onclick="retry({{ m.id }})">🔄 جرّب مرة أخرى</button>{% endif %}
     </div>
     {% endfor %}
   {% else %}
@@ -68,6 +68,13 @@ body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gr
   <button class="btn-back" onclick="location.href='/foundation?user_id={{ user_id }}'">↩️ التأسيس</button>
 </div>
 <script>
+function delManual(id){
+  if(!confirm('حذف هذه الكلمة من دفترك؟'))return;
+  const uid=(new URLSearchParams(location.search).get('user_id')||"{{ user_id }}");
+  fetch('/api/mistakes/manual/'+id+'/delete',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({user_id:uid})})
+  .then(r=>r.json()).then(res=>{location.reload();});
+}
 function addMistake(){
   const w=document.getElementById('mw').value.trim();
   const m=document.getElementById('mm').value.trim();
