@@ -18,86 +18,36 @@ DB_PATH = settings.DB_PATH
 #  بنك الأسئلة (10 أسئلة متدرجة)
 # ═══════════════════════════════════════════════════
 QUESTIONS = [
-    {
-        "id": 1, "skill": "grammar",
-        "q": "Choose the correct verb form:\n\nShe ____ to the library every Sunday.",
-        "options": {"A": "go", "B": "goes", "C": "going", "D": "gone"},
-        "answer": "B"
-    },
-    {
-        "id": 2, "skill": "vocab",
-        "q": "What does \"benefit\" mean?",
-        "options": {"A": "harm", "B": "advantage", "C": "danger", "D": "problem"},
-        "answer": "B"
-    },
-    {
-        "id": 3, "skill": "grammar",
-        "q": "Fill in the blank:\n\nIf I ____ rich, I would travel the world.",
-        "options": {"A": "am", "B": "was", "C": "were", "D": "be"},
-        "answer": "C"
-    },
-    {
-        "id": 4, "skill": "vocab",
-        "q": "Choose the synonym of \"significant\":",
-        "options": {"A": "small", "B": "important", "C": "easy", "D": "quick"},
-        "answer": "B"
-    },
-    {
-        "id": 5, "skill": "grammar",
-        "q": "Choose the correct option:\n\nThe report ____ by the manager yesterday.",
-        "options": {"A": "wrote", "B": "was written", "C": "is writing", "D": "writes"},
-        "answer": "B"
-    },
-    {
-        "id": 6, "skill": "reading",
-        "q": "Read: \"Despite the heavy rain, the match continued.\"\n\nWhat does this sentence imply?",
-        "options": {
-            "A": "The rain stopped the match",
-            "B": "The match was cancelled",
-            "C": "The match went on even though it rained",
-            "D": "There was no rain"
-        },
-        "answer": "C"
-    },
-    {
-        "id": 7, "skill": "vocab",
-        "q": "Choose the opposite of \"abundant\":",
-        "options": {"A": "plentiful", "B": "scarce", "C": "rich", "D": "full"},
-        "answer": "B"
-    },
-    {
-        "id": 8, "skill": "grammar",
-        "q": "Choose the correct sentence:",
-        "options": {
-            "A": "He don't like coffee",
-            "B": "He doesn't likes coffee",
-            "C": "He doesn't like coffee",
-            "D": "He not like coffee"
-        },
-        "answer": "C"
-    },
-    {
-        "id": 9, "skill": "reading",
-        "q": "\"The researcher's findings were inconclusive.\"\n\nThis means:",
-        "options": {
-            "A": "The results were very clear",
-            "B": "No clear conclusion was reached",
-            "C": "The research was successful",
-            "D": "The findings were published"
-        },
-        "answer": "B"
-    },
-    {
-        "id": 10, "skill": "vocab",
-        "q": "Choose the meaning of \"elaborate\":",
-        "options": {
-            "A": "simple and brief",
-            "B": "detailed and complex",
-            "C": "wrong and false",
-            "D": "quick and easy"
-        },
-        "answer": "B"
-    },
+    # ===== A1 =====
+    {"id":1,"level":"A1","skill":"grammar","q":"Choose the correct word:\n\nThis ____ a book.","options":{"A":"is","B":"are","C":"am","D":"be"},"answer":"A"},
+    {"id":2,"level":"A1","skill":"vocab","q":"What is the opposite of big?","options":{"A":"tall","B":"small","C":"long","D":"wide"},"answer":"B"},
+    {"id":3,"level":"A1","skill":"grammar","q":"Choose:\n\nI ____ a student.","options":{"A":"is","B":"are","C":"am","D":"be"},"answer":"C"},
+    {"id":4,"level":"A1","skill":"vocab","q":"Apple is a kind of:","options":{"A":"animal","B":"fruit","C":"color","D":"car"},"answer":"B"},
+    # ===== A2 =====
+    {"id":5,"level":"A2","skill":"grammar","q":"Choose:\n\nShe ____ to school every day.","options":{"A":"go","B":"goes","C":"going","D":"gone"},"answer":"B"},
+    {"id":6,"level":"A2","skill":"vocab","q":"What does happy mean?","options":{"A":"sad","B":"angry","C":"glad","D":"tired"},"answer":"C"},
+    {"id":7,"level":"A2","skill":"grammar","q":"Choose the past tense:\n\nYesterday I ____ to the park.","options":{"A":"go","B":"went","C":"gone","D":"going"},"answer":"B"},
+    {"id":8,"level":"A2","skill":"vocab","q":"Choose:\n\nHe is reading a ____.","options":{"A":"book","B":"eat","C":"run","D":"fast"},"answer":"A"},
+    # ===== B1 =====
+    {"id":9,"level":"B1","skill":"grammar","q":"Choose:\n\nIf it rains, I ____ stay home.","options":{"A":"will","B":"would","C":"was","D":"am"},"answer":"A"},
+    {"id":10,"level":"B1","skill":"vocab","q":"What does benefit mean?","options":{"A":"harm","B":"advantage","C":"danger","D":"problem"},"answer":"B"},
+    {"id":11,"level":"B1","skill":"grammar","q":"Choose:\n\nThe report ____ by the manager yesterday.","options":{"A":"wrote","B":"was written","C":"is writing","D":"writes"},"answer":"B"},
+    {"id":12,"level":"B1","skill":"reading","q":"Despite the heavy rain, the match continued.\n\nThis means:","options":{"A":"The rain stopped the match","B":"The match was cancelled","C":"The match went on even though it rained","D":"There was no rain"},"answer":"C"},
+    # ===== B2 =====
+    {"id":13,"level":"B2","skill":"grammar","q":"Choose:\n\nIf I ____ rich, I would travel the world.","options":{"A":"am","B":"was","C":"were","D":"be"},"answer":"C"},
+    {"id":14,"level":"B2","skill":"vocab","q":"Choose the synonym of significant:","options":{"A":"small","B":"important","C":"easy","D":"quick"},"answer":"B"},
+    {"id":15,"level":"B2","skill":"vocab","q":"Choose the opposite of abundant:","options":{"A":"plentiful","B":"scarce","C":"rich","D":"full"},"answer":"B"},
+    {"id":16,"level":"B2","skill":"reading","q":"The researchers findings were inconclusive.\n\nThis means:","options":{"A":"The results were very clear","B":"No clear conclusion was reached","C":"The research was successful","D":"The findings were published"},"answer":"B"},
+    # ===== C1 =====
+    {"id":17,"level":"C1","skill":"vocab","q":"Choose the meaning of elaborate (verb):","options":{"A":"to summarize briefly","B":"to explain in detail","C":"to ignore","D":"to repeat"},"answer":"B"},
+    {"id":18,"level":"C1","skill":"grammar","q":"Choose:\n\nHardly ____ he arrived when the meeting started.","options":{"A":"has","B":"had","C":"did","D":"was"},"answer":"B"},
+    {"id":19,"level":"C1","skill":"vocab","q":"Meticulous most nearly means:","options":{"A":"careless","B":"extremely careful","C":"lazy","D":"fast"},"answer":"B"},
+    {"id":20,"level":"C1","skill":"reading","q":"Her argument, while compelling, rested on flawed premises.\n\nThe writer suggests the argument was:","options":{"A":"completely wrong","B":"persuasive but based on errors","C":"perfectly logical","D":"too short"},"answer":"B"},
+    # ===== C2 =====
+    {"id":21,"level":"C2","skill":"vocab","q":"Ubiquitous means:","options":{"A":"rare","B":"present everywhere","C":"ancient","D":"hidden"},"answer":"B"},
+    {"id":22,"level":"C2","skill":"grammar","q":"Choose:\n\nWere it not for your help, I ____ failed.","options":{"A":"will have","B":"would have","C":"have","D":"had"},"answer":"B"},
+    {"id":23,"level":"C2","skill":"vocab","q":"To exacerbate a problem means to:","options":{"A":"solve it","B":"make it worse","C":"ignore it","D":"explain it"},"answer":"B"},
+    {"id":24,"level":"C2","skill":"reading","q":"The policy was ostensibly about safety, but its real aim was control.\n\nOstensibly implies the safety reason was:","options":{"A":"the true reason","B":"the apparent but not real reason","C":"unimportant","D":"illegal"},"answer":"B"},
 ]
 
 # تخزين مؤقت في الذاكرة: user_id -> {idx, answers, correct}
@@ -250,64 +200,48 @@ async def cb_answer(callback: types.CallbackQuery):
 
 
 async def _finish_test(callback, user_id):
-    """ينهي الاختبار، يحسب المستوى، يحفظه، ويُظهر التوجيه (بدون كشف النسبة)."""
+    # ينهي الاختبار، يحسب مستوى CEFR الحقيقي، يحفظه، ويعرض خطة الدراسة
     session = SESSIONS.get(user_id, {})
-    correct = session.get("correct", 0)
-    total = len(QUESTIONS)
-    score_pct = round((correct / total) * 100, 1)
-
-    # ─── تصنيف المستوى ───
-    if score_pct < 50:
-        level_emoji = "🔴"
-        level_name = "ضعيف"
-        level_desc = "تحتاج لتقوية الأساسيات أولاً"
-        path = "foundation"
-        path_msg = (
-            "🛠️ <b>مسارك: التأسيس الشامل</b>\n\n"
-            "ستبدأ بمراحل التأسيس (قواعد + مفردات + قراءة تمهيدية) "
-            "قبل الانتقال إلى TOEFL.\n\n"
-            "💡 هذا المسار مُصمَّم لبناء قاعدة قوية تنطلق منها بثقة."
-        )
-        first_stage_code = "F1"
-    elif score_pct < 80:
-        level_emoji = "🟡"
-        level_name = "متوسط"
-        level_desc = "أساسياتك جيدة، يمكنك البدء بـ TOEFL"
-        path = "toefl"
-        path_msg = (
-            "🎯 <b>مسارك: TOEFL iBT مباشر</b>\n\n"
-            "ستبدأ من القراءة المبتدئة (TR1) ثم تتقدم تدريجياً في باقي المهارات.\n\n"
-            "💪 أساسياتك تسمح بالانطلاق مباشرة."
-        )
-        first_stage_code = "TR1"
+    answers = session.get('answers', [])
+    levels_order = ['A1','A2','B1','B2','C1','C2']
+    per_level = {lv: {'correct':0,'total':0} for lv in levels_order}
+    qmap = {q['id']: q for q in QUESTIONS}
+    for a in answers:
+        q = qmap.get(a['qid'])
+        if not q:
+            continue
+        lv = q.get('level','B1')
+        per_level[lv]['total'] += 1
+        if a.get('correct'):
+            per_level[lv]['correct'] += 1
+    cefr = 'A1'
+    for lv in levels_order:
+        d = per_level[lv]
+        if d['total'] > 0 and d['correct'] >= 3:
+            cefr = lv
+        elif d['total'] > 0 and d['correct'] < 2:
+            break
+    total_correct = sum(d['correct'] for d in per_level.values())
+    total_all = sum(d['total'] for d in per_level.values()) or 1
+    score_pct = round((total_correct/total_all)*100, 1)
+    if cefr in ('A1','A2'):
+        level_emoji = '🔴'; path = 'foundation'; first_stage_code = 'F1'
+        path_msg = ('🛠️ <b>خطة دراستك: التأسيس من البداية</b>\\n\\n' + 'ستبدأ من المرحلة الأولى للتأسيس لبناء القواعد والمفردات خطوة بخطوة، ثم تنتقل تدريجياً للقراءة والاستماع.\\n\\n' + '💡 هذا المسار يبني قاعدة قوية تنطلق منها نحو TOEFL.')
+    elif cefr == 'B1':
+        level_emoji = '🟡'; path = 'foundation'; first_stage_code = 'F3'
+        path_msg = ('📘 <b>خطة دراستك: تقوية ثم انطلاق</b>\\n\\n' + 'أساسياتك جيدة! ستبدأ من مراحل التأسيس المتقدمة لسد الثغرات، ثم تنتقل سريعاً إلى القراءة في TOEFL.\\n\\n' + '💪 أنت قريب من الجاهزية الكاملة.')
+    elif cefr == 'B2':
+        level_emoji = '🟢'; path = 'toefl'; first_stage_code = 'TR1'
+        path_msg = ('🎯 <b>خطة دراستك: TOEFL مباشرة</b>\\n\\n' + 'مستواك جيد جداً! ستتخطى التأسيس وتبدأ من القراءة والاستماع في TOEFL مباشرة.\\n\\n' + '🚀 ركز على استراتيجيات الامتحان والكتابة والمحادثة.')
     else:
-        level_emoji = "🟢"
-        level_name = "متقدم"
-        level_desc = "مستواك ممتاز، ستتخطى المبتدئ"
-        path = "toefl"
-        path_msg = (
-            "🎯 <b>مسارك: TOEFL iBT (مستوى متقدم)</b>\n\n"
-            "نظراً لمستواك القوي، ستبدأ مباشرة من القراءة المتوسطة (TR2) "
-            "وتتخطى المرحلة المبتدئة.\n\n"
-            "🚀 جاهز للتقدم بسرعة!"
-        )
-        first_stage_code = "TR2"
-
-    # ─── حفظ في DB ───
+        level_emoji = '🏆'; path = 'toefl'; first_stage_code = 'TR2'
+        path_msg = ('🎯 <b>خطة دراستك: TOEFL متقدم</b>\\n\\n' + 'مستواك ممتاز! ستبدأ مباشرة من القراءة المتوسطة في TOEFL وتركز على النقاط الدقيقة التي ترفع علامتك.\\n\\n' + '🌟 هدفك إتقان التفاصيل وتحقيق درجة عالية.')
+    cefr_names = {'A1':'مبتدئ (A1)','A2':'أساسي (A2)','B1':'متوسط (B1)','B2':'فوق المتوسط (B2)','C1':'متقدم (C1)','C2':'إتقان (C2)'}
+    level_label = cefr_names.get(cefr, cefr)
     stage_id = _get_first_stage_id_by_code(first_stage_code)
     _save_placement_result(user_id, score_pct, path, stage_id)
-
-    # ─── رسالة النتيجة (بدون نسبة، بدون عدد إجابات صحيحة) ───
-    text = (
-        f"🎉 <b>اكتمل اختبار تحديد المستوى!</b>\n\n"
-        f"📊 <b>تقييم مستواك:</b>\n"
-        f"{level_emoji} <b>{level_name}</b> — {level_desc}\n\n"
-        f"{path_msg}\n\n"
-        f"📍 المرحلة الأولى: <b>{first_stage_code}</b>\n"
-        "اضغط الزر للانطلاق 👇"
-    )
+    text = ('🎉 <b>اكتمل اختبار تحديد المستوى!</b>\\n\\n' + '📊 <b>مستواك الأوروبي (CEFR):</b>\\n' + level_emoji + ' <b>' + level_label + '</b>\\n\\n' + path_msg + '\\n\\n' + '📍 نقطة البداية: <b>' + first_stage_code + '</b>\\n' + 'اضغط الزر للانطلاق 👇')
     await callback.message.edit_text(text, reply_markup=kb_after_result(path))
-
     SESSIONS.pop(user_id, None)
 
 
