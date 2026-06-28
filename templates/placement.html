@@ -115,7 +115,35 @@ document.getElementById("next").onclick=()=>{
   perLevel[item.lv][1]++;
   if(sel===item.a) perLevel[item.lv][0]++;
   idx++;
-  if(idx<QUESTIONS.length){ render(); } else { finish(); }
+  if(idx<QUESTIONS.length){ 
+async function saveCefr(sid, cefr){
+  if(!sid){ return; }
+  const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+  let nm = "", un = "";
+  try{
+    if(tg && tg.initDataUnsafe && tg.initDataUnsafe.user){
+      nm = ((tg.initDataUnsafe.user.first_name||"")+" "+(tg.initDataUnsafe.user.last_name||"")).trim();
+      un = tg.initDataUnsafe.user.username||"";
+    }
+  }catch(e){}
+  const payload = JSON.stringify({student_id:sid,cefr:cefr,name:nm,username:un});
+  for(let attempt=0; attempt<4; attempt++){
+    try{
+      const resp = await fetch("/api/placement/save-cefr",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:payload,
+        keepalive:true
+      });
+      if(resp.ok){
+        const d = await resp.json();
+        if(d && d.ok){ return; }
+      }
+    }catch(e){}
+    await new Promise(r=>setTimeout(r, 1200*(attempt+1)));
+  }
+}
+render(); } else { finish(); }
 };
 function finish(){
   const order=["A1","A2","B1","B2","C1","C2"];
@@ -141,13 +169,10 @@ function finish(){
   document.getElementById("r-cefr").textContent=cefr;
   document.getElementById("r-name").textContent=names[cefr];
   document.getElementById("r-plan").innerHTML=plan;
+  const sid=new URLSearchParams(location.search).get("student_id")||new URLSearchParams(location.search).get("user_id")||"";
   document.getElementById("r-register").href="/miniapp/plans?student_id="+sid;
   document.getElementById("res").style.display="block";
-  try{
-    const sid=new URLSearchParams(location.search).get("student_id")||new URLSearchParams(location.search).get("user_id")||"";
-    fetch("/api/placement/save-cefr",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({student_id:sid,cefr:cefr})});
-  }catch(e){}
+  saveCefr(sid, cefr);
 }
 render();
 </script>
