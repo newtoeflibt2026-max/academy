@@ -89,9 +89,8 @@ def kb_choose_target():
 
 
 def kb_start_placement(user_id):
-    webapp_url = f"{settings.WEBHOOK_HOST}/student?student_id={user_id}&mode=placement"
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", web_app=WebAppInfo(url=webapp_url))],
+        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", callback_data="pl:begin")],
         [InlineKeyboardButton(text="↩️ تغيير العلامة المستهدفة", callback_data="back:target")],
     ])
 
@@ -232,9 +231,9 @@ async def cb_target(callback: types.CallbackQuery):
         f"🎯 <b>تم تثبيت هدفك: {target}</b> في TOEFL iBT ✅\n\n"
         f"📊 <b>بوابة التخرج في Mock Exam: {mock_gate} من 120</b>\n\n"
         "🔬 <b>الخطوة التالية: اختبار تحديد المستوى</b>\n"
-        "• 10 أسئلة سريعة (حوالي 10 دقائق)\n"
-        "• نتيجة أقل من 50 بالمئة تعني مسار التأسيس\n"
-        "• نتيجة 50 بالمئة فأكثر تعني TOEFL مباشرة\n\n"
+        "• 24 سؤالاً متدرجاً، لا يوجد وقت محدد\n"
+        "• سنحدد مستواك الأوروبي (CEFR) بدقة\n"
+        "• ونرسم لك خطة دراسة تناسبك تماماً\n\n"
         "اضغط الزر لبدء الاختبار 👇"
     )
     await _safe_edit(callback.message, text, reply_markup=kb_start_placement(user_id))

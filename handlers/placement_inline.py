@@ -242,6 +242,40 @@ async def _finish_test(callback, user_id):
     _save_placement_result(user_id, score_pct, path, stage_id)
     text = ('🎉 <b>اكتمل اختبار تحديد المستوى!</b>\\n\\n' + '📊 <b>مستواك الأوروبي (CEFR):</b>\\n' + level_emoji + ' <b>' + level_label + '</b>\\n\\n' + path_msg + '\\n\\n' + '📍 نقطة البداية: <b>' + first_stage_code + '</b>\\n' + 'اضغط الزر للانطلاق 👇')
     await callback.message.edit_text(text, reply_markup=kb_after_result(path))
+    # ===== رسالة دعوة للطالب + تقرير للأدمن =====
+    try:
+        invite = (
+            '🎓 <b>مبروك! حددنا مستواك بدقة.</b>\n\n' +
+            'الآن تخيّل أن معلماً ذكياً للتوفل الدولي الجديد يرافقك خطوة بخطوة، يصحّح أخطاءك، ويتابع تقدمك يومياً. 🤖✨\n\n' +
+            '🔥 <b>عرض خاص: خصم يصل إلى 70% لفترة محدودة!</b>\n\n' +
+            'سجّل الآن وابدأ رحلتك نحو الدرجة التي تحلم بها. 👇'
+        )
+        admin_username = getattr(settings, 'ADMIN_USERNAME', 'yamen_academy')
+        invite_kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='🎯 سجّل الآن واحصل على خصم 70%', url='https://t.me/' + admin_username)],
+        ])
+        await callback.message.answer(invite, reply_markup=invite_kb)
+    except Exception as e:
+        logger.error('invite message failed: %s', e)
+    # ===== تقرير للأدمن =====
+    try:
+        student_name = callback.from_user.full_name or 'طالب'
+        student_uname = ('@' + callback.from_user.username) if callback.from_user.username else 'لا يوجد'
+        report = (
+            '🔔 <b>طالب جديد أنهى اختبار تحديد المستوى</b>\n\n' +
+            '👤 الاسم: ' + student_name + '\n' +
+            '🆔 المعرّف: <code>' + str(user_id) + '</code>\n' +
+            '📎 اليوزر: ' + student_uname + '\n' +
+            '📊 المستوى الأوروبي: <b>' + level_label + '</b>\n' +
+            '🛤️ المسار المقترح: ' + first_stage_code
+        )
+        for admin_id in settings.ADMIN_IDS:
+            try:
+                await callback.bot.send_message(admin_id, report)
+            except Exception as ee:
+                logger.error('admin report to %s failed: %s', admin_id, ee)
+    except Exception as e:
+        logger.error('admin report failed: %s', e)
     SESSIONS.pop(user_id, None)
 
 
