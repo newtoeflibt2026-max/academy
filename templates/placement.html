@@ -55,7 +55,7 @@ body { font-family:'Segoe UI',Tahoma,sans-serif; background:linear-gradient(135d
     <div class="plan" id="r-plan"></div>
     <div class="offer">🔥 عرض خاص: خصم يصل إلى 50% لفترة محدودة!</div>
     <a class="cta" id="r-register" href="#">🎯 سجّل الآن واحصل على خصم 50%</a>
-    <a class="cta2" id="r-packages" href="/packages">📦 عرض الباقات</a>
+    <a class="cta2" id="r-packages" href="/miniapp/plans">📦 عرض الباقات والعروض</a>
   </div>
 </div>
 <script>
@@ -141,7 +141,7 @@ function finish(){
   document.getElementById("r-cefr").textContent=cefr;
   document.getElementById("r-name").textContent=names[cefr];
   document.getElementById("r-plan").innerHTML=plan;
-  document.getElementById("r-register").href=ADMIN_CONTACT;
+  document.getElementById("r-register").href="/miniapp/plans?student_id="+sid;
   document.getElementById("res").style.display="block";
   try{
     const sid=new URLSearchParams(location.search).get("student_id")||new URLSearchParams(location.search).get("user_id")||"";

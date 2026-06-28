@@ -368,3 +368,76 @@ async def cb_setmode(cb: types.CallbackQuery):
         msg = "📚 الطالب يمشي بالترتيب (وصول منتظم)."
     await cb.answer("✅ تم الحفظ", show_alert=True)
     await cb.message.answer(f"{msg}\n<code>{tid}</code>", parse_mode="HTML")
+
+
+# ══ /promo : رسالة تسويقية لمن قدّم الاختبار ولم يشترك ═══════════
+_PROMO_CACHE = {}
+
+@router.message(Command("promo"))
+async def cmd_promo(message: types.Message):
+    if not _is_admin(message.from_user.id):
+        await message.answer("\u26d4 \u0647\u0630\u0627 \u0627\u0644\u0623\u0645\u0631 \u0644\u0644\u0623\u062f\u0645\u0646 \u0641\u0642\u0637.")
+        return
+    text = message.text or ""
+    body = text.partition(" ")[2].strip()
+    if not body:
+        await message.answer(
+            "\U0001F4E2 <b>\u0631\u0633\u0627\u0644\u0629 \u062a\u0633\u0648\u064a\u0642\u064a\u0629</b>\n\n"
+            "\u0627\u0643\u062a\u0628 \u0627\u0644\u0623\u0645\u0631 \u0647\u0643\u0630\u0627:\n"
+            "<code>/promo \u0646\u0635 \u0631\u0633\u0627\u0644\u062a\u0643 \u0627\u0644\u062a\u0633\u0648\u064a\u0642\u064a\u0629 \u0647\u0646\u0627</code>\n\n"
+            "\u0633\u062a\u0635\u0644 \u0644\u0643\u0644 \u0637\u0627\u0644\u0628 \u0623\u0646\u0647\u0649 \u0627\u0644\u0627\u062e\u062a\u0628\u0627\u0631 \u0648\u0644\u0645 \u064a\u0634\u062a\u0631\u0643.",
+            parse_mode="HTML")
+        return
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0)
+    rows = conn.execute(
+        "SELECT telegram_id FROM students WHERE placement_done=1 AND (is_paid=0 OR is_paid IS NULL) AND telegram_id IS NOT NULL AND telegram_id != ''"
+    ).fetchall()
+    conn.close()
+    targets = [r[0] for r in rows if str(r[0]).strip().isdigit()]
+    if not targets:
+        await message.answer("\u2139\ufe0f \u0644\u0627 \u064a\u0648\u062c\u062f \u0637\u0644\u0627\u0628 \u064a\u0637\u0627\u0628\u0642\u0648\u0646 \u0627\u0644\u0634\u0631\u0637.")
+        return
+    _PROMO_CACHE[message.from_user.id] = {"body": body, "targets": targets}
+    kb = InlineKeyboardBuilder()
+    kb.button(text="\u2705 \u062a\u0623\u0643\u064a\u062f \u0627\u0644\u0625\u0631\u0633\u0627\u0644", callback_data="promo_send")
+    kb.button(text="\u274c \u0625\u0644\u063a\u0627\u0621", callback_data="promo_cancel")
+    kb.adjust(1)
+    preview = (
+        "\U0001F4E2 <b>\u0645\u0639\u0627\u064a\u0646\u0629 \u0627\u0644\u0631\u0633\u0627\u0644\u0629</b>\n\n"
+        "\U0001F465 \u0633\u062a\u0635\u0644 \u0644\u0640 <b>" + str(len(targets)) + "</b> \u0637\u0627\u0644\u0628\n\n"
+        "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n" + body + "\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500"
+    )
+    await message.answer(preview, reply_markup=kb.as_markup(), parse_mode="HTML")
+
+
+@router.callback_query(F.data == "promo_cancel")
+async def cb_promo_cancel(callback: types.CallbackQuery):
+    _PROMO_CACHE.pop(callback.from_user.id, None)
+    await callback.message.edit_text("\u274c \u062a\u0645 \u0625\u0644\u063a\u0627\u0621 \u0627\u0644\u0625\u0631\u0633\u0627\u0644.")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "promo_send")
+async def cb_promo_send(callback: types.CallbackQuery):
+    if not _is_admin(callback.from_user.id):
+        await callback.answer("\u26d4", show_alert=True); return
+    job = _PROMO_CACHE.pop(callback.from_user.id, None)
+    if not job:
+        await callback.message.edit_text("\u26a0\ufe0f \u0627\u0646\u062a\u0647\u062a \u0635\u0644\u0627\u062d\u064a\u0629 \u0627\u0644\u0631\u0633\u0627\u0644\u0629. \u0623\u0639\u062f /promo.")
+        await callback.answer(); return
+    await callback.answer("\u062c\u0627\u0631\u064d \u0627\u0644\u0625\u0631\u0633\u0627\u0644...")
+    plans_url = settings.WEBHOOK_HOST.rstrip("/") + "/miniapp/plans"
+    sent = 0; failed = 0
+    for tid in job["targets"]:
+        try:
+            kb = InlineKeyboardBuilder()
+            kb.button(text="\U0001F4B3 \u0639\u0631\u0636 \u0627\u0644\u0628\u0627\u0642\u0627\u062a \u0648\u0627\u0644\u0639\u0631\u0648\u0636", url=plans_url)
+            await callback.bot.send_message(int(tid), job["body"], reply_markup=kb.as_markup())
+            sent += 1
+        except Exception:
+            failed += 1
+    await callback.message.edit_text(
+        "\u2705 <b>\u0627\u0643\u062a\u0645\u0644 \u0627\u0644\u0625\u0631\u0633\u0627\u0644</b>\n\n"
+        "\U0001F4E4 \u0648\u0635\u0644\u062a: <b>" + str(sent) + "</b>\n"
+        "\u26a0\ufe0f \u0641\u0634\u0644\u062a (\u062d\u0638\u0631\u0648\u0627 \u0627\u0644\u0628\u0648\u062a): <b>" + str(failed) + "</b>",
+        parse_mode="HTML")
