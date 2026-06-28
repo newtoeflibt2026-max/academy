@@ -32,8 +32,12 @@ WEBAPP_BASE = settings.WEBHOOK_HOST.rstrip("/")
 
 
 def _db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30.0, check_same_thread=False)
     conn.row_factory = sqlite3.Row
+    try:
+        conn.execute('PRAGMA busy_timeout=30000')
+    except Exception:
+        pass
     return conn
 
 
