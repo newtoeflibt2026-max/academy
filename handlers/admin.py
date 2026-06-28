@@ -57,7 +57,7 @@ async def cmd_stats(message: types.Message):
     if not _is_admin(message.from_user.id):
         return
     try:
-        conn = sqlite3.connect(settings.DB_PATH); cur = conn.cursor()
+        conn = sqlite3.connect(settings.DB_PATH, timeout=30.0); cur = conn.cursor()
         s_total = cur.execute("SELECT COUNT(*) FROM students").fetchone()[0]
         s_paid  = cur.execute("SELECT COUNT(*) FROM students WHERE is_paid=1").fetchone()[0]
         p_pend  = cur.execute("SELECT COUNT(*) FROM payments WHERE status='pending'").fetchone()[0]
@@ -92,7 +92,7 @@ async def cb_students(cb: types.CallbackQuery):
 
 
 async def _show_students(target, page, edit=False):
-    conn = sqlite3.connect(settings.DB_PATH); conn.row_factory = sqlite3.Row
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0); conn.row_factory = sqlite3.Row
     rows = conn.execute(
         "SELECT telegram_id, full_name, name, username, subscription_type, subscription_section, is_paid "
         "FROM students ORDER BY rowid DESC").fetchall()
@@ -145,7 +145,7 @@ async def cb_pick(cb: types.CallbackQuery):
     await cb.answer()
     tid = cb.data.split(":")[1]
 
-    conn = sqlite3.connect(settings.DB_PATH); conn.row_factory = sqlite3.Row
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0); conn.row_factory = sqlite3.Row
     r = conn.execute(
         "SELECT telegram_id, full_name, name, username, subscription_type, subscription_section, is_paid, package_end "
         "FROM students WHERE telegram_id=?", (tid,)).fetchone()
@@ -243,7 +243,7 @@ async def cb_confirmsec(cb: types.CallbackQuery):
                 if c == code: labels.append(l); break
         label = "، ".join(labels) if labels else section_value
     end_date = (datetime.now() + timedelta(days=45)).strftime("%Y-%m-%d")
-    conn = sqlite3.connect(settings.DB_PATH)
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0)
     conn.execute(
         "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, "
         "subscription_section=?, package_end=? WHERE telegram_id=?",
@@ -278,7 +278,7 @@ async def cb_setsec(cb: types.CallbackQuery):
             label, days = l, d; break
     end_date = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
 
-    conn = sqlite3.connect(settings.DB_PATH)
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0)
     conn.execute(
         "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, "
         "subscription_section=?, package_end=? WHERE telegram_id=?",
@@ -306,7 +306,7 @@ async def cb_stop(cb: types.CallbackQuery):
     if not _is_admin(cb.from_user.id):
         await cb.answer("⛔", show_alert=True); return
     tid = cb.data.split(":")[1]
-    conn = sqlite3.connect(settings.DB_PATH)
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0)
     conn.execute("UPDATE students SET is_paid=0, is_active=0 WHERE telegram_id=?", (tid,))
     conn.commit(); conn.close()
     await cb.answer("🚫 تم الإيقاف", show_alert=True)
@@ -334,7 +334,7 @@ async def cb_del_ok(cb: types.CallbackQuery):
     if not _is_admin(cb.from_user.id):
         await cb.answer("⛔", show_alert=True); return
     tid = cb.data.split(":")[1]
-    conn = sqlite3.connect(settings.DB_PATH)
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0)
     tables = [r[0] for r in conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
     deleted = {}
@@ -359,7 +359,7 @@ async def cb_setmode(cb: types.CallbackQuery):
         await cb.answer("⛔", show_alert=True); return
     parts = cb.data.split(":")
     tid, mode = parts[1], parts[2]
-    conn = sqlite3.connect(settings.DB_PATH)
+    conn = sqlite3.connect(settings.DB_PATH, timeout=30.0)
     conn.execute("UPDATE students SET access_mode=? WHERE telegram_id=?", (mode, tid))
     conn.commit(); conn.close()
     if mode == "full":
