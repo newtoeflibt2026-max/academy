@@ -247,12 +247,12 @@ async def _finish_test(callback, user_id):
         invite = (
             '🎓 <b>مبروك! حددنا مستواك بدقة.</b>\n\n' +
             'الآن تخيّل أن معلماً ذكياً للتوفل الدولي الجديد يرافقك خطوة بخطوة، يصحّح أخطاءك، ويتابع تقدمك يومياً. 🤖✨\n\n' +
-            '🔥 <b>عرض خاص: خصم يصل إلى 70% لفترة محدودة!</b>\n\n' +
+            '🔥 <b>عرض خاص: خصم يصل إلى 50% لفترة محدودة!</b>\n\n' +
             'سجّل الآن وابدأ رحلتك نحو الدرجة التي تحلم بها. 👇'
         )
         admin_username = getattr(settings, 'ADMIN_USERNAME', 'yamen_academy')
         invite_kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='🎯 سجّل الآن واحصل على خصم 70%', url='https://t.me/' + admin_username)],
+            [InlineKeyboardButton(text='🎯 سجّل الآن واحصل على خصم 50%', url='https://t.me/' + admin_username)],
         ])
         await callback.message.answer(invite, reply_markup=invite_kb)
     except Exception as e:
