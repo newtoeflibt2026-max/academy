@@ -1623,6 +1623,35 @@ def index():
 
 
 
+# ===== حفظ نتيجة CEFR من صفحة تحديد المستوى الاحترافية =====
+@app.route("/api/placement/save-cefr", methods=["POST"])
+def api_placement_save_cefr():
+    import sqlite3 as _sq
+    try:
+        data = request.get_json(force=True) or {}
+        sid = str(data.get("student_id", "")).strip()
+        cefr = str(data.get("cefr", "")).strip().upper()
+        if not sid or cefr not in ("A1","A2","B1","B2","C1","C2"):
+            return jsonify({"ok": False, "error": "invalid"}), 400
+        cefr_pct = {"A1":15,"A2":35,"B1":55,"B2":72,"C1":88,"C2":98}
+        pct = cefr_pct.get(cefr, 50)
+        path = "foundation" if cefr in ("A1","A2","B1") else "toefl"
+        conn = _sq.connect(DB_PATH, timeout=30.0)
+        conn.execute(
+            "UPDATE students SET placement_done=1, placement_score=?, placement_path=?, level=? WHERE telegram_id=?",
+            (pct, path, cefr, sid)
+        )
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True, "cefr": cefr, "path": path})
+    except Exception as e:
+        try:
+            app.logger.error("save-cefr failed: %s", e)
+        except Exception:
+            pass
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
 @app.route("/student")
 def student():
 

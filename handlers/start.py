@@ -90,7 +90,7 @@ def kb_choose_target():
 
 def kb_start_placement(user_id):
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", callback_data="pl:begin")],
+        [InlineKeyboardButton(text="🔬 ابدأ اختبار تحديد المستوى", web_app=WebAppInfo(url=f"{settings.WEBHOOK_HOST}/student?student_id={user_id}&mode=placement"))],
         [InlineKeyboardButton(text="↩️ تغيير العلامة المستهدفة", callback_data="back:target")],
     ])
 

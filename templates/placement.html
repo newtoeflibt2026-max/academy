@@ -1,456 +1,155 @@
-﻿<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>امتحان تحديد المستوى | Yamen Academy</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Test - Yamen Academy</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body {
-  font-family: 'Cairo', 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  color: #1f2937;
-  overflow-x: hidden;
-}
-.app { max-width: 720px; margin: 0 auto; padding: 16px; min-height: 100vh; }
-
-/* ===== Loading ===== */
-.loader { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; color: white; }
-.spinner { width: 56px; height: 56px; border: 4px solid rgba(255,255,255,0.25); border-top-color: white; border-radius: 50%; animation: spin 0.9s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ===== Welcome Screen ===== */
-.welcome-card {
-  background: white;
-  border-radius: 24px;
-  padding: 32px 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  text-align: center;
-  margin-top: 8vh;
-  animation: slideUp 0.5s ease;
-}
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.welcome-icon { font-size: 64px; margin-bottom: 12px; }
-.welcome-hi { font-size: 28px; font-weight: 900; color: #1f2937; margin-bottom: 8px; }
-.welcome-sub { font-size: 16px; color: #6b7280; margin-bottom: 28px; line-height: 1.7; }
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-.info-box { background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%); border-radius: 16px; padding: 16px 12px; }
-.info-num { font-size: 32px; font-weight: 900; color: #4f46e5; line-height: 1; }
-.info-lbl { font-size: 13px; color: #6b7280; margin-top: 4px; font-weight: 600; }
-.tips { background: #fef3c7; border-right: 4px solid #f59e0b; padding: 14px 16px; border-radius: 12px; text-align: right; margin-bottom: 24px; font-size: 14px; color: #78350f; line-height: 1.8; }
-.tips strong { display: block; margin-bottom: 4px; color: #92400e; }
-.btn-primary {
-  width: 100%; padding: 18px; border: none; border-radius: 16px;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white; font-size: 18px; font-weight: 800; cursor: pointer;
-  box-shadow: 0 10px 30px rgba(79,70,229,0.4); transition: transform 0.2s;
-  font-family: inherit;
-}
-.btn-primary:hover { transform: translateY(-2px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-/* ===== Quiz Screen ===== */
-.topbar {
-  background: white; border-radius: 20px; padding: 14px 18px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15); display: flex; align-items: center;
-  justify-content: space-between; margin-bottom: 14px;
-}
-.q-counter { font-weight: 800; color: #4f46e5; font-size: 15px; }
-.timer-badge {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white; padding: 8px 14px; border-radius: 12px;
-  font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums;
-  display: flex; align-items: center; gap: 6px;
-}
-.timer-badge.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.timer-badge.danger { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 1s infinite; }
-@keyframes pulse { 50% { transform: scale(1.05); } }
-.progress-track { height: 8px; background: rgba(255,255,255,0.3); border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #10b981); border-radius: 999px; transition: width 0.4s ease; }
-
-.question-card {
-  background: white; border-radius: 24px; padding: 24px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.2); margin-bottom: 16px;
-  animation: slideUp 0.3s ease;
-}
-.skill-tag {
-  display: inline-block; background: #ede9fe; color: #6d28d9;
-  padding: 4px 12px; border-radius: 999px; font-size: 12px;
-  font-weight: 700; margin-bottom: 12px;
-}
-.q-text { font-size: 18px; font-weight: 700; color: #1f2937; line-height: 1.7; margin-bottom: 8px; }
-
-.options { display: flex; flex-direction: column; gap: 10px; }
-.option {
-  background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 14px;
-  padding: 14px 16px; cursor: pointer; display: flex; align-items: center;
-  gap: 12px; transition: all 0.2s; font-family: inherit;
-}
-.option:hover { border-color: #c7d2fe; background: #f5f3ff; }
-.option.selected { border-color: #4f46e5; background: #ede9fe; box-shadow: 0 4px 12px rgba(79,70,229,0.2); }
-.option-letter {
-  width: 36px; height: 36px; min-width: 36px; border-radius: 10px;
-  background: #e5e7eb; color: #4b5563; display: flex; align-items: center;
-  justify-content: center; font-weight: 800; font-size: 16px; transition: all 0.2s;
-}
-.option.selected .option-letter { background: #4f46e5; color: white; }
-.option-text { font-size: 15px; color: #374151; flex: 1; line-height: 1.6; }
-
-/* ===== Result Screen ===== */
-.result-card {
-  background: white; border-radius: 24px; padding: 32px 24px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25); text-align: center;
-  margin-top: 4vh; animation: slideUp 0.5s ease;
-}
-.result-title { font-size: 22px; font-weight: 900; margin-bottom: 6px; color: #1f2937; }
-.result-sub { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
-.score-ring { position: relative; width: 180px; height: 180px; margin: 0 auto 20px; }
-.score-ring svg { transform: rotate(-90deg); }
-.score-ring circle { fill: none; stroke-width: 14; }
-.ring-bg { stroke: #e5e7eb; }
-.ring-fg { stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
-.score-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.score-num { font-size: 44px; font-weight: 900; line-height: 1; }
-.score-lbl { font-size: 13px; color: #6b7280; margin-top: 4px; }
-
-.level-badge { display: inline-block; padding: 8px 20px; border-radius: 999px; font-weight: 800; font-size: 16px; margin-bottom: 20px; }
-.level-A1, .level-A2 { background: #fee2e2; color: #991b1b; }
-.level-B1, .level-B2 { background: #fef3c7; color: #92400e; }
-.level-C1, .level-C2 { background: #d1fae5; color: #065f46; }
-
-.target-box {
-  background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
-  border-radius: 16px; padding: 18px; margin-bottom: 24px;
-}
-.target-lbl { font-size: 13px; color: #6b7280; font-weight: 700; margin-bottom: 6px; }
-.target-num { font-size: 36px; font-weight: 900; color: #4f46e5; line-height: 1; }
-.target-desc { font-size: 13px; color: #6b7280; margin-top: 6px; }
-
-.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
-.stat-mini { background: #f9fafb; border-radius: 12px; padding: 14px; }
-.stat-mini-num { font-size: 24px; font-weight: 900; color: #1f2937; }
-.stat-mini-lbl { font-size: 12px; color: #6b7280; margin-top: 2px; }
-
-.btn-secondary {
-  width: 100%; padding: 16px; border: 2px solid #e5e7eb; border-radius: 14px;
-  background: white; color: #4f46e5; font-size: 16px; font-weight: 800;
-  cursor: pointer; margin-top: 10px; font-family: inherit; transition: all 0.2s;
-}
-.btn-secondary:hover { background: #f5f3ff; border-color: #c7d2fe; }
-
-.hidden { display: none !important; }
-.err-box { background: #fee2e2; color: #991b1b; padding: 16px; border-radius: 12px; margin: 20px 0; text-align: center; font-weight: 700; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Tahoma,sans-serif; background:linear-gradient(135deg,#e0f2fe,#f0f9ff,#faf5ff); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px; }
+.card { background:#fff; border-radius:22px; box-shadow:0 12px 40px rgba(99,102,241,.15); width:100%; max-width:540px; overflow:hidden; border:1px solid #e0e7ff; }
+.head { background:linear-gradient(135deg,#60a5fa,#a78bfa); color:#fff; padding:24px; }
+.head h1 { font-size:21px; font-weight:700; }
+.head p { font-size:13px; opacity:.95; margin-top:5px; }
+.progress-wrap { height:7px; background:rgba(255,255,255,.35); border-radius:4px; margin-top:16px; overflow:hidden; }
+.progress { height:100%; background:#fff; width:0; transition:width .35s; border-radius:4px; }
+.body { padding:30px 26px; }
+.qcount { font-size:13px; color:#8b5cf6; font-weight:700; margin-bottom:10px; text-align:left; }
+.question { font-size:18px; font-weight:600; color:#1e293b; line-height:1.55; margin-bottom:24px; text-align:left; white-space:pre-line; }
+.opt { display:flex; align-items:center; gap:13px; padding:16px; border:2px solid #e2e8f0; border-radius:13px; margin-bottom:12px; cursor:pointer; transition:all .2s; background:#fff; }
+.opt:hover { border-color:#c4b5fd; background:#faf5ff; }
+.opt.sel { border-color:#8b5cf6; background:#f3e8ff; }
+.opt .letter { width:32px; height:32px; flex-shrink:0; border-radius:50%; background:#eef2ff; color:#6366f1; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; }
+.opt.sel .letter { background:#8b5cf6; color:#fff; }
+.opt .txt { font-size:15px; color:#334155; }
+.btn { width:100%; padding:16px; border:none; border-radius:13px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; font-size:16px; font-weight:700; cursor:pointer; margin-top:10px; transition:opacity .2s; }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+.result { text-align:center; padding:36px 26px; display:none; }
+.level-name { font-size:15px; color:#64748b; font-weight:600; }
+.level-badge { display:inline-block; font-size:50px; font-weight:900; color:#8b5cf6; margin:8px 0; }
+.level-cefr { display:inline-block; background:#f3e8ff; color:#8b5cf6; padding:7px 20px; border-radius:22px; font-weight:700; font-size:15px; margin-bottom:22px; }
+.plan { background:#f8fafc; border:1px solid #e2e8f0; border-radius:15px; padding:20px; text-align:right; margin-bottom:20px; font-size:14px; color:#334155; line-height:1.8; direction:rtl; }
+.plan b { color:#6366f1; }
+.offer { background:linear-gradient(135deg,#fbbf24,#fb7185); color:#fff; border-radius:15px; padding:17px; margin-bottom:16px; font-weight:700; font-size:15px; }
+.cta { display:block; width:100%; padding:16px; border-radius:13px; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:700; text-decoration:none; margin-bottom:11px; }
+.cta2 { display:block; width:100%; padding:15px; border-radius:13px; background:#6366f1; color:#fff; font-size:15px; font-weight:600; text-decoration:none; }
 </style>
 </head>
 <body>
-<div class="app">
-
-  <!-- Loading -->
-  <div id="screen-loading" class="loader">
-    <div class="spinner"></div>
-    <p style="margin-top: 16px; font-size: 16px;">جاري التحضير...</p>
+<div class="card">
+  <div class="head">
+    <h1>English Placement Test</h1>
+    <p>24 questions - No time limit - Find your CEFR level</p>
+    <div class="progress-wrap"><div class="progress" id="bar"></div></div>
   </div>
-
-  <!-- Welcome -->
-  <div id="screen-welcome" class="hidden">
-    <div class="welcome-card">
-      <div class="welcome-icon">🎯</div>
-      <div class="welcome-hi">مرحباً <span id="student-name">بك</span></div>
-      <p class="welcome-sub">سنحدد مستواك الحالي لنبني لك خطة دراسية مناسبة 100%.</p>
-
-      <div class="info-grid">
-        <div class="info-box">
-          <div class="info-num">10</div>
-          <div class="info-lbl">أسئلة</div>
-        </div>
-        <div class="info-box">
-          <div class="info-num">10</div><div class="info-lbl">دقائق</div>
-        </div>
-      </div>
-
-      <div class="tips">
-        <strong>💡 قبل البدء:</strong>
-        أجب بصدق وبدون مساعدة. النتيجة تحدد نقطة انطلاقك، وليست حكماً عليك.
-      </div>
-
-      <button class="btn-primary" id="btn-start" onclick="startQuiz()">ابدأ الآن ←</button>
-    </div>
+  <div class="body" id="quiz">
+    <div class="qcount" id="qc">Question 1 of 24</div>
+    <div class="question" id="q"></div>
+    <div id="opts"></div>
+    <button class="btn" id="next" disabled>Next</button>
   </div>
-
-  <!-- Quiz -->
-  <div id="screen-quiz" class="hidden">
-    <div class="topbar">
-      <div class="q-counter">سؤال <span id="q-current">1</span> من <span id="q-total">10</span></div>
-      <div class="timer-badge" id="timer">⏱ 10:00</div>
-    </div>
-    <div class="progress-track"><div class="progress-fill" id="progress" style="width: 0%"></div></div>
-
-    <div class="question-card">
-      <div class="q-text" id="q-text">...</div>
-    </div>
-
-    <div class="options" id="options"></div>
-
-    <button class="btn-primary" id="btn-next" onclick="nextQuestion()" disabled style="margin-top: 18px;">التالي ←</button>
+  <div class="result" id="res">
+    <div class="level-name">Your English Level</div>
+    <div class="level-badge" id="r-cefr">B1</div>
+    <div class="level-cefr" id="r-name">Intermediate</div>
+    <div class="plan" id="r-plan"></div>
+    <div class="offer">🔥 عرض خاص: خصم يصل إلى 70% لفترة محدودة!</div>
+    <a class="cta" id="r-register" href="#">🎯 سجّل الآن واحصل على خصم 70%</a>
+    <a class="cta2" id="r-packages" href="/packages">📦 عرض الباقات</a>
   </div>
-
-  <!-- Result -->
-  <div id="screen-result" class="hidden">
-    <div class="result-card">
-      <div class="result-title">🎉 اكتمل تحديد المستوى</div>
-      <p class="result-sub">إليك نتيجتك التفصيلية</p>
-
-      <div class="score-ring">
-        <svg width="180" height="180" viewBox="0 0 180 180">
-          <circle class="ring-bg" cx="90" cy="90" r="78"></circle>
-          <circle class="ring-fg" id="ring-fg" cx="90" cy="90" r="78"
-                  stroke-dasharray="490" stroke-dashoffset="490" stroke="#4f46e5"></circle>
-        </svg>
-        <div class="score-text">
-          <div class="score-num" id="r-score">0%</div>
-          <div class="score-lbl">نسبة النجاح</div>
-        </div>
-      </div>
-
-      <div class="level-badge" id="r-level">—</div>
-
-      <div class="target-box">
-        <div class="target-lbl">🎯 الهدف المقترح</div>
-        <div class="target-num">TOEFL <span id="r-target">—</span></div>
-        <div class="target-desc" id="r-path">—</div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-mini">
-          <div class="stat-mini-num" id="r-correct">0</div>
-          <div class="stat-mini-lbl">✅ صحيحة</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-num" id="r-wrong">0</div>
-          <div class="stat-mini-lbl">❌ خاطئة</div>
-        </div>
-      </div>
-
-      <button class="btn-primary" onclick="goPlans()">💎 اختر باقتك الآن</button>
-      <button class="btn-secondary" onclick="goDashboard()">العودة للوحة</button>
-    </div>
-  </div>
-
-  <div id="err-box" class="hidden err-box"></div>
 </div>
-
 <script>
-(function(){ try { window.Telegram?.WebApp?.ready(); window.Telegram?.WebApp?.expand(); } catch(e){} })();
-
-// ===== State =====
-const STUDENT_ID = new URLSearchParams(location.search).get('student_id') || '';
-let questions = [];
-let currentIdx = 0;
-let selectedOpt = null;
-let answers = [];
-let timeLeft = 600; // 5 minutes
-let timerInterval = null;
-
-// ===== Helpers =====
-function show(id){ ['screen-loading','screen-welcome','screen-quiz','screen-result'].forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id)); }
-function showErr(msg){ const e = document.getElementById('err-box'); e.textContent = msg; e.classList.remove('hidden'); }
-
-// ===== Init =====
-async function init(){
-  if(!STUDENT_ID){ showErr('معرّف الطالب مفقود'); return; }
-  // Try to fetch student name (optional)
-  try {
-    const r = await fetch(`/api/student/profile?student_id=${STUDENT_ID}`);
-    if(r.ok){
-      const d = await r.json();
-      const name = d.full_name || d.name || d.first_name || '';
-      if(name) document.getElementById('student-name').textContent = name;
-    }
-  } catch(e){}
-
-  // Pre-fetch questions
-  try {
-    const r = await fetch('/api/placement/questions');
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    questions = await r.json();
-    if(!questions.length) throw new Error('لا توجد أسئلة متاحة');
-    document.getElementById('q-total').textContent = questions.length;
-    show('screen-welcome');
-  } catch(err){
-    showErr('تعذر تحميل الأسئلة: ' + err.message);
-    show('screen-loading');
-    document.querySelector('#screen-loading p').textContent = 'حدث خطأ';
-  }
-}
-
-// ===== Start =====
-function startQuiz(){
-  currentIdx = 0;
-  selectedOpt = null;
-  answers = [];
-  timeLeft = 600;
-  show('screen-quiz');
-  startTimer();
-  renderQuestion();
-}
-
-// ===== Timer =====
-function startTimer(){
-  if(timerInterval) clearInterval(timerInterval);
-  updateTimerDisplay();
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateTimerDisplay();
-    if(timeLeft <= 0){
-      clearInterval(timerInterval);
-      finishQuiz(true);
-    }
-  }, 1000);
-}
-function updateTimerDisplay(){
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
-  const t = document.getElementById('timer');
-  t.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
-  t.classList.toggle('warning', timeLeft <= 120 && timeLeft > 60);
-  t.classList.toggle('danger', timeLeft <= 60);
-}
-
-// ===== Render Question =====
-function renderQuestion(){
-  const q = questions[currentIdx];
-  document.getElementById('q-current').textContent = currentIdx + 1;
-  document.getElementById('progress').style.width = ((currentIdx) / questions.length * 100) + '%';
-  document.getElementById('q-text').textContent = q.question_text || q.question;
-
-  const opts = [
-    {letter:'A', text: q.option_a},
-    {letter:'B', text: q.option_b},
-    {letter:'C', text: q.option_c},
-    {letter:'D', text: q.option_d}
-  ].filter(o => o.text);
-
-  const wrap = document.getElementById('options');
-  wrap.innerHTML = '';
-  opts.forEach(o => {
-    const btn = document.createElement('button');
-    btn.className = 'option';
-    btn.innerHTML = `<div class="option-letter">${o.letter}</div><div class="option-text">${escapeHtml(o.text)}</div>`;
-    btn.onclick = () => selectOption(o.letter, btn);
-    wrap.appendChild(btn);
+const QUESTIONS = [
+  {lv:"A1",q:"Choose the correct word:\n\nThis ___ a book.",o:["is","are","am","be"],a:0},
+  {lv:"A1",q:"What is the opposite of \"big\"?",o:["tall","small","long","wide"],a:1},
+  {lv:"A1",q:"Choose:\n\nI ___ a student.",o:["is","are","am","be"],a:2},
+  {lv:"A1",q:"\"Apple\" is a kind of:",o:["animal","fruit","color","car"],a:1},
+  {lv:"A2",q:"Choose:\n\nShe ___ to school every day.",o:["go","goes","going","gone"],a:1},
+  {lv:"A2",q:"What does \"happy\" mean?",o:["sad","angry","glad","tired"],a:2},
+  {lv:"A2",q:"Choose the past tense:\n\nYesterday I ___ to the park.",o:["go","went","gone","going"],a:1},
+  {lv:"A2",q:"Choose:\n\nHe is reading a ___.",o:["book","eat","run","fast"],a:0},
+  {lv:"B1",q:"Choose:\n\nIf it rains, I ___ stay home.",o:["will","would","was","am"],a:0},
+  {lv:"B1",q:"What does \"benefit\" mean?",o:["harm","advantage","danger","problem"],a:1},
+  {lv:"B1",q:"Choose:\n\nThe report ___ by the manager yesterday.",o:["wrote","was written","is writing","writes"],a:1},
+  {lv:"B1",q:"\"Despite the heavy rain, the match continued.\"\n\nThis means:",o:["The rain stopped the match","The match was cancelled","The match went on even though it rained","There was no rain"],a:2},
+  {lv:"B2",q:"Choose:\n\nIf I ___ rich, I would travel the world.",o:["am","was","were","be"],a:2},
+  {lv:"B2",q:"Choose the synonym of \"significant\":",o:["small","important","easy","quick"],a:1},
+  {lv:"B2",q:"Choose the opposite of \"abundant\":",o:["plentiful","scarce","rich","full"],a:1},
+  {lv:"B2",q:"\"The researcher's findings were inconclusive.\"\n\nThis means:",o:["The results were very clear","No clear conclusion was reached","The research was successful","The findings were published"],a:1},
+  {lv:"C1",q:"Choose the meaning of \"elaborate\" (verb):",o:["to summarize briefly","to explain in detail","to ignore","to repeat"],a:1},
+  {lv:"C1",q:"Choose:\n\nHardly ___ he arrived when the meeting started.",o:["has","had","did","was"],a:1},
+  {lv:"C1",q:"\"Meticulous\" most nearly means:",o:["careless","extremely careful","lazy","fast"],a:1},
+  {lv:"C1",q:"\"Her argument, while compelling, rested on flawed premises.\"\n\nThe argument was:",o:["completely wrong","persuasive but based on errors","perfectly logical","too short"],a:1},
+  {lv:"C2",q:"\"Ubiquitous\" means:",o:["rare","present everywhere","ancient","hidden"],a:1},
+  {lv:"C2",q:"Choose:\n\nWere it not for your help, I ___ failed.",o:["will have","would have","have","had"],a:1},
+  {lv:"C2",q:"\"To exacerbate\" a problem means to:",o:["solve it","make it worse","ignore it","explain it"],a:1},
+  {lv:"C2",q:"\"The policy was ostensibly about safety, but its real aim was control.\"\n\n\"Ostensibly\" implies the safety reason was:",o:["the true reason","the apparent but not real reason","unimportant","illegal"],a:1}
+];
+const ADMIN_CONTACT = "https://t.me/YamenAcademy_Bot";
+// خلط الخيارات لكل سؤال مع تتبع الإجابة الصحيحة
+QUESTIONS.forEach(item=>{
+  const correctText=item.o[item.a];
+  for(let i=item.o.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [item.o[i],item.o[j]]=[item.o[j],item.o[i]]; }
+  item.a=item.o.indexOf(correctText);
+});
+let idx=0, sel=null;
+const perLevel={A1:[0,0],A2:[0,0],B1:[0,0],B2:[0,0],C1:[0,0],C2:[0,0]};
+function render(){
+  const item=QUESTIONS[idx];
+  document.getElementById("qc").textContent="Question "+(idx+1)+" of "+QUESTIONS.length;
+  document.getElementById("q").textContent=item.q;
+  document.getElementById("bar").style.width=(idx/QUESTIONS.length*100)+"%";
+  const box=document.getElementById("opts"); box.innerHTML="";
+  const L=["A","B","C","D"];
+  item.o.forEach((opt,i)=>{
+    const d=document.createElement("div"); d.className="opt";
+    d.innerHTML='<div class="letter">'+L[i]+'</div><div class="txt">'+opt+'</div>';
+    d.onclick=()=>{ sel=i; [...box.children].forEach(c=>c.classList.remove("sel")); d.classList.add("sel"); document.getElementById("next").disabled=false; };
+    box.appendChild(d);
   });
-
-  selectedOpt = null;
-  document.getElementById('btn-next').disabled = true;
-  document.getElementById('btn-next').textContent = (currentIdx === questions.length - 1) ? 'إنهاء الامتحان ✓' : 'التالي ←';
+  sel=null; document.getElementById("next").disabled=true;
+  document.getElementById("next").textContent=(idx===QUESTIONS.length-1)?"Finish ✓":"Next";
 }
-
-function selectOption(letter, btn){
-  document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedOpt = letter;
-  document.getElementById('btn-next').disabled = false;
-}
-
-function nextQuestion(){
-  if(!selectedOpt) return;
-  answers.push({ question_id: questions[currentIdx].id, answer: selectedOpt });
-  currentIdx++;
-  if(currentIdx >= questions.length){
-    finishQuiz(false);
+document.getElementById("next").onclick=()=>{
+  const item=QUESTIONS[idx];
+  perLevel[item.lv][1]++;
+  if(sel===item.a) perLevel[item.lv][0]++;
+  idx++;
+  if(idx<QUESTIONS.length){ render(); } else { finish(); }
+};
+function finish(){
+  const order=["A1","A2","B1","B2","C1","C2"];
+  let cefr="A1";
+  for(const lv of order){
+    const[c,t]=perLevel[lv];
+    if(t>0&&c>=3) cefr=lv;
+    else if(t>0&&c<2) break;
+  }
+  const names={A1:"Beginner",A2:"Elementary",B1:"Intermediate",B2:"Upper-Intermediate",C1:"Advanced",C2:"Proficient"};
+  let plan="";
+  if(cefr==="A1"||cefr==="A2"){
+    plan="🛠️ <b>خطة دراستك: التأسيس من البداية</b><br>ستبدأ من المرحلة الأولى للتأسيس لبناء القواعد والمفردات خطوة بخطوة، ثم تنتقل للقراءة والاستماع.";
+  } else if(cefr==="B1"){
+    plan="📘 <b>خطة دراستك: تقوية ثم انطلاق</b><br>أساسياتك جيدة! ستبدأ من مراحل التأسيس المتقدمة لسدّ الثغرات، ثم تنتقل سريعاً إلى TOEFL.";
+  } else if(cefr==="B2"){
+    plan="🎯 <b>خطة دراستك: TOEFL مباشرة</b><br>مستواك جيد جداً! ستتخطى التأسيس وتبدأ من القراءة والاستماع في TOEFL مباشرة.";
   } else {
-    renderQuestion();
+    plan="🏆 <b>خطة دراستك: TOEFL متقدم</b><br>مستواك ممتاز! ستركّز على النقاط الدقيقة التي ترفع علامتك إلى أعلى نطاق.";
   }
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("bar").style.width="100%";
+  document.getElementById("r-cefr").textContent=cefr;
+  document.getElementById("r-name").textContent=names[cefr];
+  document.getElementById("r-plan").innerHTML=plan;
+  document.getElementById("r-register").href=ADMIN_CONTACT;
+  document.getElementById("res").style.display="block";
+  try{
+    const sid=new URLSearchParams(location.search).get("student_id")||new URLSearchParams(location.search).get("user_id")||"";
+    fetch("/api/placement/save-cefr",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({student_id:sid,cefr:cefr})});
+  }catch(e){}
 }
-
-function skillLabel(s){
-  const map = {
-    reading:'القراءة', writing:'الكتابة', listening:'الاستماع',
-    speaking:'المحادثة', grammar:'القواعد', vocabulary:'المفردات'
-  };
-  return map[(s||'').toLowerCase()] || 'سؤال عام';
-}
-
-function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-// ===== Finish =====
-async function finishQuiz(timedOut){
-  if(timerInterval) clearInterval(timerInterval);
-  document.getElementById('progress').style.width = '100%';
-
-  // If timeout, fill remaining as null
-  while(answers.length < questions.length){
-    answers.push({ question_id: questions[answers.length].id, answer: '' });
-  }
-
-  show('screen-loading');
-  document.querySelector('#screen-loading p').textContent = 'جاري حساب نتيجتك...';
-
-  try {
-    const r = await fetch('/api/placement/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ student_id: STUDENT_ID, answers: answers })
-    });
-    const d = await r.json();
-    if(d.status !== 'ok') throw new Error(d.message || 'فشل الحفظ');
-    showResult(d);
-  } catch(err){
-    showErr('تعذّر حفظ النتيجة: ' + err.message);
-  }
-}
-
-function showResult(d){
-  show('screen-result');
-  const pct = d.score || 0;
-  const correct = d.correct || 0;
-  const total = d.total || questions.length;
-  const wrong = total - correct;
-
-  document.getElementById('r-score').textContent = pct + '%';
-  document.getElementById('r-correct').textContent = correct;
-  document.getElementById('r-wrong').textContent = wrong;
-  document.getElementById('r-target').textContent = d.target_score || 69;
-
-  // Level badge
-  const lvl = d.level || 'B1';
-  const lblMap = {A1:'مبتدئ (A1)', A2:'أساسي (A2)', B1:'متوسط (B1)', B2:'فوق المتوسط (B2)', C1:'متقدم (C1)'};
-  const badge = document.getElementById('r-level');
-  badge.textContent = lblMap[lvl] || lvl;
-  badge.className = 'level-badge level-' + lvl;
-
-  // Path description
-  const pathMap = {
-    foundation: 'مسار التأسيس — نبدأ من الأساسيات بثقة',
-    intermediate: 'المسار المتوسط — نبني على معرفتك الحالية',
-    advanced: 'المسار المتقدم — تركيز على نقاط التميز'
-  };
-  document.getElementById('r-path').textContent = pathMap[d.path] || 'مسار مخصص';
-
-  // Animate ring
-  const circumference = 2 * Math.PI * 78;
-  const offset = circumference * (1 - pct / 100);
-  const ring = document.getElementById('ring-fg');
-  ring.setAttribute('stroke-dasharray', circumference);
-  setTimeout(() => { ring.setAttribute('stroke-dashoffset', offset); }, 100);
-
-  // Color by score
-  let color = '#ef4444';
-  if(pct >= 80) color = '#10b981';
-  else if(pct >= 50) color = '#f59e0b';
-  ring.setAttribute('stroke', color);
-  document.getElementById('r-score').style.color = color;
-}
-
-function goPlans(){ location.href = '/miniapp/plans?student_id=' + STUDENT_ID; }
-function goDashboard(){ location.href = '/student?student_id=' + STUDENT_ID; }
-
-init();
+render();
 </script>
 </body>
 </html>
-
