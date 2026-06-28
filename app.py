@@ -1643,6 +1643,41 @@ def api_placement_save_cefr():
         )
         conn.commit()
         conn.close()
+
+        # ===== placement_admin_notify: ارسال تقرير للأدمن عبر تيليجرام =====
+        try:
+            import os as _os, json as _json
+            from urllib import request as _ur
+            _token = _os.environ.get("BOT_TOKEN", "")
+            _admins = [x.strip() for x in _os.environ.get("ADMIN_IDS", "5572314718").split(",") if x.strip()]
+            if _token:
+                _name = str(data.get("name", "")) or "طالب"
+                _uname = str(data.get("username", ""))
+                _uname_txt = ("@" + _uname) if _uname else "-"
+                _path_ar = "التأسيس" if path == "foundation" else "TOEFL"
+                _msg = (
+                    "\U0001F514 <b>طالب أنهى اختبار تحديد المستوى</b>\n\n"
+                    "\U0001F464 الاسم: " + _name + "\n"
+                    "\U0001F194 المعرّف: <code>" + sid + "</code>\n"
+                    "\U0001F4F1 يوزر: " + _uname_txt + "\n"
+                    "\U0001F4CA المستوى الأوروبي: <b>" + cefr + "</b>\n"
+                    "\U0001F3AF المسار المقترح: <b>" + _path_ar + "</b>"
+                )
+                for _aid in _admins:
+                    try:
+                        _payload = _json.dumps({"chat_id": _aid, "text": _msg, "parse_mode": "HTML"}).encode("utf-8")
+                        _req = _ur.Request(
+                            "https://api.telegram.org/bot" + _token + "/sendMessage",
+                            data=_payload, headers={"Content-Type": "application/json"})
+                        _ur.urlopen(_req, timeout=10)
+                    except Exception:
+                        pass
+        except Exception as _e:
+            try:
+                app.logger.error("placement_admin_notify failed: %s", _e)
+            except Exception:
+                pass
+
         return jsonify({"ok": True, "cefr": cefr, "path": path})
     except Exception as e:
         try:
