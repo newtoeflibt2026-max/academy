@@ -66,12 +66,12 @@ def create_student(user_id, full_name=None, username="", level="beginner", teleg
     conn = get_db()
     cur = conn.cursor()
     # هل الطالب موجود؟
-    existing = cur.execute("SELECT user_id FROM students WHERE user_id=?", (uid,)).fetchone()
+    existing = cur.execute("SELECT user_id FROM students WHERE telegram_id=? OR user_id=?", (sid, uid)).fetchone()
     if existing:
         # تحديث فقط الحقول الأساسية بدون لمس created_at
         cur.execute(
-            "UPDATE students SET telegram_id=?, full_name=COALESCE(NULLIF(?,''), full_name), username=?, level=COALESCE(level, ?), name=COALESCE(name, ?), is_active=1 WHERE user_id=?",
-            (sid, fn, un, lv, fn, uid)
+            "UPDATE students SET telegram_id=?, full_name=COALESCE(NULLIF(?,''), full_name), username=?, level=COALESCE(level, ?), name=COALESCE(name, ?), is_active=1 WHERE telegram_id=? OR user_id=?",
+            (sid, fn, un, lv, fn, sid, uid)
         )
     else:
         cur.execute(
