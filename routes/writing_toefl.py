@@ -117,6 +117,14 @@ def view_stage(stage_id):
     # الأدمن يرى كل الدروس مفتوحة (تجاوز القفل التسلسلي)
     _admin_ids = [a.strip() for a in (os.environ.get("ADMIN_IDS") or "").split(",") if a.strip()]
     _is_admin = str(tg_id) in _admin_ids
+    # الطالب الشامل (وصول كامل) يرى كل الدروس مفتوحة مثل الأدمن
+    _is_full = False
+    try:
+        _cf = _db(); _rf = _cf.execute("SELECT access_mode, subscription_section FROM students WHERE telegram_id=? OR user_id=?", (str(tg_id), tg_id)).fetchone(); _cf.close()
+        if _rf and (str(_rf[0] or "").lower() == "full" or str(_rf[1] or "").lower() == "full"):
+            _is_full = True
+    except Exception:
+        _is_full = False
     prev_completed = True
     for L in lessons_list:
         if L.get("is_exam"):
@@ -124,9 +132,9 @@ def view_stage(stage_id):
                 progress_map.get(x["id"], {}).get("status") == "completed"
                 for x in lessons_list if not x.get("is_exam")
             ) and len([x for x in lessons_list if not x.get("is_exam")]) > 0
-            L["locked"] = False if _is_admin else (not all_done)
+            L["locked"] = False if (_is_admin or _is_full) else (not all_done)
         else:
-            L["locked"] = False if _is_admin else (not prev_completed)
+            L["locked"] = False if (_is_admin or _is_full) else (not prev_completed)
             prev_completed = progress_map.get(L["id"], {}).get("status") == "completed"
 
     return render_template("toefl_writing/stage.html",
@@ -1810,4 +1818,3 @@ def api_discussion_submit():
         response["message_ar"] = "تم استلام إجابتك."
         response["passed"] = None
     return jsonify(response)
-
