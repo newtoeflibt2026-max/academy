@@ -5,7 +5,7 @@ bot_webhook.py - Telegram webhook handler running inside Flask.
 - Feeds updates to aiogram Dispatcher synchronously.
 - Eliminates polling -> no 409 conflict, one Railway service is enough.
 """
-import os, asyncio, logging, json
+import os, asyncio, logging, json, threading
 from flask import Blueprint, request, jsonify
 
 from aiogram import Bot, Dispatcher
@@ -66,6 +66,10 @@ def init_bot():
     )
     _DP = _build_dispatcher()
     _LOOP = asyncio.new_event_loop()
+    def _run_loop():
+        asyncio.set_event_loop(_LOOP)
+        _LOOP.run_forever()
+    threading.Thread(target=_run_loop, daemon=True).start()
     _INITIALIZED = True
     print("[webhook] bot + dispatcher initialized")
     return _BOT, _DP
@@ -120,7 +124,7 @@ def telegram_webhook():
     data = request.get_json(silent=True) or {}
     try:
         update = Update.model_validate(data, context={"bot": bot})
-        _LOOP.run_until_complete(dp.feed_update(bot, update))
+        asyncio.run_coroutine_threadsafe(dp.feed_update(bot, update), _LOOP)
     except Exception as e:
         logger.exception(f"webhook process error: {e}")
         return jsonify({"ok": False, "error": str(e)}), 200  # 200 to stop retries
