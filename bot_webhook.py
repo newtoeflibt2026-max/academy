@@ -105,7 +105,12 @@ def register_webhook_with_telegram():
             print(f"[webhook] SET FAILED: {e}")
             return False
 
-    return _LOOP.run_until_complete(_setup())
+    fut = asyncio.run_coroutine_threadsafe(_setup(), _LOOP)
+    try:
+        return fut.result(timeout=30)
+    except Exception as e:
+        print(f"[webhook] setup error: {e}")
+        return False
 
 
 @webhook_bp.route("/telegram-webhook", methods=["POST"])

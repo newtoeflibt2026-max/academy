@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 8080
 
 # shell form: $PORT ?????? ??? /bin/sh -c
-CMD gunicorn -w 2 -k gthread --threads 4 --timeout 120 -b 0.0.0.0:${PORT:-8080} wsgi:app
+CMD gunicorn -w 1 -k gthread --threads 4 --timeout 120 -b 0.0.0.0:${PORT:-8080} wsgi:app
