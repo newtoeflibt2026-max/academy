@@ -138,7 +138,8 @@ def webhook_info():
     if not bot:
         return jsonify({"ok": False, "error": "bot not initialized"}), 503
     try:
-        info = _LOOP.run_until_complete(bot.get_webhook_info())
+        import asyncio as _a
+        info = _a.run_coroutine_threadsafe(bot.get_webhook_info(), _LOOP).result(timeout=15)
         return jsonify({
             "ok": True,
             "url": info.url,
