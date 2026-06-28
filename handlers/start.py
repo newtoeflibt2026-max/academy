@@ -128,9 +128,10 @@ async def cmd_start(message: types.Message):
         import sqlite3 as _sq, os as _os
         _db = DB_PATH
         _c = _sq.connect(_db); _c.row_factory = _sq.Row
-        _r = _c.execute("SELECT target_score, placement_done FROM students WHERE telegram_id=?", (user_id,)).fetchone()
+        _r = _c.execute("SELECT target_score, placement_done, access_mode, subscription_section FROM students WHERE telegram_id=?", (user_id,)).fetchone()
         _c.close()
-        _need_onboard = (not _r) or (not (_r["target_score"] or 0)) or (not (_r["placement_done"] or 0))
+        _is_full = bool(_r) and (str((_r["access_mode"] or "")) == "full" or str((_r["subscription_section"] or "")) == "full")
+        _need_onboard = (not _r) or (not _is_full and ((not (_r["target_score"] or 0)) or (not (_r["placement_done"] or 0))))
     except Exception:
         _need_onboard = False
     if _need_onboard:
