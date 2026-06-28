@@ -129,7 +129,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e
             <div class="word-en">{{ v.word or v.en }}</div>
             {% if v.ipa %}<div class="ipa">{{ v.ipa }}</div>{% endif %}
           </div>
-          <div class="meaning">{{ v.meaning_ar or v.ar or '' }}</div>
+          <div class="meaning">{{ v.meaning or v.meaning_ar or v.ar or '' }}</div>
           {% if v.example_en or v.example %}
           <div class="example-en">{{ v.example_en or v.example }}</div>
           {% endif %}
