@@ -79,8 +79,16 @@ def writing_track_page():
     conn.close()
     _admin_ids = [a.strip() for a in (os.environ.get("ADMIN_IDS") or "").split(",") if a.strip()]
     _is_admin = str(tg_id) in _admin_ids
+    _is_full = False
+    try:
+        _cc = _db(); _rr = _cc.execute("SELECT access_mode, subscription_section FROM students WHERE telegram_id=? OR user_id=?", (str(tg_id), tg_id)).fetchone()
+        _cc.close()
+        if _rr:
+            _is_full = (str(_rr["access_mode"] or "") == "full" or str(_rr["subscription_section"] or "") == "full")
+    except Exception:
+        _is_full = False
     return render_template("toefl_writing/track.html",
-        track=dict(track), stages=stages_list, user_id=tg_id, is_admin=_is_admin)
+        track=dict(track), stages=stages_list, user_id=tg_id, is_admin=_is_admin, is_full=_is_full)
 
 # ═══════════════════════════════════════════════════════════
 # PAGE: Stage detail (الدروس داخل المرحلة)
