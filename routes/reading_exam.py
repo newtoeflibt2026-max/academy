@@ -741,12 +741,12 @@ def dl_result(attempt_id):
 # Academic Reading (AR) Routes - Task 3
 # ═══════════════════════════════════════════════════════════
 
-@reading_bp.route("/reading/ar/learn")
+@reading_bp.route("/ar/learn")
 def ar_learn():
     user_id = request.args.get("user_id", "")
     return render_template("reading/ar_learn.html", user_id=user_id)
 
-@reading_bp.route("/reading/ar/exam/<content_id>")
+@reading_bp.route("/ar/exam/<content_id>")
 def ar_exam(content_id):
     user_id = request.args.get("user_id", "")
     items = load_all()
@@ -782,7 +782,7 @@ def ar_exam(content_id):
                            attempt_id=attempt_id,
                            user_id=user_id)
 
-@reading_bp.route("/reading/ar/submit", methods=["POST"])
+@reading_bp.route("/ar/submit", methods=["POST"])
 def ar_submit():
     data = request.get_json() or {}
     attempt_id = data.get("attempt_id")
@@ -883,7 +883,7 @@ def ar_submit():
 
 _AR_RESULT_CACHE = {}
 
-@reading_bp.route("/reading/ar/result/<int:attempt_id>")
+@reading_bp.route("/ar/result/<int:attempt_id>")
 def ar_result(attempt_id):
     user_id = request.args.get("user_id", "")
     cached = _AR_RESULT_CACHE.get(attempt_id)
