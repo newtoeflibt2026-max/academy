@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 # ── AUTO-UNLOCK START ─────────────────────────────────────────
 _CW_NEXT = {
@@ -749,7 +750,7 @@ def ar_learn():
 @reading_bp.route("/ar/exam/<content_id>")
 def ar_exam(content_id):
     user_id = request.args.get("user_id", "")
-    items = load_all()
+    items = cl.load_all()
     content = items.get(content_id)
     if not content or content.get("type") != "academic_reading":
         return "Content not found", 404
@@ -768,6 +769,8 @@ def ar_exam(content_id):
 
     # إنشاء passage_html مع تظليل الكلمات المهمة
     passage = content.get("passage", "")
+    if isinstance(passage, dict):
+        passage = passage.get("text_en") or passage.get("text") or ""
     passage_html = passage.replace("\n\n", "</p><p>").replace("\n", "<br>")
     passage_html = "<p>" + passage_html + "</p>"
     for hl in content.get("highlights", []):
@@ -794,7 +797,7 @@ def ar_submit():
     except:
         sid = 0
 
-    items = load_all()
+    items = cl.load_all()
     content = items.get(content_id)
     if not content:
         return jsonify({"error": "content not found"}), 404
