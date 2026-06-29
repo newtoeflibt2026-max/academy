@@ -95,6 +95,7 @@
     <div class="q-nav" id="q-nav"></div>
 
     {% for q in content.questions %}
+    {% set q_index = loop.index0 %}
     <div class="question-card" id="qc-{{ loop.index0 }}">
       <div class="q-header">
         <span class="q-number">Question {{ loop.index }} / {{ content.questions|length }}</span>
@@ -103,14 +104,13 @@
       <div class="q-text">{{ q.q }}</div>
       <div class="options">
         {% for key, val in q.options.items() %}
-        <label class="option" data-q="{{ loop.index0 }}" data-key="{{ key }}" onclick="selectAns({{ outer_loop.index0 }}, '{{ key }}')">
+        <label class="option" data-q="{{ loop.index0 }}" data-key="{{ key }}" onclick="selectAns({{ q_index }}, '{{ key }}')">
           <span class="option-key">{{ key }}</span>
           <span class="option-text">{{ val }}</span>
         </label>
         {% endfor %}
       </div>
     </div>
-    {% set outer_loop = loop %}
     {% endfor %}
 
     <div class="actions">
