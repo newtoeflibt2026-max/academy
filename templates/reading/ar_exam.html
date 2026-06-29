@@ -68,6 +68,7 @@
   .modal p { color:#4b5563; margin:15px 0; line-height:1.7; }
   .modal-btns { display:flex; gap:10px; justify-content:center; margin-top:20px; }
 </style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 
@@ -145,6 +146,9 @@
 </div>
 
 <script>
+if (window.Telegram && Telegram.WebApp) {
+  try { Telegram.WebApp.ready(); Telegram.WebApp.expand(); } catch(e){}
+}
   window.USER_ID = {{ user_id|tojson }};
   const CONTENT_ID = {{ content.id|tojson }};
   const ATTEMPT_ID = {{ attempt_id|tojson }};
