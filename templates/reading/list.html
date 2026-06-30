@@ -362,6 +362,8 @@ function goToExam(type, id, userId) {
     window.location.href = '/reading/cw/exam/' + id + '?user_id=' + userId;
   } else if (type === 'daily_reading') {
     window.location.href = '/reading/dl/exam/' + id + '?user_id=' + userId;
+  } else if (type === 'academic_reading') {
+    window.location.href = '/reading/ar/exam/' + id + '?user_id=' + userId;
   } else {
     window.location.href = '/reading/start/' + id + '?user_id=' + userId;
   }
