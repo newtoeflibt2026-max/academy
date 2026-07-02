@@ -620,7 +620,7 @@ async function loadPayments(){
       return;
     }
     document.getElementById('paymentsTable').innerHTML = `<table><thead><tr><th>#</th><th>الطالب</th><th>الباقة</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th>الإيصال</th><th>إجراءات</th></tr></thead><tbody>${rows.map(p => `
-      <tr><td>${p.id}</td><td>${p.user_id || ''}<br><small>${p.full_name||''}</small></td>
+      <tr><td>${p.id}</td><td><b>${p.student_name || p.full_name || '(بدون اسم)'}</b>${p.student_username?`<br><small>@${p.student_username}</small>`:''}<br><small style='color:#888'>${p.user_id||''}</small></td>
       <td>${p.plan_name||'-'}</td><td>${p.amount||0} د.أ</td>
       <td><span class="tag tag-${p.status==='approved'?'green':p.status==='rejected'?'red':'yellow'}">${p.status}</span></td>
       <td><small>${(p.created_at||'').split(' ')[0]}</small></td>

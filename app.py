@@ -1688,32 +1688,52 @@ def api_placement_save_cefr():
 
 
 @app.route("/student")
-def student():
+def student_router():
+    """موزّع ذكي: يقرر أي شاشة يعرض للطالب.
+    ترتيب الأولوية:
+      1. المدير → dashboard مباشرة
+      2. mode=placement → صفحة الاختبار (زر خاص من البوت)
+      3. لا يوجد اسم → /register
+      4. اشتراك نشط → dashboard
+      5. دفعة معلقة → pending_approval
+      6. غير ذلك → /pricing (تحتوي بطاقة الاختبار في أعلاها)
+    ملاحظة: لا نُجبر الطالب على اختبار المستوى — يبقى اختيارياً.
+    """
+    sid = request.args.get("student_id") or request.args.get("user_id") or ""
+    mode = request.args.get("mode", "")
 
-    from flask import render_template, request
-    import os
+    # 1. المدير يتجاوز كل شيء
+    try:
+        admin_ids_raw = os.environ.get("ADMIN_IDS", "")
+        admin_ids = {x.strip() for x in admin_ids_raw.split(",") if x.strip()}
+        if sid and str(sid) in admin_ids:
+            return render_template("student_dashboard.html", user_id=sid, student_id=sid)
+    except Exception:
+        pass
 
-    sid = request.args.get("student_id", "") or request.args.get("user_id", "")
+    # 2. زر "اختبار المستوى" المباشر من البوت
+    if mode == "placement":
+        return redirect(f"/placement?student_id={sid}")
 
-    # بوابة الموافقة: المدير يتجاوزها دائماً
-    admin_ids = [a.strip() for a in (os.environ.get("ADMIN_IDS") or "").split(",") if a.strip()]
-    is_admin = str(sid) in admin_ids
+    row = _flow_get_student_row(sid)
 
-    if sid and not is_admin:
+    # 3. طالب جديد بدون اسم → تسجيل إجباري
+    if not row or not (row.get("full_name") or "").strip():
+        return redirect(f"/register?student_id={sid}")
+
+    # 4. اشتراك نشط → لوحة الطالب مباشرة
+    if _flow_is_subscription_active(row):
+        return render_template("student_dashboard.html", user_id=sid, student_id=sid)
+
+    # 5. دفعة معلقة → شاشة انتظار
+    if _flow_has_pending_payment(sid):
         try:
-            from subscription_helpers import get_active_subscription
-            sub = get_active_subscription(sid)
-        except Exception:
-            sub = None
-        if not sub:
-            # لا يوجد اشتراك نشط -> اعرض صفحة الانتظار بدل لوحة الطالب
             return render_template("pending_approval.html", user_id=sid, student_id=sid)
+        except Exception:
+            pass
 
-    return render_template("student_dashboard.html", user_id=sid, student_id=sid)
-
-
-    return render_template("student_dashboard.html", user_id=sid, student_id=sid)
-
+    # 6. الافتراضي: صفحة الباقات (تعرض الاختبار كخيار في الأعلى)
+    return redirect(f"/pricing?student_id={sid}")
 
 
 @app.route("/_DUP_api_admin_stats")
@@ -6518,11 +6538,24 @@ def api_admin_payments_list():
 
         if status == "all":
 
-            cur.execute("SELECT p.*, sp.name_ar as plan_name_ar FROM payments p LEFT JOIN subscription_plans sp ON sp.id=p.plan_id ORDER BY p.id DESC LIMIT 200")
+            # === PATCH_PAYMENTS_LIST_NAMES ===
+            cur.execute("""SELECT p.*, sp.name_ar as plan_name_ar,
+                COALESCE(NULLIF(s.full_name,''), NULLIF(p.full_name,''), NULLIF(p.user_name,''), '') AS student_name,
+                COALESCE(s.username, '') AS student_username
+                FROM payments p
+                LEFT JOIN subscription_plans sp ON sp.id=p.plan_id
+                LEFT JOIN students s ON (s.user_id=p.user_id OR s.telegram_id=CAST(p.user_id AS TEXT))
+                ORDER BY p.id DESC LIMIT 200""")
 
         else:
 
-            cur.execute("SELECT p.*, sp.name_ar as plan_name_ar FROM payments p LEFT JOIN subscription_plans sp ON sp.id=p.plan_id WHERE p.status=? ORDER BY p.id DESC LIMIT 200", (status,))
+            cur.execute("""SELECT p.*, sp.name_ar as plan_name_ar,
+                COALESCE(NULLIF(s.full_name,''), NULLIF(p.full_name,''), NULLIF(p.user_name,''), '') AS student_name,
+                COALESCE(s.username, '') AS student_username
+                FROM payments p
+                LEFT JOIN subscription_plans sp ON sp.id=p.plan_id
+                LEFT JOIN students s ON (s.user_id=p.user_id OR s.telegram_id=CAST(p.user_id AS TEXT))
+                WHERE p.status=? ORDER BY p.id DESC LIMIT 200""", (status,))
 
         rows = [dict(r) for r in cur.fetchall()]
 
@@ -6537,69 +6570,81 @@ def api_admin_payments_list():
 
 
 @app.route("/api/admin/payments/<int:pid>/action", methods=["POST"])
-
 def api_admin_payment_action(pid):
-
+    """قبول/رفض/إلغاء دفعة. نسخة نظيفة تعتمد activate_subscription."""
     try:
-
         data = _request.get_json(force=True, silent=True) or {}
-
         action = data.get("action", "")
-
         note = data.get("note", "")
-
         if action not in ("approve", "reject", "cancel"):
-
             return _jsonify({"error": "invalid action"}), 400
 
         status_map = {"approve": "approved", "reject": "rejected", "cancel": "cancelled"}
-
         new_status = status_map[action]
 
+        # اقرأ الدفعة والباقة
         conn = _miniapp_db()
-
         cur = conn.cursor()
-
         cur.execute("SELECT user_id, plan_id, status FROM payments WHERE id=?", (pid,))
-
         row = cur.fetchone()
-
         if not row:
-
             conn.close()
-
             return _jsonify({"error": "payment not found"}), 404
 
+        uid = row["user_id"]
+        plan_id = row["plan_id"]
+
+        # جد اسم الباقة الداخلي (name) للاستخدام في activate_subscription
+        plan_name_internal = None
+        plan_name_ar = None
+        if plan_id:
+            cur.execute("SELECT name, name_ar FROM subscription_plans WHERE id=?", (plan_id,))
+            p = cur.fetchone()
+            if p:
+                plan_name_internal = p["name"]
+                plan_name_ar = p["name_ar"]
+
+        # حدّث حالة الدفعة
         note_line = "\n[" + action + "] " + note
+        cur.execute("UPDATE payments SET status=?, notes=COALESCE(notes,'')||?, verified_at=datetime('now') WHERE id=?",
+                    (new_status, note_line, pid))
 
-        cur.execute("UPDATE payments SET status=?, notes=COALESCE(notes,'')||?, verified_at=datetime('now') WHERE id=?", (new_status, note_line, pid))
-
-        if action == "approve":
-
-            cur.execute("SELECT name_ar, duration_days FROM subscription_plans WHERE id=?", (row["plan_id"],))
-
-            plan = cur.fetchone()
-
-            if plan:
-
-                cur.execute("INSERT INTO subscriptions (user_id, telegram_id, plan_name, start_date, end_date, is_active) VALUES (?, ?, ?, datetime('now'), datetime('now', '+' || ? || ' days'), 1)",
-
-                    (row["user_id"], row["user_id"], plan["name_ar"], plan["duration_days"]))
-
+        # إذا cancel: عطّل الاشتراكات النشطة
         if action == "cancel":
-
-            cur.execute("UPDATE subscriptions SET is_active=0 WHERE user_id=? AND is_active=1", (row["user_id"],))
+            cur.execute("UPDATE subscriptions SET is_active=0 WHERE (user_id=? OR telegram_id=?) AND is_active=1",
+                        (uid, str(uid)))
+            try:
+                cur.execute("UPDATE students SET is_paid=0, subscription_section='' WHERE user_id=? OR telegram_id=?",
+                            (uid, str(uid)))
+            except Exception:
+                pass
 
         conn.commit()
-
         conn.close()
 
-        return _jsonify({"ok": True, "status": new_status})
+        # === activate بعد إغلاق conn (تفادي قفل) ===
+        activation_msg = ""
+        if action == "approve" and plan_name_internal:
+            try:
+                from subscription_helpers import activate_subscription
+                ok, info = activate_subscription(uid, plan_name_internal)
+                activation_msg = "activated" if ok else ("activate_failed: " + str(info))
+                print("[payment_action]", pid, uid, plan_name_internal, activation_msg)
+            except Exception as _ae:
+                activation_msg = "activate_exception: " + str(_ae)
+                print("[payment_action] exception:", _ae)
 
+            # إشعار تليجرام
+            try:
+                from utils.notifications import send_telegram_notification
+                send_telegram_notification(uid, "✅ تم تفعيل اشتراكك (" + str(plan_name_ar or "") + "). بالتوفيق!")
+            except Exception as _ne:
+                print("[payment_action] notify exception:", _ne)
+
+        return _jsonify({"ok": True, "status": new_status, "activation": activation_msg})
     except Exception as e:
-
+        import traceback; traceback.print_exc()
         return _jsonify({"error": str(e)}), 500
-
 
 
 @app.route("/api/admin/plans/list")
@@ -15219,6 +15264,126 @@ def api_student_journey():
 
 
 
+
+
+# === FLOW_ROUTER_V1 ===
+# فصل التدفق: تسجيل → اختبار مستوى → باقة → لوحة الطالب
+# كل مسار مستقل ويقرأ student_id من الـ query string
+# القوالب تجلب البيانات بنفسها عبر JS
+
+def _flow_get_student_row(sid):
+    """يجلب صف الطالب من DB. يرجع None إذا لم يوجد."""
+    if not sid:
+        return None
+    try:
+        import sqlite3
+        conn = sqlite3.connect('/app/data/academy.db')
+        conn.row_factory = sqlite3.Row
+        try:
+            r = conn.execute(
+                "SELECT user_id, telegram_id, full_name, placement_done, "
+                "is_paid, package_end, subscription_section "
+                "FROM students WHERE user_id=? OR telegram_id=? LIMIT 1",
+                (sid, str(sid))
+            ).fetchone()
+            return dict(r) if r else None
+        finally:
+            conn.close()
+    except Exception as e:
+        print(f'[flow] student lookup error: {e}')
+        return None
+
+
+def _flow_has_pending_payment(sid):
+    """هل يوجد دفعة معلقة لهذا الطالب؟"""
+    if not sid:
+        return False
+    try:
+        import sqlite3
+        conn = sqlite3.connect('/app/data/academy.db')
+        try:
+            r = conn.execute(
+                "SELECT 1 FROM payments WHERE user_id=? AND status='pending' LIMIT 1",
+                (sid,)
+            ).fetchone()
+            return bool(r)
+        finally:
+            conn.close()
+    except Exception:
+        return False
+
+
+def _flow_is_subscription_active(row):
+    """يفحص إذا الاشتراك ما زال ساري."""
+    if not row or not row.get('is_paid'):
+        return False
+    pe = row.get('package_end')
+    if not pe:
+        return False
+    try:
+        from datetime import datetime
+        # يقبل صيغتين: '2026-08-15' أو '2026-08-15T22:26:16'
+        s = str(pe).replace('T', ' ').split('.')[0]
+        if len(s) == 10:
+            s += ' 23:59:59'
+        end = datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
+        return end > datetime.now()
+    except Exception:
+        return True  # في حال شك، اسمح
+
+
+@app.route("/register")
+def flow_register():
+    sid = request.args.get("student_id") or request.args.get("user_id") or ""
+    return render_template("register.html", student_id=sid, user_id=sid)
+
+
+@app.route("/placement")
+def flow_placement():
+    sid = request.args.get("student_id") or request.args.get("user_id") or ""
+    return render_template("placement.html", student_id=sid, user_id=sid)
+
+
+@app.route("/pricing")
+def flow_pricing():
+    sid = request.args.get("student_id") or request.args.get("user_id") or ""
+    return render_template("pricing.html", student_id=sid, user_id=sid)
+
+# === END FLOW_ROUTER_V1 ===
+
+
+
+# === FLOW_PLACEMENT_STATUS_API ===
+@app.route("/api/student/placement-status")
+def api_flow_placement_status():
+    """يرجع حالة اختبار المستوى للطالب (لبطاقة pricing.html)."""
+    sid = request.args.get("student_id") or request.args.get("user_id") or ""
+    if not sid:
+        return jsonify({"ok": False, "error": "no_student_id"}), 400
+    try:
+        import sqlite3
+        conn = sqlite3.connect('/app/data/academy.db')
+        conn.row_factory = sqlite3.Row
+        try:
+            r = conn.execute(
+                "SELECT placement_done, placement_level, placement_score "
+                "FROM students WHERE user_id=? OR telegram_id=? LIMIT 1",
+                (sid, str(sid))
+            ).fetchone()
+            if not r:
+                return jsonify({"ok": True, "done": False, "exists": False})
+            return jsonify({
+                "ok": True,
+                "exists": True,
+                "done": bool(r["placement_done"]),
+                "level": r["placement_level"] or "",
+                "score": r["placement_score"] or 0,
+            })
+        finally:
+            conn.close()
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+# === END FLOW_PLACEMENT_STATUS_API ===
 
 if __name__ == "__main__":
 

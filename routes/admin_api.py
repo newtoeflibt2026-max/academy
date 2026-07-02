@@ -10,11 +10,29 @@ import traceback
 import json
 from flask import Blueprint, request, jsonify, session
 
-from config import ADMIN_IDS, BOT_TOKEN
-from utils.notifications import send_telegram_notification, init_notifications
+import os
 
-# ---- تأكد من تهيئة التوكن مرة واحدة ----
-init_notifications(BOT_TOKEN)
+# ── تحميل الإعدادات من config.settings أو env مباشرة ─────────
+try:
+    from config import settings as _cfg
+    ADMIN_IDS = list(getattr(_cfg, "ADMIN_IDS", []) or [])
+    BOT_TOKEN = getattr(_cfg, "BOT_TOKEN", None) or os.environ.get("BOT_TOKEN", "")
+    DATABASE_PATH = getattr(_cfg, "DB_PATH", None) or os.environ.get("DB_PATH", "/app/data/academy.db")
+except Exception as _e:
+    import sys as _sys
+    print(f"[ADMIN-API] config fallback: {_e}", file=_sys.stderr)
+    ADMIN_IDS = [int(x.strip()) for x in os.environ.get("ADMIN_IDS", "5572314718").split(",") if x.strip().isdigit()]
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+    DATABASE_PATH = os.environ.get("DB_PATH", "/app/data/academy.db")
+
+from utils.notifications import send_telegram_notification, init_notifications
+import sys as _sys_init
+if BOT_TOKEN:
+    init_notifications(BOT_TOKEN)
+    print(f"[ADMIN-API] notifications ready (token len={len(BOT_TOKEN)}, admins={ADMIN_IDS})", file=_sys_init.stderr)
+else:
+    print("[ADMIN-API] BOT_TOKEN missing", file=_sys_init.stderr)
+
 
 admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/admin")
 
@@ -43,7 +61,7 @@ def _verify_admin():
 def _get_db():
     """وصول متزامن لقاعدة البيانات."""
     import sqlite3
-    from config import DATABASE_PATH
+    # DATABASE_PATH already defined at module level
     conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     return conn
@@ -52,6 +70,60 @@ def _get_db():
 # ================================================================
 #  ⭐ ENDPOINT: GET /api/admin/stats
 # ================================================================
+@admin_api_bp.route("/payments/<int:payment_id>/action", methods=["POST"])
+def payment_action(payment_id):
+    """قبول/رفض دفعة - ينشئ الطالب ان لم يوجد ثم يفعّله بالاعمدة الصحيحة."""
+    _, auth_err = _verify_admin()
+    if auth_err:
+        return auth_err
+    try:
+        data = request.get_json(force=True) or {}
+    except Exception:
+        data = {}
+    action = (data.get("action") or "").strip().lower()
+    try:
+        db = _get_db()
+        pay = db.execute("SELECT * FROM payments WHERE id=?", (payment_id,)).fetchone()
+        if not pay:
+            db.close()
+            return _error("Payment not found", 404)
+        keys = pay.keys() if hasattr(pay, "keys") else []
+        uid = pay["user_id"]
+        plan_name = pay["plan_name"] if "plan_name" in keys else ""
+        if action == "reject":
+            db.execute("UPDATE payments SET status='rejected' WHERE id=?", (payment_id,))
+            db.commit(); db.close()
+            try:
+                from utils.notifications import send_telegram_notification
+                send_telegram_notification(uid, "عذراً، لم تتم الموافقة على الدفعة. تواصل مع الدعم.")
+            except Exception:
+                pass
+            return _success({"payment_id": payment_id, "status": "rejected"})
+        # approve
+        low = (plan_name or "").lower()
+        days = 90 if ("excellence" in low or "شامل" in plan_name or "الشاملة" in plan_name) else 30
+        db.execute("UPDATE payments SET status='approved', verified_at=datetime('now') WHERE id=?", (payment_id,))
+        # انشئ الطالب ان لم يكن موجوداً
+        db.execute("INSERT OR IGNORE INTO students (user_id, telegram_id) VALUES (?, ?)", (uid, str(uid)))
+        db.execute("""UPDATE students SET
+            is_paid=1, is_active=1,
+            subscription_section='full',
+            subscription_type=?,
+            package_end=date('now','+'||?||' days')
+            WHERE user_id=?""", (plan_name, days, uid))
+        changed = db.total_changes
+        db.commit(); db.close()
+        try:
+            from utils.notifications import send_telegram_notification
+            send_telegram_notification(uid, "تمت الموافقة على اشتراكك! باقتك مفعّلة الآن. بالتوفيق.")
+        except Exception:
+            pass
+        return _success({"payment_id": payment_id, "status": "approved", "user_id": uid, "days": days, "rows_changed": changed})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return _error(str(e), 500)
+
+
 @admin_api_bp.route("/stats", methods=["GET"])
 def admin_stats():
     """إحصائيات سريعة للوحة التحكم."""
