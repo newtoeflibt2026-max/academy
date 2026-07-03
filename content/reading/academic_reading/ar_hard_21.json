@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_21",
+  "tier": "tier90",
+  "title_en": "The Myth of the Lone Genius",
+  "topic": "science",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Popular accounts of discovery often revolve around a solitary genius who, through sheer brilliance, sees what no one else could. This image is compelling, and it is not entirely false, but it obscures more than it reveals. Close study of major breakthroughs shows that they typically emerge from dense networks of collaborators, rivals, and predecessors whose contributions the celebrated individual synthesizes rather than invents from nothing.\n\nThe persistence of the lone-genius myth has real consequences. It encourages institutions to concentrate resources on a few stars while neglecting the collaborative conditions from which insight actually arises. It also distorts the historical record, as later storytellers compress a messy, communal process into a single dramatic moment attributed to one name. The many who supplied essential pieces are quietly written out.\n\nRecognizing the collective nature of discovery does not diminish genuine talent; synthesizing scattered ideas into something new is itself a rare and demanding act. What changes is the lesson we draw. If breakthroughs depend on rich exchange among many minds, then fostering communities of inquiry may matter more than hunting for the occasional prodigy.",
+    "word_count": 187,
+    "topic": "science"
+  },
+  "glossary": {
+    "solitary": "منفرد / وحيد",
+    "sheer": "محض / خالص",
+    "obscures": "يُخفي / يطمس",
+    "breakthroughs": "اختراقات / إنجازات كبرى",
+    "synthesizes": "يُركّب / يدمج",
+    "distorts": "يُشوّه",
+    "compress": "يضغط / يختزل",
+    "communal": "جماعي / مشترك",
+    "fostering": "رعاية / تنمية",
+    "prodigy": "نابغة / موهبة نادرة"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Genius does not exist at all.",
+        "B": "Major discoveries arise from collaborative networks, so the lone-genius image is misleading and has real costs.",
+        "C": "Only a few stars can ever discover anything.",
+        "D": "Storytellers are always accurate."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يجادل بأن الاكتشافات تنشأ من شبكات تعاون، فصورة العبقري المنفرد مضلّلة ولها كلفة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة متوازنة: لا تنفي الموهبة بل تعيد تأطيرها. تجنّب المتطرّف (لا وجود للعبقرية)."
+    },
+    {
+      "q": "According to the passage, what is one real consequence of the lone-genius myth?",
+      "q_translation_ar": "حسب النص، ما إحدى النتائج الواقعية لأسطورة العبقري المنفرد؟",
+      "options": {
+        "A": "It makes institutions concentrate resources on a few stars while neglecting collaborative conditions.",
+        "B": "It improves the accuracy of history.",
+        "C": "It increases the number of collaborators credited.",
+        "D": "It ends all scientific rivalry."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الأسطورة تدفع المؤسّسات لتركيز الموارد على قلّة من النجوم وإهمال الظروف التعاونية.",
+      "avoid_tip_ar": "عُد للنتيجة المذكورة حرفياً. باقي الخيارات تناقض النص."
+    },
+    {
+      "q": "The word 'obscures' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'obscures' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "hides",
+        "B": "reveals",
+        "C": "proves",
+        "D": "celebrates"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "obscures تعني (يُخفي/يطمس): الصورة تُخفي أكثر مما تكشف. أقرب معنى hides.",
+      "avoid_tip_ar": "لاحظ التقابل في الجملة (obscures more than it reveals)، فالكلمة عكس (reveals) أي تُخفي."
+    },
+    {
+      "q": "Why does the author state that synthesizing scattered ideas is 'a rare and demanding act'?",
+      "q_translation_ar": "لماذا يذكر الكاتب أن دمج الأفكار المتناثرة (فعل نادر وشاقّ)؟",
+      "options": {
+        "A": "To make clear that rejecting the lone-genius myth does not deny real talent.",
+        "B": "To prove that collaboration is useless.",
+        "C": "To argue that genius is the only thing that matters.",
+        "D": "To explain how to store ideas."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "الجملة تطمئن القارئ أن نقد الأسطورة لا يقلّل من الموهبة الحقيقية، فالتركيب نفسه فعل نادر. هذا غرضها (توازن).",
+      "avoid_tip_ar": "أسئلة الغرض تلتقط وظيفة الجملة (دفع سوء فهم محتمل)، لا معناها الحرفي فقط."
+    },
+    {
+      "q": "Which sentence best expresses the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تعبّر أفضل عن الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Talented individuals contribute nothing.",
+        "B": "Since discovery depends on exchange among many minds, fostering communities of inquiry may matter more than hunting for lone prodigies.",
+        "C": "History should ignore collaboration.",
+        "D": "Only prodigies produce breakthroughs."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن رعاية مجتمعات البحث قد تفوق أهميتها البحث عن نابغة منفرد — خلاصة النص.",
+      "avoid_tip_ar": "اختر الخلاصة الجامعة. تجنّب المبالغة (الأفراد لا يسهمون) التي يرفضها النص صراحة."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: أسطورة العبقري المنفرد"
+}

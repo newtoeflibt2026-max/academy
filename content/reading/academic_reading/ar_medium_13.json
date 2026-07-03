@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_13",
+  "tier": "tier69",
+  "title_en": "The Science of Memory",
+  "topic": "psychology",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Memory is often imagined as a kind of recording device that stores exact copies of past events. In reality, human memory works very differently. Rather than replaying a fixed recording, the brain reconstructs each memory from scattered pieces of information every time we recall it. This is why memories can feel vivid yet still contain errors.\n\nBecause memory is reconstructed rather than replayed, it can be shaped by later experiences. When people recall an event, details from other moments, or even from suggestions made by others, can quietly slip into the memory. Over time, a person may become completely confident in details that never actually happened. Studies have shown that carefully worded questions can lead witnesses to remember things they never saw.\n\nThis flexibility is not simply a flaw. The same process that allows errors also lets the mind combine past experiences to imagine the future and solve new problems. A memory system that stored perfect, unchangeable copies would be far less useful for a creature that must constantly adapt to new situations.",
+    "word_count": 178,
+    "topic": "psychology"
+  },
+  "glossary": {
+    "recording device": "جهاز تسجيل",
+    "reconstructs": "يعيد بناء",
+    "scattered": "مبعثرة / متفرّقة",
+    "recall": "يستدعي / يتذكّر",
+    "vivid": "حيّ / واضح",
+    "slip into": "يتسلّل إلى",
+    "witnesses": "شهود",
+    "flexibility": "مرونة",
+    "flaw": "عيب / خلل",
+    "adapt": "يتكيّف"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "How to record events perfectly.",
+        "B": "How human memory reconstructs the past, which allows both errors and useful flexibility.",
+        "C": "Why witnesses always tell the truth.",
+        "D": "How the brain stores exact copies of events."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يشرح أن الذاكرة تعيد بناء الماضي لا تسجّله، ما يسبّب أخطاء لكنه يمنح مرونة مفيدة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيار الذي يناقض النص (نسخ مطابقة)."
+    },
+    {
+      "q": "According to the passage, why can false details enter a memory?",
+      "q_translation_ar": "حسب النص، لماذا يمكن أن تدخل تفاصيل خاطئة إلى الذاكرة؟",
+      "options": {
+        "A": "Because memory is reconstructed and can be shaped by later experiences and suggestions.",
+        "B": "Because the brain deletes all real memories.",
+        "C": "Because people never pay attention.",
+        "D": "Because memories are stored on paper."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الذاكرة تُعاد بناؤها، فتتسلّل تفاصيل من لحظات أخرى أو من اقتراحات الآخرين.",
+      "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات لم تُذكَر أو مبالغ فيها."
+    },
+    {
+      "q": "The word 'vivid' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'vivid' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "clear and lifelike",
+        "B": "faint and unclear",
+        "C": "completely false",
+        "D": "very short"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "vivid تعني (حيّ/واضح كالحقيقة): قد تبدو الذكريات حيّة رغم احتوائها أخطاء. أقرب معنى clear and lifelike.",
+      "avoid_tip_ar": "السياق يقابل (حيّة) بـ(تحتوي أخطاء)، فالكلمة عن الوضوح لا الضعف (faint)."
+    },
+    {
+      "q": "Look at this sentence: 'The witnesses were not lying; they genuinely believed their altered memories.' Where would it best fit?",
+      "q_translation_ar": "انظر إلى الجملة: (لم يكن الشهود يكذبون؛ بل صدّقوا حقاً ذكرياتهم المُحرَّفة). أين تنتمي؟",
+      "options": {
+        "A": "After the sentence about worded questions leading witnesses to remember things they never saw (paragraph 2).",
+        "B": "At the start of paragraph 1.",
+        "C": "After the sentence about imagining the future (paragraph 3).",
+        "D": "After the title."
+      },
+      "correct": "A",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تفسّر أن الشهود لم يكذبوا بل صدّقوا ذكرياتهم، فهي تنتمي مباشرة بعد ذكر أن الأسئلة تجعل الشهود يتذكّرون ما لم يروه.",
+      "avoid_tip_ar": "اربط (الشهود) بالجملة التي تسبقها وتتحدث عن الشهود. تجنّب المواضع في فقرات موضوعها مختلف."
+    },
+    {
+      "q": "What is the relationship between the third paragraph and the previous ones?",
+      "q_translation_ar": "ما علاقة الفقرة الثالثة بما سبقها؟",
+      "options": {
+        "A": "It repeats the examples of memory errors.",
+        "B": "It reframes the flexibility described earlier as an advantage, not only a weakness.",
+        "C": "It denies that memory can ever be wrong.",
+        "D": "It explains how to record video."
+      },
+      "correct": "B",
+      "type": "paragraph_relationship",
+      "explanation_ar": "بعد أن ركّزت الفقرتان على الأخطاء، تعيد الثالثة تأطير المرونة نفسها كميزة (تخيّل المستقبل وحلّ المشكلات). فالعلاقة توسيع/إعادة تأطير.",
+      "avoid_tip_ar": "حدّد التحوّل: (عيب) ← (ميزة). الفقرة الأخيرة تقلب الزاوية لا تكرّر."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: علم الذاكرة"
+}

@@ -1,0 +1,103 @@
+{
+  "id": "ar_easy_04",
+  "tier": "tier59",
+  "title_en": "The First Public Libraries",
+  "topic": "history",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "For most of history, books were rare and costly, so reading was a privilege of the wealthy few. A single book could take months to copy by hand, which meant that large collections existed only in palaces, temples, and a handful of universities. Ordinary people had almost no chance to read for themselves.\n\nThis began to change with the idea of the public library, a place where anyone could borrow books for free. Early public libraries were often funded by generous individuals or local governments who believed that education should be available to all. By sharing a single collection among many readers, these libraries made knowledge far cheaper to reach.\n\nThe effect on society was powerful. People who had never owned a book could now study subjects that interested them, from science to history to poetry. Public libraries did not only lend books; they offered a quiet space to learn. In doing so, they helped spread literacy and gave countless people the tools to improve their lives.",
+    "word_count": 171,
+    "topic": "history"
+  },
+  "glossary": {
+    "costly": "باهظ / غالي",
+    "privilege": "امتياز / حظوة",
+    "collections": "مجموعات (كتب)",
+    "handful": "حفنة / عدد قليل",
+    "borrow": "يستعير",
+    "funded": "مُموَّل",
+    "generous": "كريم / سخي",
+    "literacy": "معرفة القراءة والكتابة",
+    "countless": "لا يُحصى / كثير جداً",
+    "tools": "أدوات / وسائل"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "How books are printed in factories today.",
+        "B": "How public libraries made reading and knowledge available to ordinary people.",
+        "C": "Why universities stopped collecting books.",
+        "D": "Why poetry is more popular than science."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يتتبّع كيف كانت الكتب نادرة، ثم كيف أتاحت المكتبات العامة القراءة والمعرفة للناس العاديين. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل الفقرات. تجنّب الخيارات الجزئية أو خارج الموضوع (الطباعة الحديثة)."
+    },
+    {
+      "q": "According to the passage, why were books rare for most of history?",
+      "q_translation_ar": "حسب النص، لماذا كانت الكتب نادرة طوال معظم التاريخ؟",
+      "options": {
+        "A": "Because few people wanted to read.",
+        "B": "Because each book had to be copied slowly by hand.",
+        "C": "Because libraries refused to lend them.",
+        "D": "Because governments banned reading."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر صراحة أن نسخ كتاب واحد باليد قد يستغرق شهوراً، لذا كانت الكتب نادرة وغالية.",
+      "avoid_tip_ar": "ابحث عن السبب المذكور حرفياً. باقي الخيارات لم يذكرها النص."
+    },
+    {
+      "q": "The word 'borrow' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'borrow' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "to buy and keep forever",
+        "B": "to take and use for a while, then return",
+        "C": "to write a new book",
+        "D": "to destroy"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "borrow تعني (يستعير): يأخذ الكتاب لمدة ثم يعيده. السياق: مكان يستعير منه أيّ شخص الكتب مجاناً.",
+      "avoid_tip_ar": "ميّز بين (يستعير = يأخذ ويعيد) و(يشتري = يملك للأبد). السياق مجاني ومؤقّت."
+    },
+    {
+      "q": "Why does the author mention generous individuals and local governments?",
+      "q_translation_ar": "لماذا يذكر الكاتب الأفراد الكرماء والحكومات المحلية؟",
+      "options": {
+        "A": "To explain who funded early public libraries.",
+        "B": "To prove that libraries were always private.",
+        "C": "To show that books were never free.",
+        "D": "To criticize wealthy people."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "ذكرهم يوضّح مصدر تمويل المكتبات العامة المبكرة، أي من جعلها مجانية متاحة للجميع.",
+      "avoid_tip_ar": "أسئلة الغرض تسأل (لماذا ذُكر هذا؟). ذِكرهم لتفسير التمويل، لا لانتقادهم."
+    },
+    {
+      "q": "What can be inferred about the effect of public libraries on society?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن أثر المكتبات العامة في المجتمع؟",
+      "options": {
+        "A": "They made education harder to reach.",
+        "B": "They gave more people the chance to learn and improve their lives.",
+        "C": "They were used only by the wealthy.",
+        "D": "They reduced the number of readers."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يقول إنها نشرت معرفة القراءة وأعطت كثيرين أدوات تحسين حياتهم، فنستنتج أنها وسّعت فرص التعلّم.",
+      "avoid_tip_ar": "الاستنتاج يتبع اتجاه النص الإيجابي. تجنّب ما يناقضه (أصعب / للأثرياء فقط)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: أوّل المكتبات العامة"
+}

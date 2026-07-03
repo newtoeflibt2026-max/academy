@@ -1,0 +1,103 @@
+{
+  "id": "ar_easy_05",
+  "tier": "tier59",
+  "title_en": "How Camels Survive the Desert",
+  "topic": "biology",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "The desert is one of the harshest environments on Earth, with burning days, cold nights, and very little water. Yet the camel lives there comfortably, thanks to a body that is well suited to such conditions. Over many generations, camels have developed features that allow them to travel long distances with almost no water.\n\nOne of the most useful features is the hump. Many people believe the hump stores water, but in fact it holds fat. When food is scarce, the camel's body slowly uses this fat for energy. The animal can also drink enormous amounts of water at once and then go for days without drinking again.\n\nCamels are protected in other ways too. Thick eyelashes and closable nostrils keep blowing sand out of their eyes and noses. Their wide feet spread their weight so they do not sink into soft sand. Together, these features make the camel one of the best-adapted animals for desert life.",
+    "word_count": 162,
+    "topic": "biology"
+  },
+  "glossary": {
+    "harshest": "الأقسى / الأشدّ",
+    "suited": "مُلائم / مناسب",
+    "generations": "أجيال",
+    "features": "سمات / خصائص",
+    "hump": "السنام",
+    "scarce": "نادر / شحيح",
+    "enormous": "ضخم / هائل",
+    "nostrils": "فتحات الأنف",
+    "spread": "يوزّع",
+    "adapted": "متكيّف"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Why deserts are growing larger every year.",
+        "B": "The physical features that help camels survive in the desert.",
+        "C": "How people use camels to carry goods.",
+        "D": "Why camels prefer cold weather."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يشرح السمات الجسدية (السنام، الرموش، الأقدام) التي تساعد الجمل على العيش في الصحراء. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل الفقرات. تجنّب الخيارات خارج الموضوع (توسّع الصحاري / نقل البضائع)."
+    },
+    {
+      "q": "According to the passage, what does a camel's hump actually store?",
+      "q_translation_ar": "حسب النص، ماذا يخزّن سنام الجمل فعلاً؟",
+      "options": {
+        "A": "Water.",
+        "B": "Fat.",
+        "C": "Sand.",
+        "D": "Air."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تصحّح اعتقاداً شائعاً: السنام يخزّن (الدهون) لا الماء، ويستخدمها الجسم للطاقة عند ندرة الطعام.",
+      "avoid_tip_ar": "احذر الاعتقاد الشائع! النص يقول صراحة إن الناس يظنون أنه ماء، لكنه (دهون). اقرأ التصحيح."
+    },
+    {
+      "q": "The word 'scarce' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'scarce' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "plentiful",
+        "B": "hard to find",
+        "C": "delicious",
+        "D": "heavy"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "scarce تعني (شحيح/نادر): عندما يكون الطعام شحيحاً يستخدم الجمل دهونه. أقرب معنى hard to find.",
+      "avoid_tip_ar": "السياق يقول إن الجسم يلجأ للدهون عند (نقص) الطعام، فالمعنى نادر لا وفير (plentiful)."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a feature that helps camels?",
+      "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كسمة تساعد الجمال؟",
+      "options": {
+        "A": "Thick eyelashes.",
+        "B": "Closable nostrils.",
+        "C": "Wide feet.",
+        "D": "Sharp claws."
+      },
+      "correct": "D",
+      "type": "negative_factual",
+      "explanation_ar": "النص يذكر الرموش الكثيفة وفتحات الأنف القابلة للإغلاق والأقدام العريضة، لكنه لم يذكر (مخالب حادة) إطلاقاً.",
+      "avoid_tip_ar": "في سؤال (NOT)، ضع علامة على كل سمة تجدها في النص. غير الموجودة هي الجواب."
+    },
+    {
+      "q": "What can be inferred about why camels can cross deserts that other animals cannot?",
+      "q_translation_ar": "ماذا يُستنتَج عن سبب قدرة الجمال على عبور صحارٍ يعجز غيرها عنها؟",
+      "options": {
+        "A": "They sleep during the entire journey.",
+        "B": "Their bodies are specially adapted to heat and lack of water.",
+        "C": "They never need to eat.",
+        "D": "They can fly over the sand."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "بما أن النص يعدّد سمات تكيّف الجمل مع الحرّ وقلّة الماء، نستنتج أن جسمه المتكيّف هو ما يميّزه عن غيره.",
+      "avoid_tip_ar": "الاستنتاج يبني على ما ذُكر. تجنّب المبالغات (لا يأكل أبداً / يطير)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: كيف تنجو الجمال في الصحراء"
+}

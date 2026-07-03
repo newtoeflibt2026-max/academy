@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_18",
+  "tier": "tier90",
+  "title_en": "The Limits of Eyewitness Testimony",
+  "topic": "science",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "For much of legal history, the testimony of an eyewitness was treated as among the most compelling forms of evidence. A confident witness pointing to a defendant carried enormous persuasive force, on the assumption that perception faithfully records reality. Decades of research, however, have steadily eroded this assumption, revealing that memory is reconstructive and therefore vulnerable to distortion.\n\nThe difficulty is not merely that witnesses occasionally forget. Rather, the very conditions of a crime, brief exposure, poor lighting, and intense stress, tend to impair the encoding of accurate detail. Worse, the confidence a witness later expresses often bears little relationship to accuracy. A vivid, self-assured account can be entirely mistaken, while a hesitant one may be correct, so the cues that jurors instinctively trust can mislead them.\n\nReforms have followed from these findings. Investigators are now advised to avoid leading questions and to record how certain a witness is at the moment of identification, before feedback can inflate that confidence. Such measures cannot make memory infallible, but they acknowledge a crucial lesson: evidence that feels overwhelmingly convincing is not, for that reason alone, reliable.",
+    "word_count": 190,
+    "topic": "science"
+  },
+  "glossary": {
+    "testimony": "شهادة",
+    "compelling": "مُقنِع / آسِر",
+    "defendant": "المُدّعى عليه / المتّهم",
+    "eroded": "قوّض / أضعف تدريجياً",
+    "reconstructive": "قائم على إعادة البناء",
+    "impair": "يُضعِف / يُعيق",
+    "encoding": "الترميز / التخزين",
+    "cues": "إشارات / دلائل",
+    "jurors": "المحلّفون",
+    "infallible": "معصوم / لا يُخطئ"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Eyewitness testimony is always false.",
+        "B": "Research has shown eyewitness testimony to be less reliable than assumed, prompting reforms.",
+        "C": "Confident witnesses are always accurate.",
+        "D": "Memory records reality perfectly."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يبيّن أن الأبحاث قوّضت الثقة بشهادة العيان وأدّت إلى إصلاحات. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية متوازنة: ليست (دائماً كاذبة) بل (أقلّ موثوقية مما يُظنّ). تجنّب المتطرّف."
+    },
+    {
+      "q": "According to the passage, what is surprising about a witness's confidence?",
+      "q_translation_ar": "حسب النص، ما المُفاجئ في ثقة الشاهد؟",
+      "options": {
+        "A": "It perfectly predicts accuracy.",
+        "B": "It often bears little relationship to how accurate the memory actually is.",
+        "C": "It always means the witness is lying.",
+        "D": "It disappears under stress."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن ثقة الشاهد كثيراً ما لا ترتبط بالدقّة: حساب واثق قد يكون خاطئاً وآخر متردّد قد يصحّ.",
+      "avoid_tip_ar": "عُد للنقطة المذكورة حرفياً. الخيار (يتنبّأ بالدقّة تماماً) عكس ما يقوله النص."
+    },
+    {
+      "q": "The word 'eroded' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'eroded' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "gradually weakened",
+        "B": "strongly confirmed",
+        "C": "quickly created",
+        "D": "carefully measured"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "eroded تعني (قوّضت/أضعفت تدريجياً): الأبحاث أضعفت الافتراض شيئاً فشيئاً. أقرب معنى gradually weakened.",
+      "avoid_tip_ar": "السياق يقول (steadily eroded this assumption)، فالمعنى إضعاف لا تأكيد (confirmed)."
+    },
+    {
+      "q": "Why does the author contrast a 'vivid, self-assured account' with a 'hesitant one'?",
+      "q_translation_ar": "لماذا يقابل الكاتب بين (حساب حيّ واثق) و(حساب متردّد)؟",
+      "options": {
+        "A": "To show that the cues jurors trust (confidence) can be misleading.",
+        "B": "To prove that hesitant witnesses always lie.",
+        "C": "To explain how lighting affects crimes.",
+        "D": "To argue that testimony should never be used."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "المقابلة توضّح أن الثقة (التي يثق بها المحلّفون غريزياً) قد تضلّل، لأن الواثق قد يخطئ والمتردّد قد يصيب. هذا غرضها.",
+      "avoid_tip_ar": "أسئلة الغرض تربط المثال بالفكرة. المقابلة تخدم فكرة (خداع مؤشّر الثقة)."
+    },
+    {
+      "q": "Which sentence best captures the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "All legal evidence is worthless.",
+        "B": "Evidence that feels highly convincing is not, for that reason alone, reliable.",
+        "C": "Witnesses should never testify in court.",
+        "D": "Lighting is the only factor in memory."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن الدليل المُقنِع شعورياً ليس موثوقاً لمجرّد كونه مقنعاً — وهي خلاصة النص.",
+      "avoid_tip_ar": "اختر الخلاصة الجامعة، لا تفصيلة (الإضاءة) ولا مبالغة (كل الأدلّة بلا قيمة)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: حدود شهادة العيان"
+}

@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_11",
+  "tier": "tier69",
+  "title_en": "The Origins of Writing",
+  "topic": "history",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Writing is often described as one of humanity's greatest inventions, yet it did not appear as a sudden flash of genius. Instead, the earliest writing systems grew slowly out of practical needs, particularly the demands of trade and record-keeping in early cities. As communities grew larger, people could no longer rely on memory alone to track goods, debts, and taxes.\n\nThe first known systems began not with words but with simple marks representing quantities and objects. A merchant might press a symbol into clay to record how many containers of grain had been delivered. Over time, these symbols became more abstract, standing for sounds rather than objects. This shift was crucial, because a system based on sounds could express any word in the language, not just things that could be drawn.\n\nThe consequences reached far beyond commerce. Once ideas could be fixed in a permanent form, knowledge could be stored, copied, and passed to future generations without depending on living memory. Laws, stories, and discoveries could now outlast the people who created them, allowing human knowledge to accumulate across centuries.",
+    "word_count": 182,
+    "topic": "history"
+  },
+  "glossary": {
+    "sudden flash": "ومضة مفاجئة",
+    "genius": "عبقرية",
+    "record-keeping": "حفظ السجلّات",
+    "debts": "ديون",
+    "merchant": "تاجر",
+    "abstract": "مجرّد / رمزي",
+    "crucial": "حاسم / بالغ الأهمية",
+    "commerce": "تجارة",
+    "permanent": "دائم / ثابت",
+    "accumulate": "يتراكم"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "How writing developed gradually from practical needs and transformed human knowledge.",
+        "B": "Why merchants disliked using clay.",
+        "C": "How drawing pictures became a popular art form.",
+        "D": "Why early cities had no taxes."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "النص يتتبّع نشوء الكتابة تدريجياً من حاجات عملية ثم أثرها في حفظ المعرفة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات الجزئية أو خارج الموضوع."
+    },
+    {
+      "q": "According to the passage, why was the shift to symbols representing sounds important?",
+      "q_translation_ar": "حسب النص، لماذا كان التحوّل إلى رموز تمثّل الأصوات مهماً؟",
+      "options": {
+        "A": "Because it made clay cheaper.",
+        "B": "Because a sound-based system could express any word, not only things that could be drawn.",
+        "C": "Because it ended all trade.",
+        "D": "Because it required no learning."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن النظام القائم على الأصوات يستطيع التعبير عن أي كلمة، لا فقط الأشياء القابلة للرسم.",
+      "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات لم تُذكَر."
+    },
+    {
+      "q": "The word 'crucial' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'crucial' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "unimportant",
+        "B": "extremely important",
+        "C": "confusing",
+        "D": "temporary"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "crucial تعني (حاسم/بالغ الأهمية): كان التحوّل حاسماً لأنه وسّع قدرة الكتابة. أقرب معنى extremely important.",
+      "avoid_tip_ar": "السياق يؤكّد أهمية التحوّل، فالمعنى (مهم جداً) لا (غير مهم)."
+    },
+    {
+      "q": "Why does the author mention recording containers of grain?",
+      "q_translation_ar": "لماذا يذكر الكاتب تسجيل حاويات الحبوب؟",
+      "options": {
+        "A": "To give a concrete example of the practical, trade-based origin of early symbols.",
+        "B": "To prove that grain was the only crop grown.",
+        "C": "To show that merchants could not write at all.",
+        "D": "To explain how clay is made."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "المثال (تسجيل الحبوب) يوضّح بشكل ملموس الأصل العملي التجاري للرموز الأولى. هذا غرض ذكره.",
+      "avoid_tip_ar": "الأمثلة تخدم فكرة أكبر. هنا المثال يجسّد فكرة (الأصل العملي للكتابة)."
+    },
+    {
+      "q": "What is the relationship between the third paragraph and the rest of the passage?",
+      "q_translation_ar": "ما علاقة الفقرة الثالثة ببقية النص؟",
+      "options": {
+        "A": "It repeats the examples from paragraph two.",
+        "B": "It moves beyond the origins to explain the broader, long-term consequences of writing.",
+        "C": "It denies that writing was ever useful.",
+        "D": "It describes how cities were built."
+      },
+      "correct": "B",
+      "type": "paragraph_relationship",
+      "explanation_ar": "بعد أن شرحت الفقرتان الأوليان نشوء الكتابة، تنتقل الثالثة إلى نتائجها الأوسع وبعيدة المدى (حفظ المعرفة عبر القرون).",
+      "avoid_tip_ar": "حدّد التطوّر: (أصل) ← (نتائج). الفقرة الأخيرة توسّع لا تكرّر."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: أصول الكتابة"
+}

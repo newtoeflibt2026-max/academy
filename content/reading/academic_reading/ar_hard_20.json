@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_20",
+  "tier": "tier90",
+  "title_en": "Why Empires Fall",
+  "topic": "history",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "The collapse of great empires has long tempted observers to search for a single decisive cause, whether moral decay, invasion, or economic ruin. Such tidy explanations are appealing precisely because they promise a clear lesson. Historians, however, have grown skeptical of them, noting that the same pressures that supposedly doomed one empire were survived by others, which suggests that no single factor is sufficient on its own.\n\nA more persuasive account emphasizes how multiple strains interact and reinforce one another. An empire weakened by overextended borders may still endure until a drought strains its food supply, which in turn fuels unrest that a fragile government cannot contain. What destroys the system is not any one shock but the loss of the flexibility needed to absorb shocks, a resilience that erodes quietly during periods of apparent success.\n\nThis perspective carries an unsettling implication. Because decline often accelerates only after a threshold is crossed, an empire can appear stable, even dominant, shortly before it unravels. The absence of visible crisis, then, is a poor measure of underlying health, a caution that applies well beyond the study of the ancient past.",
+    "word_count": 194,
+    "topic": "history"
+  },
+  "glossary": {
+    "decisive": "حاسم / قاطع",
+    "decay": "انحطاط / تحلّل",
+    "tidy": "أنيق / مرتّب (مبسّط)",
+    "skeptical": "متشكّك",
+    "strains": "ضغوط / إجهادات",
+    "overextended": "ممتدّ أكثر من طاقته",
+    "unrest": "اضطراب / قلاقل",
+    "resilience": "مرونة / قدرة على التعافي",
+    "threshold": "عتبة / حدّ فاصل",
+    "unravels": "ينحلّ / يتفكّك"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Every empire falls for one clear reason.",
+        "B": "Empires collapse from interacting strains and lost resilience, so apparent stability can be misleading.",
+        "C": "Empires never really fall.",
+        "D": "Drought is the only cause of collapse."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يرفض السبب الواحد ويؤكّد أن الانهيار ينتج عن تضافر ضغوط وفقدان المرونة، وأن الاستقرار الظاهر قد يخدع. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب المتطرّف (سبب واحد / لا تسقط) والجزئي (الجفاف فقط)."
+    },
+    {
+      "q": "According to the passage, why are single-cause explanations of collapse unconvincing to historians?",
+      "q_translation_ar": "حسب النص، لماذا لا تُقنِع تفسيراتُ السبب الواحد المؤرّخين؟",
+      "options": {
+        "A": "Because the same pressures that supposedly doomed one empire were survived by others.",
+        "B": "Because empires never faced any pressures.",
+        "C": "Because historians dislike clear lessons.",
+        "D": "Because all empires fell at the same time."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن نفس الضغوط التي يُفترَض أنها أهلكت إمبراطورية نجت منها أخرى، فلا يكفي عامل واحد.",
+      "avoid_tip_ar": "عُد للحجّة المذكورة حرفياً. باقي الخيارات لم تُذكَر أو غير منطقية."
+    },
+    {
+      "q": "The word 'resilience' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'resilience' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "the ability to recover from shocks",
+        "B": "a sudden collapse",
+        "C": "a type of border",
+        "D": "a lack of food"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "resilience تعني (المرونة/القدرة على امتصاص الصدمات والتعافي): ما يدمّر النظام هو فقدان هذه القدرة. أقرب معنى the ability to recover from shocks.",
+      "avoid_tip_ar": "السياق يعرّفها ضمناً (المرونة اللازمة لامتصاص الصدمات)، فاستعن بالتعريف داخل النص."
+    },
+    {
+      "q": "Look at this sentence: 'By then, the resources needed to respond have usually been exhausted.' Where would it best fit?",
+      "q_translation_ar": "انظر إلى الجملة: (وعندها تكون الموارد اللازمة للاستجابة قد استُنزِفت عادةً). أين تنتمي؟",
+      "options": {
+        "A": "After the sentence explaining that decline accelerates only after a threshold is crossed (paragraph 3).",
+        "B": "At the start of paragraph 1.",
+        "C": "After the sentence about tidy explanations being appealing (paragraph 1).",
+        "D": "After the title."
+      },
+      "correct": "A",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تتحدث عن نفاد الموارد (بحلول ذلك الوقت)، فهي تنتمي بعد ذكر أن التدهور يتسارع بعد تجاوز العتبة — لأنها تصف ما يحدث عند تلك النقطة.",
+      "avoid_tip_ar": "(بحلول ذلك الوقت By then) تشير إلى لحظة سابقة محدّدة. اربطها بجملة تجاوز العتبة، لا بالمقدّمة."
+    },
+    {
+      "q": "Which sentence best captures the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Empires fall only because of invasion.",
+        "B": "Collapse results from interacting strains and eroded resilience, so the absence of visible crisis is a poor measure of real health.",
+        "C": "Stable-looking empires are always truly stable.",
+        "D": "History teaches no lessons at all."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ تجمع الطرحين: تضافر الضغوط وتآكل المرونة، وأن غياب الأزمة الظاهرة ليس دليلاً على الصحّة — خلاصة النص.",
+      "avoid_tip_ar": "اختر الخلاصة الشاملة لأطروحة النص، لا سبباً واحداً ولا نتيجة تناقض النص."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: لماذا تسقط الإمبراطوريات"
+}

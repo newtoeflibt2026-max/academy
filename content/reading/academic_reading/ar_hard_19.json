@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_19",
+  "tier": "tier90",
+  "title_en": "The Economics of Extinction",
+  "topic": "environment",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Efforts to protect endangered species are frequently framed as a conflict between economic growth and moral obligation. On this view, conservation is a cost that societies bear reluctantly, sacrificing profit for the sake of preserving nature. Yet economists increasingly argue that this framing is misleading, because functioning ecosystems themselves generate enormous, if often invisible, economic value.\n\nMuch of this value goes unpriced. Wetlands filter water and buffer coastlines against storms; insects pollinate crops; forests regulate climate and rainfall. Because no one is billed directly for these services, they rarely appear on a balance sheet, and their loss is noticed only after it becomes costly to replace. A collapse in pollinators, for instance, would impose staggering expenses on agriculture that no market price had anticipated.\n\nThe implication is not that nature should be reduced to a ledger of dollars. Rather, ignoring these hidden values systematically biases decisions toward destruction, because the benefits of clearing an ecosystem are immediate and measurable while its services are diffuse and delayed. Making such values visible, conservationists argue, would reveal that protecting nature is often not a sacrifice but a sound investment.",
+    "word_count": 191,
+    "topic": "environment"
+  },
+  "glossary": {
+    "framed": "يُصاغ / يُقدَّم (على أنه)",
+    "obligation": "التزام / واجب",
+    "reluctantly": "على مضض",
+    "unpriced": "غير مُسعَّر / بلا ثمن معلوم",
+    "buffer": "يخفّف / يقي",
+    "balance sheet": "الميزانية / كشف الحساب",
+    "staggering": "مذهل / هائل",
+    "ledger": "سِجلّ / دفتر حسابات",
+    "diffuse": "منتشر / متفرّق",
+    "delayed": "مؤجّل / متأخّر"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Conservation is always a pure economic loss.",
+        "B": "Ecosystems provide large hidden economic value, so protecting nature can be a sound investment rather than a mere sacrifice.",
+        "C": "Nature should be measured only in dollars.",
+        "D": "Wetlands are the only valuable ecosystem."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يجادل بأن للأنظمة البيئية قيمة اقتصادية خفية كبيرة، فحمايتها استثمار سليم لا تضحية فقط. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية متوازنة. تجنّب المتطرّف (خسارة صافية / بالدولار فقط) والجزئي (الأراضي الرطبة فقط)."
+    },
+    {
+      "q": "According to the passage, why do the services of ecosystems rarely appear on a balance sheet?",
+      "q_translation_ar": "حسب النص، لماذا نادراً ما تظهر خدمات الأنظمة البيئية في الميزانية؟",
+      "options": {
+        "A": "Because no one is billed directly for them.",
+        "B": "Because they have no value.",
+        "C": "Because governments forbid it.",
+        "D": "Because they are too expensive to buy."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أنه لا أحد يُحاسَب مباشرة على هذه الخدمات، فلا تظهر في الحسابات.",
+      "avoid_tip_ar": "عُد للسبب المذكور حرفياً. الخيار (بلا قيمة) يناقض أطروحة النص كلها."
+    },
+    {
+      "q": "The word 'staggering' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'staggering' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "enormous",
+        "B": "tiny",
+        "C": "imaginary",
+        "D": "predictable"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "staggering تعني (مذهل/هائل): انهيار الملقّحات سيفرض نفقات هائلة. أقرب معنى enormous.",
+      "avoid_tip_ar": "السياق يشدّد على ضخامة النفقات غير المتوقّعة، فالمعنى (هائل) لا (ضئيل)."
+    },
+    {
+      "q": "Why does the author say the benefits of clearing an ecosystem are 'immediate and measurable' while its services are 'diffuse and delayed'?",
+      "q_translation_ar": "لماذا يقول الكاتب إن منافع إزالة نظام بيئي (فورية وقابلة للقياس) بينما خدماته (منتشرة ومؤجّلة)؟",
+      "options": {
+        "A": "To explain why decisions are systematically biased toward destruction.",
+        "B": "To prove that ecosystems have no services.",
+        "C": "To argue that destruction is always correct.",
+        "D": "To describe how forests grow."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "المقابلة تفسّر سبب انحياز القرارات نحو التدمير: المكاسب واضحة وفورية بينما الخدمات خفية ومتأخّرة. هذا غرضها.",
+      "avoid_tip_ar": "أسئلة الغرض تربط التفصيلة بالفكرة الأكبر (سبب الانحياز)، لا تأخذها حرفياً كحُكم."
+    },
+    {
+      "q": "Which sentence best expresses the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تعبّر أفضل عن الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Nature should be destroyed for profit.",
+        "B": "Because ecosystems provide unpriced but real value, making that value visible shows conservation is often an investment, not a sacrifice.",
+        "C": "Only wetlands and forests matter.",
+        "D": "Economics has nothing to say about nature."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ هي أن القيمة الحقيقية غير المُسعَّرة للأنظمة، إن أُظهِرت، تكشف أن الحماية استثمار غالباً لا تضحية — خلاصة النص.",
+      "avoid_tip_ar": "اختر الخلاصة الجامعة لأطروحة النص، لا مبالغة ولا تفصيلة جزئية."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: اقتصاد الانقراض"
+}

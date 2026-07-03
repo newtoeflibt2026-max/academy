@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_22",
+  "tier": "tier90",
+  "title_en": "The Puzzle of Animal Play",
+  "topic": "biology",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Play presents a genuine puzzle for biologists. It consumes energy, exposes young animals to injury and predators, and yields no immediate reward, yet it persists across a wide range of species, from mammals to some birds. Behavior this costly is unlikely to survive unless it confers benefits substantial enough to outweigh its risks, and identifying those benefits has proven surprisingly difficult.\n\nThe most durable hypothesis holds that play is a form of practice. Through mock fighting, chasing, and manipulation of objects, young animals may rehearse the physical and social skills they will need as adults, refining them in a setting where mistakes are cheap. A cub that stumbles while play-hunting loses nothing; the same error against real prey could be fatal. On this account, play trades a modest present cost for improved future competence.\n\nOther researchers caution against assuming a single tidy function. Play may simultaneously build muscle, strengthen social bonds, and enhance the flexibility of a developing brain, with different benefits dominating in different species. If so, the search for the purpose of play may be misconceived. The behavior could be favored precisely because it serves several ends at once.",
+    "word_count": 195,
+    "topic": "biology"
+  },
+  "glossary": {
+    "puzzle": "لغز / أحجية",
+    "consumes": "يستهلك",
+    "confers": "يمنح / يُضفي",
+    "durable": "مُعمِّر / صامد",
+    "hypothesis": "فرضية",
+    "mock": "صوري / تمثيلي",
+    "rehearse": "يتمرّن / يتدرّب على",
+    "competence": "كفاءة / مهارة",
+    "misconceived": "خاطئ الفهم / مغلوط",
+    "simultaneously": "في آنٍ واحد"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Play has no benefits and should not exist.",
+        "B": "Play is costly yet widespread, and it likely persists because it provides one or several important benefits.",
+        "C": "Only mammals ever play.",
+        "D": "Play is simply wasted energy with no explanation."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يعرض لغز اللعب (مكلف لكنه منتشر) ويناقش فوائده المحتملة (تدرّب، أو عدّة وظائف). هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب المتطرّف (بلا فائدة) والجزئي (الثدييات فقط)."
+    },
+    {
+      "q": "According to the passage, why is play considered puzzling?",
+      "q_translation_ar": "حسب النص، لماذا يُعدّ اللعب مُحيّراً؟",
+      "options": {
+        "A": "Because it is costly and risky yet persists across many species.",
+        "B": "Because only humans do it.",
+        "C": "Because it gives an immediate reward.",
+        "D": "Because it never causes injury."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن اللعب مكلف وخطير وبلا مكافأة فورية، ومع ذلك ينتشر عبر أنواع كثيرة — وهذا هو اللغز.",
+      "avoid_tip_ar": "عُد لسبب اللغز المذكور حرفياً. الخيار (مكافأة فورية) يناقض النص."
+    },
+    {
+      "q": "The word 'rehearse' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'rehearse' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "practice beforehand",
+        "B": "forget completely",
+        "C": "avoid entirely",
+        "D": "sell"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "rehearse تعني (يتمرّن/يتدرّب مسبقاً): صغار الحيوانات تتمرّن على المهارات التي تحتاجها لاحقاً. أقرب معنى practice beforehand.",
+      "avoid_tip_ar": "السياق عن التدرّب على مهارات المستقبل، فالمعنى (يتمرّن) لا (ينسى)."
+    },
+    {
+      "q": "Why does the author mention a cub stumbling while play-hunting?",
+      "q_translation_ar": "لماذا يذكر الكاتب شبل حيوان يتعثّر أثناء تمثيل الصيد؟",
+      "options": {
+        "A": "To illustrate how play lets young animals make mistakes cheaply, unlike in real situations.",
+        "B": "To prove that cubs cannot hunt.",
+        "C": "To show that play is dangerous and useless.",
+        "D": "To explain how prey escapes."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "المثال يوضّح فكرة أن اللعب بيئة تكون فيها الأخطاء رخيصة، بعكس المواقف الحقيقية القاتلة. هذا غرضه.",
+      "avoid_tip_ar": "الأمثلة تخدم فكرة أكبر. هنا المثال يجسّد (رخص الخطأ في اللعب)."
+    },
+    {
+      "q": "Which sentence best captures the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Play must have exactly one purpose.",
+        "B": "Play may persist because it serves several beneficial functions at once, so seeking a single purpose may be mistaken.",
+        "C": "Play is harmful to all animals.",
+        "D": "Only practice can explain play."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن اللعب قد يُفضَّل لأنه يخدم عدّة غايات معاً، فالبحث عن غرض واحد قد يكون مغلوطاً.",
+      "avoid_tip_ar": "اختر الخلاصة التي تحتضن الطرح النهائي (تعدّد الوظائف)، لا فرضية واحدة فقط."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: لغز اللعب عند الحيوان"
+}

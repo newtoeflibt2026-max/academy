@@ -1,69 +1,103 @@
 {
   "id": "ar_easy_02",
-  "tier": "easy",
-  "title_en": "Sleep and Memory",
-  "topic": "psychology",
-  "duration_seconds": 360,
+  "tier": "tier59",
+  "title_en": "The Invention of Paper",
+  "topic": "history",
+  "duration_seconds": 600,
   "passage": {
-    "text_en": "Sleep plays a crucial role in how the human brain processes and stores information. During the day, we encounter countless experiences and learn new facts, but most of these are stored only temporarily. It is during sleep, particularly in deep stages, that the brain organizes these experiences and transfers them into long-term memory.\n\nResearchers have found that students who sleep for at least seven hours after studying tend to perform better on tests than those who stay up late reviewing material. This is because sleep deprivation interferes with a process called memory consolidation. Without adequate rest, even repeated studying may have limited benefit. Sleep also supports creativity and problem-solving, as the brain continues working on unsolved problems while we rest.",
-    "word_count": 120,
-    "topic": "psychology"
+    "text_en": "Long before paper existed, people wrote on materials such as clay, stone, and animal skins. These materials worked, but they had clear drawbacks. Clay tablets were heavy and could break, while animal skins were expensive and slow to prepare. As societies grew and needed to record more information, a lighter and cheaper writing surface became necessary.\n\nThe solution appeared in ancient China around two thousand years ago. Workers learned to soak plant fibers in water, beat them into a soft pulp, and spread the mixture thinly across a flat screen. When the water drained and the layer dried, it formed a smooth sheet of paper. The process was simple enough to repeat many times, so paper could be produced in large amounts.\n\nThis new material spread slowly along trade routes, reaching other regions over several centuries. Wherever it arrived, paper made writing easier and books more affordable. By lowering the cost of recording ideas, paper helped knowledge travel farther than ever before.",
+    "word_count": 164,
+    "topic": "history"
+  },
+  "glossary": {
+    "drawbacks": "عيوب / سلبيات",
+    "tablets": "ألواح",
+    "record": "يسجّل / يدوّن",
+    "surface": "سطح",
+    "soak": "ينقع",
+    "fibers": "ألياف",
+    "pulp": "عجينة / لبّ",
+    "drained": "تصرّف / نُزِح (الماء)",
+    "trade routes": "طرق التجارة",
+    "affordable": "في المتناول / رخيص"
   },
   "questions": [
     {
-      "q": "What is the passage mainly about?",
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Why students should avoid napping during the day.",
-        "B": "How sleep helps the brain store and process information.",
-        "C": "The dangers of sleeping more than nine hours.",
-        "D": "New techniques for staying awake during exams."
+        "A": "Clay tablets were the best writing material ever made.",
+        "B": "Paper was invented to meet the need for a lighter, cheaper writing surface, and it spread widely.",
+        "C": "Ancient China was the largest country in the world.",
+        "D": "Animal skins are still used for writing today."
       },
       "correct": "B",
       "type": "factual",
-      "explanation_ar": "الموضوع الأساسي للفقرة هو دور النوم في معالجة وحفظ المعلومات."
+      "explanation_ar": "النص يشرح مشكلة المواد القديمة، ثم اختراع الورق كحلّ أخفّ وأرخص، ثم انتشاره. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل الفقرات. تجنّب الخيارات الجزئية (الألواح الطينية) أو خارج الموضوع (حجم الصين)."
     },
     {
-      "q": "According to the passage, what happens during deep sleep?",
+      "q": "According to the passage, what was a problem with animal skins?",
+      "q_translation_ar": "حسب النص، ما المشكلة في جلود الحيوانات؟",
       "options": {
-        "A": "The brain transfers experiences into long-term memory.",
-        "B": "The body produces new brain cells.",
-        "C": "Students forget what they studied earlier.",
-        "D": "The brain stops processing all information."
+        "A": "They were too light to write on.",
+        "B": "They were expensive and slow to prepare.",
+        "C": "They could not hold ink.",
+        "D": "They were only found in China."
       },
-      "correct": "A",
+      "correct": "B",
       "type": "factual",
-      "explanation_ar": "الفقرة الأولى تذكر صراحة أن الدماغ ينظم الخبرات وينقلها إلى الذاكرة طويلة الأمد خلال النوم العميق."
+      "explanation_ar": "الفقرة الأولى تذكر صراحة أن الجلود كانت غالية وبطيئة التحضير.",
+      "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات لم تُذكَر في النص إطلاقاً."
     },
     {
-      "q": "The word 'consolidation' in the passage is closest in meaning to:",
+      "q": "The word 'pulp' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'pulp' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "deletion",
-        "B": "strengthening",
-        "C": "interruption",
-        "D": "creation"
+        "A": "a hard stone",
+        "B": "a soft, wet mixture",
+        "C": "a dry powder",
+        "D": "a sharp tool"
       },
       "correct": "B",
       "type": "vocabulary",
-      "explanation_ar": "consolidation = تثبيت/تقوية الذكرى. أقرب كلمة هي strengthening."
+      "explanation_ar": "pulp تعني (عجينة/لبّ): الألياف تُضرَب لتصير مزيجاً ليّناً رطباً قبل فرده.",
+      "avoid_tip_ar": "السياق يقول إنها تُضرَب في الماء وتُفرَد، فهي رطبة ليّنة لا صلبة ولا جافة."
     },
     {
-      "q": "Why does the author mention students who sleep at least seven hours?",
+      "q": "Why does the author describe the papermaking process in the second paragraph?",
+      "q_translation_ar": "لماذا يصف الكاتب عملية صناعة الورق في الفقرة الثانية؟",
       "options": {
-        "A": "To argue that sleep is unrelated to learning.",
-        "B": "To provide an example showing how sleep improves test performance.",
-        "C": "To criticize modern educational systems.",
-        "D": "To recommend a specific number of study hours."
+        "A": "To prove that paper was difficult and rarely made.",
+        "B": "To show how a simple, repeatable process allowed paper to be produced in large amounts.",
+        "C": "To criticize ancient Chinese workers.",
+        "D": "To explain how clay tablets were made."
       },
       "correct": "B",
       "type": "rhetorical",
-      "explanation_ar": "الكاتب يستخدم هذا المثال ليُظهر بشكل تطبيقي كيف يحسّن النوم الأداء في الاختبارات."
+      "explanation_ar": "وصف العملية يوضّح أنها بسيطة وقابلة للتكرار، ولذلك أمكن إنتاج الورق بكميات كبيرة — وهذا غرض الفقرة.",
+      "avoid_tip_ar": "أسئلة الغرض تسأل (لماذا ذُكر هذا؟). النص يصف العملية ليبيّن سهولتها، لا لينتقد العمال."
+    },
+    {
+      "q": "What can be inferred about the spread of paper?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن انتشار الورق؟",
+      "options": {
+        "A": "It happened instantly all over the world.",
+        "B": "It took a long time and followed trade connections between regions.",
+        "C": "It was kept secret and never left China.",
+        "D": "It made books more expensive everywhere."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يقول إن الورق انتشر ببطء عبر طرق التجارة على مدى قرون، فنستنتج أن انتشاره كان تدريجياً ومرتبطاً بالتجارة.",
+      "avoid_tip_ar": "تجنّب المتطرّف (فوراً / لم يغادر الصين). والنص يقول إن الورق جعل الكتب أرخص لا أغلى."
     }
   ],
   "metadata": {
-    "source": "Phase 5.8 Academic Reading",
-    "level": "EASY",
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
     "type": "academic_reading"
   },
   "type": "academic_reading",
-  "title_ar": "نص 2: النوم والذاكرة"
+  "title_ar": "نص: اختراع الورق"
 }

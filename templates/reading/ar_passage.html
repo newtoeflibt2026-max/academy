@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ content.title_en }} — تدريب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f9fc;--card:#fff;--ink:#1e293b;--muted:#64748b;--line:#e6ecf5;
+    --brand:#2563eb;--brand-soft:#eff4ff;--green:#0ea371;--green-soft:#e7f7f0;
+    --red:#ef4444;--red-soft:#fef2f2;--amber:#f59e0b;--amber-soft:#fff7e6;
+    --shadow:0 4px 18px rgba(30,58,138,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Cairo',system-ui,sans-serif;background:var(--bg);
+       color:var(--ink);line-height:1.9;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto;padding:0 18px 110px}
+  .top{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;
+       padding:22px;border-radius:0 0 22px 22px;box-shadow:var(--shadow)}
+  .top .back{color:#dbeafe;text-decoration:none;font-size:.9em}
+  .top h1{margin:6px 0 2px;font-size:1.3em;font-weight:800;direction:ltr;text-align:right}
+  .top .meta{color:#c7d8f7;font-size:.88em}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;
+       padding:20px;margin-top:16px;box-shadow:var(--shadow)}
+  /* النص */
+  .passage{direction:ltr;text-align:left;font-family:Georgia,serif;font-size:1.05em;
+       line-height:2.05;color:#1e293b}
+  .passage p{margin:0 0 14px}
+  .gw{border-bottom:2px dotted var(--brand);cursor:pointer;color:#1d4ed8}
+  .gw:hover{background:var(--brand-soft)}
+  .tip-toolbar{display:flex;align-items:center;gap:8px;font-size:.82em;color:var(--muted);
+       background:var(--amber-soft);border:1px solid #fde9c0;border-radius:10px;
+       padding:8px 12px;margin-bottom:14px}
+  /* الأسئلة */
+  .q-block{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
+  .q-block:first-of-type{border-top:0;margin-top:0;padding-top:0}
+  .q-head{display:flex;align-items:flex-start;gap:8px}
+  .q-num{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--brand-soft);
+       color:var(--brand);font-weight:800;display:grid;place-items:center;font-size:.85em}
+  .q-text{font-weight:700;direction:ltr;text-align:left;flex:1;color:#1e3a8a}
+  .q-type{font-size:.72em;font-weight:700;color:var(--muted);background:#f1f5f9;
+       padding:2px 9px;border-radius:20px;margin-top:4px;display:inline-block}
+  .tr-btn{background:none;border:1px dashed #cbd5e1;color:var(--muted);font-family:inherit;
+       font-size:.78em;border-radius:8px;padding:3px 9px;cursor:pointer;margin-top:6px}
+  .tr-btn:hover{border-color:var(--brand);color:var(--brand)}
+  .tr-text{display:none;font-size:.9em;color:#475569;background:#f8fafc;border-radius:8px;
+       padding:8px 12px;margin-top:8px;border:1px solid var(--line)}
+  .tr-text.show{display:block}
+  .opt{display:block;width:100%;text-align:left;direction:ltr;background:#fff;
+       border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;margin-top:9px;
+       cursor:pointer;font-family:inherit;font-size:.95em;color:#334155;transition:.13s}
+  .opt:hover{border-color:var(--brand);background:var(--brand-soft)}
+  .opt.sel{border-color:var(--brand);background:var(--brand-soft);font-weight:700}
+  .opt.correct{border-color:var(--green);background:var(--green-soft);color:#065f46;font-weight:700}
+  .opt.wrong{border-color:var(--red);background:var(--red-soft);color:#991b1b}
+  .opt .key{display:inline-block;width:22px;font-weight:800;color:var(--brand)}
+  .fb{margin-top:10px;border-radius:11px;padding:12px 14px;font-size:.92em;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:var(--green-soft);border:1px solid #bbf0d8;color:#065f46}
+  .fb.no{background:var(--red-soft);border:1px solid #fecaca;color:#991b1b}
+  .fb .tag{font-weight:800;display:block;margin-bottom:3px}
+  .fb .avoid{margin-top:8px;background:#fff;border:1px dashed var(--amber);border-radius:8px;
+       padding:8px 11px;color:#92400e}
+  .fb .avoid b{color:#b45309}
+  /* شريط الإرسال */
+  .bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
+       padding:12px 18px;box-shadow:0 -4px 18px rgba(30,58,138,.07)}
+  .bar .inner{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:12px}
+  .bar .prog{flex:1;font-size:.88em;color:var(--muted)}
+  .submit{background:linear-gradient(135deg,#0ea371,#059669);color:#fff;border:0;
+       padding:13px 26px;border-radius:12px;font-weight:800;font-size:1em;cursor:pointer;
+       font-family:inherit;box-shadow:0 6px 16px rgba(14,163,113,.3)}
+  .submit:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  /* النتيجة */
+  .result{display:none;text-align:center;margin-top:16px}
+  .result.show{display:block}
+  .result .ring{font-size:2.4em;font-weight:800}
+  .result.pass .ring{color:var(--green)}
+  .result.fail .ring{color:var(--amber)}
+  .result .msg{color:var(--muted);margin:4px 0 16px}
+  .result a{display:inline-block;background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;
+       text-decoration:none;padding:13px 28px;border-radius:12px;font-weight:800;margin:5px}
+  .result a.ghost{background:#fff;border:1.5px solid var(--line);color:var(--brand)}
+  /* تلميح ترجمة الكلمة */
+  #pop{position:fixed;z-index:50;background:#1e293b;color:#fff;padding:8px 14px;border-radius:10px;
+       font-size:.9em;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:240px}
+  #pop b{color:#7dd3fc}
+</style>
+</head>
+<body>
+<div class="top">
+  <a class="back" href="/reading/ar?user_id={{ user_id }}">← القائمة</a>
+  <h1>{{ content.title_en }}</h1>
+  <div class="meta">{{ content.questions|length }} questions ·
+    {% if content.tier=='easy' %}Easy{% elif content.tier=='medium' %}Medium{% else %}Hard{% endif %}</div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    {% if content.glossary %}
+    <div class="tip-toolbar">💡 الكلمات تحتها خط منقّط: انقرها لرؤية الترجمة (اختياري).</div>
+    {% endif %}
+    <div class="passage" id="passage">
+      {% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}
+    </div>
+  </div>
+
+  <div class="card" id="questions">
+    {% for q in content.questions %}
+    <div class="q-block" data-idx="{{ loop.index0 }}">
+      <div class="q-head">
+        <div class="q-num">{{ loop.index }}</div>
+        <div style="flex:1">
+          <div class="q-text">{{ q.q }}</div>
+          <span class="q-type">{{ q.type }}</span>
+          {% if q.q_translation_ar %}
+          <button class="tr-btn" onclick="tr(this)">🌐 ترجمة السؤال</button>
+          <div class="tr-text">{{ q.q_translation_ar }}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% for k, v in q.options.items() %}
+      <button class="opt"
+              data-key="{{ k }}"
+              onclick="sel(this)">
+        <span class="key">{{ k }}.</span> {{ v }}
+      </button>
+      {% endfor %}
+      <div class="fb"></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="result card" id="result">
+    <div class="ring" id="ringTxt"></div>
+    <div class="msg" id="resMsg"></div>
+    <div id="resBtns"></div>
+  </div>
+
+</div>
+
+<div class="bar" id="bar">
+  <div class="inner">
+    <div class="prog" id="prog">0 / {{ content.questions|length }} مُجاب</div>
+    <button class="submit" id="submitBtn" onclick="submitAll()" disabled>تحقّق من إجاباتي</button>
+  </div>
+</div>
+
+<div id="pop"></div>
+
+<script>
+  var GLOSSARY = {{ content.glossary|default({})|tojson }};
+  var TOTAL = {{ content.questions|length }};
+  var ATTEMPT = {{ attempt_id|tojson }};
+  var CONTENT_ID = {{ content.id|tojson }};
+  var USER_ID = {{ user_id|tojson }};
+  var answers = {};
+  var locked = false;
+
+  // ترجمة السؤال (اختياري)
+  function tr(btn){
+    var t = btn.parentNode.querySelector('.tr-text');
+    t.classList.toggle('show');
+  }
+
+  // اختيار إجابة
+  function sel(btn){
+    if(locked) return;
+    var block = btn.closest('.q-block');
+    var idx = block.getAttribute('data-idx');
+    block.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel')});
+    btn.classList.add('sel');
+    answers[idx] = btn.getAttribute('data-key');
+    updateProg();
+  }
+  function updateProg(){
+    var n = Object.keys(answers).length;
+    document.getElementById('prog').textContent = n + ' / ' + TOTAL + ' مُجاب';
+    document.getElementById('submitBtn').disabled = (n < TOTAL);
+  }
+
+  // ترجمة الكلمات الصعبة (اختياري بالنقر)
+  function wrapGlossary(){
+    var keys = Object.keys(GLOSSARY);
+    if(!keys.length) return;
+    var ps = document.querySelectorAll('#passage p');
+    ps.forEach(function(p){
+      var html = p.innerHTML;
+      keys.forEach(function(w){
+        var re = new RegExp('\\b('+w+')\\b','i');
+        html = html.replace(re, '<span class="gw" data-w="'+w.toLowerCase()+'">$1</span>');
+      });
+      p.innerHTML = html;
+    });
+    document.querySelectorAll('.gw').forEach(function(el){
+      el.addEventListener('click', function(e){ showPop(e, el.getAttribute('data-w')); });
+    });
+  }
+  function showPop(e, w){
+    var pop = document.getElementById('pop');
+    var ar = GLOSSARY[w] || GLOSSARY[Object.keys(GLOSSARY).find(function(k){return k.toLowerCase()===w})] || '';
+    pop.innerHTML = '<b>'+w+'</b> — '+ar;
+    pop.style.display='block';
+    var x = e.clientX, y = e.clientY;
+    pop.style.left = Math.min(x, window.innerWidth-250)+'px';
+    pop.style.top = (y+18)+'px';
+    clearTimeout(window._pt);
+    window._pt = setTimeout(function(){pop.style.display='none'}, 3500);
+  }
+  document.addEventListener('click', function(e){
+    if(!e.target.classList.contains('gw')) document.getElementById('pop').style.display='none';
+  });
+
+  // إرسال وتصحيح
+  function submitAll(){
+    if(locked) return;
+    locked = true;
+    document.getElementById('submitBtn').disabled = true;
+    fetch('/reading/ar/check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({attempt_id:ATTEMPT, content_id:CONTENT_ID, answers:answers, user_id:USER_ID})
+    }).then(function(r){return r.json()}).then(function(d){ renderFeedback(d); });
+  }
+  function renderFeedback(d){
+    d.feedback.forEach(function(f){
+      var block = document.querySelector('.q-block[data-idx="'+f.idx+'"]');
+      block.querySelectorAll('.opt').forEach(function(o){
+        var k = o.getAttribute('data-key');
+        o.style.cursor='default';
+        if(k === f.correct) o.classList.add('correct');
+        else if(k === f.user_answer && !f.is_correct) o.classList.add('wrong');
+      });
+      var fb = block.querySelector('.fb');
+      var html = '<span class="tag">'+(f.is_correct?'✓ إجابة صحيحة':'✗ إجابة خاطئة')+'</span>'+ (f.explanation_ar||'');
+      if(!f.is_correct && f.avoid_tip_ar){
+        html += '<div class="avoid"><b>كيف تتجنّب هذا الخطأ:</b> '+f.avoid_tip_ar+'</div>';
+      }
+      fb.innerHTML = html;
+      fb.classList.add(f.is_correct?'ok':'no','show');
+    });
+    // النتيجة
+    var res = document.getElementById('result');
+    var pass = d.passed;
+    res.classList.add('show', pass?'pass':'fail');
+    document.getElementById('ringTxt').textContent = d.pct + '%';
+    document.getElementById('resMsg').textContent = pass
+      ? ('أحسنت! أجبت ' + d.score + ' من ' + d.total + '. فُتحت القطعة التالية.')
+      : ('أصبت ' + d.score + ' من ' + d.total + '. راجع الشرح أعلاه وأعد المحاولة للوصول إلى 70%.');
+    var btns = pass
+      ? '<a href="/reading/ar?user_id='+USER_ID+'">متابعة إلى القائمة ←</a>'
+      : '<a href="/reading/ar/passage/'+CONTENT_ID+'?user_id='+USER_ID+'">إعادة المحاولة</a>'+
+        '<a class="ghost" href="/reading/ar?user_id='+USER_ID+'">القائمة</a>';
+    document.getElementById('resBtns').innerHTML = btns;
+    document.getElementById('bar').style.display='none';
+    res.scrollIntoView({behavior:'smooth'});
+  }
+
+  wrapGlossary();
+</script>
+</body>
+</html>

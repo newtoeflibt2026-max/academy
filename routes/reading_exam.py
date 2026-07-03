@@ -742,162 +742,220 @@ def dl_result(attempt_id):
 # Academic Reading (AR) Routes - Task 3
 # ═══════════════════════════════════════════════════════════
 
-@reading_bp.route("/ar/learn")
-def ar_learn():
-    user_id = request.args.get("user_id", "")
-    return render_template("reading/ar_learn.html", user_id=user_id)
 
-@reading_bp.route("/ar/exam/<content_id>")
-def ar_exam(content_id):
-    user_id = request.args.get("user_id", "")
+import os as _os_ar, json as _json_ar
+
+_AR_LESSONS_PATH = _os_ar.path.join(_os_ar.path.dirname(__file__), "..",
+                                    "content", "reading", "ar_lessons", "lessons.json")
+
+def _ar_load_lessons():
+    try:
+        with open(_os_ar.path.abspath(_AR_LESSONS_PATH), encoding="utf-8") as f:
+            return _json_ar.load(f).get("lessons", [])
+    except Exception as e:
+        print(f"[ar] lessons load error: {e}")
+        return []
+
+def _ar_passages_sorted():
+    """كل القطع الأكاديمية مرتبة من السهل للصعب."""
+    rank = {"easy": 1, "medium": 2, "hard": 3}
+    items = [it for it in cl.load_all().values()
+             if it.get("type") == "academic_reading"]
+    items.sort(key=lambda it: (rank.get(it.get("tier", ""), 9), it.get("id", "")))
+    return items
+
+def _ar_progress(sid):
+    """يرجع dict: content_id -> best_score للطالب."""
+    prog = {}
+    if not sid:
+        return prog
+    try:
+        conn = _db()
+        rows = conn.execute("""
+            SELECT content_id, MAX(score) AS best, COUNT(*) AS attempts
+            FROM reading_attempts
+            WHERE student_id=? AND status='completed' AND content_type='academic_reading'
+            GROUP BY content_id
+        """, (sid,)).fetchall()
+        conn.close()
+        for r in rows:
+            prog[r["content_id"]] = {"best": r["best"] or 0, "attempts": r["attempts"]}
+    except Exception as e:
+        print(f"[ar] progress error: {e}")
+    return prog
+
+
+# ── 1) فهرس القسم: الدروس النظرية + القطع المتدرجة ──────────
+@reading_bp.route("/ar")
+@reading_bp.route("/ar/learn")
+@require_section_access("reading")
+def ar_home():
+    user_id = _get_tg_id()
+    sid = _student_id()
+    lessons = _ar_load_lessons()
+    passages = _ar_passages_sorted()
+    prog = _ar_progress(sid)
+
+    # بناء قائمة القطع مع حالة الفتح/القفل (تتابعي: تُفتح التالية عند نجاح السابقة ≥70%)
+    PASS = 70
+    p_list = []
+    prev_done = True  # أول قطعة مفتوحة دائماً
+    for it in passages:
+        best = prog.get(it["id"], {}).get("best", 0)
+        attempts = prog.get(it["id"], {}).get("attempts", 0)
+        done = best >= PASS
+        unlocked = prev_done
+        p_list.append({
+            "id": it["id"],
+            "title_en": it.get("title_en", it["id"]),
+            "title_ar": it.get("title_ar", ""),
+            "tier": it.get("tier", ""),
+            "num_q": len(it.get("questions", [])),
+            "best": best,
+            "attempts": attempts,
+            "done": done,
+            "unlocked": unlocked,
+        })
+        prev_done = done
+
+    return render_template("reading/ar_home.html",
+                           lessons=lessons,
+                           passages=p_list,
+                           user_id=user_id)
+
+
+# ── 2) درس نظري لنوع سؤال ──────────────────────────────────
+@reading_bp.route("/ar/lesson/<lesson_id>")
+@require_section_access("reading")
+def ar_lesson(lesson_id):
+    lessons = _ar_load_lessons()
+    lesson = next((l for l in lessons if l["id"] == lesson_id), None)
+    if not lesson:
+        return "Lesson not found", 404
+    idx = lessons.index(lesson)
+    nxt = lessons[idx + 1]["id"] if idx + 1 < len(lessons) else None
+    return render_template("reading/ar_lesson.html",
+                           lesson=lesson, next_id=nxt,
+                           user_id=_get_tg_id())
+
+
+# ── 3) قطعة تدريب ──────────────────────────────────────────
+@reading_bp.route("/ar/passage/<content_id>")
+@require_section_access("reading")
+def ar_passage(content_id):
     items = cl.load_all()
     content = items.get(content_id)
     if not content or content.get("type") != "academic_reading":
-        return "Content not found", 404
+        return "Passage not found", 404
 
-    # إنشاء attempt جديد
-    conn = sqlite3.connect(DB_PATH)
+    sid = _student_id()
+    conn = _db()
     cur = conn.cursor()
-    cur.execute("""INSERT INTO reading_attempts
-        (student_id, content_id, content_type, started_at, total, status)
-        VALUES (?, ?, ?, ?, ?, 'in_progress')""",
-        (int(user_id) if user_id else 0, content_id, "academic_reading",
-         datetime.now().isoformat(), len(content.get("questions", []))))
-    attempt_id = cur.lastrowid
+    # أعد استخدام محاولة مفتوحة لنفس الطالب/القطعة بدل تكديس صفوف جديدة
+    row = cur.execute("""SELECT attempt_id FROM reading_attempts
+        WHERE student_id=? AND content_id=? AND status='in_progress'
+        ORDER BY attempt_id DESC LIMIT 1""", (sid or 0, content_id)).fetchone()
+    if row:
+        attempt_id = row[0]
+    else:
+        cur.execute("""INSERT INTO reading_attempts
+            (student_id, content_id, content_type, started_at, total, status)
+            VALUES (?, ?, 'academic_reading', ?, ?, 'in_progress')""",
+            (sid or 0, content_id, datetime.now().isoformat(),
+             len(content.get("questions", []))))
+        attempt_id = cur.lastrowid
     conn.commit()
     conn.close()
 
-    # إنشاء passage_html مع تظليل الكلمات المهمة
+    # تجهيز نص الفقرات
     passage = content.get("passage", "")
     if isinstance(passage, dict):
         passage = passage.get("text_en") or passage.get("text") or ""
-    passage_html = passage.replace("\n\n", "</p><p>").replace("\n", "<br>")
-    passage_html = "<p>" + passage_html + "</p>"
-    for hl in content.get("highlights", []):
-        # case-insensitive replacement
-        import re as _re
-        pattern = _re.compile(_re.escape(hl), _re.IGNORECASE)
-        passage_html = pattern.sub(lambda m: f'<span class="highlight">{m.group(0)}</span>', passage_html, count=1)
+    paragraphs = [p.strip() for p in passage.split("\n\n") if p.strip()]
 
-    return render_template("reading/ar_exam.html",
+    return render_template("reading/ar_passage.html",
                            content=content,
-                           passage_html=passage_html,
+                           paragraphs=paragraphs,
                            attempt_id=attempt_id,
-                           user_id=user_id)
+                           user_id=_get_tg_id())
 
-@reading_bp.route("/ar/submit", methods=["POST"])
-def ar_submit():
-    data = request.get_json() or {}
+
+# ── 4) تصحيح: شرح + تلميح تفادي الخطأ + فتح التالي ─────────
+@reading_bp.route("/ar/check", methods=["POST"])
+def ar_check():
+    data = request.get_json(silent=True) or {}
     attempt_id = data.get("attempt_id")
     content_id = data.get("content_id")
     answers = data.get("answers", {})
     sid = data.get("user_id") or 0
     try:
         sid = int(sid)
-    except:
+    except Exception:
         sid = 0
 
-    items = cl.load_all()
-    content = items.get(content_id)
+    content = cl.load_all().get(content_id)
     if not content:
         return jsonify({"error": "content not found"}), 404
 
     questions = content.get("questions", [])
     total = len(questions)
     score = 0
-    detailed = []
-
+    feedback = []
     for idx, q in enumerate(questions):
-        ua = answers.get(str(idx)) or answers.get(idx)
+        ua = answers.get(str(idx))
         correct = q.get("correct")
-        is_correct = (ua == correct)
-        if is_correct:
+        ok = (ua == correct)
+        if ok:
             score += 1
-        detailed.append({
-            "q": q.get("q"),
+        feedback.append({
+            "idx": idx,
+            "is_correct": ok,
             "user_answer": ua,
-            "user_text": q.get("options", {}).get(ua, "") if ua else "",
             "correct": correct,
-            "correct_text": q.get("options", {}).get(correct, ""),
-            "is_correct": is_correct,
             "explanation_ar": q.get("explanation_ar", ""),
-            "type": q.get("type", "")
+            "avoid_tip_ar": q.get("avoid_tip_ar", "") if not ok else "",
+            "type": q.get("type", ""),
         })
 
-    pct = round((score / total) * 100) if total > 0 else 0
-    xp_earned = score * 5
+    pct = round(score * 100 / total) if total else 0
 
-    # حفظ النتيجة
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    cur.execute("""UPDATE reading_attempts
-        SET score=?, finished_at=?, status='completed', submit_reason=?
-        WHERE attempt_id=?""",
-        (score, datetime.now().isoformat(), data.get("submit_reason", "user"), attempt_id))
-
-    # حفظ الأخطاء
-    for d in detailed:
-        if not d["is_correct"] and sid:
-            try:
-                cur.execute("""INSERT INTO error_bank
-                    (user_id, question_id, error_type, wrong_answer, correct_answer, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?)""",
-                    (sid, f"{content_id}_q{detailed.index(d)}", d["type"],
-                     d["user_answer"] or "", d["correct"], datetime.now().isoformat()))
-            except:
-                pass
-
-    # XP log
-    if sid and xp_earned:
-        try:
-            cur.execute("""INSERT INTO xp_log (user_id, source, amount, created_at)
-                VALUES (?, 'academic_reading', ?, ?)""",
-                (sid, xp_earned, datetime.now().isoformat()))
-        except:
-            pass
-
-    conn.commit()
-    conn.close()
-
-    # حفظ في الكاش
-    _AR_RESULT_CACHE[attempt_id] = {
-        "detailed": detailed,
-        "content": content,
-        "score": score,
-        "total": total,
-        "pct": pct,
-        "xp_earned": xp_earned
-    }
-
-    # Auto-unlock
+    # حفظ المحاولة (score = عدد الإجابات الصحيحة، وليس النسبة)
     try:
-        _record_progress_and_unlock(sid, content_id, pct, kind="ar")
+        conn = _db()
+        cur = conn.cursor()
+        cur.execute("""UPDATE reading_attempts
+            SET score=?, total=?, finished_at=?, status='completed'
+            WHERE attempt_id=?""",
+            (score, total, datetime.now().isoformat(), attempt_id))
+        conn.commit()
+        conn.close()
     except Exception as e:
-        print(f"[ar_submit] unlock error: {e}")
+        print(f"[ar_check] save error: {e}")
+
+    # فتح القطعة التالية عند النجاح
+    try:
+        _record_progress_and_unlock(student_id=sid, content_id=content_id,
+                                    score=score, total=total, kind="ar")
+    except Exception as _eu:
+        print(f"[ar auto-unlock] {_eu}")
+
+    # إرسال رسالة العلامة للطالب عبر تيليجرام
+    try:
+        from utils.notifications import send_telegram_notification
+        status_txt = "🎉 ناجح" if pct >= 70 else "📚 حاول مرة أخرى"
+        msg = (f"<b>نتيجة القراءة</b>\n"
+               f"القطعة: {content.get('title_ar') or content.get('title_en') or content_id}\n"
+               f"العلامة: {score}/{total} ({pct}%)\n"
+               f"الحالة: {status_txt}")
+        if sid:
+            send_telegram_notification(sid, msg)
+    except Exception as _en:
+        print(f"[ar notify] {_en}")
 
     return jsonify({
-        "attempt_id": attempt_id,
         "score": score,
         "total": total,
         "pct": pct,
-        "xp_earned": xp_earned,
-        "redirect": f"/reading/ar/result/{attempt_id}?user_id={sid}"
+        "passed": pct >= 70,
+        "feedback": feedback,
     })
-
-_AR_RESULT_CACHE = {}
-
-@reading_bp.route("/ar/result/<int:attempt_id>")
-def ar_result(attempt_id):
-    user_id = request.args.get("user_id", "")
-    cached = _AR_RESULT_CACHE.get(attempt_id)
-    if not cached:
-        return "Result expired", 404
-    return render_template("reading/ar_result.html",
-                           content=cached["content"],
-                           score=cached["score"],
-                           total=cached["total"],
-                           pct=cached["pct"],
-                           xp_earned=cached["xp_earned"],
-                           detailed=cached["detailed"],
-                           user_id=user_id)
-

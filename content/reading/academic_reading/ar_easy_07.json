@@ -1,0 +1,103 @@
+{
+  "id": "ar_easy_07",
+  "tier": "tier59",
+  "title_en": "Why the Sky Is Blue",
+  "topic": "science",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "On a clear day, the sky appears as a wide dome of blue. People have wondered about this for centuries, and the explanation lies in the way sunlight travels through the air. Although sunlight looks white, it is actually made up of many colors mixed together, each with a different wavelength.\n\nWhen sunlight enters the atmosphere, it strikes tiny particles of gas. These particles scatter the light in all directions. However, they do not scatter every color equally. Blue light, which has a shorter wavelength, is scattered much more strongly than red light. As a result, blue light spreads across the whole sky, which is why we see blue when we look up.\n\nThis same process explains why sunsets often glow red and orange. When the sun is low, its light must pass through much more air to reach our eyes. Most of the blue light is scattered away before it arrives, leaving the warmer colors to dominate the evening sky.",
+    "word_count": 164,
+    "topic": "science"
+  },
+  "glossary": {
+    "dome": "قبّة",
+    "wavelength": "طول الموجة",
+    "atmosphere": "الغلاف الجوي",
+    "strikes": "يصطدم بـ",
+    "particles": "جسيمات / ذرّات صغيرة",
+    "scatter": "يبعثر / ينثر",
+    "equally": "بالتساوي",
+    "glow": "يتوهّج",
+    "dominate": "يسود / يهيمن",
+    "warmer colors": "الألوان الدافئة (الأحمر/البرتقالي)"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Why the sun is hotter in summer.",
+        "B": "Why the sky looks blue and sunsets look red.",
+        "C": "How clouds are formed in the atmosphere.",
+        "D": "Why white light is the brightest color."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يفسّر لماذا تبدو السماء زرقاء (تبعثر الضوء الأزرق) ولماذا يحمرّ الغروب. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل النص. تجنّب المواضيع التي لم تُناقَش (حرارة الصيف / تكوّن السحب)."
+    },
+    {
+      "q": "According to the passage, why is the sky blue rather than another color?",
+      "q_translation_ar": "حسب النص، لماذا تكون السماء زرقاء لا بلون آخر؟",
+      "options": {
+        "A": "Because blue light is scattered more strongly than other colors.",
+        "B": "Because the air itself is blue.",
+        "C": "Because the sun gives off only blue light.",
+        "D": "Because oceans reflect onto the sky."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن الضوء الأزرق (طوله الموجي أقصر) يتبعثر بقوة أكبر، فينتشر في السماء كلها.",
+      "avoid_tip_ar": "عُد للسبب العلمي المذكور (التبعثر). باقي الخيارات تفسيرات شائعة خاطئة لم يقلها النص."
+    },
+    {
+      "q": "The word 'scatter' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'scatter' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "to collect together",
+        "B": "to spread in many directions",
+        "C": "to make brighter",
+        "D": "to stop completely"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "scatter تعني (يبعثر/ينثر): الجسيمات تنثر الضوء في كل الاتجاهات. أقرب معنى spread in many directions.",
+      "avoid_tip_ar": "السياق يقول (في كل الاتجاهات)، فالمعنى نثر لا تجميع (collect)."
+    },
+    {
+      "q": "Why does the author explain sunsets in the last paragraph?",
+      "q_translation_ar": "لماذا يشرح الكاتب الغروب في الفقرة الأخيرة؟",
+      "options": {
+        "A": "To show that the same scattering process explains red sunsets.",
+        "B": "To prove that the sky is never really blue.",
+        "C": "To describe how the sun produces heat.",
+        "D": "To explain why nights are dark."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "شرح الغروب يطبّق نفس مبدأ التبعثر: الضوء الأزرق يُبعثَر بعيداً فتبقى الألوان الدافئة. هذا غرض الفقرة.",
+      "avoid_tip_ar": "أسئلة الغرض تربط المثال بالفكرة. الغروب مثال إضافي يؤكّد نفس التفسير."
+    },
+    {
+      "q": "What can be inferred about light from the sun?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن ضوء الشمس؟",
+      "options": {
+        "A": "It contains only the color blue.",
+        "B": "It is made of several colors, even though it looks white.",
+        "C": "It has no color at all.",
+        "D": "It cannot pass through the atmosphere."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يقول إن ضوء الشمس يبدو أبيض لكنه مكوّن من ألوان كثيرة بأطوال موجية مختلفة، فنستنتج أنه متعدّد الألوان.",
+      "avoid_tip_ar": "الاستنتاج يبني على المذكور. تجنّب ما يناقض النص (لون واحد / بلا لون)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: لماذا السماء زرقاء"
+}

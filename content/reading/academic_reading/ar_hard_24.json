@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_24",
+  "tier": "tier90",
+  "title_en": "The Illusion of Explanatory Depth",
+  "topic": "psychology",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Most people believe they understand the everyday objects around them far better than they actually do. Asked how a zipper, a flush toilet, or a bicycle gear works, they express easy confidence, only to fall silent when required to explain the mechanism step by step. Psychologists call this gap the illusion of explanatory depth: a persistent tendency to mistake familiarity for genuine understanding.\n\nThe illusion arises partly because we rarely test our knowledge to its limits. Recognizing an object, using it, and having seen it many times all generate a comforting sense of competence that a demand for detailed explanation quickly punctures. Notably, the effect is strongest for objects with visible parts, whose outward appearance seems to promise an understanding that we do not, in fact, possess.\n\nThe phenomenon has consequences beyond mechanical trivia. In debates over complex policies, people often hold strong opinions while grasping little of how the proposed systems would actually operate. Strikingly, when asked to explain such policies mechanistically, many become more moderate, their confidence deflating as the illusion collapses. Understanding the limits of our own understanding, it seems, can itself be a source of intellectual humility.",
+    "word_count": 196,
+    "topic": "psychology"
+  },
+  "glossary": {
+    "confidence": "ثقة",
+    "mechanism": "آلية",
+    "illusion": "وهم / خداع",
+    "persistent": "مستمرّ / عنيد",
+    "familiarity": "الألفة / المعرفة السطحية",
+    "punctures": "يثقب / يُفرِغ (يبدّد)",
+    "trivia": "تفاهات / معلومات هامشية",
+    "mechanistically": "آلياً / خطوة بخطوة",
+    "deflating": "يتقلّص / ينكمش",
+    "humility": "تواضع"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "People understand everyday objects perfectly.",
+        "B": "People often overestimate how well they understand things, an illusion with effects on both objects and complex debates.",
+        "C": "Zippers are impossible to understand.",
+        "D": "Strong opinions are always correct."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يشرح (وهم عمق التفسير): مبالغة الناس في تقدير فهمهم، وأثره على الأشياء وعلى النقاشات المعقّدة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب المتطرّف (يفهمون تماماً) والجزئي (السحّابات فقط)."
+    },
+    {
+      "q": "According to the passage, for which objects is the illusion strongest?",
+      "q_translation_ar": "حسب النص، لأي الأشياء يكون الوهم أقوى؟",
+      "options": {
+        "A": "Objects with visible parts whose appearance seems to promise understanding.",
+        "B": "Objects that are completely hidden.",
+        "C": "Objects no one has ever seen.",
+        "D": "Objects that do not exist."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الأثر أقوى للأشياء ذات الأجزاء الظاهرة، لأن مظهرها يوحي بفهم لا نملكه فعلاً.",
+      "avoid_tip_ar": "عُد للتفصيلة المذكورة حرفياً (أجزاء ظاهرة). باقي الخيارات عكسها أو غير منطقي."
+    },
+    {
+      "q": "The word 'punctures' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'punctures' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "bursts or breaks down",
+        "B": "strengthens",
+        "C": "hides",
+        "D": "measures"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "punctures هنا تعني (يثقب/يبدّد): طلب التفسير المفصّل يبدّد الإحساس المريح بالكفاءة. أقرب معنى bursts or breaks down.",
+      "avoid_tip_ar": "الصورة (تفريغ إحساس منتفخ)، فالمعنى تبديد/كسر لا تقوية (strengthens)."
+    },
+    {
+      "q": "Why does the author describe people becoming 'more moderate' after explaining policies?",
+      "q_translation_ar": "لماذا يصف الكاتب أن الناس يصبحون (أكثر اعتدالاً) بعد شرح السياسات؟",
+      "options": {
+        "A": "To show that exposing the illusion can reduce overconfidence and encourage humility.",
+        "B": "To prove that all policies are wrong.",
+        "C": "To argue that people should never have opinions.",
+        "D": "To explain how zippers work."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "المثال يوضّح أن كشف الوهم (بطلب الشرح الآلي) يقلّل الثقة المفرطة ويزرع التواضع الفكري. هذا غرضه.",
+      "avoid_tip_ar": "أسئلة الغرض تربط المثال بالفكرة (كشف الوهم يولّد التواضع)، لا تأخذه كحُكم على السياسات."
+    },
+    {
+      "q": "Which sentence best captures the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Familiarity guarantees true understanding.",
+        "B": "People tend to mistake familiarity for real understanding, and recognizing this limit can foster intellectual humility.",
+        "C": "No one understands anything at all.",
+        "D": "Opinions never change with explanation."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ هي أن الناس يخلطون الألفة بالفهم الحقيقي، وأن إدراك هذا الحدّ يغذّي التواضع الفكري — خلاصة النص.",
+      "avoid_tip_ar": "اختر الخلاصة الجامعة. تجنّب المتطرّف (لا أحد يفهم شيئاً) الذي لا يقوله النص."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: وهم عمق التفسير"
+}

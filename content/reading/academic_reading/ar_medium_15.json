@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_15",
+  "tier": "tier69",
+  "title_en": "The Power of First Impressions",
+  "topic": "psychology",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Within moments of meeting someone, people form an impression of that person's character. Research suggests that these judgments happen astonishingly fast, sometimes within a fraction of a second, and often before any words are exchanged. Faces, posture, and tone of voice all feed into an instant assessment that feels automatic and effortless.\n\nThese rapid judgments can be surprisingly influential. Once an impression forms, people tend to interpret later information in a way that supports it. If someone seems friendly at first, small acts are read as warm; if someone seems cold, the same acts may be read as rude. In this way, an early impression can quietly steer how an entire relationship develops.\n\nFirst impressions are not always accurate, of course, and they can be revised with time and evidence. Yet because they arrive so quickly and shape what follows, they carry real weight in social life. Understanding how they work can help people stay open to changing their minds, rather than trusting a snap judgment as if it were the whole truth.",
+    "word_count": 176,
+    "topic": "psychology"
+  },
+  "glossary": {
+    "impression": "انطباع",
+    "judgments": "أحكام",
+    "astonishingly": "بشكل مذهل",
+    "fraction": "جزء صغير / كسر",
+    "posture": "وضعية الجسم / هيئة الوقوف",
+    "assessment": "تقييم",
+    "effortless": "بلا جهد / تلقائي",
+    "steer": "يوجّه / يقود",
+    "revised": "يُراجَع / يُعدَّل",
+    "snap judgment": "حُكم سريع متسرّع"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Why people should never trust anyone.",
+        "B": "How first impressions form quickly, influence later judgments, yet can be revised.",
+        "C": "Why tone of voice is the only thing that matters.",
+        "D": "How to speak more clearly in meetings."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يشرح كيف تتكوّن الانطباعات الأولى بسرعة، وتؤثّر فيما بعدها، لكنها قابلة للمراجعة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات المتطرّفة أو الجزئية."
+    },
+    {
+      "q": "According to the passage, how do early impressions affect later information?",
+      "q_translation_ar": "حسب النص، كيف تؤثّر الانطباعات المبكرة في المعلومات اللاحقة؟",
+      "options": {
+        "A": "People ignore all later information.",
+        "B": "People tend to interpret later information so that it supports the first impression.",
+        "C": "People always change their first impression immediately.",
+        "D": "Later information erases the first impression instantly."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الناس يميلون لتفسير المعلومات اللاحقة بما يدعم الانطباع الأول.",
+      "avoid_tip_ar": "عُد للأثر المذكور حرفياً. باقي الخيارات مبالغات تناقض النص."
+    },
+    {
+      "q": "The word 'steer' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'steer' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "to guide or direct",
+        "B": "to stop suddenly",
+        "C": "to forget",
+        "D": "to measure"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "steer تعني (يوجّه/يقود): الانطباع الأول يوجّه كيف تتطوّر العلاقة. أقرب معنى to guide or direct.",
+      "avoid_tip_ar": "السياق يقول إن الانطباع (يقود مسار العلاقة)، فالمعنى توجيه لا توقّف."
+    },
+    {
+      "q": "Look at this sentence: 'The same behavior, in other words, can be judged in opposite ways depending on the initial impression.' Where would it best fit?",
+      "q_translation_ar": "انظر إلى الجملة: (بعبارة أخرى، يمكن الحكم على السلوك نفسه بطريقتين متضادّتين حسب الانطباع الأولي). أين تنتمي؟",
+      "options": {
+        "A": "After the sentence contrasting how friendly vs. cold people's acts are read (paragraph 2).",
+        "B": "At the start of paragraph 1.",
+        "C": "After the sentence about revising impressions (paragraph 3).",
+        "D": "After the title."
+      },
+      "correct": "A",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تلخّص فكرة أن السلوك نفسه يُفسَّر بطريقتين، فهي تنتمي مباشرة بعد المثال (ودود يُقرأ دافئاً، بارد يُقرأ فظّاً).",
+      "avoid_tip_ar": "(بعبارة أخرى) تلخّص ما قبلها. ضعها بعد المثال الذي تلخّصه، لا في فقرة أخرى."
+    },
+    {
+      "q": "What is the relationship between the third paragraph and the earlier ones?",
+      "q_translation_ar": "ما علاقة الفقرة الثالثة بما سبقها؟",
+      "options": {
+        "A": "It adds balance by noting impressions can be wrong and revised, and draws a practical lesson.",
+        "B": "It proves first impressions are always correct.",
+        "C": "It repeats the speed of judgments word for word.",
+        "D": "It changes the topic to public speaking."
+      },
+      "correct": "A",
+      "type": "paragraph_relationship",
+      "explanation_ar": "بعد وصف قوة الانطباعات، توازن الفقرة الثالثة بأنها قد تكون خاطئة وقابلة للتعديل، وتستخلص درساً عملياً.",
+      "avoid_tip_ar": "حدّد الدور: (قوة الانطباع) ← (توازن ودرس). العلاقة إضافة وتوازن."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: قوّة الانطباعات الأولى"
+}

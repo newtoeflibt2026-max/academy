@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_17",
+  "tier": "tier90",
+  "title_en": "The Paradox of Choice",
+  "topic": "psychology",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "It is widely assumed that expanding the range of options available to people improves their lives, since more choice should allow individuals to satisfy their preferences more precisely. Yet a growing body of research complicates this intuition. Beyond a certain point, additional options can produce not satisfaction but paralysis, as the effort required to evaluate each alternative begins to outweigh the benefit of finding a marginally better one.\n\nSeveral mechanisms appear to underlie this phenomenon. When confronted with an overwhelming array of possibilities, people often postpone deciding altogether, or they select impulsively to escape the discomfort of deliberation. Moreover, an abundance of alternatives tends to raise expectations: having rejected dozens of options, a person may feel that the chosen one should have been flawless, and so is more prone to disappointment even with an objectively good outcome.\n\nNone of this implies that choice is undesirable; a world without options would be far worse. The point is subtler. The value of additional choice is not constant but diminishes, and can even reverse, once the cognitive costs of choosing exceed the gains. Recognizing this helps explain why thoughtfully curated selections sometimes leave people more content than limitless ones.",
+    "word_count": 200,
+    "topic": "psychology"
+  },
+  "glossary": {
+    "expanding": "توسيع",
+    "intuition": "حدس / بديهة",
+    "paralysis": "شلل / عجز عن الفعل",
+    "outweigh": "يفوق / يرجح على",
+    "marginally": "بشكل هامشي / طفيف",
+    "postpone": "يؤجّل",
+    "deliberation": "تروٍّ / تفكير مطوّل",
+    "abundance": "وفرة",
+    "diminishes": "يتناقص / يقلّ",
+    "curated": "مُنتقاة بعناية"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "More choice always makes people happier.",
+        "B": "Beyond a point, additional choice can reduce satisfaction because the costs of choosing outweigh the gains.",
+        "C": "People should never be given any choices.",
+        "D": "Curated selections are always worse than large ones."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يجادل بأن قيمة الخيارات تتناقص بعد حدّ معيّن لأن كلفة الاختيار تفوق مكاسبه. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية دقيقة هنا: ليست (الخيار سيئ) ولا (الخيار دائماً جيد)، بل (تتناقص قيمته بعد حدّ). تجنّب المتطرّفين."
+    },
+    {
+      "q": "According to the passage, why might a person be disappointed even with a good outcome?",
+      "q_translation_ar": "حسب النص، لماذا قد يشعر الشخص بخيبة أمل رغم نتيجة جيدة؟",
+      "options": {
+        "A": "Because the outcome was actually bad.",
+        "B": "Because rejecting many options raises expectations that the chosen one should be flawless.",
+        "C": "Because he had no options at all.",
+        "D": "Because he decided too quickly."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن رفض عشرات الخيارات يرفع التوقّعات، فيُتوقَّع أن يكون المختار مثالياً، ما يزيد احتمال خيبة الأمل.",
+      "avoid_tip_ar": "عُد للآلية المذكورة حرفياً (رفع التوقّعات). لا تخلطها بآليات أخرى في النص."
+    },
+    {
+      "q": "The word 'outweigh' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'outweigh' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "to be greater than",
+        "B": "to be equal to",
+        "C": "to disappear",
+        "D": "to measure exactly"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "outweigh تعني (يفوق/يرجح على): الجهد يفوق فائدة إيجاد خيار أفضل قليلاً. أقرب معنى to be greater than.",
+      "avoid_tip_ar": "السياق مقارنة (الجهد مقابل الفائدة)، والكلمة تعني (يزيد على) لا (يساوي)."
+    },
+    {
+      "q": "Look at this sentence: 'Paradoxically, then, freedom of choice can generate a burden of its own.' Where would it best fit?",
+      "q_translation_ar": "انظر إلى الجملة: (ومن المفارقة إذن أن حرية الاختيار قد تولّد عبئاً خاصاً بها). أين تنتمي؟",
+      "options": {
+        "A": "After the sentence describing postponing or choosing impulsively to escape discomfort (paragraph 2).",
+        "B": "At the very start of paragraph 1.",
+        "C": "After the sentence saying a world without options would be worse (paragraph 3).",
+        "D": "After the title."
+      },
+      "correct": "A",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تلخّص أن حرية الاختيار تصبح عبئاً، فهي تنتمي بعد وصف السلوكيات السلبية (التأجيل/الاندفاع) التي تجسّد هذا العبء.",
+      "avoid_tip_ar": "(من المفارقة إذن) تستنتج مما قبلها. ضعها بعد الأمثلة التي تبرّر الاستنتاج، لا في فقرة التوازن."
+    },
+    {
+      "q": "Which sentence best expresses the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تعبّر أفضل عن الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Choice has no value and should be eliminated.",
+        "B": "The benefit of extra choice diminishes and can reverse once the mental costs of choosing exceed the gains.",
+        "C": "People always postpone decisions.",
+        "D": "Expectations never affect satisfaction."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ هي أن فائدة الخيار الإضافي تتناقص وقد تنعكس عندما تتجاوز كلفتُه الذهنية مكاسبَه — وهي خلاصة النص كله.",
+      "avoid_tip_ar": "لأسئلة الفكرة الأهمّ، اختر ما يلخّص أطروحة النص كاملة، لا تفصيلة واحدة (التأجيل) أو مبالغة (لا قيمة للخيار)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: مفارقة الاختيار"
+}

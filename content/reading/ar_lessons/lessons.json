@@ -1,0 +1,172 @@
+{
+  "lessons": [
+    {
+      "id": "factual",
+      "order": 1,
+      "icon": "📌",
+      "title_en": "Factual Information",
+      "title_ar": "المعلومة الصريحة",
+      "intro_ar": "هذا النوع يسألك عن معلومة مذكورة بوضوح في النص. الإجابة موجودة حرفياً أو بإعادة صياغة بسيطة. لا يطلب منك استنتاجاً، بل دقة في القراءة.",
+      "how_ar": "اقرأ السؤال أولاً وحدّد الكلمة المفتاحية، ثم ابحث عنها في النص. في امتحان 2026 لن يخبرك السؤال بأي فقرة تبحث، لذلك امسح النص كله بسرعة بحثاً عن المعنى لا عن الكلمة نفسها.",
+      "tactics_ar": [
+        "الإجابة الصحيحة غالباً إعادة صياغة (paraphrase) وليست نفس كلمات النص.",
+        "احذر الخيار الذي يكرر كلمة من النص لكنه يغيّر المعنى — هذا فخ شائع.",
+        "تأكد أن كل أجزاء الخيار صحيحة؛ كلمة واحدة خاطئة تجعل الخيار كله خاطئاً."
+      ],
+      "example": {
+        "passage_en": "Trees are often planted along city roads to provide shade that helps residents cope with high temperatures. Their leaves also improve air quality by absorbing carbon dioxide and harmful pollutants.",
+        "q_en": "According to the passage, how do urban trees contribute to public health?",
+        "options": {"A": "By reducing temperatures near roads", "B": "By removing pollutants", "C": "By displacing concrete", "D": "By preventing erosion on farmland"},
+        "correct": "B",
+        "explain_ar": "النص يقول إن الأشجار تحسّن جودة الهواء بامتصاص الملوّثات. الخيار A فخ: النص قال إنها تساعد الناس على (التأقلم) مع الحرارة، لا أنها تخفض الحرارة فعلياً."
+      }
+    },
+    {
+      "id": "negative_factual",
+      "order": 2,
+      "icon": "🚫",
+      "title_en": "Negative Factual (NOT / EXCEPT)",
+      "title_ar": "المعلومة المنفية",
+      "intro_ar": "السؤال يحتوي كلمة NOT أو EXCEPT. ثلاثة خيارات مذكورة في النص (صحيحة)، وخيار واحد غير مذكور أو مخالف — وهو الإجابة الصحيحة.",
+      "how_ar": "اعكس طريقة تفكيرك: ابحث عن الخيارات الثلاثة الموجودة في النص واستبعدها، ويتبقّى الخيار غير المذكور. هذا النوع يحتاج وقتاً أطول قليلاً، فلا تستعجل.",
+      "tactics_ar": [
+        "ضع علامة بجانب كل خيار تجده في النص؛ الخيار الذي لا تجده هو الجواب.",
+        "احذر الخيار المذكور في النص لكن بسياق مختلف.",
+        "اقرأ السؤال مرتين لتتأكد من وجود النفي."
+      ],
+      "example": {
+        "passage_en": "Studies show residents of green neighborhoods enjoy lower stress, better mental health, increased community engagement, and even lower crime rates.",
+        "q_en": "Which of the following is NOT mentioned as a benefit of greenery?",
+        "options": {"A": "Reduced crime rates", "B": "Lower stress levels", "C": "Higher income levels", "D": "More community involvement"},
+        "correct": "C",
+        "explain_ar": "النص ذكر تقليل الجريمة، خفض التوتر، وزيادة المشاركة المجتمعية. لم يذكر (ارتفاع الدخل) إطلاقاً، فهو الإجابة الصحيحة."
+      }
+    },
+    {
+      "id": "vocabulary",
+      "order": 3,
+      "icon": "📖",
+      "title_en": "Vocabulary in Context",
+      "title_ar": "المفردة في السياق",
+      "intro_ar": "يسألك عن أقرب معنى لكلمة محددة كما استُخدمت في النص. المطلوب المعنى داخل السياق، وليس المعنى القاموسي العام.",
+      "how_ar": "ارجع للجملة التي تحوي الكلمة، اقرأها كاملة، ثم جرّب وضع كل خيار مكان الكلمة. الخيار الذي يحافظ على المعنى هو الصحيح.",
+      "tactics_ar": [
+        "هذا النوع سريع — لا تضيّع عليه وقتاً طويلاً.",
+        "إن عرفت الكلمة، تحقق سريعاً من السياق ثم انتقل.",
+        "إن لم تعرفها، استنتج من الكلمات المحيطة (أمثلة، تضاد، نتيجة)."
+      ],
+      "example": {
+        "passage_en": "These issues can be compounded by climate change, which causes extreme weather shifts that trees cannot adapt to.",
+        "q_en": "The word 'compounded' is closest in meaning to:",
+        "options": {"A": "repeated", "B": "intensified", "C": "created", "D": "limited"},
+        "correct": "B",
+        "explain_ar": "compounded هنا تعني (تتفاقم/تشتدّ). السياق يدل على أن تغيّر المناخ يزيد المشاكل سوءاً، فأقرب كلمة intensified."
+      }
+    },
+    {
+      "id": "rhetorical",
+      "order": 4,
+      "icon": "🎯",
+      "title_en": "Rhetorical Purpose",
+      "title_ar": "غرض الكاتب",
+      "intro_ar": "يسألك لماذا ذكر الكاتب معلومة أو مثالاً معيناً. لا يسأل عن المعلومة نفسها، بل عن وظيفتها في بناء النص.",
+      "how_ar": "اسأل نفسك: ما الفكرة التي تخدمها هذه الجملة؟ هل تعطي مثالاً، تشرح سبباً، تقارن، تعارض، أم تدعم ادعاءً؟ اربط الجزء بالفكرة الأكبر حوله.",
+      "tactics_ar": [
+        "ركّز على الفعل في الخيار: (ليوضّح)، (ليقارن)، (ليعارض)، (ليعطي مثالاً).",
+        "اقرأ الجملة التي قبل وبعد الجزء المذكور لفهم وظيفته.",
+        "تجنّب الخيار الذي يلخّص المعلومة بدل تفسير غرضها."
+      ],
+      "example": {
+        "passage_en": "Construction projects often damage tree roots. Even careful builders may cut off a tree's access to water and nutrients.",
+        "q_en": "Why does the author discuss construction projects?",
+        "options": {"A": "To explain why cities need parks", "B": "To show how urban development can unintentionally harm trees", "C": "To increase tree coverage", "D": "To describe global warming"},
+        "correct": "B",
+        "explain_ar": "الكاتب ذكر مشاريع البناء ليُبيّن كيف يضرّ التطوّر العمراني الأشجار دون قصد. هذا غرض الفقرة، وليس مجرد سرد معلومة."
+      }
+    },
+    {
+      "id": "inference",
+      "order": 5,
+      "icon": "💡",
+      "title_en": "Inference",
+      "title_ar": "الاستنتاج",
+      "intro_ar": "الإجابة غير مذكورة حرفياً، لكنها نتيجة منطقية لما ورد في النص. عليك أن تستنتج ما يلمّح إليه الكاتب دون أن يقوله صراحة.",
+      "how_ar": "ابحث عن دليل في النص يقودك للاستنتاج. الاستنتاج الصحيح قريب جداً من النص ولا يحتاج معلومات خارجية. ابتعد عن المبالغة.",
+      "tactics_ar": [
+        "تجنّب الخيار الذي يحتاج معرفة من خارج النص.",
+        "تجنّب الخيار المتطرّف (always, never, completely) غالباً.",
+        "الاستنتاج الصحيح خطوة واحدة منطقية بعد ما هو مكتوب، لا قفزة بعيدة."
+      ],
+      "example": {
+        "passage_en": "Older buildings were not designed to support the weight of wet soil and plants, and require costly structural reinforcements before a green roof can be added.",
+        "q_en": "What can be inferred about older buildings?",
+        "options": {"A": "They have steep roofs", "B": "They generally need modifications to support a green roof", "C": "They were built with heavier materials", "D": "They offer better bird habitats"},
+        "correct": "B",
+        "explain_ar": "بما أن المباني القديمة تحتاج تعزيزات إنشائية مكلفة، نستنتج منطقياً أنها تحتاج تعديلات لتتحمّل السقف الأخضر. استنتاج مباشر من الدليل."
+      }
+    },
+    {
+      "id": "insert_sentence",
+      "order": 6,
+      "icon": "➕",
+      "title_en": "Insert a Sentence",
+      "title_ar": "إدراج جملة",
+      "intro_ar": "يعطيك جملة ويطلب أفضل مكان لإدراجها بين أربعة مربعات [A] [B] [C] [D] في النص. المطلوب الحفاظ على ترابط الأفكار.",
+      "how_ar": "افحص الكلمات الرابطة في الجملة المُدرَجة (this, these, however, consequently). هذه الكلمات تشير لما قبلها. ضع الجملة حيث تتدفّق الأفكار قبلها وبعدها بسلاسة.",
+      "tactics_ar": [
+        "الضمائر وأدوات الإشارة (this, such, these) ترتبط بجملة سابقة محددة — ابحث عنها.",
+        "اقرأ الجملة قبل المربّع وبعده للتأكد من عدم انقطاع المعنى.",
+        "جرّب كل مربّع ذهنياً واختر الأكثر سلاسة."
+      ],
+      "example": {
+        "passage_en": "Rain on conventional roofs goes straight to street drains. [A] During heavy storms this runoff can overwhelm old sewer systems. [B] Green roofs intercept rain first. [C] The plants act like a sponge, releasing water slowly. [D]",
+        "q_en": "Where should this sentence go? 'When the system exceeds capacity, the excess water floods streets or basements.'",
+        "options": {"A": "[A]", "B": "[B]", "C": "[C]", "D": "[D]"},
+        "correct": "B",
+        "explain_ar": "الجملة تصف ما يحدث عند تجاوز سعة النظام، فتأتي مباشرة بعد جملة (تُغرِق أنظمة الصرف القديمة) عند [B]، وقبل التحوّل لحل الأسقف الخضراء."
+      }
+    },
+    {
+      "id": "paragraph_relationship",
+      "order": 7,
+      "icon": "🔗",
+      "title_en": "Paragraph Relationships",
+      "title_ar": "العلاقة بين الفقرات",
+      "intro_ar": "نوع جديد في 2026. يسألك كيف ترتبط فقرة بأخرى: هل تعطي أمثلة، تعارض، تذكر اعتراضات، أم تتوسّع في فكرة؟",
+      "how_ar": "حدّد الفكرة الرئيسية لكل فقرة في جملة واحدة، ثم اسأل: ما العلاقة بينهما؟ (دعم، تعارض، اعتراض، تطبيق، سبب ونتيجة).",
+      "tactics_ar": [
+        "لخّص كل فقرة بكلمة أو جملة قبل المقارنة.",
+        "ابحث عن أدوات تحوّل (however, critics argue, in contrast) فهي تكشف العلاقة.",
+        "ميّز بين (يعطي مثالاً) و(يذكر اعتراضاً) — فخ شائع."
+      ],
+      "example": {
+        "passage_en": "P1-P2 describe the benefits of seaweed bioplastics. P3: 'Critics, however, argue that large-scale algae farming could upset fragile marine ecosystems.'",
+        "q_en": "How does paragraph 3 relate to paragraphs 1 and 2?",
+        "options": {"A": "It gives examples of the benefits", "B": "It describes possible objections to the claims", "C": "It contradicts that the material exists", "D": "It repeats the same benefits"},
+        "correct": "B",
+        "explain_ar": "الفقرتان 1و2 تذكران الفوائد، والفقرة 3 تبدأ بـ Critics however لتعرض اعتراضات محتملة. إذن العلاقة: تعرض اعتراضات على الادعاءات."
+      }
+    },
+    {
+      "id": "important_idea",
+      "order": 8,
+      "icon": "⭐",
+      "title_en": "Important Idea (Click the Sentence)",
+      "title_ar": "الفكرة المهمة",
+      "intro_ar": "نوع جديد في 2026. يطلب منك النقر على الجملة في النص التي تعبّر عن فكرة معينة (سبب، نتيجة، تعريف).",
+      "how_ar": "افهم الفكرة المطلوبة جيداً، ثم ابحث في النص عن الجملة التي تطابقها بالمعنى لا باللفظ. الجملة الصحيحة تجيب مباشرة على ما يطلبه السؤال.",
+      "tactics_ar": [
+        "حوّل السؤال لسؤال بسيط: ما السبب؟ ما النتيجة؟ ثم ابحث عن الجملة المُجيبة.",
+        "تجنّب الجملة التي تذكر الموضوع لكنها لا تعبّر عن الفكرة المطلوبة.",
+        "اقرأ الجمل المرشّحة كاملة قبل الاختيار."
+      ],
+      "example": {
+        "passage_en": "Residents of neighborhoods with thriving greenery experience lower stress and better mental health. Trees also stabilize soil and reduce erosion.",
+        "q_en": "Click the sentence that explains why people near many trees may be happier.",
+        "options": {"A": "The sentence about lower stress and better mental health", "B": "The sentence about soil and erosion", "C": "The sentence about planting along roads", "D": "The sentence about air quality"},
+        "correct": "A",
+        "explain_ar": "السؤال يسأل عن سبب السعادة، والجملة التي تذكر (انخفاض التوتر وتحسّن الصحة النفسية) هي التي تعبّر عن ذلك مباشرة."
+      }
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "id": "ar_easy_06",
+  "tier": "tier59",
+  "title_en": "The Story of Chocolate",
+  "topic": "history",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Chocolate is enjoyed all over the world today, but its origins lie in the ancient Americas. The cacao tree, whose seeds are used to make chocolate, grew wild in the warm forests of Central and South America. Early peoples there discovered that the bitter seeds could be turned into a rich drink.\n\nThis early chocolate was very different from the sweet bars we know now. The seeds were roasted, ground, and mixed with water and spices to make a strong, bitter beverage. It was so valued that cacao seeds were sometimes used as money. Only after chocolate traveled across the ocean did people begin adding sugar, which softened its bitter taste.\n\nLater, new machines made it possible to turn chocolate into a solid form that could be shaped into bars. As production grew, chocolate changed from a rare luxury into an everyday treat. Today it remains one of the most popular flavors in the world, though few people realize how long its journey has been.",
+    "word_count": 167,
+    "topic": "history"
+  },
+  "glossary": {
+    "origins": "أصول / منشأ",
+    "cacao": "الكاكاو",
+    "seeds": "بذور",
+    "bitter": "مُرّ",
+    "roasted": "محمّص",
+    "ground": "مطحون",
+    "beverage": "مشروب",
+    "valued": "ثمين / مُقدَّر",
+    "luxury": "ترف / رفاهية",
+    "treat": "حلوى / متعة"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Chocolate has always been a sweet, solid bar.",
+        "B": "Chocolate began as a bitter drink in the Americas and slowly changed into the treat we know today.",
+        "C": "Cacao trees grow only in cold climates.",
+        "D": "Sugar was invented in the Americas."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يتتبّع رحلة الشوكولاتة من مشروب مرّ في الأمريكتين إلى الحلوى الحديثة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل النص. تجنّب الخيار الذي يناقض النص (كانت دائماً لوحاً حلواً)."
+    },
+    {
+      "q": "According to the passage, how was early chocolate consumed?",
+      "q_translation_ar": "حسب النص، كيف كانت الشوكولاتة تُستهلَك قديماً؟",
+      "options": {
+        "A": "As a sweet solid bar.",
+        "B": "As a bitter drink mixed with water and spices.",
+        "C": "As a cold dessert.",
+        "D": "As a kind of bread."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن البذور كانت تُحمّص وتُطحن وتُمزج بالماء والتوابل لصنع مشروب مرّ قوي.",
+      "avoid_tip_ar": "عُد للوصف المذكور حرفياً. الشكل الصلب الحلو جاء لاحقاً، لا قديماً."
+    },
+    {
+      "q": "The word 'valued' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'valued' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "considered worthless",
+        "B": "considered precious",
+        "C": "easily forgotten",
+        "D": "tasted bad"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "valued تعني (ثمين/مُقدَّر): كانت البذور ثمينة لدرجة استخدامها كنقود. أقرب معنى considered precious.",
+      "avoid_tip_ar": "الدليل في الجملة نفسها: استُخدمت كنقود، إذن كانت (ثمينة) لا بلا قيمة."
+    },
+    {
+      "q": "Why does the author mention that cacao seeds were used as money?",
+      "q_translation_ar": "لماذا يذكر الكاتب أن بذور الكاكاو استُخدمت كنقود؟",
+      "options": {
+        "A": "To show how highly valued cacao was at the time.",
+        "B": "To prove that chocolate was never eaten.",
+        "C": "To explain how modern banks work.",
+        "D": "To criticize ancient peoples."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "ذكر استخدامها كنقود يدعم النقطة السابقة: أن الكاكاو كان ثميناً جداً. هذا غرض الجملة.",
+      "avoid_tip_ar": "أسئلة الغرض تربط الجملة بالنقطة قبلها. هنا (كنقود) دليل على القيمة العالية."
+    },
+    {
+      "q": "What can be inferred about chocolate over time?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن الشوكولاتة عبر الزمن؟",
+      "options": {
+        "A": "It became less popular as years passed.",
+        "B": "It changed from a rare luxury into something many people can enjoy.",
+        "C": "It is still used as money today.",
+        "D": "Its taste has never changed."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يقول إنها تحوّلت من ترف نادر إلى متعة يومية بفضل الآلات والإنتاج، فنستنتج أنها صارت متاحة للكثيرين.",
+      "avoid_tip_ar": "الاستنتاج يتبع النص. تجنّب ما يناقضه (أقلّ شعبية / لم يتغيّر طعمها)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: قصة الشوكولاتة"
+}

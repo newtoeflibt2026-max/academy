@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_09",
+  "tier": "tier69",
+  "title_en": "The Rise of Vertical Farming",
+  "topic": "sustainability",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "As the world's population becomes increasingly concentrated in cities, feeding urban residents has become a pressing challenge. One emerging solution is vertical farming, the practice of growing crops in stacked layers inside controlled indoor environments. Unlike traditional agriculture, which depends on vast areas of fertile land and predictable weather, vertical farms operate in warehouses or repurposed buildings where temperature, light, and humidity are carefully regulated.\n\nThe potential advantages are considerable. Because crops are grown indoors, they are shielded from droughts, floods, and pests, reducing the need for chemical pesticides. Water use is also dramatically lower, as the systems recycle moisture rather than allowing it to drain away. Furthermore, by situating farms within cities, producers can deliver fresh produce to nearby markets within hours, cutting both transportation costs and spoilage.\n\nStill, vertical farming faces significant obstacles. The artificial lighting required to replace sunlight consumes enormous amounts of electricity, and the initial cost of constructing these facilities remains high. Critics argue that until renewable energy becomes cheaper, the environmental benefits may be partially offset by heavy energy demands. Supporters counter that rapid advances in efficient lighting technology are steadily narrowing this gap.",
+    "word_count": 205,
+    "topic": "sustainability"
+  },
+  "glossary": {
+    "concentrated": "متركّز / مُكدّس",
+    "stacked": "مُكدّسة فوق بعضها",
+    "repurposed": "أُعيد استخدامها لغرض جديد",
+    "regulated": "مُنظَّمة / مضبوطة",
+    "shielded": "محمية / مَصونة",
+    "pests": "آفات / حشرات ضارة",
+    "spoilage": "التلف / الفساد",
+    "offset": "يُعادَل / يُقابَل",
+    "narrowing": "يُضيّق / يُقلّص الفجوة",
+    "obstacles": "عقبات / عوائق"
+  },
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Why traditional agriculture is no longer used in any country.",
+        "B": "Vertical farming as an emerging urban food solution, with its benefits and challenges.",
+        "C": "The history of warehouse construction in modern cities.",
+        "D": "How droughts and floods permanently destroyed urban farms."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يعرّف الزراعة العمودية كحلّ ناشئ لتغذية المدن، ثم يوازن بين فوائدها وعقباتها — وهذا هو الموضوع العام.",
+      "avoid_tip_ar": "للفكرة الرئيسية، ابحث عن الخيار الذي يجمع كل فقرات النص. تجنّب الخيارات المتطرّفة مثل (لم يعد يُستخدم في أي بلد)."
+    },
+    {
+      "q": "According to the passage, why do vertical farms use less water than traditional farms?",
+      "q_translation_ar": "حسب النص، لماذا تستهلك المزارع العمودية ماءً أقل من المزارع التقليدية؟",
+      "options": {
+        "A": "They grow fewer crops overall.",
+        "B": "They recycle moisture instead of letting it drain away.",
+        "C": "They rely entirely on rainwater.",
+        "D": "They use saltwater from nearby cities."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن الأنظمة تعيد تدوير الرطوبة بدل تركها تتسرّب، فينخفض استهلاك الماء.",
+      "avoid_tip_ar": "في أسئلة المعلومة الصريحة، عُد للسبب المذكور حرفياً. الخيارات الأخرى غير مذكورة."
+    },
+    {
+      "q": "The word 'offset' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'offset' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "increased",
+        "B": "counterbalanced",
+        "C": "ignored",
+        "D": "discovered"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "offset هنا تعني (يُعادَل/يُقابَل): الفوائد البيئية قد يقابلها استهلاك الطاقة الكبير. أقرب كلمة counterbalanced.",
+      "avoid_tip_ar": "ضع الخيار مكان الكلمة في الجملة. المعنى موازنة لا زيادة (increased)."
+    },
+    {
+      "q": "Look at this sentence: 'This is especially valuable for leafy greens, which lose freshness quickly.' Where would it best fit in the passage?",
+      "q_translation_ar": "انظر إلى الجملة: (هذا قيّم بشكل خاص للخضراوات الورقية التي تفقد نضارتها سريعاً). أين تنتمي في النص؟",
+      "options": {
+        "A": "After the sentence about regulating temperature and humidity (paragraph 1).",
+        "B": "After the sentence about delivering fresh produce within hours (paragraph 2).",
+        "C": "After the sentence about artificial lighting consuming electricity (paragraph 3).",
+        "D": "After the sentence defining vertical farming (paragraph 1)."
+      },
+      "correct": "B",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تتحدث عن النضارة والخضراوات الورقية، فهي تنتمي بعد الجملة التي تذكر تسليم المنتجات الطازجة خلال ساعات وتقليل الفساد — فكلاهما عن الطزاجة.",
+      "avoid_tip_ar": "لإدراج الجملة، اربط فكرتها (النضارة) بالجملة المجاورة التي تشترك معها بنفس الموضوع. تجنّب المواضع التي تتحدث عن موضوع مختلف (الطاقة/التنظيم)."
+    },
+    {
+      "q": "What is the relationship between the second and third paragraphs?",
+      "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
+      "options": {
+        "A": "The third paragraph repeats the same points as the second.",
+        "B": "The second presents the advantages, while the third presents the obstacles that balance them.",
+        "C": "Both paragraphs argue that vertical farming is impossible.",
+        "D": "The third paragraph gives the history of the second."
+      },
+      "correct": "B",
+      "type": "paragraph_relationship",
+      "explanation_ar": "الفقرة الثانية تعرض المزايا، والثالثة تعرض العقبات (الطاقة والتكلفة)، فالعلاقة هي تقديم الجانبين المتقابلين للموضوع.",
+      "avoid_tip_ar": "لأسئلة العلاقة بين الفقرات، حدّد دور كل فقرة (مزايا/عيوب/مثال/سبب). هنا: مزايا ثم عقبات تقابلها."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: صعود الزراعة العمودية"
+}

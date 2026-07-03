@@ -284,11 +284,11 @@ body {
     {% set theory_map = {
       "complete_words":   {"id": 19,  "icon": "📘", "title": "نظرية إكمال الكلمات",     "desc": "تعلّم القاعدة قبل التمارين • R-01 → R-02 → R-03"},
       "daily_reading":    {"id": 91,  "icon": "📗", "title": "نظرية القراءة اليومية",   "desc": "استراتيجيات قراءة النصوص اليومية • R-13"},
-      "academic_reading": {"id": 102, "icon": "📕", "title": "نظرية القراءة الأكاديمية", "desc": "أساسيات القراءة الأكاديمية • R-24"}
+      "academic_reading": {"id": "ar", "icon": "📕", "title": "القراءة الأكاديمية — دروس وتدريبات", "desc": "أستاذك الخصوصي: دروس الأنواع + قطع متدرّجة"}
     } %}
     {% if type_key in theory_map %}
     {% set t = theory_map[type_key] %}
-    <a href="/foundation/lesson/{{ t.id }}?user_id={{ user_id }}" class="theory-card">
+    <a href="{% if type_key == 'academic_reading' %}/reading/ar?user_id={{ user_id }}{% else %}/foundation/lesson/{{ t.id }}?user_id={{ user_id }}{% endif %}" class="theory-card">
       <div class="theory-icon">{{ t.icon }}</div>
       <div class="theory-info">
         <span class="theory-badge">📚 ابدأ هنا — درس نظري</span>
@@ -363,7 +363,7 @@ function goToExam(type, id, userId) {
   } else if (type === 'daily_reading') {
     window.location.href = '/reading/dl/exam/' + id + '?user_id=' + userId;
   } else if (type === 'academic_reading') {
-    window.location.href = '/reading/ar/exam/' + id + '?user_id=' + userId;
+    window.location.href = '/reading/ar/passage/' + id + '?user_id=' + userId;
   } else {
     window.location.href = '/reading/start/' + id + '?user_id=' + userId;
   }

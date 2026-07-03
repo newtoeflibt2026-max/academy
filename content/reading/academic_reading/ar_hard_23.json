@@ -1,0 +1,103 @@
+{
+  "id": "ar_hard_23",
+  "tier": "tier90",
+  "title_en": "The Tragedy of the Commons",
+  "topic": "environment",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Consider a pasture open to all herders in a village. Each herder gains the full benefit of adding one more animal to the land, while the cost of the resulting overgrazing is shared among everyone. Because the private gain is concentrated and the loss is diffuse, every individual has an incentive to enlarge his own herd, even though the sum of these rational choices degrades the pasture for all. This dilemma, in which individually sensible actions produce collective ruin, is known as the tragedy of the commons.\n\nThe pattern extends far beyond grazing land. Ocean fisheries, clean air, and freshwater aquifers are all shared resources vulnerable to the same logic. Each fishing fleet, factory, or farm benefits privately from taking a little more, while the depletion is borne by all who depend on the resource, and often by future generations who have no say at all.\n\nCrucially, the tragedy is not a verdict of inevitable doom. Communities have repeatedly avoided it by devising rules that align private incentives with the common good, whether through shared agreements, enforced limits, or clearly defined rights. The lesson is that unmanaged access to a shared resource invites its destruction, whereas thoughtful governance can preserve it.",
+    "word_count": 202,
+    "topic": "environment"
+  },
+  "glossary": {
+    "pasture": "مرعى",
+    "herders": "رعاة",
+    "overgrazing": "الرعي الجائر",
+    "concentrated": "مُركَّز",
+    "diffuse": "منتشر / متفرّق",
+    "incentive": "حافز / دافع",
+    "degrades": "يُدهوِر / يُتلِف",
+    "depletion": "استنزاف / نضوب",
+    "verdict": "حُكم / قرار",
+    "governance": "حوكمة / إدارة"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Shared resources can never be saved.",
+        "B": "When access to a shared resource is unmanaged, individual incentives lead to collective ruin, but good governance can prevent this.",
+        "C": "Herders should own no animals.",
+        "D": "Only fisheries face this problem."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يشرح مأساة المشاعات ثم يبيّن أن الحوكمة الجيدة تتجنّبها. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب المتطرّف (لا يمكن إنقاذها) والجزئي (المصايد فقط)."
+    },
+    {
+      "q": "According to the passage, why does each herder tend to add more animals?",
+      "q_translation_ar": "حسب النص، لماذا يميل كل راعٍ إلى إضافة مزيد من الحيوانات؟",
+      "options": {
+        "A": "Because the private gain is concentrated while the cost of overgrazing is shared by all.",
+        "B": "Because the village forces him to.",
+        "C": "Because animals are free.",
+        "D": "Because the pasture never suffers."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن المكسب الخاص مُركَّز بينما كلفة الرعي الجائر مُوزَّعة على الجميع، فيندفع كل فرد للتوسّع.",
+      "avoid_tip_ar": "عُد للآلية المذكورة حرفياً (مكسب مركّز/كلفة موزّعة). باقي الخيارات لم تُذكَر."
+    },
+    {
+      "q": "The word 'depletion' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'depletion' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "using up until exhausted",
+        "B": "cleaning",
+        "C": "increasing",
+        "D": "protecting"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "depletion تعني (استنزاف/نضوب): كلٌّ يأخذ أكثر فيُستنزَف المورد. أقرب معنى using up until exhausted.",
+      "avoid_tip_ar": "السياق سلبي (يتحمّلها الجميع)، فالمعنى استنزاف لا زيادة (increasing)."
+    },
+    {
+      "q": "Look at this sentence: 'These solutions differ in form, but they share a single principle.' Where would it best fit?",
+      "q_translation_ar": "انظر إلى الجملة: (تختلف هذه الحلول في شكلها لكنها تشترك في مبدأ واحد). أين تنتمي؟",
+      "options": {
+        "A": "After the sentence listing shared agreements, enforced limits, or defined rights (paragraph 3).",
+        "B": "At the start of paragraph 1.",
+        "C": "After the sentence defining the tragedy of the commons (paragraph 1).",
+        "D": "After the title."
+      },
+      "correct": "A",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تشير إلى (هذه الحلول)، فهي تنتمي مباشرة بعد سرد الحلول (اتفاقات، حدود، حقوق) لتعلّق على قاسمها المشترك.",
+      "avoid_tip_ar": "(هذه الحلول) تُشير إلى قائمة سبقتها. ضعها بعد القائمة نفسها، لا قبل ذكر أي حلول."
+    },
+    {
+      "q": "Which sentence best expresses the most important idea of the passage?",
+      "q_translation_ar": "أيّ جملة تعبّر أفضل عن الفكرة الأهمّ في النص؟",
+      "options": {
+        "A": "Rational individual choices always benefit everyone.",
+        "B": "Unmanaged access to a shared resource invites its destruction, whereas thoughtful governance can preserve it.",
+        "C": "Shared resources are unimportant.",
+        "D": "Destruction of the commons is completely unavoidable."
+      },
+      "correct": "B",
+      "type": "important_idea",
+      "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن الوصول غير المُدار للمورد المشترك يدعو لتدميره، بينما الحوكمة الحكيمة تحفظه — خلاصة النص.",
+      "avoid_tip_ar": "اختر الخلاصة الجامعة. تجنّب المتطرّف (حتمي / دائماً ينفع الجميع) الذي يرفضه النص."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER90",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: مأساة المشاعات"
+}

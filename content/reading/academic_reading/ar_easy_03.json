@@ -1,69 +1,103 @@
 {
   "id": "ar_easy_03",
-  "tier": "easy",
-  "title_en": "Music and the Brain",
-  "topic": "neuroscience",
-  "duration_seconds": 360,
+  "tier": "tier59",
+  "title_en": "Why Leaves Change Color",
+  "topic": "biology",
+  "duration_seconds": 600,
   "passage": {
-    "text_en": "Listening to music affects the human brain in remarkable ways. When we hear a familiar song, multiple brain regions activate at once, including those linked to memory, emotion, and motor control. This explains why we often tap our feet or feel strong emotions while listening, even without consciously deciding to react.\n\nMusic therapy has emerged as a valuable tool in medicine. Patients recovering from strokes sometimes regain speech faster when therapy includes singing exercises, because the brain's musical pathways can compensate for damaged language areas. Similarly, individuals with dementia who can no longer recognize loved ones often still remember the songs of their youth. These observations suggest that musical memory is deeply embedded and surprisingly resilient compared to other forms of memory.",
-    "word_count": 122,
-    "topic": "neuroscience"
+    "text_en": "Each autumn in many parts of the world, the green leaves of trees turn brilliant shades of yellow, orange, and red. This colorful change is not random. It is the result of chemical processes inside the leaves that respond to the shorter days and cooler nights of the season.\n\nDuring spring and summer, leaves are full of a green substance called chlorophyll, which helps the tree make food from sunlight. Chlorophyll is so plentiful that it hides the other colors present in the leaf. As autumn arrives and daylight fades, the tree slows its food production and the green chlorophyll breaks down. Once it disappears, the yellow and orange colors that were there all along finally become visible.\n\nThe bright red color works a little differently. It comes from new pigments that some trees produce in the fall, often in response to cool temperatures and bright sunlight. Eventually, the leaves stop working entirely, dry out, and fall to the ground, completing the yearly cycle.",
+    "word_count": 169,
+    "topic": "biology"
+  },
+  "glossary": {
+    "brilliant": "زاهٍ / لامع",
+    "shades": "درجات / ظلال (ألوان)",
+    "random": "عشوائي",
+    "chlorophyll": "الكلوروفيل (الصبغة الخضراء)",
+    "substance": "مادة",
+    "plentiful": "وفير / كثير",
+    "fades": "يخفت / يتلاشى",
+    "breaks down": "يتحلّل",
+    "pigments": "أصباغ / مواد ملوّنة",
+    "cycle": "دورة"
   },
   "questions": [
     {
-      "q": "What is the main idea of the passage?",
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Music affects the brain in powerful ways and can be used therapeutically.",
-        "B": "Only classical music has measurable effects on the brain.",
-        "C": "Music therapy has replaced traditional medicine.",
-        "D": "Most people cannot remember songs from their childhood."
-      },
-      "correct": "A",
-      "type": "factual",
-      "explanation_ar": "الموضوع الرئيسي هو تأثير الموسيقى على الدماغ واستخدامها علاجياً."
-    },
-    {
-      "q": "According to the passage, what happens when we hear a familiar song?",
-      "options": {
-        "A": "Only the language area of the brain activates.",
-        "B": "Several brain regions activate simultaneously.",
-        "C": "The brain temporarily stops processing emotions.",
-        "D": "Motor control areas shut down."
+        "A": "How trees grow taller each year.",
+        "B": "The chemical reasons why leaves change color in autumn.",
+        "C": "Why some trees never lose their leaves.",
+        "D": "How farmers use leaves to make food."
       },
       "correct": "B",
       "type": "factual",
-      "explanation_ar": "الفقرة الأولى تذكر أن مناطق متعددة من الدماغ تنشط في الوقت نفسه."
+      "explanation_ar": "النص يفسّر الأسباب الكيميائية لتغيّر لون الأوراق في الخريف (تحلّل الكلوروفيل، الأصباغ الجديدة). هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل النص. تجنّب المواضيع التي لم تُناقَش (نمو الطول / الأشجار دائمة الخضرة)."
     },
     {
-      "q": "The word 'resilient' in the passage is closest in meaning to:",
+      "q": "According to the passage, why are leaves green in summer?",
+      "q_translation_ar": "حسب النص، لماذا تكون الأوراق خضراء في الصيف؟",
       "options": {
-        "A": "fragile",
-        "B": "forgotten",
-        "C": "durable",
-        "D": "expensive"
+        "A": "Because they contain a lot of chlorophyll that hides other colors.",
+        "B": "Because the weather is hot.",
+        "C": "Because trees stop making food.",
+        "D": "Because red pigments cover the leaves."
       },
-      "correct": "C",
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الكلوروفيل الأخضر وفير لدرجة أنه يخفي الألوان الأخرى في الورقة.",
+      "avoid_tip_ar": "عُد للسبب المذكور صراحة. (إيقاف صنع الغذاء) يحدث في الخريف لا الصيف، فهو سبب التغيّر لا سبب الخُضرة."
+    },
+    {
+      "q": "The word 'fades' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'fades' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "grows stronger",
+        "B": "becomes weaker",
+        "C": "turns green",
+        "D": "stays the same"
+      },
+      "correct": "B",
       "type": "vocabulary",
-      "explanation_ar": "resilient = صامد/قوي/متين. أقرب كلمة هي durable."
+      "explanation_ar": "fades تعني (يخفت/يتلاشى): مع قدوم الخريف يقلّ ضوء النهار. أقرب معنى becomes weaker.",
+      "avoid_tip_ar": "السياق يتحدث عن قصر النهار في الخريف، فالضوء (يقلّ) لا (يقوى)."
     },
     {
-      "q": "Which of the following is NOT mentioned as a benefit of music?",
+      "q": "Which of the following is NOT given as a reason for autumn leaf color?",
+      "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كسبب لتلوّن أوراق الخريف؟",
       "options": {
-        "A": "Helping stroke patients regain speech.",
-        "B": "Activating memory in dementia patients.",
-        "C": "Improving physical strength in athletes.",
-        "D": "Triggering emotional responses."
+        "A": "The breakdown of green chlorophyll.",
+        "B": "New pigments made in the fall.",
+        "C": "Cool temperatures and bright sunlight.",
+        "D": "Rain washing color into the leaves."
       },
-      "correct": "C",
+      "correct": "D",
       "type": "negative_factual",
-      "explanation_ar": "الفقرة لم تذكر تحسين قوة الرياضيين الجسدية."
+      "explanation_ar": "النص يذكر تحلّل الكلوروفيل، والأصباغ الجديدة، والبرودة والضوء الساطع. لكنه لم يذكر (المطر يغسل اللون) إطلاقاً.",
+      "avoid_tip_ar": "في سؤال (NOT)، تحقّق من كل خيار في النص. الخيار غير الموجود هو الجواب."
+    },
+    {
+      "q": "What can be inferred about a leaf at the end of autumn?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن الورقة في نهاية الخريف؟",
+      "options": {
+        "A": "It produces more chlorophyll than in summer.",
+        "B": "It stops functioning and falls from the tree.",
+        "C": "It turns green again.",
+        "D": "It grows larger and stronger."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يقول إن الأوراق تتوقّف عن العمل، تجفّ، وتسقط. فنستنتج أن الورقة في النهاية تتوقّف وتسقط.",
+      "avoid_tip_ar": "الاستنتاج يتبع ما ذكره النص. تجنّب ما يناقض النص (تخضرّ / تكبر) فالاتجاه نحو الذبول."
     }
   ],
   "metadata": {
-    "source": "Phase 5.8 Academic Reading",
-    "level": "EASY",
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
     "type": "academic_reading"
   },
   "type": "academic_reading",
-  "title_ar": "نص 3: الموسيقى والدماغ"
+  "title_ar": "نص: لماذا تتغيّر ألوان الأوراق"
 }

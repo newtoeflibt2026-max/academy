@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_12",
+  "tier": "tier69",
+  "title_en": "Coral Reefs Under Pressure",
+  "topic": "environment",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Coral reefs are among the richest ecosystems on Earth, supporting a quarter of all marine species despite covering only a tiny fraction of the ocean floor. This abundance depends on a delicate partnership between coral animals and the microscopic algae that live inside them. The algae produce food through sunlight and share it with the coral, while the coral offers shelter in return.\n\nThis partnership, however, is highly sensitive to temperature. When ocean waters become too warm, the stressed coral expels the algae, losing both its color and its main food source. This process, known as bleaching, leaves the coral pale and weakened. If warm conditions persist, the coral may not recover and can eventually die, taking much of the surrounding life with it.\n\nScientists warn that rising ocean temperatures have made severe bleaching events more frequent. Yet there is some cause for hope. Certain coral populations show greater tolerance to heat, and protecting reefs from additional pressures, such as pollution and overfishing, can improve their chances of recovery. Researchers are now studying whether these hardier corals might help reefs adapt to a warming world.",
+    "word_count": 190,
+    "topic": "environment"
+  },
+  "glossary": {
+    "ecosystems": "أنظمة بيئية",
+    "abundance": "وفرة / غزارة",
+    "delicate": "دقيق / هشّ",
+    "partnership": "شراكة",
+    "algae": "طحالب",
+    "expels": "يطرد / يلفظ",
+    "bleaching": "الابيضاض (تبييض المرجان)",
+    "persist": "يستمرّ / يدوم",
+    "tolerance": "تحمّل / مقاومة",
+    "hardier": "أكثر صلابة / تحمّلاً"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Coral reefs are unimportant to ocean life.",
+        "B": "Coral reefs are rich but fragile ecosystems threatened by warming, with some hope for adaptation.",
+        "C": "Algae are harmful to coral and should be removed.",
+        "D": "Overfishing is the only threat to coral reefs."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يصف ثراء الشعاب المرجانية وهشاشتها أمام الاحترار، مع بصيص أمل في التكيّف. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات المتطرّفة أو الجزئية (تهديد واحد فقط)."
+    },
+    {
+      "q": "According to the passage, what happens during coral bleaching?",
+      "q_translation_ar": "حسب النص، ماذا يحدث أثناء ابيضاض المرجان؟",
+      "options": {
+        "A": "The coral grows faster and stronger.",
+        "B": "The stressed coral expels its algae, losing its color and main food source.",
+        "C": "The algae eat the coral.",
+        "D": "The water becomes colder."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن المرجان المُجهَد يطرد الطحالب فيفقد لونه ومصدر غذائه الرئيسي.",
+      "avoid_tip_ar": "عُد للوصف المذكور حرفياً. باقي الخيارات تناقض النص."
+    },
+    {
+      "q": "The word 'persist' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'persist' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "continue",
+        "B": "disappear",
+        "C": "weaken",
+        "D": "freeze"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "persist تعني (يستمرّ/يدوم): إذا استمرّت الظروف الدافئة قد لا يتعافى المرجان. أقرب معنى continue.",
+      "avoid_tip_ar": "السياق شرطي (إذا دامت الحرارة)، فالمعنى استمرار لا اختفاء."
+    },
+    {
+      "q": "Look at this sentence: 'For this reason, the health of a reef can be read directly from its color.' Where would it best fit?",
+      "q_translation_ar": "انظر إلى الجملة: (لهذا السبب، يمكن قراءة صحة الشعبة مباشرةً من لونها). أين تنتمي؟",
+      "options": {
+        "A": "After the sentence describing bleaching as leaving coral pale and weakened (paragraph 2).",
+        "B": "At the start of paragraph 1.",
+        "C": "After the sentence about reefs supporting a quarter of marine species (paragraph 1).",
+        "D": "After the title."
+      },
+      "correct": "A",
+      "type": "insert_sentence",
+      "explanation_ar": "الجملة تربط الصحة باللون، فهي تنتمي مباشرة بعد وصف الابيضاض الذي يجعل المرجان شاحباً وضعيفاً — لأن اللون هو المؤشّر.",
+      "avoid_tip_ar": "اربط (لهذا السبب) بالسبب الذي يسبقها مباشرة: فقدان اللون. تجنّب المواضع التي لا تتحدث عن اللون."
+    },
+    {
+      "q": "What is the relationship between the second and third paragraphs?",
+      "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
+      "options": {
+        "A": "The second describes the threat (bleaching), and the third presents both the growing danger and reasons for hope.",
+        "B": "Both paragraphs claim coral cannot be saved.",
+        "C": "The third repeats the partnership described in the second.",
+        "D": "The second is about pollution and the third about algae only."
+      },
+      "correct": "A",
+      "type": "paragraph_relationship",
+      "explanation_ar": "الفقرة الثانية تصف التهديد (الابيضاض)، والثالثة توسّع بذكر تزايد الخطر مع أسباب للأمل (مرجان أكثر تحمّلاً، الحماية). فالعلاقة تهديد ثم استجابة/أمل.",
+      "avoid_tip_ar": "حدّد دور كل فقرة. هنا: مشكلة ثم آفاق/أمل، لا تكرار ولا تناقض."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: الشعاب المرجانية تحت الضغط"
+}

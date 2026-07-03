@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_14",
+  "tier": "tier69",
+  "title_en": "The Return of the Wolves",
+  "topic": "environment",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "When wolves disappeared from a large national park, few people imagined how deeply their absence would reshape the landscape. Without wolves, the population of large plant-eating animals, such as deer, grew rapidly. These animals grazed heavily along rivers and streams, stripping young trees and shrubs before they could mature.\n\nDecades later, scientists reintroduced a small number of wolves to the park, and the effects rippled outward in surprising ways. As wolves hunted and moved the deer, the deer no longer lingered in the open river valleys. Young trees finally had a chance to grow tall. With more trees, birds returned, and beavers, which depend on wood, built dams that created new ponds and wetlands.\n\nThis chain of effects, in which a single predator influences many other species, is known as a trophic cascade. The wolf example became famous because it showed that removing or restoring one species can transform an entire ecosystem. It reminded scientists that the connections within nature are often far more intricate than they appear.",
+    "word_count": 176,
+    "topic": "environment"
+  },
+  "glossary": {
+    "absence": "غياب",
+    "reshape": "يعيد تشكيل",
+    "grazed": "رعت",
+    "stripping": "تجريد / إزالة",
+    "mature": "ينضج / يكتمل نموّه",
+    "reintroduced": "أعاد إدخال",
+    "rippled": "تموّجت / امتدّت آثارها",
+    "lingered": "تلبّثت / بقيت طويلاً",
+    "predator": "مفترس",
+    "intricate": "معقّد / متشابك"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Wolves are dangerous and should be removed from parks.",
+        "B": "Restoring one predator, the wolf, triggered a chain of changes that transformed an entire ecosystem.",
+        "C": "Deer are the most important animals in the park.",
+        "D": "Beavers build dams for no clear reason."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يروي كيف أدّت إعادة الذئاب إلى سلسلة تغييرات غيّرت النظام البيئي كله. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات الجزئية (الغزلان/السدود) أو المتطرّفة."
+    },
+    {
+      "q": "According to the passage, what happened to young trees after the wolves returned?",
+      "q_translation_ar": "حسب النص، ماذا حدث للأشجار الصغيرة بعد عودة الذئاب؟",
+      "options": {
+        "A": "They were all eaten by wolves.",
+        "B": "They finally had a chance to grow tall because deer no longer lingered in the valleys.",
+        "C": "They stopped growing completely.",
+        "D": "They were cut down by beavers immediately."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الغزلان لم تعد تتلبّث في الوديان، فأتيحت للأشجار الصغيرة فرصة أن تعلو.",
+      "avoid_tip_ar": "عُد للنتيجة المذكورة حرفياً. باقي الخيارات تناقض النص."
+    },
+    {
+      "q": "The word 'intricate' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'intricate' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "simple",
+        "B": "complex",
+        "C": "weak",
+        "D": "temporary"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "intricate تعني (معقّد/متشابك): الروابط في الطبيعة أعقد مما تبدو. أقرب معنى complex.",
+      "avoid_tip_ar": "السياق يؤكّد التعقيد (أكثر مما تبدو)، فالمعنى معقّد لا بسيط (simple)."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as an effect of the wolves' return?",
+      "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كأثر لعودة الذئاب؟",
+      "options": {
+        "A": "Young trees grew taller.",
+        "B": "Birds returned.",
+        "C": "Beavers built dams.",
+        "D": "The rivers dried up completely."
+      },
+      "correct": "D",
+      "type": "negative_factual",
+      "explanation_ar": "النص يذكر نموّ الأشجار وعودة الطيور وبناء السدود، لكنه لم يذكر (جفاف الأنهار) — بل العكس، تكوّنت برك ومستنقعات.",
+      "avoid_tip_ar": "في سؤال (NOT)، تحقّق من كل خيار. الخيار الذي يناقض النص أو لا يُذكَر هو الجواب."
+    },
+    {
+      "q": "What is the relationship between the second and third paragraphs?",
+      "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
+      "options": {
+        "A": "The second describes the specific chain of effects, and the third names and generalizes it as a broader scientific concept.",
+        "B": "Both paragraphs describe how wolves were removed.",
+        "C": "The third contradicts the second.",
+        "D": "The second is about birds and the third about deer only."
+      },
+      "correct": "A",
+      "type": "paragraph_relationship",
+      "explanation_ar": "الفقرة الثانية تسرد سلسلة الآثار المحدّدة، والثالثة تسمّيها (trophic cascade) وتعمّمها كمفهوم علمي أوسع.",
+      "avoid_tip_ar": "حدّد التطوّر: (مثال محدّد) ← (مفهوم عام). العلاقة تعميم لا تناقض."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: عودة الذئاب"
+}

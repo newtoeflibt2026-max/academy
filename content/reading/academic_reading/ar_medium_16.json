@@ -1,0 +1,103 @@
+{
+  "id": "ar_medium_16",
+  "tier": "tier69",
+  "title_en": "How Cities Cope with Heat",
+  "topic": "sustainability",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "Anyone who has walked through a city on a hot summer day has felt how much warmer it can be than the surrounding countryside. This difference, known as the urban heat island effect, occurs because the materials that make up cities absorb and hold heat. Dark roads and rooftops soak up sunlight during the day and release it slowly at night, keeping temperatures high long after sunset.\n\nThe consequences are more than mere discomfort. Higher temperatures increase the demand for air conditioning, which raises energy use and, in turn, produces more heat. During severe heat waves, the effect can even threaten the health of vulnerable residents. As cities grow and summers become hotter, planners have begun searching for practical ways to cool urban areas.\n\nSeveral strategies show promise. Planting more trees provides shade and releases moisture that cools the air. Painting roofs in light colors reflects sunlight instead of absorbing it, and adding parks and green spaces breaks up the expanses of heat-trapping surfaces. None of these measures alone solves the problem, but together they can noticeably lower a city's temperature.",
+    "word_count": 187,
+    "topic": "sustainability"
+  },
+  "glossary": {
+    "surrounding": "المحيط / المجاور",
+    "absorb": "تمتصّ",
+    "soak up": "تمتصّ / تتشرّب",
+    "release": "تُطلِق / تُصدِر",
+    "discomfort": "انزعاج / عدم راحة",
+    "vulnerable": "ضعيف / معرّض للخطر",
+    "planners": "مخطّطون (حضريون)",
+    "reflects": "يعكس",
+    "expanses": "مساحات شاسعة",
+    "measures": "إجراءات / تدابير"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Cities are always cooler than the countryside.",
+        "B": "Cities trap heat, causing problems, but several combined strategies can help cool them.",
+        "C": "Air conditioning is the only way to cool a city.",
+        "D": "Trees make cities hotter."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يشرح ظاهرة الجزيرة الحرارية، آثارها، ثم استراتيجيات التبريد المجتمعة. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات التي تناقض النص (أبرد / الأشجار تسخّن)."
+    },
+    {
+      "q": "According to the passage, why do cities stay warm after sunset?",
+      "q_translation_ar": "حسب النص، لماذا تبقى المدن دافئة بعد الغروب؟",
+      "options": {
+        "A": "Because dark surfaces absorb heat during the day and release it slowly at night.",
+        "B": "Because the sun shines all night.",
+        "C": "Because there are too many trees.",
+        "D": "Because the countryside sends heat to the city."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن الطرق والأسطح الداكنة تمتصّ الشمس نهاراً وتُطلقها ببطء ليلاً، فتبقى الحرارة مرتفعة.",
+      "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات غير منطقية أو غير مذكورة."
+    },
+    {
+      "q": "The word 'vulnerable' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'vulnerable' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "easily harmed",
+        "B": "very strong",
+        "C": "wealthy",
+        "D": "distant"
+      },
+      "correct": "A",
+      "type": "vocabulary",
+      "explanation_ar": "vulnerable تعني (ضعيف/معرّض للخطر): موجات الحرّ تهدّد صحة السكان المعرّضين للخطر. أقرب معنى easily harmed.",
+      "avoid_tip_ar": "السياق يتحدث عن تهديد الصحة، فالمعنى (سهل التأذّي) لا (قوي)."
+    },
+    {
+      "q": "Why does the author describe air conditioning in the second paragraph?",
+      "q_translation_ar": "لماذا يصف الكاتب أجهزة التكييف في الفقرة الثانية؟",
+      "options": {
+        "A": "To show a harmful cycle: heat raises AC use, which produces even more heat.",
+        "B": "To prove that AC is the best solution.",
+        "C": "To explain how AC is manufactured.",
+        "D": "To argue that AC should be banned."
+      },
+      "correct": "A",
+      "type": "rhetorical",
+      "explanation_ar": "ذكر التكييف يوضّح حلقة ضارّة: الحرارة ترفع استخدامه، وهو بدوره يُنتج حرارة أكثر. هذا غرض ذكره.",
+      "avoid_tip_ar": "أسئلة الغرض تربط التفصيلة بالفكرة. هنا التكييف مثال على تفاقم المشكلة، لا حلّ لها."
+    },
+    {
+      "q": "What is the relationship between the second and third paragraphs?",
+      "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
+      "options": {
+        "A": "The second explains the problem and its consequences, and the third offers strategies to address it.",
+        "B": "Both paragraphs list the same strategies.",
+        "C": "The third denies that heat is a problem.",
+        "D": "The second is about trees and the third about air conditioning."
+      },
+      "correct": "A",
+      "type": "paragraph_relationship",
+      "explanation_ar": "الفقرة الثانية تعرض المشكلة وعواقبها، والثالثة تقدّم استراتيجيات لمعالجتها. فالعلاقة مشكلة ثم حلول.",
+      "avoid_tip_ar": "حدّد دور كل فقرة: (مشكلة) ← (حلول). علاقة معالجة لا تكرار."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER69",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: كيف تواجه المدن الحرارة"
+}

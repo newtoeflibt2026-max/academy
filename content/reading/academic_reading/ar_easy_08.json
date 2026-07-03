@@ -1,0 +1,103 @@
+{
+  "id": "ar_easy_08",
+  "tier": "tier59",
+  "title_en": "The Importance of Sleep",
+  "topic": "health",
+  "duration_seconds": 600,
+  "passage": {
+    "text_en": "People sometimes treat sleep as wasted time, something to cut short when life gets busy. Yet scientists have found that sleep is one of the most important activities for the body and mind. Far from being idle, the sleeping brain is hard at work, carrying out tasks that cannot be done while we are awake.\n\nOne of these tasks is memory. During sleep, the brain reviews what was learned during the day and stores the most useful information for the future. This is why students who sleep well after studying often remember more than those who stay up all night. Sleep also helps the body repair itself, healing tissues and strengthening its defenses against illness.\n\nWhen people do not get enough sleep, the effects appear quickly. They may struggle to concentrate, feel irritable, and make more mistakes. Over a long period, poor sleep can harm overall health. For these reasons, experts recommend treating sleep not as a luxury but as a basic need, like food and water.",
+    "word_count": 169,
+    "topic": "health"
+  },
+  "glossary": {
+    "wasted": "مُهدَر / ضائع",
+    "idle": "خامل / عاطل",
+    "carrying out": "ينفّذ / يؤدّي",
+    "reviews": "يراجع",
+    "stores": "يخزّن",
+    "repair": "يُصلِح / يرمّم",
+    "tissues": "أنسجة",
+    "defenses": "دفاعات (المناعة)",
+    "irritable": "سريع الانفعال / متوتّر",
+    "luxury": "ترف / رفاهية"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Sleep is wasted time that should be reduced.",
+        "B": "Sleep is a vital activity that supports memory, health, and daily performance.",
+        "C": "Students should never study before bed.",
+        "D": "The brain stops working completely during sleep."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يجادل بأن النوم نشاط حيوي يدعم الذاكرة وصحة الجسم والأداء اليومي. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "الفكرة الرئيسية تجمع كل النص. تجنّب الخيار الذي يناقض النص (وقت ضائع / الدماغ يتوقّف)."
+    },
+    {
+      "q": "According to the passage, what does the brain do with information during sleep?",
+      "q_translation_ar": "حسب النص، ماذا يفعل الدماغ بالمعلومات أثناء النوم؟",
+      "options": {
+        "A": "It deletes everything learned that day.",
+        "B": "It reviews the day and stores the most useful information.",
+        "C": "It stops processing anything.",
+        "D": "It learns new languages automatically."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن الدماغ يراجع ما تعلّمه ويخزّن المعلومات الأكثر فائدة للمستقبل.",
+      "avoid_tip_ar": "عُد للوصف المذكور حرفياً. (يحذف كل شيء) عكس ما يقوله النص تماماً."
+    },
+    {
+      "q": "The word 'idle' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'idle' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "very busy",
+        "B": "doing nothing",
+        "C": "extremely tired",
+        "D": "fully awake"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "idle تعني (خامل/لا يعمل). الجملة تقول إن الدماغ النائم (بعيداً عن أن يكون خاملاً) يعمل بجدّ. أقرب معنى doing nothing.",
+      "avoid_tip_ar": "انتبه: الجملة تنفي الخمول (Far from being idle). فالكلمة نفسها تعني (لا يفعل شيئاً)، والنص يقول العكس عنها."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as an effect of not getting enough sleep?",
+      "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كأثر لعدم كفاية النوم؟",
+      "options": {
+        "A": "Difficulty concentrating.",
+        "B": "Feeling irritable.",
+        "C": "Making more mistakes.",
+        "D": "Becoming much taller."
+      },
+      "correct": "D",
+      "type": "negative_factual",
+      "explanation_ar": "النص يذكر صعوبة التركيز والانفعال وكثرة الأخطاء كآثار لقلّة النوم، لكنه لم يذكر (يصبح أطول) إطلاقاً.",
+      "avoid_tip_ar": "في سؤال (NOT)، تحقّق من كل خيار في النص. الخيار غير الموجود (غير المنطقي غالباً) هو الجواب."
+    },
+    {
+      "q": "What can be inferred from the passage about how we should view sleep?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن كيف ينبغي أن ننظر إلى النوم؟",
+      "options": {
+        "A": "As an optional habit we can skip.",
+        "B": "As a basic necessity, similar to food and water.",
+        "C": "As something only students need.",
+        "D": "As harmful to the body."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يختم بأن الخبراء ينصحون بمعاملة النوم كحاجة أساسية مثل الطعام والماء، فنستنتج أنه ضرورة لا ترف.",
+      "avoid_tip_ar": "الاستنتاج يتبع خلاصة النص. تجنّب ما يناقضها (اختياري / للطلاب فقط)."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص: أهمية النوم"
+}

@@ -1,69 +1,103 @@
 {
   "id": "ar_easy_01",
-  "tier": "easy",
+  "tier": "tier59",
   "title_en": "Urban Bees",
   "topic": "biology",
-  "duration_seconds": 360,
+  "duration_seconds": 600,
   "passage": {
-    "text_en": "Bees play a surprisingly important role in modern cities. Although many people associate bees only with rural farms, urban beekeeping has grown rapidly in recent decades. Rooftop hives and small garden colonies now thrive in many large cities, where bees pollinate flowers in parks, balconies, and community gardens. This pollination supports urban biodiversity and helps both wild and cultivated plants reproduce.\n\nCity environments can actually offer certain advantages to bees. Unlike farmland, which is often treated with pesticides, urban green spaces tend to contain a wider variety of flowering plants and fewer harmful chemicals. As a result, urban bees sometimes produce more honey than their rural counterparts. However, they also face unique challenges, including air pollution and limited nesting space.",
-    "word_count": 120,
+    "text_en": "In recent years, beekeeping has become surprisingly popular in large cities. At first, this may seem strange, since people often picture bees living in open countryside full of wildflowers. Yet many cities turn out to be excellent homes for bees. Parks, rooftop gardens, and even small balconies provide a steady supply of flowers from early spring until late autumn.\n\nCity bees also benefit from a wider variety of plants than bees in farming regions. On large farms, a single crop may cover huge areas, so bees feed on only one type of flower. In cities, by contrast, gardens and streets contain dozens of different species, giving bees a richer and more balanced diet. This variety can make urban hives remarkably healthy.\n\nThere are challenges, of course. Pollution and limited nesting space can make city life difficult for bees. Still, many urban beekeepers report strong, productive hives. Their success suggests that, with a little care, bees and people can thrive together even in the busiest of cities.",
+    "word_count": 168,
     "topic": "biology"
+  },
+  "glossary": {
+    "beekeeping": "تربية النحل",
+    "picture": "يتخيّل / يتصوّر",
+    "steady": "ثابت / مستمر",
+    "supply": "إمداد / مصدر",
+    "variety": "تنوّع",
+    "crop": "محصول",
+    "balanced": "متوازن",
+    "hives": "خلايا النحل",
+    "nesting": "التعشيش / بناء العش",
+    "thrive": "يزدهر / ينمو بقوة"
   },
   "questions": [
     {
-      "q": "What is the main idea of the passage?",
+      "q": "What is the passage mainly about?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Urban beekeeping has expanded in recent decades and supports city ecosystems.",
-        "B": "Bees can only survive in rural farmland environments.",
-        "C": "Cities should ban all forms of beekeeping due to safety concerns.",
-        "D": "Honey production is decreasing worldwide because of pesticides."
-      },
-      "correct": "A",
-      "type": "factual",
-      "explanation_ar": "الفقرة الأولى تذكر بوضوح أن تربية النحل الحضري نمت بسرعة وتدعم النظام البيئي للمدينة."
-    },
-    {
-      "q": "According to the passage, why might urban bees produce more honey than rural bees?",
-      "options": {
-        "A": "Cities have warmer temperatures year-round.",
-        "B": "Urban areas have fewer pesticides and more plant variety.",
-        "C": "Beekeepers in cities use special equipment.",
-        "D": "Wild bees migrate to cities in summer."
+        "A": "Why bees are disappearing from the countryside.",
+        "B": "How cities can be good and healthy homes for bees.",
+        "C": "The best ways to sell honey in large markets.",
+        "D": "Why farmers should stop growing single crops."
       },
       "correct": "B",
       "type": "factual",
-      "explanation_ar": "الفقرة الثانية تذكر صراحة أن المساحات الخضراء الحضرية تحتوي تنوعاً أكبر من النباتات ومواد كيميائية ضارة أقل."
+      "explanation_ar": "النص كله يدور حول أن المدن، خلافاً للمتوقّع، بيئة جيدة وصحية للنحل، ويذكر الأسباب والتحديات. هذا هو الموضوع العام.",
+      "avoid_tip_ar": "للفكرة الرئيسية، اختر ما يجمع كل الفقرات. تجنّب الخيارات التي تتناول تفصيلة واحدة فقط (مثل بيع العسل) أو موضوعاً لم يُناقَش (اختفاء النحل)."
+    },
+    {
+      "q": "According to the passage, why do city bees often have a healthier diet than farm bees?",
+      "q_translation_ar": "حسب النص، لماذا يحظى نحل المدن غالباً بغذاء أصحّ من نحل المزارع؟",
+      "options": {
+        "A": "Because cities have cleaner air than farms.",
+        "B": "Because they feed on many different kinds of flowers.",
+        "C": "Because beekeepers give them special food.",
+        "D": "Because they fly longer distances each day."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن حدائق المدن وشوارعها فيها عشرات الأنواع من الزهور، ما يمنح النحل غذاءً أغنى وأكثر توازناً.",
+      "avoid_tip_ar": "ابحث عن السبب المذكور حرفياً في النص. (الهواء النظيف) خطأ — فالنص يذكر التلوّث كتحدٍّ، لا كميزة."
     },
     {
       "q": "The word 'thrive' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'thrive' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "disappear",
-        "B": "struggle",
-        "C": "flourish",
-        "D": "compete"
+        "A": "struggle",
+        "B": "flourish",
+        "C": "disappear",
+        "D": "rest"
       },
-      "correct": "C",
+      "correct": "B",
       "type": "vocabulary",
-      "explanation_ar": "thrive = يزدهر/ينمو بقوة، وأقرب كلمة هي flourish."
+      "explanation_ar": "thrive تعني (يزدهر/ينمو بقوة). الجملة تقول إن النحل والناس يمكن أن (يزدهروا) معاً. أقرب كلمة flourish.",
+      "avoid_tip_ar": "ضع الخيار مكان الكلمة في الجملة. السياق إيجابي (يعيشون معاً بنجاح)، فالمعنى ازدهار لا معاناة (struggle)."
     },
     {
-      "q": "Which of the following is NOT mentioned as a challenge for urban bees?",
+      "q": "Which of the following is NOT mentioned as a challenge for city bees?",
+      "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كتحدٍّ لنحل المدن؟",
       "options": {
-        "A": "Air pollution",
-        "B": "Limited nesting space",
-        "C": "Loud noise",
-        "D": "Pesticide-treated farmland is not mentioned as urban challenge"
+        "A": "Pollution.",
+        "B": "Limited nesting space.",
+        "C": "Too few flowers in winter.",
+        "D": "The difficulties of busy city life."
       },
       "correct": "C",
       "type": "negative_factual",
-      "explanation_ar": "الفقرة الثانية تذكر تلوث الهواء ومساحة التعشيش المحدودة فقط. الضوضاء لم تُذكر."
+      "explanation_ar": "النص يذكر التلوّث ومحدودية أماكن التعشيش وصعوبة حياة المدينة كتحديات، لكنه لم يذكر (قلّة الزهور في الشتاء) إطلاقاً.",
+      "avoid_tip_ar": "في سؤال (NOT)، ضع علامة ✓ بجانب كل خيار تجده في النص؛ الخيار الذي لا تجده هو الجواب. هنا الزهور مذكورة كميزة لا كنقص."
+    },
+    {
+      "q": "What can be inferred about beekeeping in cities?",
+      "q_translation_ar": "ماذا يمكن استنتاجه عن تربية النحل في المدن؟",
+      "options": {
+        "A": "It is impossible without large farms nearby.",
+        "B": "It can succeed when beekeepers give bees some care.",
+        "C": "It always produces more honey than rural beekeeping.",
+        "D": "It is harmful to the health of city residents."
+      },
+      "correct": "B",
+      "type": "inference",
+      "explanation_ar": "النص يقول إن المربّين ينجحون (بقليل من العناية)، فنستنتج أن النجاح ممكن عند توفير الرعاية، رغم التحديات.",
+      "avoid_tip_ar": "الاستنتاج خطوة منطقية واحدة من النص. تجنّب المبالغات (دائماً أكثر عسلاً / مستحيل) — فالنص لم يدّعِ ذلك."
     }
   ],
   "metadata": {
-    "source": "Phase 5.8 Academic Reading",
-    "level": "EASY",
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "TIER59",
     "type": "academic_reading"
   },
   "type": "academic_reading",
-  "title_ar": "نص 1: نحل المدن"
+  "title_ar": "نص: نحل المدن"
 }
