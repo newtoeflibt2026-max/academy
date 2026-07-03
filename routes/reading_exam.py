@@ -1,4 +1,4 @@
-import sqlite3
+﻿import sqlite3
 from datetime import datetime
 
 # ── AUTO-UNLOCK START ─────────────────────────────────────────
@@ -1029,6 +1029,7 @@ def ar_exam_start():
 
     _ADAPTIVE_CACHE[attempt_id] = {
         "student_id": sid,
+        "user_id": sid,
         "started_at": datetime.now().isoformat(),
         "current_module": 1,
         "module1": {
@@ -1043,7 +1044,7 @@ def ar_exam_start():
         "final_score": None,
     }
     from flask import redirect
-    return redirect(f"/reading/ar/exam/module/{attempt_id}")
+    return redirect(f"/reading/ar/exam/module/{attempt_id}?user_id={sid}")
 
 
 @reading_bp.route("/ar/exam/module/<attempt_id>")
@@ -1111,7 +1112,7 @@ def ar_exam_submit():
         return jsonify({
             "ok": True,
             "next": "module2",
-            "redirect": f"/reading/ar/exam/module/{attempt_id}",
+            "redirect": f"/reading/ar/exam/module/{attempt_id}?user_id=" + str(state.get("user_id","")),
             "module1_score": f"{correct}/{total}",
             "next_tier": next_tier,
         })
@@ -1135,7 +1136,7 @@ def ar_exam_submit():
         return jsonify({
             "ok": True,
             "next": "result",
-            "redirect": f"/reading/ar/exam/result/{attempt_id}",
+            "redirect": f"/reading/ar/exam/result/{attempt_id}?user_id=" + str(state.get("user_id","")),
         })
 
 
