@@ -1,4 +1,4 @@
-﻿"""Yamen Academy - Placement Test Blueprint (Phase 7 — aligned with actual academy.db schema)"""
+"""Yamen Academy - Placement Test Blueprint (Phase 7 — aligned with actual academy.db schema)"""
 from flask import Blueprint, request, jsonify, render_template
 import sqlite3, traceback, os
 

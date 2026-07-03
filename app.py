@@ -15395,3 +15395,31 @@ if __name__ == "__main__":
 
     app.run(host="0.0.0.0", port=_port, debug=False)
 
+
+
+# ═══════════════════════════════════════════════════════════════
+# SECURITY: Remove dangerous auto-paid triggers (one-time cleanup)
+# These triggers gave students paid access automatically on subscription insert
+# ═══════════════════════════════════════════════════════════════
+def _cleanup_dangerous_triggers():
+    try:
+        import sqlite3 as _sq
+        import os as _os
+        _db = _os.environ.get("DB_PATH", "/app/data/academy.db")
+        if not _os.path.exists(_db):
+            return
+        _c = _sq.connect(_db)
+        _cur = _c.cursor()
+        _before = [r[0] for r in _cur.execute(
+            "SELECT name FROM sqlite_master WHERE type='trigger' AND name IN ('trg_sub_insert_set_paid','trg_sub_update_set_paid')"
+        ).fetchall()]
+        if _before:
+            _cur.execute("DROP TRIGGER IF EXISTS trg_sub_insert_set_paid")
+            _cur.execute("DROP TRIGGER IF EXISTS trg_sub_update_set_paid")
+            _c.commit()
+            print(f"[SECURITY] Removed dangerous triggers: {_before}")
+        _c.close()
+    except Exception as _e:
+        print(f"[SECURITY] Trigger cleanup skipped: {_e}")
+
+_cleanup_dangerous_triggers()

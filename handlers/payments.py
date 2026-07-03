@@ -266,7 +266,7 @@ async def admin_approve(cb: CallbackQuery):
 
     conn = get_db()
     try:
-                plan = conn.execute(
+        plan = conn.execute(
             "SELECT * FROM subscription_plans WHERE id=?", (plan_id,)).fetchone()
         plan = dict(plan) if plan else {}
         days     = plan.get("duration_days", 30)
