@@ -275,7 +275,7 @@ async def admin_approve(cb: CallbackQuery):
         end_date = (datetime.now() + timedelta(days=days)).strftime("%Y-%m-%d")
 
         conn.execute(
-            "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, subscription_section=?, package_end=? WHERE telegram_id=?",
+            "UPDATE students SET is_paid=1, is_active=1, subscription_type=?, subscription_section=?, access_mode='full', package_end=? WHERE telegram_id=?",
             (name_ar, section, end_date, uid))
 
         conn.execute(
