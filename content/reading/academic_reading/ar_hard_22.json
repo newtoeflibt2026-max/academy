@@ -26,12 +26,12 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Play has no benefits and should not exist.",
-        "B": "Play is costly yet widespread, and it likely persists because it provides one or several important benefits.",
-        "C": "Only mammals ever play.",
-        "D": "Play is simply wasted energy with no explanation."
+        "A": "Play is simply wasted energy with no explanation.",
+        "B": "Only mammals ever play.",
+        "C": "Play has no benefits and should not exist.",
+        "D": "Play is costly yet widespread, and it likely persists because it provides one or several important benefits."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "factual",
       "explanation_ar": "النص يعرض لغز اللعب (مكلف لكنه منتشر) ويناقش فوائده المحتملة (تدرّب، أو عدّة وظائف). هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب المتطرّف (بلا فائدة) والجزئي (الثدييات فقط)."
@@ -42,8 +42,8 @@
       "options": {
         "A": "Because it is costly and risky yet persists across many species.",
         "B": "Because only humans do it.",
-        "C": "Because it gives an immediate reward.",
-        "D": "Because it never causes injury."
+        "C": "Because it never causes injury.",
+        "D": "Because it gives an immediate reward."
       },
       "correct": "A",
       "type": "factual",
@@ -54,12 +54,12 @@
       "q": "The word 'rehearse' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'rehearse' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "practice beforehand",
+        "A": "avoid entirely",
         "B": "forget completely",
-        "C": "avoid entirely",
+        "C": "practice beforehand",
         "D": "sell"
       },
-      "correct": "A",
+      "correct": "C",
       "type": "vocabulary",
       "explanation_ar": "rehearse تعني (يتمرّن/يتدرّب مسبقاً): صغار الحيوانات تتمرّن على المهارات التي تحتاجها لاحقاً. أقرب معنى practice beforehand.",
       "avoid_tip_ar": "السياق عن التدرّب على مهارات المستقبل، فالمعنى (يتمرّن) لا (ينسى)."
@@ -82,12 +82,12 @@
       "q": "Which sentence best captures the most important idea of the passage?",
       "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
       "options": {
-        "A": "Play must have exactly one purpose.",
-        "B": "Play may persist because it serves several beneficial functions at once, so seeking a single purpose may be mistaken.",
-        "C": "Play is harmful to all animals.",
+        "A": "Play is harmful to all animals.",
+        "B": "Play must have exactly one purpose.",
+        "C": "Play may persist because it serves several beneficial functions at once, so seeking a single purpose may be mistaken.",
         "D": "Only practice can explain play."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "important_idea",
       "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن اللعب قد يُفضَّل لأنه يخدم عدّة غايات معاً، فالبحث عن غرض واحد قد يكون مغلوطاً.",
       "avoid_tip_ar": "اختر الخلاصة التي تحتضن الطرح النهائي (تعدّد الوظائف)، لا فرضية واحدة فقط."

@@ -40,12 +40,12 @@
       "q": "According to the passage, what is one real consequence of the lone-genius myth?",
       "q_translation_ar": "حسب النص، ما إحدى النتائج الواقعية لأسطورة العبقري المنفرد؟",
       "options": {
-        "A": "It makes institutions concentrate resources on a few stars while neglecting collaborative conditions.",
-        "B": "It improves the accuracy of history.",
-        "C": "It increases the number of collaborators credited.",
-        "D": "It ends all scientific rivalry."
+        "A": "It increases the number of collaborators credited.",
+        "B": "It ends all scientific rivalry.",
+        "C": "It improves the accuracy of history.",
+        "D": "It makes institutions concentrate resources on a few stars while neglecting collaborative conditions."
       },
-      "correct": "A",
+      "correct": "D",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر أن الأسطورة تدفع المؤسّسات لتركيز الموارد على قلّة من النجوم وإهمال الظروف التعاونية.",
       "avoid_tip_ar": "عُد للنتيجة المذكورة حرفياً. باقي الخيارات تناقض النص."
@@ -54,12 +54,12 @@
       "q": "The word 'obscures' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'obscures' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "hides",
+        "A": "celebrates",
         "B": "reveals",
-        "C": "proves",
-        "D": "celebrates"
+        "C": "hides",
+        "D": "proves"
       },
-      "correct": "A",
+      "correct": "C",
       "type": "vocabulary",
       "explanation_ar": "obscures تعني (يُخفي/يطمس): الصورة تُخفي أكثر مما تكشف. أقرب معنى hides.",
       "avoid_tip_ar": "لاحظ التقابل في الجملة (obscures more than it reveals)، فالكلمة عكس (reveals) أي تُخفي."
@@ -69,9 +69,9 @@
       "q_translation_ar": "لماذا يذكر الكاتب أن دمج الأفكار المتناثرة (فعل نادر وشاقّ)؟",
       "options": {
         "A": "To make clear that rejecting the lone-genius myth does not deny real talent.",
-        "B": "To prove that collaboration is useless.",
-        "C": "To argue that genius is the only thing that matters.",
-        "D": "To explain how to store ideas."
+        "B": "To argue that genius is the only thing that matters.",
+        "C": "To explain how to store ideas.",
+        "D": "To prove that collaboration is useless."
       },
       "correct": "A",
       "type": "rhetorical",
@@ -82,12 +82,12 @@
       "q": "Which sentence best expresses the most important idea of the passage?",
       "q_translation_ar": "أيّ جملة تعبّر أفضل عن الفكرة الأهمّ في النص؟",
       "options": {
-        "A": "Talented individuals contribute nothing.",
-        "B": "Since discovery depends on exchange among many minds, fostering communities of inquiry may matter more than hunting for lone prodigies.",
-        "C": "History should ignore collaboration.",
+        "A": "History should ignore collaboration.",
+        "B": "Talented individuals contribute nothing.",
+        "C": "Since discovery depends on exchange among many minds, fostering communities of inquiry may matter more than hunting for lone prodigies.",
         "D": "Only prodigies produce breakthroughs."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "important_idea",
       "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن رعاية مجتمعات البحث قد تفوق أهميتها البحث عن نابغة منفرد — خلاصة النص.",
       "avoid_tip_ar": "اختر الخلاصة الجامعة. تجنّب المبالغة (الأفراد لا يسهمون) التي يرفضها النص صراحة."

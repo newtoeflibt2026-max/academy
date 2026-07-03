@@ -26,12 +26,12 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Sleep is wasted time that should be reduced.",
-        "B": "Sleep is a vital activity that supports memory, health, and daily performance.",
-        "C": "Students should never study before bed.",
-        "D": "The brain stops working completely during sleep."
+        "A": "Sleep is a vital activity that supports memory, health, and daily performance.",
+        "B": "Students should never study before bed.",
+        "C": "The brain stops working completely during sleep.",
+        "D": "Sleep is wasted time that should be reduced."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "النص يجادل بأن النوم نشاط حيوي يدعم الذاكرة وصحة الجسم والأداء اليومي. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع كل النص. تجنّب الخيار الذي يناقض النص (وقت ضائع / الدماغ يتوقّف)."
@@ -41,11 +41,11 @@
       "q_translation_ar": "حسب النص، ماذا يفعل الدماغ بالمعلومات أثناء النوم؟",
       "options": {
         "A": "It deletes everything learned that day.",
-        "B": "It reviews the day and stores the most useful information.",
-        "C": "It stops processing anything.",
-        "D": "It learns new languages automatically."
+        "B": "It learns new languages automatically.",
+        "C": "It reviews the day and stores the most useful information.",
+        "D": "It stops processing anything."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر صراحة أن الدماغ يراجع ما تعلّمه ويخزّن المعلومات الأكثر فائدة للمستقبل.",
       "avoid_tip_ar": "عُد للوصف المذكور حرفياً. (يحذف كل شيء) عكس ما يقوله النص تماماً."
@@ -54,10 +54,10 @@
       "q": "The word 'idle' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'idle' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "very busy",
+        "A": "fully awake",
         "B": "doing nothing",
-        "C": "extremely tired",
-        "D": "fully awake"
+        "C": "very busy",
+        "D": "extremely tired"
       },
       "correct": "B",
       "type": "vocabulary",
@@ -68,12 +68,12 @@
       "q": "Which of the following is NOT mentioned as an effect of not getting enough sleep?",
       "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كأثر لعدم كفاية النوم؟",
       "options": {
-        "A": "Difficulty concentrating.",
-        "B": "Feeling irritable.",
-        "C": "Making more mistakes.",
-        "D": "Becoming much taller."
+        "A": "Becoming much taller.",
+        "B": "Making more mistakes.",
+        "C": "Difficulty concentrating.",
+        "D": "Feeling irritable."
       },
-      "correct": "D",
+      "correct": "A",
       "type": "negative_factual",
       "explanation_ar": "النص يذكر صعوبة التركيز والانفعال وكثرة الأخطاء كآثار لقلّة النوم، لكنه لم يذكر (يصبح أطول) إطلاقاً.",
       "avoid_tip_ar": "في سؤال (NOT)، تحقّق من كل خيار في النص. الخيار غير الموجود (غير المنطقي غالباً) هو الجواب."
@@ -82,12 +82,12 @@
       "q": "What can be inferred from the passage about how we should view sleep?",
       "q_translation_ar": "ماذا يمكن استنتاجه عن كيف ينبغي أن ننظر إلى النوم؟",
       "options": {
-        "A": "As an optional habit we can skip.",
-        "B": "As a basic necessity, similar to food and water.",
-        "C": "As something only students need.",
-        "D": "As harmful to the body."
+        "A": "As a basic necessity, similar to food and water.",
+        "B": "As something only students need.",
+        "C": "As harmful to the body.",
+        "D": "As an optional habit we can skip."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "inference",
       "explanation_ar": "النص يختم بأن الخبراء ينصحون بمعاملة النوم كحاجة أساسية مثل الطعام والماء، فنستنتج أنه ضرورة لا ترف.",
       "avoid_tip_ar": "الاستنتاج يتبع خلاصة النص. تجنّب ما يناقضها (اختياري / للطلاب فقط)."

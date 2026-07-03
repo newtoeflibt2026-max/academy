@@ -26,12 +26,12 @@
       "q": "What is the passage mainly about?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "How writing developed gradually from practical needs and transformed human knowledge.",
-        "B": "Why merchants disliked using clay.",
-        "C": "How drawing pictures became a popular art form.",
-        "D": "Why early cities had no taxes."
+        "A": "How drawing pictures became a popular art form.",
+        "B": "Why early cities had no taxes.",
+        "C": "How writing developed gradually from practical needs and transformed human knowledge.",
+        "D": "Why merchants disliked using clay."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "النص يتتبّع نشوء الكتابة تدريجياً من حاجات عملية ثم أثرها في حفظ المعرفة. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات الجزئية أو خارج الموضوع."
@@ -40,12 +40,12 @@
       "q": "According to the passage, why was the shift to symbols representing sounds important?",
       "q_translation_ar": "حسب النص، لماذا كان التحوّل إلى رموز تمثّل الأصوات مهماً؟",
       "options": {
-        "A": "Because it made clay cheaper.",
-        "B": "Because a sound-based system could express any word, not only things that could be drawn.",
-        "C": "Because it ended all trade.",
-        "D": "Because it required no learning."
+        "A": "Because a sound-based system could express any word, not only things that could be drawn.",
+        "B": "Because it made clay cheaper.",
+        "C": "Because it required no learning.",
+        "D": "Because it ended all trade."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر صراحة أن النظام القائم على الأصوات يستطيع التعبير عن أي كلمة، لا فقط الأشياء القابلة للرسم.",
       "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات لم تُذكَر."
@@ -55,11 +55,11 @@
       "q_translation_ar": "كلمة 'crucial' في النص أقرب معنىً إلى:",
       "options": {
         "A": "unimportant",
-        "B": "extremely important",
+        "B": "temporary",
         "C": "confusing",
-        "D": "temporary"
+        "D": "extremely important"
       },
-      "correct": "B",
+      "correct": "D",
       "type": "vocabulary",
       "explanation_ar": "crucial تعني (حاسم/بالغ الأهمية): كان التحوّل حاسماً لأنه وسّع قدرة الكتابة. أقرب معنى extremely important.",
       "avoid_tip_ar": "السياق يؤكّد أهمية التحوّل، فالمعنى (مهم جداً) لا (غير مهم)."
@@ -68,12 +68,12 @@
       "q": "Why does the author mention recording containers of grain?",
       "q_translation_ar": "لماذا يذكر الكاتب تسجيل حاويات الحبوب؟",
       "options": {
-        "A": "To give a concrete example of the practical, trade-based origin of early symbols.",
-        "B": "To prove that grain was the only crop grown.",
-        "C": "To show that merchants could not write at all.",
-        "D": "To explain how clay is made."
+        "A": "To show that merchants could not write at all.",
+        "B": "To explain how clay is made.",
+        "C": "To give a concrete example of the practical, trade-based origin of early symbols.",
+        "D": "To prove that grain was the only crop grown."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "rhetorical",
       "explanation_ar": "المثال (تسجيل الحبوب) يوضّح بشكل ملموس الأصل العملي التجاري للرموز الأولى. هذا غرض ذكره.",
       "avoid_tip_ar": "الأمثلة تخدم فكرة أكبر. هنا المثال يجسّد فكرة (الأصل العملي للكتابة)."
@@ -83,11 +83,11 @@
       "q_translation_ar": "ما علاقة الفقرة الثالثة ببقية النص؟",
       "options": {
         "A": "It repeats the examples from paragraph two.",
-        "B": "It moves beyond the origins to explain the broader, long-term consequences of writing.",
-        "C": "It denies that writing was ever useful.",
-        "D": "It describes how cities were built."
+        "B": "It describes how cities were built.",
+        "C": "It moves beyond the origins to explain the broader, long-term consequences of writing.",
+        "D": "It denies that writing was ever useful."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "paragraph_relationship",
       "explanation_ar": "بعد أن شرحت الفقرتان الأوليان نشوء الكتابة، تنتقل الثالثة إلى نتائجها الأوسع وبعيدة المدى (حفظ المعرفة عبر القرون).",
       "avoid_tip_ar": "حدّد التطوّر: (أصل) ← (نتائج). الفقرة الأخيرة توسّع لا تكرّر."

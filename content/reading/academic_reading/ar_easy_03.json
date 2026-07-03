@@ -26,12 +26,12 @@
       "q": "What is the passage mainly about?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "How trees grow taller each year.",
-        "B": "The chemical reasons why leaves change color in autumn.",
+        "A": "The chemical reasons why leaves change color in autumn.",
+        "B": "How trees grow taller each year.",
         "C": "Why some trees never lose their leaves.",
         "D": "How farmers use leaves to make food."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "النص يفسّر الأسباب الكيميائية لتغيّر لون الأوراق في الخريف (تحلّل الكلوروفيل، الأصباغ الجديدة). هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع كل النص. تجنّب المواضيع التي لم تُناقَش (نمو الطول / الأشجار دائمة الخضرة)."
@@ -40,12 +40,12 @@
       "q": "According to the passage, why are leaves green in summer?",
       "q_translation_ar": "حسب النص، لماذا تكون الأوراق خضراء في الصيف؟",
       "options": {
-        "A": "Because they contain a lot of chlorophyll that hides other colors.",
-        "B": "Because the weather is hot.",
-        "C": "Because trees stop making food.",
-        "D": "Because red pigments cover the leaves."
+        "A": "Because red pigments cover the leaves.",
+        "B": "Because trees stop making food.",
+        "C": "Because they contain a lot of chlorophyll that hides other colors.",
+        "D": "Because the weather is hot."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر أن الكلوروفيل الأخضر وفير لدرجة أنه يخفي الألوان الأخرى في الورقة.",
       "avoid_tip_ar": "عُد للسبب المذكور صراحة. (إيقاف صنع الغذاء) يحدث في الخريف لا الصيف، فهو سبب التغيّر لا سبب الخُضرة."
@@ -56,8 +56,8 @@
       "options": {
         "A": "grows stronger",
         "B": "becomes weaker",
-        "C": "turns green",
-        "D": "stays the same"
+        "C": "stays the same",
+        "D": "turns green"
       },
       "correct": "B",
       "type": "vocabulary",
@@ -68,12 +68,12 @@
       "q": "Which of the following is NOT given as a reason for autumn leaf color?",
       "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كسبب لتلوّن أوراق الخريف؟",
       "options": {
-        "A": "The breakdown of green chlorophyll.",
-        "B": "New pigments made in the fall.",
-        "C": "Cool temperatures and bright sunlight.",
-        "D": "Rain washing color into the leaves."
+        "A": "Rain washing color into the leaves.",
+        "B": "Cool temperatures and bright sunlight.",
+        "C": "New pigments made in the fall.",
+        "D": "The breakdown of green chlorophyll."
       },
-      "correct": "D",
+      "correct": "A",
       "type": "negative_factual",
       "explanation_ar": "النص يذكر تحلّل الكلوروفيل، والأصباغ الجديدة، والبرودة والضوء الساطع. لكنه لم يذكر (المطر يغسل اللون) إطلاقاً.",
       "avoid_tip_ar": "في سؤال (NOT)، تحقّق من كل خيار في النص. الخيار غير الموجود هو الجواب."
@@ -84,8 +84,8 @@
       "options": {
         "A": "It produces more chlorophyll than in summer.",
         "B": "It stops functioning and falls from the tree.",
-        "C": "It turns green again.",
-        "D": "It grows larger and stronger."
+        "C": "It grows larger and stronger.",
+        "D": "It turns green again."
       },
       "correct": "B",
       "type": "inference",

@@ -26,10 +26,10 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Cities are always cooler than the countryside.",
+        "A": "Trees make cities hotter.",
         "B": "Cities trap heat, causing problems, but several combined strategies can help cool them.",
-        "C": "Air conditioning is the only way to cool a city.",
-        "D": "Trees make cities hotter."
+        "C": "Cities are always cooler than the countryside.",
+        "D": "Air conditioning is the only way to cool a city."
       },
       "correct": "B",
       "type": "factual",
@@ -40,12 +40,12 @@
       "q": "According to the passage, why do cities stay warm after sunset?",
       "q_translation_ar": "حسب النص، لماذا تبقى المدن دافئة بعد الغروب؟",
       "options": {
-        "A": "Because dark surfaces absorb heat during the day and release it slowly at night.",
-        "B": "Because the sun shines all night.",
-        "C": "Because there are too many trees.",
-        "D": "Because the countryside sends heat to the city."
+        "A": "Because the sun shines all night.",
+        "B": "Because the countryside sends heat to the city.",
+        "C": "Because dark surfaces absorb heat during the day and release it slowly at night.",
+        "D": "Because there are too many trees."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الأولى تذكر أن الطرق والأسطح الداكنة تمتصّ الشمس نهاراً وتُطلقها ببطء ليلاً، فتبقى الحرارة مرتفعة.",
       "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات غير منطقية أو غير مذكورة."
@@ -54,12 +54,12 @@
       "q": "The word 'vulnerable' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'vulnerable' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "easily harmed",
-        "B": "very strong",
-        "C": "wealthy",
-        "D": "distant"
+        "A": "distant",
+        "B": "easily harmed",
+        "C": "very strong",
+        "D": "wealthy"
       },
-      "correct": "A",
+      "correct": "B",
       "type": "vocabulary",
       "explanation_ar": "vulnerable تعني (ضعيف/معرّض للخطر): موجات الحرّ تهدّد صحة السكان المعرّضين للخطر. أقرب معنى easily harmed.",
       "avoid_tip_ar": "السياق يتحدث عن تهديد الصحة، فالمعنى (سهل التأذّي) لا (قوي)."
@@ -68,12 +68,12 @@
       "q": "Why does the author describe air conditioning in the second paragraph?",
       "q_translation_ar": "لماذا يصف الكاتب أجهزة التكييف في الفقرة الثانية؟",
       "options": {
-        "A": "To show a harmful cycle: heat raises AC use, which produces even more heat.",
-        "B": "To prove that AC is the best solution.",
-        "C": "To explain how AC is manufactured.",
-        "D": "To argue that AC should be banned."
+        "A": "To explain how AC is manufactured.",
+        "B": "To argue that AC should be banned.",
+        "C": "To show a harmful cycle: heat raises AC use, which produces even more heat.",
+        "D": "To prove that AC is the best solution."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "rhetorical",
       "explanation_ar": "ذكر التكييف يوضّح حلقة ضارّة: الحرارة ترفع استخدامه، وهو بدوره يُنتج حرارة أكثر. هذا غرض ذكره.",
       "avoid_tip_ar": "أسئلة الغرض تربط التفصيلة بالفكرة. هنا التكييف مثال على تفاقم المشكلة، لا حلّ لها."
@@ -82,12 +82,12 @@
       "q": "What is the relationship between the second and third paragraphs?",
       "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
       "options": {
-        "A": "The second explains the problem and its consequences, and the third offers strategies to address it.",
-        "B": "Both paragraphs list the same strategies.",
-        "C": "The third denies that heat is a problem.",
-        "D": "The second is about trees and the third about air conditioning."
+        "A": "The second is about trees and the third about air conditioning.",
+        "B": "The third denies that heat is a problem.",
+        "C": "Both paragraphs list the same strategies.",
+        "D": "The second explains the problem and its consequences, and the third offers strategies to address it."
       },
-      "correct": "A",
+      "correct": "D",
       "type": "paragraph_relationship",
       "explanation_ar": "الفقرة الثانية تعرض المشكلة وعواقبها، والثالثة تقدّم استراتيجيات لمعالجتها. فالعلاقة مشكلة ثم حلول.",
       "avoid_tip_ar": "حدّد دور كل فقرة: (مشكلة) ← (حلول). علاقة معالجة لا تكرار."

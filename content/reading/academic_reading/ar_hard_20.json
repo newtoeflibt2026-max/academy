@@ -40,12 +40,12 @@
       "q": "According to the passage, why are single-cause explanations of collapse unconvincing to historians?",
       "q_translation_ar": "حسب النص، لماذا لا تُقنِع تفسيراتُ السبب الواحد المؤرّخين؟",
       "options": {
-        "A": "Because the same pressures that supposedly doomed one empire were survived by others.",
-        "B": "Because empires never faced any pressures.",
-        "C": "Because historians dislike clear lessons.",
-        "D": "Because all empires fell at the same time."
+        "A": "Because empires never faced any pressures.",
+        "B": "Because historians dislike clear lessons.",
+        "C": "Because all empires fell at the same time.",
+        "D": "Because the same pressures that supposedly doomed one empire were survived by others."
       },
-      "correct": "A",
+      "correct": "D",
       "type": "factual",
       "explanation_ar": "الفقرة الأولى تذكر أن نفس الضغوط التي يُفترَض أنها أهلكت إمبراطورية نجت منها أخرى، فلا يكفي عامل واحد.",
       "avoid_tip_ar": "عُد للحجّة المذكورة حرفياً. باقي الخيارات لم تُذكَر أو غير منطقية."
@@ -54,12 +54,12 @@
       "q": "The word 'resilience' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'resilience' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "the ability to recover from shocks",
+        "A": "a lack of food",
         "B": "a sudden collapse",
         "C": "a type of border",
-        "D": "a lack of food"
+        "D": "the ability to recover from shocks"
       },
-      "correct": "A",
+      "correct": "D",
       "type": "vocabulary",
       "explanation_ar": "resilience تعني (المرونة/القدرة على امتصاص الصدمات والتعافي): ما يدمّر النظام هو فقدان هذه القدرة. أقرب معنى the ability to recover from shocks.",
       "avoid_tip_ar": "السياق يعرّفها ضمناً (المرونة اللازمة لامتصاص الصدمات)، فاستعن بالتعريف داخل النص."
@@ -68,12 +68,12 @@
       "q": "Look at this sentence: 'By then, the resources needed to respond have usually been exhausted.' Where would it best fit?",
       "q_translation_ar": "انظر إلى الجملة: (وعندها تكون الموارد اللازمة للاستجابة قد استُنزِفت عادةً). أين تنتمي؟",
       "options": {
-        "A": "After the sentence explaining that decline accelerates only after a threshold is crossed (paragraph 3).",
-        "B": "At the start of paragraph 1.",
-        "C": "After the sentence about tidy explanations being appealing (paragraph 1).",
-        "D": "After the title."
+        "A": "After the title.",
+        "B": "After the sentence about tidy explanations being appealing (paragraph 1).",
+        "C": "At the start of paragraph 1.",
+        "D": "After the sentence explaining that decline accelerates only after a threshold is crossed (paragraph 3)."
       },
-      "correct": "A",
+      "correct": "D",
       "type": "insert_sentence",
       "explanation_ar": "الجملة تتحدث عن نفاد الموارد (بحلول ذلك الوقت)، فهي تنتمي بعد ذكر أن التدهور يتسارع بعد تجاوز العتبة — لأنها تصف ما يحدث عند تلك النقطة.",
       "avoid_tip_ar": "(بحلول ذلك الوقت By then) تشير إلى لحظة سابقة محدّدة. اربطها بجملة تجاوز العتبة، لا بالمقدّمة."
@@ -82,10 +82,10 @@
       "q": "Which sentence best captures the most important idea of the passage?",
       "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
       "options": {
-        "A": "Empires fall only because of invasion.",
+        "A": "History teaches no lessons at all.",
         "B": "Collapse results from interacting strains and eroded resilience, so the absence of visible crisis is a poor measure of real health.",
-        "C": "Stable-looking empires are always truly stable.",
-        "D": "History teaches no lessons at all."
+        "C": "Empires fall only because of invasion.",
+        "D": "Stable-looking empires are always truly stable."
       },
       "correct": "B",
       "type": "important_idea",

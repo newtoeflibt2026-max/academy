@@ -26,12 +26,12 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Shared resources can never be saved.",
-        "B": "When access to a shared resource is unmanaged, individual incentives lead to collective ruin, but good governance can prevent this.",
-        "C": "Herders should own no animals.",
-        "D": "Only fisheries face this problem."
+        "A": "When access to a shared resource is unmanaged, individual incentives lead to collective ruin, but good governance can prevent this.",
+        "B": "Shared resources can never be saved.",
+        "C": "Only fisheries face this problem.",
+        "D": "Herders should own no animals."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "النص يشرح مأساة المشاعات ثم يبيّن أن الحوكمة الجيدة تتجنّبها. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب المتطرّف (لا يمكن إنقاذها) والجزئي (المصايد فقط)."
@@ -40,12 +40,12 @@
       "q": "According to the passage, why does each herder tend to add more animals?",
       "q_translation_ar": "حسب النص، لماذا يميل كل راعٍ إلى إضافة مزيد من الحيوانات؟",
       "options": {
-        "A": "Because the private gain is concentrated while the cost of overgrazing is shared by all.",
-        "B": "Because the village forces him to.",
-        "C": "Because animals are free.",
-        "D": "Because the pasture never suffers."
+        "A": "Because the village forces him to.",
+        "B": "Because the pasture never suffers.",
+        "C": "Because the private gain is concentrated while the cost of overgrazing is shared by all.",
+        "D": "Because animals are free."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الأولى تذكر أن المكسب الخاص مُركَّز بينما كلفة الرعي الجائر مُوزَّعة على الجميع، فيندفع كل فرد للتوسّع.",
       "avoid_tip_ar": "عُد للآلية المذكورة حرفياً (مكسب مركّز/كلفة موزّعة). باقي الخيارات لم تُذكَر."
@@ -55,8 +55,8 @@
       "q_translation_ar": "كلمة 'depletion' في النص أقرب معنىً إلى:",
       "options": {
         "A": "using up until exhausted",
-        "B": "cleaning",
-        "C": "increasing",
+        "B": "increasing",
+        "C": "cleaning",
         "D": "protecting"
       },
       "correct": "A",
@@ -69,9 +69,9 @@
       "q_translation_ar": "انظر إلى الجملة: (تختلف هذه الحلول في شكلها لكنها تشترك في مبدأ واحد). أين تنتمي؟",
       "options": {
         "A": "After the sentence listing shared agreements, enforced limits, or defined rights (paragraph 3).",
-        "B": "At the start of paragraph 1.",
+        "B": "After the title.",
         "C": "After the sentence defining the tragedy of the commons (paragraph 1).",
-        "D": "After the title."
+        "D": "At the start of paragraph 1."
       },
       "correct": "A",
       "type": "insert_sentence",
@@ -83,11 +83,11 @@
       "q_translation_ar": "أيّ جملة تعبّر أفضل عن الفكرة الأهمّ في النص؟",
       "options": {
         "A": "Rational individual choices always benefit everyone.",
-        "B": "Unmanaged access to a shared resource invites its destruction, whereas thoughtful governance can preserve it.",
+        "B": "Destruction of the commons is completely unavoidable.",
         "C": "Shared resources are unimportant.",
-        "D": "Destruction of the commons is completely unavoidable."
+        "D": "Unmanaged access to a shared resource invites its destruction, whereas thoughtful governance can preserve it."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "important_idea",
       "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن الوصول غير المُدار للمورد المشترك يدعو لتدميره، بينما الحوكمة الحكيمة تحفظه — خلاصة النص.",
       "avoid_tip_ar": "اختر الخلاصة الجامعة. تجنّب المتطرّف (حتمي / دائماً ينفع الجميع) الذي يرفضه النص."

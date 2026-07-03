@@ -26,9 +26,9 @@
       "q": "What is the passage mainly about?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Why bees are disappearing from the countryside.",
+        "A": "The best ways to sell honey in large markets.",
         "B": "How cities can be good and healthy homes for bees.",
-        "C": "The best ways to sell honey in large markets.",
+        "C": "Why bees are disappearing from the countryside.",
         "D": "Why farmers should stop growing single crops."
       },
       "correct": "B",
@@ -40,12 +40,12 @@
       "q": "According to the passage, why do city bees often have a healthier diet than farm bees?",
       "q_translation_ar": "حسب النص، لماذا يحظى نحل المدن غالباً بغذاء أصحّ من نحل المزارع؟",
       "options": {
-        "A": "Because cities have cleaner air than farms.",
-        "B": "Because they feed on many different kinds of flowers.",
-        "C": "Because beekeepers give them special food.",
-        "D": "Because they fly longer distances each day."
+        "A": "Because they fly longer distances each day.",
+        "B": "Because cities have cleaner air than farms.",
+        "C": "Because they feed on many different kinds of flowers.",
+        "D": "Because beekeepers give them special food."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر صراحة أن حدائق المدن وشوارعها فيها عشرات الأنواع من الزهور، ما يمنح النحل غذاءً أغنى وأكثر توازناً.",
       "avoid_tip_ar": "ابحث عن السبب المذكور حرفياً في النص. (الهواء النظيف) خطأ — فالنص يذكر التلوّث كتحدٍّ، لا كميزة."
@@ -54,12 +54,12 @@
       "q": "The word 'thrive' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'thrive' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "struggle",
-        "B": "flourish",
-        "C": "disappear",
-        "D": "rest"
+        "A": "rest",
+        "B": "disappear",
+        "C": "flourish",
+        "D": "struggle"
       },
-      "correct": "B",
+      "correct": "C",
       "type": "vocabulary",
       "explanation_ar": "thrive تعني (يزدهر/ينمو بقوة). الجملة تقول إن النحل والناس يمكن أن (يزدهروا) معاً. أقرب كلمة flourish.",
       "avoid_tip_ar": "ضع الخيار مكان الكلمة في الجملة. السياق إيجابي (يعيشون معاً بنجاح)، فالمعنى ازدهار لا معاناة (struggle)."
@@ -70,10 +70,10 @@
       "options": {
         "A": "Pollution.",
         "B": "Limited nesting space.",
-        "C": "Too few flowers in winter.",
-        "D": "The difficulties of busy city life."
+        "C": "The difficulties of busy city life.",
+        "D": "Too few flowers in winter."
       },
-      "correct": "C",
+      "correct": "D",
       "type": "negative_factual",
       "explanation_ar": "النص يذكر التلوّث ومحدودية أماكن التعشيش وصعوبة حياة المدينة كتحديات، لكنه لم يذكر (قلّة الزهور في الشتاء) إطلاقاً.",
       "avoid_tip_ar": "في سؤال (NOT)، ضع علامة ✓ بجانب كل خيار تجده في النص؛ الخيار الذي لا تجده هو الجواب. هنا الزهور مذكورة كميزة لا كنقص."
@@ -82,12 +82,12 @@
       "q": "What can be inferred about beekeeping in cities?",
       "q_translation_ar": "ماذا يمكن استنتاجه عن تربية النحل في المدن؟",
       "options": {
-        "A": "It is impossible without large farms nearby.",
-        "B": "It can succeed when beekeepers give bees some care.",
+        "A": "It is harmful to the health of city residents.",
+        "B": "It is impossible without large farms nearby.",
         "C": "It always produces more honey than rural beekeeping.",
-        "D": "It is harmful to the health of city residents."
+        "D": "It can succeed when beekeepers give bees some care."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "inference",
       "explanation_ar": "النص يقول إن المربّين ينجحون (بقليل من العناية)، فنستنتج أن النجاح ممكن عند توفير الرعاية، رغم التحديات.",
       "avoid_tip_ar": "الاستنتاج خطوة منطقية واحدة من النص. تجنّب المبالغات (دائماً أكثر عسلاً / مستحيل) — فالنص لم يدّعِ ذلك."

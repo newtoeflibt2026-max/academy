@@ -27,11 +27,11 @@
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
         "A": "Wolves are dangerous and should be removed from parks.",
-        "B": "Restoring one predator, the wolf, triggered a chain of changes that transformed an entire ecosystem.",
-        "C": "Deer are the most important animals in the park.",
+        "B": "Deer are the most important animals in the park.",
+        "C": "Restoring one predator, the wolf, triggered a chain of changes that transformed an entire ecosystem.",
         "D": "Beavers build dams for no clear reason."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "النص يروي كيف أدّت إعادة الذئاب إلى سلسلة تغييرات غيّرت النظام البيئي كله. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات الجزئية (الغزلان/السدود) أو المتطرّفة."
@@ -40,12 +40,12 @@
       "q": "According to the passage, what happened to young trees after the wolves returned?",
       "q_translation_ar": "حسب النص، ماذا حدث للأشجار الصغيرة بعد عودة الذئاب؟",
       "options": {
-        "A": "They were all eaten by wolves.",
-        "B": "They finally had a chance to grow tall because deer no longer lingered in the valleys.",
+        "A": "They finally had a chance to grow tall because deer no longer lingered in the valleys.",
+        "B": "They were cut down by beavers immediately.",
         "C": "They stopped growing completely.",
-        "D": "They were cut down by beavers immediately."
+        "D": "They were all eaten by wolves."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر أن الغزلان لم تعد تتلبّث في الوديان، فأتيحت للأشجار الصغيرة فرصة أن تعلو.",
       "avoid_tip_ar": "عُد للنتيجة المذكورة حرفياً. باقي الخيارات تناقض النص."
@@ -54,12 +54,12 @@
       "q": "The word 'intricate' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'intricate' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "simple",
-        "B": "complex",
-        "C": "weak",
-        "D": "temporary"
+        "A": "complex",
+        "B": "temporary",
+        "C": "simple",
+        "D": "weak"
       },
-      "correct": "B",
+      "correct": "A",
       "type": "vocabulary",
       "explanation_ar": "intricate تعني (معقّد/متشابك): الروابط في الطبيعة أعقد مما تبدو. أقرب معنى complex.",
       "avoid_tip_ar": "السياق يؤكّد التعقيد (أكثر مما تبدو)، فالمعنى معقّد لا بسيط (simple)."
@@ -68,8 +68,8 @@
       "q": "Which of the following is NOT mentioned as an effect of the wolves' return?",
       "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كأثر لعودة الذئاب؟",
       "options": {
-        "A": "Young trees grew taller.",
-        "B": "Birds returned.",
+        "A": "Birds returned.",
+        "B": "Young trees grew taller.",
         "C": "Beavers built dams.",
         "D": "The rivers dried up completely."
       },
@@ -82,12 +82,12 @@
       "q": "What is the relationship between the second and third paragraphs?",
       "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
       "options": {
-        "A": "The second describes the specific chain of effects, and the third names and generalizes it as a broader scientific concept.",
-        "B": "Both paragraphs describe how wolves were removed.",
-        "C": "The third contradicts the second.",
-        "D": "The second is about birds and the third about deer only."
+        "A": "The third contradicts the second.",
+        "B": "The second describes the specific chain of effects, and the third names and generalizes it as a broader scientific concept.",
+        "C": "The second is about birds and the third about deer only.",
+        "D": "Both paragraphs describe how wolves were removed."
       },
-      "correct": "A",
+      "correct": "B",
       "type": "paragraph_relationship",
       "explanation_ar": "الفقرة الثانية تسرد سلسلة الآثار المحدّدة، والثالثة تسمّيها (trophic cascade) وتعمّمها كمفهوم علمي أوسع.",
       "avoid_tip_ar": "حدّد التطوّر: (مثال محدّد) ← (مفهوم عام). العلاقة تعميم لا تناقض."

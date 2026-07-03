@@ -959,3 +959,205 @@ def ar_check():
         "passed": pct >= 70,
         "feedback": feedback,
     })
+
+
+# ═══════════════════════════════════════════════════════════════
+# 🎯 الامتحان التكيّفي (Adaptive Reading Exam) — TOEFL 2026 Style
+# ═══════════════════════════════════════════════════════════════
+import random
+import time as _time_mod
+from flask import jsonify, request as _req
+
+_ADAPTIVE_CACHE = {}
+
+_TIER_POOLS = {
+    "tier59": [f"ar_easy_{i:02d}" for i in range(1, 9)],
+    "tier69": [f"ar_medium_{i:02d}" for i in range(9, 17)],
+    "tier90": [f"ar_hard_{i:02d}" for i in range(17, 25)],
+}
+
+MODULE_DURATION_SEC = 15 * 60
+PASS_THRESHOLD = 6
+
+
+def _pick_passages(tier, count=2, exclude=None):
+    exclude = exclude or []
+    pool = [p for p in _TIER_POOLS.get(tier, []) if p not in exclude]
+    random.shuffle(pool)
+    return pool[:count]
+
+
+def _load_passages_full(ids):
+    items = cl.load_all()
+    return [items[i] for i in ids if i in items]
+
+
+def _score_module(passages, answers):
+    correct = 0
+    total = 0
+    details = []
+    for p in passages:
+        pid = p["id"]
+        for qi, q in enumerate(p.get("questions", [])):
+            total += 1
+            key = f"{pid}__{qi}"
+            user_ans = answers.get(key, "")
+            is_correct = user_ans == q.get("correct")
+            if is_correct:
+                correct += 1
+            details.append({
+                "passage_id": pid,
+                "passage_title": p.get("title_en"),
+                "q_index": qi,
+                "q_text": q.get("q"),
+                "user_answer": user_ans,
+                "correct_answer": q.get("correct"),
+                "is_correct": is_correct,
+                "type": q.get("type"),
+                "explanation_ar": q.get("explanation_ar", ""),
+                "avoid_tip_ar": q.get("avoid_tip_ar", ""),
+            })
+    return correct, total, details
+
+
+@reading_bp.route("/ar/exam/start", methods=["GET", "POST"])
+@require_section_access("reading")
+def ar_exam_start():
+    sid = _student_id() or 0
+    attempt_id = f"adapt_{sid}_{int(_time_mod.time())}"
+    m1_ids = _pick_passages("tier69", count=2)
+
+    _ADAPTIVE_CACHE[attempt_id] = {
+        "student_id": sid,
+        "started_at": datetime.now().isoformat(),
+        "current_module": 1,
+        "module1": {
+            "passage_ids": m1_ids,
+            "tier": "tier69",
+            "answers": {},
+            "score": None,
+            "started_at": _time_mod.time(),
+            "submitted": False,
+        },
+        "module2": None,
+        "final_score": None,
+    }
+    from flask import redirect
+    return redirect(f"/reading/ar/exam/module/{attempt_id}")
+
+
+@reading_bp.route("/ar/exam/module/<attempt_id>")
+@require_section_access("reading")
+def ar_exam_module(attempt_id):
+    state = _ADAPTIVE_CACHE.get(attempt_id)
+    if not state:
+        return "انتهت جلسة الامتحان. ابدأ من جديد.", 404
+
+    mnum = state["current_module"]
+    mkey = f"module{mnum}"
+    mod = state[mkey]
+    passages = _load_passages_full(mod["passage_ids"])
+    elapsed = _time_mod.time() - mod["started_at"]
+    remaining = max(0, MODULE_DURATION_SEC - int(elapsed))
+
+    return render_template("reading/ar_exam.html",
+        attempt_id=attempt_id,
+        module_number=mnum,
+        module_tier=mod["tier"],
+        passages=passages,
+        remaining_seconds=remaining,
+        total_duration=MODULE_DURATION_SEC,
+        user_id=_get_tg_id())
+
+
+@reading_bp.route("/ar/exam/submit", methods=["POST"])
+@require_section_access("reading")
+def ar_exam_submit():
+    data = _req.get_json() or {}
+    attempt_id = data.get("attempt_id")
+    answers = data.get("answers", {})
+
+    state = _ADAPTIVE_CACHE.get(attempt_id)
+    if not state:
+        return jsonify({"ok": False, "error": "جلسة انتهت"}), 404
+
+    mnum = state["current_module"]
+    mkey = f"module{mnum}"
+    mod = state[mkey]
+
+    if mod["submitted"]:
+        return jsonify({"ok": False, "error": "مُسلَّم بالفعل"}), 400
+
+    passages = _load_passages_full(mod["passage_ids"])
+    correct, total, details = _score_module(passages, answers)
+
+    mod["answers"] = answers
+    mod["score"] = {"correct": correct, "total": total, "details": details}
+    mod["submitted"] = True
+    mod["submitted_at"] = datetime.now().isoformat()
+
+    if mnum == 1:
+        next_tier = "tier90" if correct >= PASS_THRESHOLD else "tier59"
+        m2_ids = _pick_passages(next_tier, count=2, exclude=mod["passage_ids"])
+        state["module2"] = {
+            "passage_ids": m2_ids,
+            "tier": next_tier,
+            "answers": {},
+            "score": None,
+            "started_at": _time_mod.time(),
+            "submitted": False,
+        }
+        state["current_module"] = 2
+        return jsonify({
+            "ok": True,
+            "next": "module2",
+            "redirect": f"/reading/ar/exam/module/{attempt_id}",
+            "module1_score": f"{correct}/{total}",
+            "next_tier": next_tier,
+        })
+    else:
+        m1 = state["module1"]["score"]
+        m2 = state["module2"]["score"]
+        m2_weight = 20 if state["module2"]["tier"] == "tier90" else 10
+        m1_pts = (m1["correct"] / m1["total"]) * 10 if m1["total"] else 0
+        m2_pts = (m2["correct"] / m2["total"]) * m2_weight if m2["total"] else 0
+        final = round(m1_pts + m2_pts, 1)
+        max_score = 10 + m2_weight
+        state["final_score"] = {
+            "raw": final,
+            "max": max_score,
+            "percent": round((final / max_score) * 100, 1),
+            "m1_correct": m1["correct"], "m1_total": m1["total"],
+            "m2_correct": m2["correct"], "m2_total": m2["total"],
+            "m2_tier": state["module2"]["tier"],
+        }
+        state["finished_at"] = datetime.now().isoformat()
+        return jsonify({
+            "ok": True,
+            "next": "result",
+            "redirect": f"/reading/ar/exam/result/{attempt_id}",
+        })
+
+
+@reading_bp.route("/ar/exam/result/<attempt_id>")
+@require_section_access("reading")
+def ar_exam_result(attempt_id):
+    state = _ADAPTIVE_CACHE.get(attempt_id)
+    if not state or not state.get("final_score"):
+        return "نتيجة غير متوفرة. أعد الامتحان.", 404
+
+    all_mistakes = []
+    for mkey in ["module1", "module2"]:
+        mod = state[mkey]
+        if mod and mod.get("score"):
+            for d in mod["score"]["details"]:
+                if not d["is_correct"]:
+                    all_mistakes.append(d)
+
+    return render_template("reading/ar_exam_result.html",
+        attempt_id=attempt_id,
+        final=state["final_score"],
+        mistakes=all_mistakes,
+        m1_details=state["module1"]["score"]["details"],
+        m2_details=state["module2"]["score"]["details"],
+        user_id=_get_tg_id())

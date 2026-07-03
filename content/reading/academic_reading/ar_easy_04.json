@@ -26,12 +26,12 @@
       "q": "What is the passage mainly about?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "How books are printed in factories today.",
-        "B": "How public libraries made reading and knowledge available to ordinary people.",
-        "C": "Why universities stopped collecting books.",
-        "D": "Why poetry is more popular than science."
+        "A": "Why universities stopped collecting books.",
+        "B": "Why poetry is more popular than science.",
+        "C": "How books are printed in factories today.",
+        "D": "How public libraries made reading and knowledge available to ordinary people."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "factual",
       "explanation_ar": "النص يتتبّع كيف كانت الكتب نادرة، ثم كيف أتاحت المكتبات العامة القراءة والمعرفة للناس العاديين. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع كل الفقرات. تجنّب الخيارات الجزئية أو خارج الموضوع (الطباعة الحديثة)."
@@ -41,11 +41,11 @@
       "q_translation_ar": "حسب النص، لماذا كانت الكتب نادرة طوال معظم التاريخ؟",
       "options": {
         "A": "Because few people wanted to read.",
-        "B": "Because each book had to be copied slowly by hand.",
-        "C": "Because libraries refused to lend them.",
-        "D": "Because governments banned reading."
+        "B": "Because governments banned reading.",
+        "C": "Because each book had to be copied slowly by hand.",
+        "D": "Because libraries refused to lend them."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الأولى تذكر صراحة أن نسخ كتاب واحد باليد قد يستغرق شهوراً، لذا كانت الكتب نادرة وغالية.",
       "avoid_tip_ar": "ابحث عن السبب المذكور حرفياً. باقي الخيارات لم يذكرها النص."
@@ -55,11 +55,11 @@
       "q_translation_ar": "كلمة 'borrow' في النص أقرب معنىً إلى:",
       "options": {
         "A": "to buy and keep forever",
-        "B": "to take and use for a while, then return",
+        "B": "to destroy",
         "C": "to write a new book",
-        "D": "to destroy"
+        "D": "to take and use for a while, then return"
       },
-      "correct": "B",
+      "correct": "D",
       "type": "vocabulary",
       "explanation_ar": "borrow تعني (يستعير): يأخذ الكتاب لمدة ثم يعيده. السياق: مكان يستعير منه أيّ شخص الكتب مجاناً.",
       "avoid_tip_ar": "ميّز بين (يستعير = يأخذ ويعيد) و(يشتري = يملك للأبد). السياق مجاني ومؤقّت."
@@ -68,12 +68,12 @@
       "q": "Why does the author mention generous individuals and local governments?",
       "q_translation_ar": "لماذا يذكر الكاتب الأفراد الكرماء والحكومات المحلية؟",
       "options": {
-        "A": "To explain who funded early public libraries.",
-        "B": "To prove that libraries were always private.",
+        "A": "To criticize wealthy people.",
+        "B": "To explain who funded early public libraries.",
         "C": "To show that books were never free.",
-        "D": "To criticize wealthy people."
+        "D": "To prove that libraries were always private."
       },
-      "correct": "A",
+      "correct": "B",
       "type": "rhetorical",
       "explanation_ar": "ذكرهم يوضّح مصدر تمويل المكتبات العامة المبكرة، أي من جعلها مجانية متاحة للجميع.",
       "avoid_tip_ar": "أسئلة الغرض تسأل (لماذا ذُكر هذا؟). ذِكرهم لتفسير التمويل، لا لانتقادهم."
@@ -82,12 +82,12 @@
       "q": "What can be inferred about the effect of public libraries on society?",
       "q_translation_ar": "ماذا يمكن استنتاجه عن أثر المكتبات العامة في المجتمع؟",
       "options": {
-        "A": "They made education harder to reach.",
-        "B": "They gave more people the chance to learn and improve their lives.",
-        "C": "They were used only by the wealthy.",
-        "D": "They reduced the number of readers."
+        "A": "They reduced the number of readers.",
+        "B": "They were used only by the wealthy.",
+        "C": "They made education harder to reach.",
+        "D": "They gave more people the chance to learn and improve their lives."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "inference",
       "explanation_ar": "النص يقول إنها نشرت معرفة القراءة وأعطت كثيرين أدوات تحسين حياتهم، فنستنتج أنها وسّعت فرص التعلّم.",
       "avoid_tip_ar": "الاستنتاج يتبع اتجاه النص الإيجابي. تجنّب ما يناقضه (أصعب / للأثرياء فقط)."

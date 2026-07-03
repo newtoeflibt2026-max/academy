@@ -27,11 +27,11 @@
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
         "A": "Why traditional agriculture is no longer used in any country.",
-        "B": "Vertical farming as an emerging urban food solution, with its benefits and challenges.",
+        "B": "How droughts and floods permanently destroyed urban farms.",
         "C": "The history of warehouse construction in modern cities.",
-        "D": "How droughts and floods permanently destroyed urban farms."
+        "D": "Vertical farming as an emerging urban food solution, with its benefits and challenges."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "factual",
       "explanation_ar": "النص يعرّف الزراعة العمودية كحلّ ناشئ لتغذية المدن، ثم يوازن بين فوائدها وعقباتها — وهذا هو الموضوع العام.",
       "avoid_tip_ar": "للفكرة الرئيسية، ابحث عن الخيار الذي يجمع كل فقرات النص. تجنّب الخيارات المتطرّفة مثل (لم يعد يُستخدم في أي بلد)."
@@ -40,10 +40,10 @@
       "q": "According to the passage, why do vertical farms use less water than traditional farms?",
       "q_translation_ar": "حسب النص، لماذا تستهلك المزارع العمودية ماءً أقل من المزارع التقليدية؟",
       "options": {
-        "A": "They grow fewer crops overall.",
+        "A": "They use saltwater from nearby cities.",
         "B": "They recycle moisture instead of letting it drain away.",
         "C": "They rely entirely on rainwater.",
-        "D": "They use saltwater from nearby cities."
+        "D": "They grow fewer crops overall."
       },
       "correct": "B",
       "type": "factual",
@@ -54,12 +54,12 @@
       "q": "The word 'offset' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'offset' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "increased",
-        "B": "counterbalanced",
+        "A": "discovered",
+        "B": "increased",
         "C": "ignored",
-        "D": "discovered"
+        "D": "counterbalanced"
       },
-      "correct": "B",
+      "correct": "D",
       "type": "vocabulary",
       "explanation_ar": "offset هنا تعني (يُعادَل/يُقابَل): الفوائد البيئية قد يقابلها استهلاك الطاقة الكبير. أقرب كلمة counterbalanced.",
       "avoid_tip_ar": "ضع الخيار مكان الكلمة في الجملة. المعنى موازنة لا زيادة (increased)."
@@ -69,11 +69,11 @@
       "q_translation_ar": "انظر إلى الجملة: (هذا قيّم بشكل خاص للخضراوات الورقية التي تفقد نضارتها سريعاً). أين تنتمي في النص؟",
       "options": {
         "A": "After the sentence about regulating temperature and humidity (paragraph 1).",
-        "B": "After the sentence about delivering fresh produce within hours (paragraph 2).",
-        "C": "After the sentence about artificial lighting consuming electricity (paragraph 3).",
+        "B": "After the sentence about artificial lighting consuming electricity (paragraph 3).",
+        "C": "After the sentence about delivering fresh produce within hours (paragraph 2).",
         "D": "After the sentence defining vertical farming (paragraph 1)."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "insert_sentence",
       "explanation_ar": "الجملة تتحدث عن النضارة والخضراوات الورقية، فهي تنتمي بعد الجملة التي تذكر تسليم المنتجات الطازجة خلال ساعات وتقليل الفساد — فكلاهما عن الطزاجة.",
       "avoid_tip_ar": "لإدراج الجملة، اربط فكرتها (النضارة) بالجملة المجاورة التي تشترك معها بنفس الموضوع. تجنّب المواضع التي تتحدث عن موضوع مختلف (الطاقة/التنظيم)."
@@ -82,12 +82,12 @@
       "q": "What is the relationship between the second and third paragraphs?",
       "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
       "options": {
-        "A": "The third paragraph repeats the same points as the second.",
-        "B": "The second presents the advantages, while the third presents the obstacles that balance them.",
+        "A": "The third paragraph gives the history of the second.",
+        "B": "The third paragraph repeats the same points as the second.",
         "C": "Both paragraphs argue that vertical farming is impossible.",
-        "D": "The third paragraph gives the history of the second."
+        "D": "The second presents the advantages, while the third presents the obstacles that balance them."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "paragraph_relationship",
       "explanation_ar": "الفقرة الثانية تعرض المزايا، والثالثة تعرض العقبات (الطاقة والتكلفة)، فالعلاقة هي تقديم الجانبين المتقابلين للموضوع.",
       "avoid_tip_ar": "لأسئلة العلاقة بين الفقرات، حدّد دور كل فقرة (مزايا/عيوب/مثال/سبب). هنا: مزايا ثم عقبات تقابلها."

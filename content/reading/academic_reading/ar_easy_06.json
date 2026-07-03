@@ -26,10 +26,10 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Chocolate has always been a sweet, solid bar.",
+        "A": "Cacao trees grow only in cold climates.",
         "B": "Chocolate began as a bitter drink in the Americas and slowly changed into the treat we know today.",
-        "C": "Cacao trees grow only in cold climates.",
-        "D": "Sugar was invented in the Americas."
+        "C": "Sugar was invented in the Americas.",
+        "D": "Chocolate has always been a sweet, solid bar."
       },
       "correct": "B",
       "type": "factual",
@@ -54,12 +54,12 @@
       "q": "The word 'valued' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'valued' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "considered worthless",
-        "B": "considered precious",
-        "C": "easily forgotten",
-        "D": "tasted bad"
+        "A": "tasted bad",
+        "B": "easily forgotten",
+        "C": "considered precious",
+        "D": "considered worthless"
       },
-      "correct": "B",
+      "correct": "C",
       "type": "vocabulary",
       "explanation_ar": "valued تعني (ثمين/مُقدَّر): كانت البذور ثمينة لدرجة استخدامها كنقود. أقرب معنى considered precious.",
       "avoid_tip_ar": "الدليل في الجملة نفسها: استُخدمت كنقود، إذن كانت (ثمينة) لا بلا قيمة."
@@ -68,12 +68,12 @@
       "q": "Why does the author mention that cacao seeds were used as money?",
       "q_translation_ar": "لماذا يذكر الكاتب أن بذور الكاكاو استُخدمت كنقود؟",
       "options": {
-        "A": "To show how highly valued cacao was at the time.",
-        "B": "To prove that chocolate was never eaten.",
-        "C": "To explain how modern banks work.",
+        "A": "To explain how modern banks work.",
+        "B": "To show how highly valued cacao was at the time.",
+        "C": "To prove that chocolate was never eaten.",
         "D": "To criticize ancient peoples."
       },
-      "correct": "A",
+      "correct": "B",
       "type": "rhetorical",
       "explanation_ar": "ذكر استخدامها كنقود يدعم النقطة السابقة: أن الكاكاو كان ثميناً جداً. هذا غرض الجملة.",
       "avoid_tip_ar": "أسئلة الغرض تربط الجملة بالنقطة قبلها. هنا (كنقود) دليل على القيمة العالية."
@@ -82,12 +82,12 @@
       "q": "What can be inferred about chocolate over time?",
       "q_translation_ar": "ماذا يمكن استنتاجه عن الشوكولاتة عبر الزمن؟",
       "options": {
-        "A": "It became less popular as years passed.",
-        "B": "It changed from a rare luxury into something many people can enjoy.",
-        "C": "It is still used as money today.",
-        "D": "Its taste has never changed."
+        "A": "Its taste has never changed.",
+        "B": "It became less popular as years passed.",
+        "C": "It changed from a rare luxury into something many people can enjoy.",
+        "D": "It is still used as money today."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "inference",
       "explanation_ar": "النص يقول إنها تحوّلت من ترف نادر إلى متعة يومية بفضل الآلات والإنتاج، فنستنتج أنها صارت متاحة للكثيرين.",
       "avoid_tip_ar": "الاستنتاج يتبع النص. تجنّب ما يناقضه (أقلّ شعبية / لم يتغيّر طعمها)."

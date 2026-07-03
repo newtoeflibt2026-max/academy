@@ -26,12 +26,12 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Clay tablets were the best writing material ever made.",
-        "B": "Paper was invented to meet the need for a lighter, cheaper writing surface, and it spread widely.",
+        "A": "Paper was invented to meet the need for a lighter, cheaper writing surface, and it spread widely.",
+        "B": "Animal skins are still used for writing today.",
         "C": "Ancient China was the largest country in the world.",
-        "D": "Animal skins are still used for writing today."
+        "D": "Clay tablets were the best writing material ever made."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "النص يشرح مشكلة المواد القديمة، ثم اختراع الورق كحلّ أخفّ وأرخص، ثم انتشاره. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع كل الفقرات. تجنّب الخيارات الجزئية (الألواح الطينية) أو خارج الموضوع (حجم الصين)."
@@ -41,11 +41,11 @@
       "q_translation_ar": "حسب النص، ما المشكلة في جلود الحيوانات؟",
       "options": {
         "A": "They were too light to write on.",
-        "B": "They were expensive and slow to prepare.",
-        "C": "They could not hold ink.",
+        "B": "They could not hold ink.",
+        "C": "They were expensive and slow to prepare.",
         "D": "They were only found in China."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الأولى تذكر صراحة أن الجلود كانت غالية وبطيئة التحضير.",
       "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات لم تُذكَر في النص إطلاقاً."
@@ -56,8 +56,8 @@
       "options": {
         "A": "a hard stone",
         "B": "a soft, wet mixture",
-        "C": "a dry powder",
-        "D": "a sharp tool"
+        "C": "a sharp tool",
+        "D": "a dry powder"
       },
       "correct": "B",
       "type": "vocabulary",
@@ -68,12 +68,12 @@
       "q": "Why does the author describe the papermaking process in the second paragraph?",
       "q_translation_ar": "لماذا يصف الكاتب عملية صناعة الورق في الفقرة الثانية؟",
       "options": {
-        "A": "To prove that paper was difficult and rarely made.",
-        "B": "To show how a simple, repeatable process allowed paper to be produced in large amounts.",
-        "C": "To criticize ancient Chinese workers.",
-        "D": "To explain how clay tablets were made."
+        "A": "To show how a simple, repeatable process allowed paper to be produced in large amounts.",
+        "B": "To criticize ancient Chinese workers.",
+        "C": "To explain how clay tablets were made.",
+        "D": "To prove that paper was difficult and rarely made."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "rhetorical",
       "explanation_ar": "وصف العملية يوضّح أنها بسيطة وقابلة للتكرار، ولذلك أمكن إنتاج الورق بكميات كبيرة — وهذا غرض الفقرة.",
       "avoid_tip_ar": "أسئلة الغرض تسأل (لماذا ذُكر هذا؟). النص يصف العملية ليبيّن سهولتها، لا لينتقد العمال."
@@ -83,11 +83,11 @@
       "q_translation_ar": "ماذا يمكن استنتاجه عن انتشار الورق؟",
       "options": {
         "A": "It happened instantly all over the world.",
-        "B": "It took a long time and followed trade connections between regions.",
+        "B": "It made books more expensive everywhere.",
         "C": "It was kept secret and never left China.",
-        "D": "It made books more expensive everywhere."
+        "D": "It took a long time and followed trade connections between regions."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "inference",
       "explanation_ar": "النص يقول إن الورق انتشر ببطء عبر طرق التجارة على مدى قرون، فنستنتج أن انتشاره كان تدريجياً ومرتبطاً بالتجارة.",
       "avoid_tip_ar": "تجنّب المتطرّف (فوراً / لم يغادر الصين). والنص يقول إن الورق جعل الكتب أرخص لا أغلى."

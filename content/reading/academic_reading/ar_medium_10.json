@@ -27,11 +27,11 @@
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
         "A": "A single disease is responsible for all honeybee losses.",
-        "B": "Honeybee decline results from several stresses acting together, requiring a combined response.",
+        "B": "Pesticides have completely solved the bee problem.",
         "C": "Bees are no longer important for food production.",
-        "D": "Pesticides have completely solved the bee problem."
+        "D": "Honeybee decline results from several stresses acting together, requiring a combined response."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "factual",
       "explanation_ar": "النص يجادل بأن تراجع النحل ناتج عن عدة ضغوط مجتمعة، ولذلك يتطلّب معالجة متعدّدة. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيار المتطرّف (سبب واحد) — فالنص يؤكّد تعدّد الأسباب."
@@ -40,12 +40,12 @@
       "q": "According to the passage, how do certain pesticides affect bees?",
       "q_translation_ar": "حسب النص، كيف تؤثّر بعض المبيدات في النحل؟",
       "options": {
-        "A": "They make bees grow larger.",
-        "B": "They cause confusion and memory loss, so bees struggle to return to the hive.",
-        "C": "They protect bees from mites.",
-        "D": "They improve the bees' diet."
+        "A": "They improve the bees' diet.",
+        "B": "They make bees grow larger.",
+        "C": "They cause confusion and memory loss, so bees struggle to return to the hive.",
+        "D": "They protect bees from mites."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر صراحة أن المبيدات تُربَط بالارتباك وفقدان الذاكرة، فيصعب على النحل العودة للخلية.",
       "avoid_tip_ar": "عُد للأثر المذكور حرفياً. باقي الخيارات تناقض النص أو لم تُذكَر."
@@ -54,12 +54,12 @@
       "q": "The word 'drains' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'drains' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "gradually uses up",
-        "B": "quickly increases",
+        "A": "quickly increases",
+        "B": "completely ignores",
         "C": "cleans thoroughly",
-        "D": "completely ignores"
+        "D": "gradually uses up"
       },
-      "correct": "A",
+      "correct": "D",
       "type": "vocabulary",
       "explanation_ar": "drains هنا تعني (يستنزف/يستهلك تدريجياً): العُثّة تستنزف قوة النحل شيئاً فشيئاً. أقرب معنى gradually uses up.",
       "avoid_tip_ar": "السياق سلبي (تُضعِف القوة)، فالمعنى استنزاف لا زيادة (increase)."
@@ -82,12 +82,12 @@
       "q": "What is the relationship between the second and third paragraphs?",
       "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
       "options": {
-        "A": "The third lists the individual causes, and the second concludes from them.",
-        "B": "The second lists the individual causes, and the third explains how they combine and what this means for solutions.",
-        "C": "Both paragraphs describe the same single cause.",
-        "D": "The third contradicts everything in the second."
+        "A": "Both paragraphs describe the same single cause.",
+        "B": "The third contradicts everything in the second.",
+        "C": "The third lists the individual causes, and the second concludes from them.",
+        "D": "The second lists the individual causes, and the third explains how they combine and what this means for solutions."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "paragraph_relationship",
       "explanation_ar": "الفقرة الثانية تعدّد الأسباب المنفردة، والثالثة تشرح كيف تتضافر معاً وأثر ذلك على الحلول. فالثالثة تبني على الثانية وتستخلص منها.",
       "avoid_tip_ar": "حدّد دور كل فقرة: (سرد الأسباب) ثم (الاستنتاج منها). العلاقة بناء وتطوير لا تناقض."

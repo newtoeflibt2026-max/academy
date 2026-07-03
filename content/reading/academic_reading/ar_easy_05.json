@@ -26,12 +26,12 @@
       "q": "What is the passage mainly about?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Why deserts are growing larger every year.",
-        "B": "The physical features that help camels survive in the desert.",
-        "C": "How people use camels to carry goods.",
-        "D": "Why camels prefer cold weather."
+        "A": "Why camels prefer cold weather.",
+        "B": "Why deserts are growing larger every year.",
+        "C": "The physical features that help camels survive in the desert.",
+        "D": "How people use camels to carry goods."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "النص يشرح السمات الجسدية (السنام، الرموش، الأقدام) التي تساعد الجمل على العيش في الصحراء. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع كل الفقرات. تجنّب الخيارات خارج الموضوع (توسّع الصحاري / نقل البضائع)."
@@ -40,12 +40,12 @@
       "q": "According to the passage, what does a camel's hump actually store?",
       "q_translation_ar": "حسب النص، ماذا يخزّن سنام الجمل فعلاً؟",
       "options": {
-        "A": "Water.",
-        "B": "Fat.",
-        "C": "Sand.",
+        "A": "Sand.",
+        "B": "Water.",
+        "C": "Fat.",
         "D": "Air."
       },
-      "correct": "B",
+      "correct": "C",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تصحّح اعتقاداً شائعاً: السنام يخزّن (الدهون) لا الماء، ويستخدمها الجسم للطاقة عند ندرة الطعام.",
       "avoid_tip_ar": "احذر الاعتقاد الشائع! النص يقول صراحة إن الناس يظنون أنه ماء، لكنه (دهون). اقرأ التصحيح."
@@ -54,12 +54,12 @@
       "q": "The word 'scarce' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'scarce' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "plentiful",
-        "B": "hard to find",
-        "C": "delicious",
-        "D": "heavy"
+        "A": "delicious",
+        "B": "heavy",
+        "C": "hard to find",
+        "D": "plentiful"
       },
-      "correct": "B",
+      "correct": "C",
       "type": "vocabulary",
       "explanation_ar": "scarce تعني (شحيح/نادر): عندما يكون الطعام شحيحاً يستخدم الجمل دهونه. أقرب معنى hard to find.",
       "avoid_tip_ar": "السياق يقول إن الجسم يلجأ للدهون عند (نقص) الطعام، فالمعنى نادر لا وفير (plentiful)."
@@ -68,9 +68,9 @@
       "q": "Which of the following is NOT mentioned as a feature that helps camels?",
       "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كسمة تساعد الجمال؟",
       "options": {
-        "A": "Thick eyelashes.",
-        "B": "Closable nostrils.",
-        "C": "Wide feet.",
+        "A": "Wide feet.",
+        "B": "Thick eyelashes.",
+        "C": "Closable nostrils.",
         "D": "Sharp claws."
       },
       "correct": "D",
@@ -82,12 +82,12 @@
       "q": "What can be inferred about why camels can cross deserts that other animals cannot?",
       "q_translation_ar": "ماذا يُستنتَج عن سبب قدرة الجمال على عبور صحارٍ يعجز غيرها عنها؟",
       "options": {
-        "A": "They sleep during the entire journey.",
-        "B": "Their bodies are specially adapted to heat and lack of water.",
-        "C": "They never need to eat.",
-        "D": "They can fly over the sand."
+        "A": "Their bodies are specially adapted to heat and lack of water.",
+        "B": "They can fly over the sand.",
+        "C": "They sleep during the entire journey.",
+        "D": "They never need to eat."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "inference",
       "explanation_ar": "بما أن النص يعدّد سمات تكيّف الجمل مع الحرّ وقلّة الماء، نستنتج أن جسمه المتكيّف هو ما يميّزه عن غيره.",
       "avoid_tip_ar": "الاستنتاج يبني على ما ذُكر. تجنّب المبالغات (لا يأكل أبداً / يطير)."

@@ -26,10 +26,10 @@
       "q": "What is the passage mainly about?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "How to record events perfectly.",
+        "A": "How the brain stores exact copies of events.",
         "B": "How human memory reconstructs the past, which allows both errors and useful flexibility.",
         "C": "Why witnesses always tell the truth.",
-        "D": "How the brain stores exact copies of events."
+        "D": "How to record events perfectly."
       },
       "correct": "B",
       "type": "factual",
@@ -40,12 +40,12 @@
       "q": "According to the passage, why can false details enter a memory?",
       "q_translation_ar": "حسب النص، لماذا يمكن أن تدخل تفاصيل خاطئة إلى الذاكرة؟",
       "options": {
-        "A": "Because memory is reconstructed and can be shaped by later experiences and suggestions.",
-        "B": "Because the brain deletes all real memories.",
-        "C": "Because people never pay attention.",
-        "D": "Because memories are stored on paper."
+        "A": "Because memories are stored on paper.",
+        "B": "Because memory is reconstructed and can be shaped by later experiences and suggestions.",
+        "C": "Because the brain deletes all real memories.",
+        "D": "Because people never pay attention."
       },
-      "correct": "A",
+      "correct": "B",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر أن الذاكرة تُعاد بناؤها، فتتسلّل تفاصيل من لحظات أخرى أو من اقتراحات الآخرين.",
       "avoid_tip_ar": "عُد للسبب المذكور حرفياً. باقي الخيارات لم تُذكَر أو مبالغ فيها."
@@ -54,12 +54,12 @@
       "q": "The word 'vivid' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'vivid' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "clear and lifelike",
+        "A": "very short",
         "B": "faint and unclear",
         "C": "completely false",
-        "D": "very short"
+        "D": "clear and lifelike"
       },
-      "correct": "A",
+      "correct": "D",
       "type": "vocabulary",
       "explanation_ar": "vivid تعني (حيّ/واضح كالحقيقة): قد تبدو الذكريات حيّة رغم احتوائها أخطاء. أقرب معنى clear and lifelike.",
       "avoid_tip_ar": "السياق يقابل (حيّة) بـ(تحتوي أخطاء)، فالكلمة عن الوضوح لا الضعف (faint)."
@@ -68,12 +68,12 @@
       "q": "Look at this sentence: 'The witnesses were not lying; they genuinely believed their altered memories.' Where would it best fit?",
       "q_translation_ar": "انظر إلى الجملة: (لم يكن الشهود يكذبون؛ بل صدّقوا حقاً ذكرياتهم المُحرَّفة). أين تنتمي؟",
       "options": {
-        "A": "After the sentence about worded questions leading witnesses to remember things they never saw (paragraph 2).",
+        "A": "After the title.",
         "B": "At the start of paragraph 1.",
-        "C": "After the sentence about imagining the future (paragraph 3).",
-        "D": "After the title."
+        "C": "After the sentence about worded questions leading witnesses to remember things they never saw (paragraph 2).",
+        "D": "After the sentence about imagining the future (paragraph 3)."
       },
-      "correct": "A",
+      "correct": "C",
       "type": "insert_sentence",
       "explanation_ar": "الجملة تفسّر أن الشهود لم يكذبوا بل صدّقوا ذكرياتهم، فهي تنتمي مباشرة بعد ذكر أن الأسئلة تجعل الشهود يتذكّرون ما لم يروه.",
       "avoid_tip_ar": "اربط (الشهود) بالجملة التي تسبقها وتتحدث عن الشهود. تجنّب المواضع في فقرات موضوعها مختلف."
@@ -82,12 +82,12 @@
       "q": "What is the relationship between the third paragraph and the previous ones?",
       "q_translation_ar": "ما علاقة الفقرة الثالثة بما سبقها؟",
       "options": {
-        "A": "It repeats the examples of memory errors.",
-        "B": "It reframes the flexibility described earlier as an advantage, not only a weakness.",
+        "A": "It explains how to record video.",
+        "B": "It repeats the examples of memory errors.",
         "C": "It denies that memory can ever be wrong.",
-        "D": "It explains how to record video."
+        "D": "It reframes the flexibility described earlier as an advantage, not only a weakness."
       },
-      "correct": "B",
+      "correct": "D",
       "type": "paragraph_relationship",
       "explanation_ar": "بعد أن ركّزت الفقرتان على الأخطاء، تعيد الثالثة تأطير المرونة نفسها كميزة (تخيّل المستقبل وحلّ المشكلات). فالعلاقة توسيع/إعادة تأطير.",
       "avoid_tip_ar": "حدّد التحوّل: (عيب) ← (ميزة). الفقرة الأخيرة تقلب الزاوية لا تكرّر."

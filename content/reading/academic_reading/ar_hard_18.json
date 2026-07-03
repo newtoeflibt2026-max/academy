@@ -26,12 +26,12 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Eyewitness testimony is always false.",
-        "B": "Research has shown eyewitness testimony to be less reliable than assumed, prompting reforms.",
-        "C": "Confident witnesses are always accurate.",
-        "D": "Memory records reality perfectly."
+        "A": "Research has shown eyewitness testimony to be less reliable than assumed, prompting reforms.",
+        "B": "Memory records reality perfectly.",
+        "C": "Eyewitness testimony is always false.",
+        "D": "Confident witnesses are always accurate."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "النص يبيّن أن الأبحاث قوّضت الثقة بشهادة العيان وأدّت إلى إصلاحات. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية متوازنة: ليست (دائماً كاذبة) بل (أقلّ موثوقية مما يُظنّ). تجنّب المتطرّف."
@@ -42,8 +42,8 @@
       "options": {
         "A": "It perfectly predicts accuracy.",
         "B": "It often bears little relationship to how accurate the memory actually is.",
-        "C": "It always means the witness is lying.",
-        "D": "It disappears under stress."
+        "C": "It disappears under stress.",
+        "D": "It always means the witness is lying."
       },
       "correct": "B",
       "type": "factual",
@@ -54,12 +54,12 @@
       "q": "The word 'eroded' in the passage is closest in meaning to:",
       "q_translation_ar": "كلمة 'eroded' في النص أقرب معنىً إلى:",
       "options": {
-        "A": "gradually weakened",
-        "B": "strongly confirmed",
-        "C": "quickly created",
+        "A": "quickly created",
+        "B": "gradually weakened",
+        "C": "strongly confirmed",
         "D": "carefully measured"
       },
-      "correct": "A",
+      "correct": "B",
       "type": "vocabulary",
       "explanation_ar": "eroded تعني (قوّضت/أضعفت تدريجياً): الأبحاث أضعفت الافتراض شيئاً فشيئاً. أقرب معنى gradually weakened.",
       "avoid_tip_ar": "السياق يقول (steadily eroded this assumption)، فالمعنى إضعاف لا تأكيد (confirmed)."
@@ -68,12 +68,12 @@
       "q": "Why does the author contrast a 'vivid, self-assured account' with a 'hesitant one'?",
       "q_translation_ar": "لماذا يقابل الكاتب بين (حساب حيّ واثق) و(حساب متردّد)؟",
       "options": {
-        "A": "To show that the cues jurors trust (confidence) can be misleading.",
-        "B": "To prove that hesitant witnesses always lie.",
-        "C": "To explain how lighting affects crimes.",
-        "D": "To argue that testimony should never be used."
+        "A": "To explain how lighting affects crimes.",
+        "B": "To show that the cues jurors trust (confidence) can be misleading.",
+        "C": "To argue that testimony should never be used.",
+        "D": "To prove that hesitant witnesses always lie."
       },
-      "correct": "A",
+      "correct": "B",
       "type": "rhetorical",
       "explanation_ar": "المقابلة توضّح أن الثقة (التي يثق بها المحلّفون غريزياً) قد تضلّل، لأن الواثق قد يخطئ والمتردّد قد يصيب. هذا غرضها.",
       "avoid_tip_ar": "أسئلة الغرض تربط المثال بالفكرة. المقابلة تخدم فكرة (خداع مؤشّر الثقة)."
@@ -82,12 +82,12 @@
       "q": "Which sentence best captures the most important idea of the passage?",
       "q_translation_ar": "أيّ جملة تُجسّد أفضل الفكرة الأهمّ في النص؟",
       "options": {
-        "A": "All legal evidence is worthless.",
-        "B": "Evidence that feels highly convincing is not, for that reason alone, reliable.",
-        "C": "Witnesses should never testify in court.",
-        "D": "Lighting is the only factor in memory."
+        "A": "Evidence that feels highly convincing is not, for that reason alone, reliable.",
+        "B": "All legal evidence is worthless.",
+        "C": "Lighting is the only factor in memory.",
+        "D": "Witnesses should never testify in court."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "important_idea",
       "explanation_ar": "الفكرة الأهمّ، كما يختم النص، أن الدليل المُقنِع شعورياً ليس موثوقاً لمجرّد كونه مقنعاً — وهي خلاصة النص.",
       "avoid_tip_ar": "اختر الخلاصة الجامعة، لا تفصيلة (الإضاءة) ولا مبالغة (كل الأدلّة بلا قيمة)."

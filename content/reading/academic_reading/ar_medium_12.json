@@ -26,12 +26,12 @@
       "q": "What is the main idea of the passage?",
       "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
       "options": {
-        "A": "Coral reefs are unimportant to ocean life.",
-        "B": "Coral reefs are rich but fragile ecosystems threatened by warming, with some hope for adaptation.",
-        "C": "Algae are harmful to coral and should be removed.",
-        "D": "Overfishing is the only threat to coral reefs."
+        "A": "Coral reefs are rich but fragile ecosystems threatened by warming, with some hope for adaptation.",
+        "B": "Coral reefs are unimportant to ocean life.",
+        "C": "Overfishing is the only threat to coral reefs.",
+        "D": "Algae are harmful to coral and should be removed."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "النص يصف ثراء الشعاب المرجانية وهشاشتها أمام الاحترار، مع بصيص أمل في التكيّف. هذا هو الموضوع العام.",
       "avoid_tip_ar": "الفكرة الرئيسية تجمع النص. تجنّب الخيارات المتطرّفة أو الجزئية (تهديد واحد فقط)."
@@ -40,12 +40,12 @@
       "q": "According to the passage, what happens during coral bleaching?",
       "q_translation_ar": "حسب النص، ماذا يحدث أثناء ابيضاض المرجان؟",
       "options": {
-        "A": "The coral grows faster and stronger.",
-        "B": "The stressed coral expels its algae, losing its color and main food source.",
-        "C": "The algae eat the coral.",
-        "D": "The water becomes colder."
+        "A": "The stressed coral expels its algae, losing its color and main food source.",
+        "B": "The coral grows faster and stronger.",
+        "C": "The water becomes colder.",
+        "D": "The algae eat the coral."
       },
-      "correct": "B",
+      "correct": "A",
       "type": "factual",
       "explanation_ar": "الفقرة الثانية تذكر صراحة أن المرجان المُجهَد يطرد الطحالب فيفقد لونه ومصدر غذائه الرئيسي.",
       "avoid_tip_ar": "عُد للوصف المذكور حرفياً. باقي الخيارات تناقض النص."
@@ -55,9 +55,9 @@
       "q_translation_ar": "كلمة 'persist' في النص أقرب معنىً إلى:",
       "options": {
         "A": "continue",
-        "B": "disappear",
-        "C": "weaken",
-        "D": "freeze"
+        "B": "freeze",
+        "C": "disappear",
+        "D": "weaken"
       },
       "correct": "A",
       "type": "vocabulary",
@@ -68,12 +68,12 @@
       "q": "Look at this sentence: 'For this reason, the health of a reef can be read directly from its color.' Where would it best fit?",
       "q_translation_ar": "انظر إلى الجملة: (لهذا السبب، يمكن قراءة صحة الشعبة مباشرةً من لونها). أين تنتمي؟",
       "options": {
-        "A": "After the sentence describing bleaching as leaving coral pale and weakened (paragraph 2).",
+        "A": "After the title.",
         "B": "At the start of paragraph 1.",
         "C": "After the sentence about reefs supporting a quarter of marine species (paragraph 1).",
-        "D": "After the title."
+        "D": "After the sentence describing bleaching as leaving coral pale and weakened (paragraph 2)."
       },
-      "correct": "A",
+      "correct": "D",
       "type": "insert_sentence",
       "explanation_ar": "الجملة تربط الصحة باللون، فهي تنتمي مباشرة بعد وصف الابيضاض الذي يجعل المرجان شاحباً وضعيفاً — لأن اللون هو المؤشّر.",
       "avoid_tip_ar": "اربط (لهذا السبب) بالسبب الذي يسبقها مباشرة: فقدان اللون. تجنّب المواضع التي لا تتحدث عن اللون."
@@ -83,8 +83,8 @@
       "q_translation_ar": "ما العلاقة بين الفقرتين الثانية والثالثة؟",
       "options": {
         "A": "The second describes the threat (bleaching), and the third presents both the growing danger and reasons for hope.",
-        "B": "Both paragraphs claim coral cannot be saved.",
-        "C": "The third repeats the partnership described in the second.",
+        "B": "The third repeats the partnership described in the second.",
+        "C": "Both paragraphs claim coral cannot be saved.",
         "D": "The second is about pollution and the third about algae only."
       },
       "correct": "A",
