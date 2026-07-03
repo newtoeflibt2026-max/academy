@@ -1,0 +1,28 @@
+﻿{
+  "id": "academic_TOPIC_NN",
+  "type": "academic_reading",
+  "title_ar": "العنوان بالعربي",
+  "title_en": "English Title",
+  "tier": "tier69",
+  "duration_seconds": 1080,
+  "passage": {
+    "topic": "Topic",
+    "text_en": "Put your English text here. Use \\n\\n between paragraphs."
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple_choice",
+      "prompt_en": "Question?",
+      "options": [
+        { "id": "A", "text_en": "Option A" },
+        { "id": "B", "text_en": "Option B" },
+        { "id": "C", "text_en": "Option C" },
+        { "id": "D", "text_en": "Option D" }
+      ],
+      "correct": "B",
+      "explanation_ar": "شرح بالعربي",
+      "points": 1
+    }
+  ]
+}

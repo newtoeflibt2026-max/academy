@@ -1,0 +1,7 @@
+﻿{
+  "title": "TOEFL Reading Schema v1.0",
+  "required": ["id", "type", "title_ar", "title_en", "tier", "duration_seconds", "passage", "questions"],
+  "types_allowed": ["academic_reading", "daily_reading", "complete_words"],
+  "tiers_allowed": ["tier59", "tier69", "tier90"],
+  "question_types": ["multiple_choice", "insert_sentence", "fill_blank", "true_false", "summary", "vocabulary_in_context"]
+}

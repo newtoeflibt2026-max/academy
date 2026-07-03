@@ -1,0 +1,94 @@
+{
+  "id": "ar_hard_07",
+  "tier": "hard",
+  "title_en": "Bioplastics from Seaweed",
+  "topic": "environmental_science",
+  "duration_seconds": 480,
+  "passage": {
+    "text_en": "Bioplastics made from seaweed and other aquatic plants are emerging as an alternative to traditional packaging materials, which many consider to be environmentally-unfriendly as they are often used just a single time. These innovative new materials are most commonly developed using brown and red algae which can be grown without impacting supplies of freshwater, and without chemical fertilizers. Since algae grows solely in marine environments, its production does not impact global food prices by competing with traditional crops for valuable farmland.\n\nThe conversion of raw algae into packaging involves drying and grinding it to extract natural polymers known as alginates. When heated, these alginates form clear films with properties similar to those of normal plastic wrap. While early versions of this natural wrap dissolved after prolonged exposure to water, scientists have discovered that coating them with beeswax helps them resist moisture long enough to safely preserve foods. If disposed of in a composting system after use, the films quickly break down — often in a matter of weeks — leaving behind no toxic residue.\n\nSupporters argue that this technology could create employment for communities who live alongside coasts. Critics, however, argue that if implemented on a large scale, algae farming could upset fragile marine ecosystems. They suggest that dense offshore farms could block sunlight from reaching the seafloor and prevent certain fish from developing properly. Researchers are therefore experimenting with rotating harvest zones and setting maximum plot sizes to balance production with ecological health.",
+    "word_count": 244,
+    "topic": "environmental_science"
+  },
+  "highlights": [
+    "Bioplastics",
+    "aquatic plants",
+    "alternative",
+    "brown and red algae",
+    "alginates",
+    "polymers",
+    "beeswax",
+    "composting",
+    "toxic residue",
+    "fragile marine ecosystems",
+    "rotating harvest zones"
+  ],
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "options": {
+        "A": "The possible benefits of harvesting seaweed and algae",
+        "B": "The environmental risks of traditional plastic packaging",
+        "C": "The development and potential of plastic alternatives made from algae",
+        "D": "The ways to improve offshore fishing yields"
+      },
+      "correct": "C",
+      "type": "factual",
+      "explanation_ar": "النص بشكل عام يتحدث عن تطوير وإمكانيات بدائل البلاستيك المصنوعة من الطحالب."
+    },
+    {
+      "q": "According to the passage, why does algae farming not impact food prices?",
+      "options": {
+        "A": "It frees up farmland to produce traditional crops.",
+        "B": "It is done entirely in water and does not compete for farmland.",
+        "C": "It utilizes farms that float above the surface of the water.",
+        "D": "It does not involve chemical fertilizers."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر أن الطحالب تنمو فقط في البيئة البحرية فلا تنافس على الأراضي الزراعية."
+    },
+    {
+      "q": "The word 'resist' in the passage is closest in meaning to:",
+      "options": {
+        "A": "capture",
+        "B": "prevent",
+        "C": "withstand",
+        "D": "measure"
+      },
+      "correct": "C",
+      "type": "vocabulary",
+      "explanation_ar": "resist moisture = يقاوم الرطوبة. أقرب كلمة withstand."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a benefit of seaweed bioplastics?",
+      "options": {
+        "A": "Rapid decomposition in composting systems",
+        "B": "Economic opportunities for coastal residents",
+        "C": "Use of areas not normally suitable for traditional farming",
+        "D": "Reduction of single-use plastic waste"
+      },
+      "correct": "C",
+      "type": "negative_factual",
+      "explanation_ar": "النص لم يذكر استخدام مناطق غير مناسبة للزراعة التقليدية كميزة."
+    },
+    {
+      "q": "How does paragraph 3 relate to paragraphs 1 and 2?",
+      "options": {
+        "A": "It highlights weaknesses in the arguments made in paragraphs 1 and 2.",
+        "B": "It describes possible objections to the claims made in paragraphs 1 and 2.",
+        "C": "It contradicts all claims made in paragraphs 1 and 2.",
+        "D": "It gives an example of the benefits mentioned in paragraphs 1 and 2."
+      },
+      "correct": "B",
+      "type": "paragraph_relationship",
+      "explanation_ar": "الفقرة الثالثة تعرض الاعتراضات والانتقادات المحتملة على ما جاء في الفقرتين السابقتين."
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.8 Academic Reading",
+    "level": "HARD",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 7: البلاستيك الحيوي من الطحالب"
+}

@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة — أكاديمية يامن</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+:root{
+  --bg:#0f172a;--bg-soft:#1e293b;--card:#1e293b;--border:#334155;
+  --text:#e2e8f0;--muted:#94a3b8;--primary:#6366f1;--primary-soft:rgba(99,102,241,.15);
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.layout{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:240px;background:#1e293b;border-left:1px solid var(--border);padding:18px 0;position:fixed;right:0;top:0;height:100vh;overflow-y:auto;z-index:100}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:0 18px 18px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.sb-logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.sb-logo h1{font-size:15px;color:#fbbf24}
+.sb-logo small{font-size:11px;color:var(--muted)}
+.sb-item{display:flex;align-items:center;gap:10px;padding:11px 18px;color:var(--text);cursor:pointer;font-size:14px;font-weight:600;border-right:3px solid transparent;transition:.15s;position:relative}
+.sb-item:hover{background:rgba(99,102,241,.1)}
+.sb-item.active{background:var(--primary-soft);border-right-color:var(--primary);color:#fff}
+.sb-item .icon{font-size:18px}
+.sb-badge{background:var(--danger);color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700;margin-right:auto}
+
+/* Main */
+.main{flex:1;margin-right:240px;padding:20px}
+.page{display:none}
+.page.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.page-title{font-size:22px;color:#fbbf24;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.page-subtitle{color:var(--muted);font-size:13px;margin-bottom:20px}
+
+/* Cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden;transition:.2s}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--primary)}
+.stat-card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:50%;filter:blur(30px);opacity:.2}
+.stat-card.primary::before{background:var(--primary)}
+.stat-card.success::before{background:var(--success)}
+.stat-card.warning::before{background:var(--warning)}
+.stat-card.danger::before{background:var(--danger)}
+.stat-card.info::before{background:var(--info)}
+.stat-icon{font-size:24px;margin-bottom:8px}
+.stat-value{font-size:26px;font-weight:800;margin-bottom:2px}
+.stat-label{font-size:12px;color:var(--muted)}
+
+/* Tables */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar input,.toolbar select{background:var(--bg-soft);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:9px;font-size:13px;font-family:inherit}
+.toolbar input:focus,.toolbar select:focus{outline:none;border-color:var(--primary)}
+.btn{background:var(--primary);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(99,102,241,.3)}
+.btn-success{background:var(--success)}
+.btn-warning{background:var(--warning);color:#000}
+.btn-danger{background:var(--danger)}
+.btn-info{background:var(--info)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:#0f172a}
+th{padding:11px 12px;text-align:right;font-size:12px;color:#fbbf24;font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:11px 12px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover{background:rgba(99,102,241,.05)}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;padding:3px 9px;border-radius:8px;font-size:11px;font-weight:700}
+.tag-blue{background:#1e40af;color:#dbeafe}
+.tag-green{background:#065f46;color:#d1fae5}
+.tag-yellow{background:#92400e;color:#fef3c7}
+.tag-red{background:#991b1b;color:#fee2e2}
+.tag-purple{background:#6b21a8;color:#f3e8ff}
+.tag-gray{background:#374151;color:#d1d5db}
+.actions{display:flex;gap:5px;flex-wrap:wrap}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;backdrop-filter:blur(4px)}
+.modal.show{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:18px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;animation:modalIn .25s}
+.modal-box.lg{max-width:900px}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:17px;color:#fbbf24;font-weight:700;display:flex;align-items:center;gap:8px}
+.modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--danger)}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600}
+.form-row input,.form-row select,.form-row textarea{width:100%;background:var(--bg-soft);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:9px;font-size:13px;font-family:inherit}
+.form-row textarea{min-height:80px;resize:vertical}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
+
+/* Toast */
+.toast{position:fixed;top:20px;right:50%;transform:translateX(50%);background:var(--card);border:1px solid var(--border);padding:12px 20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.4);display:none;align-items:center;gap:10px;z-index:99999;font-size:13px;font-weight:600;animation:toastIn .3s}
+.toast.show{display:flex}
+.toast.success{border-color:var(--success);color:var(--success)}
+.toast.error{border-color:var(--danger);color:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translate(50%,-12px)}to{opacity:1;transform:translateX(50%)}}
+
+/* Sortable */
+.sortable-ghost{opacity:.4;background:var(--primary-soft)}
+.sortable-chosen{cursor:grabbing}
+.drag-handle{cursor:grab;color:var(--muted);user-select:none;font-size:18px}
+.drag-handle:hover{color:var(--primary)}
+
+/* Lessons hierarchy */
+.stage-block{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.stage-head{background:#0f172a;padding:12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid var(--border)}
+.stage-head:hover{background:#1a2536}
+.stage-head .arrow{transition:.2s;color:var(--muted)}
+.stage-block.open .arrow{transform:rotate(90deg)}
+.stage-body{display:none;padding:12px}
+.stage-block.open .stage-body{display:block}
+.lesson-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-soft);border-radius:9px;margin-bottom:6px;border:1px solid transparent;transition:.15s}
+.lesson-row:hover{border-color:var(--primary)}
+.lesson-row .num{background:var(--primary);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.lesson-row .title{flex:1;font-size:13px;font-weight:600}
+.lesson-row .q-count{font-size:11px;color:var(--muted);background:#0f172a;padding:3px 9px;border-radius:7px}
+
+/* Student journey view */
+.journey-stage{background:var(--bg-soft);border-radius:12px;padding:12px;margin-bottom:10px}
+.journey-stage-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.journey-stage-name{font-weight:700;font-size:14px}
+.journey-progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
+.journey-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--success));transition:width .5s}
+.journey-lesson{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;background:var(--card);border-radius:7px;margin:3px;font-size:11px}
+.journey-lesson.completed{background:#065f46;color:#d1fae5}
+.journey-lesson.in_progress{background:#92400e;color:#fef3c7}
+.journey-lesson.locked{opacity:.5}
+
+@media(max-width:768px){
+  .sidebar{width:60px}
+  .sb-item{justify-content:center;padding:11px}
+  .sb-item span:not(.icon){display:none}
+  .sb-logo h1,.sb-logo small{display:none}
+  .main{margin-right:60px;padding:14px}
+}
+
+/* ===== Custom Modals ===== */
+.cm-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;z-index:99999;animation:cmFadeIn .2s ease}
+.cm-backdrop.show{display:flex}
+@keyframes cmFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cmSlideUp{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.cm-box{background:linear-gradient(145deg,#1e293b,#0f172a);border:1px solid rgba(148,163,184,.2);
+  border-radius:16px;width:90%;max-width:480px;box-shadow:0 25px 50px rgba(0,0,0,.5);
+  animation:cmSlideUp .25s ease;overflow:hidden}
+.cm-head{padding:20px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(148,163,184,.1)}
+.cm-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0}
+.cm-icon.success{background:rgba(34,197,94,.15);color:#22c55e}
+.cm-icon.error{background:rgba(239,68,68,.15);color:#ef4444}
+.cm-icon.warning{background:rgba(245,158,11,.15);color:#f59e0b}
+.cm-icon.info{background:rgba(59,130,246,.15);color:#3b82f6}
+.cm-icon.confirm{background:rgba(168,85,247,.15);color:#a855f7}
+.cm-title{font-size:18px;font-weight:700;color:#f1f5f9;margin:0}
+.cm-body{padding:20px 24px;color:#cbd5e1;font-size:15px;line-height:1.6}
+.cm-input{width:100%;padding:12px 14px;background:#0f172a;border:1px solid rgba(148,163,184,.3);
+  border-radius:10px;color:#f1f5f9;font-size:15px;margin-top:12px;outline:none;transition:border .2s}
+.cm-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.cm-select{width:100%;padding:12px 14px;background:#0f172a;border:1px solid rgba(148,163,184,.3);
+  border-radius:10px;color:#f1f5f9;font-size:15px;margin-top:12px;outline:none;cursor:pointer}
+.cm-actions{padding:16px 24px;display:flex;gap:10px;justify-content:flex-end;
+  background:rgba(15,23,42,.5);border-top:1px solid rgba(148,163,184,.1)}
+.cm-btn{padding:10px 20px;border:none;border-radius:10px;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:inherit}
+.cm-btn-cancel{background:rgba(148,163,184,.15);color:#cbd5e1}
+.cm-btn-cancel:hover{background:rgba(148,163,184,.25)}
+.cm-btn-confirm{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
+.cm-btn-confirm:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.4)}
+.cm-btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.cm-btn-danger:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(239,68,68,.4)}
+.cm-btn-success{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.cm-btn-success:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,.4)}
+.cm-hint{font-size:12px;color:#94a3b8;margin-top:8px}
+
+
+.btn-small{padding:5px 10px;border-radius:6px;border:1px solid rgba(148,163,184,.2);background:rgba(59,130,246,.1);color:#cbd5e1;cursor:pointer;font-size:12px;transition:.15s}
+.btn-small:hover{background:rgba(59,130,246,.25)}
+.btn-danger-small{background:rgba(239,68,68,.1);color:#fca5a5}
+.btn-danger-small:hover{background:rgba(239,68,68,.25)}
+.btn-questions{background:rgba(168,85,247,.15);color:#c084fc}
+.btn-questions:hover{background:rgba(168,85,247,.3)}
+.btn-primary{padding:9px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:600;cursor:pointer}
+.btn-secondary{padding:9px 18px;border-radius:10px;border:1px solid rgba(148,163,184,.2);background:rgba(148,163,184,.1);color:#cbd5e1;cursor:pointer}
+
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">⚡</div>
+      <div><h1>أكاديمية يامن</h1><small>لوحة الإدارة</small></div>
+    </div>
+    <div class="sb-item active" data-page="dashboard" onclick="nav('dashboard')"><span class="icon">📊</span><span>الرئيسية</span></div>
+    <div class="sb-item" data-page="payments" onclick="nav('payments')"><span class="icon">💳</span><span>المدفوعات</span><span class="sb-badge" id="badge-payments" style="display:none">0</span></div>
+    <div class="sb-item" data-page="weekly-tasks" onclick="nav('weekly-tasks')"><span class="icon">📋</span><span>المهام الأسبوعية</span><span class="sb-badge" id="badge-tasks" style="display:none">0</span></div>
+    <div class="sb-item" data-page="weekly-templates" onclick="nav('weekly-templates')"><span class="icon">📝</span><span>قوالب المهام</span></div>
+    <div class="sb-item" data-page="plans" onclick="nav('plans')"><span class="icon">📦</span><span>الباقات</span></div>
+    <div class="sb-item" data-page="paths" onclick="nav('paths')"><span class="icon">🛤️</span><span>المسارات</span></div>
+    <div class="sb-item" data-page="stages" onclick="nav('stages')"><span class="icon">🏗️</span><span>المستويات</span></div>
+    <div class="sb-item" data-page="lessons" onclick="nav('lessons')"><span class="icon">📚</span><span>الدروس</span></div>
+    <div class="sb-item" data-page="students" onclick="nav('students')"><span class="icon">👨‍🎓</span><span>الطلاب</span></div>
+    <div class="sb-item" data-page="progress" onclick="nav('progress')"><span class="icon">📊</span><span>تقدم الطلاب</span></div>
+    <div class="sb-item" data-page="ctw" onclick="nav('ctw')"><span class="icon">📝</span><span>Complete the Words</span></div>
+    <div class="sb-item" data-page="exam-questions" onclick="nav('exam-questions')"><span class="icon">❓</span><span>أسئلة الامتحانات</span></div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <h2 class="page-title">📊 لوحة المعلومات</h2>
+      <p class="page-subtitle">نظرة عامة على نشاط الأكاديمية</p>
+      <div class="stats-grid" id="dashboardStats"></div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="page" id="page-payments">
+      <h2 class="page-title">💳 المدفوعات</h2>
+      <p class="page-subtitle">مراجعة وقبول/رفض إثباتات الدفع</p>
+      <div class="toolbar">
+        <select id="paymentFilter" onchange="loadPayments()">
+          <option value="pending">⏳ معلقة</option>
+          <option value="approved">✅ مقبولة</option>
+          <option value="rejected">❌ مرفوضة</option>
+        </select>
+      </div>
+      <div class="table-wrap" id="paymentsTable"><div style="padding:30px;text-align:center;color:var(--muted)">جاري التحميل...</div></div>
+    </div>
+
+    <!-- WEEKLY TASKS -->
+    <div class="page" id="page-weekly-tasks">
+      <h2 class="page-title">📋 المهام الأسبوعية</h2>
+      <p class="page-subtitle">مراجعة إثباتات المهام التسويقية</p>
+      <div class="toolbar">
+        <select id="taskFilter" onchange="loadWeeklyTasks()">
+          <option value="pending">⏳ معلقة</option>
+          <option value="approved">✅ مقبولة</option>
+          <option value="rejected">❌ مرفوضة</option>
+        </select>
+      </div>
+      <div class="table-wrap" id="weeklyTasksTable"><div style="padding:30px;text-align:center;color:var(--muted)">جاري التحميل...</div></div>
+    </div>
+
+    <!-- WEEKLY TEMPLATES -->
+    <div class="page" id="page-weekly-templates">
+      <h2 class="page-title">📝 قوالب المهام الأسبوعية</h2>
+      <p class="page-subtitle">إدارة قوالب المهام الأربعة (للباقة المجانية)</p>
+      <div class="toolbar"><button class="btn" onclick="openTemplateModal()">➕ إضافة قالب</button></div>
+      <div class="table-wrap" id="templatesTable"></div>
+    </div>
+
+    <!-- PLANS -->
+    <div class="page" id="page-plans">
+      <h2 class="page-title">📦 الباقات</h2>
+      <p class="page-subtitle">إدارة باقات الاشتراك</p>
+      <div class="toolbar"><button class="btn" onclick="openPlanModal()">➕ إضافة باقة</button></div>
+      <div class="table-wrap" id="plansTable"></div>
+    </div>
+
+    <!-- PATHS -->
+    <div class="page" id="page-paths">
+      <h2 class="page-title">🛤️ المسارات التعليمية</h2>
+      <p class="page-subtitle">4 مسارات حسب مستوى الطالب — قابلة للتخصيص</p>
+      <div id="pathsList"></div>
+    </div>
+
+    <!-- STAGES -->
+    <div class="page" id="page-stages">
+      <h2 class="page-title">🏗️ المستويات والمراحل</h2>
+      <p class="page-subtitle">تنظيم المراحل مع Drag&Drop — اسحب لإعادة الترتيب</p>
+      <div class="toolbar">
+        <select id="stageFilter" onchange="loadStages()">
+          <option value="">جميع المسارات</option>
+          <option value="foundation">Foundation</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="toefl">TOEFL</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+          <option value="master">Master</option>
+        </select>
+        <button class="btn" onclick="openStageModal()">➕ إضافة مرحلة</button>
+      </div>
+      <div class="table-wrap" id="stagesTable"></div>
+    </div>
+
+    <!-- LESSONS -->
+    <div class="page" id="page-lessons">
+      <h2 class="page-title">📚 الدروس</h2>
+      <p class="page-subtitle">عرض هرمي بـ Drag&Drop — اضغط على مرحلة لعرض دروسها</p>
+      <div id="lessonsHierarchy"></div>
+    </div>
+
+    <!-- STUDENTS -->
+    <div class="page" id="page-students">
+      <h2 class="page-title">👨‍🎓 الطلاب</h2>
+      <p class="page-subtitle">إدارة شاملة — فتح بوابة التخرج، تغيير المسار، إعادة التعيين</p>
+      <div class="toolbar">
+        <input type="text" id="studentSearch" placeholder="🔍 ابحث بالاسم أو المعرّف" oninput="debouncedLoadStudents()">
+        <select id="studentLevelFilter" onchange="loadStudents()">
+          <option value="">جميع المستويات</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+      </div>
+      <div class="table-wrap" id="studentsTable"></div>
+    </div>
+  
+    <!-- PROGRESS TRACKING -->
+    <div class="page" id="page-progress">
+      <h2 class="page-title">📊 تقدم الطلاب</h2>
+      <p class="page-subtitle">نسب الإنجاز في المهارات الأربع: استماع / محادثة / كتابة / قراءة</p>
+      <div class="toolbar">
+        <button class="btn" onclick="loadProgress()">🔄 تحديث</button>
+        <div id="prog-summary" style="margin-right:auto;color:var(--muted);font-size:14px;">—</div>
+      </div>
+      <div class="table-wrap">
+        <table id="prog-table" style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الطالب</th>
+              <th style="text-align:center;">🎧 استماع</th>
+              <th style="text-align:center;">🗣️ محادثة</th>
+              <th style="text-align:center;">✍️ كتابة</th>
+              <th style="text-align:center;">📖 قراءة</th>
+              <th style="text-align:center;">الإجمالي</th>
+              <th style="text-align:center;">إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="prog-tbody">
+            <tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted);">جاري التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CTW (Complete the Words) -->
+    <div class="page" id="page-ctw">
+      <h2 class="page-title">📝 Complete the Words</h2>
+      <p class="page-subtitle">إدارة قطع وكلمات Complete the Words لكل المراحل</p>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;height:calc(100vh - 180px);min-height:600px">
+        <iframe id="ctwFrame" src="about:blank" style="width:100%;height:100%;border:0;background:#f0f2f5"></iframe>
+      </div>
+    </div>
+
+    <!-- EXAM QUESTIONS -->
+    <div class="page" id="page-exam-questions">
+      <h2 class="page-title">❓ أسئلة الامتحانات (نهاية كل مرحلة)</h2>
+      <p class="page-subtitle">إدارة بنك أسئلة امتحانات نهاية المراحل</p>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;height:calc(100vh - 180px);min-height:600px">
+        <iframe id="examQFrame" src="about:blank" style="width:100%;height:100%;border:0;background:#f0f2f5"></iframe>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Generic Modal -->
+<div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+<div class="modal" id="modalLg"><div class="modal-box lg" id="modalLgBox"></div></div>
+
+
+<!-- ===== Custom Modals ===== -->
+<div id="cmBackdrop" class="cm-backdrop" onclick="if(event.target===this)cmClose()">
+  <div class="cm-box" id="cmBox">
+    <div class="cm-head">
+      <div class="cm-icon" id="cmIcon">ℹ️</div>
+      <h3 class="cm-title" id="cmTitle">عنوان</h3>
+    </div>
+    <div class="cm-body" id="cmBody">رسالة</div>
+    <div class="cm-actions" id="cmActions"></div>
+  </div>
+</div>
+
+<script>
+let _cmResolve = null;
+function cmClose(){
+  document.getElementById('cmBackdrop').classList.remove('show');
+  if(_cmResolve){ _cmResolve(null); _cmResolve = null; }
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') cmClose();
+});
+
+function customAlert(title, message, type){
+  type = type || 'info';
+  const icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  return new Promise(res=>{
+    _cmResolve = res;
+    document.getElementById('cmIcon').className = 'cm-icon ' + type;
+    document.getElementById('cmIcon').textContent = icons[type] || 'ℹ️';
+    document.getElementById('cmTitle').textContent = title;
+    document.getElementById('cmBody').innerHTML = message;
+    document.getElementById('cmActions').innerHTML = 
+      '<button class="cm-btn cm-btn-confirm" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(true);})()">حسناً</button>';
+    document.getElementById('cmBackdrop').classList.add('show');
+  });
+}
+
+function customConfirm(title, message, type){
+  type = type || 'confirm';
+  const icons = {confirm:'❓',warning:'⚠️',danger:'🗑️'};
+  const btnClass = type==='danger' ? 'cm-btn-danger' : (type==='warning' ? 'cm-btn-danger' : 'cm-btn-confirm');
+  return new Promise(res=>{
+    _cmResolve = res;
+    document.getElementById('cmIcon').className = 'cm-icon ' + (type==='danger'?'error':type);
+    document.getElementById('cmIcon').textContent = icons[type] || '❓';
+    document.getElementById('cmTitle').textContent = title;
+    document.getElementById('cmBody').innerHTML = message;
+    document.getElementById('cmActions').innerHTML = 
+      '<button class="cm-btn cm-btn-cancel" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(false);})()">إلغاء</button>' +
+      '<button class="cm-btn '+btnClass+'" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(true);})()">تأكيد</button>';
+    document.getElementById('cmBackdrop').classList.add('show');
+  });
+}
+
+function customPrompt(title, message, opts){
+  opts = opts || {};
+  const defaultVal = opts.default || '';
+  const inputType = opts.type || 'text';
+  const choices = opts.choices || null;
+  const hint = opts.hint || '';
+  return new Promise(res=>{
+    _cmResolve = res;
+    document.getElementById('cmIcon').className = 'cm-icon info';
+    document.getElementById('cmIcon').textContent = opts.icon || '✏️';
+    document.getElementById('cmTitle').textContent = title;
+    let inputHtml = '';
+    if(choices){
+      inputHtml = '<select id="cmInput" class="cm-select">';
+      choices.forEach(c=>{
+        const sel = (c.value===defaultVal)?' selected':'';
+        inputHtml += '<option value="'+c.value+'"'+sel+'>'+c.label+'</option>';
+      });
+      inputHtml += '</select>';
+    } else {
+      inputHtml = '<input id="cmInput" class="cm-input" type="'+inputType+'" value="'+defaultVal.toString().replace(/"/g,'&quot;')+'" />';
+    }
+    if(hint) inputHtml += '<div class="cm-hint">'+hint+'</div>';
+    document.getElementById('cmBody').innerHTML = '<div>'+message+'</div>' + inputHtml;
+    document.getElementById('cmActions').innerHTML = 
+      '<button class="cm-btn cm-btn-cancel" onclick="(function(){var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(null);})()">إلغاء</button>' +
+      '<button class="cm-btn cm-btn-confirm" onclick="(function(){var v=document.getElementById(\'cmInput\').value;var r=_cmResolve;_cmResolve=null;document.getElementById(\'cmBackdrop\').classList.remove(\'show\');if(r)r(v);})()">تأكيد</button>';
+    document.getElementById('cmBackdrop').classList.add('show');
+    setTimeout(()=>{
+      const inp = document.getElementById('cmInput');
+      if(inp){ inp.focus(); if(inp.select)inp.select();
+        inp.addEventListener('keydown', e=>{
+          if(e.key==='Enter' && inp.tagName!=='TEXTAREA'){
+            const v = inp.value; const r = _cmResolve; _cmResolve=null;
+            document.getElementById('cmBackdrop').classList.remove('show');
+            if(r) r(v);
+          }
+        });
+      }
+    }, 50);
+  });
+}
+</script>
+
+
+<div id="secModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:24px;max-width:420px;width:90%;font-family:sans-serif">
+    <h3 style="margin:0 0 14px">تفعيل أقسام للطالب</h3>
+    <div style="margin-bottom:12px">
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="reading"> القراءة</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="listening"> الاستماع</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="writing"> الكتابة</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="speaking"> المحادثة</label>
+      <label style="display:block;margin:6px 0"><input type="checkbox" class="secChk" value="foundation"> التأسيس</label>
+    </div>
+    <label style="display:block;margin:6px 0;font-weight:bold"><input type="checkbox" id="secFull"> Full Access (كل الأقسام)</label>
+    <div style="margin:12px 0">
+      <label>المدة:</label>
+      <select id="secMonths" style="padding:6px;border-radius:6px">
+        <option value="1">شهر</option>
+        <option value="3" selected>3 أشهر</option>
+        <option value="6">6 أشهر</option>
+        <option value="12">سنة</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button class="btn btn-success" onclick="doActivateSections()">تفعيل</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('secModal').style.display='none'">إلغاء</button>
+    </div>
+  </div>
+</div>
+<script>
+var _secUid = null;
+function openSections(uid){
+  _secUid = uid;
+  document.querySelectorAll('.secChk').forEach(c => c.checked=false);
+  document.getElementById('secFull').checked = false;
+  document.getElementById('secMonths').value = '3';
+  document.getElementById('secModal').style.display = 'flex';
+}
+async function doActivateSections(){
+  var months = document.getElementById('secMonths').value;
+  var sections;
+  if (document.getElementById('secFull').checked){
+    sections = 'full';
+  } else {
+    var arr = [];
+    document.querySelectorAll('.secChk:checked').forEach(c => arr.push(c.value));
+    if (arr.length === 0){ toast('اختر قسماً واحداً على الأقل','error'); return; }
+    sections = arr.join(',');
+  }
+  try{
+    var r = await fetch('/api/admin/students/'+_secUid+'/activate-sections', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({sections:sections, months:parseInt(months)})
+    });
+    var j = await r.json();
+    if (j.ok){ toast(j.message||'تم التفعيل','success'); document.getElementById('secModal').style.display='none'; loadStudents(); }
+    else { toast(j.error||'خطأ','error'); }
+  }catch(e){ toast('خطأ في الاتصال','error'); }
+}
+</script>
+</body>
+<script>
+const API = "";
+let DEBOUNCE_TIMER = null;
+const debouncedLoadStudents = () => { clearTimeout(DEBOUNCE_TIMER); DEBOUNCE_TIMER = setTimeout(loadStudents, 300); };
+
+// ========== NAV ==========
+function nav(page){
+  // Lazy-load iframes for CTW and Exam Questions
+  try {
+    if(page === 'ctw'){
+      var f = document.getElementById('ctwFrame');
+      if(f && (!f.src || f.src === 'about:blank' || f.src.indexOf('about:') === 0)){
+        f.src = '/admin/ctw';
+      }
+    } else if(page === 'exam-questions'){
+      var f2 = document.getElementById('examQFrame');
+      if(f2 && (!f2.src || f2.src === 'about:blank' || f2.src.indexOf('about:') === 0)){
+        f2.src = '/admin/questions';
+      }
+    }
+  } catch(e){ console.warn('iframe load err', e); }
+
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.toggle('active', el.dataset.page === page));
+  document.querySelectorAll('.page').forEach(el => el.classList.toggle('active', el.id === 'page-' + page));
+  const loaders = {dashboard:loadDashboard, payments:loadPayments, 'weekly-tasks':loadWeeklyTasks,
+    'weekly-templates':loadTemplates, plans:loadPlans, paths:loadPaths, stages:loadStages,
+    lessons:loadLessonsHierarchy, students:loadStudents};
+  if(loaders[page]) loaders[page]();
+}
+
+// ========== TOAST ==========
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========== MODAL ==========
+function showModal(html, large=false){
+  const id = large ? 'modalLg' : 'modal';
+  const boxId = large ? 'modalLgBox' : 'modalBox';
+  document.getElementById(boxId).innerHTML = html;
+  document.getElementById(id).classList.add('show');
+}
+function closeModal(){ document.querySelectorAll('.modal').forEach(m => m.classList.remove('show')); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+document.addEventListener('click', e => { if(e.target.classList.contains('modal')) closeModal(); });
+
+async function api(url, opts={}){
+  const r = await fetch(url, opts);
+  try{
+    const j = await r.json();
+    if(!r.ok && !j.error) j.error = 'HTTP '+r.status;
+    if(!('ok' in j)) j.ok = r.ok;
+    return j;
+  }catch(e){
+    return {ok:false, error:'HTTP '+r.status};
+  }
+}
+
+// ========== DASHBOARD ==========
+async function loadDashboard(){
+  try{
+    const s = await api('/api/admin/dashboard/stats');
+    const cards = [
+      {icon:'👨‍🎓', val:s.total_students||0, label:'إجمالي الطلاب', cls:'primary'},
+      {icon:'✅', val:s.active_subscriptions||0, label:'اشتراكات نشطة', cls:'success'},
+      {icon:'💳', val:s.pending_payments||0, label:'مدفوعات معلقة', cls:'warning'},
+      {icon:'📋', val:s.pending_tasks||0, label:'مهام معلقة', cls:'danger'},
+      {icon:'🏗️', val:s.total_stages||0, label:'مراحل', cls:'info'},
+      {icon:'📚', val:s.total_lessons||0, label:'دروس', cls:'primary'},
+      {icon:'❓', val:s.total_questions||0, label:'أسئلة', cls:'success'},
+      {icon:'🆕', val:s.new_students_7d||0, label:'طلاب جدد (7 أيام)', cls:'info'},
+    ];
+    document.getElementById('dashboardStats').innerHTML = cards.map(c =>
+      `<div class="stat-card ${c.cls}"><div class="stat-icon">${c.icon}</div><div class="stat-value">${c.val}</div><div class="stat-label">${c.label}</div></div>`).join('');
+    // update sidebar badges
+    if((s.pending_payments||0) > 0){ const b = document.getElementById('badge-payments'); b.style.display='inline-block'; b.textContent = s.pending_payments; }
+    if((s.pending_tasks||0) > 0){ const b = document.getElementById('badge-tasks'); b.style.display='inline-block'; b.textContent = s.pending_tasks; }
+  }catch(e){ toast('فشل تحميل الإحصائيات','error'); }
+}
+
+// ========== PAYMENTS ==========
+async function loadPayments(){
+  const status = document.getElementById('paymentFilter').value;
+  try{
+    const j = await api('/api/admin/payments/list?status=' + status);
+    const rows = j.payments || j || [];
+    if(rows.length === 0){
+      document.getElementById('paymentsTable').innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">لا توجد مدفوعات</div>';
+      return;
+    }
+    document.getElementById('paymentsTable').innerHTML = `<table><thead><tr><th>#</th><th>الطالب</th><th>الباقة</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th><th>الإيصال</th><th>إجراءات</th></tr></thead><tbody>${rows.map(p => `
+      <tr><td>${p.id}</td><td>${p.user_id || ''}<br><small>${p.full_name||''}</small></td>
+      <td>${p.plan_name||'-'}</td><td>${p.amount||0} د.أ</td>
+      <td><span class="tag tag-${p.status==='approved'?'green':p.status==='rejected'?'red':'yellow'}">${p.status}</span></td>
+      <td><small>${(p.created_at||'').split(' ')[0]}</small></td>
+      <td>${p.proof_image ? `<a href="${p.proof_image}" target="_blank" class="btn btn-sm btn-ghost">📷 عرض</a>`:'-'}</td>
+      <td class="actions">${p.status==='pending' ? `
+        <button class="btn btn-sm btn-success" onclick="actPayment(${p.id},'approve')">✓</button>
+        <button class="btn btn-sm btn-danger" onclick="actPayment(${p.id},'reject')">✗</button>`:''}</td>
+      </tr>`).join('')}</tbody></table>`;
+  }catch(e){ toast('فشل تحميل المدفوعات','error'); }
+}
+async function actPayment(id, action){
+  if(!confirm(action==='approve'?'قبول هذه الدفعة؟':'رفض هذه الدفعة؟')) return;
+  try{
+    const r = await api(`/api/admin/payments/${id}/action`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action})});
+    toast(r.ok?'تم':'فشل', r.ok?'success':'error');
+    loadPayments(); loadDashboard();
+  }catch(e){ toast('خطأ','error'); }
+}
+
+// ========== WEEKLY TASKS ==========
+async function loadWeeklyTasks(){
+  const status = document.getElementById('taskFilter').value;
+  try{
+    const j = await api('/api/admin/weekly-tasks/list?status=' + status);
+    const rows = j.tasks || [];
+    if(rows.length === 0){
+      document.getElementById('weeklyTasksTable').innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">لا توجد مهام</div>';
+      return;
+    }
+    document.getElementById('weeklyTasksTable').innerHTML = `<table><thead><tr><th>#</th><th>الطالب</th><th>الأسبوع</th><th>النوع</th><th>الحالة</th><th>الإثبات</th><th>إجراءات</th></tr></thead><tbody>${rows.map(t => `
+      <tr><td>${t.id}</td><td>${t.user_id}</td><td>الأسبوع ${t.week_number}</td><td>${t.task_type||'-'}</td>
+      <td><span class="tag tag-${t.status==='approved'?'green':t.status==='rejected'?'red':'yellow'}">${t.status}</span></td>
+      <td>${t.proof_image?`<a href="${t.proof_image}" target="_blank" class="btn btn-sm btn-ghost">📷</a>`:'-'}</td>
+      <td class="actions">${t.status==='pending'?`
+        <button class="btn btn-sm btn-success" onclick="actWeeklyTask(${t.id},'approve')">✓</button>
+        <button class="btn btn-sm btn-danger" onclick="actWeeklyTask(${t.id},'reject')">✗</button>`:''}</td>
+      </tr>`).join('')}</tbody></table>`;
+  }catch(e){ toast('خطأ','error'); }
+}
+async function actWeeklyTask(id, action){
+  const note = action==='reject' ? prompt('سبب الرفض (اختياري):') || '' : '';
+  try{
+    const r = await api(`/api/admin/weekly-tasks/${id}/action`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,admin_note:note})});
+    toast(r.ok?'تم':'فشل', r.ok?'success':'error');
+    loadWeeklyTasks(); loadDashboard();
+  }catch(e){ toast('خطأ','error'); }
+}
+
+// ========== WEEKLY TEMPLATES ==========
+async function loadTemplates(){
+  try{
+    const j = await api('/api/admin/weekly-templates');
+    const rows = j.templates || [];
+    document.getElementById('templatesTable').innerHTML = `<table><thead><tr><th>الأسبوع</th><th>الأيقونة</th><th>العنوان</th><th>الوصف</th><th>الرابط</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>${rows.map(t => `
+      <tr><td><strong>${t.week_number}</strong></td><td style="font-size:22px">${t.icon||''}</td>
+      <td>${t.title}</td><td><small>${(t.description||'').substring(0,60)}...</small></td>
+      <td>${t.action_url?`<a href="${t.action_url}" target="_blank" style="color:var(--info)">🔗 افتح</a>`:'-'}</td>
+      <td><span class="tag tag-${t.is_active?'green':'gray'}">${t.is_active?'نشط':'متوقف'}</span></td>
+      <td class="actions">
+        <button class="btn btn-sm btn-info" onclick='editTemplate(${JSON.stringify(t).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteTemplate(${t.id})">🗑️</button>
+      </td></tr>`).join('')}</tbody></table>`;
+  }catch(e){ toast('خطأ','error'); }
+}
+function openTemplateModal(t=null){
+  t = t || {week_number:'',icon:'⭐',title:'',description:'',action_url:'',action_label:'اذهب للمهمة',is_active:1};
+  showModal(`<div class="modal-header"><h3 class="modal-title">📝 ${t.id?'تعديل':'إضافة'} قالب مهمة</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row"><label>رقم الأسبوع (1-4)</label><input type="number" id="t_week" value="${t.week_number}" min="1" max="12"></div>
+    <div class="form-row"><label>الأيقونة (emoji)</label><input type="text" id="t_icon" value="${t.icon||'⭐'}"></div>
+    <div class="form-row"><label>العنوان</label><input type="text" id="t_title" value="${t.title||''}"></div>
+    <div class="form-row"><label>الوصف</label><textarea id="t_desc">${t.description||''}</textarea></div>
+    <div class="form-row"><label>رابط الإجراء</label><input type="text" id="t_url" value="${t.action_url||''}"></div>
+    <div class="form-row"><label>نص الزر</label><input type="text" id="t_label" value="${t.action_label||'اذهب للمهمة'}"></div>
+    <div class="form-row"><label><input type="checkbox" id="t_active" ${t.is_active?'checked':''}> نشط</label></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button><button class="btn btn-success" onclick="saveTemplate(${t.id||'null'})">حفظ</button></div>`);
+}
+function editTemplate(t){ openTemplateModal(t); }
+async function saveTemplate(id){
+  const data = {
+    week_number: parseInt(document.getElementById('t_week').value),
+    icon: document.getElementById('t_icon').value,
+    title: document.getElementById('t_title').value,
+    description: document.getElementById('t_desc').value,
+    action_url: document.getElementById('t_url').value,
+    action_label: document.getElementById('t_label').value,
+    is_active: document.getElementById('t_active').checked ? 1 : 0
+  };
+  const url = id ? `/api/admin/weekly-templates/${id}` : '/api/admin/weekly-templates';
+  const method = id ? 'PUT' : 'POST';
+  try{
+    const r = await api(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    toast(r.ok?'تم':'فشل', r.ok?'success':'error');
+    if(r.ok){ closeModal(); loadTemplates(); }
+  }catch(e){ toast('خطأ','error'); }
+}
+async function deleteTemplate(id){
+  if(!confirm('حذف هذا القالب؟')) return;
+  const r = await api(`/api/admin/weekly-templates/${id}`,{method:'DELETE'});
+  toast(r.ok?'تم':'فشل', r.ok?'success':'error'); loadTemplates();
+}
+
+// ========== PATHS ==========
+async function loadPaths(){
+  try{
+    const j = await api('/api/admin/paths/list');
+    const rows = j.paths || [];
+    document.getElementById('pathsList').innerHTML = `<div class="stats-grid">${rows.map(p => `
+      <div class="stat-card" style="border-color:${p.color||'var(--primary)'}">
+        <div class="stat-icon" style="color:${p.color||'#fff'}">${p.icon||'📚'}</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:4px">${p.display_name||p.path}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">${p.path}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;margin-bottom:10px">
+          <div>🏗️ مراحل: <strong>${p.stages_count||0}</strong></div>
+          <div>📚 دروس: <strong>${p.lessons_count||0}</strong></div>
+          <div>❓ أسئلة: <strong>${p.exam_questions||0}</strong></div>
+          <div>👨‍🎓 طلاب: <strong>${p.students_count||0}</strong></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">
+          📊 placement: ${p.min_score}-${p.max_score} | نجاح: ${p.passing_threshold}% | تخرج: ${p.graduation_threshold}%
+        </div>
+        <button class="btn btn-sm" onclick='editPath(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ تعديل</button>
+      </div>`).join('')}</div>`;
+  }catch(e){ toast('خطأ في تحميل المسارات','error'); }
+}
+function editPath(p){
+  showModal(`<div class="modal-header"><h3 class="modal-title">🛤️ تعديل مسار: ${p.display_name}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row"><label>الاسم</label><input type="text" id="p_name" value="${p.display_name||''}"></div>
+    <div class="form-row"><label>الأيقونة</label><input type="text" id="p_icon" value="${p.icon||''}"></div>
+    <div class="form-row"><label>اللون</label><input type="color" id="p_color" value="${p.color||'#6366f1'}"></div>
+    <div class="form-row"><label>أدنى placement score</label><input type="number" id="p_min" value="${p.min_score}"></div>
+    <div class="form-row"><label>أعلى placement score</label><input type="number" id="p_max" value="${p.max_score}"></div>
+    <div class="form-row"><label>عتبة النجاح في الدرس (%)</label><input type="number" id="p_pass" value="${p.passing_threshold}"></div>
+    <div class="form-row"><label>عتبة التخرج (%)</label><input type="number" id="p_grad" value="${p.graduation_threshold}"></div>
+    <div class="form-row"><label>عدد أسئلة الامتحان النهائي</label><input type="number" id="p_eq" value="${p.exam_questions_count||30}"></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button><button class="btn btn-success" onclick="savePath('${p.path}')">حفظ</button></div>`);
+}
+async function savePath(path){
+  const data = {
+    display_name: document.getElementById('p_name').value,
+    icon: document.getElementById('p_icon').value,
+    color: document.getElementById('p_color').value,
+    min_score: parseFloat(document.getElementById('p_min').value),
+    max_score: parseFloat(document.getElementById('p_max').value),
+    passing_threshold: parseFloat(document.getElementById('p_pass').value),
+    graduation_threshold: parseFloat(document.getElementById('p_grad').value),
+    exam_questions_count: parseInt(document.getElementById('p_eq').value)
+  };
+  const r = await api(`/api/admin/paths/${path}/update`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  toast(r.ok?'تم':'فشل', r.ok?'success':'error');
+  if(r.ok){ closeModal(); loadPaths(); }
+}
+
+// ========== STAGES ==========
+async function loadStages(){
+  const track = document.getElementById('stageFilter').value;
+  try{
+    const url = track ? `/api/admin/stages?track=${track}` : '/api/admin/stages';
+    const j = await api(url);
+    const rows = j.stages || [];
+    document.getElementById('stagesTable').innerHTML = `<table><thead><tr><th width="40"></th><th>#</th><th>الرمز</th><th>الاسم</th><th>المسار</th><th>القسم</th><th>الحد الأدنى</th><th>إجراءات</th></tr></thead>
+      <tbody id="stagesTbody">${rows.map((s,i) => `
+        <tr data-id="${s.id}"><td><span class="drag-handle">⋮⋮</span></td>
+        <td>${i+1}</td><td><strong>${s.code}</strong></td>
+        <td>${s.name_ar||s.name||''}<br><small style="color:var(--muted)">${s.name_en||''}</small></td>
+        <td><span class="tag tag-purple">${s.track||s.path||''}</span></td>
+        <td>${s.section_name||s.section||''}</td>
+        <td>${s.gatekeeper_threshold||s.min_score||70}%</td>
+        <td class="actions">
+          <button class="btn btn-sm btn-info" onclick='editStage(${JSON.stringify(s).replace(/'/g,"&#39;")})'>✏️</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteStage(${s.id})">🗑️</button>
+        </td></tr>`).join('')}</tbody></table>`;
+  }catch(e){ toast('خطأ','error'); }
+}
+function openStageModal(){ editStage({code:'',name_ar:'',name_en:'',track:'foundation',section_name:'grammar',gatekeeper_threshold:70}); }
+function editStage(s){
+  showModal(`<div class="modal-header"><h3 class="modal-title">🏗️ ${s.id?'تعديل':'إضافة'} مرحلة</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row"><label>الرمز (مثل F1، TR2)</label><input type="text" id="s_code" value="${s.code||''}"></div>
+    <div class="form-row"><label>الاسم بالعربية</label><input type="text" id="s_name_ar" value="${s.name_ar||''}"></div>
+    <div class="form-row"><label>الاسم بالإنجليزية</label><input type="text" id="s_name_en" value="${s.name_en||''}"></div>
+    <div class="form-row"><label>المسار</label><select id="s_track">
+      <option value="foundation" ${s.track==='foundation'?'selected':''}>Foundation</option>
+      <option value="toefl" ${s.track==='toefl'?'selected':''}>TOEFL</option>
+      <option value="intermediate" ${s.track==='intermediate'?'selected':''}>Intermediate</option>
+      <option value="advanced" ${s.track==='advanced'?'selected':''}>Advanced</option>
+      <option value="master" ${s.track==='master'?'selected':''}>Master</option>
+    </select></div>
+    <div class="form-row"><label>القسم</label><select id="s_section">
+      <option value="grammar" ${s.section_name==='grammar'?'selected':''}>Grammar</option>
+      <option value="vocabulary" ${s.section_name==='vocabulary'?'selected':''}>Vocabulary</option>
+      <option value="reading" ${s.section_name==='reading'?'selected':''}>Reading</option>
+      <option value="listening" ${s.section_name==='listening'?'selected':''}>Listening</option>
+      <option value="writing" ${s.section_name==='writing'?'selected':''}>Writing</option>
+      <option value="speaking" ${s.section_name==='speaking'?'selected':''}>Speaking</option>
+    </select></div>
+    <div class="form-row"><label>الحد الأدنى للنجاح (%)</label><input type="number" id="s_min" value="${s.gatekeeper_threshold||70}"></div>
+    <div class="form-row"><label>ترتيب (اختياري — اتركه فارغاً للإضافة في النهاية)</label><input type="number" id="s_order" value=""></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button><button class="btn btn-success" onclick="saveStage(${s.id||'null'})">حفظ</button></div>`);
+}
+async function saveStage(id){
+  const data = {
+    code: document.getElementById('s_code').value,
+    name: document.getElementById('s_name_ar').value,
+    name_ar: document.getElementById('s_name_ar').value,
+    name_en: document.getElementById('s_name_en').value,
+    track: document.getElementById('s_track').value,
+    path: document.getElementById('s_track').value,
+    section_name: document.getElementById('s_section').value,
+    section: document.getElementById('s_section').value,
+    min_score: parseFloat(document.getElementById('s_min').value),
+    gatekeeper_threshold: parseFloat(document.getElementById('s_min').value)
+  };
+  const ord = document.getElementById('s_order').value;
+  if(ord) data.order_index = parseInt(ord);
+  const url = id ? `/api/admin/stages/${id}/update` : '/api/admin/stages/create';
+  const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const qok=r.ok||r.success; toast(qok?'تم حفظ السؤال':(r.error||r.message||'فشل'), qok?'success':'error');
+  if(r.ok){ closeModal(); loadStages(); loadDashboard(); }
+}
+async function deleteStage(id){
+  if(!confirm('حذف هذه المرحلة (مع كل دروسها)؟')) return;
+  const r = await api(`/api/admin/stages/${id}/delete`,{method:'POST'});
+  toast(r.ok?'تم':'فشل', r.ok?'success':'error'); loadLessonsHierarchy(); if(typeof loadStages==='function') loadStages(); if(typeof loadDashboard==='function') loadDashboard();
+}
+
+// ========== LESSONS HIERARCHY ==========
+
+async function openLessonModal(stageId, l=null){
+  l = l || {title:'',content:'',stage_id:stageId};
+  showModal(`<div class="modal-header"><h3 class="modal-title">📚 ${l.id?'تعديل':'إضافة'} درس</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row"><label>عنوان الدرس</label><input type="text" id="l_title" value="${l.title||''}"></div>
+    <div class="form-row"><label>المحتوى</label><textarea id="l_content">${l.content||''}</textarea></div>
+    <div class="form-row"><label>الترتيب (اختياري)</label><input type="number" id="l_order" placeholder="اتركه فارغاً للإضافة في النهاية"></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button><button class="btn btn-success" onclick="saveLesson(${l.id||'null'},${stageId})">حفظ</button></div>`);
+}
+function editLesson(l){ openLessonModal(l.stage_id, l); }
+async function saveLesson(id, stageId){
+  const data = {
+    title: document.getElementById('l_title').value,
+    content: document.getElementById('l_content').value,
+    stage_id: stageId
+  };
+  const ord = document.getElementById('l_order').value;
+  if(ord) data.order_index = parseInt(ord);
+  const url = id ? `/api/admin/lessons/${id}/update` : '/api/admin/lessons/create';
+  const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const qok=r.ok||r.success; toast(qok?'تم حفظ السؤال':(r.error||r.message||'فشل'), qok?'success':'error');
+  if(r.ok){ closeModal(); document.querySelector(`.stage-block[data-stage="${stageId}"]`).classList.remove('open'); toggleStage(stageId); loadDashboard(); }
+}
+async function deleteLesson(lid, sid){
+  if(!confirm('حذف هذا الدرس وكل أسئلته؟')) return;
+  try{
+    const r = await api(`/api/admin/lessons/${lid}/delete`,{method:'POST'});
+    const ok = r.ok || r.success;
+    toast(ok?'تم الحذف':('فشل: '+(r.error||'')), ok?'success':'error');
+    try{ await loadLessonsHierarchy(); }catch(e2){}
+    try{ if(typeof loadDashboard==='function') loadDashboard(); }catch(e3){}
+  }catch(e){ toast('خطأ: '+e.message,'error'); }
+}
+async function manageLessonQuestions(lid, title){
+  const j = await api('/api/admin/lessons/' + lid + '/questions');
+  const qs = j.questions || [];
+  window._currentQuestions = {};
+  qs.forEach(q => { window._currentQuestions[q.id] = q; });
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  showModal(`<div class="modal-header"><h3 class="modal-title">❓ أسئلة: ${esc(title)}</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <button class="btn btn-success" style="margin-bottom:14px" onclick="openQuestionModal(${lid})">➕ إضافة سؤال</button>
+    <div>${qs.length ? qs.map((q,i) => `
+      <div style="background:var(--bg-soft);border-radius:9px;padding:10px;margin-bottom:8px">
+        <div style="font-weight:700;margin-bottom:6px">${i+1}. ${esc(q.question_text)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">
+          A) ${esc(q.option_a)} | B) ${esc(q.option_b)} | C) ${esc(q.option_c)} | D) ${esc(q.option_d)}
+        </div>
+        <div style="font-size:12px;color:var(--success)">✓ الإجابة: ${esc(q.correct_answer)}</div>
+        <div class="actions" style="margin-top:6px">
+          <button class="btn btn-sm btn-info" onclick="editQuestionById(${q.id},${lid})">✏️</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteQuestion(${q.id},${lid})">🗑️</button>
+        </div>
+      </div>`).join('') : '<div style="color:var(--muted);text-align:center;padding:20px">لا توجد أسئلة</div>'}
+    </div>`, true);
+  window._currentLessonTitle = title;
+}
+function editQuestionById(qid, lid){
+  const q = (window._currentQuestions||{})[qid];
+  if(!q){ toast('لم يتم العثور على السؤال','error'); return; }
+  openQuestionModal(lid, q);
+}
+function openQuestionModal(lid, q){
+  q = q || {question_text:'',option_a:'',option_b:'',option_c:'',option_d:'',correct_answer:'A',explanation:''};
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const qid = q.id ? q.id : 0;
+  showModal(`<div class="modal-header"><h3 class="modal-title">❓ ${q.id?'تعديل':'إضافة'} سؤال</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row"><label>نص السؤال</label><textarea id="q_text">${esc(q.question_text)}</textarea></div>
+    <div class="form-row"><label>الخيار A</label><input type="text" id="q_a" value="${esc(q.option_a)}"></div>
+    <div class="form-row"><label>الخيار B</label><input type="text" id="q_b" value="${esc(q.option_b)}"></div>
+    <div class="form-row"><label>الخيار C</label><input type="text" id="q_c" value="${esc(q.option_c)}"></div>
+    <div class="form-row"><label>الخيار D</label><input type="text" id="q_d" value="${esc(q.option_d)}"></div>
+    <div class="form-row"><label>الإجابة الصحيحة</label><select id="q_ans">
+      <option value="A" ${q.correct_answer==='A'?'selected':''}>A</option>
+      <option value="B" ${q.correct_answer==='B'?'selected':''}>B</option>
+      <option value="C" ${q.correct_answer==='C'?'selected':''}>C</option>
+      <option value="D" ${q.correct_answer==='D'?'selected':''}>D</option>
+    </select></div>
+    <div class="form-row"><label>الشرح (اختياري)</label><textarea id="q_exp">${esc(q.explanation)}</textarea></div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button><button class="btn btn-success" onclick="saveQuestion(${qid},${lid})">حفظ</button></div>`, true);
+}
+async function saveQuestion(id, lid){
+  const data = {
+    lesson_id: lid,
+    question_text: (document.getElementById('q_text')||{}).value || '',
+    option_a: (document.getElementById('q_a')||{}).value || '',
+    option_b: (document.getElementById('q_b')||{}).value || '',
+    option_c: (document.getElementById('q_c')||{}).value || '',
+    option_d: (document.getElementById('q_d')||{}).value || '',
+    correct_answer: (document.getElementById('q_ans')||{}).value || 'A',
+    explanation: (document.getElementById('q_exp')||{}).value || ''
+  };
+  if(!data.question_text.trim()){ toast('نص السؤال مطلوب','error'); return; }
+  const url = (id && id>0) ? `/api/admin/lesson-questions/${id}/update` : '/api/admin/lesson-questions/create';
+  try{
+    const r = await api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const qok = r.ok || r.success;
+    toast(qok ? 'تم حفظ السؤال' : (r.error||r.message||'فشل'), qok?'success':'error');
+    if(qok){ closeModal(); manageLessonQuestions(lid, window._currentLessonTitle||''); }
+  }catch(e){ toast('خطأ: '+e.message,'error'); }
+}
+async function deleteQuestion(qid, lid){
+  if(!confirm('حذف هذا السؤال؟')) return;
+  try{
+    const r = await api(`/api/admin/lesson-questions/${qid}/delete`,{method:'POST'});
+    const ok = r.ok || r.success;
+    toast(ok?'تم الحذف':'فشل', ok?'success':'error');
+    if(ok) manageLessonQuestions(lid, window._currentLessonTitle||'');
+  }catch(e){ toast('خطأ: '+e.message,'error'); }
+}
+
+// ========== STUDENTS ==========
+async function loadStudents(){
+  const q = document.getElementById('studentSearch').value;
+  const level = document.getElementById('studentLevelFilter').value;
+  try{
+    const j = await api(`/api/admin/students/list?q=${encodeURIComponent(q)}&level=${level}&per_page=50`);
+    const rows = j.students || [];
+    if(!rows.length){
+      document.getElementById('studentsTable').innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted)">لا يوجد طلاب</div>';
+      return;
+    }
+    document.getElementById('studentsTable').innerHTML = `<table><thead><tr><th>المعرّف</th><th>الاسم</th><th>المسار</th><th>المستوى</th><th>الاشتراك</th><th>placement</th><th>إجراءات</th></tr></thead><tbody>${rows.map(s => `
+      <tr><td><code style="font-size:11px">${s.user_id}</code></td>
+      <td>${s.full_name||'-'}</td>
+      <td><span class="tag tag-purple">${s.current_path||s.placement_path||'foundation'}</span></td>
+      <td>${s.level||'-'}</td>
+      <td>${s.subscription ? `<span class="tag tag-green">${s.subscription.plan_name||'نشط'}</span>` : '<span class="tag tag-gray">-</span>'}</td>
+      <td>${s.placement_score!=null ? `<strong>${s.placement_score}</strong>` : '-'}</td>
+      <td class="actions">
+        <button class="btn btn-sm btn-info" onclick="viewJourney('${s.user_id}')">📊</button>
+              <button class="btn btn-sm btn-warning" onclick="unlockGrad('${s.user_id}')" title="فتح بوابة التخرج">🎓</button>
+        <button class="btn btn-sm" onclick="changeStudentPath('${s.user_id}','${s.current_path||'foundation'}')" title="تغيير المسار">⚡</button>
+        <button class="btn btn-sm btn-ghost" onclick="grantXP('${s.user_id}')" title="منحه XP">💎</button>
+        <button class="btn btn-sm btn-ghost" onclick="resetProgress('${s.user_id}')" title="إعادة تعيين">🔄</button>
+        <button class="btn btn-sm btn-success" onclick="openSections('${s.user_id}')" title="تفعيل أقسام">✅</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteStudent('${s.user_id}')">🗑️</button>
+      </td></tr>`).join('')}</tbody></table>`;
+  }catch(e){ toast('خطأ','error'); }
+}
+async function viewJourney(uid){
+  try{
+    const d = await api('/api/admin/students/' + uid + '/deep-analysis');
+    if(!d.ok){ toast(d.error||'تعذّر التحليل','error'); return; }
+    showModal(renderDeepAnalysis(uid, d), true);
+    // attach tab listeners
+    setTimeout(()=>{
+      document.querySelectorAll('.dp-tab').forEach(t=>{
+        t.addEventListener('click', ()=>{
+          document.querySelectorAll('.dp-tab').forEach(x=>x.classList.remove('on'));
+          document.querySelectorAll('.dp-pane').forEach(x=>x.classList.remove('on'));
+          t.classList.add('on');
+          document.getElementById('dp-pane-'+t.dataset.tab).classList.add('on');
+        });
+      });
+    }, 50);
+  }catch(e){ toast('خطأ: '+(e.message||e),'error'); }
+
+}
+async function unlockGrad(studentId){
+  const ok = await customConfirm('🎓 فتح بوابة التخرج',
+    'سيتم السماح للطالب بالوصول إلى الاختبار النهائي مباشرة، حتى لو لم يكمل جميع الدروس.<br>هل أنت متأكد؟','confirm');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/graduation/unlock',{method:'POST'});
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم بنجاح','🎓 تم فتح بوابة التخرج للطالب','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+async function changeStudentPath(studentId){
+  const newPath = await customPrompt('تغيير المسار التعليمي','اختر المسار الجديد للطالب:',{
+    icon:'⚡',
+    default:'foundation',
+    choices:[
+      {value:'foundation',label:'🌱 Foundation - تأسيسي (15 درس)'},
+      {value:'intermediate',label:'📘 Intermediate - متوسط (10 دروس)'},
+      {value:'advanced',label:'🚀 Advanced - متقدم (7 دروس)'},
+      {value:'master',label:'🏆 Master - محترف (3 دروس)'}
+    ],
+    hint:'سيتم تطبيق المسار فوراً على الطالب'
+  });
+  if(!newPath) return;
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/path/change',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({new_path:newPath})
+    });
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم بنجاح','تم تغيير مسار الطالب إلى: <b>'+newPath+'</b>','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل التغيير','error');
+  }catch(e){ await customAlert('خطأ في الاتصال',e.message,'error'); }
+}
+async function grantXP(studentId){
+  const amount = await customPrompt('منح نقاط خبرة (XP)','كم نقطة XP تريد منحها للطالب؟',{
+    icon:'💎',type:'number',default:'50',hint:'القيمة بين 1 و 10000'
+  });
+  if(!amount) return;
+  const n = parseInt(amount);
+  if(isNaN(n)||n<1||n>10000){ await customAlert('قيمة غير صالحة','أدخل رقماً بين 1 و 10000','warning'); return; }
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/xp/grant',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({amount:n})
+    });
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم بنجاح','تم منح <b>'+n+' XP</b> للطالب 💎','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل المنح','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+async function resetProgress(studentId){
+  const ok = await customConfirm('⚠️ إعادة تعيين التقدم',
+    'سيتم حذف كامل تقدم الطالب في جميع الدروس!<br><b style="color:#ef4444">هذا الإجراء لا يمكن التراجع عنه.</b>','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/progress/reset',{method:'POST'});
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم بنجاح','تمت إعادة تعيين تقدم الطالب بالكامل','success'); loadStudents(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+async function deleteStudent(uid){
+  if(!confirm('حذف هذا الطالب وكل بياناته؟ لا يمكن التراجع.')) return;
+  const r = await api(`/api/admin/students/${uid}/delete`,{method:'POST'});
+  toast(r.ok?'تم':'فشل', r.ok?'success':'error');
+  loadStudents(); loadDashboard();
+}
+
+// ========== PLANS ==========
+async function loadPlans(){
+  try{
+    const j = await api('/api/admin/plans/list');
+    const rows = j.plans || j || [];
+    document.getElementById('plansTable').innerHTML = `<table><thead><tr><th>الاسم</th><th>السعر</th><th>المدة</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>${rows.map(p => `
+      <tr><td>${p.name}</td><td>${p.price||0} د.أ</td><td>${p.duration_days||30} يوم</td>
+      <td><span class="tag tag-${p.is_active?'green':'gray'}">${p.is_active?'نشطة':'متوقفة'}</span></td>
+      <td class="actions">
+        <button class="btn btn-sm" onclick='editPlan(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deletePlan(${p.id})">🗑️</button>
+      </td></tr>`).join('')}</tbody></table>`;
+  }catch(e){ document.getElementById('plansTable').innerHTML='<div style="padding:30px;color:var(--muted);text-align:center">لا يوجد API plans/list — استخدم لوحة Plans في النسخة السابقة</div>'; }
+}
+function openPlanModal(){ toast('استخدم Plans API الموجود','info'); }
+function editPlan(p){ toast('استخدم Plans API','info'); }
+async function deletePlan(id){ toast('استخدم Plans API','info'); }
+
+// ========== INIT ==========
+window.addEventListener('DOMContentLoaded', () => {
+  loadDashboard();
+  setInterval(loadDashboard, 60000); // refresh كل دقيقة
+});
+
+
+// ===== Lessons Hierarchy (Phase 12D) =====
+let _lessonsData = {stages:[], lessons:{}};
+
+async function loadLessonsHierarchy(){
+  const c = document.getElementById('page-lessons');
+  if(!c) return;
+  c.innerHTML = '<div style="padding:40px;text-align:center;color:#94a3b8">⏳ جاري التحميل...</div>';
+  try{
+    const sr = await fetch('/api/admin/stages/list');
+    const sd = await sr.json();
+    const stages = sd.stages || sd.data || [];
+    _lessonsData.stages = stages;
+
+    // Phase 12H v2: persist filter value via window storage
+    const _existing = document.getElementById('lessonsTrackFilter');
+    const trackVal = _existing ? _existing.value : (window._lessonsTrackFilter || '');
+    window._lessonsTrackFilter = trackVal;
+    const filteredStages = trackVal ? stages.filter(s => ((s.track||s.path||'').toLowerCase()) === trackVal.toLowerCase()) : stages;
+    // Build track counts for dynamic dropdown
+    const _trackCounts = {};
+    stages.forEach(s => {
+      const t = (s.track || s.path || 'other').toLowerCase();
+      _trackCounts[t] = (_trackCounts[t] || 0) + 1;
+    });
+    const _trackLabels = { foundation:'Foundation', intermediate:'Intermediate', toefl:'TOEFL', advanced:'Advanced', master:'Master', other:'أخرى' };
+    const _availTracks = Object.keys(_trackCounts).sort();
+
+    let html = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap">
+        <h2 style="margin:0">📚 إدارة الدروس</h2>
+        <div style="display:flex;gap:10px;align-items:center">
+          <select id="lessonsTrackFilter" onchange="window._lessonsTrackFilter=this.value;loadLessonsHierarchy()" style="padding:8px 12px;border-radius:8px;background:#1e293b;color:#e2e8f0;border:1px solid rgba(148,163,184,.2)">
+            <option value="" ${!trackVal?'selected':''}>جميع المسارات (${stages.length})</option>
+            ${_availTracks.map(t => `<option value="${t}" ${trackVal===t?'selected':''}>${_trackLabels[t]||t} (${_trackCounts[t]})</option>`).join('')}
+          </select>
+          <button class="btn-primary" onclick="addStage()">➕ إضافة مرحلة جديدة</button>
+          <button class="btn-secondary" onclick="loadLessonsHierarchy()">🔄 تحديث</button>
+        </div>
+      </div>
+      <div id="stagesList"></div>
+    `;
+    c.innerHTML = html;
+
+    const list = document.getElementById('stagesList');
+    for(const stage of filteredStages){
+      const sid = stage.id;
+      const stageName = stage.name_ar||stage.name||stage.name_en||('مرحلة '+sid);
+      window._stageNames = window._stageNames || {};
+      window._stageNames[sid] = stageName;
+      const lr = await api('/api/admin/lessons/by-stage/'+sid);
+      const ld = lr;
+      const lessons = ld.lessons || ld.data || [];
+      _lessonsData.lessons[sid] = lessons;
+
+      const stageDiv = document.createElement('div');
+      stageDiv.className = 'stage-card';
+      stageDiv.style.cssText = 'background:#1e293b;border:1px solid rgba(148,163,184,.15);border-radius:12px;margin-bottom:14px;overflow:hidden';
+      stageDiv.innerHTML = `
+        <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(168,85,247,.1));cursor:pointer" onclick="toggleStage(${sid})">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span id="stageArrow_${sid}" style="font-size:14px;transition:.2s">▶</span>
+            <strong style="font-size:16px">${stage.name_ar||stage.name||'مرحلة '+sid}</strong>
+            <span style="background:rgba(59,130,246,.2);padding:3px 10px;border-radius:20px;font-size:12px">${lessons.length} درس</span>
+          </div>
+          <div onclick="event.stopPropagation()" style="display:flex;gap:6px">
+            
+            <button class="btn-small" onclick="event.stopPropagation();manageStageExamSafe(${sid})" title="امتحان المرحلة" style="background:rgba(168,85,247,.15);color:#c084fc">🎯 امتحان</button>
+            <button class="btn-small" onclick="addLessonToStage(${sid})" title="إضافة درس">➕ درس</button>
+            <button class="btn-small" onclick="editStage(${sid})" title="تعديل المرحلة">✏️</button>
+            <button class="btn-small btn-danger-small" onclick="deleteStage(${sid})" title="حذف المرحلة">🗑️</button>
+          </div>
+        </div>
+        <div id="stageBody_${sid}" style="display:none;padding:10px 18px 18px"></div>
+      `;
+      list.appendChild(stageDiv);
+
+      const body = document.getElementById('stageBody_'+sid);
+      if(lessons.length===0){
+        body.innerHTML = '<div style="padding:20px;text-align:center;color:#64748b">لا توجد دروس بعد. اضغط ➕ درس لإضافة درس.</div>';
+      } else {
+        const ul = document.createElement('div');
+        ul.id = 'sortable_'+sid;
+        ul.style.cssText = 'display:flex;flex-direction:column;gap:6px';
+        lessons.forEach(L=>{
+          const row = document.createElement('div');
+          row.dataset.lessonId = L.id;
+          row.style.cssText = 'background:#0f172a;border:1px solid rgba(148,163,184,.1);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:grab';
+          row.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;flex:1">
+              <span style="color:#64748b;font-size:13px">⋮⋮</span>
+              <span style="background:rgba(168,85,247,.2);padding:2px 8px;border-radius:6px;font-size:12px">${L.order_index||'?'}</span>
+              <strong>${L.title||L.name||'درس '+L.id}</strong>
+              <span style="font-size:11px;color:#94a3b8">نجاح: ${L.pass_score||70}%</span>
+              ${L.type?`<span style="background:rgba(34,197,94,.15);color:#22c55e;padding:2px 8px;border-radius:6px;font-size:11px">${L.type}</span>`:''}
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn-small" onclick="editLesson(${L.id})" title="تعديل">✏️</button>
+              <button class="btn-small btn-questions" onclick="manageLessonQuestions(${L.id}, '')" title="الأسئلة">❓</button>
+              <button class="btn-small" onclick="moveLessonToStage(${L.id})" title="نقل لمرحلة">🔀</button>
+              <button class="btn-small btn-danger-small" onclick="deleteLesson(${L.id},${sid})" title="حذف">🗑️</button>
+            </div>
+          `;
+          ul.appendChild(row);
+        });
+        body.appendChild(ul);
+
+        if(typeof Sortable!=='undefined'){
+          new Sortable(ul,{
+            animation:150,
+            onEnd: async function(evt){
+              const newOrder = Array.from(ul.children).map((el,i)=>({id:parseInt(el.dataset.lessonId),order_index:i+1}));
+              await api('/api/admin/lessons/reorder',{
+                method:'POST',headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({stage_id:sid,order:newOrder})
+              });
+              loadLessonsHierarchy();
+            }
+          });
+        }
+      }
+    }
+  }catch(e){
+    c.innerHTML = '<div style="padding:20px;color:#ef4444">❌ خطأ: '+e.message+'</div>';
+  }
+}
+
+function toggleStage(sid){
+  const b = document.getElementById('stageBody_'+sid);
+  const a = document.getElementById('stageArrow_'+sid);
+  if(b.style.display==='none'){ b.style.display='block'; a.textContent='▼'; }
+  else { b.style.display='none'; a.textContent='▶'; }
+}
+
+// ===== إضافة مرحلة جديدة =====
+async function addStage(){
+  const name = await customPrompt('إضافة مرحلة جديدة','اكتب اسم المرحلة بالعربية:',{icon:'📚',default:'مرحلة جديدة'});
+  if(!name) return;
+  try{
+    const code = 'S' + Date.now().toString().slice(-5);
+    const r = await fetch('/api/admin/stages/create',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        code: code,
+        name: name,
+        name_ar: name,
+        name_en: name,
+        track: 'foundation',
+        path: 'foundation',
+        section_name: 'grammar',
+        section: 'grammar',
+        min_score: 70,
+        gatekeeper_threshold: 70
+      })
+    });
+    const d = await r.json();
+    if(d.ok || d.success){ await customAlert('تم بنجاح','تم إنشاء المرحلة 📚','success'); loadLessonsHierarchy(); if(typeof loadStages==='function') loadStages(); }
+    else await customAlert('خطأ', d.error || d.message || ('HTTP '+r.status),'error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function editStage(sid){
+  const stage = _lessonsData.stages.find(s=>s.id===sid);
+  if(!stage){ await customAlert('خطأ','المرحلة غير موجودة','error'); return; }
+  const name = await customPrompt('تعديل المرحلة','اسم المرحلة:',{icon:'✏️',default:stage.name_ar||stage.name||''});
+  if(!name) return;
+  try{
+    const r = await fetch('/api/admin/stages/'+sid+'/update',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name_ar:name,name_en:name})
+    });
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم','تم التعديل','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function deleteStage(sid){
+  const ok = await customConfirm('🗑️ حذف المرحلة','سيتم حذف المرحلة وجميع دروسها وأسئلتها!<br><b style="color:#ef4444">لا يمكن التراجع.</b>','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/stages/'+sid+'/delete',{method:'POST'});
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم','تم الحذف','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+// ===== إضافة درس لمرحلة =====
+async function addLessonToStage(sid){
+  const title = await customPrompt('إضافة درس جديد','اكتب عنوان الدرس:',{icon:'📖',default:'درس جديد'});
+  if(!title) return;
+  const passScore = await customPrompt('شرط النجاح','أقل علامة للانتقال للدرس التالي (%):',{icon:'🎯',type:'number',default:'70',hint:'بين 50 و 100'});
+  if(!passScore) return;
+  const ps = parseInt(passScore);
+  if(isNaN(ps)||ps<50||ps>100){ await customAlert('قيمة غير صالحة','بين 50 و 100','warning'); return; }
+  try{
+    const r = await api('/api/admin/lessons/create',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({stage_id:sid,title:title,name:title,pass_score:ps})
+    });
+    const d = r;
+    if(d.ok || d.success){
+      await customAlert('تم بنجاح','تم إضافة الدرس ✅<br>الآن أضف أسئلة الدرس','success');
+      loadLessonsHierarchy();
+    }
+    else await customAlert('خطأ', d.error || d.message || ('HTTP '+r.status),'error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+async function editLesson(lid){
+  let lesson = null; let stageId = null;
+  for(const sid in _lessonsData.lessons){
+    const f = _lessonsData.lessons[sid].find(l=>l.id===lid);
+    if(f){ lesson = f; stageId = sid; break; }
+  }
+  if(!lesson){ await customAlert('خطأ','الدرس غير موجود','error'); return; }
+  const title = await customPrompt('تعديل الدرس','عنوان الدرس:',{icon:'✏️',default:lesson.title||lesson.name||''});
+  if(!title) return;
+  const passScore = await customPrompt('شرط النجاح','أقل علامة للنجاح (%):',{icon:'🎯',type:'number',default:String(lesson.pass_score||70)});
+  if(!passScore) return;
+  try{
+    const r = await api('/api/admin/lessons/'+lid+'/update',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({title:title,name:title,pass_score:parseInt(passScore)})
+    });
+    const d = r;
+    if(d.ok||d.success){ await customAlert('تم','تم التعديل','success'); loadLessonsHierarchy(); }
+    else await customAlert('خطأ',d.message||'فشل','error');
+  }catch(e){ await customAlert('خطأ',e.message,'error'); }
+}
+
+
+
+
+// ═══ Phase 12E-2: Stage Exam Bank Management ═══
+
+async function manageStageExam(stageId, stageName){
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-questions');
+    const d = await r.json();
+    if(!d.success){ await customAlert('خطأ', d.message||'فشل التحميل', 'error'); return; }
+
+    const qs = d.questions || [];
+    const cnt = d.exam_questions_count || 10;
+
+    let body = '<div style="text-align:right;max-height:60vh;overflow-y:auto;padding-left:8px">';
+
+    // قسم 1: الإعدادات
+    body += `
+      <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);padding:14px;border-radius:10px;margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div>
+            <strong style="color:#60a5fa">⚙️ إعدادات الامتحان</strong>
+            <div style="font-size:12px;color:#94a3b8;margin-top:4px">عدد الأسئلة الظاهرة لكل طالب في كل محاولة</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="number" id="examCntInput_${stageId}" value="${cnt}" min="1" max="100" style="width:70px;padding:8px;background:#0f172a;border:1px solid rgba(148,163,184,.3);border-radius:8px;color:#f1f5f9;text-align:center"/>
+            <button class="cm-btn cm-btn-confirm" style="padding:8px 14px" onclick="saveExamSettings(${stageId})">حفظ</button>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:#cbd5e1">
+          📊 بنك الأسئلة: <strong style="color:#22c55e">${qs.length}</strong> سؤال
+          ${qs.length < cnt ? '<span style="color:#ef4444;margin-right:8px">⚠️ يجب إضافة '+(cnt-qs.length)+' سؤال على الأقل ليبدأ الامتحان</span>' : '<span style="color:#22c55e;margin-right:8px">✅ كافٍ لبدء الامتحان</span>'}
+        </div>
+      </div>
+    `;
+
+    // قسم 2: زر إضافة
+    body += `
+      <button class="cm-btn cm-btn-success" style="width:100%;margin-bottom:14px;padding:12px" onclick="addStageExamQuestion(${stageId},'${(stageName||'').replace(/'/g,"\\'")}')">
+        ➕ إضافة سؤال جديد للبنك
+      </button>
+    `;
+
+    // قسم 3: قائمة الأسئلة
+    if(qs.length === 0){
+      body += '<div style="text-align:center;color:#64748b;padding:30px;background:#0f172a;border-radius:10px">📭 بنك الأسئلة فارغ. ابدأ بإضافة أسئلة لتفعيل الامتحان.</div>';
+    } else {
+      qs.forEach((q,i) => {
+        const opts = ['A','B','C','D'].map(L => {
+          const v = q['option_'+L.toLowerCase()];
+          if(!v) return '';
+          const isCorrect = (q.correct_answer||'').toUpperCase() === L;
+          return `<div style="padding:4px 8px;${isCorrect?'background:rgba(34,197,94,.15);color:#86efac;border-radius:6px':''}">
+            ${isCorrect?'✓ ':''}<strong>${L}.</strong> ${escapeHtml(v)}
+          </div>`;
+        }).filter(x=>x).join('');
+
+        body += `
+          <div style="background:#0f172a;border:1px solid rgba(148,163,184,.1);padding:12px;border-radius:10px;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:8px">
+              <strong style="flex:1">س${i+1}: ${escapeHtml(q.question_text||'')}</strong>
+              <div style="display:flex;gap:5px">
+                <button class="btn-small" onclick="editStageExamQuestion(${q.id},${stageId})" title="تعديل">✏️</button>
+                <button class="btn-small btn-danger-small" onclick="deleteStageExamQuestion(${q.id},${stageId},'${(stageName||'').replace(/'/g,"\\'")}')" title="حذف">🗑️</button>
+              </div>
+            </div>
+            <div style="font-size:13px;color:#cbd5e1;margin-bottom:6px">${opts}</div>
+            ${q.explanation ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(168,85,247,.08);border-right:3px solid #a855f7;border-radius:6px;font-size:12px;color:#c084fc"><strong>💡 الشرح:</strong> ${escapeHtml(q.explanation)}</div>` : '<div style="font-size:11px;color:#64748b;margin-top:6px">⚠️ لا يوجد شرح — أضف شرحاً لمساعدة الطالب عند الفشل</div>'}
+          </div>
+        `;
+      });
+    }
+
+    body += '</div>';
+    await customAlert('🎯 امتحان المرحلة: '+stageName, body, 'info');
+  }catch(e){
+    await customAlert('خطأ', e.message, 'error');
+  }
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+async function saveExamSettings(stageId){
+  const inp = document.getElementById('examCntInput_'+stageId);
+  if(!inp) return;
+  const cnt = parseInt(inp.value);
+  if(isNaN(cnt) || cnt < 1 || cnt > 100){
+    await customAlert('قيمة غير صالحة','أدخل رقماً بين 1 و 100','warning');
+    return;
+  }
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-settings',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({exam_questions_count: cnt})
+    });
+    const d = await r.json();
+    if(d.ok||d.success){ await customAlert('تم','تم حفظ عدد الأسئلة: '+cnt,'success'); }
+    else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+async function addStageExamQuestion(stageId, stageName){
+  const qtext = await customPrompt('➕ سؤال جديد - بنك '+stageName,'اكتب نص السؤال:',{icon:'❓',default:''});
+  if(!qtext) return;
+  const optA = await customPrompt('الخيار A','نص الخيار الأول:',{icon:'🅰️',default:''}); if(!optA) return;
+  const optB = await customPrompt('الخيار B','نص الخيار الثاني:',{icon:'🅱️',default:''}); if(!optB) return;
+  const optC = await customPrompt('الخيار C','نص الخيار الثالث (اتركه فارغاً للتخطي):',{icon:'©️',default:''});
+  const optD = await customPrompt('الخيار D','نص الخيار الرابع (اتركه فارغاً للتخطي):',{icon:'Ⓓ',default:''});
+
+  const choices = [{value:'A',label:'A — '+optA},{value:'B',label:'B — '+optB}];
+  if(optC) choices.push({value:'C',label:'C — '+optC});
+  if(optD) choices.push({value:'D',label:'D — '+optD});
+
+  const correct = await customPrompt('الإجابة الصحيحة','اختر الإجابة الصحيحة:',{icon:'✅',default:'A',choices:choices});
+  if(!correct) return;
+
+  const explanation = await customPrompt('💡 شرح الفكرة','اكتب شرحاً للفكرة (يظهر للطالب بعد الإجابة لتوصيل المفهوم دون كشف الإجابة):',{icon:'💡',default:'',hint:'مهم جداً — الطالب يرى الشرح فقط عند الفشل'});
+  // explanation اختياري لكن مستحسن
+
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-questions/create',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        question_text: qtext,
+        option_a: optA, option_b: optB,
+        option_c: optC||'', option_d: optD||'',
+        correct_answer: correct,
+        explanation: explanation||''
+      })
+    });
+    const d = await r.json();
+    if(d.ok||d.success){
+      await customAlert('تم','تم إضافة السؤال إلى البنك ✅','success');
+      manageStageExam(stageId, stageName);  // إعادة فتح
+    } else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+async function editStageExamQuestion(qid, stageId){
+  // نحتاج جلب السؤال الحالي — لا يوجد endpoint مفرد، نجلب القائمة ونبحث
+  try{
+    const r = await fetch('/api/admin/stages/'+stageId+'/exam-questions');
+    const d = await r.json();
+    const q = (d.questions||[]).find(x => x.id === qid);
+    if(!q){ await customAlert('خطأ','السؤال غير موجود','error'); return; }
+
+    const qtext = await customPrompt('تعديل السؤال','نص السؤال:',{icon:'✏️',default:q.question_text||''});
+    if(!qtext) return;
+    const optA = await customPrompt('الخيار A','',{icon:'🅰️',default:q.option_a||''}); if(!optA) return;
+    const optB = await customPrompt('الخيار B','',{icon:'🅱️',default:q.option_b||''}); if(!optB) return;
+    const optC = await customPrompt('الخيار C','',{icon:'©️',default:q.option_c||''});
+    const optD = await customPrompt('الخيار D','',{icon:'Ⓓ',default:q.option_d||''});
+
+    const choices = [{value:'A',label:'A — '+optA},{value:'B',label:'B — '+optB}];
+    if(optC) choices.push({value:'C',label:'C — '+optC});
+    if(optD) choices.push({value:'D',label:'D — '+optD});
+    const correct = await customPrompt('الإجابة الصحيحة','',{icon:'✅',default:q.correct_answer||'A',choices:choices});
+    if(!correct) return;
+
+    const explanation = await customPrompt('💡 شرح الفكرة','الشرح:',{icon:'💡',default:q.explanation||''});
+
+    const u = await fetch('/api/admin/exam-questions/'+qid+'/update',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        question_text: qtext, option_a: optA, option_b: optB,
+        option_c: optC||'', option_d: optD||'',
+        correct_answer: correct, explanation: explanation||''
+      })
+    });
+    const ud = await u.json();
+    if(ud.success){ await customAlert('تم','تم التعديل ✅','success'); }
+    else await customAlert('خطأ', ud.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+async function deleteStageExamQuestion(qid, stageId, stageName){
+  const ok = await customConfirm('🗑️ حذف سؤال','سيتم حذف هذا السؤال من بنك أسئلة المرحلة نهائياً.','danger');
+  if(!ok) return;
+  try{
+    const r = await fetch('/api/admin/exam-questions/'+qid+'/delete',{method:'POST'});
+    const d = await r.json();
+    if(d.ok||d.success){
+      await customAlert('تم','تم الحذف','success');
+      manageStageExam(stageId, stageName);
+    } else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+// ═══ تعديل شرط النجاح الشخصي للطالب ═══
+async function setPersonalPassScore(studentId, currentScore){
+  const ps = await customPrompt(
+    '🎯 شرط النجاح الشخصي',
+    'حدد علامة الإتقان للطالب. الطالب يحتاج <b>هذه العلامة + 10</b> للانتقال لمرحلة جديدة.<br>مثلاً: 59 → ينتقل بـ 69%، 79 → ينتقل بـ 89%',
+    {icon:'🎯', type:'number', default: String(currentScore||70), hint:'بين 30 و 95'}
+  );
+  if(!ps) return;
+  const n = parseInt(ps);
+  if(isNaN(n)||n<30||n>95){ await customAlert('قيمة غير صالحة','بين 30 و 95','warning'); return; }
+  try{
+    const r = await fetch('/api/admin/students/'+studentId+'/pass-score',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({personal_pass_score: n})
+    });
+    const d = await r.json();
+    if(d.ok||d.success){
+      await customAlert('تم بنجاح','شرط النجاح: <b>'+n+'%</b><br>المطلوب للانتقال: <b>'+(n+10)+'%</b>','success');
+      if(typeof loadStudents === 'function') loadStudents();
+    } else await customAlert('خطأ', d.message||'فشل', 'error');
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+
+
+// === PROGRESS TAB (auto-injected) ===
+function _pctColor(pct){
+  pct = Number(pct)||0;
+  if(pct >= 75) return '#10b981';
+  if(pct >= 40) return '#f59e0b';
+  if(pct >= 1)  return '#ef4444';
+  return '#94a3b8';
+}
+function _pctCell(o){
+  o = o || {done:0,total:0,pct:0};
+  var col = _pctColor(o.pct);
+  return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">'+
+         '<div style="font-weight:700;color:'+col+';font-size:15px;">'+(o.pct||0)+'%</div>'+
+         '<div style="font-size:11px;color:var(--muted);">'+(o.done||0)+' / '+(o.total||0)+'</div>'+
+         '</div>';
+}
+async function loadProgress(){
+  var tbody = document.getElementById('prog-tbody');
+  var sum = document.getElementById('prog-summary');
+  if(tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--muted);">جاري التحميل...</td></tr>';
+  try{
+    var d = await api('/api/admin/students/progress-overview');
+    var list = (d && d.students) || [];
+    if(sum) sum.textContent = 'إجمالي الطلاب: ' + list.length;
+    if(list.length === 0){
+      tbody.innerHTML = '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--muted);">لا يوجد طلاب مسجلون بعد.</td></tr>';
+      return;
+    }
+    var html = '';
+    list.forEach(function(s, i){
+      var name = s.full_name || s.name || ('طالب #' + s.user_id);
+      var safeName = String(name).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      html += '<tr>'+
+              '<td>'+(i+1)+'</td>'+
+              '<td><div style="font-weight:600;">'+name+'</div><div style="font-size:11px;color:var(--muted);">'+s.user_id+'</div></td>'+
+              '<td>'+_pctCell(s.listening)+'</td>'+
+              '<td>'+_pctCell(s.speaking)+'</td>'+
+              '<td>'+_pctCell(s.writing)+'</td>'+
+              '<td>'+_pctCell(s.reading)+'</td>'+
+              '<td style="text-align:center;font-weight:700;color:'+_pctColor(s.overall_pct||0)+';">'+(s.overall_pct||0)+'%</td>'+
+              '<td style="text-align:center;"><button class="btn" style="padding:5px 10px;font-size:12px;" onclick="showProgressDetail(\''+s.user_id+'\', \''+safeName+'\')">📋 تفاصيل</button></td>'+
+              '</tr>';
+    });
+    tbody.innerHTML = html;
+  }catch(e){
+    if(tbody) tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#ef4444;">خطأ: '+(e && e.message || e)+'</td></tr>';
+  }
+}
+async function showProgressDetail(uid, name){
+  var old = document.getElementById('progDetailOverlay');
+  if(old) old.remove();
+  var ov = document.createElement('div');
+  ov.id = 'progDetailOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  ov.innerHTML =
+    '<div style="background:var(--panel,#0f172a);border:1px solid var(--border,#334155);border-radius:12px;max-width:900px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;">'+
+    '<h3 style="margin:0;">📋 تفاصيل تقدم: '+name+'</h3>'+
+    '<button class="btn" onclick="document.getElementById(\'progDetailOverlay\').remove()">✕ إغلاق</button>'+
+    '</div>'+
+    '<div id="progDetailBody" style="color:var(--text,#cbd5e1);">جاري التحميل...</div>'+
+    '</div>';
+  ov.onclick = function(e){ if(e.target===ov) ov.remove(); };
+  document.body.appendChild(ov);
+  try{
+    var d = await api('/api/admin/students/'+encodeURIComponent(uid)+'/journey-detail');
+    var skills = [
+      {key:'listening', label:'🎧 الاستماع'},
+      {key:'speaking',  label:'🗣️ المحادثة'},
+      {key:'writing',   label:'✍️ الكتابة'},
+      {key:'reading',   label:'📖 القراءة'}
+    ];
+    var html = '';
+    skills.forEach(function(sk){
+      var items = (d && d[sk.key]) || [];
+      html += '<div style="margin-bottom:18px;">'+
+              '<h4 style="margin:0 0 8px;border-bottom:1px solid var(--border,#334155);padding-bottom:6px;">'+sk.label+
+              ' <span style="color:var(--muted);font-size:13px;font-weight:400;">('+items.length+' درس)</span></h4>';
+      if(items.length === 0){
+        html += '<div style="color:var(--muted);font-size:13px;padding:8px;">لا يوجد تقدم بعد</div>';
+      }else{
+        html += '<table style="width:100%;font-size:13px;border-collapse:collapse;">'+
+                '<thead><tr><th style="text-align:right;padding:6px;">المرحلة</th><th style="text-align:right;padding:6px;">الدرس</th><th style="text-align:center;padding:6px;">النتيجة</th><th style="text-align:right;padding:6px;">التاريخ</th></tr></thead><tbody>';
+        items.forEach(function(it){
+          html += '<tr>'+
+                  '<td style="padding:6px;">'+(it.stage_id||'-')+'</td>'+
+                  '<td style="padding:6px;">'+(it.lesson_id||it.title||'-')+'</td>'+
+                  '<td style="padding:6px;text-align:center;">'+(it.score!=null?it.score:'-')+'</td>'+
+                  '<td style="padding:6px;color:var(--muted);font-size:12px;">'+(it.completed_at||it.date||'-')+'</td>'+
+                  '</tr>';
+        });
+        html += '</tbody></table>';
+      }
+      html += '</div>';
+    });
+    document.getElementById('progDetailBody').innerHTML = html;
+  }catch(e){
+    document.getElementById('progDetailBody').innerHTML = '<div style="color:#ef4444;">خطأ: '+(e && e.message || e)+'</div>';
+  }
+}
+// Hook: auto-load when nav('progress') is called
+(function(){
+  var _origNav = window.nav;
+  if(typeof _origNav === 'function'){
+    window.nav = function(page){
+      var r = _origNav.apply(this, arguments);
+      if(page === 'progress'){ try{ loadProgress(); }catch(e){} }
+      return r;
+    };
+  }
+})();
+// === END PROGRESS TAB ===
+
+
+// ════════════════════════════════════════════════════════════
+// DEEP ANALYSIS UI (injected)
+// ════════════════════════════════════════════════════════════
+(function injectDeepStyles(){
+  if(document.getElementById('dp-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'dp-styles';
+  s.textContent = `
+    .dp-tabs{display:flex;gap:4px;border-bottom:2px solid var(--border,#334155);margin:14px 0;flex-wrap:wrap}
+    .dp-tab{padding:9px 14px;cursor:pointer;border-radius:8px 8px 0 0;background:transparent;color:var(--muted,#94a3b8);font-size:13px;font-weight:600;border:none;transition:.15s}
+    .dp-tab:hover{background:rgba(99,102,241,.1);color:#e2e8f0}
+    .dp-tab.on{background:#6366f1;color:#fff}
+    .dp-pane{display:none;animation:fadeIn .2s}
+    .dp-pane.on{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+    .dp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+    .dp-stat{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px;text-align:center}
+    .dp-stat .v{font-size:22px;font-weight:800;color:#e2e8f0}
+    .dp-stat .l{font-size:11px;color:#94a3b8;margin-top:4px}
+    .dp-stat.good .v{color:#10b981}
+    .dp-stat.warn .v{color:#f59e0b}
+    .dp-stat.bad  .v{color:#ef4444}
+    .dp-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+    .dp-table th{background:#1e293b;padding:8px;text-align:right;border-bottom:2px solid #334155;color:#cbd5e1;font-weight:700}
+    .dp-table td{padding:8px;border-bottom:1px solid #1f2937;color:#cbd5e1}
+    .dp-table tr:hover{background:#1e293b}
+    .dp-pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
+    .dp-pill.ok{background:#064e3b;color:#10b981}
+    .dp-pill.no{background:#7f1d1d;color:#fca5a5}
+    .dp-pill.mid{background:#78350f;color:#fbbf24}
+    .dp-crit{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#1e293b;border:1px solid #334155;border-radius:8px;margin-bottom:6px}
+    .dp-crit .lbl{color:#cbd5e1;font-size:13px}
+    .dp-crit .act{font-size:12px;color:#94a3b8}
+    .dp-verdict{font-size:24px;font-weight:800;padding:16px;border-radius:12px;text-align:center;margin:12px 0}
+    .dp-verdict.ready{background:rgba(16,185,129,.15);color:#10b981;border:2px solid #10b981}
+    .dp-verdict.needs_review{background:rgba(245,158,11,.15);color:#f59e0b;border:2px solid #f59e0b}
+    .dp-verdict.not_ready{background:rgba(239,68,68,.15);color:#ef4444;border:2px solid #ef4444}
+    .dp-grad-btn{padding:12px 24px;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;transition:.2s}
+    .dp-grad-btn.unlock{background:#10b981;color:#fff}
+    .dp-grad-btn.lock{background:#ef4444;color:#fff}
+    .dp-grad-btn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+  `;
+  document.head.appendChild(s);
+})();
+
+function _dpEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function _dpPctCls(p){ p=Number(p)||0; if(p>=75) return 'good'; if(p>=40) return 'warn'; if(p>=1) return 'bad'; return ''; }
+
+function renderDeepAnalysis(uid, d){
+  const st  = d.student || {};
+  const sm  = d.summary || {};
+  const sk  = d.skills  || {};
+  const ex  = d.stage_exams || [];
+  const er  = d.frequent_errors || [];
+  const ac  = d.recent_activity || [];
+  const gr  = d.graduation_readiness || {};
+  const name = _dpEsc(st.full_name || uid);
+
+  // === Tab 1: Overview ===
+  const tabOverview = `
+    <div class="dp-grid">
+      <div class="dp-stat"><div class="v">${sm.total_attempts||0}</div><div class="l">إجمالي المحاولات</div></div>
+      <div class="dp-stat ${_dpPctCls(sm.accuracy_pct)}"><div class="v">${sm.accuracy_pct||0}%</div><div class="l">نسبة الدقة</div></div>
+      <div class="dp-stat good"><div class="v">${sm.correct_count||0}</div><div class="l">إجابات صحيحة</div></div>
+      <div class="dp-stat bad"><div class="v">${sm.wrong_count||0}</div><div class="l">إجابات خاطئة</div></div>
+      <div class="dp-stat ${_dpPctCls(sm.avg_score)}"><div class="v">${sm.avg_score||0}%</div><div class="l">متوسط الدرجات</div></div>
+      <div class="dp-stat"><div class="v">${sm.total_time_minutes||0}</div><div class="l">دقائق التعلم</div></div>
+      <div class="dp-stat"><div class="v">${sm.lessons_passed||0}</div><div class="l">دروس مجتازة</div></div>
+      <div class="dp-stat"><div class="v">${sm.avg_attempts_per_lesson||0}</div><div class="l">متوسط المحاولات/درس</div></div>
+    </div>
+    <div style="background:#1e293b;padding:12px;border-radius:8px;font-size:13px;color:#cbd5e1;margin-top:8px">
+      <strong>المسار:</strong> ${_dpEsc(st.current_path||'—')} •
+      <strong>المستوى:</strong> ${_dpEsc(st.level||'—')} •
+      <strong>XP:</strong> ${st.xp_total||0} •
+      <strong>Streak:</strong> ${st.streak_days||0} 🔥 •
+      <strong>آخر نشاط:</strong> ${_dpEsc(sm.last_active||'—')}
+    </div>
+    <h4 style="margin-top:14px;color:#cbd5e1">📈 النشاط في آخر 30 يوم</h4>
+    ${ac.length===0 ? '<div style="color:#64748b;padding:12px">لا يوجد نشاط حديث</div>' :
+      `<table class="dp-table"><thead><tr><th>التاريخ</th><th>دروس</th><th>أسئلة</th><th>صحيحة</th><th>الدقة</th></tr></thead><tbody>
+      ${ac.map(a=>`<tr><td>${_dpEsc(a.d)}</td><td>${a.lessons}</td><td>${a.questions}</td><td>${a.correct}</td><td>${a.questions?Math.round(100*a.correct/a.questions):0}%</td></tr>`).join('')}
+      </tbody></table>`
+    }
+  `;
+
+  // === Tab 2: Skills ===
+  const tabSkills = `
+    <h4 style="color:#cbd5e1;margin-bottom:8px">🎧 الاستماع</h4>
+    <div class="dp-grid">
+      <div class="dp-stat"><div class="v">${sk.listening?.completed_lessons||0}</div><div class="l">دروس مكتملة</div></div>
+    </div>
+    <h4 style="color:#cbd5e1;margin-top:14px;margin-bottom:8px">🗣️ المحادثة</h4>
+    <div class="dp-grid">
+      <div class="dp-stat"><div class="v">${sk.speaking?.completed_items||0}</div><div class="l">عناصر مكتملة</div></div>
+    </div>
+    <h4 style="color:#cbd5e1;margin-top:14px;margin-bottom:8px">✍️ الكتابة</h4>
+    <div class="dp-grid">
+      <div class="dp-stat"><div class="v">${sk.writing?.attempts||0}</div><div class="l">محاولات</div></div>
+      <div class="dp-stat ${_dpPctCls(sk.writing?.avg_ai_score)}"><div class="v">${sk.writing?.avg_ai_score||0}</div><div class="l">متوسط درجة AI</div></div>
+      <div class="dp-stat"><div class="v">${sk.writing?.total_time_minutes||0}</div><div class="l">دقائق</div></div>
+    </div>
+    <h4 style="color:#cbd5e1;margin-top:14px;margin-bottom:8px">📖 القراءة</h4>
+    <div class="dp-grid">
+      <div class="dp-stat"><div class="v">${sk.reading?.attempts||0}</div><div class="l">محاولات</div></div>
+      <div class="dp-stat ${_dpPctCls(sk.reading?.accuracy_pct)}"><div class="v">${sk.reading?.accuracy_pct||0}%</div><div class="l">نسبة الدقة</div></div>
+      <div class="dp-stat"><div class="v">${sk.reading?.q_total||0}</div><div class="l">إجمالي الأسئلة</div></div>
+    </div>
+  `;
+
+  // === Tab 3: Frequent errors ===
+  const tabErrors = er.length===0
+    ? '<div style="color:#64748b;padding:30px;text-align:center">✨ لا توجد أخطاء متكررة — أداء جيد!</div>'
+    : `<table class="dp-table">
+        <thead><tr><th>معرّف السؤال</th><th>عدد المحاولات</th><th>مرات الخطأ</th><th>نسبة الخطأ</th></tr></thead>
+        <tbody>${er.map(e=>{
+          const pct = Math.round(100*e.wrong_count/Math.max(1,e.total_attempts));
+          return `<tr><td><code>${_dpEsc(e.q_id)}</code></td><td>${e.total_attempts}</td><td style="color:#ef4444;font-weight:700">${e.wrong_count}</td><td>${pct}%</td></tr>`;
+        }).join('')}</tbody>
+      </table>`;
+
+  // === Tab 4: Stage exams ===
+  const tabExams = ex.length===0
+    ? '<div style="color:#64748b;padding:30px;text-align:center">لم يُجرِ الطالب أي امتحان مرحلة بعد</div>'
+    : `<table class="dp-table">
+        <thead><tr><th>المرحلة</th><th>محاولات</th><th>أفضل درجة</th><th>صحيحة</th><th>إجمالي</th><th>الحالة</th><th>آخر محاولة</th></tr></thead>
+        <tbody>${ex.map(e=>{
+          const cls = e.ever_passed ? 'ok' : (e.best_score>0 ? 'mid' : 'no');
+          const txt = e.ever_passed ? '✅ اجتاز' : (e.best_score>0 ? '⚠️ يحتاج إعادة' : '❌ لم يجتز');
+          return `<tr><td><strong>Stage ${e.stage_id}</strong></td><td>${e.attempts_count}</td><td>${e.best_score||0}%</td><td>${e.correct_q||0}</td><td>${e.total_q||0}</td><td><span class="dp-pill ${cls}">${txt}</span></td><td style="font-size:11px;color:#94a3b8">${_dpEsc(e.last_at||'—')}</td></tr>`;
+        }).join('')}</tbody>
+      </table>`;
+
+  // === Tab 5: Graduation decision ===
+  const gradBtn = gr.currently_unlocked
+    ? `<button class="dp-grad-btn lock" onclick="dpToggleGraduation('${_dpEsc(uid)}', false)">🔒 إقفال بوابة التخرج</button>`
+    : `<button class="dp-grad-btn unlock" onclick="dpToggleGraduation('${_dpEsc(uid)}', true)">🎓 فتح بوابة التخرج</button>`;
+  const tabGrad = `
+    <div class="dp-verdict ${gr.verdict||'not_ready'}">${_dpEsc(gr.verdict_ar||'—')}<br>
+      <span style="font-size:14px;font-weight:500">اجتاز ${gr.passed_count||0} من ${gr.total_criteria||0} معايير (${gr.score||0}%)</span>
+    </div>
+    <h4 style="color:#cbd5e1;margin:10px 0">📋 معايير الجاهزية</h4>
+    ${(gr.criteria||[]).map(c=>`
+      <div class="dp-crit">
+        <div>
+          <div class="lbl">${c.passed?'✅':'❌'} ${_dpEsc(c.label)}</div>
+          <div class="act">القيمة الفعلية: ${_dpEsc(c.actual||'—')}</div>
+        </div>
+        <span class="dp-pill ${c.passed?'ok':'no'}">${c.passed?'مستوفى':'غير مستوفى'}</span>
+      </div>`).join('')}
+    <div style="text-align:center;margin-top:16px;padding:14px;background:#0f172a;border-radius:10px">
+      <div style="color:#94a3b8;font-size:13px;margin-bottom:8px">
+        الحالة الحالية: <strong style="color:${gr.currently_unlocked?'#10b981':'#ef4444'}">
+        ${gr.currently_unlocked?'🎓 البوابة مفتوحة':'🔒 البوابة مقفلة'}</strong>
+      </div>
+      ${gradBtn}
+    </div>
+  `;
+
+  return `
+    <div class="modal-header">
+      <h3 class="modal-title">📊 تحليل عميق: ${name} <span style="font-size:12px;color:#94a3b8">(${_dpEsc(uid)})</span></h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="dp-tabs">
+      <button class="dp-tab on" data-tab="overview">📊 نظرة عامة</button>
+      <button class="dp-tab" data-tab="skills">🎯 المهارات</button>
+      <button class="dp-tab" data-tab="errors">📝 الأخطاء المتكررة</button>
+      <button class="dp-tab" data-tab="exams">📈 امتحانات المراحل</button>
+      <button class="dp-tab" data-tab="grad">🎓 قرار التخرج</button>
+    </div>
+    <div id="dp-pane-overview" class="dp-pane on">${tabOverview}</div>
+    <div id="dp-pane-skills"   class="dp-pane">${tabSkills}</div>
+    <div id="dp-pane-errors"   class="dp-pane">${tabErrors}</div>
+    <div id="dp-pane-exams"    class="dp-pane">${tabExams}</div>
+    <div id="dp-pane-grad"     class="dp-pane">${tabGrad}</div>
+  `;
+}
+
+async function dpToggleGraduation(uid, unlock){
+  const action = unlock ? 'فتح' : 'إقفال';
+  const ok = await customConfirm('🎓 '+action+' بوابة التخرج',
+    'سيتم '+action+' بوابة التخرج لهذا الطالب. هل أنت متأكد؟',
+    unlock?'confirm':'danger');
+  if(!ok) return;
+  try{
+    const url = '/api/admin/students/'+encodeURIComponent(uid)+'/graduation/'+(unlock?'unlock':'lock');
+    const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+    const d = await r.json();
+    if(d.ok||d.success){
+      await customAlert('تم بنجاح', 'تم '+action+' بوابة التخرج', 'success');
+      closeModal();
+      if(typeof loadStudents==='function') loadStudents();
+      viewJourney(uid); // reopen to refresh
+    } else {
+      await customAlert('خطأ', d.error||d.message||'فشل', 'error');
+    }
+  }catch(e){ await customAlert('خطأ', e.message, 'error'); }
+}
+// ════════════════════════════════════════════════════════════
+
+</script>
+</html>

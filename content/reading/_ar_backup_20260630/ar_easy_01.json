@@ -1,0 +1,89 @@
+{
+  "id": "ar_easy_01",
+  "tier": "easy",
+  "title_en": "Urban Bees",
+  "topic": "biology",
+  "duration_seconds": 360,
+  "passage": {
+    "text_en": "Bees play a surprisingly important role in modern cities. Although many people associate bees only with rural farms, urban beekeeping has grown rapidly in recent decades. Rooftop hives and small garden colonies now thrive in many large cities, where bees pollinate flowers in parks, balconies, and community gardens. This pollination supports urban biodiversity and helps both wild and cultivated plants reproduce.\n\nCity environments can actually offer certain advantages to bees. Unlike farmland, which is often treated with pesticides, urban green spaces tend to contain a wider variety of flowering plants and fewer harmful chemicals. As a result, urban bees sometimes produce more honey than their rural counterparts. However, they also face unique challenges, including air pollution and limited nesting space.",
+    "word_count": 120,
+    "topic": "biology"
+  },
+  "glossary": {
+    "beekeeping": "تربية النحل",
+    "hives": "خلايا النحل",
+    "colonies": "مستعمرات",
+    "pollinate": "يُلقّح",
+    "pollination": "التلقيح",
+    "biodiversity": "التنوّع الحيوي",
+    "cultivated": "مزروعة / مستنبتة",
+    "pesticides": "مبيدات حشرية",
+    "counterparts": "نظائرها / أمثالها",
+    "nesting": "التعشيش / بناء الأعشاش"
+  },
+  "questions": [
+    {
+      "q": "What is the main idea of the passage?",
+      "q_translation_ar": "ما الفكرة الرئيسية للنص؟",
+      "options": {
+        "A": "Urban beekeeping has expanded in recent decades and supports city ecosystems.",
+        "B": "Bees can only survive in rural farmland environments.",
+        "C": "Cities should ban all forms of beekeeping due to safety concerns.",
+        "D": "Honey production is decreasing worldwide because of pesticides."
+      },
+      "correct": "A",
+      "type": "factual",
+      "explanation_ar": "الفقرة الأولى تذكر بوضوح أن تربية النحل الحضري نمت بسرعة وتدعم النظام البيئي للمدينة.",
+      "avoid_tip_ar": "لتحديد الفكرة الرئيسية، اسأل: ما الذي تتحدث عنه كل الفقرات معاً؟ تجنّب الخيار الذي يذكر تفصيلاً صغيراً أو معلومة غير موجودة في النص أصلاً."
+    },
+    {
+      "q": "According to the passage, why might urban bees produce more honey than rural bees?",
+      "q_translation_ar": "حسب النص، لماذا قد ينتج نحل المدن عسلاً أكثر من نحل الريف؟",
+      "options": {
+        "A": "Cities have warmer temperatures year-round.",
+        "B": "Urban areas have fewer pesticides and more plant variety.",
+        "C": "Beekeepers in cities use special equipment.",
+        "D": "Wild bees migrate to cities in summer."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر صراحة أن المساحات الخضراء الحضرية تحتوي تنوعاً أكبر من النباتات ومواد كيميائية ضارة أقل.",
+      "avoid_tip_ar": "في أسئلة المعلومة الصريحة، عُد للنص وابحث عن السبب المذكور حرفياً. تجنّب الخيارات التي تبدو منطقية لكنها غير مذكورة في النص (مثل الحرارة أو المعدات)."
+    },
+    {
+      "q": "The word 'thrive' in the passage is closest in meaning to:",
+      "q_translation_ar": "كلمة 'thrive' في النص أقرب معنىً إلى:",
+      "options": {
+        "A": "disappear",
+        "B": "struggle",
+        "C": "flourish",
+        "D": "compete"
+      },
+      "correct": "C",
+      "type": "vocabulary",
+      "explanation_ar": "thrive = يزدهر/ينمو بقوة، وأقرب كلمة هي flourish.",
+      "avoid_tip_ar": "ضع كل خيار مكان الكلمة في الجملة واقرأها. الخلايا 'تزدهر' في المدن — flourish تناسب، بينما disappear وstruggle عكس المعنى."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a challenge for urban bees?",
+      "q_translation_ar": "أيٌّ مما يلي لم يُذكَر كتحدٍّ يواجه نحل المدن؟",
+      "options": {
+        "A": "Air pollution",
+        "B": "Limited nesting space",
+        "C": "Loud noise",
+        "D": "A shortage of flowering plants"
+      },
+      "correct": "C",
+      "type": "negative_factual",
+      "explanation_ar": "الفقرة الثانية ذكرت تلوث الهواء ومساحة التعشيش المحدودة فقط كتحدّيات. الضوضاء العالية (C) لم تُذكَر إطلاقاً، فهي الإجابة الصحيحة.",
+      "avoid_tip_ar": "في أسئلة NOT، ضع علامة بجانب كل خيار تجده في النص واستبعده. ما لا تجده هو الجواب. لا تختر خياراً لمجرد أنه يبدو منطقياً — التزم بما هو مكتوب فقط."
+    }
+  ],
+  "metadata": {
+    "source": "Academic Reading (Updated TOEFL)",
+    "level": "EASY",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 1: نحل المدن"
+}

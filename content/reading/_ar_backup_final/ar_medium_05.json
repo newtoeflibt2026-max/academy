@@ -1,0 +1,92 @@
+{
+  "id": "ar_medium_05",
+  "tier": "medium",
+  "title_en": "Sports and Social Integration",
+  "topic": "sociology",
+  "duration_seconds": 420,
+  "passage": {
+    "text_en": "Sports have long served as more than just entertainment or physical exercise; they often play a powerful role in bringing diverse communities together. In many countries, local sports clubs and recreational leagues attract members from different ethnic, religious, and economic backgrounds. The shared experience of teamwork, competition, and celebration creates bonds that might not form in other social settings.\n\nResearchers studying immigrant communities have observed that participation in sports often accelerates social integration. New arrivals who join local teams tend to learn the language faster and build broader social networks compared to those who remain isolated. Sports also provide a relatively neutral environment where cultural differences become less significant than shared goals and team performance.\n\nHowever, sports can also reinforce divisions when access is unequal. Expensive equipment, club fees, and transportation costs can exclude lower-income families. Some communities have addressed this problem by funding free programs and providing equipment, recognizing that the social benefits of sports extend far beyond athletic skill. When designed inclusively, sports programs can become valuable tools for strengthening community ties.",
+    "word_count": 174,
+    "topic": "sociology"
+  },
+  "highlights": [
+    "entertainment",
+    "diverse communities",
+    "ethnic",
+    "social integration",
+    "isolated",
+    "neutral environment",
+    "reinforce divisions",
+    "exclude",
+    "inclusively"
+  ],
+  "questions": [
+    {
+      "q": "What is the passage mainly about?",
+      "options": {
+        "A": "The economic costs of organizing sports leagues.",
+        "B": "How sports can both unite and divide communities.",
+        "C": "Why competitive sports are more effective than recreational ones.",
+        "D": "The history of immigrant sports clubs."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "النص يتحدث عن دور الرياضة في توحيد المجتمعات وأيضاً قدرتها على تعزيز الانقسامات."
+    },
+    {
+      "q": "According to the passage, how do sports help immigrants?",
+      "options": {
+        "A": "By providing financial assistance.",
+        "B": "By accelerating language learning and building networks.",
+        "C": "By guaranteeing employment opportunities.",
+        "D": "By teaching them traditional sports."
+      },
+      "correct": "B",
+      "type": "factual",
+      "explanation_ar": "الفقرة الثانية تذكر أن الرياضة تسرّع تعلم اللغة وبناء الشبكات الاجتماعية."
+    },
+    {
+      "q": "The word 'reinforce' in the passage is closest in meaning to:",
+      "options": {
+        "A": "remove",
+        "B": "strengthen",
+        "C": "explain",
+        "D": "ignore"
+      },
+      "correct": "B",
+      "type": "vocabulary",
+      "explanation_ar": "reinforce = يقوي/يعزز. أقرب كلمة strengthen."
+    },
+    {
+      "q": "Why does the author mention 'expensive equipment, club fees, and transportation costs'?",
+      "options": {
+        "A": "To recommend cheaper alternatives.",
+        "B": "To illustrate barriers that exclude some families.",
+        "C": "To compare sports to other hobbies.",
+        "D": "To criticize professional athletes."
+      },
+      "correct": "B",
+      "type": "rhetorical",
+      "explanation_ar": "الكاتب يذكر هذه التكاليف ليوضح الحواجز التي تستبعد العائلات منخفضة الدخل."
+    },
+    {
+      "q": "Which of the following is NOT mentioned as a benefit of sports participation?",
+      "options": {
+        "A": "Faster language acquisition",
+        "B": "Building social networks",
+        "C": "Improving academic performance",
+        "D": "Creating bonds between diverse groups"
+      },
+      "correct": "C",
+      "type": "negative_factual",
+      "explanation_ar": "الفقرة لم تذكر تحسن الأداء الأكاديمي."
+    }
+  ],
+  "metadata": {
+    "source": "Phase 5.8 Academic Reading",
+    "level": "MEDIUM",
+    "type": "academic_reading"
+  },
+  "type": "academic_reading",
+  "title_ar": "نص 5: الرياضة والاندماج"
+}
