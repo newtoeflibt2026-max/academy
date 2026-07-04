@@ -941,7 +941,7 @@ def ar_home():
         plist = tiers.get(tkey, [])
         stage_total = len(plist)
         stage_completed = 0
-        this_stage_locked = not prev_stage_done
+        this_stage_locked = False  # ALL_UNLOCKED
 
         prev_done = True
         for p in plist:
@@ -1023,8 +1023,8 @@ def ar_stage(tier):
         done = best >= PASS
         if done:
             completed += 1
-        unlocked = prev_done
-        css = 'completed' if done else ('current' if unlocked else 'locked')
+        unlocked = True  # ALL_UNLOCKED
+        css = 'completed' if done else 'current'
         questions = p.get('questions') or []
         words = _extract_word_count(p)
         passages_out.append({

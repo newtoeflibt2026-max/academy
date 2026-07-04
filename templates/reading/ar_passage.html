@@ -202,7 +202,10 @@ function checkAnswer(qIdx) {
   const card = document.getElementById('qcard-' + qIdx);
   const q = QUESTIONS[qIdx];
   const chosen = selected[qIdx];
-  if (!chosen) return;
+  if (!chosen) {
+    alert('⚠️ الرجاء اختيار إجابة أولاً');
+    return;
+  }
 
   answered[qIdx] = true;
   const isCorrect = (chosen === q.correct);
