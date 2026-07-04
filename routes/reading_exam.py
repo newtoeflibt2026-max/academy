@@ -785,6 +785,43 @@ def _ar_progress(sid):
     return prog
 
 
+def _normalize_tier(t):
+    '''تحويل tier من صيغة JSON (tier59/69/90) أو صيغة موحّدة (easy/medium/hard).'''
+    if not t:
+        return 'easy'
+    s = str(t).strip().lower()
+    mapping = {
+        'tier59': 'easy',   'easy':   'easy',   't59': 'easy',
+        'tier69': 'medium', 'medium': 'medium', 't69': 'medium',
+        'tier90': 'hard',   'hard':   'hard',   't90': 'hard',
+    }
+    return mapping.get(s, 'easy')
+
+
+def _extract_passage_text(p):
+    '''استخراج نص القطعة سواء كان string أو dict فيه text_en/text.'''
+    pa = p.get('passage')
+    if isinstance(pa, str):
+        return pa
+    if isinstance(pa, dict):
+        return pa.get('text_en') or pa.get('text') or pa.get('en') or ''
+    if isinstance(pa, list):
+        return chr(10).join(str(x) for x in pa)
+    return ''
+
+
+def _extract_word_count(p):
+    '''عدد الكلمات: من passage.word_count إن وُجد، وإلا نحسبه.'''
+    pa = p.get('passage')
+    if isinstance(pa, dict) and pa.get('word_count'):
+        try:
+            return int(pa.get('word_count'))
+        except (TypeError, ValueError):
+            pass
+    txt = _extract_passage_text(p)
+    return len(txt.split()) if txt else 0
+
+
 def _html_escape(s):
     if s is None:
         return ''
@@ -886,7 +923,7 @@ def ar_home():
     # تجميع القطع حسب المرحلة
     tiers = {'easy': [], 'medium': [], 'hard': []}
     for p in passages_raw:
-        tier = (p.get('tier') or 'easy').lower()
+        tier = _normalize_tier(p.get('tier'))
         if tier not in tiers:
             tier = 'easy'
         tiers[tier].append(p)
@@ -974,7 +1011,7 @@ def ar_stage(tier):
 
     prog = _ar_progress(sid) if sid else {}
     passages_raw = [p for p in (_ar_passages_sorted() or [])
-                    if (p.get('tier') or 'easy').lower() == tier]
+                    if _normalize_tier(p.get('tier')) == tier]
 
     PASS = 70
     passages_out = []
@@ -989,7 +1026,7 @@ def ar_stage(tier):
         unlocked = prev_done
         css = 'completed' if done else ('current' if unlocked else 'locked')
         questions = p.get('questions') or []
-        words = len((p.get('passage') or '').split())
+        words = _extract_word_count(p)
         passages_out.append({
             'id': cid,
             'number': idx,
@@ -1064,7 +1101,7 @@ def ar_passage(content_id):
         return redirect(url_for('reading.ar_home', user_id=user_id))
 
     # نص القطعة كفقرات آمنة
-    passage_text = (p.get('passage') or '').strip()
+    passage_text = _extract_passage_text(p).strip()
     para_sep = chr(10) + chr(10)
     paragraphs = [para.strip() for para in passage_text.split(para_sep) if para.strip()]
     text_html = ''.join('<p>' + _html_escape(par) + '</p>' for par in paragraphs)
@@ -1094,7 +1131,7 @@ def ar_passage(content_id):
         questions.append(item)
         questions_js.append(item)
 
-    tier_key = (p.get('tier') or 'easy').lower()
+    tier_key = _normalize_tier(p.get('tier'))
     passage = {
         'id':              p.get('id'),
         'title_en':        p.get('title_en') or p.get('id'),
