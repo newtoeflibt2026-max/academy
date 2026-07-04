@@ -191,10 +191,18 @@ let fontSize = 16;
 function selectOption(qIdx, key, e) {
   if (answered[qIdx]) return;
   const card = document.getElementById('qcard-' + qIdx);
+  if (!card) return;
+  // إزالة selected من كل الخيارات
   card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-  e.currentTarget.classList.add('selected');
+  // إضافة selected للـ li الحالي (نبحث بـ data-key بدل currentTarget)
+  const targetLi = card.querySelector('.option[data-key="' + key + '"]');
+  if (targetLi) targetLi.classList.add('selected');
+  // حفظ الاختيار
   selected[qIdx] = key;
-  card.querySelector('.check-btn').disabled = false;
+  // تفعيل زر التحقق
+  const btn = card.querySelector('.check-btn');
+  if (btn) btn.disabled = false;
+  console.log('selected q' + qIdx + ' = ' + key, selected);
 }
 
 function checkAnswer(qIdx) {
