@@ -121,6 +121,36 @@ def listening_track_page():
 
 # ═══════════════════════════════════════════════════════════
 # PAGE: Stage detail
+def _build_audio_url(item_dict, stage_id):
+    """يبني مسار MP3 من code+tier. آمن ضد الأخطاء."""
+    try:
+        import os as _os, re as _re
+        code = (item_dict.get("code") or "").strip()
+        if not code:
+            return ""
+        try:
+            tier = int(item_dict.get("tier") or 1)
+        except Exception:
+            tier = 1
+        tier_letter = {1: "e", 2: "m", 3: "d"}.get(tier, "e")
+        static_root = _os.path.join(_os.getcwd(), "static", "audio", "listening")
+        candidates = [code + ".mp3", "stage5/" + code + ".mp3"]
+        m = _re.match(r"^(conv|lec)_0*(\d+)$", code)
+        if m:
+            prefix = m.group(1)
+            num = m.group(2).zfill(2)
+            candidates.append(prefix + "_" + tier_letter + num + ".mp3")
+            candidates.append("stage5/" + prefix + "_" + tier_letter + num + ".mp3")
+        candidates.append(code.upper() + ".mp3")
+        for cand in candidates:
+            full = _os.path.join(static_root, cand.replace("/", _os.sep))
+            if _os.path.exists(full):
+                return "/static/audio/listening/" + cand
+        return ""
+    except Exception as _e:
+        print("[_build_audio_url] error:", _e)
+        return ""
+
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening/stage/<int:stage_id>")
 @require_section_access("listening")
@@ -255,29 +285,6 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: l
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening/lesson/<int:lesson_id>")
 @require_section_access("listening")
-
-def _build_audio_url(item_dict, stage_id):
-    """يبني مسار MP3 من code+tier، ويرجع فراغ إذا الملف غير موجود."""
-    code = (item_dict.get("code") or "").strip()
-    if not code:
-        return ""
-    tier = int(item_dict.get("tier") or 1)
-    tier_letter = {1: "e", 2: "m", 3: "d"}.get(tier, "e")
-    static_root = os.path.join(os.getcwd(), "static", "audio", "listening")
-    candidates = [code + ".mp3", "stage5/" + code + ".mp3"]
-    m = re.match(r"^(conv|lec)_0*(\d+)$", code)
-    if m:
-        prefix = m.group(1)
-        num = m.group(2).zfill(2)
-        candidates.append(prefix + "_" + tier_letter + num + ".mp3")
-        candidates.append("stage5/" + prefix + "_" + tier_letter + num + ".mp3")
-    candidates.append(code.upper() + ".mp3")
-    for cand in candidates:
-        full = os.path.join(static_root, cand.replace("/", os.sep))
-        if os.path.exists(full):
-            return "/static/audio/listening/" + cand
-    return ""
-
 def view_lesson(lesson_id):
     user_id = request.args.get("user_id") or _get_tg_id()
     stage_id = int(request.args.get("stage", 1))
