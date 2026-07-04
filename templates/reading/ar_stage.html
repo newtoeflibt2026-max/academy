@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ stage.name_ar }}</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height: 100vh; padding: 16px; color: #2d3748; }
+.container { max-width: 720px; margin: 0 auto; }
+.header { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 20px; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); text-align: center; }
+.header .icon-big { font-size: 42px; margin-bottom: 6px; }
+.header h1 { font-size: 22px; color: #4a5568; margin-bottom: 4px; }
+.header p { color: #718096; font-size: 13px; }
+.header .progress-summary { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #667eea; font-weight: 600; }
+
+.passage-card { background: #fff; border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.10); display: flex; align-items: center; gap: 14px; transition: all 0.25s; text-decoration: none; color: inherit; }
+.passage-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
+.passage-card.locked { opacity: 0.55; cursor: not-allowed; background: #f7fafc; }
+.passage-card.completed { border-right: 5px solid #48bb78; }
+.passage-card.current { border-right: 5px solid #4299e1; background: linear-gradient(90deg,#ebf8ff,#fff); }
+
+.p-number { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; background: #edf2f7; color: #667eea; flex-shrink: 0; }
+.passage-card.current .p-number { background: #bee3f8; color: #2b6cb0; }
+.passage-card.completed .p-number { background: #c6f6d5; color: #22543d; }
+
+.p-body { flex: 1; min-width: 0; }
+.p-title { font-size: 15px; font-weight: 600; color: #2d3748; margin-bottom: 4px; }
+.p-title-en { font-size: 13px; color: #4a5568; direction: ltr; text-align: right; font-family: 'Segoe UI', Arial; }
+.p-meta { font-size: 11px; color: #a0aec0; margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap; }
+.p-meta span { display: inline-flex; align-items: center; gap: 3px; }
+.p-status { font-size: 20px; flex-shrink: 0; }
+
+.btn-back { position: fixed; bottom: 20px; right: 20px; background: #fff; color: #4a5568; border: none; padding: 12px 20px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 14px; cursor: pointer; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="icon-big">{{ stage.icon }}</div>
+    <h1>{{ stage.name_ar }}</h1>
+    <p>{{ stage.desc_ar }}</p>
+    <div class="progress-summary">{{ stage.completed }}/{{ stage.total }} قطع مكتملة · {{ stage.progress_pct }}%</div>
+  </div>
+
+  {% for p in passages %}
+  <a href="{% if not p.locked %}/reading/ar/passage/{{ p.id }}?user_id={{ user_id }}{% else %}#{% endif %}" class="passage-card {{ p.css_class }}">
+    <div class="p-number">{{ p.number }}</div>
+    <div class="p-body">
+      <div class="p-title">{{ p.topic_ar }}</div>
+      <div class="p-title-en">{{ p.title_en }}</div>
+      <div class="p-meta">
+        <span>📝 {{ p.questions_count }} أسئلة</span>
+        <span>📖 {{ p.words_count }} كلمة</span>
+        {% if p.score is not none %}<span>🎯 {{ p.score }}/{{ p.questions_count }}</span>{% endif %}
+      </div>
+    </div>
+    <div class="p-status">
+      {% if p.locked %}🔒
+      {% elif p.css_class == 'completed' %}✅
+      {% elif p.css_class == 'current' %}▶️
+      {% else %}›{% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+
+<a href="/reading/ar?user_id={{ user_id }}" class="btn-back">↩️ رجوع</a>
+<script>if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}</script>
+</body>
+</html>

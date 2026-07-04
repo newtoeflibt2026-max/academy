@@ -1,264 +1,281 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ content.title_en }} — تدريب</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ passage.title_en }}</title>
 <style>
-  :root{
-    --bg:#f7f9fc;--card:#fff;--ink:#1e293b;--muted:#64748b;--line:#e6ecf5;
-    --brand:#2563eb;--brand-soft:#eff4ff;--green:#0ea371;--green-soft:#e7f7f0;
-    --red:#ef4444;--red-soft:#fef2f2;--amber:#f59e0b;--amber-soft:#fff7e6;
-    --shadow:0 4px 18px rgba(30,58,138,.07);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:'Cairo',system-ui,sans-serif;background:var(--bg);
-       color:var(--ink);line-height:1.9;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:780px;margin:0 auto;padding:0 18px 110px}
-  .top{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;
-       padding:22px;border-radius:0 0 22px 22px;box-shadow:var(--shadow)}
-  .top .back{color:#dbeafe;text-decoration:none;font-size:.9em}
-  .top h1{margin:6px 0 2px;font-size:1.3em;font-weight:800;direction:ltr;text-align:right}
-  .top .meta{color:#c7d8f7;font-size:.88em}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;
-       padding:20px;margin-top:16px;box-shadow:var(--shadow)}
-  /* النص */
-  .passage{direction:ltr;text-align:left;font-family:Georgia,serif;font-size:1.05em;
-       line-height:2.05;color:#1e293b}
-  .passage p{margin:0 0 14px}
-  .gw{border-bottom:2px dotted var(--brand);cursor:pointer;color:#1d4ed8}
-  .gw:hover{background:var(--brand-soft)}
-  .tip-toolbar{display:flex;align-items:center;gap:8px;font-size:.82em;color:var(--muted);
-       background:var(--amber-soft);border:1px solid #fde9c0;border-radius:10px;
-       padding:8px 12px;margin-bottom:14px}
-  /* الأسئلة */
-  .q-block{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
-  .q-block:first-of-type{border-top:0;margin-top:0;padding-top:0}
-  .q-head{display:flex;align-items:flex-start;gap:8px}
-  .q-num{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--brand-soft);
-       color:var(--brand);font-weight:800;display:grid;place-items:center;font-size:.85em}
-  .q-text{font-weight:700;direction:ltr;text-align:left;flex:1;color:#1e3a8a}
-  .q-type{font-size:.72em;font-weight:700;color:var(--muted);background:#f1f5f9;
-       padding:2px 9px;border-radius:20px;margin-top:4px;display:inline-block}
-  .tr-btn{background:none;border:1px dashed #cbd5e1;color:var(--muted);font-family:inherit;
-       font-size:.78em;border-radius:8px;padding:3px 9px;cursor:pointer;margin-top:6px}
-  .tr-btn:hover{border-color:var(--brand);color:var(--brand)}
-  .tr-text{display:none;font-size:.9em;color:#475569;background:#f8fafc;border-radius:8px;
-       padding:8px 12px;margin-top:8px;border:1px solid var(--line)}
-  .tr-text.show{display:block}
-  .opt{display:block;width:100%;text-align:left;direction:ltr;background:#fff;
-       border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;margin-top:9px;
-       cursor:pointer;font-family:inherit;font-size:.95em;color:#334155;transition:.13s}
-  .opt:hover{border-color:var(--brand);background:var(--brand-soft)}
-  .opt.sel{border-color:var(--brand);background:var(--brand-soft);font-weight:700}
-  .opt.correct{border-color:var(--green);background:var(--green-soft);color:#065f46;font-weight:700}
-  .opt.wrong{border-color:var(--red);background:var(--red-soft);color:#991b1b}
-  .opt .key{display:inline-block;width:22px;font-weight:800;color:var(--brand)}
-  .fb{margin-top:10px;border-radius:11px;padding:12px 14px;font-size:.92em;display:none}
-  .fb.show{display:block}
-  .fb.ok{background:var(--green-soft);border:1px solid #bbf0d8;color:#065f46}
-  .fb.no{background:var(--red-soft);border:1px solid #fecaca;color:#991b1b}
-  .fb .tag{font-weight:800;display:block;margin-bottom:3px}
-  .fb .avoid{margin-top:8px;background:#fff;border:1px dashed var(--amber);border-radius:8px;
-       padding:8px 11px;color:#92400e}
-  .fb .avoid b{color:#b45309}
-  /* شريط الإرسال */
-  .bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
-       padding:12px 18px;box-shadow:0 -4px 18px rgba(30,58,138,.07)}
-  .bar .inner{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:12px}
-  .bar .prog{flex:1;font-size:.88em;color:var(--muted)}
-  .submit{background:linear-gradient(135deg,#0ea371,#059669);color:#fff;border:0;
-       padding:13px 26px;border-radius:12px;font-weight:800;font-size:1em;cursor:pointer;
-       font-family:inherit;box-shadow:0 6px 16px rgba(14,163,113,.3)}
-  .submit:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
-  /* النتيجة */
-  .result{display:none;text-align:center;margin-top:16px}
-  .result.show{display:block}
-  .result .ring{font-size:2.4em;font-weight:800}
-  .result.pass .ring{color:var(--green)}
-  .result.fail .ring{color:var(--amber)}
-  .result .msg{color:var(--muted);margin:4px 0 16px}
-  .result a{display:inline-block;background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;
-       text-decoration:none;padding:13px 28px;border-radius:12px;font-weight:800;margin:5px}
-  .result a.ghost{background:#fff;border:1.5px solid var(--line);color:var(--brand)}
-  /* تلميح ترجمة الكلمة */
-  #pop{position:fixed;z-index:50;background:#1e293b;color:#fff;padding:8px 14px;border-radius:10px;
-       font-size:.9em;display:none;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:240px}
-  #pop b{color:#7dd3fc}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#1e293b;overflow:hidden}
+
+.topbar{background:#fff;padding:12px 20px;box-shadow:0 1px 4px rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.topbar .left{display:flex;align-items:center;gap:12px}
+.back-btn{background:#f1f5f9;color:#475569;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px}
+.back-btn:hover{background:#e2e8f0}
+.topbar h1{font-size:15px;color:#0f172a;font-weight:700}
+.topbar h1 small{display:block;font-size:11px;color:#64748b;font-weight:500;direction:ltr;text-align:right;margin-top:2px}
+.progress-info{display:flex;align-items:center;gap:14px;font-size:13px;color:#475569}
+.progress-info .score{background:#eef2ff;color:#4f46e5;padding:5px 12px;border-radius:20px;font-weight:700}
+.progress-info .bar{width:120px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.progress-info .bar .fill{height:100%;background:linear-gradient(90deg,#10b981,#059669);transition:width .3s}
+
+.main-layout{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;height:calc(100vh - 60px)}
+
+/* === القطعة (يمين في RTL) === */
+.passage-pane{background:#fff;border-radius:14px;padding:24px 28px;overflow-y:auto;box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative}
+.passage-pane::-webkit-scrollbar{width:8px}
+.passage-pane::-webkit-scrollbar-track{background:#f1f5f9;border-radius:4px}
+.passage-pane::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+.passage-title-en{direction:ltr;text-align:left;font-size:22px;font-weight:800;color:#0f172a;margin-bottom:6px;font-family:'Georgia','Times New Roman',serif}
+.passage-title-ar{color:#64748b;font-size:13px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid #e2e8f0}
+.passage-text{direction:ltr;text-align:left;font-family:'Georgia','Times New Roman',serif;font-size:16px;line-height:2;color:#1e293b}
+.passage-text .sent{transition:background .3s}
+.passage-text .sent.highlight{background:#fef3c7;padding:2px 4px;border-radius:3px;box-shadow:0 0 0 2px #fbbf24}
+
+.font-controls{position:sticky;top:-24px;background:#fff;padding:6px 0 12px;margin:-24px -28px 12px;padding:10px 28px;border-bottom:1px solid #f1f5f9;display:flex;gap:8px;justify-content:flex-end;z-index:5}
+.font-controls button{background:#f1f5f9;color:#475569;border:none;width:32px;height:32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.font-controls button:hover{background:#e2e8f0}
+.font-controls .label{color:#64748b;font-size:11px;align-self:center;margin-left:auto}
+
+/* === الأسئلة (يسار في RTL) === */
+.questions-pane{background:#fff;border-radius:14px;padding:20px 24px;overflow-y:auto;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.questions-pane::-webkit-scrollbar{width:8px}
+.questions-pane::-webkit-scrollbar-track{background:#f1f5f9;border-radius:4px}
+.questions-pane::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+.q-card{background:#fefefe;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-bottom:16px;transition:all .25s}
+.q-card.answered.correct{border-color:#86efac;background:#f0fdf4}
+.q-card.answered.wrong{border-color:#fca5a5;background:#fef2f2}
+
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #f1f5f9}
+.q-number{background:#4f46e5;color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.q-card.answered.correct .q-number{background:#10b981}
+.q-card.answered.wrong .q-number{background:#ef4444}
+.q-type{background:#eef2ff;color:#4f46e5;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+
+.q-text{direction:ltr;text-align:left;font-family:'Georgia',serif;font-size:15px;font-weight:600;color:#0f172a;margin-bottom:6px;line-height:1.6}
+.q-text-ar{color:#64748b;font-size:13px;margin-bottom:14px;line-height:1.7}
+
+.options{list-style:none;padding:0;margin:0 0 12px}
+.option{padding:11px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:9px;margin-bottom:7px;cursor:pointer;transition:all .2s;direction:ltr;text-align:left;font-size:14px;color:#334155;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.option:hover:not(.disabled){border-color:#4f46e5;background:#f5f3ff}
+.option.selected{border-color:#4f46e5;background:#eef2ff;color:#3730a3;font-weight:600}
+.option.correct{border-color:#10b981;background:#dcfce7;color:#15803d;font-weight:600}
+.option.wrong{border-color:#ef4444;background:#fee2e2;color:#991b1b;font-weight:600}
+.option.disabled{cursor:default;opacity:.85}
+.option .letter{font-weight:700;color:#4f46e5;flex-shrink:0}
+.option.correct .letter{color:#15803d}
+.option.wrong .letter{color:#991b1b}
+.option .mark{margin-left:auto;font-size:16px}
+
+.check-btn{background:linear-gradient(135deg,#4f46e5,#4338ca);color:#fff;border:none;padding:11px 22px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 3px 10px rgba(79,70,229,.3);transition:all .2s;width:100%}
+.check-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 14px rgba(79,70,229,.4)}
+.check-btn:disabled{background:#cbd5e1;cursor:not-allowed;box-shadow:none}
+
+.feedback{margin-top:12px;padding:12px 14px;border-radius:9px;font-size:13.5px;line-height:1.8;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#f0fdf4;border-right:3px solid #10b981;color:#065f46}
+.feedback.wrong{background:#fef2f2;border-right:3px solid #ef4444;color:#7f1d1d}
+.feedback strong{display:block;margin-bottom:4px;font-size:14px}
+.feedback .tip{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.12);color:#475569;font-size:12.5px;font-style:italic}
+
+/* === النتيجة النهائية === */
+.final-result{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-radius:14px;padding:24px;text-align:center;margin-top:16px;display:none}
+.final-result.show{display:block}
+.final-result .big{font-size:38px;font-weight:800;margin:8px 0}
+.final-result .msg{font-size:15px;opacity:.95;margin-bottom:14px}
+.final-result .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.final-result .actions a{background:rgba(255,255,255,.95);color:#065f46;padding:10px 22px;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px}
+.final-result .actions a.secondary{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)}
+
+/* === Mobile === */
+@media (max-width:900px){
+  body{overflow:auto}
+  .main-layout{grid-template-columns:1fr;height:auto;padding:10px}
+  .passage-pane{max-height:45vh;position:sticky;top:10px;z-index:10}
+  .questions-pane{padding:16px}
+}
 </style>
 </head>
 <body>
-<div class="top">
-  <a class="back" href="/reading/ar?user_id={{ user_id }}">← القائمة</a>
-  <h1>{{ content.title_en }}</h1>
-  <div class="meta">{{ content.questions|length }} questions ·
-    {% if content.tier=='easy' %}Easy{% elif content.tier=='medium' %}Medium{% else %}Hard{% endif %}</div>
+
+<div class="topbar">
+  <div class="left">
+    <a href="/reading/ar/stage/{{ passage.tier_key }}?user_id={{ user_id }}" class="back-btn">← رجوع</a>
+    <h1>{{ passage.topic_ar }}<small>{{ passage.title_en }}</small></h1>
+  </div>
+  <div class="progress-info">
+    <div class="score"><span id="scoreVal">0</span>/{{ passage.questions|length }}</div>
+    <div class="bar"><div class="fill" id="progFill" style="width:0%"></div></div>
+  </div>
 </div>
 
-<div class="wrap">
+<div class="main-layout">
 
-  <div class="card">
-    {% if content.glossary %}
-    <div class="tip-toolbar">💡 الكلمات تحتها خط منقّط: انقرها لرؤية الترجمة (اختياري).</div>
-    {% endif %}
-    <div class="passage" id="passage">
-      {% for p in paragraphs %}<p>{{ p }}</p>{% endfor %}
+  <!-- ===== القطعة (يمين) ===== -->
+  <div class="passage-pane" id="passagePane">
+    <div class="font-controls">
+      <span class="label">حجم الخط:</span>
+      <button onclick="changeFont(-1)">أ-</button>
+      <button onclick="changeFont(1)">أ+</button>
     </div>
+    <div class="passage-title-en">{{ passage.title_en }}</div>
+    <div class="passage-title-ar">{{ passage.topic_ar }}</div>
+    <div class="passage-text" id="passageText">{{ passage.text_html | safe }}</div>
   </div>
 
-  <div class="card" id="questions">
-    {% for q in content.questions %}
-    <div class="q-block" data-idx="{{ loop.index0 }}">
-      <div class="q-head">
-        <div class="q-num">{{ loop.index }}</div>
-        <div style="flex:1">
-          <div class="q-text">{{ q.q }}</div>
-          <span class="q-type">{{ q.type }}</span>
-          {% if q.q_translation_ar %}
-          <button class="tr-btn" onclick="tr(this)">🌐 ترجمة السؤال</button>
-          <div class="tr-text">{{ q.q_translation_ar }}</div>
-          {% endif %}
-        </div>
+  <!-- ===== الأسئلة (يسار) ===== -->
+  <div class="questions-pane">
+    {% for q in passage.questions %}
+    <div class="q-card" id="qcard-{{ loop.index0 }}" data-idx="{{ loop.index0 }}">
+      <div class="q-header">
+        <div class="q-number">{{ loop.index }}</div>
+        <div class="q-type">{{ q.type_label }}</div>
       </div>
-      {% for k, v in q.options.items() %}
-      <button class="opt"
-              data-key="{{ k }}"
-              onclick="sel(this)">
-        <span class="key">{{ k }}.</span> {{ v }}
-      </button>
-      {% endfor %}
-      <div class="fb"></div>
+      <div class="q-text">{{ q.q }}</div>
+      <div class="q-text-ar">{{ q.q_translation_ar }}</div>
+      <ul class="options">
+        {% for key, val in q.options.items() %}
+        <li class="option" data-key="{{ key }}" onclick="selectOption({{ loop.index0 }}, '{{ key }}', event)">
+          <span class="letter">{{ key }}.</span>
+          <span class="text">{{ val }}</span>
+          <span class="mark"></span>
+        </li>
+        {% endfor %}
+      </ul>
+      <button class="check-btn" onclick="checkAnswer({{ loop.index0 }})" disabled>تحقق من الإجابة</button>
+      <div class="feedback">
+        <strong class="head"></strong>
+        <div class="explain"></div>
+        <div class="tip"></div>
+      </div>
     </div>
     {% endfor %}
-  </div>
 
-  <div class="result card" id="result">
-    <div class="ring" id="ringTxt"></div>
-    <div class="msg" id="resMsg"></div>
-    <div id="resBtns"></div>
+    <div class="final-result" id="finalResult">
+      <div class="big"><span id="finalScore">0</span>/{{ passage.questions|length }}</div>
+      <div class="msg" id="finalMsg">أحسنت! تم إكمال القطعة</div>
+      <div class="actions">
+        <a href="/reading/ar/stage/{{ passage.tier_key }}?user_id={{ user_id }}">📚 القطعة التالية</a>
+        <a href="/reading/ar?user_id={{ user_id }}" class="secondary">🏠 الرئيسية</a>
+      </div>
+    </div>
   </div>
 
 </div>
-
-<div class="bar" id="bar">
-  <div class="inner">
-    <div class="prog" id="prog">0 / {{ content.questions|length }} مُجاب</div>
-    <button class="submit" id="submitBtn" onclick="submitAll()" disabled>تحقّق من إجاباتي</button>
-  </div>
-</div>
-
-<div id="pop"></div>
 
 <script>
-  var GLOSSARY = {{ content.glossary|default({})|tojson }};
-  var TOTAL = {{ content.questions|length }};
-  var ATTEMPT = {{ attempt_id|tojson }};
-  var CONTENT_ID = {{ content.id|tojson }};
-  var USER_ID = {{ user_id|tojson }};
-  var answers = {};
-  var locked = false;
+const PASSAGE_ID = "{{ passage.id }}";
+const USER_ID = "{{ user_id }}";
+const TOTAL_Q = {{ passage.questions|length }};
+const QUESTIONS = {{ passage.questions_js | safe }};
 
-  // ترجمة السؤال (اختياري)
-  function tr(btn){
-    var t = btn.parentNode.querySelector('.tr-text');
-    t.classList.toggle('show');
-  }
+let selected = {};   // {qIdx: 'A'}
+let answered = {};   // {qIdx: true}
+let correctCount = 0;
+let fontSize = 16;
 
-  // اختيار إجابة
-  function sel(btn){
-    if(locked) return;
-    var block = btn.closest('.q-block');
-    var idx = block.getAttribute('data-idx');
-    block.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel')});
-    btn.classList.add('sel');
-    answers[idx] = btn.getAttribute('data-key');
-    updateProg();
-  }
-  function updateProg(){
-    var n = Object.keys(answers).length;
-    document.getElementById('prog').textContent = n + ' / ' + TOTAL + ' مُجاب';
-    document.getElementById('submitBtn').disabled = (n < TOTAL);
-  }
+function selectOption(qIdx, key, e) {
+  if (answered[qIdx]) return;
+  const card = document.getElementById('qcard-' + qIdx);
+  card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  e.currentTarget.classList.add('selected');
+  selected[qIdx] = key;
+  card.querySelector('.check-btn').disabled = false;
+}
 
-  // ترجمة الكلمات الصعبة (اختياري بالنقر)
-  function wrapGlossary(){
-    var keys = Object.keys(GLOSSARY);
-    if(!keys.length) return;
-    var ps = document.querySelectorAll('#passage p');
-    ps.forEach(function(p){
-      var html = p.innerHTML;
-      keys.forEach(function(w){
-        var re = new RegExp('\\b('+w+')\\b','i');
-        html = html.replace(re, '<span class="gw" data-w="'+w.toLowerCase()+'">$1</span>');
-      });
-      p.innerHTML = html;
-    });
-    document.querySelectorAll('.gw').forEach(function(el){
-      el.addEventListener('click', function(e){ showPop(e, el.getAttribute('data-w')); });
-    });
-  }
-  function showPop(e, w){
-    var pop = document.getElementById('pop');
-    var ar = GLOSSARY[w] || GLOSSARY[Object.keys(GLOSSARY).find(function(k){return k.toLowerCase()===w})] || '';
-    pop.innerHTML = '<b>'+w+'</b> — '+ar;
-    pop.style.display='block';
-    var x = e.clientX, y = e.clientY;
-    pop.style.left = Math.min(x, window.innerWidth-250)+'px';
-    pop.style.top = (y+18)+'px';
-    clearTimeout(window._pt);
-    window._pt = setTimeout(function(){pop.style.display='none'}, 3500);
-  }
-  document.addEventListener('click', function(e){
-    if(!e.target.classList.contains('gw')) document.getElementById('pop').style.display='none';
+function checkAnswer(qIdx) {
+  if (answered[qIdx]) return;
+  const card = document.getElementById('qcard-' + qIdx);
+  const q = QUESTIONS[qIdx];
+  const chosen = selected[qIdx];
+  if (!chosen) return;
+
+  answered[qIdx] = true;
+  const isCorrect = (chosen === q.correct);
+  if (isCorrect) correctCount++;
+
+  card.classList.add('answered');
+  card.classList.add(isCorrect ? 'correct' : 'wrong');
+  card.querySelectorAll('.option').forEach(opt => {
+    opt.classList.add('disabled');
+    const k = opt.dataset.key;
+    if (k === q.correct) {
+      opt.classList.add('correct');
+      opt.querySelector('.mark').textContent = '✅';
+    } else if (k === chosen && !isCorrect) {
+      opt.classList.add('wrong');
+      opt.querySelector('.mark').textContent = '❌';
+    }
   });
 
-  // إرسال وتصحيح
-  function submitAll(){
-    if(locked) return;
-    locked = true;
-    document.getElementById('submitBtn').disabled = true;
-    fetch('/reading/ar/check', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({attempt_id:ATTEMPT, content_id:CONTENT_ID, answers:answers, user_id:USER_ID})
-    }).then(function(r){return r.json()}).then(function(d){ renderFeedback(d); });
-  }
-  function renderFeedback(d){
-    d.feedback.forEach(function(f){
-      var block = document.querySelector('.q-block[data-idx="'+f.idx+'"]');
-      block.querySelectorAll('.opt').forEach(function(o){
-        var k = o.getAttribute('data-key');
-        o.style.cursor='default';
-        if(k === f.correct) o.classList.add('correct');
-        else if(k === f.user_answer && !f.is_correct) o.classList.add('wrong');
-      });
-      var fb = block.querySelector('.fb');
-      var html = '<span class="tag">'+(f.is_correct?'✓ إجابة صحيحة':'✗ إجابة خاطئة')+'</span>'+ (f.explanation_ar||'');
-      if(!f.is_correct && f.avoid_tip_ar){
-        html += '<div class="avoid"><b>كيف تتجنّب هذا الخطأ:</b> '+f.avoid_tip_ar+'</div>';
-      }
-      fb.innerHTML = html;
-      fb.classList.add(f.is_correct?'ok':'no','show');
-    });
-    // النتيجة
-    var res = document.getElementById('result');
-    var pass = d.passed;
-    res.classList.add('show', pass?'pass':'fail');
-    document.getElementById('ringTxt').textContent = d.pct + '%';
-    document.getElementById('resMsg').textContent = pass
-      ? ('أحسنت! أجبت ' + d.score + ' من ' + d.total + '. فُتحت القطعة التالية.')
-      : ('أصبت ' + d.score + ' من ' + d.total + '. راجع الشرح أعلاه وأعد المحاولة للوصول إلى 70%.');
-    var btns = pass
-      ? '<a href="/reading/ar?user_id='+USER_ID+'">متابعة إلى القائمة ←</a>'
-      : '<a href="/reading/ar/passage/'+CONTENT_ID+'?user_id='+USER_ID+'">إعادة المحاولة</a>'+
-        '<a class="ghost" href="/reading/ar?user_id='+USER_ID+'">القائمة</a>';
-    document.getElementById('resBtns').innerHTML = btns;
-    document.getElementById('bar').style.display='none';
-    res.scrollIntoView({behavior:'smooth'});
+  card.querySelector('.check-btn').disabled = true;
+  card.querySelector('.check-btn').textContent = isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة';
+
+  const fb = card.querySelector('.feedback');
+  fb.classList.add('show', isCorrect ? 'correct' : 'wrong');
+  fb.querySelector('.head').textContent = isCorrect ? '✅ ممتاز!' : '❌ الإجابة الصحيحة: ' + q.correct;
+  fb.querySelector('.explain').textContent = q.explanation_ar || '';
+  const tipEl = fb.querySelector('.tip');
+  if (q.avoid_tip_ar) { tipEl.textContent = '💡 ' + q.avoid_tip_ar; }
+
+  // تمييز الجملة المرجعية في القطعة
+  if (q.ref_sent_id) {
+    const sent = document.querySelector('.sent[data-sid="' + q.ref_sent_id + '"]');
+    if (sent) {
+      document.querySelectorAll('.sent.highlight').forEach(s => s.classList.remove('highlight'));
+      sent.classList.add('highlight');
+      sent.scrollIntoView({behavior:'smooth', block:'center'});
+    }
   }
 
-  wrapGlossary();
+  updateProgress();
+
+  // حفظ الإجابة في الخادم (اختياري - لا يعطل الواجهة إذا فشل)
+  try {
+    fetch('/reading/ar/check', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        passage_id: PASSAGE_ID,
+        user_id: USER_ID,
+        q_idx: qIdx,
+        chosen: chosen,
+        correct: isCorrect
+      })
+    }).catch(()=>{});
+  } catch(e) {}
+}
+
+function updateProgress() {
+  document.getElementById('scoreVal').textContent = correctCount;
+  const answeredCount = Object.keys(answered).length;
+  const pct = (answeredCount / TOTAL_Q) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+
+  if (answeredCount === TOTAL_Q) {
+    const final = document.getElementById('finalResult');
+    document.getElementById('finalScore').textContent = correctCount;
+    const pctScore = (correctCount / TOTAL_Q) * 100;
+    let msg = '';
+    if (pctScore === 100) msg = '🏆 ممتاز جداً! إجابات مثالية';
+    else if (pctScore >= 80) msg = '⭐ عمل رائع! استمر';
+    else if (pctScore >= 60) msg = '👍 جيد، راجع الأسئلة الخاطئة';
+    else msg = '📚 راجع الشرح وحاول قطعة أخرى';
+    document.getElementById('finalMsg').textContent = msg;
+    final.classList.add('show');
+    final.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function changeFont(delta) {
+  fontSize = Math.max(13, Math.min(22, fontSize + delta));
+  document.getElementById('passageText').style.fontSize = fontSize + 'px';
+}
+
+if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
 </script>
 </body>
 </html>

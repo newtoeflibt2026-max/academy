@@ -785,180 +785,433 @@ def _ar_progress(sid):
     return prog
 
 
-# ── 1) فهرس القسم: الدروس النظرية + القطع المتدرجة ──────────
-@reading_bp.route("/ar")
-@reading_bp.route("/ar/learn")
-@require_section_access("reading")
+def _html_escape(s):
+    if s is None:
+        return ''
+    return (str(s)
+            .replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace('>', '&gt;')
+            .replace('"', '&quot;')
+            .replace("'", '&#39;'))
+
+
+# ETS 2026 official reading question type labels
+_AR_TYPE_LABELS = {
+    'factual':                {'en': 'Factual Information',           'ar': 'معلومة صريحة'},
+    'negative_factual':       {'en': 'Negative Factual Information',  'ar': 'معلومة غير مذكورة'},
+    'vocabulary':             {'en': 'Vocabulary in Context',         'ar': 'مفردات في السياق'},
+    'inference':              {'en': 'Inference',                     'ar': 'استنتاج'},
+    'rhetorical':             {'en': 'Rhetorical Purpose',            'ar': 'الغرض البلاغي'},
+    'insert_sentence':        {'en': 'Insert Text',                   'ar': 'إدراج نص'},
+    'important_idea':         {'en': 'Important Idea',                'ar': 'الفكرة الأهم'},
+    'paragraph_relationship': {'en': 'Paragraph Relationship',        'ar': 'العلاقة بين الفقرات'},
+}
+
+_AR_STAGE_META = {
+    'easy':   {'icon': '',  'name_en': 'Easy',   'name_ar': 'المستوى السهل',  'desc_en': 'Short, direct passages to build the foundation.', 'desc_ar': 'قطع قصيرة ومباشرة لبناء الأساس.'},
+    'medium': {'icon': '',  'name_en': 'Medium', 'name_ar': 'المستوى المتوسط', 'desc_en': 'Longer passages requiring deeper comprehension.', 'desc_ar': 'قطع أطول تتطلب فهماً أعمق.'},
+    'hard':   {'icon': '',  'name_en': 'Hard',   'name_ar': 'المستوى المتقدم', 'desc_en': 'Real TOEFL-level academic passages.',             'desc_ar': 'قطع بمستوى TOEFL الحقيقي.'},
+}
+
+
+def _ar_build_lesson_view(L, index=None, next_id=None):
+    '''تحويل ملف الدرس الخام إلى بنية القالب.'''
+    ex = L.get('example') or {}
+
+    # الاستراتيجية: قد تكون قائمة خطوات أو نصاً واحداً
+    raw_strategy = L.get('strategy') or L.get('how_ar') or []
+    if isinstance(raw_strategy, str):
+        strategy_list = [{'title': 'Strategy', 'body': raw_strategy}]
+    elif isinstance(raw_strategy, list):
+        strategy_list = []
+        for i, s in enumerate(raw_strategy, start=1):
+            if isinstance(s, dict):
+                strategy_list.append({
+                    'title': s.get('title') or ('Step ' + str(i)),
+                    'body':  s.get('body')  or s.get('text') or '',
+                })
+            else:
+                strategy_list.append({'title': 'Step ' + str(i), 'body': str(s)})
+    else:
+        strategy_list = []
+
+    return {
+        'id': L.get('id'),
+        'number': index,
+        'title_en': L.get('title_en') or L.get('title') or L.get('id'),
+        'title_ar': L.get('title_ar') or '',
+        'icon': L.get('icon') or '',
+        'desc_ar': L.get('intro_ar') or L.get('desc_ar') or L.get('summary_ar') or '',
+        'what_is_it': L.get('what_is_it') or L.get('intro_ar') or '',
+        'how_to_recognize': L.get('how_to_recognize') or L.get('how_ar') or '',
+        'strategy': strategy_list,
+        'tips':  L.get('tips')  or L.get('tactics_ar') or [],
+        'avoid': L.get('avoid') or L.get('traps_ar')   or [],
+        'example': {
+            'passage':      ex.get('passage_en') or ex.get('passage') or '',
+            'q':            ex.get('q_en') or ex.get('question_en') or ex.get('q') or '',
+            'q_ar':         ex.get('q_ar') or ex.get('q_translation_ar') or '',
+            'options':      ex.get('options') or {},
+            'correct':      ex.get('correct') or '',
+            'wrong_show':   ex.get('wrong_show') or '',
+            'explain_ar':   ex.get('explain_ar') or ex.get('explanation_ar') or '',
+        },
+        'next_id': next_id,
+    }
+
+
+# --- 1) Home: lessons + staged passages -------------------
+@reading_bp.route('/ar')
+@reading_bp.route('/ar/learn')
+@require_section_access('reading')
 def ar_home():
     user_id = _get_tg_id()
     sid = _student_id()
-    lessons = _ar_load_lessons()
-    passages = _ar_passages_sorted()
-    prog = _ar_progress(sid)
+    raw_lessons = _ar_load_lessons() or []
+    prog = _ar_progress(sid) if sid else {}
+    passages_raw = _ar_passages_sorted() or []
 
-    # بناء قائمة القطع مع حالة الفتح/القفل (تتابعي: تُفتح التالية عند نجاح السابقة ≥70%)
+    # قائمة الدروس للصفحة الرئيسية
+    lessons = []
+    for L in raw_lessons:
+        lessons.append({
+            'id':       L.get('id'),
+            'title_en': L.get('title_en') or L.get('title') or L.get('id'),
+            'title_ar': L.get('title_ar') or '',
+            'icon':     L.get('icon') or '',
+            'desc_ar':  L.get('intro_ar') or L.get('desc_ar') or L.get('summary_ar') or '',
+        })
+
+    # تجميع القطع حسب المرحلة
+    tiers = {'easy': [], 'medium': [], 'hard': []}
+    for p in passages_raw:
+        tier = (p.get('tier') or 'easy').lower()
+        if tier not in tiers:
+            tier = 'easy'
+        tiers[tier].append(p)
+
     PASS = 70
-    p_list = []
-    prev_done = True  # أول قطعة مفتوحة دائماً
-    for it in passages:
-        best = prog.get(it["id"], {}).get("best", 0)
-        attempts = prog.get(it["id"], {}).get("attempts", 0)
+    stages = []
+    total_all = 0
+    completed_all = 0
+    correct_sum = 0
+    questions_sum = 0
+    prev_stage_done = True
+
+    for tkey in ('easy', 'medium', 'hard'):
+        meta = _AR_STAGE_META[tkey]
+        plist = tiers.get(tkey, [])
+        stage_total = len(plist)
+        stage_completed = 0
+        this_stage_locked = not prev_stage_done
+
+        prev_done = True
+        for p in plist:
+            cid = p.get('id')
+            best = int((prog.get(cid) or {}).get('best') or 0)
+            qcount = len(p.get('questions') or [])
+            if best >= PASS:
+                stage_completed += 1
+                completed_all += 1
+            # للاحصائيات: نحسب صحيح تقريبي من أفضل نسبة
+            if best > 0 and qcount > 0:
+                correct_sum += int(round(best * qcount / 100.0))
+                questions_sum += qcount
+
+        total_all += stage_total
+        progress_pct = int(round(100 * stage_completed / stage_total)) if stage_total else 0
+
+        if stage_completed >= stage_total and stage_total > 0:
+            css = 'completed'
+        elif this_stage_locked:
+            css = 'locked'
+        else:
+            css = 'current'
+
+        stages.append({
+            'id':           tkey,
+            'key':          tkey,
+            'icon':         meta['icon'],
+            'name_en':      meta['name_en'],
+            'name_ar':      meta['name_ar'],
+            'desc_en':      meta['desc_en'],
+            'desc_ar':      meta['desc_ar'],
+            'total':        stage_total,
+            'completed':    stage_completed,
+            'progress_pct': progress_pct,
+            'locked':       this_stage_locked,
+            'css_class':    css,
+        })
+
+        prev_stage_done = (stage_completed >= stage_total) and stage_total > 0
+
+    accuracy = int(round(100 * correct_sum / questions_sum)) if questions_sum else 0
+    total_xp = completed_all * 10
+
+    stats = {
+        'total':         total_all,
+        'completed':     completed_all,
+        'progress_pct':  int(round(100 * completed_all / total_all)) if total_all else 0,
+        'lessons_count': len(lessons),
+        'accuracy':      accuracy,
+        'total_xp':      total_xp,
+    }
+
+    return render_template('reading/ar_main.html',
+        user_id=user_id, lessons=lessons, stages=stages, stats=stats)
+
+
+# --- 2) One stage (easy/medium/hard) ----------------------
+@reading_bp.route('/ar/stage/<tier>')
+@require_section_access('reading')
+def ar_stage(tier):
+    user_id = _get_tg_id()
+    sid = _student_id()
+    tier = (tier or '').lower()
+    if tier not in ('easy', 'medium', 'hard'):
+        return redirect(url_for('reading.ar_home', user_id=user_id))
+
+    prog = _ar_progress(sid) if sid else {}
+    passages_raw = [p for p in (_ar_passages_sorted() or [])
+                    if (p.get('tier') or 'easy').lower() == tier]
+
+    PASS = 70
+    passages_out = []
+    prev_done = True
+    completed = 0
+    for idx, p in enumerate(passages_raw, start=1):
+        cid = p.get('id')
+        best = int((prog.get(cid) or {}).get('best') or 0)
         done = best >= PASS
+        if done:
+            completed += 1
         unlocked = prev_done
-        p_list.append({
-            "id": it["id"],
-            "title_en": it.get("title_en", it["id"]),
-            "title_ar": it.get("title_ar", ""),
-            "tier": it.get("tier", ""),
-            "num_q": len(it.get("questions", [])),
-            "best": best,
-            "attempts": attempts,
-            "done": done,
-            "unlocked": unlocked,
+        css = 'completed' if done else ('current' if unlocked else 'locked')
+        questions = p.get('questions') or []
+        words = len((p.get('passage') or '').split())
+        passages_out.append({
+            'id': cid,
+            'number': idx,
+            'title_en': p.get('title_en') or cid,
+            'title_ar': p.get('title_ar') or '',
+            'topic_ar': p.get('topic') or '',
+            'questions_count': len(questions),
+            'words_count': words,
+            'score': best if best > 0 else None,
+            'locked': not unlocked,
+            'css_class': css,
         })
         prev_done = done
 
-    return render_template("reading/ar_home.html",
-                           lessons=lessons,
-                           passages=p_list,
-                           user_id=user_id)
+    total = len(passages_raw)
+    meta = _AR_STAGE_META[tier]
+    stage = {
+        'key':          tier,
+        'id':           tier,
+        'icon':         meta['icon'],
+        'name_en':      meta['name_en'],
+        'name_ar':      meta['name_ar'],
+        'desc_en':      meta['desc_en'],
+        'desc_ar':      meta['desc_ar'],
+        'total':        total,
+        'completed':    completed,
+        'progress_pct': int(round(100 * completed / total)) if total else 0,
+    }
+
+    return render_template('reading/ar_stage.html',
+        user_id=user_id, stage=stage, passages=passages_out)
 
 
-# ── 2) درس نظري لنوع سؤال ──────────────────────────────────
-@reading_bp.route("/ar/lesson/<lesson_id>")
-@require_section_access("reading")
+# --- 3) Lesson page ---------------------------------------
+@reading_bp.route('/ar/lesson/<lesson_id>')
+@require_section_access('reading')
 def ar_lesson(lesson_id):
-    lessons = _ar_load_lessons()
-    lesson = next((l for l in lessons if l["id"] == lesson_id), None)
-    if not lesson:
-        return "Lesson not found", 404
-    idx = lessons.index(lesson)
-    nxt = lessons[idx + 1]["id"] if idx + 1 < len(lessons) else None
-    return render_template("reading/ar_lesson.html",
-                           lesson=lesson, next_id=nxt,
-                           user_id=_get_tg_id())
+    user_id = _get_tg_id()
+    all_lessons = _ar_load_lessons() or []
+    L = next((x for x in all_lessons if x.get('id') == lesson_id), None)
+    if not L:
+        return redirect(url_for('reading.ar_home', user_id=user_id))
+
+    ids = [x.get('id') for x in all_lessons]
+    next_id = None
+    index = None
+    try:
+        i = ids.index(lesson_id)
+        index = i + 1
+        if i + 1 < len(ids):
+            next_id = ids[i + 1]
+    except ValueError:
+        pass
+
+    lesson = _ar_build_lesson_view(L, index=index, next_id=next_id)
+
+    return render_template('reading/ar_lesson.html',
+        user_id=user_id, lesson=lesson)
 
 
-# ── 3) قطعة تدريب ──────────────────────────────────────────
-@reading_bp.route("/ar/passage/<content_id>")
-@require_section_access("reading")
+# --- 4) Passage page --------------------------------------
+@reading_bp.route('/ar/passage/<content_id>')
+@require_section_access('reading')
 def ar_passage(content_id):
-    items = cl.load_all()
-    content = items.get(content_id)
-    if not content or content.get("type") != "academic_reading":
-        return "Passage not found", 404
-
+    import json as _json
+    user_id = _get_tg_id()
     sid = _student_id()
-    conn = _db()
-    cur = conn.cursor()
-    # أعد استخدام محاولة مفتوحة لنفس الطالب/القطعة بدل تكديس صفوف جديدة
-    row = cur.execute("""SELECT attempt_id FROM reading_attempts
-        WHERE student_id=? AND content_id=? AND status='in_progress'
-        ORDER BY attempt_id DESC LIMIT 1""", (sid or 0, content_id)).fetchone()
-    if row:
-        attempt_id = row[0]
-    else:
-        cur.execute("""INSERT INTO reading_attempts
-            (student_id, content_id, content_type, started_at, total, status)
-            VALUES (?, ?, 'academic_reading', ?, ?, 'in_progress')""",
-            (sid or 0, content_id, datetime.now().isoformat(),
-             len(content.get("questions", []))))
-        attempt_id = cur.lastrowid
-    conn.commit()
-    conn.close()
 
-    # تجهيز نص الفقرات
-    passage = content.get("passage", "")
-    if isinstance(passage, dict):
-        passage = passage.get("text_en") or passage.get("text") or ""
-    paragraphs = [p.strip() for p in passage.split("\n\n") if p.strip()]
+    all_p = _ar_passages_sorted() or []
+    p = next((x for x in all_p if x.get('id') == content_id), None)
+    if not p:
+        return redirect(url_for('reading.ar_home', user_id=user_id))
 
-    return render_template("reading/ar_passage.html",
-                           content=content,
-                           paragraphs=paragraphs,
-                           attempt_id=attempt_id,
-                           user_id=_get_tg_id())
+    # نص القطعة كفقرات آمنة
+    passage_text = (p.get('passage') or '').strip()
+    para_sep = chr(10) + chr(10)
+    paragraphs = [para.strip() for para in passage_text.split(para_sep) if para.strip()]
+    text_html = ''.join('<p>' + _html_escape(par) + '</p>' for par in paragraphs)
+
+    # قائمة الأسئلة للقالب (مع type_label)
+    questions = []
+    questions_js = []
+    for i, q in enumerate(p.get('questions') or [], start=1):
+        qtype = q.get('type') or 'factual'
+        label = _AR_TYPE_LABELS.get(qtype) or {'en': qtype, 'ar': qtype}
+        type_label = label['en']
+
+        item = {
+            'n': i,
+            'q':                 q.get('q') or q.get('q_en') or '',
+            'q_en':              q.get('q') or q.get('q_en') or '',
+            'q_translation_ar':  q.get('q_translation_ar') or q.get('q_ar') or '',
+            'q_ar':              q.get('q_translation_ar') or q.get('q_ar') or '',
+            'type':              qtype,
+            'type_label':        type_label,
+            'type_label_ar':     label['ar'],
+            'options':           q.get('options') or {},
+            'correct':           q.get('correct') or '',
+            'explanation_ar':    q.get('explanation_ar') or '',
+            'avoid_tip_ar':      q.get('avoid_tip_ar') or '',
+        }
+        questions.append(item)
+        questions_js.append(item)
+
+    tier_key = (p.get('tier') or 'easy').lower()
+    passage = {
+        'id':              p.get('id'),
+        'title_en':        p.get('title_en') or p.get('id'),
+        'title_ar':        p.get('title_ar') or '',
+        'topic_ar':        p.get('topic') or '',
+        'tier':            tier_key,
+        'tier_key':        tier_key,
+        'text_html':       text_html,
+        'questions':       questions,
+        'questions_js':    _json.dumps(questions_js, ensure_ascii=False),
+        'questions_count': len(questions),
+    }
+
+    # إنشاء/استرجاع محاولة
+    attempt_id = None
+    if sid:
+        try:
+            conn = _db()
+            cur = conn.cursor()
+            row = cur.execute(
+                "SELECT attempt_id FROM reading_attempts "
+                "WHERE student_id=? AND content_id=? AND status='in_progress' "
+                "ORDER BY attempt_id DESC LIMIT 1",
+                (sid, content_id)).fetchone()
+            if row:
+                attempt_id = row[0]
+            else:
+                cur.execute(
+                    "INSERT INTO reading_attempts "
+                    "(student_id, content_id, content_type, started_at, total, status) "
+                    "VALUES (?, ?, 'academic_reading', ?, ?, 'in_progress')",
+                    (sid, content_id, datetime.now().isoformat(), len(questions)))
+                attempt_id = cur.lastrowid
+                conn.commit()
+            conn.close()
+        except Exception as _ea:
+            print('[ar_passage attempt] ' + str(_ea))
+
+    return render_template('reading/ar_passage.html',
+        user_id=user_id, passage=passage, attempt_id=attempt_id)
 
 
-# ── 4) تصحيح: شرح + تلميح تفادي الخطأ + فتح التالي ─────────
-@reading_bp.route("/ar/check", methods=["POST"])
+# --- 5) Check answers API ---------------------------------
+@reading_bp.route('/ar/check', methods=['POST'])
 def ar_check():
     data = request.get_json(silent=True) or {}
-    attempt_id = data.get("attempt_id")
-    content_id = data.get("content_id")
-    answers = data.get("answers", {})
-    sid = data.get("user_id") or 0
-    try:
-        sid = int(sid)
-    except Exception:
-        sid = 0
+    attempt_id = data.get('attempt_id')
+    content_id = data.get('content_id')
+    answers = data.get('answers') or {}
+    sid = _student_id()
 
-    content = cl.load_all().get(content_id)
+    all_p = _ar_passages_sorted() or []
+    content = next((x for x in all_p if x.get('id') == content_id), None)
     if not content:
-        return jsonify({"error": "content not found"}), 404
+        return jsonify({'error': 'content_not_found'}), 404
 
-    questions = content.get("questions", [])
+    questions = content.get('questions') or []
     total = len(questions)
     score = 0
-    feedback = []
-    for idx, q in enumerate(questions):
-        ua = answers.get(str(idx))
-        correct = q.get("correct")
-        ok = (ua == correct)
-        if ok:
+    feedback = {}
+    for i, q in enumerate(questions, start=1):
+        key = str(i)
+        user_ans = (answers.get(key) or '').upper()
+        correct = (q.get('correct') or '').upper()
+        is_correct = (user_ans == correct and user_ans != '')
+        if is_correct:
             score += 1
-        feedback.append({
-            "idx": idx,
-            "is_correct": ok,
-            "user_answer": ua,
-            "correct": correct,
-            "explanation_ar": q.get("explanation_ar", ""),
-            "avoid_tip_ar": q.get("avoid_tip_ar", "") if not ok else "",
-            "type": q.get("type", ""),
-        })
+        feedback[key] = {
+            'correct': correct,
+            'user': user_ans,
+            'is_correct': is_correct,
+            'explanation_ar': q.get('explanation_ar') or '',
+            'avoid_tip_ar': q.get('avoid_tip_ar') or '',
+        }
 
-    pct = round(score * 100 / total) if total else 0
+    pct = int(round(100 * score / total)) if total else 0
 
-    # حفظ المحاولة (score = عدد الإجابات الصحيحة، وليس النسبة)
     try:
         conn = _db()
         cur = conn.cursor()
-        cur.execute("""UPDATE reading_attempts
-            SET score=?, total=?, finished_at=?, status='completed'
-            WHERE attempt_id=?""",
+        cur.execute(
+            "UPDATE reading_attempts "
+            "SET score=?, total=?, finished_at=?, status='completed' "
+            "WHERE attempt_id=?",
             (score, total, datetime.now().isoformat(), attempt_id))
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"[ar_check] save error: {e}")
+        print('[ar_check] save error: ' + str(e))
 
-    # فتح القطعة التالية عند النجاح
     try:
         _record_progress_and_unlock(student_id=sid, content_id=content_id,
-                                    score=score, total=total, kind="ar")
+                                    score=score, total=total, kind='ar')
     except Exception as _eu:
-        print(f"[ar auto-unlock] {_eu}")
+        print('[ar auto-unlock] ' + str(_eu))
 
-    # إرسال رسالة العلامة للطالب عبر تيليجرام
     try:
         from utils.notifications import send_telegram_notification
-        status_txt = "🎉 ناجح" if pct >= 70 else "📚 حاول مرة أخرى"
-        msg = (f"<b>نتيجة القراءة</b>\n"
-               f"القطعة: {content.get('title_ar') or content.get('title_en') or content_id}\n"
-               f"العلامة: {score}/{total} ({pct}%)\n"
-               f"الحالة: {status_txt}")
+        status_txt = 'PASSED' if pct >= 70 else 'RETRY'
+        title = content.get('title_en') or content.get('title_ar') or content_id
+        msg = ('<b>Reading Result</b>' + chr(10) +
+               'Passage: ' + str(title) + chr(10) +
+               'Score: ' + str(score) + '/' + str(total) + ' (' + str(pct) + '%)' + chr(10) +
+               'Status: ' + status_txt)
         if sid:
             send_telegram_notification(sid, msg)
     except Exception as _en:
-        print(f"[ar notify] {_en}")
+        print('[ar notify] ' + str(_en))
 
     return jsonify({
-        "score": score,
-        "total": total,
-        "pct": pct,
-        "passed": pct >= 70,
-        "feedback": feedback,
+        'score': score,
+        'total': total,
+        'pct': pct,
+        'passed': pct >= 70,
+        'feedback': feedback,
     })
+
 
 
 # ═══════════════════════════════════════════════════════════════

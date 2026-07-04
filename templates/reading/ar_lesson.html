@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ lesson.title_ar }}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f8fafc;color:#1e293b;line-height:1.8}
+.topbar{background:#fff;padding:14px 24px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:50}
+.topbar .left{display:flex;align-items:center;gap:14px}
+.back-btn{background:#f1f5f9;color:#475569;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px}
+.back-btn:hover{background:#e2e8f0}
+.topbar h1{font-size:17px;color:#0f172a;font-weight:700}
+.topbar .badge{background:#eef2ff;color:#4f46e5;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}
+
+.layout{max-width:900px;margin:0 auto;padding:24px}
+.content-area{background:#fff;border-radius:14px;padding:36px 40px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.lesson-header{text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #f1f5f9}
+.lesson-header .icon-big{font-size:52px;margin-bottom:8px}
+.lesson-header h2{font-size:26px;color:#0f172a;font-weight:800;margin-bottom:6px;border:none;padding:0}
+.lesson-header p{color:#64748b;font-size:14px}
+
+.content-area h2{font-size:22px;color:#0f172a;margin:28px 0 14px;font-weight:700;padding-bottom:8px;border-bottom:2px solid #f1f5f9}
+.content-area h3{font-size:18px;color:#1e293b;margin:22px 0 10px;font-weight:700}
+.content-area p{margin-bottom:14px;color:#334155;font-size:15.5px;line-height:1.9}
+.content-area ul,.content-area ol{margin:14px 24px;color:#334155}
+.content-area li{margin-bottom:8px;line-height:1.9}
+.content-area strong{color:#0f172a;font-weight:700}
+
+.info-box{background:#eff6ff;border-right:4px solid #3b82f6;padding:16px 20px;border-radius:10px;margin:18px 0}
+.info-box strong{color:#1d4ed8}
+.warn-box{background:#fef3c7;border-right:4px solid #f59e0b;padding:16px 20px;border-radius:10px;margin:18px 0;color:#78350f}
+.warn-box strong{color:#92400e}
+.tip-box{background:#f0fdf4;border-right:4px solid #10b981;padding:16px 20px;border-radius:10px;margin:18px 0;color:#065f46}
+.tip-box strong{color:#047857}
+
+.strategy-steps{counter-reset:step;margin:18px 0}
+.strategy-step{position:relative;padding:14px 60px 14px 18px;background:#f8fafc;border-radius:10px;margin-bottom:10px;border:1px solid #e2e8f0}
+.strategy-step::before{counter-increment:step;content:counter(step);position:absolute;right:14px;top:50%;transform:translateY(-50%);width:34px;height:34px;background:#4f46e5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.strategy-step-title{font-weight:700;color:#0f172a;margin-bottom:4px;font-size:15px}
+.strategy-step-body{color:#475569;font-size:14px;line-height:1.7}
+
+.example-block{background:#fefefe;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin:20px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.example-label{display:inline-block;background:#4f46e5;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:12px}
+.example-passage{background:#f8fafc;padding:14px 18px;border-radius:8px;direction:ltr;text-align:left;font-family:'Segoe UI',Arial;color:#0f172a;font-size:14.5px;line-height:1.8;margin-bottom:14px;border-right:3px solid #cbd5e1}
+.example-q{direction:ltr;text-align:left;font-weight:600;color:#0f172a;font-size:15px;margin-bottom:10px}
+.example-q-ar{color:#64748b;font-size:13.5px;margin-bottom:14px}
+.example-options{list-style:none;padding:0;margin:0 0 14px}
+.example-options li{padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:6px;direction:ltr;text-align:left;font-size:14px}
+.example-options li.correct{background:#dcfce7;border-color:#86efac;color:#15803d;font-weight:600}
+.example-options li.wrong{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
+.example-explain{background:#f0f9ff;border-right:3px solid #0ea5e9;padding:12px 16px;border-radius:8px;color:#075985;font-size:14px;line-height:1.8}
+.example-explain strong{color:#0c4a6e}
+
+.final-cta{display:flex;justify-content:center;margin:36px 0 12px;gap:12px;flex-wrap:wrap}
+.final-cta a{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(16,185,129,.35);transition:transform .2s}
+.final-cta a:hover{transform:translateY(-2px)}
+.final-cta a.secondary{background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 4px 14px rgba(99,102,241,.35)}
+
+@media (max-width:900px){.content-area{padding:24px 20px}.layout{padding:14px}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="left">
+    <a href="/reading/ar?user_id={{ user_id }}" class="back-btn">← رجوع</a>
+    <h1>📖 القراءة الأكاديمية</h1>
+  </div>
+  <div class="badge">درس {{ lesson.number }}/8</div>
+</div>
+
+<div class="layout">
+  <div class="content-area">
+
+    <div class="lesson-header">
+      <div class="icon-big">{{ lesson.icon }}</div>
+      <h2>{{ lesson.title_ar }}</h2>
+      <p>{{ lesson.title_en }}</p>
+    </div>
+
+    <h2>🎯 ما هو هذا النوع؟</h2>
+    <p>{{ lesson.what_is_it | safe }}</p>
+
+    {% if lesson.how_to_recognize %}
+    <div class="info-box">
+      <strong>🔍 كيف تتعرّف عليه؟</strong>
+      <p style="margin-top:8px;margin-bottom:0">{{ lesson.how_to_recognize | safe }}</p>
+    </div>
+    {% endif %}
+
+    <h2>📋 استراتيجية الحل خطوة بخطوة</h2>
+    <div class="strategy-steps">
+      {% for step in lesson.strategy %}
+      <div class="strategy-step">
+        <div class="strategy-step-title">{{ step.title }}</div>
+        <div class="strategy-step-body">{{ step.body | safe }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if lesson.example %}
+    <h2>💡 مثال محلول</h2>
+    <div class="example-block">
+      <div class="example-label">مثال</div>
+      <div class="example-passage">{{ lesson.example.passage }}</div>
+      <div class="example-q">{{ lesson.example.q }}</div>
+      <div class="example-q-ar">{{ lesson.example.q_ar }}</div>
+      <ul class="example-options">
+        {% for key, val in lesson.example.options.items() %}
+        <li class="{% if key == lesson.example.correct %}correct{% elif key == lesson.example.wrong_show %}wrong{% endif %}">
+          <strong>{{ key }}.</strong> {{ val }}
+          {% if key == lesson.example.correct %} ✅{% endif %}
+          {% if key == lesson.example.wrong_show %} ❌{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="example-explain">
+        <strong>💬 الشرح:</strong>
+        <p style="margin-top:6px;margin-bottom:0">{{ lesson.example.explain_ar }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if lesson.tips %}
+    <h2>💎 نصائح ذهبية</h2>
+    <div class="tip-box">
+      <ul style="margin:0;padding-right:20px">
+        {% for tip in lesson.tips %}
+        <li style="margin-bottom:8px">{{ tip }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if lesson.avoid %}
+    <h2>⚠️ أخطاء شائعة تجنّبها</h2>
+    <div class="warn-box">
+      <ul style="margin:0;padding-right:20px">
+        {% for a in lesson.avoid %}
+        <li style="margin-bottom:8px">{{ a }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <div class="final-cta">
+      <a href="/reading/ar/stage/easy?user_id={{ user_id }}">🎯 تدرّب على قطع Easy</a>
+      {% if lesson.next_id %}
+      <a href="/reading/ar/lesson/{{ lesson.next_id }}?user_id={{ user_id }}" class="secondary">الدرس التالي ›</a>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script>if(window.Telegram&&window.Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}</script>
+</body>
+</html>
