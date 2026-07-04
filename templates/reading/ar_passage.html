@@ -135,7 +135,8 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#1e
   <!-- ===== الأسئلة (يسار) ===== -->
   <div class="questions-pane">
     {% for q in passage.questions %}
-    <div class="q-card" id="qcard-{{ loop.index0 }}" data-idx="{{ loop.index0 }}">
+    {% set q_idx = loop.index0 %}
+    <div class="q-card" id="qcard-{{ q_idx }}" data-idx="{{ q_idx }}">
       <div class="q-header">
         <div class="q-number">{{ loop.index }}</div>
         <div class="q-type">{{ q.type_label }}</div>
@@ -149,7 +150,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#f1f5f9;color:#1e
       {% endif %}
       <ul class="options">
         {% for key, val in q.options.items() %}
-        <li class="option" data-key="{{ key }}" onclick="selectOption({{ loop.index0 }}, '{{ key }}', event)">
+        <li class="option" data-key="{{ key }}" onclick="selectOption({{ q_idx }}, '{{ key }}', event)">
           <span class="letter">{{ key }}.</span>
           <span class="text">{{ val }}</span>
           <span class="mark"></span>
