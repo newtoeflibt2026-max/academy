@@ -687,7 +687,9 @@ def _get_lesson_question_pool(c, lesson_id):
 
 
 def _is_lesson_unlocked(c, tg_id, lesson_id):
-    """A lesson is unlocked if prev_lesson_id is NULL or the previous lesson was passed/exhausted."""
+    """ALL_UNLOCKED_FOR_SUBSCRIBERS — كل الدروس مفتوحة للمشترك."""
+    return True
+    # --- old logic below (kept for reference) ---
     lesson = c.execute("SELECT prev_lesson_id, stage_id FROM listening_lessons WHERE id=?", (lesson_id,)).fetchone()
     if not lesson:
         return False

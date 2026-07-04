@@ -124,9 +124,9 @@ def view_stage(stage_id):
                 progress_map.get(x["id"], {}).get("status") == "completed"
                 for x in lessons_list if not x.get("is_exam")
             ) and len([x for x in lessons_list if not x.get("is_exam")]) > 0
-            L["locked"] = False if _is_admin else (not all_done)
+            L["locked"] = False  # ALL_UNLOCKED
         else:
-            L["locked"] = False if _is_admin else (not prev_completed)
+            L["locked"] = False  # ALL_UNLOCKED
             prev_completed = progress_map.get(L["id"], {}).get("status") == "completed"
 
     return render_template("toefl_writing/stage.html",
@@ -1445,7 +1445,7 @@ def _user_unlocked_tiers(user_id):
     """Determine which tiers the user has unlocked based on past correct answers"""
     conn = _get_db_conn()
     cur = conn.cursor()
-    unlocked = {"tier59": True, "tier69": False, "tier90": False}
+    unlocked = {"tier59": True, "tier69": True, "tier90": True}  # ALL_UNLOCKED
 
     # Count correct answers per tier
     cur.execute("""

@@ -977,7 +977,7 @@ def ar_home():
             'total':        stage_total,
             'completed':    stage_completed,
             'progress_pct': progress_pct,
-            'locked':       this_stage_locked,
+            'locked': False,
             'css_class':    css,
         })
 
@@ -1036,7 +1036,7 @@ def ar_stage(tier):
             'questions_count': len(questions),
             'words_count': words,
             'score': best if best > 0 else None,
-            'locked': not unlocked,
+            'locked': False,
             'css_class': css,
         })
         prev_done = done

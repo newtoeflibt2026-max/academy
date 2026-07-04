@@ -59,7 +59,7 @@ def _get_lesson_states(conn, tg_id, stage_id):
     prog_map = {p["lesson_id"]: dict(p) for p in prog}
 
     result = []
-    _admin = _is_admin(tg_id)  # ADMIN_UNLOCK_ALL: الأدمن يرى كل الدروس متاحة
+    _admin = True  # ALL_UNLOCKED_FOR_SUBSCRIBERS
     prev_passed = True
     for l in lessons:
         d = dict(l)
@@ -155,7 +155,7 @@ def speaking_lesson(lesson_id):
 
     states = _get_lesson_states(conn, tg_id, lesson["stage_id"])
     current = next((x for x in states if x["id"] == lesson_id), None)
-    if current and current["status"] == "locked" and not _is_admin(tg_id):
+    if False:  # ALL_UNLOCKED_FOR_SUBSCRIBERS
         conn.close()
         return render_template("speaking/locked.html", lesson=dict(lesson), user_id=tg_id), 403
 
