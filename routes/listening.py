@@ -255,6 +255,29 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: l
 # ═══════════════════════════════════════════════════════════
 @listening_bp.route("/listening/lesson/<int:lesson_id>")
 @require_section_access("listening")
+
+def _build_audio_url(item_dict, stage_id):
+    """يبني مسار MP3 من code+tier، ويرجع فراغ إذا الملف غير موجود."""
+    code = (item_dict.get("code") or "").strip()
+    if not code:
+        return ""
+    tier = int(item_dict.get("tier") or 1)
+    tier_letter = {1: "e", 2: "m", 3: "d"}.get(tier, "e")
+    static_root = os.path.join(os.getcwd(), "static", "audio", "listening")
+    candidates = [code + ".mp3", "stage5/" + code + ".mp3"]
+    m = re.match(r"^(conv|lec)_0*(\d+)$", code)
+    if m:
+        prefix = m.group(1)
+        num = m.group(2).zfill(2)
+        candidates.append(prefix + "_" + tier_letter + num + ".mp3")
+        candidates.append("stage5/" + prefix + "_" + tier_letter + num + ".mp3")
+    candidates.append(code.upper() + ".mp3")
+    for cand in candidates:
+        full = os.path.join(static_root, cand.replace("/", os.sep))
+        if os.path.exists(full):
+            return "/static/audio/listening/" + cand
+    return ""
+
 def view_lesson(lesson_id):
     user_id = request.args.get("user_id") or _get_tg_id()
     stage_id = int(request.args.get("stage", 1))
@@ -276,6 +299,8 @@ def view_lesson(lesson_id):
     if not row:
         conn.close(); return "Lesson not found", 404
     item = dict(row)
+    # ═══ ربط MP3 تلقائياً ═══
+    item["audio_url"] = _build_audio_url(item, stage_id)
     conn.close()
 
     import json as _json
@@ -302,7 +327,11 @@ def view_lesson(lesson_id):
             opt_html += f'<button class="option" data-correct="{ok}" onclick="pickOption(this)">{letter}. {opt}</button>'
         body = (
             f'<h2 style="color:{color}">🎯 اسمع واختر الرد المناسب</h2>'
-            f'<div class="audio-card"><button class="btn-listen" onclick="speakText()">🔊 استمع</button>'
+            f'<div class="audio-card">'
+            f'<audio id="lessonAudio" src="{item.get("audio_url","")}" preload="auto"></audio>'
+            f'<button class="btn-listen" onclick="playAudio()">🔊 استمع</button> '
+            f'<button class="btn-replay" onclick="replayAudio()">🔁 إعادة</button>'
+            f'<div class="audio-bar-wrap"><div class="audio-bar" id="audioBar"></div></div>'
             f'<div class="hint">اضغط للاستماع (يمكنك إعادة الاستماع)</div></div>'
             f'<div class="options">{opt_html}</div>'
             f'<div class="feedback" id="feedback" style="display:none"></div>'
@@ -310,7 +339,7 @@ def view_lesson(lesson_id):
             f'<div style="background:#f3f4f6;padding:12px;border-radius:8px;margin-top:12px;direction:ltr;text-align:left"><b>Audio text:</b> {audio_text}</div>'
             f'<div style="background:#fef3c7;padding:12px;border-radius:8px;margin-top:8px"><b>الشرح:</b> {explanation}</div></div>'
             f'<button class="btn-finish" id="finishBtn" onclick="finishLesson()" style="display:none">التالي ←</button>'
-            f'<script>const AUDIO_TEXT = {_json.dumps(audio_text, ensure_ascii=False)};</script>'
+            f'<script>const AUDIO_URL = {_json.dumps(item.get("audio_url",""))}; const AUDIO_TEXT = {_json.dumps(audio_text, ensure_ascii=False)};</script>'
         )
 
     else:
@@ -346,13 +375,17 @@ def view_lesson(lesson_id):
             )
         body = (
             f'<h2 style="color:{color}">{topic}</h2>'
-            f'<div class="audio-card"><button class="btn-listen" onclick="speakDialog()">🔊 استمع للنص</button>'
+            f'<div class="audio-card">'
+            f'<audio id="lessonAudio" src="{item.get("audio_url","")}" preload="auto"></audio>'
+            f'<button class="btn-listen" onclick="playAudio()">🔊 استمع للنص</button> '
+            f'<button class="btn-replay" onclick="replayAudio()">🔁 إعادة</button>'
+            f'<div class="audio-bar-wrap"><div class="audio-bar" id="audioBar"></div></div>'
             f'<div class="hint">استمع جيداً قبل الإجابة. يمكنك إعادة الاستماع.</div>'
             f'<button class="btn-reveal" onclick="toggleTranscript()">📄 إظهار/إخفاء النص</button></div>'
             f'<div class="transcript" id="transcript" style="display:none" dir="ltr">{transcript}</div>'
             f'<div class="questions">{q_html}</div>'
             f'<button class="btn-finish" id="finishBtn" onclick="finishLesson()" style="display:none">✓ إنهاء الدرس</button>'
-            f'<script>const AUDIO_TEXT = {_json.dumps(transcript, ensure_ascii=False)}; const TOTAL_Q = {len(questions)};</script>'
+            f'<script>const AUDIO_URL = {_json.dumps(item.get("audio_url",""))}; const AUDIO_TEXT = {_json.dumps(transcript, ensure_ascii=False)}; const TOTAL_Q = {len(questions)};</script>'
         )
 
     return (
@@ -390,6 +423,9 @@ def view_lesson(lesson_id):
         '<script>'
         f'const LESSON_ID = {lesson_id}; const STAGE_ID = {stage_id}; const USER_ID = "{user_id}";'
         'let answeredQuestions = 0;'
+        'function playAudio(){var a=document.getElementById("lessonAudio");var bar=document.getElementById("audioBar");if(a&&a.src&&a.src.indexOf(".mp3")>0){a.currentTime=0;var p=a.play();if(p&&p.catch)p.catch(function(e){console.warn("MP3 fail:",e);speakText();});if(bar){a.ontimeupdate=function(){if(a.duration)bar.style.width=(100*a.currentTime/a.duration)+"%";};a.onended=function(){bar.style.width="100%";};}}else{speakText();}}'
+        'function replayAudio(){var a=document.getElementById("lessonAudio");if(a){a.pause();a.currentTime=0;}playAudio();}'
+        'function speakDialog(){playAudio();}'
         'function cleanForTTS(t){return (t||"").replace(/\//g," ").replace(/[\[\]\(\)\*_~`#]/g," ").replace(/\s+/g," ").trim();}'
         'function speakText(){if(!window.speechSynthesis||!AUDIO_TEXT)return;speechSynthesis.cancel();'
         'const u=new SpeechSynthesisUtterance(cleanForTTS(AUDIO_TEXT));u.lang="en-US";u.rate=0.92;'
